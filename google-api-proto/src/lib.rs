@@ -96,6 +96,7 @@ pub mod ccc;
         feature = "google-cloud-beyondcorp-appgateways-v1",
         feature = "google-cloud-beyondcorp-clientconnectorservices-v1",
         feature = "google-cloud-beyondcorp-clientgateways-v1",
+        feature = "google-cloud-bigquery-analyticshub-v1",
         feature = "google-cloud-bigquery-connection-v1",
         feature = "google-cloud-bigquery-connection-v1beta1",
         feature = "google-cloud-bigquery-dataexchange-v1beta1",

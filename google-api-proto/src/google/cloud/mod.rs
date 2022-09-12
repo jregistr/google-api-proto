@@ -61,6 +61,7 @@ pub mod batch;
 pub mod beyondcorp;
 #[cfg(
     any(
+        feature = "google-cloud-bigquery-analyticshub-v1",
         feature = "google-cloud-bigquery-connection-v1",
         feature = "google-cloud-bigquery-connection-v1beta1",
         feature = "google-cloud-bigquery-dataexchange-v1beta1",
