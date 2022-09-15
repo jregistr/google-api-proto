@@ -124,6 +124,8 @@ pub mod compute;
 pub mod connectors;
 #[cfg(any(feature = "google-cloud-contactcenterinsights-v1"))]
 pub mod contactcenterinsights;
+#[cfg(any(feature = "google-cloud-contentwarehouse-v1"))]
+pub mod contentwarehouse;
 #[cfg(
     any(
         feature = "google-cloud-datacatalog-v1",
