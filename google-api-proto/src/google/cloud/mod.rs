@@ -265,6 +265,8 @@ pub mod gkemulticloud;
     )
 )]
 pub mod gsuiteaddons;
+#[cfg(any(feature = "google-cloud-healthcare-logging"))]
+pub mod healthcare;
 #[cfg(any(feature = "google-cloud-iap-v1", feature = "google-cloud-iap-v1beta1"))]
 pub mod iap;
 #[cfg(
