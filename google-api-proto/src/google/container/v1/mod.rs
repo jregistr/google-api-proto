@@ -251,6 +251,9 @@ pub struct NodeConfig {
     /// All the nodes in the node pool will be Confidential VM once enabled.
     #[prost(message, optional, tag="35")]
     pub confidential_nodes: ::core::option::Option<ConfidentialNodes>,
+    /// Logging configuration.
+    #[prost(message, optional, tag="38")]
+    pub logging_config: ::core::option::Option<NodePoolLoggingConfig>,
 }
 /// Specifies options for controlling advanced machine features.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -386,8 +389,9 @@ pub struct ReservationAffinity {
     #[prost(enumeration="reservation_affinity::Type", tag="1")]
     pub consume_reservation_type: i32,
     /// Corresponds to the label key of a reservation resource. To target a
-    /// SPECIFIC_RESERVATION by name, specify "googleapis.com/reservation-name" as
-    /// the key and specify the name of your reservation as its value.
+    /// SPECIFIC_RESERVATION by name, specify
+    /// "compute.googleapis.com/reservation-name" as the key and specify the name
+    /// of your reservation as its value.
     #[prost(string, tag="2")]
     pub key: ::prost::alloc::string::String,
     /// Corresponds to the label value(s) of reservation resource(s).
@@ -1288,6 +1292,9 @@ pub struct NodeConfigDefaults {
     /// GCFS (Google Container File System, also known as Riptide) options.
     #[prost(message, optional, tag="1")]
     pub gcfs_config: ::core::option::Option<GcfsConfig>,
+    /// Logging configuration for node pools.
+    #[prost(message, optional, tag="3")]
+    pub logging_config: ::core::option::Option<NodePoolLoggingConfig>,
 }
 /// ClusterUpdate describes an update to the cluster. Exactly one update can
 /// be applied to a cluster with each request, so at most one field can be
@@ -1452,6 +1459,9 @@ pub struct ClusterUpdate {
     /// in autopilot clusters and node auto-provisioning enabled clusters.
     #[prost(message, optional, tag="110")]
     pub desired_node_pool_auto_config_network_tags: ::core::option::Option<NetworkTags>,
+    /// The desired node pool logging configuration defaults for the cluster.
+    #[prost(message, optional, tag="116")]
+    pub desired_node_pool_logging_config: ::core::option::Option<NodePoolLoggingConfig>,
 }
 /// This operation resource represents operations that may have happened or are
 /// happening on the cluster. All fields are output only.
@@ -1801,6 +1811,9 @@ pub struct UpdateNodePoolRequest {
     /// Enable or disable gvnic on the node pool.
     #[prost(message, optional, tag="29")]
     pub gvnic: ::core::option::Option<VirtualNic>,
+    /// Logging configuration.
+    #[prost(message, optional, tag="32")]
+    pub logging_config: ::core::option::Option<NodePoolLoggingConfig>,
 }
 /// SetNodePoolAutoscalingRequest sets the autoscaler settings of a node pool.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3038,7 +3051,7 @@ pub struct AutoprovisioningNodePoolDefaults {
     /// minCpuPlatform: Intel Haswell or
     /// minCpuPlatform: Intel Sandy Bridge. For more
     /// information, read [how to specify min CPU
-    /// platform](<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform>)
+    /// platform](<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform>).
     /// This field is deprecated, min_cpu_platform should be specified using
     /// <https://cloud.google.com/requested-min-cpu-platform> label selector on the
     /// pod.
@@ -4070,6 +4083,34 @@ pub struct MonitoringConfig {
     /// in the cluster.
     #[prost(message, optional, tag="2")]
     pub managed_prometheus_config: ::core::option::Option<ManagedPrometheusConfig>,
+}
+/// NodePoolLoggingConfig specifies logging configuration for nodepools.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NodePoolLoggingConfig {
+    /// Logging variant configuration.
+    #[prost(message, optional, tag="1")]
+    pub variant_config: ::core::option::Option<LoggingVariantConfig>,
+}
+/// LoggingVariantConfig specifies the behaviour of the logging component.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LoggingVariantConfig {
+    /// Logging variant deployed on nodes.
+    #[prost(enumeration="logging_variant_config::Variant", tag="1")]
+    pub variant: i32,
+}
+/// Nested message and enum types in `LoggingVariantConfig`.
+pub mod logging_variant_config {
+    /// Logging component variants.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Variant {
+        /// Default value. This shouldn't be used.
+        Unspecified = 0,
+        /// default logging variant.
+        Default = 1,
+        /// maximum logging throughput variant.
+        MaxThroughput = 2,
+    }
 }
 /// MonitoringComponentConfig is cluster monitoring component configuration.
 #[derive(Clone, PartialEq, ::prost::Message)]
