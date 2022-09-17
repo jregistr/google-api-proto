@@ -488,7 +488,11 @@ pub mod servicedirectory;
 #[cfg(any(feature = "google-cloud-shell-v1"))]
 pub mod shell;
 #[cfg(
-    any(feature = "google-cloud-speech-v1", feature = "google-cloud-speech-v1p1beta1")
+    any(
+        feature = "google-cloud-speech-v1",
+        feature = "google-cloud-speech-v1p1beta1",
+        feature = "google-cloud-speech-v2",
+    )
 )]
 pub mod speech;
 #[cfg(any(feature = "google-cloud-sql-v1", feature = "google-cloud-sql-v1beta4"))]
