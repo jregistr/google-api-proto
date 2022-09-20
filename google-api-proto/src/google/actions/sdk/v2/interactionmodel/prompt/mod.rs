@@ -1,3 +1,35 @@
+/// Defines a link which will be displayed as a suggestion chip and can be opened
+/// by the user.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StaticLinkPrompt {
+    /// Name of the link
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Defines behavior when the user opens the link.
+    #[prost(message, optional, tag="2")]
+    pub open: ::core::option::Option<OpenUrl>,
+}
+/// Defines behavior when the user opens the link.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OpenUrl {
+    /// The url field which could be any of:
+    /// - http/https urls for opening an App-linked App or a webpage
+    #[prost(string, tag="1")]
+    pub url: ::prost::alloc::string::String,
+    /// Indicates a hint for the url type.
+    #[prost(enumeration="UrlHint", tag="2")]
+    pub hint: i32,
+}
+/// Different types of url hints.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum UrlHint {
+    /// Unspecified
+    HintUnspecified = 0,
+    /// URL that points directly to AMP content, or to a canonical URL
+    /// which refers to AMP content via `<link rel="amphtml">`.
+    Amp = 1,
+}
 /// Represents a Interactive Canvas response to be sent to the user.
 /// This can be used in conjunction with the `first_simple` field in the
 /// containing prompt to speak to the user in addition to displaying a
@@ -69,61 +101,6 @@ pub mod static_image_prompt {
         Cropped = 3,
     }
 }
-/// Defines a link which will be displayed as a suggestion chip and can be opened
-/// by the user.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticLinkPrompt {
-    /// Name of the link
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Defines behavior when the user opens the link.
-    #[prost(message, optional, tag="2")]
-    pub open: ::core::option::Option<OpenUrl>,
-}
-/// Defines behavior when the user opens the link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OpenUrl {
-    /// The url field which could be any of:
-    /// - http/https urls for opening an App-linked App or a webpage
-    #[prost(string, tag="1")]
-    pub url: ::prost::alloc::string::String,
-    /// Indicates a hint for the url type.
-    #[prost(enumeration="UrlHint", tag="2")]
-    pub hint: i32,
-}
-/// Different types of url hints.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum UrlHint {
-    /// Unspecified
-    HintUnspecified = 0,
-    /// URL that points directly to AMP content, or to a canonical URL
-    /// which refers to AMP content via `<link rel="amphtml">`.
-    Amp = 1,
-}
-/// A basic card for displaying some information, e.g. an image and/or text.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticCardPrompt {
-    /// Optional. Overall title of the card.
-    #[prost(string, tag="1")]
-    pub title: ::prost::alloc::string::String,
-    /// Optional. Subtitle of the card.
-    #[prost(string, tag="2")]
-    pub subtitle: ::prost::alloc::string::String,
-    /// Required. Body text of the card which is needed unless image is present. Supports a
-    /// limited set of markdown syntax for formatting.
-    #[prost(string, tag="3")]
-    pub text: ::prost::alloc::string::String,
-    /// Optional. A hero image for the card. The height is fixed to 192dp.
-    #[prost(message, optional, tag="4")]
-    pub image: ::core::option::Option<StaticImagePrompt>,
-    /// Optional. How the image background will be filled.
-    #[prost(enumeration="static_image_prompt::ImageFill", tag="5")]
-    pub image_fill: i32,
-    /// Optional. A clickable button to be shown in the Card.
-    #[prost(message, optional, tag="6")]
-    pub button: ::core::option::Option<StaticLinkPrompt>,
-}
 /// Presents a set of web documents as a collection of large-tile items. Items
 /// may be selected to launch their associated web document in a web viewer.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -158,6 +135,101 @@ pub mod static_collection_browse_prompt {
         #[prost(message, optional, tag="5")]
         pub open_uri_action: ::core::option::Option<super::OpenUrl>,
     }
+}
+/// A table card for displaying a table of text.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StaticTablePrompt {
+    /// Optional. Overall title of the table. Must be set if subtitle is set.
+    #[prost(string, tag="1")]
+    pub title: ::prost::alloc::string::String,
+    /// Optional. Subtitle for the table.
+    #[prost(string, tag="2")]
+    pub subtitle: ::prost::alloc::string::String,
+    /// Optional. Image associated with the table.
+    #[prost(message, optional, tag="3")]
+    pub image: ::core::option::Option<StaticImagePrompt>,
+    /// Optional. Headers and alignment of columns.
+    #[prost(message, repeated, tag="4")]
+    pub columns: ::prost::alloc::vec::Vec<TableColumn>,
+    /// Optional. Row data of the table. The first 3 rows are guaranteed to be shown but
+    /// others might be cut on certain surfaces. Please test with the simulator to
+    /// see which rows will be shown for a given surface. On surfaces that support
+    /// the `WEB_BROWSER` capability, you can point the user to
+    /// a web page with more data.
+    #[prost(message, repeated, tag="5")]
+    pub rows: ::prost::alloc::vec::Vec<TableRow>,
+    /// Optional. Button.
+    #[prost(message, optional, tag="6")]
+    pub button: ::core::option::Option<StaticLinkPrompt>,
+}
+/// Describes a column in the table.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableColumn {
+    /// Header text for the column.
+    #[prost(string, tag="1")]
+    pub header: ::prost::alloc::string::String,
+    /// Horizontal alignment of content w.r.t column. If unspecified, content
+    /// will be aligned to the leading edge.
+    #[prost(enumeration="table_column::HorizontalAlignment", tag="2")]
+    pub align: i32,
+}
+/// Nested message and enum types in `TableColumn`.
+pub mod table_column {
+    /// The alignment of the content within the cell.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum HorizontalAlignment {
+        /// HorizontalAlignment unspecified.
+        Unspecified = 0,
+        /// Leading edge of the cell. This is the default.
+        Leading = 1,
+        /// Content is aligned to the center of the column.
+        Center = 2,
+        /// Content is aligned to the trailing edge of the column.
+        Trailing = 3,
+    }
+}
+/// Describes a cell in a row.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableCell {
+    /// Text content of the cell.
+    #[prost(string, tag="1")]
+    pub text: ::prost::alloc::string::String,
+}
+/// Describes a row in the table.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableRow {
+    /// Cells in this row. The first 3 cells are guaranteed to be shown but
+    /// others might be cut on certain surfaces. Please test with the simulator
+    /// to see which cells will be shown for a given surface.
+    #[prost(message, repeated, tag="1")]
+    pub cells: ::prost::alloc::vec::Vec<TableCell>,
+    /// Indicates whether there should be a divider after each row.
+    #[prost(bool, tag="2")]
+    pub divider: bool,
+}
+/// A basic card for displaying some information, e.g. an image and/or text.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StaticCardPrompt {
+    /// Optional. Overall title of the card.
+    #[prost(string, tag="1")]
+    pub title: ::prost::alloc::string::String,
+    /// Optional. Subtitle of the card.
+    #[prost(string, tag="2")]
+    pub subtitle: ::prost::alloc::string::String,
+    /// Required. Body text of the card which is needed unless image is present. Supports a
+    /// limited set of markdown syntax for formatting.
+    #[prost(string, tag="3")]
+    pub text: ::prost::alloc::string::String,
+    /// Optional. A hero image for the card. The height is fixed to 192dp.
+    #[prost(message, optional, tag="4")]
+    pub image: ::core::option::Option<StaticImagePrompt>,
+    /// Optional. How the image background will be filled.
+    #[prost(enumeration="static_image_prompt::ImageFill", tag="5")]
+    pub image_fill: i32,
+    /// Optional. A clickable button to be shown in the Card.
+    #[prost(message, optional, tag="6")]
+    pub button: ::core::option::Option<StaticLinkPrompt>,
 }
 /// A card for presenting a collection of options to select from.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -330,78 +402,6 @@ pub mod media_image {
         Icon(super::StaticImagePrompt),
     }
 }
-/// A table card for displaying a table of text.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticTablePrompt {
-    /// Optional. Overall title of the table. Must be set if subtitle is set.
-    #[prost(string, tag="1")]
-    pub title: ::prost::alloc::string::String,
-    /// Optional. Subtitle for the table.
-    #[prost(string, tag="2")]
-    pub subtitle: ::prost::alloc::string::String,
-    /// Optional. Image associated with the table.
-    #[prost(message, optional, tag="3")]
-    pub image: ::core::option::Option<StaticImagePrompt>,
-    /// Optional. Headers and alignment of columns.
-    #[prost(message, repeated, tag="4")]
-    pub columns: ::prost::alloc::vec::Vec<TableColumn>,
-    /// Optional. Row data of the table. The first 3 rows are guaranteed to be shown but
-    /// others might be cut on certain surfaces. Please test with the simulator to
-    /// see which rows will be shown for a given surface. On surfaces that support
-    /// the `WEB_BROWSER` capability, you can point the user to
-    /// a web page with more data.
-    #[prost(message, repeated, tag="5")]
-    pub rows: ::prost::alloc::vec::Vec<TableRow>,
-    /// Optional. Button.
-    #[prost(message, optional, tag="6")]
-    pub button: ::core::option::Option<StaticLinkPrompt>,
-}
-/// Describes a column in the table.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableColumn {
-    /// Header text for the column.
-    #[prost(string, tag="1")]
-    pub header: ::prost::alloc::string::String,
-    /// Horizontal alignment of content w.r.t column. If unspecified, content
-    /// will be aligned to the leading edge.
-    #[prost(enumeration="table_column::HorizontalAlignment", tag="2")]
-    pub align: i32,
-}
-/// Nested message and enum types in `TableColumn`.
-pub mod table_column {
-    /// The alignment of the content within the cell.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum HorizontalAlignment {
-        /// HorizontalAlignment unspecified.
-        Unspecified = 0,
-        /// Leading edge of the cell. This is the default.
-        Leading = 1,
-        /// Content is aligned to the center of the column.
-        Center = 2,
-        /// Content is aligned to the trailing edge of the column.
-        Trailing = 3,
-    }
-}
-/// Describes a cell in a row.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableCell {
-    /// Text content of the cell.
-    #[prost(string, tag="1")]
-    pub text: ::prost::alloc::string::String,
-}
-/// Describes a row in the table.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableRow {
-    /// Cells in this row. The first 3 cells are guaranteed to be shown but
-    /// others might be cut on certain surfaces. Please test with the simulator
-    /// to see which cells will be shown for a given surface.
-    #[prost(message, repeated, tag="1")]
-    pub cells: ::prost::alloc::vec::Vec<TableCell>,
-    /// Indicates whether there should be a divider after each row.
-    #[prost(bool, tag="2")]
-    pub divider: bool,
-}
 /// A placeholder for the Content part of a StaticPrompt.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StaticContentPrompt {
@@ -437,6 +437,16 @@ pub mod static_content_prompt {
         CollectionBrowse(super::StaticCollectionBrowsePrompt),
     }
 }
+/// Represents a suggestion chip, a UI element shown to the user for convenience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Suggestion {
+    /// Required. The text shown in the suggestion chip. When tapped, this text will be
+    /// posted back to the conversation verbatim as if the user had typed it.
+    /// Each title must be unique among the set of suggestion chips.
+    /// Max 25 chars
+    #[prost(string, tag="1")]
+    pub title: ::prost::alloc::string::String,
+}
 /// Represents a simple prompt to be send to a user.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StaticSimplePrompt {
@@ -465,16 +475,6 @@ pub mod static_simple_prompt {
         #[prost(string, tag="2")]
         pub text: ::prost::alloc::string::String,
     }
-}
-/// Represents a suggestion chip, a UI element shown to the user for convenience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Suggestion {
-    /// Required. The text shown in the suggestion chip. When tapped, this text will be
-    /// posted back to the conversation verbatim as if the user had typed it.
-    /// Each title must be unique among the set of suggestion chips.
-    /// Max 25 chars
-    #[prost(string, tag="1")]
-    pub title: ::prost::alloc::string::String,
 }
 /// Represents the surface the user is using to make a request to the Action.
 #[derive(Clone, PartialEq, ::prost::Message)]
