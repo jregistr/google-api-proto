@@ -1,5 +1,7 @@
 #[cfg(any(feature = "ccc-hosted-marketplace-v2"))]
 pub mod ccc;
+#[cfg(any(feature = "cloud-kubernetes-security-containersecurity_logging"))]
+pub mod cloud;
 #[cfg(
     any(
         feature = "google-actions-sdk-v2",
