@@ -886,6 +886,9 @@ pub struct ClusterConfig {
     /// Optional. Metastore configuration.
     #[prost(message, optional, tag="20")]
     pub metastore_config: ::core::option::Option<MetastoreConfig>,
+    /// Optional. Dataproc metrics configuration.
+    #[prost(message, optional, tag="21")]
+    pub dataproc_metric_config: ::core::option::Option<DataprocMetricConfig>,
 }
 /// Dataproc cluster config for a cluster that does not directly control the
 /// underlying compute resources, such as a [Dataproc-on-GKE
@@ -1566,6 +1569,48 @@ pub struct MetastoreConfig {
     /// * `projects/\[project_id]/locations/[dataproc_region]/services/[service-name\]`
     #[prost(string, tag="1")]
     pub dataproc_metastore_service: ::prost::alloc::string::String,
+}
+/// Specifies Dataproc OSS Metric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Metric {
+    /// Required. Specified source of metric collection
+    #[prost(enumeration="metric::MetricSource", tag="1")]
+    pub metric_source: i32,
+    /// Optional. The set of available OSS metrics to collect from the metric
+    /// source.
+    #[prost(string, repeated, tag="2")]
+    pub metric_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `Metric`.
+pub mod metric {
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum MetricSource {
+        /// Unspecified metric source
+        Unspecified = 0,
+        /// Default monitoring agent metrics. If this source is enabled,
+        /// Dataproc enables the monitoring agent in Compute Engine, and collects
+        /// default monitoring agent metrics, which are published with an
+        /// agent.googleapis.com prefix.
+        MonitoringAgentDefaults = 1,
+        /// HDFS metric source
+        Hdfs = 2,
+        /// SPARK metric source
+        Spark = 3,
+        /// YARN metric source
+        Yarn = 4,
+        /// Spark History Server metric source
+        SparkHistoryServer = 5,
+        /// Hiveserver2 metric source
+        Hiveserver2 = 6,
+    }
+}
+/// Specifies a Dataproc metric config
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataprocMetricConfig {
+    /// Configuration set of metrics to collect from the cluster
+    #[prost(message, repeated, tag="1")]
+    pub metrics: ::prost::alloc::vec::Vec<Metric>,
 }
 /// Contains cluster daemon metrics, such as HDFS and YARN stats.
 ///
