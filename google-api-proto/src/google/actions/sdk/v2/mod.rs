@@ -111,6 +111,122 @@ pub mod account_linking {
         Implicit = 2,
     }
 }
+/// Information about the encrypted OAuth client secret used in account linking
+/// flows (for AUTH_CODE grant type).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountLinkingSecret {
+    /// Encrypted account linking client secret ciphertext.
+    #[prost(bytes="bytes", tag="1")]
+    pub encrypted_client_secret: ::prost::bytes::Bytes,
+    /// The version of the crypto key used to encrypt the account linking client
+    /// secret.
+    /// Note that this field is ignored in push, preview, and version creation
+    /// flows.
+    #[prost(string, tag="2")]
+    pub encryption_key_version: ::prost::alloc::string::String,
+}
+/// Represents the list of Actions defined in a project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Actions {
+    /// Map from intents to custom Actions to configure invocation for the project.
+    /// The invocation intents could either be system or custom intents defined
+    /// in the "custom/intents/" package. All intents defined here (system
+    /// intents & custom intents) must have a corresponding intent file in the
+    /// "custom/global/" package.
+    #[prost(btree_map="string, message", tag="3")]
+    pub custom: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, actions::CustomAction>,
+}
+/// Nested message and enum types in `Actions`.
+pub mod actions {
+    /// Defines the engagement mechanisms associated with this action. This
+    /// allows end users to subscribe to push notification and daily update.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Engagement {
+        /// The title of the engagement that will be sent to end users asking for
+        /// their permission to receive updates. The prompt sent to end users for
+        /// daily updates will look like "What time would you like me to send your
+        /// daily {title}" and for push notifications will look like
+        /// "Is it ok if I send push notifications for {title}".
+        /// **This field is localizable.**
+        #[prost(string, tag="1")]
+        pub title: ::prost::alloc::string::String,
+        /// Push notification settings that this engagement supports.
+        #[prost(message, optional, tag="2")]
+        pub push_notification: ::core::option::Option<engagement::PushNotification>,
+        /// Link config for an action which determines whether sharing links is
+        /// enabled for the action and if so, contains the user friendly display name
+        /// for the link.
+        /// ActionLink is deprecated. Use AssistantLink instead.
+        #[deprecated]
+        #[prost(message, optional, tag="4")]
+        pub action_link: ::core::option::Option<engagement::ActionLink>,
+        /// Link config for an action which determines whether sharing links is
+        /// enabled for the action and if so, contains the user friendly display name
+        /// for the link.
+        #[prost(message, optional, tag="6")]
+        pub assistant_link: ::core::option::Option<engagement::AssistantLink>,
+        /// Recurring update settings that this engagement supports.
+        #[prost(oneof="engagement::RecurringUpdate", tags="3")]
+        pub recurring_update: ::core::option::Option<engagement::RecurringUpdate>,
+    }
+    /// Nested message and enum types in `Engagement`.
+    pub mod engagement {
+        /// Defines push notification settings that this engagement supports.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct PushNotification {
+        }
+        /// Defines daily update settings that this engagement supports.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct DailyUpdate {
+        }
+        /// Indicates whether sharing links is enabled for this action and the
+        /// corresponding settings. Action links are used to deep link a user into a
+        /// specific action.
+        /// ActionLink is deprecated. Use AssistantLink instead.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ActionLink {
+            /// User friendly display title for the link.
+            #[prost(string, tag="1")]
+            pub title: ::prost::alloc::string::String,
+        }
+        /// Indicates whether sharing links is enabled for this action and the
+        /// corresponding settings. Assistant links are used to deep link a user into
+        /// a specific action.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct AssistantLink {
+            /// User friendly display title for the link.
+            #[prost(string, tag="1")]
+            pub title: ::prost::alloc::string::String,
+        }
+        /// Recurring update settings that this engagement supports.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum RecurringUpdate {
+            /// Daily update settings that this engagement supports.
+            #[prost(message, tag="3")]
+            DailyUpdate(DailyUpdate),
+        }
+    }
+    /// Details regarding a custom action.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CustomAction {
+        /// Engagement mechanisms associated with the action to help end users
+        /// subscribe to push notifications and daily updates.
+        /// Note that the intent name specified in daily updates/push notifications
+        /// slot config needs to match the intent corresponding to this action for
+        /// end users to subscribe to these updates.
+        #[prost(message, optional, tag="2")]
+        pub engagement: ::core::option::Option<Engagement>,
+    }
+}
+/// Contains information that's "transportable" i.e. not specific to any given
+/// project and can be moved between projects.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Manifest {
+    /// Version of the file format. The current file format version is 1.0
+    /// Example: "1.0"
+    #[prost(string, tag="1")]
+    pub version: ::prost::alloc::string::String,
+}
 /// Styles applied to cards that are presented to users
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ThemeCustomization {
@@ -429,21 +545,314 @@ pub mod settings {
         HomeControl = 19,
     }
 }
-/// Definition of release channel resource.
+/// Metadata for different types of webhooks. If you're using
+/// `inlineCloudFunction`, your source code must be in a directory with the same
+/// name as the value for the `executeFunction` key.
+/// For example, a value of `my_webhook` for the`executeFunction` key would have
+/// a code structure like this:
+///  - `/webhooks/my_webhook.yaml`
+///  - `/webhooks/my_webhook/index.js`
+///  - `/webhooks/my_webhook/package.json`
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseChannel {
-    /// The unique name of the release channel in the following format.
-    /// `projects/{project}/releaseChannels/{release_channel}`.
+pub struct Webhook {
+    /// List of handlers for this webhook.
+    #[prost(message, repeated, tag="1")]
+    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
+    /// Only one webhook type is supported.
+    #[prost(oneof="webhook::WebhookType", tags="2, 3")]
+    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
+}
+/// Nested message and enum types in `Webhook`.
+pub mod webhook {
+    /// Declares the name of the webhoook handler. A webhook can have
+    /// multiple handlers registered. These handlers can be called from multiple
+    /// places in your Actions project.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Handler {
+        /// Required. Name of the handler. Must be unique across all handlers the Actions
+        /// project. You can check the name of this handler to invoke the correct
+        /// function in your fulfillment source code.
+        #[prost(string, tag="1")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// REST endpoint to notify if you're not using the inline editor.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct HttpsEndpoint {
+        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
+        /// Handler names are appended to the base URL path after a colon
+        /// (following the style guide in
+        /// <https://cloud.google.com/apis/design/custom_methods>).
+        /// For example a base URL of '<https://gactions.service.com/api'> would
+        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
+        #[prost(string, tag="1")]
+        pub base_url: ::prost::alloc::string::String,
+        /// Map of HTTP parameters to be included in the POST request.
+        #[prost(btree_map="string, string", tag="2")]
+        pub http_headers: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+        /// Version of the protocol used by the endpoint. This is the protocol shared
+        /// by all fulfillment types and not specific to Google fulfillment type.
+        #[prost(int32, tag="3")]
+        pub endpoint_api_version: i32,
+    }
+    /// Holds the metadata of an inline Cloud Function deployed from the
+    /// webhooks folder.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InlineCloudFunction {
+        /// The name of the Cloud Function entry point. The value of this field
+        /// should match the name of the method exported from the source code.
+        #[prost(string, tag="1")]
+        pub execute_function: ::prost::alloc::string::String,
+    }
+    /// Only one webhook type is supported.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum WebhookType {
+        /// Custom webhook HTTPS endpoint.
+        #[prost(message, tag="2")]
+        HttpsEndpoint(HttpsEndpoint),
+        /// Metadata for cloud function deployed from code in the webhooks folder.
+        #[prost(message, tag="3")]
+        InlineCloudFunction(InlineCloudFunction),
+    }
+}
+/// Wrapper for repeated config files. Repeated fields cannot exist in a oneof.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConfigFiles {
+    /// Multiple config files.
+    #[prost(message, repeated, tag="1")]
+    pub config_files: ::prost::alloc::vec::Vec<ConfigFile>,
+}
+/// Represents a single file which contains structured data. Developers can
+/// define most of their project using structured config including Actions,
+/// Settings, Fulfillment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConfigFile {
+    /// Relative path of the config file from the project root in the SDK file
+    /// structure. Each file types below have an allowed file path.
+    /// Eg: settings/settings.yaml
+    #[prost(string, tag="1")]
+    pub file_path: ::prost::alloc::string::String,
+    /// Each type of config file should have a corresponding field in the oneof.
+    #[prost(oneof="config_file::File", tags="2, 3, 4, 6, 7, 8, 15, 9, 10, 11, 13, 12")]
+    pub file: ::core::option::Option<config_file::File>,
+}
+/// Nested message and enum types in `ConfigFile`.
+pub mod config_file {
+    /// Each type of config file should have a corresponding field in the oneof.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum File {
+        /// Single manifest file.
+        /// Allowed file path: `manifest.yaml`
+        #[prost(message, tag="2")]
+        Manifest(super::Manifest),
+        /// Single actions file with all the actions defined.
+        /// Allowed file paths: `actions/{language}?/actions.yaml`
+        #[prost(message, tag="3")]
+        Actions(super::Actions),
+        /// Single settings config which includes non-localizable settings and
+        /// settings for the project's default locale (if specified).
+        /// For a locale override file, only localized_settings field will be
+        /// populated.
+        /// Allowed file paths: `settings/{language}?/settings.yaml`
+        /// Note that the non-localized settings file `settings/settings.yaml` must
+        /// be present in the write flow requests.
+        #[prost(message, tag="4")]
+        Settings(super::Settings),
+        /// Single webhook definition.
+        /// Allowed file path: `webhooks/{WebhookName}.yaml`
+        #[prost(message, tag="6")]
+        Webhook(super::Webhook),
+        /// Single intent definition.
+        /// Allowed file paths: `custom/intents/{language}?/{IntentName}.yaml`
+        #[prost(message, tag="7")]
+        Intent(super::interactionmodel::Intent),
+        /// Single type definition.
+        /// Allowed file paths: `custom/types/{language}?/{TypeName}.yaml`
+        #[prost(message, tag="8")]
+        Type(super::interactionmodel::r#type::Type),
+        /// Single entity set definition.
+        /// Allowed file paths: `custom/entitySets/{language}?/{EntitySetName}.yaml`
+        #[prost(message, tag="15")]
+        EntitySet(super::interactionmodel::EntitySet),
+        /// Single global intent event definition.
+        /// Allowed file paths: `custom/global/{GlobalIntentEventName}.yaml`
+        /// The file name (GlobalIntentEventName) should be the name of the intent
+        /// that this global intent event corresponds to.
+        #[prost(message, tag="9")]
+        GlobalIntentEvent(super::interactionmodel::GlobalIntentEvent),
+        /// Single scene definition.
+        /// Allowed file paths: `custom/scenes/{SceneName}.yaml`
+        #[prost(message, tag="10")]
+        Scene(super::interactionmodel::Scene),
+        /// Single static prompt definition.
+        /// Allowed file paths: `custom/prompts/{language}?/{StaticPromptName}.yaml`
+        #[prost(message, tag="11")]
+        StaticPrompt(super::interactionmodel::prompt::StaticPrompt),
+        /// Metadata corresponding to the client secret used in account linking.
+        /// Allowed file path: `settings/accountLinkingSecret.yaml`
+        #[prost(message, tag="13")]
+        AccountLinkingSecret(super::AccountLinkingSecret),
+        /// Single resource bundle, which is a map from a string to a string or list
+        /// of strings. Resource bundles could be used for localizing strings in
+        /// static prompts.
+        /// Allowed file paths: `resources/strings/{language}?/{multiple
+        /// directories}?/{BundleName}.yaml`
+        #[prost(message, tag="12")]
+        ResourceBundle(::prost_types::Struct),
+    }
+}
+/// Wrapper for repeated data file. Repeated fields cannot exist in a oneof.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataFiles {
+    /// Multiple data files.
+    #[prost(message, repeated, tag="1")]
+    pub data_files: ::prost::alloc::vec::Vec<DataFile>,
+}
+/// Represents a single file which contains unstructured data. Examples include
+/// image files, audio files, and cloud function source code.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataFile {
+    /// Relative path of the data file from the project root in the SDK file
+    /// structure.
+    /// Allowed file paths:
+    ///     - Images: `resources/images/{multiple
+    ///     directories}?/{ImageName}.{extension}`
+    ///     - Audio: `resources/audio/{multiple
+    ///     directories}?/{AudioFileName}.{extension}`
+    ///     - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
+    /// Allowed extensions:
+    ///     - Images: `png`, `jpg`, `jpeg`
+    ///     - Audio: `mp3`, `mpeg`
+    ///     - Inline Cloud Functions: `zip`
+    #[prost(string, tag="1")]
+    pub file_path: ::prost::alloc::string::String,
+    /// Required. The content type of this asset. Example: `text/html`. The content
+    /// type must comply with the specification
+    /// (<http://www.w3.org/Protocols/rfc1341/4_Content-Type.html>).
+    /// Cloud functions must be in zip format and the content type should
+    /// be `application/zip;zip_type=cloud_function`. The zip_type parameter
+    /// indicates that the zip is for a cloud function.
+    #[prost(string, tag="2")]
+    pub content_type: ::prost::alloc::string::String,
+    /// Content of the data file. Examples would be raw bytes of images, audio
+    /// files, or cloud function zip format.
+    /// There is 10 MB strict limit on the payload size.
+    #[prost(bytes="bytes", tag="3")]
+    pub payload: ::prost::bytes::Bytes,
+}
+/// Wrapper for a list of files.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Files {
+    /// Only one type of files can be sent to the server at a time, config files or
+    /// data files.
+    #[prost(oneof="files::FileType", tags="1, 2")]
+    pub file_type: ::core::option::Option<files::FileType>,
+}
+/// Nested message and enum types in `Files`.
+pub mod files {
+    /// Only one type of files can be sent to the server at a time, config files or
+    /// data files.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum FileType {
+        /// List of config files. This includes manifest, settings, interaction model
+        /// resource bundles and more.
+        #[prost(message, tag="1")]
+        ConfigFiles(super::ConfigFiles),
+        /// List of data files. This includes image, audio file, cloud function
+        /// source code.
+        #[prost(message, tag="2")]
+        DataFiles(super::DataFiles),
+    }
+}
+/// Definition of version resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Version {
+    /// The unique identifier of the version in the following format.
+    /// `projects/{project}/versions/{version}`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// Version currently deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag="2")]
-    pub current_version: ::prost::alloc::string::String,
-    /// Version to be deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
+    /// The current state of the version.
+    #[prost(message, optional, tag="2")]
+    pub version_state: ::core::option::Option<version::VersionState>,
+    /// Email of the user who created this version.
     #[prost(string, tag="3")]
-    pub pending_version: ::prost::alloc::string::String,
+    pub creator: ::prost::alloc::string::String,
+    /// Timestamp of the last change to this version.
+    #[prost(message, optional, tag="4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `Version`.
+pub mod version {
+    /// Represents the current state of the version.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct VersionState {
+        /// The current state of the version.
+        #[prost(enumeration="version_state::State", tag="1")]
+        pub state: i32,
+        /// User-friendly message for the current state of the version.
+        #[prost(string, tag="2")]
+        pub message: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `VersionState`.
+    pub mod version_state {
+        /// Enum indicating the states that a Version can take. This enum is not yet
+        /// frozen and values maybe added later.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum State {
+            /// Default value of State.
+            Unspecified = 0,
+            /// The version creation is in progress.
+            CreationInProgress = 1,
+            /// The version creation failed.
+            CreationFailed = 2,
+            /// The version has been successfully created.
+            Created = 3,
+            /// The version is under policy review (aka Approval).
+            ReviewInProgress = 4,
+            /// The version has been approved for policy review and can be deployed.
+            Approved = 5,
+            /// The version has been conditionally approved but is pending final
+            /// review. It may be rolled back if final review is denied.
+            ConditionallyApproved = 6,
+            /// The version has been denied for policy review.
+            Denied = 7,
+            /// The version is taken down as entire agent and all versions are taken
+            /// down.
+            UnderTakedown = 8,
+            /// The version has been deleted.
+            Deleted = 9,
+        }
+    }
+}
+/// Wrapper for repeated validation result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResults {
+    /// Multiple validation results.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
+}
+/// Represents a validation result associated with the app content.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResult {
+    /// Holds the validation message.
+    #[prost(string, tag="1")]
+    pub validation_message: ::prost::alloc::string::String,
+    /// Context to identify the resource the validation message relates to.
+    #[prost(message, optional, tag="2")]
+    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
+}
+/// Nested message and enum types in `ValidationResult`.
+pub mod validation_result {
+    /// Context to identify the resource the validation message relates to.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValidationContext {
+        /// Language code of the lozalized resource.
+        /// Empty if the error is for non-localized resource.
+        /// See the list of supported languages in
+        /// <https://developers.google.com/assistant/console/languages-locales>
+        #[prost(string, tag="1")]
+        pub language_code: ::prost::alloc::string::String,
+    }
 }
 /// Contains information about execution event which happened during processing
 /// Actions Builder conversation request. For an overview of the stages involved
@@ -998,430 +1407,21 @@ pub mod actions_testing_client {
         }
     }
 }
-/// Contains information that's "transportable" i.e. not specific to any given
-/// project and can be moved between projects.
+/// Definition of release channel resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Manifest {
-    /// Version of the file format. The current file format version is 1.0
-    /// Example: "1.0"
-    #[prost(string, tag="1")]
-    pub version: ::prost::alloc::string::String,
-}
-/// Represents the list of Actions defined in a project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Actions {
-    /// Map from intents to custom Actions to configure invocation for the project.
-    /// The invocation intents could either be system or custom intents defined
-    /// in the "custom/intents/" package. All intents defined here (system
-    /// intents & custom intents) must have a corresponding intent file in the
-    /// "custom/global/" package.
-    #[prost(btree_map="string, message", tag="3")]
-    pub custom: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, actions::CustomAction>,
-}
-/// Nested message and enum types in `Actions`.
-pub mod actions {
-    /// Defines the engagement mechanisms associated with this action. This
-    /// allows end users to subscribe to push notification and daily update.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Engagement {
-        /// The title of the engagement that will be sent to end users asking for
-        /// their permission to receive updates. The prompt sent to end users for
-        /// daily updates will look like "What time would you like me to send your
-        /// daily {title}" and for push notifications will look like
-        /// "Is it ok if I send push notifications for {title}".
-        /// **This field is localizable.**
-        #[prost(string, tag="1")]
-        pub title: ::prost::alloc::string::String,
-        /// Push notification settings that this engagement supports.
-        #[prost(message, optional, tag="2")]
-        pub push_notification: ::core::option::Option<engagement::PushNotification>,
-        /// Link config for an action which determines whether sharing links is
-        /// enabled for the action and if so, contains the user friendly display name
-        /// for the link.
-        /// ActionLink is deprecated. Use AssistantLink instead.
-        #[deprecated]
-        #[prost(message, optional, tag="4")]
-        pub action_link: ::core::option::Option<engagement::ActionLink>,
-        /// Link config for an action which determines whether sharing links is
-        /// enabled for the action and if so, contains the user friendly display name
-        /// for the link.
-        #[prost(message, optional, tag="6")]
-        pub assistant_link: ::core::option::Option<engagement::AssistantLink>,
-        /// Recurring update settings that this engagement supports.
-        #[prost(oneof="engagement::RecurringUpdate", tags="3")]
-        pub recurring_update: ::core::option::Option<engagement::RecurringUpdate>,
-    }
-    /// Nested message and enum types in `Engagement`.
-    pub mod engagement {
-        /// Defines push notification settings that this engagement supports.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct PushNotification {
-        }
-        /// Defines daily update settings that this engagement supports.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct DailyUpdate {
-        }
-        /// Indicates whether sharing links is enabled for this action and the
-        /// corresponding settings. Action links are used to deep link a user into a
-        /// specific action.
-        /// ActionLink is deprecated. Use AssistantLink instead.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ActionLink {
-            /// User friendly display title for the link.
-            #[prost(string, tag="1")]
-            pub title: ::prost::alloc::string::String,
-        }
-        /// Indicates whether sharing links is enabled for this action and the
-        /// corresponding settings. Assistant links are used to deep link a user into
-        /// a specific action.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct AssistantLink {
-            /// User friendly display title for the link.
-            #[prost(string, tag="1")]
-            pub title: ::prost::alloc::string::String,
-        }
-        /// Recurring update settings that this engagement supports.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum RecurringUpdate {
-            /// Daily update settings that this engagement supports.
-            #[prost(message, tag="3")]
-            DailyUpdate(DailyUpdate),
-        }
-    }
-    /// Details regarding a custom action.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CustomAction {
-        /// Engagement mechanisms associated with the action to help end users
-        /// subscribe to push notifications and daily updates.
-        /// Note that the intent name specified in daily updates/push notifications
-        /// slot config needs to match the intent corresponding to this action for
-        /// end users to subscribe to these updates.
-        #[prost(message, optional, tag="2")]
-        pub engagement: ::core::option::Option<Engagement>,
-    }
-}
-/// Information about the encrypted OAuth client secret used in account linking
-/// flows (for AUTH_CODE grant type).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLinkingSecret {
-    /// Encrypted account linking client secret ciphertext.
-    #[prost(bytes="bytes", tag="1")]
-    pub encrypted_client_secret: ::prost::bytes::Bytes,
-    /// The version of the crypto key used to encrypt the account linking client
-    /// secret.
-    /// Note that this field is ignored in push, preview, and version creation
-    /// flows.
-    #[prost(string, tag="2")]
-    pub encryption_key_version: ::prost::alloc::string::String,
-}
-/// Metadata for different types of webhooks. If you're using
-/// `inlineCloudFunction`, your source code must be in a directory with the same
-/// name as the value for the `executeFunction` key.
-/// For example, a value of `my_webhook` for the`executeFunction` key would have
-/// a code structure like this:
-///  - `/webhooks/my_webhook.yaml`
-///  - `/webhooks/my_webhook/index.js`
-///  - `/webhooks/my_webhook/package.json`
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Webhook {
-    /// List of handlers for this webhook.
-    #[prost(message, repeated, tag="1")]
-    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
-    /// Only one webhook type is supported.
-    #[prost(oneof="webhook::WebhookType", tags="2, 3")]
-    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
-}
-/// Nested message and enum types in `Webhook`.
-pub mod webhook {
-    /// Declares the name of the webhoook handler. A webhook can have
-    /// multiple handlers registered. These handlers can be called from multiple
-    /// places in your Actions project.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Handler {
-        /// Required. Name of the handler. Must be unique across all handlers the Actions
-        /// project. You can check the name of this handler to invoke the correct
-        /// function in your fulfillment source code.
-        #[prost(string, tag="1")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// REST endpoint to notify if you're not using the inline editor.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct HttpsEndpoint {
-        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
-        /// Handler names are appended to the base URL path after a colon
-        /// (following the style guide in
-        /// <https://cloud.google.com/apis/design/custom_methods>).
-        /// For example a base URL of '<https://gactions.service.com/api'> would
-        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
-        #[prost(string, tag="1")]
-        pub base_url: ::prost::alloc::string::String,
-        /// Map of HTTP parameters to be included in the POST request.
-        #[prost(btree_map="string, string", tag="2")]
-        pub http_headers: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-        /// Version of the protocol used by the endpoint. This is the protocol shared
-        /// by all fulfillment types and not specific to Google fulfillment type.
-        #[prost(int32, tag="3")]
-        pub endpoint_api_version: i32,
-    }
-    /// Holds the metadata of an inline Cloud Function deployed from the
-    /// webhooks folder.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InlineCloudFunction {
-        /// The name of the Cloud Function entry point. The value of this field
-        /// should match the name of the method exported from the source code.
-        #[prost(string, tag="1")]
-        pub execute_function: ::prost::alloc::string::String,
-    }
-    /// Only one webhook type is supported.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum WebhookType {
-        /// Custom webhook HTTPS endpoint.
-        #[prost(message, tag="2")]
-        HttpsEndpoint(HttpsEndpoint),
-        /// Metadata for cloud function deployed from code in the webhooks folder.
-        #[prost(message, tag="3")]
-        InlineCloudFunction(InlineCloudFunction),
-    }
-}
-/// Wrapper for repeated config files. Repeated fields cannot exist in a oneof.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConfigFiles {
-    /// Multiple config files.
-    #[prost(message, repeated, tag="1")]
-    pub config_files: ::prost::alloc::vec::Vec<ConfigFile>,
-}
-/// Represents a single file which contains structured data. Developers can
-/// define most of their project using structured config including Actions,
-/// Settings, Fulfillment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConfigFile {
-    /// Relative path of the config file from the project root in the SDK file
-    /// structure. Each file types below have an allowed file path.
-    /// Eg: settings/settings.yaml
-    #[prost(string, tag="1")]
-    pub file_path: ::prost::alloc::string::String,
-    /// Each type of config file should have a corresponding field in the oneof.
-    #[prost(oneof="config_file::File", tags="2, 3, 4, 6, 7, 8, 15, 9, 10, 11, 13, 12")]
-    pub file: ::core::option::Option<config_file::File>,
-}
-/// Nested message and enum types in `ConfigFile`.
-pub mod config_file {
-    /// Each type of config file should have a corresponding field in the oneof.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum File {
-        /// Single manifest file.
-        /// Allowed file path: `manifest.yaml`
-        #[prost(message, tag="2")]
-        Manifest(super::Manifest),
-        /// Single actions file with all the actions defined.
-        /// Allowed file paths: `actions/{language}?/actions.yaml`
-        #[prost(message, tag="3")]
-        Actions(super::Actions),
-        /// Single settings config which includes non-localizable settings and
-        /// settings for the project's default locale (if specified).
-        /// For a locale override file, only localized_settings field will be
-        /// populated.
-        /// Allowed file paths: `settings/{language}?/settings.yaml`
-        /// Note that the non-localized settings file `settings/settings.yaml` must
-        /// be present in the write flow requests.
-        #[prost(message, tag="4")]
-        Settings(super::Settings),
-        /// Single webhook definition.
-        /// Allowed file path: `webhooks/{WebhookName}.yaml`
-        #[prost(message, tag="6")]
-        Webhook(super::Webhook),
-        /// Single intent definition.
-        /// Allowed file paths: `custom/intents/{language}?/{IntentName}.yaml`
-        #[prost(message, tag="7")]
-        Intent(super::interactionmodel::Intent),
-        /// Single type definition.
-        /// Allowed file paths: `custom/types/{language}?/{TypeName}.yaml`
-        #[prost(message, tag="8")]
-        Type(super::interactionmodel::r#type::Type),
-        /// Single entity set definition.
-        /// Allowed file paths: `custom/entitySets/{language}?/{EntitySetName}.yaml`
-        #[prost(message, tag="15")]
-        EntitySet(super::interactionmodel::EntitySet),
-        /// Single global intent event definition.
-        /// Allowed file paths: `custom/global/{GlobalIntentEventName}.yaml`
-        /// The file name (GlobalIntentEventName) should be the name of the intent
-        /// that this global intent event corresponds to.
-        #[prost(message, tag="9")]
-        GlobalIntentEvent(super::interactionmodel::GlobalIntentEvent),
-        /// Single scene definition.
-        /// Allowed file paths: `custom/scenes/{SceneName}.yaml`
-        #[prost(message, tag="10")]
-        Scene(super::interactionmodel::Scene),
-        /// Single static prompt definition.
-        /// Allowed file paths: `custom/prompts/{language}?/{StaticPromptName}.yaml`
-        #[prost(message, tag="11")]
-        StaticPrompt(super::interactionmodel::prompt::StaticPrompt),
-        /// Metadata corresponding to the client secret used in account linking.
-        /// Allowed file path: `settings/accountLinkingSecret.yaml`
-        #[prost(message, tag="13")]
-        AccountLinkingSecret(super::AccountLinkingSecret),
-        /// Single resource bundle, which is a map from a string to a string or list
-        /// of strings. Resource bundles could be used for localizing strings in
-        /// static prompts.
-        /// Allowed file paths: `resources/strings/{language}?/{multiple
-        /// directories}?/{BundleName}.yaml`
-        #[prost(message, tag="12")]
-        ResourceBundle(::prost_types::Struct),
-    }
-}
-/// Wrapper for repeated data file. Repeated fields cannot exist in a oneof.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataFiles {
-    /// Multiple data files.
-    #[prost(message, repeated, tag="1")]
-    pub data_files: ::prost::alloc::vec::Vec<DataFile>,
-}
-/// Represents a single file which contains unstructured data. Examples include
-/// image files, audio files, and cloud function source code.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataFile {
-    /// Relative path of the data file from the project root in the SDK file
-    /// structure.
-    /// Allowed file paths:
-    ///     - Images: `resources/images/{multiple
-    ///     directories}?/{ImageName}.{extension}`
-    ///     - Audio: `resources/audio/{multiple
-    ///     directories}?/{AudioFileName}.{extension}`
-    ///     - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
-    /// Allowed extensions:
-    ///     - Images: `png`, `jpg`, `jpeg`
-    ///     - Audio: `mp3`, `mpeg`
-    ///     - Inline Cloud Functions: `zip`
-    #[prost(string, tag="1")]
-    pub file_path: ::prost::alloc::string::String,
-    /// Required. The content type of this asset. Example: `text/html`. The content
-    /// type must comply with the specification
-    /// (<http://www.w3.org/Protocols/rfc1341/4_Content-Type.html>).
-    /// Cloud functions must be in zip format and the content type should
-    /// be `application/zip;zip_type=cloud_function`. The zip_type parameter
-    /// indicates that the zip is for a cloud function.
-    #[prost(string, tag="2")]
-    pub content_type: ::prost::alloc::string::String,
-    /// Content of the data file. Examples would be raw bytes of images, audio
-    /// files, or cloud function zip format.
-    /// There is 10 MB strict limit on the payload size.
-    #[prost(bytes="bytes", tag="3")]
-    pub payload: ::prost::bytes::Bytes,
-}
-/// Wrapper for a list of files.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Files {
-    /// Only one type of files can be sent to the server at a time, config files or
-    /// data files.
-    #[prost(oneof="files::FileType", tags="1, 2")]
-    pub file_type: ::core::option::Option<files::FileType>,
-}
-/// Nested message and enum types in `Files`.
-pub mod files {
-    /// Only one type of files can be sent to the server at a time, config files or
-    /// data files.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum FileType {
-        /// List of config files. This includes manifest, settings, interaction model
-        /// resource bundles and more.
-        #[prost(message, tag="1")]
-        ConfigFiles(super::ConfigFiles),
-        /// List of data files. This includes image, audio file, cloud function
-        /// source code.
-        #[prost(message, tag="2")]
-        DataFiles(super::DataFiles),
-    }
-}
-/// Wrapper for repeated validation result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResults {
-    /// Multiple validation results.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
-}
-/// Represents a validation result associated with the app content.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResult {
-    /// Holds the validation message.
-    #[prost(string, tag="1")]
-    pub validation_message: ::prost::alloc::string::String,
-    /// Context to identify the resource the validation message relates to.
-    #[prost(message, optional, tag="2")]
-    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
-}
-/// Nested message and enum types in `ValidationResult`.
-pub mod validation_result {
-    /// Context to identify the resource the validation message relates to.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValidationContext {
-        /// Language code of the lozalized resource.
-        /// Empty if the error is for non-localized resource.
-        /// See the list of supported languages in
-        /// <https://developers.google.com/assistant/console/languages-locales>
-        #[prost(string, tag="1")]
-        pub language_code: ::prost::alloc::string::String,
-    }
-}
-/// Definition of version resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Version {
-    /// The unique identifier of the version in the following format.
-    /// `projects/{project}/versions/{version}`.
+pub struct ReleaseChannel {
+    /// The unique name of the release channel in the following format.
+    /// `projects/{project}/releaseChannels/{release_channel}`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// The current state of the version.
-    #[prost(message, optional, tag="2")]
-    pub version_state: ::core::option::Option<version::VersionState>,
-    /// Email of the user who created this version.
+    /// Version currently deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag="2")]
+    pub current_version: ::prost::alloc::string::String,
+    /// Version to be deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
     #[prost(string, tag="3")]
-    pub creator: ::prost::alloc::string::String,
-    /// Timestamp of the last change to this version.
-    #[prost(message, optional, tag="4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `Version`.
-pub mod version {
-    /// Represents the current state of the version.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct VersionState {
-        /// The current state of the version.
-        #[prost(enumeration="version_state::State", tag="1")]
-        pub state: i32,
-        /// User-friendly message for the current state of the version.
-        #[prost(string, tag="2")]
-        pub message: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `VersionState`.
-    pub mod version_state {
-        /// Enum indicating the states that a Version can take. This enum is not yet
-        /// frozen and values maybe added later.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum State {
-            /// Default value of State.
-            Unspecified = 0,
-            /// The version creation is in progress.
-            CreationInProgress = 1,
-            /// The version creation failed.
-            CreationFailed = 2,
-            /// The version has been successfully created.
-            Created = 3,
-            /// The version is under policy review (aka Approval).
-            ReviewInProgress = 4,
-            /// The version has been approved for policy review and can be deployed.
-            Approved = 5,
-            /// The version has been conditionally approved but is pending final
-            /// review. It may be rolled back if final review is denied.
-            ConditionallyApproved = 6,
-            /// The version has been denied for policy review.
-            Denied = 7,
-            /// The version is taken down as entire agent and all versions are taken
-            /// down.
-            UnderTakedown = 8,
-            /// The version has been deleted.
-            Deleted = 9,
-        }
-    }
+    pub pending_version: ::prost::alloc::string::String,
 }
 /// Streaming RPC request for WriteDraft.
 #[derive(Clone, PartialEq, ::prost::Message)]
