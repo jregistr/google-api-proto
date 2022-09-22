@@ -278,6 +278,7 @@ pub mod cloud;
         feature = "google-cloud-securitycenter-v1",
         feature = "google-cloud-securitycenter-v1beta1",
         feature = "google-cloud-securitycenter-v1p1beta1",
+        feature = "google-cloud-sensitiveaction-logging-v1",
         feature = "google-cloud-servicedirectory-v1",
         feature = "google-cloud-servicedirectory-v1beta1",
         feature = "google-cloud-shell-v1",

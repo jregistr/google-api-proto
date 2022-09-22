@@ -478,6 +478,8 @@ pub mod security;
     )
 )]
 pub mod securitycenter;
+#[cfg(any(feature = "google-cloud-sensitiveaction-logging-v1"))]
+pub mod sensitiveaction;
 #[cfg(
     any(
         feature = "google-cloud-servicedirectory-v1",
