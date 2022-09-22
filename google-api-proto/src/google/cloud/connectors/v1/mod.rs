@@ -244,6 +244,82 @@ pub enum LaunchStage {
     /// DEPRECATED.
     Deprecated = 3,
 }
+/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connector {
+    /// Output only. Resource name of the Connector.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag="6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag="7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag="8")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag="9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag="10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration="LaunchStage", tag="11")]
+    pub launch_stage: i32,
+}
+/// Request message for Connectors.GetConnector.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for Connectors.ListConnectors.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListConnectors.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsResponse {
+    /// A list of connectors.
+    #[prost(message, repeated, tag="1")]
+    pub connectors: ::prost::alloc::vec::Vec<Connector>,
+    /// Next page token.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag="3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// AuthConfig defines details of a authentication type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthConfig {
@@ -905,82 +981,6 @@ pub enum ConnectionView {
     Basic = 1,
     /// Include runtime required configs.
     Full = 2,
-}
-/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connector {
-    /// Output only. Resource name of the Connector.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag="6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag="7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag="8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag="9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag="10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration="LaunchStage", tag="11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetConnector.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListConnectors.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListConnectors.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsResponse {
-    /// A list of connectors.
-    #[prost(message, repeated, tag="1")]
-    pub connectors: ::prost::alloc::vec::Vec<Connector>,
-    /// Next page token.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// ConnectorVersion indicates a specific version of a connector.
 #[derive(Clone, PartialEq, ::prost::Message)]

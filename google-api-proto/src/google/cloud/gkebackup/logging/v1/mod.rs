@@ -1,3 +1,36 @@
+/// Namespaces, list of namespaces
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Namespaces {
+    /// namespaces
+    #[prost(string, repeated, tag="1")]
+    pub namespaces: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// NamespacedName
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NamespacedName {
+    /// the namespace of the resource in Kubernetes
+    #[prost(string, tag="1")]
+    pub namespace: ::prost::alloc::string::String,
+    /// the name of the resource in Kubernetes
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+}
+/// NamespacedNames
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NamespacedNames {
+    /// a list of namespaced names in Kubernetes
+    #[prost(message, repeated, tag="1")]
+    pub namespaced_names: ::prost::alloc::vec::Vec<NamespacedName>,
+}
+/// Encryption key.
+/// This only contains the key metadata, and no key material.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EncryptionKey {
+    /// Google KMS encryption key in the format:
+    /// projects/<project>/locations/<location>/keyRings/<key-ring>/cryptoKeys/<key>
+    #[prost(string, tag="1")]
+    pub gcp_kms_encryption_key: ::prost::alloc::string::String,
+}
 /// Backup as stored in Platform log. It's used to log the details of
 /// a createBackup/updateBackup request, so only fields that can be taken
 /// from API calls are included here.
@@ -46,39 +79,6 @@ pub mod logged_backup {
         /// of being deleted.
         Deleting = 5,
     }
-}
-/// Namespaces, list of namespaces
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Namespaces {
-    /// namespaces
-    #[prost(string, repeated, tag="1")]
-    pub namespaces: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// NamespacedName
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NamespacedName {
-    /// the namespace of the resource in Kubernetes
-    #[prost(string, tag="1")]
-    pub namespace: ::prost::alloc::string::String,
-    /// the name of the resource in Kubernetes
-    #[prost(string, tag="2")]
-    pub name: ::prost::alloc::string::String,
-}
-/// NamespacedNames
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NamespacedNames {
-    /// a list of namespaced names in Kubernetes
-    #[prost(message, repeated, tag="1")]
-    pub namespaced_names: ::prost::alloc::vec::Vec<NamespacedName>,
-}
-/// Encryption key.
-/// This only contains the key metadata, and no key material.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EncryptionKey {
-    /// Google KMS encryption key in the format:
-    /// projects/<project>/locations/<location>/keyRings/<key-ring>/cryptoKeys/<key>
-    #[prost(string, tag="1")]
-    pub gcp_kms_encryption_key: ::prost::alloc::string::String,
 }
 /// BackupPlan as stored in Platform log. It's used to log the details of
 /// a createBackupPlan/updateBackupPlan request, so only fields that can be taken
