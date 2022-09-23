@@ -3501,6 +3501,10 @@ pub struct Model {
     /// Model and all sub-resources of this Model will be secured by this key.
     #[prost(message, optional, tag="24")]
     pub encryption_spec: ::core::option::Option<EncryptionSpec>,
+    /// Output only. Source of a model. It can either be automl training pipeline, custom
+    /// training pipeline, BigQuery ML, or existing Vertex AI Model.
+    #[prost(message, optional, tag="38")]
+    pub model_source_info: ::core::option::Option<ModelSourceInfo>,
 }
 /// Nested message and enum types in `Model`.
 pub mod model {
@@ -3830,6 +3834,29 @@ pub struct Port {
     /// Must be a valid port number, between 1 and 65535 inclusive.
     #[prost(int32, tag="3")]
     pub container_port: i32,
+}
+/// Detail description of the source information of the model.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ModelSourceInfo {
+    /// Type of the model source.
+    #[prost(enumeration="model_source_info::ModelSourceType", tag="1")]
+    pub source_type: i32,
+}
+/// Nested message and enum types in `ModelSourceInfo`.
+pub mod model_source_info {
+    /// Source of the model.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ModelSourceType {
+        /// Should not be used.
+        Unspecified = 0,
+        /// The Model is uploaded by automl training pipeline.
+        Automl = 1,
+        /// The Model is uploaded by user or custom training pipeline.
+        Custom = 2,
+        /// The Model is registered and sync'ed from BigQuery ML.
+        Bqml = 3,
+    }
 }
 /// Describes the state of a pipeline.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
