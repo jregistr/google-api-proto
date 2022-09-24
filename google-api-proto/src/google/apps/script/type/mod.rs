@@ -10,37 +10,6 @@ pub mod gmail;
 pub mod sheets;
 #[cfg(any(feature = "google-apps-script-type-slides"))]
 pub mod slides;
-/// The widget subset used by an add-on.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AddOnWidgetSet {
-    /// The list of widgets used in an add-on.
-    #[prost(enumeration="add_on_widget_set::WidgetType", repeated, tag="1")]
-    pub used_widgets: ::prost::alloc::vec::Vec<i32>,
-}
-/// Nested message and enum types in `AddOnWidgetSet`.
-pub mod add_on_widget_set {
-    /// The Widget type. DEFAULT is the basic widget set.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum WidgetType {
-        /// The default widget set.
-        Unspecified = 0,
-        /// The date picker.
-        DatePicker = 1,
-        /// Styled buttons include filled buttons and disabled buttons.
-        StyledButtons = 2,
-        /// Persistent forms allow persisting form values during actions.
-        PersistentForms = 3,
-        /// Fixed footer in card.
-        FixedFooter = 4,
-        /// Update the subject and recipients of a draft.
-        UpdateSubjectAndRecipients = 5,
-        /// The grid widget.
-        GridWidget = 6,
-        /// A Gmail add-on action that applies to the addon compose UI.
-        AddonComposeUiAction = 7,
-    }
-}
 // Common Manifest protos for G Suite extension-point configuration.
 
 /// Common format for declaring a  menu item, or button, that appears within a
@@ -101,6 +70,37 @@ pub mod universal_action_extension_point {
         /// Endpoint to be run by the UniversalAction.
         #[prost(string, tag="3")]
         RunFunction(::prost::alloc::string::String),
+    }
+}
+/// The widget subset used by an add-on.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AddOnWidgetSet {
+    /// The list of widgets used in an add-on.
+    #[prost(enumeration="add_on_widget_set::WidgetType", repeated, tag="1")]
+    pub used_widgets: ::prost::alloc::vec::Vec<i32>,
+}
+/// Nested message and enum types in `AddOnWidgetSet`.
+pub mod add_on_widget_set {
+    /// The Widget type. DEFAULT is the basic widget set.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum WidgetType {
+        /// The default widget set.
+        Unspecified = 0,
+        /// The date picker.
+        DatePicker = 1,
+        /// Styled buttons include filled buttons and disabled buttons.
+        StyledButtons = 2,
+        /// Persistent forms allow persisting form values during actions.
+        PersistentForms = 3,
+        /// Fixed footer in card.
+        FixedFooter = 4,
+        /// Update the subject and recipients of a draft.
+        UpdateSubjectAndRecipients = 5,
+        /// The grid widget.
+        GridWidget = 6,
+        /// A Gmail add-on action that applies to the addon compose UI.
+        AddonComposeUiAction = 7,
     }
 }
 /// Add-on configuration that is shared across all add-on host applications.

@@ -1,84 +1,3 @@
-/// DockerImage represents a docker artifact.
-/// The following fields are returned as untyped metadata in the Version
-/// resource, using camelcase keys (i.e. metadata.imageSizeBytes):
-/// * imageSizeBytes
-/// * mediaType
-/// * buildTime
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DockerImage {
-    /// Required. registry_location, project_id, repository_name and image id forms a unique
-    /// image
-    /// name:`projects/<project_id>/locations/<location>/repository/<repository_name>/dockerImages/<docker_image>`.
-    /// For example,
-    /// "projects/test-project/locations/us-west4/repositories/test-repo/dockerImages/
-    /// nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf",
-    /// where "us-west4" is the registry_location, "test-project" is the
-    /// project_id, "test-repo" is the repository_name and
-    /// "nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf"
-    /// is the image's digest.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. URL to access the image.
-    /// Example:
-    /// us-west4-docker.pkg.dev/test-project/test-repo/nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf
-    #[prost(string, tag="2")]
-    pub uri: ::prost::alloc::string::String,
-    /// Tags attached to this image.
-    #[prost(string, repeated, tag="3")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Calculated size of the image.
-    /// This field is returned as the 'metadata.imageSizeBytes' field in the
-    /// Version resource.
-    #[prost(int64, tag="4")]
-    pub image_size_bytes: i64,
-    /// Time the image was uploaded.
-    #[prost(message, optional, tag="5")]
-    pub upload_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Media type of this image, e.g.
-    /// "application/vnd.docker.distribution.manifest.v2+json".
-    /// This field is returned as the 'metadata.mediaType' field in the
-    /// Version resource.
-    #[prost(string, tag="6")]
-    pub media_type: ::prost::alloc::string::String,
-    /// The time this image was built.
-    /// This field is returned as the 'metadata.buildTime' field in the
-    /// Version resource.
-    /// The build time is returned to the client as an RFC 3339 string, which can
-    /// be easily used with the JavaScript Date constructor.
-    #[prost(message, optional, tag="7")]
-    pub build_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The request to list docker images.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDockerImagesRequest {
-    /// Required. The name of the parent resource whose docker images will be listed.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of artifacts to return.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The next_page_token value returned from a previous list request, if any.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The response from listing docker images.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDockerImagesResponse {
-    /// The docker images returned.
-    #[prost(message, repeated, tag="1")]
-    pub docker_images: ::prost::alloc::vec::Vec<DockerImage>,
-    /// The token to retrieve the next page of artifacts, or empty if there are no
-    /// more artifacts to return.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The request to get docker images.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetDockerImageRequest {
-    /// Required. The name of the docker images.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
 /// A Repository for storing artifacts with a specific format.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Repository {
@@ -329,6 +248,101 @@ pub struct DeleteTagRequest {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
+/// The body of a version resource. A version resource represents a
+/// collection of components, such as files and other data. This may correspond
+/// to a version in many package management schemes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Version {
+    /// The name of the version, for example:
+    /// "projects/p1/locations/us-central1/repositories/repo1/packages/pkg1/versions/art1".
+    /// If the package or version ID parts contain slashes, the slashes are
+    /// escaped.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Description of the version, as specified in its metadata.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The time when the version was created.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time when the version was last updated.
+    #[prost(message, optional, tag="6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. A list of related tags. Will contain up to 100 tags that
+    /// reference this version.
+    #[prost(message, repeated, tag="7")]
+    pub related_tags: ::prost::alloc::vec::Vec<Tag>,
+    /// Output only. Repository-specific Metadata stored against this version.
+    /// The fields returned are defined by the underlying repository-specific
+    /// resource. Currently, the only resource in use is
+    /// \[DockerImage][google.devtools.artifactregistry.v1.DockerImage\]
+    #[prost(message, optional, tag="8")]
+    pub metadata: ::core::option::Option<::prost_types::Struct>,
+}
+/// The request to list versions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListVersionsRequest {
+    /// The name of the parent resource whose versions will be listed.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of versions to return. Maximum page size is 1,000.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The next_page_token value returned from a previous list request, if any.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The view that should be returned in the response.
+    #[prost(enumeration="VersionView", tag="4")]
+    pub view: i32,
+    /// Optional. The field to order the results by.
+    #[prost(string, tag="5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// The response from listing versions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListVersionsResponse {
+    /// The versions returned.
+    #[prost(message, repeated, tag="1")]
+    pub versions: ::prost::alloc::vec::Vec<Version>,
+    /// The token to retrieve the next page of versions, or empty if there are no
+    /// more versions to return.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The request to retrieve a version.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetVersionRequest {
+    /// The name of the version to retrieve.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The view that should be returned in the response.
+    #[prost(enumeration="VersionView", tag="2")]
+    pub view: i32,
+}
+/// The request to delete a version.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteVersionRequest {
+    /// The name of the version to delete.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// By default, a version that is tagged may not be deleted. If force=true, the
+    /// version and any tags pointing to the version are deleted.
+    #[prost(bool, tag="2")]
+    pub force: bool,
+}
+/// The view, which determines what version information is returned in a
+/// response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VersionView {
+    /// The default / unset value.
+    /// The API will default to the BASIC view.
+    Unspecified = 0,
+    /// Includes basic information about the version, but not any related tags.
+    Basic = 1,
+    /// Include everything.
+    Full = 2,
+}
 /// Packages are named collections of versions.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Package {
@@ -385,55 +399,6 @@ pub struct DeletePackageRequest {
     /// Required. The name of the package to delete.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-}
-/// The Artifact Registry settings that apply to a Project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProjectSettings {
-    /// The name of the project's settings.
-    ///
-    /// Always of the form:
-    /// projects/{project-id}/projectSettings
-    ///
-    /// In update request: never set
-    /// In response: always set
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The redirection state of the legacy repositories in this project.
-    #[prost(enumeration="project_settings::RedirectionState", tag="2")]
-    pub legacy_redirection_state: i32,
-}
-/// Nested message and enum types in `ProjectSettings`.
-pub mod project_settings {
-    /// The possible redirection states for legacy repositories.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum RedirectionState {
-        /// No redirection status has been set.
-        Unspecified = 0,
-        /// Redirection is disabled.
-        RedirectionFromGcrIoDisabled = 1,
-        /// Redirection is enabled.
-        RedirectionFromGcrIoEnabled = 2,
-        /// Redirection is enabled, and has been finalized so cannot be reverted.
-        RedirectionFromGcrIoFinalized = 3,
-    }
-}
-/// Gets the redirection status for a project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetProjectSettingsRequest {
-    /// Required. The name of the projectSettings resource.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Sets the settings of the project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateProjectSettingsRequest {
-    /// The project settings.
-    #[prost(message, optional, tag="2")]
-    pub project_settings: ::core::option::Option<ProjectSettings>,
-    /// Field mask to support partial updates.
-    #[prost(message, optional, tag="3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// A detailed representation of an Apt artifact. Information in the record
 /// is derived from the archive's control file.
@@ -634,100 +599,135 @@ pub struct GetFileRequest {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
-/// The body of a version resource. A version resource represents a
-/// collection of components, such as files and other data. This may correspond
-/// to a version in many package management schemes.
+/// DockerImage represents a docker artifact.
+/// The following fields are returned as untyped metadata in the Version
+/// resource, using camelcase keys (i.e. metadata.imageSizeBytes):
+/// * imageSizeBytes
+/// * mediaType
+/// * buildTime
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Version {
-    /// The name of the version, for example:
-    /// "projects/p1/locations/us-central1/repositories/repo1/packages/pkg1/versions/art1".
-    /// If the package or version ID parts contain slashes, the slashes are
-    /// escaped.
+pub struct DockerImage {
+    /// Required. registry_location, project_id, repository_name and image id forms a unique
+    /// image
+    /// name:`projects/<project_id>/locations/<location>/repository/<repository_name>/dockerImages/<docker_image>`.
+    /// For example,
+    /// "projects/test-project/locations/us-west4/repositories/test-repo/dockerImages/
+    /// nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf",
+    /// where "us-west4" is the registry_location, "test-project" is the
+    /// project_id, "test-repo" is the repository_name and
+    /// "nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf"
+    /// is the image's digest.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. Description of the version, as specified in its metadata.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The time when the version was created.
+    /// Required. URL to access the image.
+    /// Example:
+    /// us-west4-docker.pkg.dev/test-project/test-repo/nginx@sha256:e9954c1fc875017be1c3e36eca16be2d9e9bccc4bf072163515467d6a823c7cf
+    #[prost(string, tag="2")]
+    pub uri: ::prost::alloc::string::String,
+    /// Tags attached to this image.
+    #[prost(string, repeated, tag="3")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Calculated size of the image.
+    /// This field is returned as the 'metadata.imageSizeBytes' field in the
+    /// Version resource.
+    #[prost(int64, tag="4")]
+    pub image_size_bytes: i64,
+    /// Time the image was uploaded.
     #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time when the version was last updated.
-    #[prost(message, optional, tag="6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. A list of related tags. Will contain up to 100 tags that
-    /// reference this version.
-    #[prost(message, repeated, tag="7")]
-    pub related_tags: ::prost::alloc::vec::Vec<Tag>,
-    /// Output only. Repository-specific Metadata stored against this version.
-    /// The fields returned are defined by the underlying repository-specific
-    /// resource. Currently, the only resource in use is
-    /// \[DockerImage][google.devtools.artifactregistry.v1.DockerImage\]
-    #[prost(message, optional, tag="8")]
-    pub metadata: ::core::option::Option<::prost_types::Struct>,
+    pub upload_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Media type of this image, e.g.
+    /// "application/vnd.docker.distribution.manifest.v2+json".
+    /// This field is returned as the 'metadata.mediaType' field in the
+    /// Version resource.
+    #[prost(string, tag="6")]
+    pub media_type: ::prost::alloc::string::String,
+    /// The time this image was built.
+    /// This field is returned as the 'metadata.buildTime' field in the
+    /// Version resource.
+    /// The build time is returned to the client as an RFC 3339 string, which can
+    /// be easily used with the JavaScript Date constructor.
+    #[prost(message, optional, tag="7")]
+    pub build_time: ::core::option::Option<::prost_types::Timestamp>,
 }
-/// The request to list versions.
+/// The request to list docker images.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVersionsRequest {
-    /// The name of the parent resource whose versions will be listed.
+pub struct ListDockerImagesRequest {
+    /// Required. The name of the parent resource whose docker images will be listed.
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
-    /// The maximum number of versions to return. Maximum page size is 1,000.
+    /// The maximum number of artifacts to return.
     #[prost(int32, tag="2")]
     pub page_size: i32,
     /// The next_page_token value returned from a previous list request, if any.
     #[prost(string, tag="3")]
     pub page_token: ::prost::alloc::string::String,
-    /// The view that should be returned in the response.
-    #[prost(enumeration="VersionView", tag="4")]
-    pub view: i32,
-    /// Optional. The field to order the results by.
-    #[prost(string, tag="5")]
-    pub order_by: ::prost::alloc::string::String,
 }
-/// The response from listing versions.
+/// The response from listing docker images.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVersionsResponse {
-    /// The versions returned.
+pub struct ListDockerImagesResponse {
+    /// The docker images returned.
     #[prost(message, repeated, tag="1")]
-    pub versions: ::prost::alloc::vec::Vec<Version>,
-    /// The token to retrieve the next page of versions, or empty if there are no
-    /// more versions to return.
+    pub docker_images: ::prost::alloc::vec::Vec<DockerImage>,
+    /// The token to retrieve the next page of artifacts, or empty if there are no
+    /// more artifacts to return.
     #[prost(string, tag="2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// The request to retrieve a version.
+/// The request to get docker images.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetVersionRequest {
-    /// The name of the version to retrieve.
+pub struct GetDockerImageRequest {
+    /// Required. The name of the docker images.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// The view that should be returned in the response.
-    #[prost(enumeration="VersionView", tag="2")]
-    pub view: i32,
 }
-/// The request to delete a version.
+/// The Artifact Registry settings that apply to a Project.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteVersionRequest {
-    /// The name of the version to delete.
+pub struct ProjectSettings {
+    /// The name of the project's settings.
+    ///
+    /// Always of the form:
+    /// projects/{project-id}/projectSettings
+    ///
+    /// In update request: never set
+    /// In response: always set
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// By default, a version that is tagged may not be deleted. If force=true, the
-    /// version and any tags pointing to the version are deleted.
-    #[prost(bool, tag="2")]
-    pub force: bool,
+    /// The redirection state of the legacy repositories in this project.
+    #[prost(enumeration="project_settings::RedirectionState", tag="2")]
+    pub legacy_redirection_state: i32,
 }
-/// The view, which determines what version information is returned in a
-/// response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum VersionView {
-    /// The default / unset value.
-    /// The API will default to the BASIC view.
-    Unspecified = 0,
-    /// Includes basic information about the version, but not any related tags.
-    Basic = 1,
-    /// Include everything.
-    Full = 2,
+/// Nested message and enum types in `ProjectSettings`.
+pub mod project_settings {
+    /// The possible redirection states for legacy repositories.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum RedirectionState {
+        /// No redirection status has been set.
+        Unspecified = 0,
+        /// Redirection is disabled.
+        RedirectionFromGcrIoDisabled = 1,
+        /// Redirection is enabled.
+        RedirectionFromGcrIoEnabled = 2,
+        /// Redirection is enabled, and has been finalized so cannot be reverted.
+        RedirectionFromGcrIoFinalized = 3,
+    }
+}
+/// Gets the redirection status for a project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProjectSettingsRequest {
+    /// Required. The name of the projectSettings resource.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Sets the settings of the project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateProjectSettingsRequest {
+    /// The project settings.
+    #[prost(message, optional, tag="2")]
+    pub project_settings: ::core::option::Option<ProjectSettings>,
+    /// Field mask to support partial updates.
+    #[prost(message, optional, tag="3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// A detailed representation of a Yum artifact.
 #[derive(Clone, PartialEq, ::prost::Message)]
