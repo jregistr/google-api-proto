@@ -14,42 +14,6 @@ pub struct CrawledUrl {
     #[prost(string, tag="3")]
     pub body: ::prost::alloc::string::String,
 }
-/// Output only.
-/// Defines a warning trace message for ScanRun. Warning traces provide customers
-/// with useful information that helps make the scanning process more effective.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ScanRunWarningTrace {
-    /// Output only. Indicates the warning code.
-    #[prost(enumeration="scan_run_warning_trace::Code", tag="1")]
-    pub code: i32,
-}
-/// Nested message and enum types in `ScanRunWarningTrace`.
-pub mod scan_run_warning_trace {
-    /// Output only.
-    /// Defines a warning message code.
-    /// Next id: 6
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Code {
-        /// Default value is never used.
-        Unspecified = 0,
-        /// Indicates that a scan discovered an unexpectedly low number of URLs. This
-        /// is sometimes caused by complex navigation features or by using a single
-        /// URL for numerous pages.
-        InsufficientCrawlResults = 1,
-        /// Indicates that a scan discovered too many URLs to test, or excessive
-        /// redundant URLs.
-        TooManyCrawlResults = 2,
-        /// Indicates that too many tests have been generated for the scan. Customer
-        /// should try reducing the number of starting URLs, increasing the QPS rate,
-        /// or narrowing down the scope of the scan using the excluded patterns.
-        TooManyFuzzTasks = 3,
-        /// Indicates that a scan is blocked by IAP.
-        BlockedByIap = 4,
-        /// Indicates that no seeds is found for a scan
-        NoStartingUrlFoundForManagedScan = 5,
-    }
-}
 /// ! Information about a vulnerability with an HTML.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Form {
@@ -647,6 +611,42 @@ pub mod scan_run_error_trace {
         /// pages. When available, most_common_http_error_code field indicates the
         /// most common HTTP error code encountered during the scan.
         TooManyHttpErrors = 6,
+    }
+}
+/// Output only.
+/// Defines a warning trace message for ScanRun. Warning traces provide customers
+/// with useful information that helps make the scanning process more effective.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScanRunWarningTrace {
+    /// Output only. Indicates the warning code.
+    #[prost(enumeration="scan_run_warning_trace::Code", tag="1")]
+    pub code: i32,
+}
+/// Nested message and enum types in `ScanRunWarningTrace`.
+pub mod scan_run_warning_trace {
+    /// Output only.
+    /// Defines a warning message code.
+    /// Next id: 6
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Code {
+        /// Default value is never used.
+        Unspecified = 0,
+        /// Indicates that a scan discovered an unexpectedly low number of URLs. This
+        /// is sometimes caused by complex navigation features or by using a single
+        /// URL for numerous pages.
+        InsufficientCrawlResults = 1,
+        /// Indicates that a scan discovered too many URLs to test, or excessive
+        /// redundant URLs.
+        TooManyCrawlResults = 2,
+        /// Indicates that too many tests have been generated for the scan. Customer
+        /// should try reducing the number of starting URLs, increasing the QPS rate,
+        /// or narrowing down the scope of the scan using the excluded patterns.
+        TooManyFuzzTasks = 3,
+        /// Indicates that a scan is blocked by IAP.
+        BlockedByIap = 4,
+        /// Indicates that no seeds is found for a scan
+        NoStartingUrlFoundForManagedScan = 5,
     }
 }
 /// A ScanRun is a output-only resource representing an actual run of the scan.

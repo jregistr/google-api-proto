@@ -1,18 +1,3 @@
-/// Contains compliance information about a security standard indicating unmet
-/// recommendations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Compliance {
-    /// Refers to industry wide standards or benchmarks e.g. "cis", "pci", "owasp",
-    /// etc.
-    #[prost(string, tag="1")]
-    pub standard: ::prost::alloc::string::String,
-    /// Version of the standard/benchmark e.g. 1.1
-    #[prost(string, tag="2")]
-    pub version: ::prost::alloc::string::String,
-    /// Policies within the standard/benchmark e.g. A.12.4.1
-    #[prost(string, repeated, tag="3")]
-    pub ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// Represents what's commonly known as an Indicator of compromise (IoC) in
 /// computer forensics. This is an artifact observed on a network or in an
 /// operating system that, with high confidence, indicates a computer intrusion.
@@ -86,6 +71,1079 @@ pub mod indicator {
             YaraRuleSignature(YaraRuleSignature),
         }
     }
+}
+/// Message that contains the resource name and display name of a folder
+/// resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Folder {
+    /// Full resource name of this folder. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub resource_folder: ::prost::alloc::string::String,
+    /// The user defined display name for this folder.
+    #[prost(string, tag="2")]
+    pub resource_folder_display_name: ::prost::alloc::string::String,
+}
+/// User specified security marks that are attached to the parent Security
+/// Command Center resource. Security marks are scoped within a Security Command
+/// Center organization -- they can be modified and viewed by all users who have
+/// proper permissions on the organization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SecurityMarks {
+    /// The relative resource name of the SecurityMarks. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Examples:
+    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Mutable user specified security marks belonging to the parent resource.
+    /// Constraints are as follows:
+    ///
+    ///   * Keys and values are treated as case insensitive
+    ///   * Keys must be between 1 - 256 characters (inclusive)
+    ///   * Keys must be letters, numbers, underscores, or dashes
+    ///   * Values have leading and trailing whitespace trimmed, remaining
+    ///     characters must be between 1 - 4096 characters (inclusive)
+    #[prost(btree_map="string, string", tag="2")]
+    pub marks: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The canonical name of the marks.
+    /// Examples:
+    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
+    /// "folders/{folder_id}/assets/{asset_id}/securityMarks"
+    /// "projects/{project_number}/assets/{asset_id}/securityMarks"
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
+    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
+    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks"
+    #[prost(string, tag="3")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Security Command Center representation of a Google Cloud
+/// resource.
+///
+/// The Asset is a Security Command Center resource that captures information
+/// about a single Google Cloud resource. All modifications to an Asset are only
+/// within the context of Security Command Center and don't affect the referenced
+/// Google Cloud resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Asset {
+    /// The relative resource name of this asset. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/assets/{asset_id}".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[prost(message, optional, tag="2")]
+    pub security_center_properties: ::core::option::Option<asset::SecurityCenterProperties>,
+    /// Resource managed properties. These properties are managed and defined by
+    /// the Google Cloud resource and cannot be modified by the user.
+    #[prost(btree_map="string, message", tag="7")]
+    pub resource_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
+    /// User specified security marks. These marks are entirely managed by the user
+    /// and come from the SecurityMarks resource that belongs to the asset.
+    #[prost(message, optional, tag="8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the asset was created in Security Command Center.
+    #[prost(message, optional, tag="9")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the asset was last updated or added in Cloud SCC.
+    #[prost(message, optional, tag="10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[prost(message, optional, tag="11")]
+    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
+    /// The canonical name of the resource. It's either
+    /// "organizations/{organization_id}/assets/{asset_id}",
+    /// "folders/{folder_id}/assets/{asset_id}" or
+    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
+    /// ancestor of the resource.
+    #[prost(string, tag="13")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SecurityCenterProperties {
+        /// The full resource name of the Google Cloud resource this asset
+        /// represents. This field is immutable after create time. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="1")]
+        pub resource_name: ::prost::alloc::string::String,
+        /// The type of the Google Cloud resource. Examples include: APPLICATION,
+        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
+        /// Security Command Center and/or the producer of the resource and is
+        /// immutable after create time.
+        #[prost(string, tag="2")]
+        pub resource_type: ::prost::alloc::string::String,
+        /// The full resource name of the immediate parent of the resource. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="3")]
+        pub resource_parent: ::prost::alloc::string::String,
+        /// The full resource name of the project the resource belongs to. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="4")]
+        pub resource_project: ::prost::alloc::string::String,
+        /// Owners of the Google Cloud resource.
+        #[prost(string, repeated, tag="5")]
+        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The user defined display name for this resource.
+        #[prost(string, tag="6")]
+        pub resource_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the parent of this resource.
+        #[prost(string, tag="7")]
+        pub resource_parent_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the project of this resource.
+        #[prost(string, tag="8")]
+        pub resource_project_display_name: ::prost::alloc::string::String,
+        /// Contains a Folder message for each folder in the assets ancestry.
+        /// The first folder is the deepest nested folder, and the last folder is the
+        /// folder directly under the Organization.
+        #[prost(message, repeated, tag="10")]
+        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
+    }
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IamPolicy {
+        /// The JSON representation of the Policy associated with the asset.
+        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
+        /// details.
+        #[prost(string, tag="1")]
+        pub policy_blob: ::prost::alloc::string::String,
+    }
+}
+/// A mute config is a Cloud SCC resource that contains the configuration
+/// to mute create/update events of findings.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MuteConfig {
+    /// This field will be ignored if provided on config creation. Format
+    /// "organizations/{organization}/muteConfigs/{mute_config}"
+    /// "folders/{folder}/muteConfigs/{mute_config}"
+    /// "projects/{project}/muteConfigs/{mute_config}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name to be displayed for the mute config.
+    #[deprecated]
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// A description of the mute config.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. An expression that defines the filter to apply across create/update events
+    /// of findings. While creating a filter string, be mindful of the
+    /// scope in which the mute configuration is being created. E.g., If a filter
+    /// contains project = X but is created under the project = Y scope, it might
+    /// not match any findings.
+    ///
+    /// The following field and operator combinations are supported:
+    ///
+    /// * severity: `=`, `:`
+    /// * category: `=`, `:`
+    /// * resource.name: `=`, `:`
+    /// * resource.project_name: `=`, `:`
+    /// * resource.project_display_name: `=`, `:`
+    /// * resource.folders.resource_folder: `=`, `:`
+    /// * resource.parent_name: `=`, `:`
+    /// * resource.parent_display_name: `=`, `:`
+    /// * resource.type: `=`, `:`
+    /// * finding_class: `=`, `:`
+    /// * indicator.ip_addresses: `=`, `:`
+    /// * indicator.domains: `=`, `:`
+    #[prost(string, tag="4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Output only. The time at which the mute config was created.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The most recent time at which the mute config was updated.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(message, optional, tag="6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Email address of the user who last edited the mute config.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(string, tag="7")]
+    pub most_recent_editor: ::prost::alloc::string::String,
+}
+/// Representation of third party SIEM/SOAR fields within SCC.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExternalSystem {
+    /// External System Name e.g. jira, demisto, etc.
+    ///  e.g.:
+    ///  `organizations/1234/sources/5678/findings/123456/externalSystems/jira`
+    /// `folders/1234/sources/5678/findings/123456/externalSystems/jira`
+    /// `projects/1234/sources/5678/findings/123456/externalSystems/jira`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// References primary/secondary etc assignees in the external system.
+    #[prost(string, repeated, tag="2")]
+    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Identifier that's used to track the given finding in the external system.
+    #[prost(string, tag="3")]
+    pub external_uid: ::prost::alloc::string::String,
+    /// Most recent status of the corresponding finding's ticket/tracker in the
+    /// external system.
+    #[prost(string, tag="4")]
+    pub status: ::prost::alloc::string::String,
+    /// The most recent time when the corresponding finding's ticket/tracker was
+    /// updated in the external system.
+    #[prost(message, optional, tag="5")]
+    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Cloud Security Command Center (Cloud SCC) notification configs.
+///
+/// A notification config is a Cloud SCC resource that contains the configuration
+/// to send notifications for create/update events of findings, assets and etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationConfig {
+    /// The relative resource name of this notification config. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the notification config (max of 1024 characters).
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// The Pub/Sub topic to send notifications to. Its format is
+    /// "projects/\[project_id]/topics/[topic\]".
+    #[prost(string, tag="3")]
+    pub pubsub_topic: ::prost::alloc::string::String,
+    /// Output only. The service account that needs "pubsub.topics.publish"
+    /// permission to publish to the Pub/Sub topic.
+    #[prost(string, tag="4")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The config for triggering notifications.
+    #[prost(oneof="notification_config::NotifyConfig", tags="5")]
+    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
+}
+/// Nested message and enum types in `NotificationConfig`.
+pub mod notification_config {
+    /// The config for streaming-based notifications, which send each event as soon
+    /// as it is detected.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StreamingConfig {
+        /// Expression that defines the filter to apply across create/update events
+        /// of assets or findings as specified by the event type. The expression is a
+        /// list of zero or more restrictions combined via logical operators `AND`
+        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
+        /// `AND`.
+        ///
+        /// Restrictions have the form `<field> <operator> <value>` and may have a
+        /// `-` character in front of them to indicate negation. The fields map to
+        /// those defined in the corresponding resource.
+        ///
+        /// The supported operators are:
+        ///
+        /// * `=` for all value types.
+        /// * `>`, `<`, `>=`, `<=` for integer values.
+        /// * `:`, meaning substring matching, for strings.
+        ///
+        /// The supported value types are:
+        ///
+        /// * string literals in quotes.
+        /// * integer literals without quotes.
+        /// * boolean literals `true` and `false` without quotes.
+        #[prost(string, tag="1")]
+        pub filter: ::prost::alloc::string::String,
+    }
+    /// The config for triggering notifications.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum NotifyConfig {
+        /// The config for triggering streaming-based notifications.
+        #[prost(message, tag="5")]
+        StreamingConfig(StreamingConfig),
+    }
+}
+/// The details pertaining to specific contacts
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ContactDetails {
+    /// A list of contacts
+    #[prost(message, repeated, tag="1")]
+    pub contacts: ::prost::alloc::vec::Vec<Contact>,
+}
+/// Representa a single contact's email address
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Contact {
+    /// An email address e.g. "person123@company.com"
+    #[prost(string, tag="1")]
+    pub email: ::prost::alloc::string::String,
+}
+/// User specified settings that are attached to the Security Command
+/// Center organization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OrganizationSettings {
+    /// The relative resource name of the settings. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/organizationSettings".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
+    /// set to `true`, then discovery of assets will occur. If it is set to `false,
+    /// all historical assets will remain, but discovery of future assets will not
+    /// occur.
+    #[prost(bool, tag="2")]
+    pub enable_asset_discovery: bool,
+    /// The configuration used for Asset Discovery runs.
+    #[prost(message, optional, tag="3")]
+    pub asset_discovery_config: ::core::option::Option<organization_settings::AssetDiscoveryConfig>,
+}
+/// Nested message and enum types in `OrganizationSettings`.
+pub mod organization_settings {
+    /// The configuration used for Asset Discovery runs.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AssetDiscoveryConfig {
+        /// The project ids to use for filtering asset discovery.
+        #[prost(string, repeated, tag="1")]
+        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The mode to use for filtering asset discovery.
+        #[prost(enumeration="asset_discovery_config::InclusionMode", tag="2")]
+        pub inclusion_mode: i32,
+        /// The folder ids to use for filtering asset discovery.
+        /// It consists of only digits, e.g., 756619654966.
+        #[prost(string, repeated, tag="3")]
+        pub folder_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// Nested message and enum types in `AssetDiscoveryConfig`.
+    pub mod asset_discovery_config {
+        /// The mode of inclusion when running Asset Discovery.
+        /// Asset discovery can be limited by explicitly identifying projects to be
+        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
+        /// within the organization and their children are discovered during asset
+        /// discovery. If EXCLUDE is set, then projects that don't match those
+        /// projects are discovered during asset discovery. If neither are set, then
+        /// all projects within the organization are discovered during asset
+        /// discovery.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum InclusionMode {
+            /// Unspecified. Setting the mode with this value will disable
+            /// inclusion/exclusion filtering for Asset Discovery.
+            Unspecified = 0,
+            /// Asset Discovery will capture only the resources within the projects
+            /// specified. All other resources will be ignored.
+            IncludeOnly = 1,
+            /// Asset Discovery will ignore all resources under the projects specified.
+            /// All other resources will be retrieved.
+            Exclude = 2,
+        }
+    }
+}
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, and
+/// other tools.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated or insecure libraries."
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}",
+    /// "folders/{folder_id}/sources/{source_id}" or
+    /// "projects/{project_number}/sources/{source_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag="14")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Information related to the Google Cloud resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Resource {
+    /// The full resource name of the resource. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name of the resource.
+    #[prost(string, tag="8")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The full resource type of the resource.
+    #[prost(string, tag="6")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The full resource name of project that the resource belongs to.
+    #[prost(string, tag="2")]
+    pub project: ::prost::alloc::string::String,
+    /// The project ID that the resource belongs to.
+    #[prost(string, tag="3")]
+    pub project_display_name: ::prost::alloc::string::String,
+    /// The full resource name of resource's parent.
+    #[prost(string, tag="4")]
+    pub parent: ::prost::alloc::string::String,
+    /// The human readable name of resource's parent.
+    #[prost(string, tag="5")]
+    pub parent_display_name: ::prost::alloc::string::String,
+    /// Output only. Contains a Folder message for each folder in the assets ancestry.
+    /// The first folder is the deepest nested folder, and the last folder is the
+    /// folder directly under the Organization.
+    #[prost(message, repeated, tag="7")]
+    pub folders: ::prost::alloc::vec::Vec<Folder>,
+}
+/// Contains compliance information about a security standard indicating unmet
+/// recommendations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Compliance {
+    /// Refers to industry wide standards or benchmarks e.g. "cis", "pci", "owasp",
+    /// etc.
+    #[prost(string, tag="1")]
+    pub standard: ::prost::alloc::string::String,
+    /// Version of the standard/benchmark e.g. 1.1
+    #[prost(string, tag="2")]
+    pub version: ::prost::alloc::string::String,
+    /// Policies within the standard/benchmark e.g. A.12.4.1
+    #[prost(string, repeated, tag="3")]
+    pub ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Represents a particular IAM binding, which captures a member's role addition,
+/// removal, or state.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IamBinding {
+    /// The action that was performed on a Binding.
+    #[prost(enumeration="iam_binding::Action", tag="1")]
+    pub action: i32,
+    /// Role that is assigned to "members".
+    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
+    #[prost(string, tag="2")]
+    pub role: ::prost::alloc::string::String,
+    /// A single identity requesting access for a Cloud Platform resource,
+    /// e.g. "foo@google.com".
+    #[prost(string, tag="3")]
+    pub member: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `IamBinding`.
+pub mod iam_binding {
+    /// The type of action performed on a Binding in a policy.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Action {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Addition of a Binding.
+        Add = 1,
+        /// Removal of a Binding.
+        Remove = 2,
+    }
+}
+/// Represents an access event.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Access {
+    /// Associated email, such as "foo@google.com".
+    ///
+    /// The email address of the authenticated user (or service account on behalf
+    /// of third party principal) making the request. For third party identity
+    /// callers, the `principal_subject` field is populated instead of this field.
+    /// For privacy reasons, the principal email address is sometimes redacted.
+    /// For more information, see [Caller identities in audit
+    /// logs](<https://cloud.google.com/logging/docs/audit#user-id>).
+    #[prost(string, tag="1")]
+    pub principal_email: ::prost::alloc::string::String,
+    /// Caller's IP address, such as "1.1.1.1".
+    #[prost(string, tag="2")]
+    pub caller_ip: ::prost::alloc::string::String,
+    /// The caller IP's geolocation, which identifies where the call came from.
+    #[prost(message, optional, tag="3")]
+    pub caller_ip_geo: ::core::option::Option<Geolocation>,
+    /// What kind of user agent is associated, e.g. operating system shells,
+    /// embedded or stand-alone applications, etc.
+    #[prost(string, tag="4")]
+    pub user_agent_family: ::prost::alloc::string::String,
+    /// This is the API service that the service account made a call to, e.g.
+    /// "iam.googleapis.com"
+    #[prost(string, tag="5")]
+    pub service_name: ::prost::alloc::string::String,
+    /// The method that the service account called, e.g. "SetIamPolicy".
+    #[prost(string, tag="6")]
+    pub method_name: ::prost::alloc::string::String,
+    /// A string representing the principal_subject associated with the identity.
+    /// As compared to `principal_email`, supports principals that aren't
+    /// associated with email addresses, such as third party principals. For most
+    /// identities, the format will be `principal://iam.googleapis.com/{identity
+    /// pool name}/subjects/{subject}` except for some GKE identities
+    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
+    /// format `serviceAccount:{identity pool name}\[{subject}\]`
+    #[prost(string, tag="7")]
+    pub principal_subject: ::prost::alloc::string::String,
+    /// The name of the service account key used to create or exchange
+    /// credentials for authenticating the service account making the request.
+    /// This is a scheme-less URI full resource name. For example:
+    ///
+    /// "//iam.googleapis.com/projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}"
+    ///
+    #[prost(string, tag="8")]
+    pub service_account_key_name: ::prost::alloc::string::String,
+    /// Identity delegation history of an authenticated service account that makes
+    /// the request. It contains information on the real authorities that try to
+    /// access GCP resources by delegating on a service account. When multiple
+    /// authorities are present, they are guaranteed to be sorted based on the
+    /// original ordering of the identity delegation events.
+    #[prost(message, repeated, tag="9")]
+    pub service_account_delegation_info: ::prost::alloc::vec::Vec<ServiceAccountDelegationInfo>,
+}
+/// Identity delegation history of an authenticated service account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServiceAccountDelegationInfo {
+    /// The email address of a Google account.
+    #[prost(string, tag="1")]
+    pub principal_email: ::prost::alloc::string::String,
+    /// A string representing the principal_subject associated with the identity.
+    /// As compared to `principal_email`, supports principals that aren't
+    /// associated with email addresses, such as third party principals. For most
+    /// identities, the format will be `principal://iam.googleapis.com/{identity
+    /// pool name}/subjects/{subject}` except for some GKE identities
+    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
+    /// format `serviceAccount:{identity pool name}\[{subject}\]`
+    #[prost(string, tag="2")]
+    pub principal_subject: ::prost::alloc::string::String,
+}
+/// Represents a geographical location for a given access.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Geolocation {
+    /// A CLDR.
+    #[prost(string, tag="1")]
+    pub region_code: ::prost::alloc::string::String,
+}
+/// Contains information about the IP connection associated with the finding.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connection {
+    /// Destination IP address. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(string, tag="1")]
+    pub destination_ip: ::prost::alloc::string::String,
+    /// Destination port. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(int32, tag="2")]
+    pub destination_port: i32,
+    /// Source IP address.
+    #[prost(string, tag="3")]
+    pub source_ip: ::prost::alloc::string::String,
+    /// Source port.
+    #[prost(int32, tag="4")]
+    pub source_port: i32,
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[prost(enumeration="connection::Protocol", tag="5")]
+    pub protocol: i32,
+}
+/// Nested message and enum types in `Connection`.
+pub mod connection {
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Protocol {
+        /// Unspecified protocol (not HOPOPT).
+        Unspecified = 0,
+        /// Internet Control Message Protocol.
+        Icmp = 1,
+        /// Transmission Control Protocol.
+        Tcp = 6,
+        /// User Datagram Protocol.
+        Udp = 17,
+        /// Generic Routing Encapsulation.
+        Gre = 47,
+        /// Encap Security Payload.
+        Esp = 50,
+    }
+}
+/// Label represents a generic name=value label. Label has separate name and
+/// value fields to support filtering with contains().
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Label {
+    /// Label name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Label value.
+    #[prost(string, tag="2")]
+    pub value: ::prost::alloc::string::String,
+}
+/// Container associated with the finding.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Container {
+    /// Container name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Container image URI provided when configuring a pod/container.
+    /// May identify a container image version using mutable tags.
+    #[prost(string, tag="2")]
+    pub uri: ::prost::alloc::string::String,
+    /// Optional container image id, when provided by the container runtime.
+    /// Uniquely identifies the container image launched using a container image
+    /// digest.
+    #[prost(string, tag="3")]
+    pub image_id: ::prost::alloc::string::String,
+    /// Container labels, as provided by the container runtime.
+    #[prost(message, repeated, tag="4")]
+    pub labels: ::prost::alloc::vec::Vec<Label>,
+}
+/// Represents database access information, such as queries.
+/// A database may be a sub-resource of an instance (as in the case of CloudSQL
+/// instances or Cloud Spanner instances), or the database instance itself.
+/// Some database resources may not have the full resource name populated
+/// because these resource types are not yet supported by Cloud Asset Inventory
+/// (e.g. CloudSQL databases).  In these cases only the display name will be
+/// provided.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Database {
+    /// The full resource name of the database the user connected to, if it is
+    /// supported by CAI. (<https://google.aip.dev/122#full-resource-names>)
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name of the database the user connected to.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The username used to connect to the DB. This may not necessarily be an IAM
+    /// principal, and has no required format.
+    #[prost(string, tag="3")]
+    pub user_name: ::prost::alloc::string::String,
+    /// The SQL statement associated with the relevant access.
+    #[prost(string, tag="4")]
+    pub query: ::prost::alloc::string::String,
+    /// The target usernames/roles/groups of a SQL privilege grant (not an IAM
+    /// policy change).
+    #[prost(string, repeated, tag="5")]
+    pub grantees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Exfiltration represents a data exfiltration attempt of one or more
+/// sources to one or more targets.  Sources represent the source
+/// of data that is exfiltrated, and Targets represents the destination the
+/// data was copied to.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Exfiltration {
+    /// If there are multiple sources, then the data is considered "joined" between
+    /// them. For instance, BigQuery can join multiple tables, and each
+    /// table would be considered a source.
+    #[prost(message, repeated, tag="1")]
+    pub sources: ::prost::alloc::vec::Vec<ExfilResource>,
+    /// If there are multiple targets, each target would get a complete copy of the
+    /// "joined" source data.
+    #[prost(message, repeated, tag="2")]
+    pub targets: ::prost::alloc::vec::Vec<ExfilResource>,
+}
+/// Resource that has been exfiltrated or exfiltrated_to.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExfilResource {
+    /// Resource's URI (<https://google.aip.dev/122#full-resource-names>)
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Subcomponents of the asset that is exfiltrated - these could be
+    /// URIs used during exfiltration, table names, databases, filenames, etc.
+    /// For example, multiple tables may be exfiltrated from the same CloudSQL
+    /// instance, or multiple files from the same Cloud Storage bucket.
+    #[prost(string, repeated, tag="2")]
+    pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Kubernetes related attributes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Kubernetes {
+    /// Kubernetes Pods associated with the finding. This field will contain Pod
+    /// records for each container that is owned by a Pod.
+    #[prost(message, repeated, tag="1")]
+    pub pods: ::prost::alloc::vec::Vec<kubernetes::Pod>,
+    /// Provides Kubernetes Node information.
+    #[prost(message, repeated, tag="2")]
+    pub nodes: ::prost::alloc::vec::Vec<kubernetes::Node>,
+    /// GKE Node Pools associated with the finding. This field will
+    /// contain NodePool information for each Node, when it is available.
+    #[prost(message, repeated, tag="3")]
+    pub node_pools: ::prost::alloc::vec::Vec<kubernetes::NodePool>,
+    /// Provides Kubernetes role information for findings that involve
+    /// Roles or ClusterRoles.
+    #[prost(message, repeated, tag="4")]
+    pub roles: ::prost::alloc::vec::Vec<kubernetes::Role>,
+    /// Provides Kubernetes role binding information for findings that involve
+    /// RoleBindings or ClusterRoleBindings.
+    #[prost(message, repeated, tag="5")]
+    pub bindings: ::prost::alloc::vec::Vec<kubernetes::Binding>,
+    /// Provides information on any Kubernetes access reviews (i.e. privilege
+    /// checks) relevant to the finding.
+    #[prost(message, repeated, tag="6")]
+    pub access_reviews: ::prost::alloc::vec::Vec<kubernetes::AccessReview>,
+}
+/// Nested message and enum types in `Kubernetes`.
+pub mod kubernetes {
+    /// Kubernetes Pod.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Pod {
+        /// Kubernetes Pod namespace.
+        #[prost(string, tag="1")]
+        pub ns: ::prost::alloc::string::String,
+        /// Kubernetes Pod name.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+        /// Pod labels.  For Kubernetes containers, these are applied to the
+        /// container.
+        #[prost(message, repeated, tag="3")]
+        pub labels: ::prost::alloc::vec::Vec<super::Label>,
+        /// Pod containers associated with this finding, if any.
+        #[prost(message, repeated, tag="4")]
+        pub containers: ::prost::alloc::vec::Vec<super::Container>,
+    }
+    /// Kubernetes Nodes associated with the finding.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Node {
+        /// Full Resource name of the Compute Engine VM running the
+        /// cluster node.
+        #[prost(string, tag="1")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// Provides GKE Node Pool information.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct NodePool {
+        /// Kubernetes Node pool name.
+        #[prost(string, tag="1")]
+        pub name: ::prost::alloc::string::String,
+        /// Nodes associated with the finding.
+        #[prost(message, repeated, tag="2")]
+        pub nodes: ::prost::alloc::vec::Vec<Node>,
+    }
+    /// Kubernetes Role or ClusterRole.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Role {
+        /// Role type.
+        #[prost(enumeration="role::Kind", tag="1")]
+        pub kind: i32,
+        /// Role namespace.
+        #[prost(string, tag="2")]
+        pub ns: ::prost::alloc::string::String,
+        /// Role name.
+        #[prost(string, tag="3")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `Role`.
+    pub mod role {
+        /// Types of Kubernetes roles.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Kind {
+            /// Role type is not specified.
+            Unspecified = 0,
+            /// Kubernetes Role.
+            Role = 1,
+            /// Kubernetes ClusterRole.
+            ClusterRole = 2,
+        }
+    }
+    /// Represents a Kubernetes RoleBinding or ClusterRoleBinding.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Binding {
+        /// Namespace for binding.
+        #[prost(string, tag="1")]
+        pub ns: ::prost::alloc::string::String,
+        /// Name for binding.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+        /// The Role or ClusterRole referenced by the binding.
+        #[prost(message, optional, tag="3")]
+        pub role: ::core::option::Option<Role>,
+        /// Represents the subjects(s) bound to the role. Not always available
+        /// for PATCH requests.
+        #[prost(message, repeated, tag="4")]
+        pub subjects: ::prost::alloc::vec::Vec<Subject>,
+    }
+    /// Represents a Kubernetes Subject.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Subject {
+        /// Authentication type for subject.
+        #[prost(enumeration="subject::AuthType", tag="1")]
+        pub kind: i32,
+        /// Namespace for subject.
+        #[prost(string, tag="2")]
+        pub ns: ::prost::alloc::string::String,
+        /// Name for subject.
+        #[prost(string, tag="3")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `Subject`.
+    pub mod subject {
+        /// Auth types that can be used for Subject's kind field.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum AuthType {
+            /// Authentication is not specified.
+            Unspecified = 0,
+            /// User with valid certificate.
+            User = 1,
+            /// Users managed by Kubernetes API with credentials stored as Secrets.
+            Serviceaccount = 2,
+            /// Collection of users.
+            Group = 3,
+        }
+    }
+    /// Conveys information about a Kubernetes access review (e.g. kubectl auth
+    /// can-i ...) that was involved in a finding.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AccessReview {
+        /// Group is the API Group of the Resource. "*" means all.
+        #[prost(string, tag="1")]
+        pub group: ::prost::alloc::string::String,
+        /// Namespace of the action being requested. Currently, there is no
+        /// distinction between no namespace and all namespaces.  Both
+        /// are represented by "" (empty).
+        #[prost(string, tag="2")]
+        pub ns: ::prost::alloc::string::String,
+        /// Name is the name of the resource being requested. Empty means all.
+        #[prost(string, tag="3")]
+        pub name: ::prost::alloc::string::String,
+        /// Resource is the optional resource type requested. "*" means all.
+        #[prost(string, tag="4")]
+        pub resource: ::prost::alloc::string::String,
+        /// Subresource is the optional subresource type.
+        #[prost(string, tag="5")]
+        pub subresource: ::prost::alloc::string::String,
+        /// Verb is a Kubernetes resource API verb, like: get, list, watch, create,
+        /// update, delete, proxy. "*" means all.
+        #[prost(string, tag="6")]
+        pub verb: ::prost::alloc::string::String,
+        /// Version is the API Version of the Resource. "*" means all.
+        #[prost(string, tag="7")]
+        pub version: ::prost::alloc::string::String,
+    }
+}
+/// MITRE ATT&CK tactics and techniques related to this finding.
+/// See: <https://attack.mitre.org>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MitreAttack {
+    /// The MITRE ATT&CK tactic most closely represented by this finding, if any.
+    #[prost(enumeration="mitre_attack::Tactic", tag="1")]
+    pub primary_tactic: i32,
+    /// The MITRE ATT&CK technique most closely represented by this finding, if
+    /// any. primary_techniques is a repeated field because there are multiple
+    /// levels of MITRE ATT&CK techniques.  If the technique most closely
+    /// represented by this finding is a sub-technique (e.g. `SCANNING_IP_BLOCKS`),
+    /// both the sub-technique and its parent technique(s) will be listed (e.g.
+    /// `SCANNING_IP_BLOCKS`, `ACTIVE_SCANNING`).
+    #[prost(enumeration="mitre_attack::Technique", repeated, tag="2")]
+    pub primary_techniques: ::prost::alloc::vec::Vec<i32>,
+    /// Additional MITRE ATT&CK tactics related to this finding, if any.
+    #[prost(enumeration="mitre_attack::Tactic", repeated, tag="3")]
+    pub additional_tactics: ::prost::alloc::vec::Vec<i32>,
+    /// Additional MITRE ATT&CK techniques related to this finding, if any, along
+    /// with any of their respective parent techniques.
+    #[prost(enumeration="mitre_attack::Technique", repeated, tag="4")]
+    pub additional_techniques: ::prost::alloc::vec::Vec<i32>,
+    /// The MITRE ATT&CK version referenced by the above fields. E.g. "8".
+    #[prost(string, tag="5")]
+    pub version: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `MitreAttack`.
+pub mod mitre_attack {
+    /// MITRE ATT&CK tactics that can be referenced by SCC findings.
+    /// See: <https://attack.mitre.org/tactics/enterprise/>
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Tactic {
+        /// Unspecified value.
+        Unspecified = 0,
+        /// TA0043
+        Reconnaissance = 1,
+        /// TA0042
+        ResourceDevelopment = 2,
+        /// TA0001
+        InitialAccess = 5,
+        /// TA0002
+        Execution = 3,
+        /// TA0003
+        Persistence = 6,
+        /// TA0004
+        PrivilegeEscalation = 8,
+        /// TA0005
+        DefenseEvasion = 7,
+        /// TA0006
+        CredentialAccess = 9,
+        /// TA0007
+        Discovery = 10,
+        /// TA0008
+        LateralMovement = 11,
+        /// TA0009
+        Collection = 12,
+        /// TA0011
+        CommandAndControl = 4,
+        /// TA0010
+        Exfiltration = 13,
+        /// TA0040
+        Impact = 14,
+    }
+    /// MITRE ATT&CK techniques that can be referenced by SCC findings.
+    /// See: <https://attack.mitre.org/techniques/enterprise/>
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Technique {
+        /// Unspecified value.
+        Unspecified = 0,
+        /// T1595
+        ActiveScanning = 1,
+        /// T1595.001
+        ScanningIpBlocks = 2,
+        /// T1105
+        IngressToolTransfer = 3,
+        /// T1106
+        NativeApi = 4,
+        /// T1129
+        SharedModules = 5,
+        /// T1059
+        CommandAndScriptingInterpreter = 6,
+        /// T1059.004
+        UnixShell = 7,
+        /// T1496
+        ResourceHijacking = 8,
+        /// T1090
+        Proxy = 9,
+        /// T1090.002
+        ExternalProxy = 10,
+        /// T1090.003
+        MultiHopProxy = 11,
+        /// T1568
+        DynamicResolution = 12,
+        /// T1552
+        UnsecuredCredentials = 13,
+        /// T1078
+        ValidAccounts = 14,
+        /// T1078.003
+        LocalAccounts = 15,
+        /// T1078.004
+        CloudAccounts = 16,
+        /// T1498
+        NetworkDenialOfService = 17,
+        /// T1069
+        PermissionGroupsDiscovery = 18,
+        /// T1069.003
+        CloudGroups = 19,
+        /// T1567
+        ExfiltrationOverWebService = 20,
+        /// T1567.002
+        ExfiltrationToCloudStorage = 21,
+        /// T1098
+        AccountManipulation = 22,
+        /// T1098.004
+        SshAuthorizedKeys = 23,
+        /// T1543
+        CreateOrModifySystemProcess = 24,
+        /// T1539
+        StealWebSessionCookie = 25,
+        /// T1578
+        ModifyCloudComputeInfrastructure = 26,
+        /// T1190
+        ExploitPublicFacingApplication = 27,
+        /// T1556
+        ModifyAuthenticationProcess = 28,
+        /// T1485
+        DataDestruction = 29,
+        /// T1484
+        DomainPolicyModification = 30,
+        /// T1562
+        ImpairDefenses = 31,
+        /// T1046
+        NetworkServiceDiscovery = 32,
+        /// T1134
+        AccessTokenManipulation = 33,
+        /// T1548
+        AbuseElevationControlMechanism = 34,
+    }
+}
+/// File information about the related binary/library used by an executable, or
+/// the script used by a script interpreter
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct File {
+    /// Absolute path of the file as a JSON encoded string.
+    #[prost(string, tag="1")]
+    pub path: ::prost::alloc::string::String,
+    /// Size of the file in bytes.
+    #[prost(int64, tag="2")]
+    pub size: i64,
+    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
+    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
+    /// of the entire file.
+    #[prost(string, tag="3")]
+    pub sha256: ::prost::alloc::string::String,
+    /// The length in bytes of the file prefix that was hashed.  If
+    /// hashed_size == size, any hashes reported represent the entire
+    /// file.
+    #[prost(int64, tag="4")]
+    pub hashed_size: i64,
+    /// True when the hash covers only a prefix of the file.
+    #[prost(bool, tag="5")]
+    pub partially_hashed: bool,
+    /// Prefix of the file contents as a JSON encoded string.
+    /// (Currently only populated for Malicious Script Executed findings.)
+    #[prost(string, tag="6")]
+    pub contents: ::prost::alloc::string::String,
+}
+/// Represents an operating system process.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Process {
+    /// The process name visible in utilities like `top` and `ps`; it can
+    /// be accessed via `/proc/\[pid\]/comm` and changed with `prctl(PR_SET_NAME)`.
+    #[prost(string, tag="12")]
+    pub name: ::prost::alloc::string::String,
+    /// File information for the process executable.
+    #[prost(message, optional, tag="3")]
+    pub binary: ::core::option::Option<File>,
+    /// File information for libraries loaded by the process.
+    #[prost(message, repeated, tag="4")]
+    pub libraries: ::prost::alloc::vec::Vec<File>,
+    /// When the process represents the invocation of a script,
+    /// `binary` provides information about the interpreter while `script`
+    /// provides information about the script file provided to the
+    /// interpreter.
+    #[prost(message, optional, tag="5")]
+    pub script: ::core::option::Option<File>,
+    /// Process arguments as JSON encoded strings.
+    #[prost(string, repeated, tag="6")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// True if `args` is incomplete.
+    #[prost(bool, tag="7")]
+    pub arguments_truncated: bool,
+    /// Process environment variables.
+    #[prost(message, repeated, tag="8")]
+    pub env_variables: ::prost::alloc::vec::Vec<EnvironmentVariable>,
+    /// True if `env_variables` is incomplete.
+    #[prost(bool, tag="9")]
+    pub env_variables_truncated: bool,
+    /// The process id.
+    #[prost(int64, tag="10")]
+    pub pid: i64,
+    /// The parent process id.
+    #[prost(int64, tag="11")]
+    pub parent_pid: i64,
+}
+/// EnvironmentVariable is a name-value pair to store environment variables for
+/// Process.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EnvironmentVariable {
+    /// Environment variable name as a JSON encoded string.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Environment variable value as a JSON encoded string.
+    #[prost(string, tag="2")]
+    pub val: ::prost::alloc::string::String,
 }
 /// Refers to common vulnerability fields e.g. cve, cvss, cwe etc.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -274,991 +1332,6 @@ pub mod cvssv3 {
         /// No impact.
         None = 3,
     }
-}
-/// MITRE ATT&CK tactics and techniques related to this finding.
-/// See: <https://attack.mitre.org>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MitreAttack {
-    /// The MITRE ATT&CK tactic most closely represented by this finding, if any.
-    #[prost(enumeration="mitre_attack::Tactic", tag="1")]
-    pub primary_tactic: i32,
-    /// The MITRE ATT&CK technique most closely represented by this finding, if
-    /// any. primary_techniques is a repeated field because there are multiple
-    /// levels of MITRE ATT&CK techniques.  If the technique most closely
-    /// represented by this finding is a sub-technique (e.g. `SCANNING_IP_BLOCKS`),
-    /// both the sub-technique and its parent technique(s) will be listed (e.g.
-    /// `SCANNING_IP_BLOCKS`, `ACTIVE_SCANNING`).
-    #[prost(enumeration="mitre_attack::Technique", repeated, tag="2")]
-    pub primary_techniques: ::prost::alloc::vec::Vec<i32>,
-    /// Additional MITRE ATT&CK tactics related to this finding, if any.
-    #[prost(enumeration="mitre_attack::Tactic", repeated, tag="3")]
-    pub additional_tactics: ::prost::alloc::vec::Vec<i32>,
-    /// Additional MITRE ATT&CK techniques related to this finding, if any, along
-    /// with any of their respective parent techniques.
-    #[prost(enumeration="mitre_attack::Technique", repeated, tag="4")]
-    pub additional_techniques: ::prost::alloc::vec::Vec<i32>,
-    /// The MITRE ATT&CK version referenced by the above fields. E.g. "8".
-    #[prost(string, tag="5")]
-    pub version: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `MitreAttack`.
-pub mod mitre_attack {
-    /// MITRE ATT&CK tactics that can be referenced by SCC findings.
-    /// See: <https://attack.mitre.org/tactics/enterprise/>
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Tactic {
-        /// Unspecified value.
-        Unspecified = 0,
-        /// TA0043
-        Reconnaissance = 1,
-        /// TA0042
-        ResourceDevelopment = 2,
-        /// TA0001
-        InitialAccess = 5,
-        /// TA0002
-        Execution = 3,
-        /// TA0003
-        Persistence = 6,
-        /// TA0004
-        PrivilegeEscalation = 8,
-        /// TA0005
-        DefenseEvasion = 7,
-        /// TA0006
-        CredentialAccess = 9,
-        /// TA0007
-        Discovery = 10,
-        /// TA0008
-        LateralMovement = 11,
-        /// TA0009
-        Collection = 12,
-        /// TA0011
-        CommandAndControl = 4,
-        /// TA0010
-        Exfiltration = 13,
-        /// TA0040
-        Impact = 14,
-    }
-    /// MITRE ATT&CK techniques that can be referenced by SCC findings.
-    /// See: <https://attack.mitre.org/techniques/enterprise/>
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Technique {
-        /// Unspecified value.
-        Unspecified = 0,
-        /// T1595
-        ActiveScanning = 1,
-        /// T1595.001
-        ScanningIpBlocks = 2,
-        /// T1105
-        IngressToolTransfer = 3,
-        /// T1106
-        NativeApi = 4,
-        /// T1129
-        SharedModules = 5,
-        /// T1059
-        CommandAndScriptingInterpreter = 6,
-        /// T1059.004
-        UnixShell = 7,
-        /// T1496
-        ResourceHijacking = 8,
-        /// T1090
-        Proxy = 9,
-        /// T1090.002
-        ExternalProxy = 10,
-        /// T1090.003
-        MultiHopProxy = 11,
-        /// T1568
-        DynamicResolution = 12,
-        /// T1552
-        UnsecuredCredentials = 13,
-        /// T1078
-        ValidAccounts = 14,
-        /// T1078.003
-        LocalAccounts = 15,
-        /// T1078.004
-        CloudAccounts = 16,
-        /// T1498
-        NetworkDenialOfService = 17,
-        /// T1069
-        PermissionGroupsDiscovery = 18,
-        /// T1069.003
-        CloudGroups = 19,
-        /// T1567
-        ExfiltrationOverWebService = 20,
-        /// T1567.002
-        ExfiltrationToCloudStorage = 21,
-        /// T1098
-        AccountManipulation = 22,
-        /// T1098.004
-        SshAuthorizedKeys = 23,
-        /// T1543
-        CreateOrModifySystemProcess = 24,
-        /// T1539
-        StealWebSessionCookie = 25,
-        /// T1578
-        ModifyCloudComputeInfrastructure = 26,
-        /// T1190
-        ExploitPublicFacingApplication = 27,
-        /// T1556
-        ModifyAuthenticationProcess = 28,
-        /// T1485
-        DataDestruction = 29,
-        /// T1484
-        DomainPolicyModification = 30,
-        /// T1562
-        ImpairDefenses = 31,
-        /// T1046
-        NetworkServiceDiscovery = 32,
-        /// T1134
-        AccessTokenManipulation = 33,
-        /// T1548
-        AbuseElevationControlMechanism = 34,
-    }
-}
-/// Represents an access event.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Access {
-    /// Associated email, such as "foo@google.com".
-    ///
-    /// The email address of the authenticated user (or service account on behalf
-    /// of third party principal) making the request. For third party identity
-    /// callers, the `principal_subject` field is populated instead of this field.
-    /// For privacy reasons, the principal email address is sometimes redacted.
-    /// For more information, see [Caller identities in audit
-    /// logs](<https://cloud.google.com/logging/docs/audit#user-id>).
-    #[prost(string, tag="1")]
-    pub principal_email: ::prost::alloc::string::String,
-    /// Caller's IP address, such as "1.1.1.1".
-    #[prost(string, tag="2")]
-    pub caller_ip: ::prost::alloc::string::String,
-    /// The caller IP's geolocation, which identifies where the call came from.
-    #[prost(message, optional, tag="3")]
-    pub caller_ip_geo: ::core::option::Option<Geolocation>,
-    /// What kind of user agent is associated, e.g. operating system shells,
-    /// embedded or stand-alone applications, etc.
-    #[prost(string, tag="4")]
-    pub user_agent_family: ::prost::alloc::string::String,
-    /// This is the API service that the service account made a call to, e.g.
-    /// "iam.googleapis.com"
-    #[prost(string, tag="5")]
-    pub service_name: ::prost::alloc::string::String,
-    /// The method that the service account called, e.g. "SetIamPolicy".
-    #[prost(string, tag="6")]
-    pub method_name: ::prost::alloc::string::String,
-    /// A string representing the principal_subject associated with the identity.
-    /// As compared to `principal_email`, supports principals that aren't
-    /// associated with email addresses, such as third party principals. For most
-    /// identities, the format will be `principal://iam.googleapis.com/{identity
-    /// pool name}/subjects/{subject}` except for some GKE identities
-    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
-    /// format `serviceAccount:{identity pool name}\[{subject}\]`
-    #[prost(string, tag="7")]
-    pub principal_subject: ::prost::alloc::string::String,
-    /// The name of the service account key used to create or exchange
-    /// credentials for authenticating the service account making the request.
-    /// This is a scheme-less URI full resource name. For example:
-    ///
-    /// "//iam.googleapis.com/projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}"
-    ///
-    #[prost(string, tag="8")]
-    pub service_account_key_name: ::prost::alloc::string::String,
-    /// Identity delegation history of an authenticated service account that makes
-    /// the request. It contains information on the real authorities that try to
-    /// access GCP resources by delegating on a service account. When multiple
-    /// authorities are present, they are guaranteed to be sorted based on the
-    /// original ordering of the identity delegation events.
-    #[prost(message, repeated, tag="9")]
-    pub service_account_delegation_info: ::prost::alloc::vec::Vec<ServiceAccountDelegationInfo>,
-}
-/// Identity delegation history of an authenticated service account.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ServiceAccountDelegationInfo {
-    /// The email address of a Google account.
-    #[prost(string, tag="1")]
-    pub principal_email: ::prost::alloc::string::String,
-    /// A string representing the principal_subject associated with the identity.
-    /// As compared to `principal_email`, supports principals that aren't
-    /// associated with email addresses, such as third party principals. For most
-    /// identities, the format will be `principal://iam.googleapis.com/{identity
-    /// pool name}/subjects/{subject}` except for some GKE identities
-    /// (GKE_WORKLOAD, FREEFORM, GKE_HUB_WORKLOAD) that are still in the legacy
-    /// format `serviceAccount:{identity pool name}\[{subject}\]`
-    #[prost(string, tag="2")]
-    pub principal_subject: ::prost::alloc::string::String,
-}
-/// Represents a geographical location for a given access.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Geolocation {
-    /// A CLDR.
-    #[prost(string, tag="1")]
-    pub region_code: ::prost::alloc::string::String,
-}
-/// File information about the related binary/library used by an executable, or
-/// the script used by a script interpreter
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct File {
-    /// Absolute path of the file as a JSON encoded string.
-    #[prost(string, tag="1")]
-    pub path: ::prost::alloc::string::String,
-    /// Size of the file in bytes.
-    #[prost(int64, tag="2")]
-    pub size: i64,
-    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
-    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
-    /// of the entire file.
-    #[prost(string, tag="3")]
-    pub sha256: ::prost::alloc::string::String,
-    /// The length in bytes of the file prefix that was hashed.  If
-    /// hashed_size == size, any hashes reported represent the entire
-    /// file.
-    #[prost(int64, tag="4")]
-    pub hashed_size: i64,
-    /// True when the hash covers only a prefix of the file.
-    #[prost(bool, tag="5")]
-    pub partially_hashed: bool,
-    /// Prefix of the file contents as a JSON encoded string.
-    /// (Currently only populated for Malicious Script Executed findings.)
-    #[prost(string, tag="6")]
-    pub contents: ::prost::alloc::string::String,
-}
-/// Represents an operating system process.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Process {
-    /// The process name visible in utilities like `top` and `ps`; it can
-    /// be accessed via `/proc/\[pid\]/comm` and changed with `prctl(PR_SET_NAME)`.
-    #[prost(string, tag="12")]
-    pub name: ::prost::alloc::string::String,
-    /// File information for the process executable.
-    #[prost(message, optional, tag="3")]
-    pub binary: ::core::option::Option<File>,
-    /// File information for libraries loaded by the process.
-    #[prost(message, repeated, tag="4")]
-    pub libraries: ::prost::alloc::vec::Vec<File>,
-    /// When the process represents the invocation of a script,
-    /// `binary` provides information about the interpreter while `script`
-    /// provides information about the script file provided to the
-    /// interpreter.
-    #[prost(message, optional, tag="5")]
-    pub script: ::core::option::Option<File>,
-    /// Process arguments as JSON encoded strings.
-    #[prost(string, repeated, tag="6")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// True if `args` is incomplete.
-    #[prost(bool, tag="7")]
-    pub arguments_truncated: bool,
-    /// Process environment variables.
-    #[prost(message, repeated, tag="8")]
-    pub env_variables: ::prost::alloc::vec::Vec<EnvironmentVariable>,
-    /// True if `env_variables` is incomplete.
-    #[prost(bool, tag="9")]
-    pub env_variables_truncated: bool,
-    /// The process id.
-    #[prost(int64, tag="10")]
-    pub pid: i64,
-    /// The parent process id.
-    #[prost(int64, tag="11")]
-    pub parent_pid: i64,
-}
-/// EnvironmentVariable is a name-value pair to store environment variables for
-/// Process.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EnvironmentVariable {
-    /// Environment variable name as a JSON encoded string.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Environment variable value as a JSON encoded string.
-    #[prost(string, tag="2")]
-    pub val: ::prost::alloc::string::String,
-}
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, and
-/// other tools.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated or insecure libraries."
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}",
-    /// "folders/{folder_id}/sources/{source_id}" or
-    /// "projects/{project_number}/sources/{source_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag="14")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Message that contains the resource name and display name of a folder
-/// resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Folder {
-    /// Full resource name of this folder. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub resource_folder: ::prost::alloc::string::String,
-    /// The user defined display name for this folder.
-    #[prost(string, tag="2")]
-    pub resource_folder_display_name: ::prost::alloc::string::String,
-}
-/// Information related to the Google Cloud resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Resource {
-    /// The full resource name of the resource. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name of the resource.
-    #[prost(string, tag="8")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The full resource type of the resource.
-    #[prost(string, tag="6")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The full resource name of project that the resource belongs to.
-    #[prost(string, tag="2")]
-    pub project: ::prost::alloc::string::String,
-    /// The project ID that the resource belongs to.
-    #[prost(string, tag="3")]
-    pub project_display_name: ::prost::alloc::string::String,
-    /// The full resource name of resource's parent.
-    #[prost(string, tag="4")]
-    pub parent: ::prost::alloc::string::String,
-    /// The human readable name of resource's parent.
-    #[prost(string, tag="5")]
-    pub parent_display_name: ::prost::alloc::string::String,
-    /// Output only. Contains a Folder message for each folder in the assets ancestry.
-    /// The first folder is the deepest nested folder, and the last folder is the
-    /// folder directly under the Organization.
-    #[prost(message, repeated, tag="7")]
-    pub folders: ::prost::alloc::vec::Vec<Folder>,
-}
-/// A mute config is a Cloud SCC resource that contains the configuration
-/// to mute create/update events of findings.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MuteConfig {
-    /// This field will be ignored if provided on config creation. Format
-    /// "organizations/{organization}/muteConfigs/{mute_config}"
-    /// "folders/{folder}/muteConfigs/{mute_config}"
-    /// "projects/{project}/muteConfigs/{mute_config}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name to be displayed for the mute config.
-    #[deprecated]
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// A description of the mute config.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. An expression that defines the filter to apply across create/update events
-    /// of findings. While creating a filter string, be mindful of the
-    /// scope in which the mute configuration is being created. E.g., If a filter
-    /// contains project = X but is created under the project = Y scope, it might
-    /// not match any findings.
-    ///
-    /// The following field and operator combinations are supported:
-    ///
-    /// * severity: `=`, `:`
-    /// * category: `=`, `:`
-    /// * resource.name: `=`, `:`
-    /// * resource.project_name: `=`, `:`
-    /// * resource.project_display_name: `=`, `:`
-    /// * resource.folders.resource_folder: `=`, `:`
-    /// * resource.parent_name: `=`, `:`
-    /// * resource.parent_display_name: `=`, `:`
-    /// * resource.type: `=`, `:`
-    /// * finding_class: `=`, `:`
-    /// * indicator.ip_addresses: `=`, `:`
-    /// * indicator.domains: `=`, `:`
-    #[prost(string, tag="4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Output only. The time at which the mute config was created.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation.
-    #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The most recent time at which the mute config was updated.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(message, optional, tag="6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Email address of the user who last edited the mute config.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(string, tag="7")]
-    pub most_recent_editor: ::prost::alloc::string::String,
-}
-/// Response of asset discovery run
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
-    }
-}
-/// Representation of third party SIEM/SOAR fields within SCC.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExternalSystem {
-    /// External System Name e.g. jira, demisto, etc.
-    ///  e.g.:
-    ///  `organizations/1234/sources/5678/findings/123456/externalSystems/jira`
-    /// `folders/1234/sources/5678/findings/123456/externalSystems/jira`
-    /// `projects/1234/sources/5678/findings/123456/externalSystems/jira`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// References primary/secondary etc assignees in the external system.
-    #[prost(string, repeated, tag="2")]
-    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Identifier that's used to track the given finding in the external system.
-    #[prost(string, tag="3")]
-    pub external_uid: ::prost::alloc::string::String,
-    /// Most recent status of the corresponding finding's ticket/tracker in the
-    /// external system.
-    #[prost(string, tag="4")]
-    pub status: ::prost::alloc::string::String,
-    /// The most recent time when the corresponding finding's ticket/tracker was
-    /// updated in the external system.
-    #[prost(message, optional, tag="5")]
-    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Represents a particular IAM binding, which captures a member's role addition,
-/// removal, or state.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IamBinding {
-    /// The action that was performed on a Binding.
-    #[prost(enumeration="iam_binding::Action", tag="1")]
-    pub action: i32,
-    /// Role that is assigned to "members".
-    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
-    #[prost(string, tag="2")]
-    pub role: ::prost::alloc::string::String,
-    /// A single identity requesting access for a Cloud Platform resource,
-    /// e.g. "foo@google.com".
-    #[prost(string, tag="3")]
-    pub member: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `IamBinding`.
-pub mod iam_binding {
-    /// The type of action performed on a Binding in a policy.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Action {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Addition of a Binding.
-        Add = 1,
-        /// Removal of a Binding.
-        Remove = 2,
-    }
-}
-/// Cloud Security Command Center (Cloud SCC) notification configs.
-///
-/// A notification config is a Cloud SCC resource that contains the configuration
-/// to send notifications for create/update events of findings, assets and etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationConfig {
-    /// The relative resource name of this notification config. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the notification config (max of 1024 characters).
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// The Pub/Sub topic to send notifications to. Its format is
-    /// "projects/\[project_id]/topics/[topic\]".
-    #[prost(string, tag="3")]
-    pub pubsub_topic: ::prost::alloc::string::String,
-    /// Output only. The service account that needs "pubsub.topics.publish"
-    /// permission to publish to the Pub/Sub topic.
-    #[prost(string, tag="4")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The config for triggering notifications.
-    #[prost(oneof="notification_config::NotifyConfig", tags="5")]
-    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
-}
-/// Nested message and enum types in `NotificationConfig`.
-pub mod notification_config {
-    /// The config for streaming-based notifications, which send each event as soon
-    /// as it is detected.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StreamingConfig {
-        /// Expression that defines the filter to apply across create/update events
-        /// of assets or findings as specified by the event type. The expression is a
-        /// list of zero or more restrictions combined via logical operators `AND`
-        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
-        /// `AND`.
-        ///
-        /// Restrictions have the form `<field> <operator> <value>` and may have a
-        /// `-` character in front of them to indicate negation. The fields map to
-        /// those defined in the corresponding resource.
-        ///
-        /// The supported operators are:
-        ///
-        /// * `=` for all value types.
-        /// * `>`, `<`, `>=`, `<=` for integer values.
-        /// * `:`, meaning substring matching, for strings.
-        ///
-        /// The supported value types are:
-        ///
-        /// * string literals in quotes.
-        /// * integer literals without quotes.
-        /// * boolean literals `true` and `false` without quotes.
-        #[prost(string, tag="1")]
-        pub filter: ::prost::alloc::string::String,
-    }
-    /// The config for triggering notifications.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum NotifyConfig {
-        /// The config for triggering streaming-based notifications.
-        #[prost(message, tag="5")]
-        StreamingConfig(StreamingConfig),
-    }
-}
-/// Exfiltration represents a data exfiltration attempt of one or more
-/// sources to one or more targets.  Sources represent the source
-/// of data that is exfiltrated, and Targets represents the destination the
-/// data was copied to.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Exfiltration {
-    /// If there are multiple sources, then the data is considered "joined" between
-    /// them. For instance, BigQuery can join multiple tables, and each
-    /// table would be considered a source.
-    #[prost(message, repeated, tag="1")]
-    pub sources: ::prost::alloc::vec::Vec<ExfilResource>,
-    /// If there are multiple targets, each target would get a complete copy of the
-    /// "joined" source data.
-    #[prost(message, repeated, tag="2")]
-    pub targets: ::prost::alloc::vec::Vec<ExfilResource>,
-}
-/// Resource that has been exfiltrated or exfiltrated_to.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExfilResource {
-    /// Resource's URI (<https://google.aip.dev/122#full-resource-names>)
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Subcomponents of the asset that is exfiltrated - these could be
-    /// URIs used during exfiltration, table names, databases, filenames, etc.
-    /// For example, multiple tables may be exfiltrated from the same CloudSQL
-    /// instance, or multiple files from the same Cloud Storage bucket.
-    #[prost(string, repeated, tag="2")]
-    pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Configures how to deliver Findings to BigQuery Instance.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryExport {
-    /// The relative resource name of this export. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name.>
-    /// Example format:
-    /// "organizations/{organization_id}/bigQueryExports/{export_id}" Example
-    /// format: "folders/{folder_id}/bigQueryExports/{export_id}" Example format:
-    /// "projects/{project_id}/bigQueryExports/{export_id}"
-    /// This field is provided in responses, and is ignored when provided in create
-    /// requests.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the export (max of 1024 characters).
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Expression that defines the filter to apply across create/update events
-    /// of findings. The expression is a list of zero or more restrictions combined
-    /// via logical operators `AND` and `OR`. Parentheses are supported, and `OR`
-    /// has higher precedence than `AND`.
-    ///
-    /// Restrictions have the form `<field> <operator> <value>` and may have a
-    /// `-` character in front of them to indicate negation. The fields map to
-    /// those defined in the corresponding resource.
-    ///
-    /// The supported operators are:
-    ///
-    /// * `=` for all value types.
-    /// * `>`, `<`, `>=`, `<=` for integer values.
-    /// * `:`, meaning substring matching, for strings.
-    ///
-    /// The supported value types are:
-    ///
-    /// * string literals in quotes.
-    /// * integer literals without quotes.
-    /// * boolean literals `true` and `false` without quotes.
-    #[prost(string, tag="3")]
-    pub filter: ::prost::alloc::string::String,
-    /// The dataset to write findings' updates to. Its format is
-    /// "projects/\[project_id]/datasets/[bigquery_dataset_id\]".
-    /// BigQuery Dataset unique ID  must contain only letters (a-z, A-Z), numbers
-    /// (0-9), or underscores (_).
-    #[prost(string, tag="4")]
-    pub dataset: ::prost::alloc::string::String,
-    /// Output only. The time at which the big query export was created.
-    /// This field is set by the server and will be ignored if provided on export
-    /// on creation.
-    #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The most recent time at which the big export was updated.
-    /// This field is set by the server and will be ignored if provided on export
-    /// creation or update.
-    #[prost(message, optional, tag="6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Email address of the user who last edited the big query export.
-    /// This field is set by the server and will be ignored if provided on export
-    /// creation or update.
-    #[prost(string, tag="7")]
-    pub most_recent_editor: ::prost::alloc::string::String,
-    /// Output only. The service account that needs permission to create table, upload data to
-    /// the big query dataset.
-    #[prost(string, tag="8")]
-    pub principal: ::prost::alloc::string::String,
-}
-/// Contains information about the IP connection associated with the finding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connection {
-    /// Destination IP address. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(string, tag="1")]
-    pub destination_ip: ::prost::alloc::string::String,
-    /// Destination port. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(int32, tag="2")]
-    pub destination_port: i32,
-    /// Source IP address.
-    #[prost(string, tag="3")]
-    pub source_ip: ::prost::alloc::string::String,
-    /// Source port.
-    #[prost(int32, tag="4")]
-    pub source_port: i32,
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[prost(enumeration="connection::Protocol", tag="5")]
-    pub protocol: i32,
-}
-/// Nested message and enum types in `Connection`.
-pub mod connection {
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Protocol {
-        /// Unspecified protocol (not HOPOPT).
-        Unspecified = 0,
-        /// Internet Control Message Protocol.
-        Icmp = 1,
-        /// Transmission Control Protocol.
-        Tcp = 6,
-        /// User Datagram Protocol.
-        Udp = 17,
-        /// Generic Routing Encapsulation.
-        Gre = 47,
-        /// Encap Security Payload.
-        Esp = 50,
-    }
-}
-/// The details pertaining to specific contacts
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContactDetails {
-    /// A list of contacts
-    #[prost(message, repeated, tag="1")]
-    pub contacts: ::prost::alloc::vec::Vec<Contact>,
-}
-/// Representa a single contact's email address
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Contact {
-    /// An email address e.g. "person123@company.com"
-    #[prost(string, tag="1")]
-    pub email: ::prost::alloc::string::String,
-}
-/// Label represents a generic name=value label. Label has separate name and
-/// value fields to support filtering with contains().
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Label {
-    /// Label name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Label value.
-    #[prost(string, tag="2")]
-    pub value: ::prost::alloc::string::String,
-}
-/// Container associated with the finding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Container {
-    /// Container name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Container image URI provided when configuring a pod/container.
-    /// May identify a container image version using mutable tags.
-    #[prost(string, tag="2")]
-    pub uri: ::prost::alloc::string::String,
-    /// Optional container image id, when provided by the container runtime.
-    /// Uniquely identifies the container image launched using a container image
-    /// digest.
-    #[prost(string, tag="3")]
-    pub image_id: ::prost::alloc::string::String,
-    /// Container labels, as provided by the container runtime.
-    #[prost(message, repeated, tag="4")]
-    pub labels: ::prost::alloc::vec::Vec<Label>,
-}
-/// Represents database access information, such as queries.
-/// A database may be a sub-resource of an instance (as in the case of CloudSQL
-/// instances or Cloud Spanner instances), or the database instance itself.
-/// Some database resources may not have the full resource name populated
-/// because these resource types are not yet supported by Cloud Asset Inventory
-/// (e.g. CloudSQL databases).  In these cases only the display name will be
-/// provided.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Database {
-    /// The full resource name of the database the user connected to, if it is
-    /// supported by CAI. (<https://google.aip.dev/122#full-resource-names>)
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name of the database the user connected to.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The username used to connect to the DB. This may not necessarily be an IAM
-    /// principal, and has no required format.
-    #[prost(string, tag="3")]
-    pub user_name: ::prost::alloc::string::String,
-    /// The SQL statement associated with the relevant access.
-    #[prost(string, tag="4")]
-    pub query: ::prost::alloc::string::String,
-    /// The target usernames/roles/groups of a SQL privilege grant (not an IAM
-    /// policy change).
-    #[prost(string, repeated, tag="5")]
-    pub grantees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Kubernetes related attributes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Kubernetes {
-    /// Kubernetes Pods associated with the finding. This field will contain Pod
-    /// records for each container that is owned by a Pod.
-    #[prost(message, repeated, tag="1")]
-    pub pods: ::prost::alloc::vec::Vec<kubernetes::Pod>,
-    /// Provides Kubernetes Node information.
-    #[prost(message, repeated, tag="2")]
-    pub nodes: ::prost::alloc::vec::Vec<kubernetes::Node>,
-    /// GKE Node Pools associated with the finding. This field will
-    /// contain NodePool information for each Node, when it is available.
-    #[prost(message, repeated, tag="3")]
-    pub node_pools: ::prost::alloc::vec::Vec<kubernetes::NodePool>,
-    /// Provides Kubernetes role information for findings that involve
-    /// Roles or ClusterRoles.
-    #[prost(message, repeated, tag="4")]
-    pub roles: ::prost::alloc::vec::Vec<kubernetes::Role>,
-    /// Provides Kubernetes role binding information for findings that involve
-    /// RoleBindings or ClusterRoleBindings.
-    #[prost(message, repeated, tag="5")]
-    pub bindings: ::prost::alloc::vec::Vec<kubernetes::Binding>,
-    /// Provides information on any Kubernetes access reviews (i.e. privilege
-    /// checks) relevant to the finding.
-    #[prost(message, repeated, tag="6")]
-    pub access_reviews: ::prost::alloc::vec::Vec<kubernetes::AccessReview>,
-}
-/// Nested message and enum types in `Kubernetes`.
-pub mod kubernetes {
-    /// Kubernetes Pod.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Pod {
-        /// Kubernetes Pod namespace.
-        #[prost(string, tag="1")]
-        pub ns: ::prost::alloc::string::String,
-        /// Kubernetes Pod name.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// Pod labels.  For Kubernetes containers, these are applied to the
-        /// container.
-        #[prost(message, repeated, tag="3")]
-        pub labels: ::prost::alloc::vec::Vec<super::Label>,
-        /// Pod containers associated with this finding, if any.
-        #[prost(message, repeated, tag="4")]
-        pub containers: ::prost::alloc::vec::Vec<super::Container>,
-    }
-    /// Kubernetes Nodes associated with the finding.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Node {
-        /// Full Resource name of the Compute Engine VM running the
-        /// cluster node.
-        #[prost(string, tag="1")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// Provides GKE Node Pool information.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct NodePool {
-        /// Kubernetes Node pool name.
-        #[prost(string, tag="1")]
-        pub name: ::prost::alloc::string::String,
-        /// Nodes associated with the finding.
-        #[prost(message, repeated, tag="2")]
-        pub nodes: ::prost::alloc::vec::Vec<Node>,
-    }
-    /// Kubernetes Role or ClusterRole.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Role {
-        /// Role type.
-        #[prost(enumeration="role::Kind", tag="1")]
-        pub kind: i32,
-        /// Role namespace.
-        #[prost(string, tag="2")]
-        pub ns: ::prost::alloc::string::String,
-        /// Role name.
-        #[prost(string, tag="3")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `Role`.
-    pub mod role {
-        /// Types of Kubernetes roles.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Kind {
-            /// Role type is not specified.
-            Unspecified = 0,
-            /// Kubernetes Role.
-            Role = 1,
-            /// Kubernetes ClusterRole.
-            ClusterRole = 2,
-        }
-    }
-    /// Represents a Kubernetes RoleBinding or ClusterRoleBinding.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Binding {
-        /// Namespace for binding.
-        #[prost(string, tag="1")]
-        pub ns: ::prost::alloc::string::String,
-        /// Name for binding.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// The Role or ClusterRole referenced by the binding.
-        #[prost(message, optional, tag="3")]
-        pub role: ::core::option::Option<Role>,
-        /// Represents the subjects(s) bound to the role. Not always available
-        /// for PATCH requests.
-        #[prost(message, repeated, tag="4")]
-        pub subjects: ::prost::alloc::vec::Vec<Subject>,
-    }
-    /// Represents a Kubernetes Subject.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Subject {
-        /// Authentication type for subject.
-        #[prost(enumeration="subject::AuthType", tag="1")]
-        pub kind: i32,
-        /// Namespace for subject.
-        #[prost(string, tag="2")]
-        pub ns: ::prost::alloc::string::String,
-        /// Name for subject.
-        #[prost(string, tag="3")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `Subject`.
-    pub mod subject {
-        /// Auth types that can be used for Subject's kind field.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum AuthType {
-            /// Authentication is not specified.
-            Unspecified = 0,
-            /// User with valid certificate.
-            User = 1,
-            /// Users managed by Kubernetes API with credentials stored as Secrets.
-            Serviceaccount = 2,
-            /// Collection of users.
-            Group = 3,
-        }
-    }
-    /// Conveys information about a Kubernetes access review (e.g. kubectl auth
-    /// can-i ...) that was involved in a finding.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AccessReview {
-        /// Group is the API Group of the Resource. "*" means all.
-        #[prost(string, tag="1")]
-        pub group: ::prost::alloc::string::String,
-        /// Namespace of the action being requested. Currently, there is no
-        /// distinction between no namespace and all namespaces.  Both
-        /// are represented by "" (empty).
-        #[prost(string, tag="2")]
-        pub ns: ::prost::alloc::string::String,
-        /// Name is the name of the resource being requested. Empty means all.
-        #[prost(string, tag="3")]
-        pub name: ::prost::alloc::string::String,
-        /// Resource is the optional resource type requested. "*" means all.
-        #[prost(string, tag="4")]
-        pub resource: ::prost::alloc::string::String,
-        /// Subresource is the optional subresource type.
-        #[prost(string, tag="5")]
-        pub subresource: ::prost::alloc::string::String,
-        /// Verb is a Kubernetes resource API verb, like: get, list, watch, create,
-        /// update, delete, proxy. "*" means all.
-        #[prost(string, tag="6")]
-        pub verb: ::prost::alloc::string::String,
-        /// Version is the API Version of the Resource. "*" means all.
-        #[prost(string, tag="7")]
-        pub version: ::prost::alloc::string::String,
-    }
-}
-/// User specified security marks that are attached to the parent Security
-/// Command Center resource. Security marks are scoped within a Security Command
-/// Center organization -- they can be modified and viewed by all users who have
-/// proper permissions on the organization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SecurityMarks {
-    /// The relative resource name of the SecurityMarks. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Examples:
-    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Mutable user specified security marks belonging to the parent resource.
-    /// Constraints are as follows:
-    ///
-    ///   * Keys and values are treated as case insensitive
-    ///   * Keys must be between 1 - 256 characters (inclusive)
-    ///   * Keys must be letters, numbers, underscores, or dashes
-    ///   * Values have leading and trailing whitespace trimmed, remaining
-    ///     characters must be between 1 - 4096 characters (inclusive)
-    #[prost(btree_map="string, string", tag="2")]
-    pub marks: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The canonical name of the marks.
-    /// Examples:
-    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
-    /// "folders/{folder_id}/assets/{asset_id}/securityMarks"
-    /// "projects/{project_number}/assets/{asset_id}/securityMarks"
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    #[prost(string, tag="3")]
-    pub canonical_name: ::prost::alloc::string::String,
 }
 /// Security Command Center finding.
 ///
@@ -1562,169 +1635,96 @@ pub mod notification_message {
         Finding(super::Finding),
     }
 }
-/// Security Command Center representation of a Google Cloud
-/// resource.
-///
-/// The Asset is a Security Command Center resource that captures information
-/// about a single Google Cloud resource. All modifications to an Asset are only
-/// within the context of Security Command Center and don't affect the referenced
-/// Google Cloud resource.
+/// Response of asset discovery run
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// The relative resource name of this asset. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/assets/{asset_id}".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
     #[prost(message, optional, tag="2")]
-    pub security_center_properties: ::core::option::Option<asset::SecurityCenterProperties>,
-    /// Resource managed properties. These properties are managed and defined by
-    /// the Google Cloud resource and cannot be modified by the user.
-    #[prost(btree_map="string, message", tag="7")]
-    pub resource_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
-    /// User specified security marks. These marks are entirely managed by the user
-    /// and come from the SecurityMarks resource that belongs to the asset.
-    #[prost(message, optional, tag="8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the asset was created in Security Command Center.
-    #[prost(message, optional, tag="9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the asset was last updated or added in Cloud SCC.
-    #[prost(message, optional, tag="10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[prost(message, optional, tag="11")]
-    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
-    /// The canonical name of the resource. It's either
-    /// "organizations/{organization_id}/assets/{asset_id}",
-    /// "folders/{folder_id}/assets/{asset_id}" or
-    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
-    /// ancestor of the resource.
-    #[prost(string, tag="13")]
-    pub canonical_name: ::prost::alloc::string::String,
+    pub duration: ::core::option::Option<::prost_types::Duration>,
 }
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SecurityCenterProperties {
-        /// The full resource name of the Google Cloud resource this asset
-        /// represents. This field is immutable after create time. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="1")]
-        pub resource_name: ::prost::alloc::string::String,
-        /// The type of the Google Cloud resource. Examples include: APPLICATION,
-        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
-        /// Security Command Center and/or the producer of the resource and is
-        /// immutable after create time.
-        #[prost(string, tag="2")]
-        pub resource_type: ::prost::alloc::string::String,
-        /// The full resource name of the immediate parent of the resource. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="3")]
-        pub resource_parent: ::prost::alloc::string::String,
-        /// The full resource name of the project the resource belongs to. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="4")]
-        pub resource_project: ::prost::alloc::string::String,
-        /// Owners of the Google Cloud resource.
-        #[prost(string, repeated, tag="5")]
-        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The user defined display name for this resource.
-        #[prost(string, tag="6")]
-        pub resource_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the parent of this resource.
-        #[prost(string, tag="7")]
-        pub resource_parent_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the project of this resource.
-        #[prost(string, tag="8")]
-        pub resource_project_display_name: ::prost::alloc::string::String,
-        /// Contains a Folder message for each folder in the assets ancestry.
-        /// The first folder is the deepest nested folder, and the last folder is the
-        /// folder directly under the Organization.
-        #[prost(message, repeated, tag="10")]
-        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
-    }
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IamPolicy {
-        /// The JSON representation of the Policy associated with the asset.
-        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
-        /// details.
-        #[prost(string, tag="1")]
-        pub policy_blob: ::prost::alloc::string::String,
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
     }
 }
-/// User specified settings that are attached to the Security Command
-/// Center organization.
+/// Configures how to deliver Findings to BigQuery Instance.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OrganizationSettings {
-    /// The relative resource name of the settings. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/organizationSettings".
+pub struct BigQueryExport {
+    /// The relative resource name of this export. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name.>
+    /// Example format:
+    /// "organizations/{organization_id}/bigQueryExports/{export_id}" Example
+    /// format: "folders/{folder_id}/bigQueryExports/{export_id}" Example format:
+    /// "projects/{project_id}/bigQueryExports/{export_id}"
+    /// This field is provided in responses, and is ignored when provided in create
+    /// requests.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
-    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
-    /// set to `true`, then discovery of assets will occur. If it is set to `false,
-    /// all historical assets will remain, but discovery of future assets will not
-    /// occur.
-    #[prost(bool, tag="2")]
-    pub enable_asset_discovery: bool,
-    /// The configuration used for Asset Discovery runs.
-    #[prost(message, optional, tag="3")]
-    pub asset_discovery_config: ::core::option::Option<organization_settings::AssetDiscoveryConfig>,
-}
-/// Nested message and enum types in `OrganizationSettings`.
-pub mod organization_settings {
-    /// The configuration used for Asset Discovery runs.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AssetDiscoveryConfig {
-        /// The project ids to use for filtering asset discovery.
-        #[prost(string, repeated, tag="1")]
-        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The mode to use for filtering asset discovery.
-        #[prost(enumeration="asset_discovery_config::InclusionMode", tag="2")]
-        pub inclusion_mode: i32,
-        /// The folder ids to use for filtering asset discovery.
-        /// It consists of only digits, e.g., 756619654966.
-        #[prost(string, repeated, tag="3")]
-        pub folder_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// Nested message and enum types in `AssetDiscoveryConfig`.
-    pub mod asset_discovery_config {
-        /// The mode of inclusion when running Asset Discovery.
-        /// Asset discovery can be limited by explicitly identifying projects to be
-        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
-        /// within the organization and their children are discovered during asset
-        /// discovery. If EXCLUDE is set, then projects that don't match those
-        /// projects are discovered during asset discovery. If neither are set, then
-        /// all projects within the organization are discovered during asset
-        /// discovery.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum InclusionMode {
-            /// Unspecified. Setting the mode with this value will disable
-            /// inclusion/exclusion filtering for Asset Discovery.
-            Unspecified = 0,
-            /// Asset Discovery will capture only the resources within the projects
-            /// specified. All other resources will be ignored.
-            IncludeOnly = 1,
-            /// Asset Discovery will ignore all resources under the projects specified.
-            /// All other resources will be retrieved.
-            Exclude = 2,
-        }
-    }
+    /// The description of the export (max of 1024 characters).
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// Expression that defines the filter to apply across create/update events
+    /// of findings. The expression is a list of zero or more restrictions combined
+    /// via logical operators `AND` and `OR`. Parentheses are supported, and `OR`
+    /// has higher precedence than `AND`.
+    ///
+    /// Restrictions have the form `<field> <operator> <value>` and may have a
+    /// `-` character in front of them to indicate negation. The fields map to
+    /// those defined in the corresponding resource.
+    ///
+    /// The supported operators are:
+    ///
+    /// * `=` for all value types.
+    /// * `>`, `<`, `>=`, `<=` for integer values.
+    /// * `:`, meaning substring matching, for strings.
+    ///
+    /// The supported value types are:
+    ///
+    /// * string literals in quotes.
+    /// * integer literals without quotes.
+    /// * boolean literals `true` and `false` without quotes.
+    #[prost(string, tag="3")]
+    pub filter: ::prost::alloc::string::String,
+    /// The dataset to write findings' updates to. Its format is
+    /// "projects/\[project_id]/datasets/[bigquery_dataset_id\]".
+    /// BigQuery Dataset unique ID  must contain only letters (a-z, A-Z), numbers
+    /// (0-9), or underscores (_).
+    #[prost(string, tag="4")]
+    pub dataset: ::prost::alloc::string::String,
+    /// Output only. The time at which the big query export was created.
+    /// This field is set by the server and will be ignored if provided on export
+    /// on creation.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The most recent time at which the big export was updated.
+    /// This field is set by the server and will be ignored if provided on export
+    /// creation or update.
+    #[prost(message, optional, tag="6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Email address of the user who last edited the big query export.
+    /// This field is set by the server and will be ignored if provided on export
+    /// creation or update.
+    #[prost(string, tag="7")]
+    pub most_recent_editor: ::prost::alloc::string::String,
+    /// Output only. The service account that needs permission to create table, upload data to
+    /// the big query dataset.
+    #[prost(string, tag="8")]
+    pub principal: ::prost::alloc::string::String,
 }
 /// Request message for bulk findings update.
 ///

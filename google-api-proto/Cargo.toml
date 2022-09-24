@@ -176,6 +176,7 @@ google-cloud-dialogflow-cx-v3 = ["google-api", "google-cloud", "google-longrunni
 google-cloud-dialogflow-cx-v3beta1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-dialogflow-v2 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-dialogflow-v2beta1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
+google-cloud-discoveryengine-v1beta = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-documentai-v1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-documentai-v1beta1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-documentai-v1beta2 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]

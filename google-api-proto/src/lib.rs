@@ -149,6 +149,7 @@ pub mod cloud;
         feature = "google-cloud-dialogflow-cx-v3beta1",
         feature = "google-cloud-dialogflow-v2",
         feature = "google-cloud-dialogflow-v2beta1",
+        feature = "google-cloud-discoveryengine-v1beta",
         feature = "google-cloud-documentai-v1",
         feature = "google-cloud-documentai-v1beta1",
         feature = "google-cloud-documentai-v1beta2",
