@@ -1,84 +1,3 @@
-/// A set of field paths on a document.
-/// Used to restrict a get or update operation on a document to a subset of its
-/// fields.
-/// This is different from standard field masks, as this is always scoped to a
-/// \[Document][google.firestore.v1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1.Value\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentMask {
-    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1.Document.fields\] for a field
-    /// path syntax reference.
-    #[prost(string, repeated, tag="1")]
-    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A precondition on a document, used for conditional operations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Precondition {
-    /// The type of precondition.
-    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
-    pub condition_type: ::core::option::Option<precondition::ConditionType>,
-}
-/// Nested message and enum types in `Precondition`.
-pub mod precondition {
-    /// The type of precondition.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ConditionType {
-        /// When set to `true`, the target document must exist.
-        /// When set to `false`, the target document must not exist.
-        #[prost(bool, tag="1")]
-        Exists(bool),
-        /// When set, the target document must exist and have been last updated at
-        /// that time. Timestamp must be microsecond aligned.
-        #[prost(message, tag="2")]
-        UpdateTime(::prost_types::Timestamp),
-    }
-}
-/// Options for creating a new transaction.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TransactionOptions {
-    /// The mode of the transaction.
-    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
-    pub mode: ::core::option::Option<transaction_options::Mode>,
-}
-/// Nested message and enum types in `TransactionOptions`.
-pub mod transaction_options {
-    /// Options for a transaction that can be used to read and write documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadWrite {
-        /// An optional transaction to retry.
-        #[prost(bytes="bytes", tag="1")]
-        pub retry_transaction: ::prost::bytes::Bytes,
-    }
-    /// Options for a transaction that can only be used to read documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadOnly {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
-        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
-    }
-    /// Nested message and enum types in `ReadOnly`.
-    pub mod read_only {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ConsistencySelector {
-            /// Reads documents at the given time.
-            /// This may not be older than 60 seconds.
-            #[prost(message, tag="2")]
-            ReadTime(::prost_types::Timestamp),
-        }
-    }
-    /// The mode of the transaction.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Mode {
-        /// The transaction can only be used for read operations.
-        #[prost(message, tag="2")]
-        ReadOnly(ReadOnly),
-        /// The transaction can be used for both read and write operations.
-        #[prost(message, tag="3")]
-        ReadWrite(ReadWrite),
-    }
-}
 /// A Firestore document.
 ///
 /// Must not exceed 1 MiB - 4 bytes.
@@ -209,6 +128,102 @@ pub struct MapValue {
     #[prost(btree_map="string, message", tag="1")]
     pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
+/// The result of a single bucket from a Firestore aggregation query.
+///
+/// The keys of `aggregate_fields` are the same for all results in an aggregation
+/// query, unlike document queries which can have different fields present for
+/// each result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AggregationResult {
+    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
+    ///
+    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
+    /// assigned to the aggregation function on input and the size of this map
+    /// equals the number of aggregation functions in the query.
+    #[prost(btree_map="string, message", tag="2")]
+    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
+}
+/// A set of field paths on a document.
+/// Used to restrict a get or update operation on a document to a subset of its
+/// fields.
+/// This is different from standard field masks, as this is always scoped to a
+/// \[Document][google.firestore.v1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1.Value\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentMask {
+    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1.Document.fields\] for a field
+    /// path syntax reference.
+    #[prost(string, repeated, tag="1")]
+    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A precondition on a document, used for conditional operations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Precondition {
+    /// The type of precondition.
+    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
+    pub condition_type: ::core::option::Option<precondition::ConditionType>,
+}
+/// Nested message and enum types in `Precondition`.
+pub mod precondition {
+    /// The type of precondition.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ConditionType {
+        /// When set to `true`, the target document must exist.
+        /// When set to `false`, the target document must not exist.
+        #[prost(bool, tag="1")]
+        Exists(bool),
+        /// When set, the target document must exist and have been last updated at
+        /// that time. Timestamp must be microsecond aligned.
+        #[prost(message, tag="2")]
+        UpdateTime(::prost_types::Timestamp),
+    }
+}
+/// Options for creating a new transaction.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransactionOptions {
+    /// The mode of the transaction.
+    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
+    pub mode: ::core::option::Option<transaction_options::Mode>,
+}
+/// Nested message and enum types in `TransactionOptions`.
+pub mod transaction_options {
+    /// Options for a transaction that can be used to read and write documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadWrite {
+        /// An optional transaction to retry.
+        #[prost(bytes="bytes", tag="1")]
+        pub retry_transaction: ::prost::bytes::Bytes,
+    }
+    /// Options for a transaction that can only be used to read documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadOnly {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
+        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
+    }
+    /// Nested message and enum types in `ReadOnly`.
+    pub mod read_only {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ConsistencySelector {
+            /// Reads documents at the given time.
+            /// This may not be older than 60 seconds.
+            #[prost(message, tag="2")]
+            ReadTime(::prost_types::Timestamp),
+        }
+    }
+    /// The mode of the transaction.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        /// The transaction can only be used for read operations.
+        #[prost(message, tag="2")]
+        ReadOnly(ReadOnly),
+        /// The transaction can be used for both read and write operations.
+        #[prost(message, tag="3")]
+        ReadWrite(ReadWrite),
+    }
+}
 /// A write on a document.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Write {
@@ -294,6 +309,18 @@ pub mod document_transform {
             /// precision. If used on multiple fields (same or different documents) in
             /// a transaction, all the fields will get the same server timestamp.
             RequestTime = 1,
+        }
+        impl ServerValue {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ServerValue::Unspecified => "SERVER_VALUE_UNSPECIFIED",
+                    ServerValue::RequestTime => "REQUEST_TIME",
+                }
+            }
         }
         /// The transformation to apply on the field.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -480,20 +507,20 @@ pub struct StructuredQuery {
     /// no ordering at all. In all cases, Firestore guarantees a stable ordering
     /// through the following rules:
     ///
-    ///  * The `order_by` is required to reference all fields used with an
-    ///    inequality filter.
-    ///  * All fields that are required to be in the `order_by` but are not already
-    ///    present are appended in lexicographical ordering of the field name.
-    ///  * If an order on `__name__` is not specified, it is appended by default.
+    ///   * The `order_by` is required to reference all fields used with an
+    ///     inequality filter.
+    ///   * All fields that are required to be in the `order_by` but are not already
+    ///     present are appended in lexicographical ordering of the field name.
+    ///   * If an order on `__name__` is not specified, it is appended by default.
     ///
     /// Fields are appended with the same sort direction as the last order
     /// specified, or 'ASCENDING' if no order was specified. For example:
     ///
-    ///  * `ORDER BY a` becomes `ORDER BY a ASC, __name__ ASC`
-    ///  * `ORDER BY a DESC` becomes `ORDER BY a DESC, __name__ DESC`
-    ///  * `WHERE a > 1` becomes `WHERE a > 1 ORDER BY a ASC, __name__ ASC`
-    ///  * `WHERE __name__ > ... AND a > 1` becomes
-    ///     `WHERE __name__ > ... AND a > 1 ORDER BY a ASC, __name__ ASC`
+    ///   * `ORDER BY a` becomes `ORDER BY a ASC, __name__ ASC`
+    ///   * `ORDER BY a DESC` becomes `ORDER BY a DESC, __name__ DESC`
+    ///   * `WHERE a > 1` becomes `WHERE a > 1 ORDER BY a ASC, __name__ ASC`
+    ///   * `WHERE __name__ > ... AND a > 1` becomes
+    ///      `WHERE __name__ > ... AND a > 1 ORDER BY a ASC, __name__ ASC`
     #[prost(message, repeated, tag="4")]
     pub order_by: ::prost::alloc::vec::Vec<structured_query::Order>,
     /// A potential prefix of a position in the result set to start the query at.
@@ -515,7 +542,7 @@ pub struct StructuredQuery {
     /// will have varying impact:
     ///
     /// - `START BEFORE (2, /k/123)`: start the query right before `a = 1 AND
-    ///    b > 2 AND __name__ > /k/123`.
+    ///     b > 2 AND __name__ > /k/123`.
     /// - `START AFTER (10)`: start the query right after `a = 1 AND b > 10`.
     ///
     /// Unlike `OFFSET` which requires scanning over the first N results to skip,
@@ -526,7 +553,7 @@ pub struct StructuredQuery {
     /// Requires:
     ///
     /// * The number of values cannot be greater than the number of fields
-    ///   specified in the `ORDER BY` clause.
+    ///    specified in the `ORDER BY` clause.
     #[prost(message, optional, tag="7")]
     pub start_at: ::core::option::Option<Cursor>,
     /// A potential prefix of a position in the result set to end the query at.
@@ -537,7 +564,7 @@ pub struct StructuredQuery {
     /// Requires:
     ///
     /// * The number of values cannot be greater than the number of fields
-    ///   specified in the `ORDER BY` clause.
+    ///    specified in the `ORDER BY` clause.
     #[prost(message, optional, tag="8")]
     pub end_at: ::core::option::Option<Cursor>,
     /// The number of documents to skip before returning the first result.
@@ -623,6 +650,18 @@ pub mod structured_query {
             /// Documents are required to satisfy all of the combined filters.
             And = 1,
         }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::And => "AND",
+                }
+            }
+        }
     }
     /// A filter on a specific field.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -701,9 +740,30 @@ pub mod structured_query {
             ///
             /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
             /// * No other `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
-            ///   `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            ///    `IS_NOT_NULL`, or `IS_NOT_NAN`.
             /// * That `field` comes first in the `order_by`.
             NotIn = 10,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::LessThan => "LESS_THAN",
+                    Operator::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operator::GreaterThan => "GREATER_THAN",
+                    Operator::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                    Operator::Equal => "EQUAL",
+                    Operator::NotEqual => "NOT_EQUAL",
+                    Operator::ArrayContains => "ARRAY_CONTAINS",
+                    Operator::In => "IN",
+                    Operator::ArrayContainsAny => "ARRAY_CONTAINS_ANY",
+                    Operator::NotIn => "NOT_IN",
+                }
+            }
         }
     }
     /// A filter with a single operand.
@@ -742,6 +802,21 @@ pub mod structured_query {
             /// * A single `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
             /// * That `field` comes first in the `order_by`.
             IsNotNull = 5,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::IsNan => "IS_NAN",
+                    Operator::IsNull => "IS_NULL",
+                    Operator::IsNotNan => "IS_NOT_NAN",
+                    Operator::IsNotNull => "IS_NOT_NULL",
+                }
+            }
         }
         /// The argument to the filter.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -793,6 +868,19 @@ pub mod structured_query {
         /// Descending.
         Descending = 2,
     }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Ascending => "ASCENDING",
+                Direction::Descending => "DESCENDING",
+            }
+        }
+    }
 }
 /// Firestore query for running an aggregation over a \[StructuredQuery][google.firestore.v1.StructuredQuery\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -820,12 +908,12 @@ pub mod structured_aggregation_query {
         ///
         /// ```
         /// AGGREGATE
-        ///   COUNT_UP_TO(1) AS count_up_to_1,
-        ///   COUNT_UP_TO(2),
-        ///   COUNT_UP_TO(3) AS count_up_to_3,
-        ///   COUNT_UP_TO(4)
+        ///    COUNT_UP_TO(1) AS count_up_to_1,
+        ///    COUNT_UP_TO(2),
+        ///    COUNT_UP_TO(3) AS count_up_to_3,
+        ///    COUNT_UP_TO(4)
         /// OVER (
-        ///   ...
+        ///    ...
         /// );
         /// ```
         ///
@@ -833,12 +921,12 @@ pub mod structured_aggregation_query {
         ///
         /// ```
         /// AGGREGATE
-        ///   COUNT_UP_TO(1) AS count_up_to_1,
-        ///   COUNT_UP_TO(2) AS field_1,
-        ///   COUNT_UP_TO(3) AS count_up_to_3,
-        ///   COUNT_UP_TO(4) AS field_2
+        ///    COUNT_UP_TO(1) AS count_up_to_1,
+        ///    COUNT_UP_TO(2) AS field_1,
+        ///    COUNT_UP_TO(3) AS count_up_to_3,
+        ///    COUNT_UP_TO(4) AS field_2
         /// OVER (
-        ///   ...
+        ///    ...
         /// );
         /// ```
         ///
@@ -908,21 +996,6 @@ pub struct Cursor {
     /// to the sort order defined by the query.
     #[prost(bool, tag="2")]
     pub before: bool,
-}
-/// The result of a single bucket from a Firestore aggregation query.
-///
-/// The keys of `aggregate_fields` are the same for all results in an aggregation
-/// query, unlike document queries which can have different fields present for
-/// each result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AggregationResult {
-    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
-    ///
-    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
-    /// assigned to the aggregation function on input and the size of this map
-    /// equals the number of aggregation functions in the query.
-    #[prost(btree_map="string, message", tag="2")]
-    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
 /// The request for \[Firestore.GetDocument][google.firestore.v1.Firestore.GetDocument\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1417,8 +1490,8 @@ pub struct PartitionQueryRequest {
     ///
     /// For example, two subsequent calls using a page_token may return:
     ///
-    ///  * cursor B, cursor M, cursor Q
-    ///  * cursor A, cursor U, cursor W
+    ///   * cursor B, cursor M, cursor Q
+    ///   * cursor A, cursor U, cursor W
     ///
     /// To obtain a complete result set ordered with respect to the results of the
     /// query supplied to PartitionQuery, the results sets should be merged:
@@ -1478,9 +1551,9 @@ pub struct PartitionQueryResponse {
     /// running the following three queries will return the entire result set of
     /// the original query:
     ///
-    ///  * query, end_at A
-    ///  * query, start_at A, end_at B
-    ///  * query, start_at B
+    ///   * query, end_at A
+    ///   * query, start_at A, end_at B
+    ///   * query, start_at B
     ///
     /// An empty result may indicate that the query has too few results to be
     /// partitioned.
@@ -1775,6 +1848,21 @@ pub mod target_change {
         /// if the target was previously indicated to be `CURRENT`.
         Reset = 4,
     }
+    impl TargetChangeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetChangeType::NoChange => "NO_CHANGE",
+                TargetChangeType::Add => "ADD",
+                TargetChangeType::Remove => "REMOVE",
+                TargetChangeType::Current => "CURRENT",
+                TargetChangeType::Reset => "RESET",
+            }
+        }
+    }
 }
 /// The request for \[Firestore.ListCollectionIds][google.firestore.v1.Firestore.ListCollectionIds\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1857,6 +1945,7 @@ pub struct BatchWriteResponse {
 pub mod firestore_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Firestore service.
     ///
     /// Cloud Firestore is a fast, fully managed, serverless, cloud-native NoSQL
@@ -1880,6 +1969,10 @@ pub mod firestore_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1899,19 +1992,19 @@ pub mod firestore_client {
         {
             FirestoreClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets a single document.

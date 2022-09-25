@@ -332,8 +332,8 @@ pub mod backup {
         /// The source cluster from which this Backup was created.
         /// Valid formats:
         ///
-        ///   - projects/*/locations/*/clusters/*
-        ///   - projects/*/zones/*/clusters/*
+        ///    - projects/*/locations/*/clusters/*
+        ///    - projects/*/zones/*/clusters/*
         ///
         /// This is inherited from the parent BackupPlan's
         /// \[cluster][google.cloud.gkebackup.v1.BackupPlan.cluster\] field.
@@ -381,6 +381,22 @@ pub mod backup {
         /// This Backup resource (and its associated artifacts) is in the process
         /// of being deleted.
         Deleting = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::InProgress => "IN_PROGRESS",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
     /// Defines the "scope" of the Backup - which namespaced resources in the
     /// cluster were included in the Backup.  Inherited from the parent
@@ -431,8 +447,8 @@ pub struct Restore {
     /// Output only. The target cluster into which this Restore will restore data.
     /// Valid formats:
     ///
-    ///   - projects/*/locations/*/clusters/*
-    ///   - projects/*/zones/*/clusters/*
+    ///    - projects/*/locations/*/clusters/*
+    ///    - projects/*/zones/*/clusters/*
     ///
     /// Inherited from parent RestorePlan's \[cluster][google.cloud.gkebackup.v1.RestorePlan.cluster\] value.
     #[prost(string, tag="7")]
@@ -498,6 +514,22 @@ pub mod restore {
         Failed = 4,
         /// This Restore resource is in the process of being deleted.
         Deleting = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::InProgress => "IN_PROGRESS",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// Configuration of a restore.
@@ -630,6 +662,20 @@ pub mod restore_config {
         /// provisioning blank PVs or binding to statically provisioned PVs.
         NoVolumeDataRestoration = 3,
     }
+    impl VolumeDataRestorePolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VolumeDataRestorePolicy::Unspecified => "VOLUME_DATA_RESTORE_POLICY_UNSPECIFIED",
+                VolumeDataRestorePolicy::RestoreVolumeDataFromBackup => "RESTORE_VOLUME_DATA_FROM_BACKUP",
+                VolumeDataRestorePolicy::ReuseVolumeHandleFromBackup => "REUSE_VOLUME_HANDLE_FROM_BACKUP",
+                VolumeDataRestorePolicy::NoVolumeDataRestoration => "NO_VOLUME_DATA_RESTORATION",
+            }
+        }
+    }
     /// Defines the behavior for handling the situation where cluster-scoped
     /// resources being restored already exist in the target cluster.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -645,6 +691,19 @@ pub mod restore_config {
         /// data loss if used inappropriately - for example, deleting a CRD will
         /// cause Kubernetes to delete all CRs of that type.
         UseBackupVersion = 2,
+    }
+    impl ClusterResourceConflictPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ClusterResourceConflictPolicy::Unspecified => "CLUSTER_RESOURCE_CONFLICT_POLICY_UNSPECIFIED",
+                ClusterResourceConflictPolicy::UseExistingVersion => "USE_EXISTING_VERSION",
+                ClusterResourceConflictPolicy::UseBackupVersion => "USE_BACKUP_VERSION",
+            }
+        }
     }
     /// Defines the behavior for handling the situation where sets of namespaced
     /// resources being restored already exist in the target cluster.
@@ -667,6 +726,19 @@ pub mod restore_config {
         /// occurs during the restore process itself (e.g., because an out of band
         /// process creates conflicting resources), a conflict will be reported.
         FailOnConflict = 2,
+    }
+    impl NamespacedResourceRestoreMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NamespacedResourceRestoreMode::Unspecified => "NAMESPACED_RESOURCE_RESTORE_MODE_UNSPECIFIED",
+                NamespacedResourceRestoreMode::DeleteAndRestore => "DELETE_AND_RESTORE",
+                NamespacedResourceRestoreMode::FailOnConflict => "FAIL_ON_CONFLICT",
+            }
+        }
     }
     /// Specifies the namespaced resources to restore from the Backup.
     /// Only one of the entries may be specified. If not specified, NO namespaced
@@ -722,8 +794,8 @@ pub struct RestorePlan {
     /// RestorePlan.
     /// Valid formats:
     ///
-    ///   - projects/*/locations/*/clusters/*
-    ///   - projects/*/zones/*/clusters/*
+    ///    - projects/*/locations/*/clusters/*
+    ///    - projects/*/zones/*/clusters/*
     #[prost(string, tag="7")]
     pub cluster: ::prost::alloc::string::String,
     /// Required. Configuration of Restores created via this RestorePlan.
@@ -815,6 +887,18 @@ pub mod volume_backup {
         /// Compute Engine Persistent Disk snapshot based volume backup.
         GcePersistentDisk = 1,
     }
+    impl VolumeBackupFormat {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VolumeBackupFormat::Unspecified => "VOLUME_BACKUP_FORMAT_UNSPECIFIED",
+                VolumeBackupFormat::GcePersistentDisk => "GCE_PERSISTENT_DISK",
+            }
+        }
+    }
     /// The current state of a VolumeBackup
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -839,6 +923,23 @@ pub mod volume_backup {
         /// This VolumeBackup resource (and its associated artifacts) is in the
         /// process of being deleted.
         Deleting = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Snapshotting => "SNAPSHOTTING",
+                State::Uploading => "UPLOADING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// Represents the operation of restoring a volume from a VolumeBackup.
@@ -905,6 +1006,18 @@ pub mod volume_restore {
         /// Compute Engine Persistent Disk volume
         GcePersistentDisk = 1,
     }
+    impl VolumeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VolumeType::Unspecified => "VOLUME_TYPE_UNSPECIFIED",
+                VolumeType::GcePersistentDisk => "GCE_PERSISTENT_DISK",
+            }
+        }
+    }
     /// The current state of a VolumeRestore
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -922,6 +1035,22 @@ pub mod volume_restore {
         Failed = 4,
         /// This VolumeRestore resource is in the process of being deleted.
         Deleting = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Restoring => "RESTORING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// Represents the metadata of the long-running operation.
@@ -1073,11 +1202,11 @@ pub struct CreateBackupRequest {
     /// The client-provided short name for the Backup resource.
     /// This name must:
     ///
-    ///  - be between 1 and 63 characters long (inclusive)
-    ///  - consist of only lower-case ASCII letters, numbers, and dashes
-    ///  - start with a lower-case letter
-    ///  - end with a lower-case letter or number
-    ///  - be unique within the set of Backups in this BackupPlan
+    ///   - be between 1 and 63 characters long (inclusive)
+    ///   - consist of only lower-case ASCII letters, numbers, and dashes
+    ///   - start with a lower-case letter
+    ///   - end with a lower-case letter or number
+    ///   - be unique within the set of Backups in this BackupPlan
     #[prost(string, tag="3")]
     pub backup_id: ::prost::alloc::string::String,
 }
@@ -1232,11 +1361,11 @@ pub struct CreateRestorePlanRequest {
     /// Required. The client-provided short name for the RestorePlan resource.
     /// This name must:
     ///
-    ///  - be between 1 and 63 characters long (inclusive)
-    ///  - consist of only lower-case ASCII letters, numbers, and dashes
-    ///  - start with a lower-case letter
-    ///  - end with a lower-case letter or number
-    ///  - be unique within the set of RestorePlans in this location
+    ///   - be between 1 and 63 characters long (inclusive)
+    ///   - consist of only lower-case ASCII letters, numbers, and dashes
+    ///   - start with a lower-case letter
+    ///   - end with a lower-case letter or number
+    ///   - be unique within the set of RestorePlans in this location
     #[prost(string, tag="3")]
     pub restore_plan_id: ::prost::alloc::string::String,
 }
@@ -1344,11 +1473,11 @@ pub struct CreateRestoreRequest {
     /// Required. The client-provided short name for the Restore resource.
     /// This name must:
     ///
-    ///  - be between 1 and 63 characters long (inclusive)
-    ///  - consist of only lower-case ASCII letters, numbers, and dashes
-    ///  - start with a lower-case letter
-    ///  - end with a lower-case letter or number
-    ///  - be unique within the set of Restores in this RestorePlan.
+    ///   - be between 1 and 63 characters long (inclusive)
+    ///   - consist of only lower-case ASCII letters, numbers, and dashes
+    ///   - start with a lower-case letter
+    ///   - end with a lower-case letter or number
+    ///   - be unique within the set of Restores in this RestorePlan.
     #[prost(string, tag="3")]
     pub restore_id: ::prost::alloc::string::String,
 }
@@ -1498,6 +1627,7 @@ pub struct GetVolumeRestoreRequest {
 pub mod backup_for_gke_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// BackupForGKE allows Kubernetes administrators to configure, execute, and
     /// manage backup and restore operations for their GKE clusters.
     #[derive(Debug, Clone)]
@@ -1513,6 +1643,10 @@ pub mod backup_for_gke_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1534,19 +1668,19 @@ pub mod backup_for_gke_client {
         {
             BackupForGkeClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new BackupPlan in a given location.

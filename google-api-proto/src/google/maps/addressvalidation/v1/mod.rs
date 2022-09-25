@@ -100,6 +100,20 @@ pub mod address_component {
         /// example, a neighborhood that does not fit the rest of the address.
         UnconfirmedAndSuspicious = 3,
     }
+    impl ConfirmationLevel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConfirmationLevel::Unspecified => "CONFIRMATION_LEVEL_UNSPECIFIED",
+                ConfirmationLevel::Confirmed => "CONFIRMED",
+                ConfirmationLevel::UnconfirmedButPlausible => "UNCONFIRMED_BUT_PLAUSIBLE",
+                ConfirmationLevel::UnconfirmedAndSuspicious => "UNCONFIRMED_AND_SUSPICIOUS",
+            }
+        }
+    }
 }
 /// A wrapper for the name of the component.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -468,6 +482,21 @@ pub mod provide_validation_feedback_request {
         /// The transaction was abandoned and the address was not used.
         Unused = 4,
     }
+    impl ValidationConclusion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ValidationConclusion::Unspecified => "VALIDATION_CONCLUSION_UNSPECIFIED",
+                ValidationConclusion::ValidatedVersionUsed => "VALIDATED_VERSION_USED",
+                ValidationConclusion::UserVersionUsed => "USER_VERSION_USED",
+                ValidationConclusion::UnvalidatedVersionUsed => "UNVALIDATED_VERSION_USED",
+                ValidationConclusion::Unused => "UNUSED",
+            }
+        }
+    }
 }
 /// The response for validation feedback.
 ///
@@ -586,11 +615,29 @@ pub mod verdict {
         /// deliverable.
         Other = 6,
     }
+    impl Granularity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Granularity::Unspecified => "GRANULARITY_UNSPECIFIED",
+                Granularity::SubPremise => "SUB_PREMISE",
+                Granularity::Premise => "PREMISE",
+                Granularity::PremiseProximity => "PREMISE_PROXIMITY",
+                Granularity::Block => "BLOCK",
+                Granularity::Route => "ROUTE",
+                Granularity::Other => "OTHER",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod address_validation_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The service for validating addresses.
     #[derive(Debug, Clone)]
     pub struct AddressValidationClient<T> {
@@ -605,6 +652,10 @@ pub mod address_validation_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -626,19 +677,19 @@ pub mod address_validation_client {
         {
             AddressValidationClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Validates an address.

@@ -295,6 +295,18 @@ pub mod document_transform {
             /// a transaction, all the fields will get the same server timestamp.
             RequestTime = 1,
         }
+        impl ServerValue {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ServerValue::Unspecified => "SERVER_VALUE_UNSPECIFIED",
+                    ServerValue::RequestTime => "REQUEST_TIME",
+                }
+            }
+        }
         /// The transformation to apply on the field.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum TransformType {
@@ -478,20 +490,20 @@ pub struct StructuredQuery {
     ///
     /// Firestore guarantees a stable ordering through the following rules:
     ///
-    ///  * Any field required to appear in `order_by`, that is not already
-    ///    specified in `order_by`, is appended to the order in field name order
-    ///    by default.
-    ///  * If an order on `__name__` is not specified, it is appended by default.
+    ///   * Any field required to appear in `order_by`, that is not already
+    ///     specified in `order_by`, is appended to the order in field name order
+    ///     by default.
+    ///   * If an order on `__name__` is not specified, it is appended by default.
     ///
     /// Fields are appended with the same sort direction as the last order
     /// specified, or 'ASCENDING' if no order was specified. For example:
     ///
-    ///  * `SELECT * FROM Foo ORDER BY A` becomes
-    ///    `SELECT * FROM Foo ORDER BY A, __name__`
-    ///  * `SELECT * FROM Foo ORDER BY A DESC` becomes
-    ///    `SELECT * FROM Foo ORDER BY A DESC, __name__ DESC`
-    ///  * `SELECT * FROM Foo WHERE A > 1` becomes
-    ///    `SELECT * FROM Foo WHERE A > 1 ORDER BY A, __name__`
+    ///   * `SELECT * FROM Foo ORDER BY A` becomes
+    ///     `SELECT * FROM Foo ORDER BY A, __name__`
+    ///   * `SELECT * FROM Foo ORDER BY A DESC` becomes
+    ///     `SELECT * FROM Foo ORDER BY A DESC, __name__ DESC`
+    ///   * `SELECT * FROM Foo WHERE A > 1` becomes
+    ///     `SELECT * FROM Foo WHERE A > 1 ORDER BY A, __name__`
     #[prost(message, repeated, tag="4")]
     pub order_by: ::prost::alloc::vec::Vec<structured_query::Order>,
     /// A starting point for the query results.
@@ -573,6 +585,18 @@ pub mod structured_query {
             /// The results are required to satisfy each of the combined filters.
             And = 1,
         }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::And => "AND",
+                }
+            }
+        }
     }
     /// A filter on a specific field.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -651,9 +675,30 @@ pub mod structured_query {
             ///
             /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
             /// * No other `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
-            ///   `IS_NOT_NULL`, or `IS_NOT_NAN`.
+            ///    `IS_NOT_NULL`, or `IS_NOT_NAN`.
             /// * That `field` comes first in the `order_by`.
             NotIn = 10,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::LessThan => "LESS_THAN",
+                    Operator::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operator::GreaterThan => "GREATER_THAN",
+                    Operator::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                    Operator::Equal => "EQUAL",
+                    Operator::NotEqual => "NOT_EQUAL",
+                    Operator::ArrayContains => "ARRAY_CONTAINS",
+                    Operator::In => "IN",
+                    Operator::ArrayContainsAny => "ARRAY_CONTAINS_ANY",
+                    Operator::NotIn => "NOT_IN",
+                }
+            }
         }
     }
     /// A filter with a single operand.
@@ -692,6 +737,21 @@ pub mod structured_query {
             /// * A single `NOT_EQUAL`, `NOT_IN`, `IS_NOT_NULL`, or `IS_NOT_NAN`.
             /// * That `field` comes first in the `order_by`.
             IsNotNull = 5,
+        }
+        impl Operator {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operator::Unspecified => "OPERATOR_UNSPECIFIED",
+                    Operator::IsNan => "IS_NAN",
+                    Operator::IsNull => "IS_NULL",
+                    Operator::IsNotNan => "IS_NOT_NAN",
+                    Operator::IsNotNull => "IS_NOT_NULL",
+                }
+            }
         }
         /// The argument to the filter.
         #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -737,6 +797,19 @@ pub mod structured_query {
         Ascending = 1,
         /// Descending.
         Descending = 2,
+    }
+    impl Direction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Direction::Unspecified => "DIRECTION_UNSPECIFIED",
+                Direction::Ascending => "ASCENDING",
+                Direction::Descending => "DESCENDING",
+            }
+        }
     }
 }
 /// A position in a query result set.
@@ -1159,8 +1232,8 @@ pub struct PartitionQueryRequest {
     ///
     /// For example, two subsequent calls using a page_token may return:
     ///
-    ///  * cursor B, cursor M, cursor Q
-    ///  * cursor A, cursor U, cursor W
+    ///   * cursor B, cursor M, cursor Q
+    ///   * cursor A, cursor U, cursor W
     ///
     /// To obtain a complete result set ordered with respect to the results of the
     /// query supplied to PartitionQuery, the results sets should be merged:
@@ -1207,9 +1280,9 @@ pub struct PartitionQueryResponse {
     /// running the following three queries will return the entire result set of
     /// the original query:
     ///
-    ///  * query, end_at A
-    ///  * query, start_at A, end_at B
-    ///  * query, start_at B
+    ///   * query, end_at A
+    ///   * query, start_at A, end_at B
+    ///   * query, start_at B
     ///
     /// An empty result may indicate that the query has too few results to be
     /// partitioned.
@@ -1504,6 +1577,21 @@ pub mod target_change {
         /// if the target was previously indicated to be `CURRENT`.
         Reset = 4,
     }
+    impl TargetChangeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetChangeType::NoChange => "NO_CHANGE",
+                TargetChangeType::Add => "ADD",
+                TargetChangeType::Remove => "REMOVE",
+                TargetChangeType::Current => "CURRENT",
+                TargetChangeType::Reset => "RESET",
+            }
+        }
+    }
 }
 /// The request for \[Firestore.ListCollectionIds][google.firestore.v1beta1.Firestore.ListCollectionIds\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1570,6 +1658,7 @@ pub struct BatchWriteResponse {
 pub mod firestore_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Cloud Firestore service.
     ///
     /// Cloud Firestore is a fast, fully managed, serverless, cloud-native NoSQL
@@ -1593,6 +1682,10 @@ pub mod firestore_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -1612,19 +1705,19 @@ pub mod firestore_client {
         {
             FirestoreClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets a single document.

@@ -10,15 +10,15 @@
 ///
 /// For example, consider the following table definition:
 ///
-///     CREATE TABLE UserEvents (
-///       UserName STRING(MAX),
-///       EventDate STRING(10)
-///     ) PRIMARY KEY(UserName, EventDate);
+///      CREATE TABLE UserEvents (
+///        UserName STRING(MAX),
+///        EventDate STRING(10)
+///      ) PRIMARY KEY(UserName, EventDate);
 ///
 /// The following keys name rows in this table:
 ///
-///     ["Bob", "2014-09-23"]
-///     ["Alfred", "2015-06-12"]
+///      ["Bob", "2014-09-23"]
+///      ["Alfred", "2015-06-12"]
 ///
 /// Since the `UserEvents` table's `PRIMARY KEY` clause names two
 /// columns, each `UserEvents` key has two elements; the first is the
@@ -29,8 +29,8 @@
 /// sort order. For example, the following range returns all events for
 /// user `"Bob"` that occurred in the year 2015:
 ///
-///     "start_closed": ["Bob", "2015-01-01"]
-///     "end_closed": ["Bob", "2015-12-31"]
+///      "start_closed": ["Bob", "2015-01-01"]
+///      "end_closed": ["Bob", "2015-12-31"]
 ///
 /// Start and end keys can omit trailing key components. This affects the
 /// inclusion and exclusion of rows that exactly match the provided key
@@ -41,48 +41,48 @@
 /// For example, the following range includes all events for `"Bob"` that
 /// occurred during and after the year 2000:
 ///
-///     "start_closed": ["Bob", "2000-01-01"]
-///     "end_closed": \["Bob"\]
+///      "start_closed": ["Bob", "2000-01-01"]
+///      "end_closed": \["Bob"\]
 ///
 /// The next example retrieves all events for `"Bob"`:
 ///
-///     "start_closed": \["Bob"\]
-///     "end_closed": \["Bob"\]
+///      "start_closed": \["Bob"\]
+///      "end_closed": \["Bob"\]
 ///
 /// To retrieve events before the year 2000:
 ///
-///     "start_closed": \["Bob"\]
-///     "end_open": ["Bob", "2000-01-01"]
+///      "start_closed": \["Bob"\]
+///      "end_open": ["Bob", "2000-01-01"]
 ///
 /// The following range includes all rows in the table:
 ///
-///     "start_closed": []
-///     "end_closed": []
+///      "start_closed": []
+///      "end_closed": []
 ///
 /// This range returns all users whose `UserName` begins with any
 /// character from A to C:
 ///
-///     "start_closed": \["A"\]
-///     "end_open": \["D"\]
+///      "start_closed": \["A"\]
+///      "end_open": \["D"\]
 ///
 /// This range returns all users whose `UserName` begins with B:
 ///
-///     "start_closed": \["B"\]
-///     "end_open": \["C"\]
+///      "start_closed": \["B"\]
+///      "end_open": \["C"\]
 ///
 /// Key ranges honor column sort order. For example, suppose a table is
 /// defined as follows:
 ///
-///     CREATE TABLE DescendingSortedTable {
-///       Key INT64,
-///       ...
-///     ) PRIMARY KEY(Key DESC);
+///      CREATE TABLE DescendingSortedTable {
+///        Key INT64,
+///        ...
+///      ) PRIMARY KEY(Key DESC);
 ///
 /// The following range retrieves all rows with key values between 1
 /// and 100 inclusive:
 ///
-///     "start_closed": \["100"\]
-///     "end_closed": \["1"\]
+///      "start_closed": \["100"\]
+///      "end_closed": \["1"\]
 ///
 /// Note that 100 is passed as the start, and 1 is passed as the end,
 /// because `Key` is a descending column in the schema.
@@ -147,6 +147,122 @@ pub struct KeySet {
     #[prost(bool, tag="3")]
     pub all: bool,
 }
+/// A modification to one or more Cloud Spanner rows.  Mutations can be
+/// applied to a Cloud Spanner database by sending them in a
+/// \[Commit][google.spanner.v1.Spanner.Commit\] call.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Mutation {
+    /// Required. The operation to perform.
+    #[prost(oneof="mutation::Operation", tags="1, 2, 3, 4, 5")]
+    pub operation: ::core::option::Option<mutation::Operation>,
+}
+/// Nested message and enum types in `Mutation`.
+pub mod mutation {
+    /// Arguments to \[insert][google.spanner.v1.Mutation.insert\], \[update][google.spanner.v1.Mutation.update\], \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], and
+    /// \[replace][google.spanner.v1.Mutation.replace\] operations.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Write {
+        /// Required. The table whose rows will be written.
+        #[prost(string, tag="1")]
+        pub table: ::prost::alloc::string::String,
+        /// The names of the columns in \[table][google.spanner.v1.Mutation.Write.table\] to be written.
+        ///
+        /// The list of columns must contain enough columns to allow
+        /// Cloud Spanner to derive values for all primary key columns in the
+        /// row(s) to be modified.
+        #[prost(string, repeated, tag="2")]
+        pub columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The values to be written. `values` can contain more than one
+        /// list of values. If it does, then multiple rows are written, one
+        /// for each entry in `values`. Each list in `values` must have
+        /// exactly as many entries as there are entries in \[columns][google.spanner.v1.Mutation.Write.columns\]
+        /// above. Sending multiple lists is equivalent to sending multiple
+        /// `Mutation`s, each containing one `values` entry and repeating
+        /// \[table][google.spanner.v1.Mutation.Write.table\] and \[columns][google.spanner.v1.Mutation.Write.columns\]. Individual values in each list are
+        /// encoded as described \[here][google.spanner.v1.TypeCode\].
+        #[prost(message, repeated, tag="3")]
+        pub values: ::prost::alloc::vec::Vec<::prost_types::ListValue>,
+    }
+    /// Arguments to \[delete][google.spanner.v1.Mutation.delete\] operations.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Delete {
+        /// Required. The table whose rows will be deleted.
+        #[prost(string, tag="1")]
+        pub table: ::prost::alloc::string::String,
+        /// Required. The primary keys of the rows within \[table][google.spanner.v1.Mutation.Delete.table\] to delete.  The
+        /// primary keys must be specified in the order in which they appear in the
+        /// `PRIMARY KEY()` clause of the table's equivalent DDL statement (the DDL
+        /// statement used to create the table).
+        /// Delete is idempotent. The transaction will succeed even if some or all
+        /// rows do not exist.
+        #[prost(message, optional, tag="2")]
+        pub key_set: ::core::option::Option<super::KeySet>,
+    }
+    /// Required. The operation to perform.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Insert new rows in a table. If any of the rows already exist,
+        /// the write or transaction fails with error `ALREADY_EXISTS`.
+        #[prost(message, tag="1")]
+        Insert(Write),
+        /// Update existing rows in a table. If any of the rows does not
+        /// already exist, the transaction fails with error `NOT_FOUND`.
+        #[prost(message, tag="2")]
+        Update(Write),
+        /// Like \[insert][google.spanner.v1.Mutation.insert\], except that if the row already exists, then
+        /// its column values are overwritten with the ones provided. Any
+        /// column values not explicitly written are preserved.
+        ///
+        /// When using \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], just as when using \[insert][google.spanner.v1.Mutation.insert\], all `NOT
+        /// NULL` columns in the table must be given a value. This holds true
+        /// even when the row already exists and will therefore actually be updated.
+        #[prost(message, tag="3")]
+        InsertOrUpdate(Write),
+        /// Like \[insert][google.spanner.v1.Mutation.insert\], except that if the row already exists, it is
+        /// deleted, and the column values provided are inserted
+        /// instead. Unlike \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], this means any values not
+        /// explicitly written become `NULL`.
+        ///
+        /// In an interleaved table, if you create the child table with the
+        /// `ON DELETE CASCADE` annotation, then replacing a parent row
+        /// also deletes the child rows. Otherwise, you must delete the
+        /// child rows before you replace the parent row.
+        #[prost(message, tag="4")]
+        Replace(Write),
+        /// Delete rows from a table. Succeeds whether or not the named
+        /// rows were present.
+        #[prost(message, tag="5")]
+        Delete(Delete),
+    }
+}
+/// The response for \[Commit][google.spanner.v1.Spanner.Commit\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommitResponse {
+    /// The Cloud Spanner timestamp at which the transaction committed.
+    #[prost(message, optional, tag="1")]
+    pub commit_timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// The statistics about this Commit. Not returned by default.
+    /// For more information, see
+    /// \[CommitRequest.return_commit_stats][google.spanner.v1.CommitRequest.return_commit_stats\].
+    #[prost(message, optional, tag="2")]
+    pub commit_stats: ::core::option::Option<commit_response::CommitStats>,
+}
+/// Nested message and enum types in `CommitResponse`.
+pub mod commit_response {
+    /// Additional statistics about a commit.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CommitStats {
+        /// The total number of mutations for the transaction. Knowing the
+        /// `mutation_count` value can help you maximize the number of mutations
+        /// in a transaction and minimize the number of API round trips. You can
+        /// also monitor this value to prevent transactions from exceeding the system
+        /// \[limit\](<https://cloud.google.com/spanner/quotas#limits_for_creating_reading_updating_and_deleting_data>).
+        /// If the number of mutations exceeds the limit, the server returns
+        /// \[INVALID_ARGUMENT\](<https://cloud.google.com/spanner/docs/reference/rest/v1/Code#ENUM_VALUES.INVALID_ARGUMENT>).
+        #[prost(int64, tag="1")]
+        pub mutation_count: i64,
+    }
+}
 /// Node information for nodes appearing in a \[QueryPlan.plan_nodes][google.spanner.v1.QueryPlan.plan_nodes\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlanNode {
@@ -173,10 +289,10 @@ pub struct PlanNode {
     /// For example, a Parameter Reference node could have the following
     /// information in its metadata:
     ///
-    ///     {
-    ///       "parameter_reference": "param1",
-    ///       "parameter_type": "array"
-    ///     }
+    ///      {
+    ///        "parameter_reference": "param1",
+    ///        "parameter_type": "array"
+    ///      }
     #[prost(message, optional, tag="6")]
     pub metadata: ::core::option::Option<::prost_types::Struct>,
     /// The execution statistics associated with the node, contained in a group of
@@ -244,6 +360,19 @@ pub mod plan_node {
         /// to column names.
         Scalar = 2,
     }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Kind::Unspecified => "KIND_UNSPECIFIED",
+                Kind::Relational => "RELATIONAL",
+                Kind::Scalar => "SCALAR",
+            }
+        }
+    }
 }
 /// Contains an ordered list of nodes appearing in the query plan.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -266,31 +395,31 @@ pub struct QueryPlan {
 ///
 /// Cloud Spanner supports three transaction modes:
 ///
-///   1. Locking read-write. This type of transaction is the only way
-///      to write data into Cloud Spanner. These transactions rely on
-///      pessimistic locking and, if necessary, two-phase commit.
-///      Locking read-write transactions may abort, requiring the
-///      application to retry.
+///    1. Locking read-write. This type of transaction is the only way
+///       to write data into Cloud Spanner. These transactions rely on
+///       pessimistic locking and, if necessary, two-phase commit.
+///       Locking read-write transactions may abort, requiring the
+///       application to retry.
 ///
-///   2. Snapshot read-only. Snapshot read-only transactions provide guaranteed
-///      consistency across several reads, but do not allow
-///      writes. Snapshot read-only transactions can be configured to read at
-///      timestamps in the past, or configured to perform a strong read
-///      (where Spanner will select a timestamp such that the read is
-///      guaranteed to see the effects of all transactions that have committed
-///      before the start of the read). Snapshot read-only transactions do not
-///      need to be committed.
+///    2. Snapshot read-only. Snapshot read-only transactions provide guaranteed
+///       consistency across several reads, but do not allow
+///       writes. Snapshot read-only transactions can be configured to read at
+///       timestamps in the past, or configured to perform a strong read
+///       (where Spanner will select a timestamp such that the read is
+///       guaranteed to see the effects of all transactions that have committed
+///       before the start of the read). Snapshot read-only transactions do not
+///       need to be committed.
 ///
-///      Queries on change streams must be performed with the snapshot read-only
-///      transaction mode, specifying a strong read. Please see
-///      \[TransactionOptions.ReadOnly.strong][google.spanner.v1.TransactionOptions.ReadOnly.strong\] for more details.
+///       Queries on change streams must be performed with the snapshot read-only
+///       transaction mode, specifying a strong read. Please see
+///       \[TransactionOptions.ReadOnly.strong][google.spanner.v1.TransactionOptions.ReadOnly.strong\] for more details.
 ///
-///   3. Partitioned DML. This type of transaction is used to execute
-///      a single Partitioned DML statement. Partitioned DML partitions
-///      the key space and runs the DML statement over each partition
-///      in parallel using separate, internal transactions that commit
-///      independently. Partitioned DML transactions do not need to be
-///      committed.
+///    3. Partitioned DML. This type of transaction is used to execute
+///       a single Partitioned DML statement. Partitioned DML partitions
+///       the key space and runs the DML statement over each partition
+///       in parallel using separate, internal transactions that commit
+///       independently. Partitioned DML transactions do not need to be
+///       committed.
 ///
 /// For transactions that only read, snapshot read-only transactions
 /// provide simpler semantics and are almost always faster. In
@@ -393,9 +522,9 @@ pub struct QueryPlan {
 ///
 /// The types of timestamp bound are:
 ///
-///   - Strong (the default).
-///   - Bounded staleness.
-///   - Exact staleness.
+///    - Strong (the default).
+///    - Bounded staleness.
+///    - Exact staleness.
 ///
 /// If the Cloud Spanner database to be read is geographically distributed,
 /// stale read-only transactions can execute more quickly than strong
@@ -536,38 +665,38 @@ pub struct QueryPlan {
 /// That said, Partitioned DML is not a drop-in replacement for standard DML used
 /// in ReadWrite transactions.
 ///
-///  - The DML statement must be fully-partitionable. Specifically, the statement
-///    must be expressible as the union of many statements which each access only
-///    a single row of the table.
+///   - The DML statement must be fully-partitionable. Specifically, the statement
+///     must be expressible as the union of many statements which each access only
+///     a single row of the table.
 ///
-///  - The statement is not applied atomically to all rows of the table. Rather,
-///    the statement is applied atomically to partitions of the table, in
-///    independent transactions. Secondary index rows are updated atomically
-///    with the base table rows.
+///   - The statement is not applied atomically to all rows of the table. Rather,
+///     the statement is applied atomically to partitions of the table, in
+///     independent transactions. Secondary index rows are updated atomically
+///     with the base table rows.
 ///
-///  - Partitioned DML does not guarantee exactly-once execution semantics
-///    against a partition. The statement will be applied at least once to each
-///    partition. It is strongly recommended that the DML statement should be
-///    idempotent to avoid unexpected results. For instance, it is potentially
-///    dangerous to run a statement such as
-///    `UPDATE table SET column = column + 1` as it could be run multiple times
-///    against some rows.
+///   - Partitioned DML does not guarantee exactly-once execution semantics
+///     against a partition. The statement will be applied at least once to each
+///     partition. It is strongly recommended that the DML statement should be
+///     idempotent to avoid unexpected results. For instance, it is potentially
+///     dangerous to run a statement such as
+///     `UPDATE table SET column = column + 1` as it could be run multiple times
+///     against some rows.
 ///
-///  - The partitions are committed automatically - there is no support for
-///    Commit or Rollback. If the call returns an error, or if the client issuing
-///    the ExecuteSql call dies, it is possible that some rows had the statement
-///    executed on them successfully. It is also possible that statement was
-///    never executed against other rows.
+///   - The partitions are committed automatically - there is no support for
+///     Commit or Rollback. If the call returns an error, or if the client issuing
+///     the ExecuteSql call dies, it is possible that some rows had the statement
+///     executed on them successfully. It is also possible that statement was
+///     never executed against other rows.
 ///
-///  - Partitioned DML transactions may only contain the execution of a single
-///    DML statement via ExecuteSql or ExecuteStreamingSql.
+///   - Partitioned DML transactions may only contain the execution of a single
+///     DML statement via ExecuteSql or ExecuteStreamingSql.
 ///
-///  - If any error is encountered during the execution of the partitioned DML
-///    operation (for instance, a UNIQUE INDEX violation, division by zero, or a
-///    value that cannot be stored due to schema constraints), then the
-///    operation is stopped at that point and an error is returned. It is
-///    possible that at this point, some partitions have been committed (or even
-///    committed multiple times), and other partitions have not been run at all.
+///   - If any error is encountered during the execution of the partitioned DML
+///     operation (for instance, a UNIQUE INDEX violation, division by zero, or a
+///     value that cannot be stored due to schema constraints), then the
+///     operation is stopped at that point and an error is returned. It is
+///     possible that at this point, some partitions have been committed (or even
+///     committed multiple times), and other partitions have not been run at all.
 ///
 /// Given the above, Partitioned DML is good fit for large, database-wide,
 /// operations that are idempotent, such as deleting old rows from a very large
@@ -859,9 +988,31 @@ pub enum TypeCode {
     /// - Whitespace characters are not preserved.
     /// - If a JSON object has duplicate keys, only the first key is preserved.
     /// - Members of a JSON object are not guaranteed to have their order
-    ///   preserved.
+    ///    preserved.
     /// - JSON array elements will have their order preserved.
     Json = 11,
+}
+impl TypeCode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TypeCode::Unspecified => "TYPE_CODE_UNSPECIFIED",
+            TypeCode::Bool => "BOOL",
+            TypeCode::Int64 => "INT64",
+            TypeCode::Float64 => "FLOAT64",
+            TypeCode::Timestamp => "TIMESTAMP",
+            TypeCode::Date => "DATE",
+            TypeCode::String => "STRING",
+            TypeCode::Bytes => "BYTES",
+            TypeCode::Array => "ARRAY",
+            TypeCode::Struct => "STRUCT",
+            TypeCode::Numeric => "NUMERIC",
+            TypeCode::Json => "JSON",
+        }
+    }
 }
 /// `TypeAnnotationCode` is used as a part of \[Type][google.spanner.v1.Type\] to
 /// disambiguate SQL types that should be used for a given Cloud Spanner value.
@@ -887,6 +1038,19 @@ pub enum TypeAnnotationCode {
     /// \[JSON][google.spanner.v1.TypeCode.JSON\] when a client interacts with PostgreSQL-enabled
     /// Spanner databases.
     PgJsonb = 3,
+}
+impl TypeAnnotationCode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TypeAnnotationCode::Unspecified => "TYPE_ANNOTATION_CODE_UNSPECIFIED",
+            TypeAnnotationCode::PgNumeric => "PG_NUMERIC",
+            TypeAnnotationCode::PgJsonb => "PG_JSONB",
+        }
+    }
 }
 /// Results from \[Read][google.spanner.v1.Spanner.Read\] or
 /// \[ExecuteSql][google.spanner.v1.Spanner.ExecuteSql\].
@@ -938,60 +1102,60 @@ pub struct PartialResultSet {
     /// field. Two or more chunked values can be merged to form a
     /// complete value as follows:
     ///
-    ///   * `bool/number/null`: cannot be chunked
-    ///   * `string`: concatenate the strings
-    ///   * `list`: concatenate the lists. If the last element in a list is a
-    ///     `string`, `list`, or `object`, merge it with the first element in
-    ///     the next list by applying these rules recursively.
-    ///   * `object`: concatenate the (field name, field value) pairs. If a
-    ///     field name is duplicated, then apply these rules recursively
-    ///     to merge the field values.
+    ///    * `bool/number/null`: cannot be chunked
+    ///    * `string`: concatenate the strings
+    ///    * `list`: concatenate the lists. If the last element in a list is a
+    ///      `string`, `list`, or `object`, merge it with the first element in
+    ///      the next list by applying these rules recursively.
+    ///    * `object`: concatenate the (field name, field value) pairs. If a
+    ///      field name is duplicated, then apply these rules recursively
+    ///      to merge the field values.
     ///
     /// Some examples of merging:
     ///
-    ///     # Strings are concatenated.
-    ///     "foo", "bar" => "foobar"
+    ///      # Strings are concatenated.
+    ///      "foo", "bar" => "foobar"
     ///
-    ///     # Lists of non-strings are concatenated.
-    ///     [2, 3], \[4\] => [2, 3, 4]
+    ///      # Lists of non-strings are concatenated.
+    ///      [2, 3], \[4\] => [2, 3, 4]
     ///
-    ///     # Lists are concatenated, but the last and first elements are merged
-    ///     # because they are strings.
-    ///     ["a", "b"], ["c", "d"] => ["a", "bc", "d"]
+    ///      # Lists are concatenated, but the last and first elements are merged
+    ///      # because they are strings.
+    ///      ["a", "b"], ["c", "d"] => ["a", "bc", "d"]
     ///
-    ///     # Lists are concatenated, but the last and first elements are merged
-    ///     # because they are lists. Recursively, the last and first elements
-    ///     # of the inner lists are merged because they are strings.
-    ///     ["a", ["b", "c"]], \[["d"\], "e"] => ["a", ["b", "cd"], "e"]
+    ///      # Lists are concatenated, but the last and first elements are merged
+    ///      # because they are lists. Recursively, the last and first elements
+    ///      # of the inner lists are merged because they are strings.
+    ///      ["a", ["b", "c"]], \[["d"\], "e"] => ["a", ["b", "cd"], "e"]
     ///
-    ///     # Non-overlapping object fields are combined.
-    ///     {"a": "1"}, {"b": "2"} => {"a": "1", "b": 2"}
+    ///      # Non-overlapping object fields are combined.
+    ///      {"a": "1"}, {"b": "2"} => {"a": "1", "b": 2"}
     ///
-    ///     # Overlapping object fields are merged.
-    ///     {"a": "1"}, {"a": "2"} => {"a": "12"}
+    ///      # Overlapping object fields are merged.
+    ///      {"a": "1"}, {"a": "2"} => {"a": "12"}
     ///
-    ///     # Examples of merging objects containing lists of strings.
-    ///     {"a": \["1"\]}, {"a": \["2"\]} => {"a": \["12"\]}
+    ///      # Examples of merging objects containing lists of strings.
+    ///      {"a": \["1"\]}, {"a": \["2"\]} => {"a": \["12"\]}
     ///
     /// For a more complete example, suppose a streaming SQL query is
     /// yielding a result set whose rows contain a single string
     /// field. The following `PartialResultSet`s might be yielded:
     ///
-    ///     {
-    ///       "metadata": { ... }
-    ///       "values": ["Hello", "W"]
-    ///       "chunked_value": true
-    ///       "resume_token": "Af65..."
-    ///     }
-    ///     {
-    ///       "values": \["orl"\]
-    ///       "chunked_value": true
-    ///       "resume_token": "Bqp2..."
-    ///     }
-    ///     {
-    ///       "values": \["d"\]
-    ///       "resume_token": "Zx1B..."
-    ///     }
+    ///      {
+    ///        "metadata": { ... }
+    ///        "values": ["Hello", "W"]
+    ///        "chunked_value": true
+    ///        "resume_token": "Af65..."
+    ///      }
+    ///      {
+    ///        "values": \["orl"\]
+    ///        "chunked_value": true
+    ///        "resume_token": "Bqp2..."
+    ///      }
+    ///      {
+    ///        "values": \["d"\]
+    ///        "resume_token": "Zx1B..."
+    ///      }
     ///
     /// This sequence of `PartialResultSet`s encodes two rows, one
     /// containing the field value `"Hello"`, and a second containing the
@@ -1026,10 +1190,10 @@ pub struct ResultSetMetadata {
     /// set.  For example, a SQL query like `"SELECT UserId, UserName FROM
     /// Users"` could return a `row_type` value like:
     ///
-    ///     "fields": [
-    ///       { "name": "UserId", "type": { "code": "INT64" } },
-    ///       { "name": "UserName", "type": { "code": "STRING" } },
-    ///     ]
+    ///      "fields": [
+    ///        { "name": "UserId", "type": { "code": "INT64" } },
+    ///        { "name": "UserName", "type": { "code": "STRING" } },
+    ///      ]
     #[prost(message, optional, tag="1")]
     pub row_type: ::core::option::Option<StructType>,
     /// If the read or SQL query began a transaction as a side-effect, the
@@ -1047,11 +1211,11 @@ pub struct ResultSetStats {
     /// the query is profiled. For example, a query could return the statistics as
     /// follows:
     ///
-    ///     {
-    ///       "rows_returned": "3",
-    ///       "elapsed_time": "1.22 secs",
-    ///       "cpu_time": "1.19 secs"
-    ///     }
+    ///      {
+    ///        "rows_returned": "3",
+    ///        "elapsed_time": "1.22 secs",
+    ///        "cpu_time": "1.19 secs"
+    ///      }
     #[prost(message, optional, tag="2")]
     pub query_stats: ::core::option::Option<::prost_types::Struct>,
     /// The number of rows modified by the DML statement.
@@ -1070,122 +1234,6 @@ pub mod result_set_stats {
         /// returns a lower bound of the rows modified.
         #[prost(int64, tag="4")]
         RowCountLowerBound(i64),
-    }
-}
-/// A modification to one or more Cloud Spanner rows.  Mutations can be
-/// applied to a Cloud Spanner database by sending them in a
-/// \[Commit][google.spanner.v1.Spanner.Commit\] call.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Mutation {
-    /// Required. The operation to perform.
-    #[prost(oneof="mutation::Operation", tags="1, 2, 3, 4, 5")]
-    pub operation: ::core::option::Option<mutation::Operation>,
-}
-/// Nested message and enum types in `Mutation`.
-pub mod mutation {
-    /// Arguments to \[insert][google.spanner.v1.Mutation.insert\], \[update][google.spanner.v1.Mutation.update\], \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], and
-    /// \[replace][google.spanner.v1.Mutation.replace\] operations.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Write {
-        /// Required. The table whose rows will be written.
-        #[prost(string, tag="1")]
-        pub table: ::prost::alloc::string::String,
-        /// The names of the columns in \[table][google.spanner.v1.Mutation.Write.table\] to be written.
-        ///
-        /// The list of columns must contain enough columns to allow
-        /// Cloud Spanner to derive values for all primary key columns in the
-        /// row(s) to be modified.
-        #[prost(string, repeated, tag="2")]
-        pub columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The values to be written. `values` can contain more than one
-        /// list of values. If it does, then multiple rows are written, one
-        /// for each entry in `values`. Each list in `values` must have
-        /// exactly as many entries as there are entries in \[columns][google.spanner.v1.Mutation.Write.columns\]
-        /// above. Sending multiple lists is equivalent to sending multiple
-        /// `Mutation`s, each containing one `values` entry and repeating
-        /// \[table][google.spanner.v1.Mutation.Write.table\] and \[columns][google.spanner.v1.Mutation.Write.columns\]. Individual values in each list are
-        /// encoded as described \[here][google.spanner.v1.TypeCode\].
-        #[prost(message, repeated, tag="3")]
-        pub values: ::prost::alloc::vec::Vec<::prost_types::ListValue>,
-    }
-    /// Arguments to \[delete][google.spanner.v1.Mutation.delete\] operations.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Delete {
-        /// Required. The table whose rows will be deleted.
-        #[prost(string, tag="1")]
-        pub table: ::prost::alloc::string::String,
-        /// Required. The primary keys of the rows within \[table][google.spanner.v1.Mutation.Delete.table\] to delete.  The
-        /// primary keys must be specified in the order in which they appear in the
-        /// `PRIMARY KEY()` clause of the table's equivalent DDL statement (the DDL
-        /// statement used to create the table).
-        /// Delete is idempotent. The transaction will succeed even if some or all
-        /// rows do not exist.
-        #[prost(message, optional, tag="2")]
-        pub key_set: ::core::option::Option<super::KeySet>,
-    }
-    /// Required. The operation to perform.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Insert new rows in a table. If any of the rows already exist,
-        /// the write or transaction fails with error `ALREADY_EXISTS`.
-        #[prost(message, tag="1")]
-        Insert(Write),
-        /// Update existing rows in a table. If any of the rows does not
-        /// already exist, the transaction fails with error `NOT_FOUND`.
-        #[prost(message, tag="2")]
-        Update(Write),
-        /// Like \[insert][google.spanner.v1.Mutation.insert\], except that if the row already exists, then
-        /// its column values are overwritten with the ones provided. Any
-        /// column values not explicitly written are preserved.
-        ///
-        /// When using \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], just as when using \[insert][google.spanner.v1.Mutation.insert\], all `NOT
-        /// NULL` columns in the table must be given a value. This holds true
-        /// even when the row already exists and will therefore actually be updated.
-        #[prost(message, tag="3")]
-        InsertOrUpdate(Write),
-        /// Like \[insert][google.spanner.v1.Mutation.insert\], except that if the row already exists, it is
-        /// deleted, and the column values provided are inserted
-        /// instead. Unlike \[insert_or_update][google.spanner.v1.Mutation.insert_or_update\], this means any values not
-        /// explicitly written become `NULL`.
-        ///
-        /// In an interleaved table, if you create the child table with the
-        /// `ON DELETE CASCADE` annotation, then replacing a parent row
-        /// also deletes the child rows. Otherwise, you must delete the
-        /// child rows before you replace the parent row.
-        #[prost(message, tag="4")]
-        Replace(Write),
-        /// Delete rows from a table. Succeeds whether or not the named
-        /// rows were present.
-        #[prost(message, tag="5")]
-        Delete(Delete),
-    }
-}
-/// The response for \[Commit][google.spanner.v1.Spanner.Commit\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommitResponse {
-    /// The Cloud Spanner timestamp at which the transaction committed.
-    #[prost(message, optional, tag="1")]
-    pub commit_timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// The statistics about this Commit. Not returned by default.
-    /// For more information, see
-    /// \[CommitRequest.return_commit_stats][google.spanner.v1.CommitRequest.return_commit_stats\].
-    #[prost(message, optional, tag="2")]
-    pub commit_stats: ::core::option::Option<commit_response::CommitStats>,
-}
-/// Nested message and enum types in `CommitResponse`.
-pub mod commit_response {
-    /// Additional statistics about a commit.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CommitStats {
-        /// The total number of mutations for the transaction. Knowing the
-        /// `mutation_count` value can help you maximize the number of mutations
-        /// in a transaction and minimize the number of API round trips. You can
-        /// also monitor this value to prevent transactions from exceeding the system
-        /// \[limit\](<https://cloud.google.com/spanner/quotas#limits_for_creating_reading_updating_and_deleting_data>).
-        /// If the number of mutations exceeds the limit, the server returns
-        /// \[INVALID_ARGUMENT\](<https://cloud.google.com/spanner/docs/reference/rest/v1/Code#ENUM_VALUES.INVALID_ARGUMENT>).
-        #[prost(int64, tag="1")]
-        pub mutation_count: i64,
     }
 }
 /// The request for \[CreateSession][google.spanner.v1.Spanner.CreateSession\].
@@ -1230,11 +1278,11 @@ pub struct Session {
     pub name: ::prost::alloc::string::String,
     /// The labels for the session.
     ///
-    ///  * Label keys must be between 1 and 63 characters long and must conform to
-    ///    the following regular expression: `\[a-z]([-a-z0-9]*[a-z0-9\])?`.
-    ///  * Label values must be between 0 and 63 characters long and must conform
-    ///    to the regular expression `(\[a-z]([-a-z0-9]*[a-z0-9\])?)?`.
-    ///  * No more than 64 labels can be associated with a given session.
+    ///   * Label keys must be between 1 and 63 characters long and must conform to
+    ///     the following regular expression: `\[a-z]([-a-z0-9]*[a-z0-9\])?`.
+    ///   * Label values must be between 0 and 63 characters long and must conform
+    ///     to the regular expression `(\[a-z]([-a-z0-9]*[a-z0-9\])?)?`.
+    ///   * No more than 64 labels can be associated with a given session.
     ///
     /// See <https://goo.gl/xmQnxf> for more information on and examples of labels.
     #[prost(btree_map="string, string", tag="2")]
@@ -1275,13 +1323,13 @@ pub struct ListSessionsRequest {
     /// An expression for filtering the results of the request. Filter rules are
     /// case insensitive. The fields eligible for filtering are:
     ///
-    ///   * `labels.key` where key is the name of a label
+    ///    * `labels.key` where key is the name of a label
     ///
     /// Some examples of using filters are:
     ///
-    ///   * `labels.env:*` --> The session has the label "env".
-    ///   * `labels.env:dev` --> The session has the label "env" and the value of
-    ///                        the label contains the string "dev".
+    ///    * `labels.env:*` --> The session has the label "env".
+    ///    * `labels.env:dev` --> The session has the label "env" and the value of
+    ///                         the label contains the string "dev".
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -1345,15 +1393,15 @@ pub mod request_options {
     /// guarantee priority or order of execution. For example:
     ///
     /// * Some parts of a write operation always execute at `PRIORITY_HIGH`,
-    ///   regardless of the specified priority. This may cause you to see an
-    ///   increase in high priority workload even when executing a low priority
-    ///   request. This can also potentially cause a priority inversion where a
-    ///   lower priority request will be fulfilled ahead of a higher priority
-    ///   request.
+    ///    regardless of the specified priority. This may cause you to see an
+    ///    increase in high priority workload even when executing a low priority
+    ///    request. This can also potentially cause a priority inversion where a
+    ///    lower priority request will be fulfilled ahead of a higher priority
+    ///    request.
     /// * If a transaction contains multiple operations with different priorities,
-    ///   Cloud Spanner does not guarantee to process the higher priority
-    ///   operations first. There may be other constraints to satisfy, such as
-    ///   order of operations.
+    ///    Cloud Spanner does not guarantee to process the higher priority
+    ///    operations first. There may be other constraints to satisfy, such as
+    ///    order of operations.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Priority {
@@ -1365,6 +1413,20 @@ pub mod request_options {
         Medium = 2,
         /// This specifies that the request is high priority.
         High = 3,
+    }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::Unspecified => "PRIORITY_UNSPECIFIED",
+                Priority::Low => "PRIORITY_LOW",
+                Priority::Medium => "PRIORITY_MEDIUM",
+                Priority::High => "PRIORITY_HIGH",
+            }
+        }
     }
 }
 /// The request for \[ExecuteSql][google.spanner.v1.Spanner.ExecuteSql\] and
@@ -1521,6 +1583,19 @@ pub mod execute_sql_request {
         /// with the results.
         Profile = 2,
     }
+    impl QueryMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                QueryMode::Normal => "NORMAL",
+                QueryMode::Plan => "PLAN",
+                QueryMode::Profile => "PROFILE",
+            }
+        }
+    }
 }
 /// The request for \[ExecuteBatchDml][google.spanner.v1.Spanner.ExecuteBatchDml\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1599,10 +1674,10 @@ pub mod execute_batch_dml_request {
 /// To check for DML statements that failed, use the following approach:
 ///
 /// 1. Check the status in the response message. The \[google.rpc.Code][google.rpc.Code\] enum
-///    value `OK` indicates that all statements were executed successfully.
+///     value `OK` indicates that all statements were executed successfully.
 /// 2. If the status was not `OK`, check the number of result sets in the
-///    response. If the response contains `N` \[ResultSet][google.spanner.v1.ResultSet\] messages, then
-///    statement `N+1` in the request failed.
+///     response. If the response contains `N` \[ResultSet][google.spanner.v1.ResultSet\] messages, then
+///     statement `N+1` in the request failed.
 ///
 /// Example 1:
 ///
@@ -1613,8 +1688,8 @@ pub mod execute_batch_dml_request {
 ///
 /// * Request: 5 DML statements. The third statement has a syntax error.
 /// * Response: 2 \[ResultSet][google.spanner.v1.ResultSet\] messages, and a syntax error (`INVALID_ARGUMENT`)
-///   status. The number of \[ResultSet][google.spanner.v1.ResultSet\] messages indicates that the third
-///   statement failed, and the fourth and fifth statements were not executed.
+///    status. The number of \[ResultSet][google.spanner.v1.ResultSet\] messages indicates that the third
+///    statement failed, and the fourth and fifth statements were not executed.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecuteBatchDmlResponse {
     /// One \[ResultSet][google.spanner.v1.ResultSet\] for each statement in the request that ran successfully,
@@ -1895,6 +1970,7 @@ pub struct RollbackRequest {
 pub mod spanner_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Spanner API
     ///
     /// The Cloud Spanner API can be used to manage sessions and execute
@@ -1912,6 +1988,10 @@ pub mod spanner_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1933,19 +2013,19 @@ pub mod spanner_client {
         {
             SpannerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new session. A session can be used to perform

@@ -48,20 +48,20 @@ pub struct Endpoint {
     /// Restrictions:
     ///
     /// *   The entire metadata dictionary may contain up to 512 characters,
-    ///     spread accoss all key-value pairs. Metadata that goes beyond this
-    ///     limit are rejected
+    ///      spread accoss all key-value pairs. Metadata that goes beyond this
+    ///      limit are rejected
     /// *   Valid metadata keys have two segments: an optional prefix and name,
-    ///     separated by a slash (/). The name segment is required and must be 63
-    ///     characters or less, beginning and ending with an alphanumeric character
-    ///     (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
-    ///     alphanumerics between. The prefix is optional. If specified, the prefix
-    ///     must be a DNS subdomain: a series of DNS labels separated by dots (.),
-    ///     not longer than 253 characters in total, followed by a slash (/).
-    ///     Metadata that fails to meet these requirements are rejected
+    ///      separated by a slash (/). The name segment is required and must be 63
+    ///      characters or less, beginning and ending with an alphanumeric character
+    ///      (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
+    ///      alphanumerics between. The prefix is optional. If specified, the prefix
+    ///      must be a DNS subdomain: a series of DNS labels separated by dots (.),
+    ///      not longer than 253 characters in total, followed by a slash (/).
+    ///      Metadata that fails to meet these requirements are rejected
     /// *   The `(*.)google.com/` and `(*.)googleapis.com/` prefixes are reserved
-    ///     for system metadata managed by Service Directory. If the user tries
-    ///     to write to these keyspaces, those entries are silently ignored by
-    ///     the system
+    ///      for system metadata managed by Service Directory. If the user tries
+    ///      to write to these keyspaces, those entries are silently ignored by
+    ///      the system
     ///
     /// Note: This field is equivalent to the `annotations` field in the v1 API.
     /// They have the same syntax and read/write to the same location in Service
@@ -100,20 +100,20 @@ pub struct Service {
     /// Restrictions:
     ///
     /// *   The entire metadata dictionary may contain up to 2000 characters,
-    ///     spread accoss all key-value pairs. Metadata that goes beyond this
-    ///     limit are rejected
+    ///      spread accoss all key-value pairs. Metadata that goes beyond this
+    ///      limit are rejected
     /// *   Valid metadata keys have two segments: an optional prefix and name,
-    ///     separated by a slash (/). The name segment is required and must be 63
-    ///     characters or less, beginning and ending with an alphanumeric character
-    ///     (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
-    ///     alphanumerics between. The prefix is optional. If specified, the prefix
-    ///     must be a DNS subdomain: a series of DNS labels separated by dots (.),
-    ///     not longer than 253 characters in total, followed by a slash (/).
-    ///     Metadata that fails to meet these requirements are rejected
+    ///      separated by a slash (/). The name segment is required and must be 63
+    ///      characters or less, beginning and ending with an alphanumeric character
+    ///      (\[a-z0-9A-Z\]) with dashes (-), underscores (_), dots (.), and
+    ///      alphanumerics between. The prefix is optional. If specified, the prefix
+    ///      must be a DNS subdomain: a series of DNS labels separated by dots (.),
+    ///      not longer than 253 characters in total, followed by a slash (/).
+    ///      Metadata that fails to meet these requirements are rejected
     /// *   The `(*.)google.com/` and `(*.)googleapis.com/` prefixes are reserved
-    ///     for system metadata managed by Service Directory. If the user tries
-    ///     to write to these keyspaces, those entries are silently ignored by
-    ///     the system
+    ///      for system metadata managed by Service Directory. If the user tries
+    ///      to write to these keyspaces, those entries are silently ignored by
+    ///      the system
     ///
     /// Note: This field is equivalent to the `annotations` field in the v1 API.
     /// They have the same syntax and read/write to the same location in Service
@@ -152,30 +152,30 @@ pub struct ResolveServiceRequest {
     /// `<field> <operator> <value> (<logical connector>)`
     ///
     /// *   `<field>` can be `name`, `address`, `port`, or `metadata.<key>` for
-    ///     map field
+    ///      map field
     /// *   `<operator>` can be `<`, `>`, `<=`, `>=`, `!=`, `=`, `:`. Of which `:`
-    ///     means `HAS`, and is roughly the same as `=`
+    ///      means `HAS`, and is roughly the same as `=`
     /// *   `<value>` must be the same data type as field
     /// *   `<logical connector>` can be `AND`, `OR`, `NOT`
     ///
     /// Examples of valid filters:
     ///
     /// *   `metadata.owner` returns endpoints that have a annotation with the key
-    ///     `owner`, this is the same as `metadata:owner`
+    ///      `owner`, this is the same as `metadata:owner`
     /// *   `metadata.protocol=gRPC` returns endpoints that have key/value
-    ///     `protocol=gRPC`
+    ///      `protocol=gRPC`
     /// *   `address=192.108.1.105` returns endpoints that have this address
     /// *   `port>8080` returns endpoints that have port number larger than 8080
     /// *
     /// `name>projects/my-project/locations/us-east1/namespaces/my-namespace/services/my-service/endpoints/endpoint-c`
-    ///     returns endpoints that have name that is alphabetically later than the
-    ///     string, so "endpoint-e" is returned but "endpoint-a" is not
+    ///      returns endpoints that have name that is alphabetically later than the
+    ///      string, so "endpoint-e" is returned but "endpoint-a" is not
     /// *   `metadata.owner!=sd AND metadata.foo=bar` returns endpoints that have
-    ///     `owner` in annotation key but value is not `sd` AND have key/value
-    ///      `foo=bar`
+    ///      `owner` in annotation key but value is not `sd` AND have key/value
+    ///       `foo=bar`
     /// *   `doesnotexist.foo=bar` returns an empty list. Note that endpoint
-    ///     doesn't have a field called "doesnotexist". Since the filter does not
-    ///     match any endpoint, it returns no results
+    ///      doesn't have a field called "doesnotexist". Since the filter does not
+    ///      match any endpoint, it returns no results
     ///
     /// For more information about filtering, see
     /// [API Filtering](<https://aip.dev/160>).
@@ -192,6 +192,7 @@ pub struct ResolveServiceResponse {
 pub mod lookup_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Directory API for looking up service data at runtime.
     #[derive(Debug, Clone)]
     pub struct LookupServiceClient<T> {
@@ -206,6 +207,10 @@ pub mod lookup_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -227,19 +232,19 @@ pub mod lookup_service_client {
         {
             LookupServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns a [service][google.cloud.servicedirectory.v1beta1.Service] and its
@@ -306,23 +311,23 @@ pub struct ListNamespacesRequest {
     ///
     /// *   `<field>` can be `name` or `labels.<key>` for map field
     /// *   `<operator>` can be `<`, `>`, `<=`, `>=`, `!=`, `=`, `:`. Of which `:`
-    ///     means `HAS`, and is roughly the same as `=`
+    ///      means `HAS`, and is roughly the same as `=`
     /// *   `<value>` must be the same data type as field
     /// *   `<logical connector>` can be `AND`, `OR`, `NOT`
     ///
     /// Examples of valid filters:
     ///
     /// *   `labels.owner` returns namespaces that have a label with the key
-    ///     `owner`, this is the same as `labels:owner`
+    ///      `owner`, this is the same as `labels:owner`
     /// *   `labels.owner=sd` returns namespaces that have key/value `owner=sd`
     /// *   `name>projects/my-project/locations/us-east1/namespaces/namespace-c`
-    ///     returns namespaces that have name that is alphabetically later than the
-    ///     string, so "namespace-e" is returned but "namespace-a" is not
+    ///      returns namespaces that have name that is alphabetically later than the
+    ///      string, so "namespace-e" is returned but "namespace-a" is not
     /// *   `labels.owner!=sd AND labels.foo=bar` returns namespaces that have
-    ///     `owner` in label key but value is not `sd` AND have key/value `foo=bar`
+    ///      `owner` in label key but value is not `sd` AND have key/value `foo=bar`
     /// *   `doesnotexist.foo=bar` returns an empty list. Note that namespace
-    ///     doesn't have a field called "doesnotexist". Since the filter does not
-    ///     match any namespaces, it returns no results
+    ///      doesn't have a field called "doesnotexist". Since the filter does not
+    ///      match any namespaces, it returns no results
     ///
     /// For more information about filtering, see
     /// [API Filtering](<https://aip.dev/160>).
@@ -334,7 +339,7 @@ pub struct ListNamespacesRequest {
     ///
     /// *   `<field>` allows value: `name`
     /// *   `<asc|desc>` ascending or descending order by `<field>`. If this is
-    ///     left blank, `asc` is used
+    ///      left blank, `asc` is used
     ///
     /// Note that an empty `order_by` string results in default order, which is
     /// order by `name` in ascending order.
@@ -416,26 +421,26 @@ pub struct ListServicesRequest {
     ///
     /// *   `<field>` can be `name` or `metadata.<key>` for map field
     /// *   `<operator>` can be `<`, `>`, `<=`, `>=`, `!=`, `=`, `:`. Of which `:`
-    ///     means `HAS`, and is roughly the same as `=`
+    ///      means `HAS`, and is roughly the same as `=`
     /// *   `<value>` must be the same data type as field
     /// *   `<logical connector>` can be `AND`, `OR`, `NOT`
     ///
     /// Examples of valid filters:
     ///
     /// *   `metadata.owner` returns services that have a metadata with the key
-    ///     `owner`, this is the same as `metadata:owner`
+    ///      `owner`, this is the same as `metadata:owner`
     /// *   `metadata.protocol=gRPC` returns services that have key/value
-    ///     `protocol=gRPC`
+    ///      `protocol=gRPC`
     /// *
     /// `name>projects/my-project/locations/us-east1/namespaces/my-namespace/services/service-c`
-    ///     returns services that have name that is alphabetically later than the
-    ///     string, so "service-e" is returned but "service-a" is not
+    ///      returns services that have name that is alphabetically later than the
+    ///      string, so "service-e" is returned but "service-a" is not
     /// *   `metadata.owner!=sd AND metadata.foo=bar` returns services that have
-    ///     `owner` in metadata key but value is not `sd` AND have key/value
-    ///     `foo=bar`
+    ///      `owner` in metadata key but value is not `sd` AND have key/value
+    ///      `foo=bar`
     /// *   `doesnotexist.foo=bar` returns an empty list. Note that service
-    ///     doesn't have a field called "doesnotexist". Since the filter does not
-    ///     match any services, it returns no results
+    ///      doesn't have a field called "doesnotexist". Since the filter does not
+    ///      match any services, it returns no results
     ///
     /// For more information about filtering, see
     /// [API Filtering](<https://aip.dev/160>).
@@ -447,7 +452,7 @@ pub struct ListServicesRequest {
     ///
     /// *   `<field>` allows value: `name`
     /// *   `<asc|desc>` ascending or descending order by `<field>`. If this is
-    ///     left blank, `asc` is used
+    ///      left blank, `asc` is used
     ///
     /// Note that an empty `order_by` string results in default order, which is
     /// order by `name` in ascending order.
@@ -530,30 +535,30 @@ pub struct ListEndpointsRequest {
     /// `<field> <operator> <value> (<logical connector>)`
     ///
     /// *   `<field>` can be `name`, `address`, `port`, or `metadata.<key>` for map
-    ///     field
+    ///      field
     /// *   `<operator>` can be `<`, `>`, `<=`, `>=`, `!=`, `=`, `:`. Of which `:`
-    ///     means `HAS`, and is roughly the same as `=`
+    ///      means `HAS`, and is roughly the same as `=`
     /// *   `<value>` must be the same data type as field
     /// *   `<logical connector>` can be `AND`, `OR`, `NOT`
     ///
     /// Examples of valid filters:
     ///
     /// *   `metadata.owner` returns endpoints that have a metadata with the key
-    ///     `owner`, this is the same as `metadata:owner`
+    ///      `owner`, this is the same as `metadata:owner`
     /// *   `metadata.protocol=gRPC` returns endpoints that have key/value
-    ///     `protocol=gRPC`
+    ///      `protocol=gRPC`
     /// *   `address=192.108.1.105` returns endpoints that have this address
     /// *   `port>8080` returns endpoints that have port number larger than 8080
     /// *
     /// `name>projects/my-project/locations/us-east1/namespaces/my-namespace/services/my-service/endpoints/endpoint-c`
-    ///     returns endpoints that have name that is alphabetically later than the
-    ///     string, so "endpoint-e" is returned but "endpoint-a" is not
+    ///      returns endpoints that have name that is alphabetically later than the
+    ///      string, so "endpoint-e" is returned but "endpoint-a" is not
     /// *   `metadata.owner!=sd AND metadata.foo=bar` returns endpoints that have
-    ///     `owner` in metadata key but value is not `sd` AND have key/value
-    ///      `foo=bar`
+    ///      `owner` in metadata key but value is not `sd` AND have key/value
+    ///       `foo=bar`
     /// *   `doesnotexist.foo=bar` returns an empty list. Note that endpoint
-    ///     doesn't have a field called "doesnotexist". Since the filter does not
-    ///     match any endpoints, it returns no results
+    ///      doesn't have a field called "doesnotexist". Since the filter does not
+    ///      match any endpoints, it returns no results
     ///
     /// For more information about filtering, see
     /// [API Filtering](<https://aip.dev/160>).
@@ -565,7 +570,7 @@ pub struct ListEndpointsRequest {
     ///
     /// *   `<field>` allows values: `name`, `address`, `port`
     /// *   `<asc|desc>` ascending or descending order by `<field>`. If this is
-    ///     left blank, `asc` is used
+    ///      left blank, `asc` is used
     ///
     /// Note that an empty `order_by` string results in default order, which is
     /// order by `name` in ascending order.
@@ -613,6 +618,7 @@ pub struct DeleteEndpointRequest {
 pub mod registration_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Directory API for registering services. It defines the following
     /// resource model:
     ///
@@ -643,6 +649,10 @@ pub mod registration_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -662,19 +672,19 @@ pub mod registration_service_client {
         {
             RegistrationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a namespace, and returns the new namespace.

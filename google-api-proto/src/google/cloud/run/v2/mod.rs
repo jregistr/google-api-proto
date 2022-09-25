@@ -48,6 +48,143 @@ pub enum TrafficTargetAllocationType {
     /// Allocates instances to a Revision by name.
     Revision = 2,
 }
+impl TrafficTargetAllocationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TrafficTargetAllocationType::Unspecified => "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED",
+            TrafficTargetAllocationType::Latest => "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST",
+            TrafficTargetAllocationType::Revision => "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION",
+        }
+    }
+}
+/// VPC Access settings. For more information on creating a VPC Connector, visit
+/// <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> For
+/// information on how to configure Cloud Run with an existing VPC Connector,
+/// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VpcAccess {
+    /// VPC Access connector name.
+    /// Format: projects/{project}/locations/{location}/connectors/{connector}
+    #[prost(string, tag="1")]
+    pub connector: ::prost::alloc::string::String,
+    /// Traffic VPC egress settings.
+    #[prost(enumeration="vpc_access::VpcEgress", tag="2")]
+    pub egress: i32,
+}
+/// Nested message and enum types in `VpcAccess`.
+pub mod vpc_access {
+    /// Egress options for VPC access.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum VpcEgress {
+        /// Unspecified
+        Unspecified = 0,
+        /// All outbound traffic is routed through the VPC connector.
+        AllTraffic = 1,
+        /// Only private IP ranges are routed through the VPC connector.
+        PrivateRangesOnly = 2,
+    }
+    impl VpcEgress {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VpcEgress::Unspecified => "VPC_EGRESS_UNSPECIFIED",
+                VpcEgress::AllTraffic => "ALL_TRAFFIC",
+                VpcEgress::PrivateRangesOnly => "PRIVATE_RANGES_ONLY",
+            }
+        }
+    }
+}
+/// Settings for Binary Authorization feature.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BinaryAuthorization {
+    /// If present, indicates to use Breakglass using this justification.
+    /// If use_default is False, then it must be empty.
+    /// For more information on breakglass, see
+    /// <https://cloud.google.com/binary-authorization/docs/using-breakglass>
+    #[prost(string, tag="2")]
+    pub breakglass_justification: ::prost::alloc::string::String,
+    #[prost(oneof="binary_authorization::BinauthzMethod", tags="1")]
+    pub binauthz_method: ::core::option::Option<binary_authorization::BinauthzMethod>,
+}
+/// Nested message and enum types in `BinaryAuthorization`.
+pub mod binary_authorization {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum BinauthzMethod {
+        /// If True, indicates to use the default project's binary authorization
+        /// policy. If False, binary authorization will be disabled.
+        #[prost(bool, tag="1")]
+        UseDefault(bool),
+    }
+}
+/// Settings for revision-level scaling settings.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RevisionScaling {
+    /// Minimum number of serving instances that this resource should have.
+    #[prost(int32, tag="1")]
+    pub min_instance_count: i32,
+    /// Maximum number of serving instances that this resource should have.
+    #[prost(int32, tag="2")]
+    pub max_instance_count: i32,
+}
+/// Allowed ingress traffic for the Container.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum IngressTraffic {
+    /// Unspecified
+    Unspecified = 0,
+    /// All inbound traffic is allowed.
+    All = 1,
+    /// Only internal traffic is allowed.
+    InternalOnly = 2,
+    /// Both internal and Google Cloud Load Balancer traffic is allowed.
+    InternalLoadBalancer = 3,
+}
+impl IngressTraffic {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IngressTraffic::Unspecified => "INGRESS_TRAFFIC_UNSPECIFIED",
+            IngressTraffic::All => "INGRESS_TRAFFIC_ALL",
+            IngressTraffic::InternalOnly => "INGRESS_TRAFFIC_INTERNAL_ONLY",
+            IngressTraffic::InternalLoadBalancer => "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER",
+        }
+    }
+}
+/// Alternatives for execution environments.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExecutionEnvironment {
+    /// Unspecified
+    Unspecified = 0,
+    /// Uses the First Generation environment.
+    Gen1 = 1,
+    /// Uses Second Generation environment.
+    Gen2 = 2,
+}
+impl ExecutionEnvironment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ExecutionEnvironment::Unspecified => "EXECUTION_ENVIRONMENT_UNSPECIFIED",
+            ExecutionEnvironment::Gen1 => "EXECUTION_ENVIRONMENT_GEN1",
+            ExecutionEnvironment::Gen2 => "EXECUTION_ENVIRONMENT_GEN2",
+        }
+    }
+}
 /// Defines a status condition for a resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Condition {
@@ -93,6 +230,21 @@ pub mod condition {
         /// Terminal state: Reconciliation completed successfully.
         ConditionSucceeded = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::ConditionPending => "CONDITION_PENDING",
+                State::ConditionReconciling => "CONDITION_RECONCILING",
+                State::ConditionFailed => "CONDITION_FAILED",
+                State::ConditionSucceeded => "CONDITION_SUCCEEDED",
+            }
+        }
+    }
     /// Represents the severity of the condition failures.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -105,6 +257,20 @@ pub mod condition {
         Warning = 2,
         /// Info severity.
         Info = 3,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Error => "ERROR",
+                Severity::Warning => "WARNING",
+                Severity::Info => "INFO",
+            }
+        }
     }
     /// Reasons common to all types of conditions.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -141,6 +307,31 @@ pub mod condition {
         /// An internal error occurred. Further information may be in the message.
         Internal = 16,
     }
+    impl CommonReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommonReason::Undefined => "COMMON_REASON_UNDEFINED",
+                CommonReason::Unknown => "UNKNOWN",
+                CommonReason::RevisionFailed => "REVISION_FAILED",
+                CommonReason::ProgressDeadlineExceeded => "PROGRESS_DEADLINE_EXCEEDED",
+                CommonReason::ContainerMissing => "CONTAINER_MISSING",
+                CommonReason::ContainerPermissionDenied => "CONTAINER_PERMISSION_DENIED",
+                CommonReason::ContainerImageUnauthorized => "CONTAINER_IMAGE_UNAUTHORIZED",
+                CommonReason::ContainerImageAuthorizationCheckFailed => "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED",
+                CommonReason::EncryptionKeyPermissionDenied => "ENCRYPTION_KEY_PERMISSION_DENIED",
+                CommonReason::EncryptionKeyCheckFailed => "ENCRYPTION_KEY_CHECK_FAILED",
+                CommonReason::SecretsAccessCheckFailed => "SECRETS_ACCESS_CHECK_FAILED",
+                CommonReason::WaitingForOperation => "WAITING_FOR_OPERATION",
+                CommonReason::ImmediateRetry => "IMMEDIATE_RETRY",
+                CommonReason::PostponedRetry => "POSTPONED_RETRY",
+                CommonReason::Internal => "INTERNAL",
+            }
+        }
+    }
     /// Reasons specific to Revision resource.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -176,6 +367,28 @@ pub mod condition {
         /// manually scaled service with 0 instance count
         HealthCheckSkipped = 11,
     }
+    impl RevisionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RevisionReason::Undefined => "REVISION_REASON_UNDEFINED",
+                RevisionReason::Pending => "PENDING",
+                RevisionReason::Reserve => "RESERVE",
+                RevisionReason::Retired => "RETIRED",
+                RevisionReason::Retiring => "RETIRING",
+                RevisionReason::Recreating => "RECREATING",
+                RevisionReason::HealthCheckContainerError => "HEALTH_CHECK_CONTAINER_ERROR",
+                RevisionReason::CustomizedPathResponsePending => "CUSTOMIZED_PATH_RESPONSE_PENDING",
+                RevisionReason::MinInstancesNotProvisioned => "MIN_INSTANCES_NOT_PROVISIONED",
+                RevisionReason::ActiveRevisionLimitReached => "ACTIVE_REVISION_LIMIT_REACHED",
+                RevisionReason::NoDeployment => "NO_DEPLOYMENT",
+                RevisionReason::HealthCheckSkipped => "HEALTH_CHECK_SKIPPED",
+            }
+        }
+    }
     /// Reasons specific to Execution resource.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -187,6 +400,19 @@ pub mod condition {
         /// A task reached its retry limit and the last attempt failed due to the
         /// user container exiting with a non-zero exit code.
         NonZeroExitCode = 2,
+    }
+    impl ExecutionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExecutionReason::Undefined => "EXECUTION_REASON_UNDEFINED",
+                ExecutionReason::JobStatusServicePollingError => "JOB_STATUS_SERVICE_POLLING_ERROR",
+                ExecutionReason::NonZeroExitCode => "NON_ZERO_EXIT_CODE",
+            }
+        }
     }
     /// The reason for this condition. Depending on the condition type,
     /// it will populate one of these fields.
@@ -453,90 +679,6 @@ pub struct CloudSqlInstance {
     #[prost(string, repeated, tag="1")]
     pub instances: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// VPC Access settings. For more information on creating a VPC Connector, visit
-/// <https://cloud.google.com/vpc/docs/configure-serverless-vpc-access> For
-/// information on how to configure Cloud Run with an existing VPC Connector,
-/// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VpcAccess {
-    /// VPC Access connector name.
-    /// Format: projects/{project}/locations/{location}/connectors/{connector}
-    #[prost(string, tag="1")]
-    pub connector: ::prost::alloc::string::String,
-    /// Traffic VPC egress settings.
-    #[prost(enumeration="vpc_access::VpcEgress", tag="2")]
-    pub egress: i32,
-}
-/// Nested message and enum types in `VpcAccess`.
-pub mod vpc_access {
-    /// Egress options for VPC access.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum VpcEgress {
-        /// Unspecified
-        Unspecified = 0,
-        /// All outbound traffic is routed through the VPC connector.
-        AllTraffic = 1,
-        /// Only private IP ranges are routed through the VPC connector.
-        PrivateRangesOnly = 2,
-    }
-}
-/// Settings for Binary Authorization feature.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BinaryAuthorization {
-    /// If present, indicates to use Breakglass using this justification.
-    /// If use_default is False, then it must be empty.
-    /// For more information on breakglass, see
-    /// <https://cloud.google.com/binary-authorization/docs/using-breakglass>
-    #[prost(string, tag="2")]
-    pub breakglass_justification: ::prost::alloc::string::String,
-    #[prost(oneof="binary_authorization::BinauthzMethod", tags="1")]
-    pub binauthz_method: ::core::option::Option<binary_authorization::BinauthzMethod>,
-}
-/// Nested message and enum types in `BinaryAuthorization`.
-pub mod binary_authorization {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum BinauthzMethod {
-        /// If True, indicates to use the default project's binary authorization
-        /// policy. If False, binary authorization will be disabled.
-        #[prost(bool, tag="1")]
-        UseDefault(bool),
-    }
-}
-/// Settings for revision-level scaling settings.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RevisionScaling {
-    /// Minimum number of serving instances that this resource should have.
-    #[prost(int32, tag="1")]
-    pub min_instance_count: i32,
-    /// Maximum number of serving instances that this resource should have.
-    #[prost(int32, tag="2")]
-    pub max_instance_count: i32,
-}
-/// Allowed ingress traffic for the Container.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum IngressTraffic {
-    /// Unspecified
-    Unspecified = 0,
-    /// All inbound traffic is allowed.
-    All = 1,
-    /// Only internal traffic is allowed.
-    InternalOnly = 2,
-    /// Both internal and Google Cloud Load Balancer traffic is allowed.
-    InternalLoadBalancer = 3,
-}
-/// Alternatives for execution environments.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ExecutionEnvironment {
-    /// Unspecified
-    Unspecified = 0,
-    /// Uses the First Generation environment.
-    Gen1 = 1,
-    /// Uses Second Generation environment.
-    Gen2 = 2,
-}
 /// Request message for obtaining a Revision by its full name.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRevisionRequest {
@@ -709,6 +851,7 @@ pub struct Revision {
 pub mod revisions_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Run Revision Control Plane API.
     #[derive(Debug, Clone)]
     pub struct RevisionsClient<T> {
@@ -723,6 +866,10 @@ pub mod revisions_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -744,19 +891,19 @@ pub mod revisions_client {
         {
             RevisionsClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets information about a Revision.
@@ -1127,6 +1274,7 @@ pub struct Service {
 pub mod services_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Run Service Control Plane API
     #[derive(Debug, Clone)]
     pub struct ServicesClient<T> {
@@ -1141,6 +1289,10 @@ pub mod services_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1162,19 +1314,19 @@ pub mod services_client {
         {
             ServicesClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new Service in a given project and location.

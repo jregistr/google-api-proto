@@ -1,3 +1,256 @@
+/// Represents a Pubsub snapshot.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PubsubSnapshotMetadata {
+    /// The name of the Pubsub topic.
+    #[prost(string, tag="1")]
+    pub topic_name: ::prost::alloc::string::String,
+    /// The name of the Pubsub snapshot.
+    #[prost(string, tag="2")]
+    pub snapshot_name: ::prost::alloc::string::String,
+    /// The expire time of the Pubsub snapshot.
+    #[prost(message, optional, tag="3")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Represents a snapshot of a job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Snapshot {
+    /// The unique ID of this snapshot.
+    #[prost(string, tag="1")]
+    pub id: ::prost::alloc::string::String,
+    /// The project this snapshot belongs to.
+    #[prost(string, tag="2")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The job this snapshot was created from.
+    #[prost(string, tag="3")]
+    pub source_job_id: ::prost::alloc::string::String,
+    /// The time this snapshot was created.
+    #[prost(message, optional, tag="4")]
+    pub creation_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time after which this snapshot will be automatically deleted.
+    #[prost(message, optional, tag="5")]
+    pub ttl: ::core::option::Option<::prost_types::Duration>,
+    /// State of the snapshot.
+    #[prost(enumeration="SnapshotState", tag="6")]
+    pub state: i32,
+    /// Pub/Sub snapshot metadata.
+    #[prost(message, repeated, tag="7")]
+    pub pubsub_metadata: ::prost::alloc::vec::Vec<PubsubSnapshotMetadata>,
+    /// User specified description of the snapshot. Maybe empty.
+    #[prost(string, tag="8")]
+    pub description: ::prost::alloc::string::String,
+    /// The disk byte size of the snapshot. Only available for snapshots in READY
+    /// state.
+    #[prost(int64, tag="9")]
+    pub disk_size_bytes: i64,
+    /// Cloud region where this snapshot lives in, e.g., "us-central1".
+    #[prost(string, tag="10")]
+    pub region: ::prost::alloc::string::String,
+}
+/// Request to get information about a snapshot
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetSnapshotRequest {
+    /// The ID of the Cloud Platform project that the snapshot belongs to.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The ID of the snapshot.
+    #[prost(string, tag="2")]
+    pub snapshot_id: ::prost::alloc::string::String,
+    /// The location that contains this snapshot.
+    #[prost(string, tag="3")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Request to delete a snapshot.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteSnapshotRequest {
+    /// The ID of the Cloud Platform project that the snapshot belongs to.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The ID of the snapshot.
+    #[prost(string, tag="2")]
+    pub snapshot_id: ::prost::alloc::string::String,
+    /// The location that contains this snapshot.
+    #[prost(string, tag="3")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Response from deleting a snapshot.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteSnapshotResponse {
+}
+/// Request to list snapshots.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSnapshotsRequest {
+    /// The project ID to list snapshots for.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// If specified, list snapshots created from this job.
+    #[prost(string, tag="3")]
+    pub job_id: ::prost::alloc::string::String,
+    /// The location to list snapshots in.
+    #[prost(string, tag="2")]
+    pub location: ::prost::alloc::string::String,
+}
+/// List of snapshots.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSnapshotsResponse {
+    /// Returned snapshots.
+    #[prost(message, repeated, tag="1")]
+    pub snapshots: ::prost::alloc::vec::Vec<Snapshot>,
+}
+/// Snapshot state.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SnapshotState {
+    /// Unknown state.
+    UnknownSnapshotState = 0,
+    /// Snapshot intent to create has been persisted, snapshotting of state has not
+    /// yet started.
+    Pending = 1,
+    /// Snapshotting is being performed.
+    Running = 2,
+    /// Snapshot has been created and is ready to be used.
+    Ready = 3,
+    /// Snapshot failed to be created.
+    Failed = 4,
+    /// Snapshot has been deleted.
+    Deleted = 5,
+}
+impl SnapshotState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SnapshotState::UnknownSnapshotState => "UNKNOWN_SNAPSHOT_STATE",
+            SnapshotState::Pending => "PENDING",
+            SnapshotState::Running => "RUNNING",
+            SnapshotState::Ready => "READY",
+            SnapshotState::Failed => "FAILED",
+            SnapshotState::Deleted => "DELETED",
+        }
+    }
+}
+/// Generated client implementations.
+pub mod snapshots_v1_beta3_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Provides methods to manage snapshots of Google Cloud Dataflow jobs.
+    #[derive(Debug, Clone)]
+    pub struct SnapshotsV1Beta3Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SnapshotsV1Beta3Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SnapshotsV1Beta3Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SnapshotsV1Beta3Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets information about a snapshot.
+        pub async fn get_snapshot(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSnapshotRequest>,
+        ) -> Result<tonic::Response<super::Snapshot>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.SnapshotsV1Beta3/GetSnapshot",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a snapshot.
+        pub async fn delete_snapshot(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteSnapshotRequest>,
+        ) -> Result<tonic::Response<super::DeleteSnapshotResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.SnapshotsV1Beta3/DeleteSnapshot",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists snapshots.
+        pub async fn list_snapshots(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSnapshotsRequest>,
+        ) -> Result<tonic::Response<super::ListSnapshotsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.SnapshotsV1Beta3/ListSnapshots",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Describes the environment in which a Dataflow Job runs.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Environment {
@@ -12,8 +265,8 @@ pub struct Environment {
     ///
     /// Google Cloud Storage:
     ///
-    ///   storage.googleapis.com/{bucket}/{object}
-    ///   bucket.storage.googleapis.com/{object}
+    ///    storage.googleapis.com/{bucket}/{object}
+    ///    bucket.storage.googleapis.com/{object}
     #[prost(string, tag="1")]
     pub temp_storage_prefix: ::prost::alloc::string::String,
     /// The type of cluster manager API to use.  If unknown or
@@ -36,7 +289,7 @@ pub struct Environment {
     /// at rest, AKA a Customer Managed Encryption Key (CMEK).
     ///
     /// Format:
-    ///   projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY
+    ///    projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/KEY
     #[prost(string, tag="12")]
     pub service_kms_key_name: ::prost::alloc::string::String,
     /// The worker pools. At least one "harness" worker pool must be
@@ -56,7 +309,7 @@ pub struct Environment {
     /// The supported resource type is:
     ///
     /// Google BigQuery:
-    ///   bigquery.googleapis.com/{dataset}
+    ///    bigquery.googleapis.com/{dataset}
     #[prost(string, tag="7")]
     pub dataset: ::prost::alloc::string::String,
     /// The Cloud Dataflow SDK pipeline options specified by the user. These
@@ -113,8 +366,8 @@ pub struct Package {
     ///
     /// Google Cloud Storage:
     ///
-    ///   storage.googleapis.com/{bucket}
-    ///   bucket.storage.googleapis.com/
+    ///    storage.googleapis.com/{bucket}
+    ///    bucket.storage.googleapis.com/
     #[prost(string, tag="2")]
     pub location: ::prost::alloc::string::String,
 }
@@ -184,8 +437,8 @@ pub struct WorkerSettings {
     ///
     /// Google Cloud Storage:
     ///
-    ///   storage.googleapis.com/{bucket}/{object}
-    ///   bucket.storage.googleapis.com/{object}
+    ///    storage.googleapis.com/{bucket}/{object}
+    ///    bucket.storage.googleapis.com/{object}
     #[prost(string, tag="6")]
     pub temp_storage_prefix: ::prost::alloc::string::String,
 }
@@ -240,8 +493,8 @@ pub struct TaskRunnerSettings {
     /// The supported resource type is:
     ///
     /// Google Cloud Storage:
-    ///   storage.googleapis.com/{bucket}/{object}
-    ///   bucket.storage.googleapis.com/{object}
+    ///    storage.googleapis.com/{bucket}/{object}
+    ///    bucket.storage.googleapis.com/{object}
     #[prost(string, tag="11")]
     pub log_upload_location: ::prost::alloc::string::String,
     /// The directory on the VM to store logs.
@@ -253,8 +506,8 @@ pub struct TaskRunnerSettings {
     /// The supported resource type is:
     ///
     /// Google Cloud Storage:
-    ///   storage.googleapis.com/{bucket}/{object}
-    ///   bucket.storage.googleapis.com/{object}
+    ///    storage.googleapis.com/{bucket}/{object}
+    ///    bucket.storage.googleapis.com/{object}
     #[prost(string, tag="13")]
     pub temp_storage_prefix: ::prost::alloc::string::String,
     /// The command to launch the worker harness.
@@ -443,6 +696,19 @@ pub enum JobType {
     /// processed, and written continuously.
     Streaming = 2,
 }
+impl JobType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobType::Unknown => "JOB_TYPE_UNKNOWN",
+            JobType::Batch => "JOB_TYPE_BATCH",
+            JobType::Streaming => "JOB_TYPE_STREAMING",
+        }
+    }
+}
 /// Specifies the resource to optimize for in Flexible Resource Scheduling.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -453,6 +719,19 @@ pub enum FlexResourceSchedulingGoal {
     FlexrsSpeedOptimized = 1,
     /// Optimize for lower cost.
     FlexrsCostOptimized = 2,
+}
+impl FlexResourceSchedulingGoal {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FlexResourceSchedulingGoal::FlexrsUnspecified => "FLEXRS_UNSPECIFIED",
+            FlexResourceSchedulingGoal::FlexrsSpeedOptimized => "FLEXRS_SPEED_OPTIMIZED",
+            FlexResourceSchedulingGoal::FlexrsCostOptimized => "FLEXRS_COST_OPTIMIZED",
+        }
+    }
 }
 /// Specifies what happens to a resource when a Cloud Dataflow
 /// \[google.dataflow.v1beta3.Job][google.dataflow.v1beta3.Job\] has completed.
@@ -470,6 +749,20 @@ pub enum TeardownPolicy {
     /// development.
     TeardownNever = 3,
 }
+impl TeardownPolicy {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TeardownPolicy::Unknown => "TEARDOWN_POLICY_UNKNOWN",
+            TeardownPolicy::TeardownAlways => "TEARDOWN_ALWAYS",
+            TeardownPolicy::TeardownOnSuccess => "TEARDOWN_ON_SUCCESS",
+            TeardownPolicy::TeardownNever => "TEARDOWN_NEVER",
+        }
+    }
+}
 /// The default set of packages to be staged on a pool of workers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -483,6 +776,20 @@ pub enum DefaultPackageSet {
     Java = 2,
     /// Stage packages typically useful to workers written in Python.
     Python = 3,
+}
+impl DefaultPackageSet {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DefaultPackageSet::Unknown => "DEFAULT_PACKAGE_SET_UNKNOWN",
+            DefaultPackageSet::None => "DEFAULT_PACKAGE_SET_NONE",
+            DefaultPackageSet::Java => "DEFAULT_PACKAGE_SET_JAVA",
+            DefaultPackageSet::Python => "DEFAULT_PACKAGE_SET_PYTHON",
+        }
+    }
 }
 /// Specifies the algorithm used to determine the number of worker
 /// processes to run at any given point in time, based on the amount of
@@ -498,6 +805,19 @@ pub enum AutoscalingAlgorithm {
     /// Increase worker count over time to reduce job execution time.
     Basic = 2,
 }
+impl AutoscalingAlgorithm {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AutoscalingAlgorithm::Unknown => "AUTOSCALING_ALGORITHM_UNKNOWN",
+            AutoscalingAlgorithm::None => "AUTOSCALING_ALGORITHM_NONE",
+            AutoscalingAlgorithm::Basic => "AUTOSCALING_ALGORITHM_BASIC",
+        }
+    }
+}
 /// Specifies how IP addresses should be allocated to the worker machines.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -508,6 +828,19 @@ pub enum WorkerIpAddressConfiguration {
     WorkerIpPublic = 1,
     /// Workers should have private IP addresses.
     WorkerIpPrivate = 2,
+}
+impl WorkerIpAddressConfiguration {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            WorkerIpAddressConfiguration::WorkerIpUnspecified => "WORKER_IP_UNSPECIFIED",
+            WorkerIpAddressConfiguration::WorkerIpPublic => "WORKER_IP_PUBLIC",
+            WorkerIpAddressConfiguration::WorkerIpPrivate => "WORKER_IP_PRIVATE",
+        }
+    }
 }
 /// Specifies the shuffle mode used by a
 /// \[google.dataflow.v1beta3.Job\], which determines the approach data is shuffled
@@ -522,6 +855,1143 @@ pub enum ShuffleMode {
     VmBased = 1,
     /// Shuffle is done on the service side.
     ServiceBased = 2,
+}
+impl ShuffleMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ShuffleMode::Unspecified => "SHUFFLE_MODE_UNSPECIFIED",
+            ShuffleMode::VmBased => "VM_BASED",
+            ShuffleMode::ServiceBased => "SERVICE_BASED",
+        }
+    }
+}
+/// Defines a job to be run by the Cloud Dataflow service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Job {
+    /// The unique ID of this job.
+    ///
+    /// This field is set by the Cloud Dataflow service when the Job is
+    /// created, and is immutable for the life of the job.
+    #[prost(string, tag="1")]
+    pub id: ::prost::alloc::string::String,
+    /// The ID of the Cloud Platform project that the job belongs to.
+    #[prost(string, tag="2")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The user-specified Cloud Dataflow job name.
+    ///
+    /// Only one Job with a given name may exist in a project at any
+    /// given time. If a caller attempts to create a Job with the same
+    /// name as an already-existing Job, the attempt returns the
+    /// existing Job.
+    ///
+    /// The name must match the regular expression
+    /// `\[a-z]([-a-z0-9]{0,1022}[a-z0-9\])?`
+    #[prost(string, tag="3")]
+    pub name: ::prost::alloc::string::String,
+    /// The type of Cloud Dataflow job.
+    #[prost(enumeration="JobType", tag="4")]
+    pub r#type: i32,
+    /// The environment for the job.
+    #[prost(message, optional, tag="5")]
+    pub environment: ::core::option::Option<Environment>,
+    /// Exactly one of step or steps_location should be specified.
+    ///
+    /// The top-level steps that constitute the entire job. Only retrieved with
+    /// JOB_VIEW_ALL.
+    #[prost(message, repeated, tag="6")]
+    pub steps: ::prost::alloc::vec::Vec<Step>,
+    /// The Cloud Storage location where the steps are stored.
+    #[prost(string, tag="24")]
+    pub steps_location: ::prost::alloc::string::String,
+    /// The current state of the job.
+    ///
+    /// Jobs are created in the `JOB_STATE_STOPPED` state unless otherwise
+    /// specified.
+    ///
+    /// A job in the `JOB_STATE_RUNNING` state may asynchronously enter a
+    /// terminal state. After a job has reached a terminal state, no
+    /// further state updates may be made.
+    ///
+    /// This field may be mutated by the Cloud Dataflow service;
+    /// callers cannot mutate it.
+    #[prost(enumeration="JobState", tag="7")]
+    pub current_state: i32,
+    /// The timestamp associated with the current state.
+    #[prost(message, optional, tag="8")]
+    pub current_state_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The job's requested state.
+    ///
+    /// `UpdateJob` may be used to switch between the `JOB_STATE_STOPPED` and
+    /// `JOB_STATE_RUNNING` states, by setting requested_state.  `UpdateJob` may
+    /// also be used to directly set a job's requested state to
+    /// `JOB_STATE_CANCELLED` or `JOB_STATE_DONE`, irrevocably terminating the
+    /// job if it has not already reached a terminal state.
+    #[prost(enumeration="JobState", tag="9")]
+    pub requested_state: i32,
+    /// Deprecated.
+    #[prost(message, optional, tag="10")]
+    pub execution_info: ::core::option::Option<JobExecutionInfo>,
+    /// The timestamp when the job was initially created. Immutable and set by the
+    /// Cloud Dataflow service.
+    #[prost(message, optional, tag="11")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// If this job is an update of an existing job, this field is the job ID
+    /// of the job it replaced.
+    ///
+    /// When sending a `CreateJobRequest`, you can update a job by specifying it
+    /// here. The job named here is stopped, and its intermediate state is
+    /// transferred to this job.
+    #[prost(string, tag="12")]
+    pub replace_job_id: ::prost::alloc::string::String,
+    /// The map of transform name prefixes of the job to be replaced to the
+    /// corresponding name prefixes of the new job.
+    #[prost(btree_map="string, string", tag="13")]
+    pub transform_name_mapping: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The client's unique identifier of the job, re-used across retried attempts.
+    /// If this field is set, the service will ensure its uniqueness.
+    /// The request to create a job will fail if the service has knowledge of a
+    /// previously submitted job with the same client's ID and job name.
+    /// The caller may use this field to ensure idempotence of job
+    /// creation across retried attempts to create a job.
+    /// By default, the field is empty and, in that case, the service ignores it.
+    #[prost(string, tag="14")]
+    pub client_request_id: ::prost::alloc::string::String,
+    /// If another job is an update of this job (and thus, this job is in
+    /// `JOB_STATE_UPDATED`), this field contains the ID of that job.
+    #[prost(string, tag="15")]
+    pub replaced_by_job_id: ::prost::alloc::string::String,
+    /// A set of files the system should be aware of that are used
+    /// for temporary storage. These temporary files will be
+    /// removed on job completion.
+    /// No duplicates are allowed.
+    /// No file patterns are supported.
+    ///
+    /// The supported files are:
+    ///
+    /// Google Cloud Storage:
+    ///
+    ///     storage.googleapis.com/{bucket}/{object}
+    ///     bucket.storage.googleapis.com/{object}
+    #[prost(string, repeated, tag="16")]
+    pub temp_files: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// User-defined labels for this job.
+    ///
+    /// The labels map can contain no more than 64 entries.  Entries of the labels
+    /// map are UTF8 strings that comply with the following restrictions:
+    ///
+    /// * Keys must conform to regexp:  \[\p{Ll}\p{Lo}][\p{Ll}\p{Lo}\p{N}_-\]{0,62}
+    /// * Values must conform to regexp:  \[\p{Ll}\p{Lo}\p{N}_-\]{0,63}
+    /// * Both keys and values are additionally constrained to be <= 128 bytes in
+    /// size.
+    #[prost(btree_map="string, string", tag="17")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains this job.
+    #[prost(string, tag="18")]
+    pub location: ::prost::alloc::string::String,
+    /// Preliminary field: The format of this data may change at any time.
+    /// A description of the user pipeline and stages through which it is executed.
+    /// Created by Cloud Dataflow service.  Only retrieved with
+    /// JOB_VIEW_DESCRIPTION or JOB_VIEW_ALL.
+    #[prost(message, optional, tag="19")]
+    pub pipeline_description: ::core::option::Option<PipelineDescription>,
+    /// This field may be mutated by the Cloud Dataflow service;
+    /// callers cannot mutate it.
+    #[prost(message, repeated, tag="20")]
+    pub stage_states: ::prost::alloc::vec::Vec<ExecutionStageState>,
+    /// This field is populated by the Dataflow service to support filtering jobs
+    /// by the metadata values provided here. Populated for ListJobs and all GetJob
+    /// views SUMMARY and higher.
+    #[prost(message, optional, tag="21")]
+    pub job_metadata: ::core::option::Option<JobMetadata>,
+    /// The timestamp when the job was started (transitioned to JOB_STATE_PENDING).
+    /// Flexible resource scheduling jobs are started with some delay after job
+    /// creation, so start_time is unset before start and is updated when the
+    /// job is started by the Cloud Dataflow service. For other jobs, start_time
+    /// always equals to create_time and is immutable and set by the Cloud Dataflow
+    /// service.
+    #[prost(message, optional, tag="22")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// If this is specified, the job's initial state is populated from the given
+    /// snapshot.
+    #[prost(string, tag="23")]
+    pub created_from_snapshot_id: ::prost::alloc::string::String,
+    /// Reserved for future use. This field is set only in responses from the
+    /// server; it is ignored if it is set in any requests.
+    #[prost(bool, tag="25")]
+    pub satisfies_pzs: bool,
+}
+/// Metadata for a Datastore connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DatastoreIoDetails {
+    /// Namespace used in the connection.
+    #[prost(string, tag="1")]
+    pub namespace: ::prost::alloc::string::String,
+    /// ProjectId accessed in the connection.
+    #[prost(string, tag="2")]
+    pub project_id: ::prost::alloc::string::String,
+}
+/// Metadata for a Pub/Sub connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PubSubIoDetails {
+    /// Topic accessed in the connection.
+    #[prost(string, tag="1")]
+    pub topic: ::prost::alloc::string::String,
+    /// Subscription used in the connection.
+    #[prost(string, tag="2")]
+    pub subscription: ::prost::alloc::string::String,
+}
+/// Metadata for a File connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FileIoDetails {
+    /// File Pattern used to access files by the connector.
+    #[prost(string, tag="1")]
+    pub file_pattern: ::prost::alloc::string::String,
+}
+/// Metadata for a Cloud Bigtable connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigTableIoDetails {
+    /// ProjectId accessed in the connection.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// InstanceId accessed in the connection.
+    #[prost(string, tag="2")]
+    pub instance_id: ::prost::alloc::string::String,
+    /// TableId accessed in the connection.
+    #[prost(string, tag="3")]
+    pub table_id: ::prost::alloc::string::String,
+}
+/// Metadata for a BigQuery connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryIoDetails {
+    /// Table accessed in the connection.
+    #[prost(string, tag="1")]
+    pub table: ::prost::alloc::string::String,
+    /// Dataset accessed in the connection.
+    #[prost(string, tag="2")]
+    pub dataset: ::prost::alloc::string::String,
+    /// Project accessed in the connection.
+    #[prost(string, tag="3")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Query used to access data in the connection.
+    #[prost(string, tag="4")]
+    pub query: ::prost::alloc::string::String,
+}
+/// Metadata for a Spanner connector used by the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpannerIoDetails {
+    /// ProjectId accessed in the connection.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// InstanceId accessed in the connection.
+    #[prost(string, tag="2")]
+    pub instance_id: ::prost::alloc::string::String,
+    /// DatabaseId accessed in the connection.
+    #[prost(string, tag="3")]
+    pub database_id: ::prost::alloc::string::String,
+}
+/// The version of the SDK used to run the job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SdkVersion {
+    /// The version of the SDK used to run the job.
+    #[prost(string, tag="1")]
+    pub version: ::prost::alloc::string::String,
+    /// A readable string describing the version of the SDK.
+    #[prost(string, tag="2")]
+    pub version_display_name: ::prost::alloc::string::String,
+    /// The support status for this SDK version.
+    #[prost(enumeration="sdk_version::SdkSupportStatus", tag="3")]
+    pub sdk_support_status: i32,
+}
+/// Nested message and enum types in `SdkVersion`.
+pub mod sdk_version {
+    /// The support status of the SDK used to run the job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SdkSupportStatus {
+        /// Cloud Dataflow is unaware of this version.
+        Unknown = 0,
+        /// This is a known version of an SDK, and is supported.
+        Supported = 1,
+        /// A newer version of the SDK family exists, and an update is recommended.
+        Stale = 2,
+        /// This version of the SDK is deprecated and will eventually be
+        /// unsupported.
+        Deprecated = 3,
+        /// Support for this SDK version has ended and it should no longer be used.
+        Unsupported = 4,
+    }
+    impl SdkSupportStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SdkSupportStatus::Unknown => "UNKNOWN",
+                SdkSupportStatus::Supported => "SUPPORTED",
+                SdkSupportStatus::Stale => "STALE",
+                SdkSupportStatus::Deprecated => "DEPRECATED",
+                SdkSupportStatus::Unsupported => "UNSUPPORTED",
+            }
+        }
+    }
+}
+/// Metadata available primarily for filtering jobs. Will be included in the
+/// ListJob response and Job SUMMARY view.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobMetadata {
+    /// The SDK version used to run the job.
+    #[prost(message, optional, tag="1")]
+    pub sdk_version: ::core::option::Option<SdkVersion>,
+    /// Identification of a Spanner source used in the Dataflow job.
+    #[prost(message, repeated, tag="2")]
+    pub spanner_details: ::prost::alloc::vec::Vec<SpannerIoDetails>,
+    /// Identification of a BigQuery source used in the Dataflow job.
+    #[prost(message, repeated, tag="3")]
+    pub bigquery_details: ::prost::alloc::vec::Vec<BigQueryIoDetails>,
+    /// Identification of a Cloud Bigtable source used in the Dataflow job.
+    #[prost(message, repeated, tag="4")]
+    pub big_table_details: ::prost::alloc::vec::Vec<BigTableIoDetails>,
+    /// Identification of a Pub/Sub source used in the Dataflow job.
+    #[prost(message, repeated, tag="5")]
+    pub pubsub_details: ::prost::alloc::vec::Vec<PubSubIoDetails>,
+    /// Identification of a File source used in the Dataflow job.
+    #[prost(message, repeated, tag="6")]
+    pub file_details: ::prost::alloc::vec::Vec<FileIoDetails>,
+    /// Identification of a Datastore source used in the Dataflow job.
+    #[prost(message, repeated, tag="7")]
+    pub datastore_details: ::prost::alloc::vec::Vec<DatastoreIoDetails>,
+}
+/// A message describing the state of a particular execution stage.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecutionStageState {
+    /// The name of the execution stage.
+    #[prost(string, tag="1")]
+    pub execution_stage_name: ::prost::alloc::string::String,
+    /// Executions stage states allow the same set of values as JobState.
+    #[prost(enumeration="JobState", tag="2")]
+    pub execution_stage_state: i32,
+    /// The time at which the stage transitioned to this state.
+    #[prost(message, optional, tag="3")]
+    pub current_state_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A descriptive representation of submitted pipeline as well as the executed
+/// form.  This data is provided by the Dataflow service for ease of visualizing
+/// the pipeline and interpreting Dataflow provided metrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PipelineDescription {
+    /// Description of each transform in the pipeline and collections between them.
+    #[prost(message, repeated, tag="1")]
+    pub original_pipeline_transform: ::prost::alloc::vec::Vec<TransformSummary>,
+    /// Description of each stage of execution of the pipeline.
+    #[prost(message, repeated, tag="2")]
+    pub execution_pipeline_stage: ::prost::alloc::vec::Vec<ExecutionStageSummary>,
+    /// Pipeline level display data.
+    #[prost(message, repeated, tag="3")]
+    pub display_data: ::prost::alloc::vec::Vec<DisplayData>,
+}
+/// Description of the type, names/ids, and input/outputs for a transform.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransformSummary {
+    /// Type of transform.
+    #[prost(enumeration="KindType", tag="1")]
+    pub kind: i32,
+    /// SDK generated id of this transform instance.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// User provided name for this transform instance.
+    #[prost(string, tag="3")]
+    pub name: ::prost::alloc::string::String,
+    /// Transform-specific display data.
+    #[prost(message, repeated, tag="4")]
+    pub display_data: ::prost::alloc::vec::Vec<DisplayData>,
+    /// User  names for all collection outputs to this transform.
+    #[prost(string, repeated, tag="5")]
+    pub output_collection_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// User names for all collection inputs to this transform.
+    #[prost(string, repeated, tag="6")]
+    pub input_collection_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Description of the composing transforms, names/ids, and input/outputs of a
+/// stage of execution.  Some composing transforms and sources may have been
+/// generated by the Dataflow service during execution planning.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecutionStageSummary {
+    /// Dataflow service generated name for this stage.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Dataflow service generated id for this stage.
+    #[prost(string, tag="2")]
+    pub id: ::prost::alloc::string::String,
+    /// Type of transform this stage is executing.
+    #[prost(enumeration="KindType", tag="3")]
+    pub kind: i32,
+    /// Input sources for this stage.
+    #[prost(message, repeated, tag="4")]
+    pub input_source: ::prost::alloc::vec::Vec<execution_stage_summary::StageSource>,
+    /// Output sources for this stage.
+    #[prost(message, repeated, tag="5")]
+    pub output_source: ::prost::alloc::vec::Vec<execution_stage_summary::StageSource>,
+    /// Other stages that must complete before this stage can run.
+    #[prost(string, repeated, tag="8")]
+    pub prerequisite_stage: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Transforms that comprise this execution stage.
+    #[prost(message, repeated, tag="6")]
+    pub component_transform: ::prost::alloc::vec::Vec<execution_stage_summary::ComponentTransform>,
+    /// Collections produced and consumed by component transforms of this stage.
+    #[prost(message, repeated, tag="7")]
+    pub component_source: ::prost::alloc::vec::Vec<execution_stage_summary::ComponentSource>,
+}
+/// Nested message and enum types in `ExecutionStageSummary`.
+pub mod execution_stage_summary {
+    /// Description of an input or output of an execution stage.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StageSource {
+        /// Human-readable name for this source; may be user or system generated.
+        #[prost(string, tag="1")]
+        pub user_name: ::prost::alloc::string::String,
+        /// Dataflow service generated name for this source.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+        /// User name for the original user transform or collection with which this
+        /// source is most closely associated.
+        #[prost(string, tag="3")]
+        pub original_transform_or_collection: ::prost::alloc::string::String,
+        /// Size of the source, if measurable.
+        #[prost(int64, tag="4")]
+        pub size_bytes: i64,
+    }
+    /// Description of a transform executed as part of an execution stage.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ComponentTransform {
+        /// Human-readable name for this transform; may be user or system generated.
+        #[prost(string, tag="1")]
+        pub user_name: ::prost::alloc::string::String,
+        /// Dataflow service generated name for this source.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+        /// User name for the original user transform with which this transform is
+        /// most closely associated.
+        #[prost(string, tag="3")]
+        pub original_transform: ::prost::alloc::string::String,
+    }
+    /// Description of an interstitial value between transforms in an execution
+    /// stage.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ComponentSource {
+        /// Human-readable name for this transform; may be user or system generated.
+        #[prost(string, tag="1")]
+        pub user_name: ::prost::alloc::string::String,
+        /// Dataflow service generated name for this source.
+        #[prost(string, tag="2")]
+        pub name: ::prost::alloc::string::String,
+        /// User name for the original user transform or collection with which this
+        /// source is most closely associated.
+        #[prost(string, tag="3")]
+        pub original_transform_or_collection: ::prost::alloc::string::String,
+    }
+}
+/// Data provided with a pipeline or transform to provide descriptive info.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DisplayData {
+    /// The key identifying the display data.
+    /// This is intended to be used as a label for the display data
+    /// when viewed in a dax monitoring system.
+    #[prost(string, tag="1")]
+    pub key: ::prost::alloc::string::String,
+    /// The namespace for the key. This is usually a class name or programming
+    /// language namespace (i.e. python module) which defines the display data.
+    /// This allows a dax monitoring system to specially handle the data
+    /// and perform custom rendering.
+    #[prost(string, tag="2")]
+    pub namespace: ::prost::alloc::string::String,
+    /// A possible additional shorter value to display.
+    /// For example a java_class_name_value of com.mypackage.MyDoFn
+    /// will be stored with MyDoFn as the short_str_value and
+    /// com.mypackage.MyDoFn as the java_class_name value.
+    /// short_str_value can be displayed and java_class_name_value
+    /// will be displayed as a tooltip.
+    #[prost(string, tag="11")]
+    pub short_str_value: ::prost::alloc::string::String,
+    /// An optional full URL.
+    #[prost(string, tag="12")]
+    pub url: ::prost::alloc::string::String,
+    /// An optional label to display in a dax UI for the element.
+    #[prost(string, tag="13")]
+    pub label: ::prost::alloc::string::String,
+    /// Various value types which can be used for display data.  Only one will be
+    /// set.
+    #[prost(oneof="display_data::Value", tags="4, 5, 6, 7, 8, 9, 10")]
+    pub value: ::core::option::Option<display_data::Value>,
+}
+/// Nested message and enum types in `DisplayData`.
+pub mod display_data {
+    /// Various value types which can be used for display data.  Only one will be
+    /// set.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// Contains value if the data is of string type.
+        #[prost(string, tag="4")]
+        StrValue(::prost::alloc::string::String),
+        /// Contains value if the data is of int64 type.
+        #[prost(int64, tag="5")]
+        Int64Value(i64),
+        /// Contains value if the data is of float type.
+        #[prost(float, tag="6")]
+        FloatValue(f32),
+        /// Contains value if the data is of java class type.
+        #[prost(string, tag="7")]
+        JavaClassValue(::prost::alloc::string::String),
+        /// Contains value if the data is of timestamp type.
+        #[prost(message, tag="8")]
+        TimestampValue(::prost_types::Timestamp),
+        /// Contains value if the data is of duration type.
+        #[prost(message, tag="9")]
+        DurationValue(::prost_types::Duration),
+        /// Contains value if the data is of a boolean type.
+        #[prost(bool, tag="10")]
+        BoolValue(bool),
+    }
+}
+/// Defines a particular step within a Cloud Dataflow job.
+///
+/// A job consists of multiple steps, each of which performs some
+/// specific operation as part of the overall job.  Data is typically
+/// passed from one step to another as part of the job.
+///
+/// Here's an example of a sequence of steps which together implement a
+/// Map-Reduce job:
+///
+///    * Read a collection of data from some source, parsing the
+///      collection's elements.
+///
+///    * Validate the elements.
+///
+///    * Apply a user-defined function to map each element to some value
+///      and extract an element-specific key value.
+///
+///    * Group elements with the same key into a single element with
+///      that key, transforming a multiply-keyed collection into a
+///      uniquely-keyed collection.
+///
+///    * Write the elements out to some data sink.
+///
+/// Note that the Cloud Dataflow service may be used to run many different
+/// types of jobs, not just Map-Reduce.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Step {
+    /// The kind of step in the Cloud Dataflow job.
+    #[prost(string, tag="1")]
+    pub kind: ::prost::alloc::string::String,
+    /// The name that identifies the step. This must be unique for each
+    /// step with respect to all other steps in the Cloud Dataflow job.
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+    /// Named properties associated with the step. Each kind of
+    /// predefined step has its own required set of properties.
+    /// Must be provided on Create.  Only retrieved with JOB_VIEW_ALL.
+    #[prost(message, optional, tag="3")]
+    pub properties: ::core::option::Option<::prost_types::Struct>,
+}
+/// Additional information about how a Cloud Dataflow job will be executed that
+/// isn't contained in the submitted job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobExecutionInfo {
+    /// A mapping from each stage to the information about that stage.
+    #[prost(btree_map="string, message", tag="1")]
+    pub stages: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, JobExecutionStageInfo>,
+}
+/// Contains information about how a particular
+/// \[google.dataflow.v1beta3.Step][google.dataflow.v1beta3.Step\] will be executed.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobExecutionStageInfo {
+    /// The steps associated with the execution stage.
+    /// Note that stages may have several steps, and that a given step
+    /// might be run by more than one stage.
+    #[prost(string, repeated, tag="1")]
+    pub step_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request to create a Cloud Dataflow job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateJobRequest {
+    /// The ID of the Cloud Platform project that the job belongs to.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The job to create.
+    #[prost(message, optional, tag="2")]
+    pub job: ::core::option::Option<Job>,
+    /// The level of information requested in response.
+    #[prost(enumeration="JobView", tag="3")]
+    pub view: i32,
+    /// Deprecated. This field is now in the Job message.
+    #[prost(string, tag="4")]
+    pub replace_job_id: ::prost::alloc::string::String,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains this job.
+    #[prost(string, tag="5")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Request to get the state of a Cloud Dataflow job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetJobRequest {
+    /// The ID of the Cloud Platform project that the job belongs to.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The job ID.
+    #[prost(string, tag="2")]
+    pub job_id: ::prost::alloc::string::String,
+    /// The level of information requested in response.
+    #[prost(enumeration="JobView", tag="3")]
+    pub view: i32,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains this job.
+    #[prost(string, tag="4")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Request to update a Cloud Dataflow job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateJobRequest {
+    /// The ID of the Cloud Platform project that the job belongs to.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The job ID.
+    #[prost(string, tag="2")]
+    pub job_id: ::prost::alloc::string::String,
+    /// The updated job.
+    /// Only the job state is updatable; other fields will be ignored.
+    #[prost(message, optional, tag="3")]
+    pub job: ::core::option::Option<Job>,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains this job.
+    #[prost(string, tag="4")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Request to list Cloud Dataflow jobs.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListJobsRequest {
+    /// The kind of filter to use.
+    #[prost(enumeration="list_jobs_request::Filter", tag="5")]
+    pub filter: i32,
+    /// The project which owns the jobs.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Deprecated. ListJobs always returns summaries now.
+    /// Use GetJob for other JobViews.
+    #[deprecated]
+    #[prost(enumeration="JobView", tag="2")]
+    pub view: i32,
+    /// If there are many jobs, limit response to at most this many.
+    /// The actual number of jobs returned will be the lesser of max_responses
+    /// and an unspecified server-defined limit.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+    /// Set this to the 'next_page_token' field of a previous response
+    /// to request additional results in a long list.
+    #[prost(string, tag="4")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains this job.
+    #[prost(string, tag="17")]
+    pub location: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ListJobsRequest`.
+pub mod list_jobs_request {
+    /// This field filters out and returns jobs in the specified job state. The
+    /// order of data returned is determined by the filter used, and is subject to
+    /// change.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Filter {
+        /// The filter isn't specified, or is unknown. This returns all jobs ordered
+        /// on descending `JobUuid`.
+        Unknown = 0,
+        /// Returns all running jobs first ordered on creation timestamp, then
+        /// returns all terminated jobs ordered on the termination timestamp.
+        All = 1,
+        /// Filters the jobs that have a terminated state, ordered on the
+        /// termination timestamp. Example terminated states: `JOB_STATE_STOPPED`,
+        /// `JOB_STATE_UPDATED`, `JOB_STATE_DRAINED`, etc.
+        Terminated = 2,
+        /// Filters the jobs that are running ordered on the creation timestamp.
+        Active = 3,
+    }
+    impl Filter {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Filter::Unknown => "UNKNOWN",
+                Filter::All => "ALL",
+                Filter::Terminated => "TERMINATED",
+                Filter::Active => "ACTIVE",
+            }
+        }
+    }
+}
+/// Indicates which [regional endpoint]
+/// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) failed
+/// to respond to a request for data.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FailedLocation {
+    /// The name of the [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// failed to respond.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Response to a request to list Cloud Dataflow jobs in a project. This might
+/// be a partial response, depending on the page size in the ListJobsRequest.
+/// However, if the project does not have any jobs, an instance of
+/// ListJobsResponse is not returned and the requests's response
+/// body is empty {}.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListJobsResponse {
+    /// A subset of the requested job information.
+    #[prost(message, repeated, tag="1")]
+    pub jobs: ::prost::alloc::vec::Vec<Job>,
+    /// Set if there may be more results than fit in this response.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Zero or more messages describing the [regional endpoints]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// failed to respond.
+    #[prost(message, repeated, tag="3")]
+    pub failed_location: ::prost::alloc::vec::Vec<FailedLocation>,
+}
+/// Request to create a snapshot of a job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SnapshotJobRequest {
+    /// The project which owns the job to be snapshotted.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The job to be snapshotted.
+    #[prost(string, tag="2")]
+    pub job_id: ::prost::alloc::string::String,
+    /// TTL for the snapshot.
+    #[prost(message, optional, tag="3")]
+    pub ttl: ::core::option::Option<::prost_types::Duration>,
+    /// The location that contains this job.
+    #[prost(string, tag="4")]
+    pub location: ::prost::alloc::string::String,
+    /// If true, perform snapshots for sources which support this.
+    #[prost(bool, tag="5")]
+    pub snapshot_sources: bool,
+    /// User specified description of the snapshot. Maybe empty.
+    #[prost(string, tag="6")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Request to check is active jobs exists for a project
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckActiveJobsRequest {
+    /// The project which owns the jobs.
+    #[prost(string, tag="1")]
+    pub project_id: ::prost::alloc::string::String,
+}
+/// Response for CheckActiveJobsRequest.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckActiveJobsResponse {
+    /// If True, active jobs exists for project. False otherwise.
+    #[prost(bool, tag="1")]
+    pub active_jobs_exist: bool,
+}
+/// Type of transform or stage operation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum KindType {
+    /// Unrecognized transform type.
+    UnknownKind = 0,
+    /// ParDo transform.
+    ParDoKind = 1,
+    /// Group By Key transform.
+    GroupByKeyKind = 2,
+    /// Flatten transform.
+    FlattenKind = 3,
+    /// Read transform.
+    ReadKind = 4,
+    /// Write transform.
+    WriteKind = 5,
+    /// Constructs from a constant value, such as with Create.of.
+    ConstantKind = 6,
+    /// Creates a Singleton view of a collection.
+    SingletonKind = 7,
+    /// Opening or closing a shuffle session, often as part of a GroupByKey.
+    ShuffleKind = 8,
+}
+impl KindType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            KindType::UnknownKind => "UNKNOWN_KIND",
+            KindType::ParDoKind => "PAR_DO_KIND",
+            KindType::GroupByKeyKind => "GROUP_BY_KEY_KIND",
+            KindType::FlattenKind => "FLATTEN_KIND",
+            KindType::ReadKind => "READ_KIND",
+            KindType::WriteKind => "WRITE_KIND",
+            KindType::ConstantKind => "CONSTANT_KIND",
+            KindType::SingletonKind => "SINGLETON_KIND",
+            KindType::ShuffleKind => "SHUFFLE_KIND",
+        }
+    }
+}
+/// Describes the overall state of a \[google.dataflow.v1beta3.Job][google.dataflow.v1beta3.Job\].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum JobState {
+    /// The job's run state isn't specified.
+    Unknown = 0,
+    /// `JOB_STATE_STOPPED` indicates that the job has not
+    /// yet started to run.
+    Stopped = 1,
+    /// `JOB_STATE_RUNNING` indicates that the job is currently running.
+    Running = 2,
+    /// `JOB_STATE_DONE` indicates that the job has successfully completed.
+    /// This is a terminal job state.  This state may be set by the Cloud Dataflow
+    /// service, as a transition from `JOB_STATE_RUNNING`. It may also be set via a
+    /// Cloud Dataflow `UpdateJob` call, if the job has not yet reached a terminal
+    /// state.
+    Done = 3,
+    /// `JOB_STATE_FAILED` indicates that the job has failed.  This is a
+    /// terminal job state.  This state may only be set by the Cloud Dataflow
+    /// service, and only as a transition from `JOB_STATE_RUNNING`.
+    Failed = 4,
+    /// `JOB_STATE_CANCELLED` indicates that the job has been explicitly
+    /// cancelled. This is a terminal job state. This state may only be
+    /// set via a Cloud Dataflow `UpdateJob` call, and only if the job has not
+    /// yet reached another terminal state.
+    Cancelled = 5,
+    /// `JOB_STATE_UPDATED` indicates that the job was successfully updated,
+    /// meaning that this job was stopped and another job was started, inheriting
+    /// state from this one. This is a terminal job state. This state may only be
+    /// set by the Cloud Dataflow service, and only as a transition from
+    /// `JOB_STATE_RUNNING`.
+    Updated = 6,
+    /// `JOB_STATE_DRAINING` indicates that the job is in the process of draining.
+    /// A draining job has stopped pulling from its input sources and is processing
+    /// any data that remains in-flight. This state may be set via a Cloud Dataflow
+    /// `UpdateJob` call, but only as a transition from `JOB_STATE_RUNNING`. Jobs
+    /// that are draining may only transition to `JOB_STATE_DRAINED`,
+    /// `JOB_STATE_CANCELLED`, or `JOB_STATE_FAILED`.
+    Draining = 7,
+    /// `JOB_STATE_DRAINED` indicates that the job has been drained.
+    /// A drained job terminated by stopping pulling from its input sources and
+    /// processing any data that remained in-flight when draining was requested.
+    /// This state is a terminal state, may only be set by the Cloud Dataflow
+    /// service, and only as a transition from `JOB_STATE_DRAINING`.
+    Drained = 8,
+    /// `JOB_STATE_PENDING` indicates that the job has been created but is not yet
+    /// running.  Jobs that are pending may only transition to `JOB_STATE_RUNNING`,
+    /// or `JOB_STATE_FAILED`.
+    Pending = 9,
+    /// `JOB_STATE_CANCELLING` indicates that the job has been explicitly cancelled
+    /// and is in the process of stopping.  Jobs that are cancelling may only
+    /// transition to `JOB_STATE_CANCELLED` or `JOB_STATE_FAILED`.
+    Cancelling = 10,
+    /// `JOB_STATE_QUEUED` indicates that the job has been created but is being
+    /// delayed until launch. Jobs that are queued may only transition to
+    /// `JOB_STATE_PENDING` or `JOB_STATE_CANCELLED`.
+    Queued = 11,
+    /// `JOB_STATE_RESOURCE_CLEANING_UP` indicates that the batch job's associated
+    /// resources are currently being cleaned up after a successful run.
+    /// Currently, this is an opt-in feature, please reach out to Cloud support
+    /// team if you are interested.
+    ResourceCleaningUp = 12,
+}
+impl JobState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobState::Unknown => "JOB_STATE_UNKNOWN",
+            JobState::Stopped => "JOB_STATE_STOPPED",
+            JobState::Running => "JOB_STATE_RUNNING",
+            JobState::Done => "JOB_STATE_DONE",
+            JobState::Failed => "JOB_STATE_FAILED",
+            JobState::Cancelled => "JOB_STATE_CANCELLED",
+            JobState::Updated => "JOB_STATE_UPDATED",
+            JobState::Draining => "JOB_STATE_DRAINING",
+            JobState::Drained => "JOB_STATE_DRAINED",
+            JobState::Pending => "JOB_STATE_PENDING",
+            JobState::Cancelling => "JOB_STATE_CANCELLING",
+            JobState::Queued => "JOB_STATE_QUEUED",
+            JobState::ResourceCleaningUp => "JOB_STATE_RESOURCE_CLEANING_UP",
+        }
+    }
+}
+/// Selector for how much information is returned in Job responses.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum JobView {
+    /// The job view to return isn't specified, or is unknown.
+    /// Responses will contain at least the `JOB_VIEW_SUMMARY` information,
+    /// and may contain additional information.
+    Unknown = 0,
+    /// Request summary information only:
+    /// Project ID, Job ID, job name, job type, job status, start/end time,
+    /// and Cloud SDK version details.
+    Summary = 1,
+    /// Request all information available for this job.
+    All = 2,
+    /// Request summary info and limited job description data for steps, labels and
+    /// environment.
+    Description = 3,
+}
+impl JobView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobView::Unknown => "JOB_VIEW_UNKNOWN",
+            JobView::Summary => "JOB_VIEW_SUMMARY",
+            JobView::All => "JOB_VIEW_ALL",
+            JobView::Description => "JOB_VIEW_DESCRIPTION",
+        }
+    }
+}
+/// Generated client implementations.
+pub mod jobs_v1_beta3_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Provides a method to create and modify Google Cloud Dataflow jobs.
+    /// A Job is a multi-stage computation graph run by the Cloud Dataflow service.
+    #[derive(Debug, Clone)]
+    pub struct JobsV1Beta3Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> JobsV1Beta3Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> JobsV1Beta3Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            JobsV1Beta3Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a Cloud Dataflow job.
+        ///
+        /// To create a job, we recommend using `projects.locations.jobs.create` with a
+        /// [regional endpoint]
+        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+        /// `projects.jobs.create` is not recommended, as your job will always start
+        /// in `us-central1`.
+        pub async fn create_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/CreateJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the state of the specified Cloud Dataflow job.
+        ///
+        /// To get the state of a job, we recommend using `projects.locations.jobs.get`
+        /// with a [regional endpoint]
+        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+        /// `projects.jobs.get` is not recommended, as you can only get the state of
+        /// jobs that are running in `us-central1`.
+        pub async fn get_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/GetJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the state of an existing Cloud Dataflow job.
+        ///
+        /// To update the state of an existing job, we recommend using
+        /// `projects.locations.jobs.update` with a [regional endpoint]
+        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
+        /// `projects.jobs.update` is not recommended, as you can only update the state
+        /// of jobs that are running in `us-central1`.
+        pub async fn update_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/UpdateJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// List the jobs of a project.
+        ///
+        /// To list the jobs of a project in a region, we recommend using
+        /// `projects.locations.jobs.list` with a [regional endpoint]
+        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). To
+        /// list the all jobs across all regions, use `projects.jobs.aggregated`. Using
+        /// `projects.jobs.list` is not recommended, as you can only get the list of
+        /// jobs that are running in `us-central1`.
+        pub async fn list_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListJobsRequest>,
+        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/ListJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// List the jobs of a project across all regions.
+        pub async fn aggregated_list_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListJobsRequest>,
+        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/AggregatedListJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Check for existence of active jobs in the given project across all regions.
+        pub async fn check_active_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CheckActiveJobsRequest>,
+        ) -> Result<tonic::Response<super::CheckActiveJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/CheckActiveJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Snapshot the state of a streaming job.
+        pub async fn snapshot_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SnapshotJobRequest>,
+        ) -> Result<tonic::Response<super::Snapshot>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.dataflow.v1beta3.JobsV1Beta3/SnapshotJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
 }
 /// Identifies a metric, by describing the source which generated the
 /// metric.
@@ -828,10 +2298,27 @@ pub enum ExecutionState {
     /// Execution of the component was cancelled.
     Cancelled = 5,
 }
+impl ExecutionState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ExecutionState::Unknown => "EXECUTION_STATE_UNKNOWN",
+            ExecutionState::NotStarted => "EXECUTION_STATE_NOT_STARTED",
+            ExecutionState::Running => "EXECUTION_STATE_RUNNING",
+            ExecutionState::Succeeded => "EXECUTION_STATE_SUCCEEDED",
+            ExecutionState::Failed => "EXECUTION_STATE_FAILED",
+            ExecutionState::Cancelled => "EXECUTION_STATE_CANCELLED",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod metrics_v1_beta3_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Dataflow Metrics API lets you monitor the progress of Dataflow
     /// jobs.
     #[derive(Debug, Clone)]
@@ -847,6 +2334,10 @@ pub mod metrics_v1_beta3_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -868,19 +2359,19 @@ pub mod metrics_v1_beta3_client {
         {
             MetricsV1Beta3Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Request the job status.
@@ -956,1061 +2447,463 @@ pub mod metrics_v1_beta3_client {
         }
     }
 }
-/// Represents a Pubsub snapshot.
+/// Global topology of the streaming Dataflow job, including all
+/// computations and their sharded locations.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PubsubSnapshotMetadata {
-    /// The name of the Pubsub topic.
-    #[prost(string, tag="1")]
-    pub topic_name: ::prost::alloc::string::String,
-    /// The name of the Pubsub snapshot.
-    #[prost(string, tag="2")]
-    pub snapshot_name: ::prost::alloc::string::String,
-    /// The expire time of the Pubsub snapshot.
-    #[prost(message, optional, tag="3")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Represents a snapshot of a job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Snapshot {
-    /// The unique ID of this snapshot.
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
-    /// The project this snapshot belongs to.
-    #[prost(string, tag="2")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job this snapshot was created from.
-    #[prost(string, tag="3")]
-    pub source_job_id: ::prost::alloc::string::String,
-    /// The time this snapshot was created.
-    #[prost(message, optional, tag="4")]
-    pub creation_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time after which this snapshot will be automatically deleted.
-    #[prost(message, optional, tag="5")]
-    pub ttl: ::core::option::Option<::prost_types::Duration>,
-    /// State of the snapshot.
-    #[prost(enumeration="SnapshotState", tag="6")]
-    pub state: i32,
-    /// Pub/Sub snapshot metadata.
-    #[prost(message, repeated, tag="7")]
-    pub pubsub_metadata: ::prost::alloc::vec::Vec<PubsubSnapshotMetadata>,
-    /// User specified description of the snapshot. Maybe empty.
-    #[prost(string, tag="8")]
-    pub description: ::prost::alloc::string::String,
-    /// The disk byte size of the snapshot. Only available for snapshots in READY
-    /// state.
-    #[prost(int64, tag="9")]
-    pub disk_size_bytes: i64,
-    /// Cloud region where this snapshot lives in, e.g., "us-central1".
-    #[prost(string, tag="10")]
-    pub region: ::prost::alloc::string::String,
-}
-/// Request to get information about a snapshot
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetSnapshotRequest {
-    /// The ID of the Cloud Platform project that the snapshot belongs to.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The ID of the snapshot.
-    #[prost(string, tag="2")]
-    pub snapshot_id: ::prost::alloc::string::String,
-    /// The location that contains this snapshot.
-    #[prost(string, tag="3")]
-    pub location: ::prost::alloc::string::String,
-}
-/// Request to delete a snapshot.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteSnapshotRequest {
-    /// The ID of the Cloud Platform project that the snapshot belongs to.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The ID of the snapshot.
-    #[prost(string, tag="2")]
-    pub snapshot_id: ::prost::alloc::string::String,
-    /// The location that contains this snapshot.
-    #[prost(string, tag="3")]
-    pub location: ::prost::alloc::string::String,
-}
-/// Response from deleting a snapshot.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteSnapshotResponse {
-}
-/// Request to list snapshots.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSnapshotsRequest {
-    /// The project ID to list snapshots for.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// If specified, list snapshots created from this job.
-    #[prost(string, tag="3")]
-    pub job_id: ::prost::alloc::string::String,
-    /// The location to list snapshots in.
-    #[prost(string, tag="2")]
-    pub location: ::prost::alloc::string::String,
-}
-/// List of snapshots.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSnapshotsResponse {
-    /// Returned snapshots.
+pub struct TopologyConfig {
+    /// The computations associated with a streaming Dataflow job.
     #[prost(message, repeated, tag="1")]
-    pub snapshots: ::prost::alloc::vec::Vec<Snapshot>,
+    pub computations: ::prost::alloc::vec::Vec<ComputationTopology>,
+    /// The disks assigned to a streaming Dataflow job.
+    #[prost(message, repeated, tag="2")]
+    pub data_disk_assignments: ::prost::alloc::vec::Vec<DataDiskAssignment>,
+    /// Maps user stage names to stable computation names.
+    #[prost(btree_map="string, string", tag="3")]
+    pub user_stage_to_computation_name_map: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The size (in bits) of keys that will be assigned to source messages.
+    #[prost(int32, tag="4")]
+    pub forwarding_key_bits: i32,
+    /// Version number for persistent state.
+    #[prost(int32, tag="5")]
+    pub persistent_state_version: i32,
 }
-/// Snapshot state.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SnapshotState {
-    /// Unknown state.
-    UnknownSnapshotState = 0,
-    /// Snapshot intent to create has been persisted, snapshotting of state has not
-    /// yet started.
-    Pending = 1,
-    /// Snapshotting is being performed.
-    Running = 2,
-    /// Snapshot has been created and is ready to be used.
-    Ready = 3,
-    /// Snapshot failed to be created.
-    Failed = 4,
-    /// Snapshot has been deleted.
-    Deleted = 5,
-}
-/// Generated client implementations.
-pub mod snapshots_v1_beta3_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// Provides methods to manage snapshots of Google Cloud Dataflow jobs.
-    #[derive(Debug, Clone)]
-    pub struct SnapshotsV1Beta3Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SnapshotsV1Beta3Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SnapshotsV1Beta3Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SnapshotsV1Beta3Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Gets information about a snapshot.
-        pub async fn get_snapshot(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSnapshotRequest>,
-        ) -> Result<tonic::Response<super::Snapshot>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.SnapshotsV1Beta3/GetSnapshot",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a snapshot.
-        pub async fn delete_snapshot(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteSnapshotRequest>,
-        ) -> Result<tonic::Response<super::DeleteSnapshotResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.SnapshotsV1Beta3/DeleteSnapshot",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists snapshots.
-        pub async fn list_snapshots(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListSnapshotsRequest>,
-        ) -> Result<tonic::Response<super::ListSnapshotsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.SnapshotsV1Beta3/ListSnapshots",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Defines a job to be run by the Cloud Dataflow service.
+/// Identifies a pubsub location to use for transferring data into or
+/// out of a streaming Dataflow job.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Job {
-    /// The unique ID of this job.
-    ///
-    /// This field is set by the Cloud Dataflow service when the Job is
-    /// created, and is immutable for the life of the job.
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
-    /// The ID of the Cloud Platform project that the job belongs to.
-    #[prost(string, tag="2")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The user-specified Cloud Dataflow job name.
-    ///
-    /// Only one Job with a given name may exist in a project at any
-    /// given time. If a caller attempts to create a Job with the same
-    /// name as an already-existing Job, the attempt returns the
-    /// existing Job.
-    ///
-    /// The name must match the regular expression
-    /// `\[a-z]([-a-z0-9]{0,1022}[a-z0-9\])?`
-    #[prost(string, tag="3")]
-    pub name: ::prost::alloc::string::String,
-    /// The type of Cloud Dataflow job.
-    #[prost(enumeration="JobType", tag="4")]
-    pub r#type: i32,
-    /// The environment for the job.
-    #[prost(message, optional, tag="5")]
-    pub environment: ::core::option::Option<Environment>,
-    /// Exactly one of step or steps_location should be specified.
-    ///
-    /// The top-level steps that constitute the entire job. Only retrieved with
-    /// JOB_VIEW_ALL.
-    #[prost(message, repeated, tag="6")]
-    pub steps: ::prost::alloc::vec::Vec<Step>,
-    /// The Cloud Storage location where the steps are stored.
-    #[prost(string, tag="24")]
-    pub steps_location: ::prost::alloc::string::String,
-    /// The current state of the job.
-    ///
-    /// Jobs are created in the `JOB_STATE_STOPPED` state unless otherwise
-    /// specified.
-    ///
-    /// A job in the `JOB_STATE_RUNNING` state may asynchronously enter a
-    /// terminal state. After a job has reached a terminal state, no
-    /// further state updates may be made.
-    ///
-    /// This field may be mutated by the Cloud Dataflow service;
-    /// callers cannot mutate it.
-    #[prost(enumeration="JobState", tag="7")]
-    pub current_state: i32,
-    /// The timestamp associated with the current state.
-    #[prost(message, optional, tag="8")]
-    pub current_state_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The job's requested state.
-    ///
-    /// `UpdateJob` may be used to switch between the `JOB_STATE_STOPPED` and
-    /// `JOB_STATE_RUNNING` states, by setting requested_state.  `UpdateJob` may
-    /// also be used to directly set a job's requested state to
-    /// `JOB_STATE_CANCELLED` or `JOB_STATE_DONE`, irrevocably terminating the
-    /// job if it has not already reached a terminal state.
-    #[prost(enumeration="JobState", tag="9")]
-    pub requested_state: i32,
-    /// Deprecated.
-    #[prost(message, optional, tag="10")]
-    pub execution_info: ::core::option::Option<JobExecutionInfo>,
-    /// The timestamp when the job was initially created. Immutable and set by the
-    /// Cloud Dataflow service.
-    #[prost(message, optional, tag="11")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// If this job is an update of an existing job, this field is the job ID
-    /// of the job it replaced.
-    ///
-    /// When sending a `CreateJobRequest`, you can update a job by specifying it
-    /// here. The job named here is stopped, and its intermediate state is
-    /// transferred to this job.
-    #[prost(string, tag="12")]
-    pub replace_job_id: ::prost::alloc::string::String,
-    /// The map of transform name prefixes of the job to be replaced to the
-    /// corresponding name prefixes of the new job.
-    #[prost(btree_map="string, string", tag="13")]
-    pub transform_name_mapping: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The client's unique identifier of the job, re-used across retried attempts.
-    /// If this field is set, the service will ensure its uniqueness.
-    /// The request to create a job will fail if the service has knowledge of a
-    /// previously submitted job with the same client's ID and job name.
-    /// The caller may use this field to ensure idempotence of job
-    /// creation across retried attempts to create a job.
-    /// By default, the field is empty and, in that case, the service ignores it.
-    #[prost(string, tag="14")]
-    pub client_request_id: ::prost::alloc::string::String,
-    /// If another job is an update of this job (and thus, this job is in
-    /// `JOB_STATE_UPDATED`), this field contains the ID of that job.
-    #[prost(string, tag="15")]
-    pub replaced_by_job_id: ::prost::alloc::string::String,
-    /// A set of files the system should be aware of that are used
-    /// for temporary storage. These temporary files will be
-    /// removed on job completion.
-    /// No duplicates are allowed.
-    /// No file patterns are supported.
-    ///
-    /// The supported files are:
-    ///
-    /// Google Cloud Storage:
-    ///
-    ///    storage.googleapis.com/{bucket}/{object}
-    ///    bucket.storage.googleapis.com/{object}
-    #[prost(string, repeated, tag="16")]
-    pub temp_files: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// User-defined labels for this job.
-    ///
-    /// The labels map can contain no more than 64 entries.  Entries of the labels
-    /// map are UTF8 strings that comply with the following restrictions:
-    ///
-    /// * Keys must conform to regexp:  \[\p{Ll}\p{Lo}][\p{Ll}\p{Lo}\p{N}_-\]{0,62}
-    /// * Values must conform to regexp:  \[\p{Ll}\p{Lo}\p{N}_-\]{0,63}
-    /// * Both keys and values are additionally constrained to be <= 128 bytes in
-    /// size.
-    #[prost(btree_map="string, string", tag="17")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains this job.
-    #[prost(string, tag="18")]
-    pub location: ::prost::alloc::string::String,
-    /// Preliminary field: The format of this data may change at any time.
-    /// A description of the user pipeline and stages through which it is executed.
-    /// Created by Cloud Dataflow service.  Only retrieved with
-    /// JOB_VIEW_DESCRIPTION or JOB_VIEW_ALL.
-    #[prost(message, optional, tag="19")]
-    pub pipeline_description: ::core::option::Option<PipelineDescription>,
-    /// This field may be mutated by the Cloud Dataflow service;
-    /// callers cannot mutate it.
-    #[prost(message, repeated, tag="20")]
-    pub stage_states: ::prost::alloc::vec::Vec<ExecutionStageState>,
-    /// This field is populated by the Dataflow service to support filtering jobs
-    /// by the metadata values provided here. Populated for ListJobs and all GetJob
-    /// views SUMMARY and higher.
-    #[prost(message, optional, tag="21")]
-    pub job_metadata: ::core::option::Option<JobMetadata>,
-    /// The timestamp when the job was started (transitioned to JOB_STATE_PENDING).
-    /// Flexible resource scheduling jobs are started with some delay after job
-    /// creation, so start_time is unset before start and is updated when the
-    /// job is started by the Cloud Dataflow service. For other jobs, start_time
-    /// always equals to create_time and is immutable and set by the Cloud Dataflow
-    /// service.
-    #[prost(message, optional, tag="22")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// If this is specified, the job's initial state is populated from the given
-    /// snapshot.
-    #[prost(string, tag="23")]
-    pub created_from_snapshot_id: ::prost::alloc::string::String,
-    /// Reserved for future use. This field is set only in responses from the
-    /// server; it is ignored if it is set in any requests.
-    #[prost(bool, tag="25")]
-    pub satisfies_pzs: bool,
-}
-/// Metadata for a Datastore connector used by the job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DatastoreIoDetails {
-    /// Namespace used in the connection.
-    #[prost(string, tag="1")]
-    pub namespace: ::prost::alloc::string::String,
-    /// ProjectId accessed in the connection.
-    #[prost(string, tag="2")]
-    pub project_id: ::prost::alloc::string::String,
-}
-/// Metadata for a Pub/Sub connector used by the job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PubSubIoDetails {
-    /// Topic accessed in the connection.
+pub struct PubsubLocation {
+    /// A pubsub topic, in the form of
+    /// "pubsub.googleapis.com/topics/<project-id>/<topic-name>"
     #[prost(string, tag="1")]
     pub topic: ::prost::alloc::string::String,
-    /// Subscription used in the connection.
+    /// A pubsub subscription, in the form of
+    /// "pubsub.googleapis.com/subscriptions/<project-id>/<subscription-name>"
     #[prost(string, tag="2")]
     pub subscription: ::prost::alloc::string::String,
-}
-/// Metadata for a File connector used by the job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FileIoDetails {
-    /// File Pattern used to access files by the connector.
-    #[prost(string, tag="1")]
-    pub file_pattern: ::prost::alloc::string::String,
-}
-/// Metadata for a Cloud Bigtable connector used by the job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigTableIoDetails {
-    /// ProjectId accessed in the connection.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// InstanceId accessed in the connection.
-    #[prost(string, tag="2")]
-    pub instance_id: ::prost::alloc::string::String,
-    /// TableId accessed in the connection.
+    /// If set, contains a pubsub label from which to extract record timestamps.
+    /// If left empty, record timestamps will be generated upon arrival.
     #[prost(string, tag="3")]
-    pub table_id: ::prost::alloc::string::String,
-}
-/// Metadata for a BigQuery connector used by the job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryIoDetails {
-    /// Table accessed in the connection.
-    #[prost(string, tag="1")]
-    pub table: ::prost::alloc::string::String,
-    /// Dataset accessed in the connection.
-    #[prost(string, tag="2")]
-    pub dataset: ::prost::alloc::string::String,
-    /// Project accessed in the connection.
-    #[prost(string, tag="3")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Query used to access data in the connection.
+    pub timestamp_label: ::prost::alloc::string::String,
+    /// If set, contains a pubsub label from which to extract record ids.
+    /// If left empty, record deduplication will be strictly best effort.
     #[prost(string, tag="4")]
-    pub query: ::prost::alloc::string::String,
+    pub id_label: ::prost::alloc::string::String,
+    /// Indicates whether the pipeline allows late-arriving data.
+    #[prost(bool, tag="5")]
+    pub drop_late_data: bool,
+    /// If set, specifies the pubsub subscription that will be used for tracking
+    /// custom time timestamps for watermark estimation.
+    #[prost(string, tag="6")]
+    pub tracking_subscription: ::prost::alloc::string::String,
+    /// If true, then the client has requested to get pubsub attributes.
+    #[prost(bool, tag="7")]
+    pub with_attributes: bool,
 }
-/// Metadata for a Spanner connector used by the job.
+/// Identifies the location of a streaming computation stage, for
+/// stage-to-stage communication.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpannerIoDetails {
-    /// ProjectId accessed in the connection.
+pub struct StreamingStageLocation {
+    /// Identifies the particular stream within the streaming Dataflow
+    /// job.
     #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// InstanceId accessed in the connection.
-    #[prost(string, tag="2")]
-    pub instance_id: ::prost::alloc::string::String,
-    /// DatabaseId accessed in the connection.
-    #[prost(string, tag="3")]
-    pub database_id: ::prost::alloc::string::String,
+    pub stream_id: ::prost::alloc::string::String,
 }
-/// The version of the SDK used to run the job.
+/// Identifies the location of a streaming side input.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SdkVersion {
-    /// The version of the SDK used to run the job.
+pub struct StreamingSideInputLocation {
+    /// Identifies the particular side input within the streaming Dataflow job.
     #[prost(string, tag="1")]
-    pub version: ::prost::alloc::string::String,
-    /// A readable string describing the version of the SDK.
+    pub tag: ::prost::alloc::string::String,
+    /// Identifies the state family where this side input is stored.
     #[prost(string, tag="2")]
-    pub version_display_name: ::prost::alloc::string::String,
-    /// The support status for this SDK version.
-    #[prost(enumeration="sdk_version::SdkSupportStatus", tag="3")]
-    pub sdk_support_status: i32,
+    pub state_family: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `SdkVersion`.
-pub mod sdk_version {
-    /// The support status of the SDK used to run the job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SdkSupportStatus {
-        /// Cloud Dataflow is unaware of this version.
-        Unknown = 0,
-        /// This is a known version of an SDK, and is supported.
-        Supported = 1,
-        /// A newer version of the SDK family exists, and an update is recommended.
-        Stale = 2,
-        /// This version of the SDK is deprecated and will eventually be
-        /// unsupported.
-        Deprecated = 3,
-        /// Support for this SDK version has ended and it should no longer be used.
-        Unsupported = 4,
-    }
-}
-/// Metadata available primarily for filtering jobs. Will be included in the
-/// ListJob response and Job SUMMARY view.
+/// Identifies the location of a custom souce.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobMetadata {
-    /// The SDK version used to run the job.
-    #[prost(message, optional, tag="1")]
-    pub sdk_version: ::core::option::Option<SdkVersion>,
-    /// Identification of a Spanner source used in the Dataflow job.
-    #[prost(message, repeated, tag="2")]
-    pub spanner_details: ::prost::alloc::vec::Vec<SpannerIoDetails>,
-    /// Identification of a BigQuery source used in the Dataflow job.
-    #[prost(message, repeated, tag="3")]
-    pub bigquery_details: ::prost::alloc::vec::Vec<BigQueryIoDetails>,
-    /// Identification of a Cloud Bigtable source used in the Dataflow job.
-    #[prost(message, repeated, tag="4")]
-    pub big_table_details: ::prost::alloc::vec::Vec<BigTableIoDetails>,
-    /// Identification of a Pub/Sub source used in the Dataflow job.
-    #[prost(message, repeated, tag="5")]
-    pub pubsub_details: ::prost::alloc::vec::Vec<PubSubIoDetails>,
-    /// Identification of a File source used in the Dataflow job.
-    #[prost(message, repeated, tag="6")]
-    pub file_details: ::prost::alloc::vec::Vec<FileIoDetails>,
-    /// Identification of a Datastore source used in the Dataflow job.
-    #[prost(message, repeated, tag="7")]
-    pub datastore_details: ::prost::alloc::vec::Vec<DatastoreIoDetails>,
+pub struct CustomSourceLocation {
+    /// Whether this source is stateful.
+    #[prost(bool, tag="1")]
+    pub stateful: bool,
 }
-/// A message describing the state of a particular execution stage.
+/// Describes a stream of data, either as input to be processed or as
+/// output of a streaming Dataflow job.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExecutionStageState {
-    /// The name of the execution stage.
-    #[prost(string, tag="1")]
-    pub execution_stage_name: ::prost::alloc::string::String,
-    /// Executions stage states allow the same set of values as JobState.
-    #[prost(enumeration="JobState", tag="2")]
-    pub execution_stage_state: i32,
-    /// The time at which the stage transitioned to this state.
-    #[prost(message, optional, tag="3")]
-    pub current_state_time: ::core::option::Option<::prost_types::Timestamp>,
+pub struct StreamLocation {
+    /// A specification of a stream's location.
+    #[prost(oneof="stream_location::Location", tags="1, 2, 3, 4")]
+    pub location: ::core::option::Option<stream_location::Location>,
 }
-/// A descriptive representation of submitted pipeline as well as the executed
-/// form.  This data is provided by the Dataflow service for ease of visualizing
-/// the pipeline and interpreting Dataflow provided metrics.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PipelineDescription {
-    /// Description of each transform in the pipeline and collections between them.
-    #[prost(message, repeated, tag="1")]
-    pub original_pipeline_transform: ::prost::alloc::vec::Vec<TransformSummary>,
-    /// Description of each stage of execution of the pipeline.
-    #[prost(message, repeated, tag="2")]
-    pub execution_pipeline_stage: ::prost::alloc::vec::Vec<ExecutionStageSummary>,
-    /// Pipeline level display data.
-    #[prost(message, repeated, tag="3")]
-    pub display_data: ::prost::alloc::vec::Vec<DisplayData>,
-}
-/// Description of the type, names/ids, and input/outputs for a transform.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TransformSummary {
-    /// Type of transform.
-    #[prost(enumeration="KindType", tag="1")]
-    pub kind: i32,
-    /// SDK generated id of this transform instance.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// User provided name for this transform instance.
-    #[prost(string, tag="3")]
-    pub name: ::prost::alloc::string::String,
-    /// Transform-specific display data.
-    #[prost(message, repeated, tag="4")]
-    pub display_data: ::prost::alloc::vec::Vec<DisplayData>,
-    /// User  names for all collection outputs to this transform.
-    #[prost(string, repeated, tag="5")]
-    pub output_collection_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// User names for all collection inputs to this transform.
-    #[prost(string, repeated, tag="6")]
-    pub input_collection_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Description of the composing transforms, names/ids, and input/outputs of a
-/// stage of execution.  Some composing transforms and sources may have been
-/// generated by the Dataflow service during execution planning.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExecutionStageSummary {
-    /// Dataflow service generated name for this stage.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Dataflow service generated id for this stage.
-    #[prost(string, tag="2")]
-    pub id: ::prost::alloc::string::String,
-    /// Type of transform this stage is executing.
-    #[prost(enumeration="KindType", tag="3")]
-    pub kind: i32,
-    /// Input sources for this stage.
-    #[prost(message, repeated, tag="4")]
-    pub input_source: ::prost::alloc::vec::Vec<execution_stage_summary::StageSource>,
-    /// Output sources for this stage.
-    #[prost(message, repeated, tag="5")]
-    pub output_source: ::prost::alloc::vec::Vec<execution_stage_summary::StageSource>,
-    /// Other stages that must complete before this stage can run.
-    #[prost(string, repeated, tag="8")]
-    pub prerequisite_stage: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Transforms that comprise this execution stage.
-    #[prost(message, repeated, tag="6")]
-    pub component_transform: ::prost::alloc::vec::Vec<execution_stage_summary::ComponentTransform>,
-    /// Collections produced and consumed by component transforms of this stage.
-    #[prost(message, repeated, tag="7")]
-    pub component_source: ::prost::alloc::vec::Vec<execution_stage_summary::ComponentSource>,
-}
-/// Nested message and enum types in `ExecutionStageSummary`.
-pub mod execution_stage_summary {
-    /// Description of an input or output of an execution stage.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StageSource {
-        /// Human-readable name for this source; may be user or system generated.
-        #[prost(string, tag="1")]
-        pub user_name: ::prost::alloc::string::String,
-        /// Dataflow service generated name for this source.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// User name for the original user transform or collection with which this
-        /// source is most closely associated.
-        #[prost(string, tag="3")]
-        pub original_transform_or_collection: ::prost::alloc::string::String,
-        /// Size of the source, if measurable.
-        #[prost(int64, tag="4")]
-        pub size_bytes: i64,
-    }
-    /// Description of a transform executed as part of an execution stage.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ComponentTransform {
-        /// Human-readable name for this transform; may be user or system generated.
-        #[prost(string, tag="1")]
-        pub user_name: ::prost::alloc::string::String,
-        /// Dataflow service generated name for this source.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// User name for the original user transform with which this transform is
-        /// most closely associated.
-        #[prost(string, tag="3")]
-        pub original_transform: ::prost::alloc::string::String,
-    }
-    /// Description of an interstitial value between transforms in an execution
-    /// stage.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ComponentSource {
-        /// Human-readable name for this transform; may be user or system generated.
-        #[prost(string, tag="1")]
-        pub user_name: ::prost::alloc::string::String,
-        /// Dataflow service generated name for this source.
-        #[prost(string, tag="2")]
-        pub name: ::prost::alloc::string::String,
-        /// User name for the original user transform or collection with which this
-        /// source is most closely associated.
-        #[prost(string, tag="3")]
-        pub original_transform_or_collection: ::prost::alloc::string::String,
-    }
-}
-/// Data provided with a pipeline or transform to provide descriptive info.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DisplayData {
-    /// The key identifying the display data.
-    /// This is intended to be used as a label for the display data
-    /// when viewed in a dax monitoring system.
-    #[prost(string, tag="1")]
-    pub key: ::prost::alloc::string::String,
-    /// The namespace for the key. This is usually a class name or programming
-    /// language namespace (i.e. python module) which defines the display data.
-    /// This allows a dax monitoring system to specially handle the data
-    /// and perform custom rendering.
-    #[prost(string, tag="2")]
-    pub namespace: ::prost::alloc::string::String,
-    /// A possible additional shorter value to display.
-    /// For example a java_class_name_value of com.mypackage.MyDoFn
-    /// will be stored with MyDoFn as the short_str_value and
-    /// com.mypackage.MyDoFn as the java_class_name value.
-    /// short_str_value can be displayed and java_class_name_value
-    /// will be displayed as a tooltip.
-    #[prost(string, tag="11")]
-    pub short_str_value: ::prost::alloc::string::String,
-    /// An optional full URL.
-    #[prost(string, tag="12")]
-    pub url: ::prost::alloc::string::String,
-    /// An optional label to display in a dax UI for the element.
-    #[prost(string, tag="13")]
-    pub label: ::prost::alloc::string::String,
-    /// Various value types which can be used for display data.  Only one will be
-    /// set.
-    #[prost(oneof="display_data::Value", tags="4, 5, 6, 7, 8, 9, 10")]
-    pub value: ::core::option::Option<display_data::Value>,
-}
-/// Nested message and enum types in `DisplayData`.
-pub mod display_data {
-    /// Various value types which can be used for display data.  Only one will be
-    /// set.
+/// Nested message and enum types in `StreamLocation`.
+pub mod stream_location {
+    /// A specification of a stream's location.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// Contains value if the data is of string type.
-        #[prost(string, tag="4")]
-        StrValue(::prost::alloc::string::String),
-        /// Contains value if the data is of int64 type.
-        #[prost(int64, tag="5")]
-        Int64Value(i64),
-        /// Contains value if the data is of float type.
-        #[prost(float, tag="6")]
-        FloatValue(f32),
-        /// Contains value if the data is of java class type.
-        #[prost(string, tag="7")]
-        JavaClassValue(::prost::alloc::string::String),
-        /// Contains value if the data is of timestamp type.
-        #[prost(message, tag="8")]
-        TimestampValue(::prost_types::Timestamp),
-        /// Contains value if the data is of duration type.
-        #[prost(message, tag="9")]
-        DurationValue(::prost_types::Duration),
-        /// Contains value if the data is of a boolean type.
-        #[prost(bool, tag="10")]
-        BoolValue(bool),
+    pub enum Location {
+        /// The stream is part of another computation within the current
+        /// streaming Dataflow job.
+        #[prost(message, tag="1")]
+        StreamingStageLocation(super::StreamingStageLocation),
+        /// The stream is a pubsub stream.
+        #[prost(message, tag="2")]
+        PubsubLocation(super::PubsubLocation),
+        /// The stream is a streaming side input.
+        #[prost(message, tag="3")]
+        SideInputLocation(super::StreamingSideInputLocation),
+        /// The stream is a custom source.
+        #[prost(message, tag="4")]
+        CustomSourceLocation(super::CustomSourceLocation),
     }
 }
-/// Defines a particular step within a Cloud Dataflow job.
-///
-/// A job consists of multiple steps, each of which performs some
-/// specific operation as part of the overall job.  Data is typically
-/// passed from one step to another as part of the job.
-///
-/// Here's an example of a sequence of steps which together implement a
-/// Map-Reduce job:
-///
-///   * Read a collection of data from some source, parsing the
-///     collection's elements.
-///
-///   * Validate the elements.
-///
-///   * Apply a user-defined function to map each element to some value
-///     and extract an element-specific key value.
-///
-///   * Group elements with the same key into a single element with
-///     that key, transforming a multiply-keyed collection into a
-///     uniquely-keyed collection.
-///
-///   * Write the elements out to some data sink.
-///
-/// Note that the Cloud Dataflow service may be used to run many different
-/// types of jobs, not just Map-Reduce.
+/// State family configuration.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Step {
-    /// The kind of step in the Cloud Dataflow job.
+pub struct StateFamilyConfig {
+    /// The state family value.
     #[prost(string, tag="1")]
-    pub kind: ::prost::alloc::string::String,
-    /// The name that identifies the step. This must be unique for each
-    /// step with respect to all other steps in the Cloud Dataflow job.
-    #[prost(string, tag="2")]
-    pub name: ::prost::alloc::string::String,
-    /// Named properties associated with the step. Each kind of
-    /// predefined step has its own required set of properties.
-    /// Must be provided on Create.  Only retrieved with JOB_VIEW_ALL.
-    #[prost(message, optional, tag="3")]
-    pub properties: ::core::option::Option<::prost_types::Struct>,
+    pub state_family: ::prost::alloc::string::String,
+    /// If true, this family corresponds to a read operation.
+    #[prost(bool, tag="2")]
+    pub is_read: bool,
 }
-/// Additional information about how a Cloud Dataflow job will be executed that
-/// isn't contained in the submitted job.
+/// All configuration data for a particular Computation.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobExecutionInfo {
-    /// A mapping from each stage to the information about that stage.
-    #[prost(btree_map="string, message", tag="1")]
-    pub stages: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, JobExecutionStageInfo>,
-}
-/// Contains information about how a particular
-/// \[google.dataflow.v1beta3.Step][google.dataflow.v1beta3.Step\] will be executed.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobExecutionStageInfo {
-    /// The steps associated with the execution stage.
-    /// Note that stages may have several steps, and that a given step
-    /// might be run by more than one stage.
-    #[prost(string, repeated, tag="1")]
-    pub step_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Request to create a Cloud Dataflow job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateJobRequest {
-    /// The ID of the Cloud Platform project that the job belongs to.
+pub struct ComputationTopology {
+    /// The system stage name.
     #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job to create.
-    #[prost(message, optional, tag="2")]
-    pub job: ::core::option::Option<Job>,
-    /// The level of information requested in response.
-    #[prost(enumeration="JobView", tag="3")]
-    pub view: i32,
-    /// Deprecated. This field is now in the Job message.
-    #[prost(string, tag="4")]
-    pub replace_job_id: ::prost::alloc::string::String,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains this job.
+    pub system_stage_name: ::prost::alloc::string::String,
+    /// The ID of the computation.
     #[prost(string, tag="5")]
-    pub location: ::prost::alloc::string::String,
+    pub computation_id: ::prost::alloc::string::String,
+    /// The key ranges processed by the computation.
+    #[prost(message, repeated, tag="2")]
+    pub key_ranges: ::prost::alloc::vec::Vec<KeyRangeLocation>,
+    /// The inputs to the computation.
+    #[prost(message, repeated, tag="3")]
+    pub inputs: ::prost::alloc::vec::Vec<StreamLocation>,
+    /// The outputs from the computation.
+    #[prost(message, repeated, tag="4")]
+    pub outputs: ::prost::alloc::vec::Vec<StreamLocation>,
+    /// The state family values.
+    #[prost(message, repeated, tag="7")]
+    pub state_families: ::prost::alloc::vec::Vec<StateFamilyConfig>,
 }
-/// Request to get the state of a Cloud Dataflow job.
+/// Location information for a specific key-range of a sharded computation.
+/// Currently we only support UTF-8 character splits to simplify encoding into
+/// JSON.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetJobRequest {
-    /// The ID of the Cloud Platform project that the job belongs to.
+pub struct KeyRangeLocation {
+    /// The start (inclusive) of the key range.
     #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job ID.
+    pub start: ::prost::alloc::string::String,
+    /// The end (exclusive) of the key range.
     #[prost(string, tag="2")]
-    pub job_id: ::prost::alloc::string::String,
-    /// The level of information requested in response.
-    #[prost(enumeration="JobView", tag="3")]
-    pub view: i32,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains this job.
-    #[prost(string, tag="4")]
-    pub location: ::prost::alloc::string::String,
-}
-/// Request to update a Cloud Dataflow job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateJobRequest {
-    /// The ID of the Cloud Platform project that the job belongs to.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job ID.
-    #[prost(string, tag="2")]
-    pub job_id: ::prost::alloc::string::String,
-    /// The updated job.
-    /// Only the job state is updatable; other fields will be ignored.
-    #[prost(message, optional, tag="3")]
-    pub job: ::core::option::Option<Job>,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains this job.
-    #[prost(string, tag="4")]
-    pub location: ::prost::alloc::string::String,
-}
-/// Request to list Cloud Dataflow jobs.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobsRequest {
-    /// The kind of filter to use.
-    #[prost(enumeration="list_jobs_request::Filter", tag="5")]
-    pub filter: i32,
-    /// The project which owns the jobs.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Deprecated. ListJobs always returns summaries now.
-    /// Use GetJob for other JobViews.
+    pub end: ::prost::alloc::string::String,
+    /// The physical location of this range assignment to be used for
+    /// streaming computation cross-worker message delivery.
+    #[prost(string, tag="3")]
+    pub delivery_endpoint: ::prost::alloc::string::String,
+    /// The name of the data disk where data for this range is stored.
+    /// This name is local to the Google Cloud Platform project and uniquely
+    /// identifies the disk within that project, for example
+    /// "myproject-1014-104817-4c2-harness-0-disk-1".
+    #[prost(string, tag="5")]
+    pub data_disk: ::prost::alloc::string::String,
+    /// DEPRECATED. The location of the persistent state for this range, as a
+    /// persistent directory in the worker local filesystem.
     #[deprecated]
-    #[prost(enumeration="JobView", tag="2")]
-    pub view: i32,
-    /// If there are many jobs, limit response to at most this many.
-    /// The actual number of jobs returned will be the lesser of max_responses
-    /// and an unspecified server-defined limit.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
-    /// Set this to the 'next_page_token' field of a previous response
-    /// to request additional results in a long list.
     #[prost(string, tag="4")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains this job.
-    #[prost(string, tag="17")]
-    pub location: ::prost::alloc::string::String,
+    pub deprecated_persistent_directory: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `ListJobsRequest`.
-pub mod list_jobs_request {
-    /// This field filters out and returns jobs in the specified job state. The
-    /// order of data returned is determined by the filter used, and is subject to
-    /// change.
+/// Describes mounted data disk.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MountedDataDisk {
+    /// The name of the data disk.
+    /// This name is local to the Google Cloud Platform project and uniquely
+    /// identifies the disk within that project, for example
+    /// "myproject-1014-104817-4c2-harness-0-disk-1".
+    #[prost(string, tag="1")]
+    pub data_disk: ::prost::alloc::string::String,
+}
+/// Data disk assignment for a given VM instance.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataDiskAssignment {
+    /// VM instance name the data disks mounted to, for example
+    /// "myproject-1014-104817-4c2-harness-0".
+    #[prost(string, tag="1")]
+    pub vm_instance: ::prost::alloc::string::String,
+    /// Mounted data disks. The order is important a data disk's 0-based index in
+    /// this list defines which persistent directory the disk is mounted to, for
+    /// example the list of { "myproject-1014-104817-4c2-harness-0-disk-0" },
+    /// { "myproject-1014-104817-4c2-harness-0-disk-1" }.
+    #[prost(string, repeated, tag="2")]
+    pub data_disks: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Data disk assignment information for a specific key-range of a sharded
+/// computation.
+/// Currently we only support UTF-8 character splits to simplify encoding into
+/// JSON.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeyRangeDataDiskAssignment {
+    /// The start (inclusive) of the key range.
+    #[prost(string, tag="1")]
+    pub start: ::prost::alloc::string::String,
+    /// The end (exclusive) of the key range.
+    #[prost(string, tag="2")]
+    pub end: ::prost::alloc::string::String,
+    /// The name of the data disk where data for this range is stored.
+    /// This name is local to the Google Cloud Platform project and uniquely
+    /// identifies the disk within that project, for example
+    /// "myproject-1014-104817-4c2-harness-0-disk-1".
+    #[prost(string, tag="3")]
+    pub data_disk: ::prost::alloc::string::String,
+}
+/// Describes full or partial data disk assignment information of the computation
+/// ranges.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StreamingComputationRanges {
+    /// The ID of the computation.
+    #[prost(string, tag="1")]
+    pub computation_id: ::prost::alloc::string::String,
+    /// Data disk assignments for ranges from this computation.
+    #[prost(message, repeated, tag="2")]
+    pub range_assignments: ::prost::alloc::vec::Vec<KeyRangeDataDiskAssignment>,
+}
+/// Streaming appliance snapshot configuration.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StreamingApplianceSnapshotConfig {
+    /// If set, indicates the snapshot id for the snapshot being performed.
+    #[prost(string, tag="1")]
+    pub snapshot_id: ::prost::alloc::string::String,
+    /// Indicates which endpoint is used to import appliance state.
+    #[prost(string, tag="2")]
+    pub import_state_endpoint: ::prost::alloc::string::String,
+}
+/// A particular message pertaining to a Dataflow job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobMessage {
+    /// Deprecated.
+    #[prost(string, tag="1")]
+    pub id: ::prost::alloc::string::String,
+    /// The timestamp of the message.
+    #[prost(message, optional, tag="2")]
+    pub time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The text of the message.
+    #[prost(string, tag="3")]
+    pub message_text: ::prost::alloc::string::String,
+    /// Importance level of the message.
+    #[prost(enumeration="JobMessageImportance", tag="4")]
+    pub message_importance: i32,
+}
+/// A rich message format, including a human readable string, a key for
+/// identifying the message, and structured data associated with the message for
+/// programmatic consumption.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructuredMessage {
+    /// Human-readable version of message.
+    #[prost(string, tag="1")]
+    pub message_text: ::prost::alloc::string::String,
+    /// Identifier for this message type.  Used by external systems to
+    /// internationalize or personalize message.
+    #[prost(string, tag="2")]
+    pub message_key: ::prost::alloc::string::String,
+    /// The structured data associated with this message.
+    #[prost(message, repeated, tag="3")]
+    pub parameters: ::prost::alloc::vec::Vec<structured_message::Parameter>,
+}
+/// Nested message and enum types in `StructuredMessage`.
+pub mod structured_message {
+    /// Structured data associated with this message.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Parameter {
+        /// Key or name for this parameter.
+        #[prost(string, tag="1")]
+        pub key: ::prost::alloc::string::String,
+        /// Value for this parameter.
+        #[prost(message, optional, tag="2")]
+        pub value: ::core::option::Option<::prost_types::Value>,
+    }
+}
+/// A structured message reporting an autoscaling decision made by the Dataflow
+/// service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AutoscalingEvent {
+    /// The current number of workers the job has.
+    #[prost(int64, tag="1")]
+    pub current_num_workers: i64,
+    /// The target number of workers the worker pool wants to resize to use.
+    #[prost(int64, tag="2")]
+    pub target_num_workers: i64,
+    /// The type of autoscaling event to report.
+    #[prost(enumeration="autoscaling_event::AutoscalingEventType", tag="3")]
+    pub event_type: i32,
+    /// A message describing why the system decided to adjust the current
+    /// number of workers, why it failed, or why the system decided to
+    /// not make any changes to the number of workers.
+    #[prost(message, optional, tag="4")]
+    pub description: ::core::option::Option<StructuredMessage>,
+    /// The time this event was emitted to indicate a new target or current
+    /// num_workers value.
+    #[prost(message, optional, tag="5")]
+    pub time: ::core::option::Option<::prost_types::Timestamp>,
+    /// A short and friendly name for the worker pool this event refers to.
+    #[prost(string, tag="7")]
+    pub worker_pool: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `AutoscalingEvent`.
+pub mod autoscaling_event {
+    /// Indicates the type of autoscaling event.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum Filter {
-        /// The filter isn't specified, or is unknown. This returns all jobs ordered
-        /// on descending `JobUuid`.
-        Unknown = 0,
-        /// Returns all running jobs first ordered on creation timestamp, then
-        /// returns all terminated jobs ordered on the termination timestamp.
-        All = 1,
-        /// Filters the jobs that have a terminated state, ordered on the
-        /// termination timestamp. Example terminated states: `JOB_STATE_STOPPED`,
-        /// `JOB_STATE_UPDATED`, `JOB_STATE_DRAINED`, etc.
-        Terminated = 2,
-        /// Filters the jobs that are running ordered on the creation timestamp.
-        Active = 3,
+    pub enum AutoscalingEventType {
+        /// Default type for the enum.  Value should never be returned.
+        TypeUnknown = 0,
+        /// The TARGET_NUM_WORKERS_CHANGED type should be used when the target
+        /// worker pool size has changed at the start of an actuation. An event
+        /// should always be specified as TARGET_NUM_WORKERS_CHANGED if it reflects
+        /// a change in the target_num_workers.
+        TargetNumWorkersChanged = 1,
+        /// The CURRENT_NUM_WORKERS_CHANGED type should be used when actual worker
+        /// pool size has been changed, but the target_num_workers has not changed.
+        CurrentNumWorkersChanged = 2,
+        /// The ACTUATION_FAILURE type should be used when we want to report
+        /// an error to the user indicating why the current number of workers
+        /// in the pool could not be changed.
+        /// Displayed in the current status and history widgets.
+        ActuationFailure = 3,
+        /// Used when we want to report to the user a reason why we are
+        /// not currently adjusting the number of workers.
+        /// Should specify both target_num_workers, current_num_workers and a
+        /// decision_message.
+        NoChange = 4,
+    }
+    impl AutoscalingEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AutoscalingEventType::TypeUnknown => "TYPE_UNKNOWN",
+                AutoscalingEventType::TargetNumWorkersChanged => "TARGET_NUM_WORKERS_CHANGED",
+                AutoscalingEventType::CurrentNumWorkersChanged => "CURRENT_NUM_WORKERS_CHANGED",
+                AutoscalingEventType::ActuationFailure => "ACTUATION_FAILURE",
+                AutoscalingEventType::NoChange => "NO_CHANGE",
+            }
+        }
     }
 }
-/// Indicates which [regional endpoint]
-/// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) failed
-/// to respond to a request for data.
+/// Request to list job messages.
+/// Up to max_results messages will be returned in the time range specified
+/// starting with the oldest messages first. If no time range is specified
+/// the results with start with the oldest message.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FailedLocation {
-    /// The name of the [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// failed to respond.
+pub struct ListJobMessagesRequest {
+    /// A project id.
     #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
+    pub project_id: ::prost::alloc::string::String,
+    /// The job to get messages about.
+    #[prost(string, tag="2")]
+    pub job_id: ::prost::alloc::string::String,
+    /// Filter to only get messages with importance >= level
+    #[prost(enumeration="JobMessageImportance", tag="3")]
+    pub minimum_importance: i32,
+    /// If specified, determines the maximum number of messages to
+    /// return.  If unspecified, the service may choose an appropriate
+    /// default, or may return an arbitrarily large number of results.
+    #[prost(int32, tag="4")]
+    pub page_size: i32,
+    /// If supplied, this should be the value of next_page_token returned
+    /// by an earlier call. This will cause the next page of results to
+    /// be returned.
+    #[prost(string, tag="5")]
+    pub page_token: ::prost::alloc::string::String,
+    /// If specified, return only messages with timestamps >= start_time.
+    /// The default is the job creation time (i.e. beginning of messages).
+    #[prost(message, optional, tag="6")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Return only messages with timestamps < end_time. The default is now
+    /// (i.e. return up to the latest messages available).
+    #[prost(message, optional, tag="7")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The [regional endpoint]
+    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
+    /// contains the job specified by job_id.
+    #[prost(string, tag="8")]
+    pub location: ::prost::alloc::string::String,
 }
-/// Response to a request to list Cloud Dataflow jobs in a project. This might
-/// be a partial response, depending on the page size in the ListJobsRequest.
-/// However, if the project does not have any jobs, an instance of
-/// ListJobsResponse is not returned and the requests's response
-/// body is empty {}.
+/// Response to a request to list job messages.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobsResponse {
-    /// A subset of the requested job information.
+pub struct ListJobMessagesResponse {
+    /// Messages in ascending timestamp order.
     #[prost(message, repeated, tag="1")]
-    pub jobs: ::prost::alloc::vec::Vec<Job>,
-    /// Set if there may be more results than fit in this response.
+    pub job_messages: ::prost::alloc::vec::Vec<JobMessage>,
+    /// The token to obtain the next page of results if there are more.
     #[prost(string, tag="2")]
     pub next_page_token: ::prost::alloc::string::String,
-    /// Zero or more messages describing the [regional endpoints]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// failed to respond.
+    /// Autoscaling events in ascending timestamp order.
     #[prost(message, repeated, tag="3")]
-    pub failed_location: ::prost::alloc::vec::Vec<FailedLocation>,
+    pub autoscaling_events: ::prost::alloc::vec::Vec<AutoscalingEvent>,
 }
-/// Request to create a snapshot of a job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SnapshotJobRequest {
-    /// The project which owns the job to be snapshotted.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job to be snapshotted.
-    #[prost(string, tag="2")]
-    pub job_id: ::prost::alloc::string::String,
-    /// TTL for the snapshot.
-    #[prost(message, optional, tag="3")]
-    pub ttl: ::core::option::Option<::prost_types::Duration>,
-    /// The location that contains this job.
-    #[prost(string, tag="4")]
-    pub location: ::prost::alloc::string::String,
-    /// If true, perform snapshots for sources which support this.
-    #[prost(bool, tag="5")]
-    pub snapshot_sources: bool,
-    /// User specified description of the snapshot. Maybe empty.
-    #[prost(string, tag="6")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Request to check is active jobs exists for a project
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckActiveJobsRequest {
-    /// The project which owns the jobs.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-}
-/// Response for CheckActiveJobsRequest.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckActiveJobsResponse {
-    /// If True, active jobs exists for project. False otherwise.
-    #[prost(bool, tag="1")]
-    pub active_jobs_exist: bool,
-}
-/// Type of transform or stage operation.
+/// Indicates the importance of the message.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum KindType {
-    /// Unrecognized transform type.
-    UnknownKind = 0,
-    /// ParDo transform.
-    ParDoKind = 1,
-    /// Group By Key transform.
-    GroupByKeyKind = 2,
-    /// Flatten transform.
-    FlattenKind = 3,
-    /// Read transform.
-    ReadKind = 4,
-    /// Write transform.
-    WriteKind = 5,
-    /// Constructs from a constant value, such as with Create.of.
-    ConstantKind = 6,
-    /// Creates a Singleton view of a collection.
-    SingletonKind = 7,
-    /// Opening or closing a shuffle session, often as part of a GroupByKey.
-    ShuffleKind = 8,
-}
-/// Describes the overall state of a \[google.dataflow.v1beta3.Job][google.dataflow.v1beta3.Job\].
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum JobState {
-    /// The job's run state isn't specified.
+pub enum JobMessageImportance {
+    /// The message importance isn't specified, or is unknown.
     Unknown = 0,
-    /// `JOB_STATE_STOPPED` indicates that the job has not
-    /// yet started to run.
-    Stopped = 1,
-    /// `JOB_STATE_RUNNING` indicates that the job is currently running.
-    Running = 2,
-    /// `JOB_STATE_DONE` indicates that the job has successfully completed.
-    /// This is a terminal job state.  This state may be set by the Cloud Dataflow
-    /// service, as a transition from `JOB_STATE_RUNNING`. It may also be set via a
-    /// Cloud Dataflow `UpdateJob` call, if the job has not yet reached a terminal
-    /// state.
-    Done = 3,
-    /// `JOB_STATE_FAILED` indicates that the job has failed.  This is a
-    /// terminal job state.  This state may only be set by the Cloud Dataflow
-    /// service, and only as a transition from `JOB_STATE_RUNNING`.
-    Failed = 4,
-    /// `JOB_STATE_CANCELLED` indicates that the job has been explicitly
-    /// cancelled. This is a terminal job state. This state may only be
-    /// set via a Cloud Dataflow `UpdateJob` call, and only if the job has not
-    /// yet reached another terminal state.
-    Cancelled = 5,
-    /// `JOB_STATE_UPDATED` indicates that the job was successfully updated,
-    /// meaning that this job was stopped and another job was started, inheriting
-    /// state from this one. This is a terminal job state. This state may only be
-    /// set by the Cloud Dataflow service, and only as a transition from
-    /// `JOB_STATE_RUNNING`.
-    Updated = 6,
-    /// `JOB_STATE_DRAINING` indicates that the job is in the process of draining.
-    /// A draining job has stopped pulling from its input sources and is processing
-    /// any data that remains in-flight. This state may be set via a Cloud Dataflow
-    /// `UpdateJob` call, but only as a transition from `JOB_STATE_RUNNING`. Jobs
-    /// that are draining may only transition to `JOB_STATE_DRAINED`,
-    /// `JOB_STATE_CANCELLED`, or `JOB_STATE_FAILED`.
-    Draining = 7,
-    /// `JOB_STATE_DRAINED` indicates that the job has been drained.
-    /// A drained job terminated by stopping pulling from its input sources and
-    /// processing any data that remained in-flight when draining was requested.
-    /// This state is a terminal state, may only be set by the Cloud Dataflow
-    /// service, and only as a transition from `JOB_STATE_DRAINING`.
-    Drained = 8,
-    /// `JOB_STATE_PENDING` indicates that the job has been created but is not yet
-    /// running.  Jobs that are pending may only transition to `JOB_STATE_RUNNING`,
-    /// or `JOB_STATE_FAILED`.
-    Pending = 9,
-    /// `JOB_STATE_CANCELLING` indicates that the job has been explicitly cancelled
-    /// and is in the process of stopping.  Jobs that are cancelling may only
-    /// transition to `JOB_STATE_CANCELLED` or `JOB_STATE_FAILED`.
-    Cancelling = 10,
-    /// `JOB_STATE_QUEUED` indicates that the job has been created but is being
-    /// delayed until launch. Jobs that are queued may only transition to
-    /// `JOB_STATE_PENDING` or `JOB_STATE_CANCELLED`.
-    Queued = 11,
-    /// `JOB_STATE_RESOURCE_CLEANING_UP` indicates that the batch job's associated
-    /// resources are currently being cleaned up after a successful run.
-    /// Currently, this is an opt-in feature, please reach out to Cloud support
-    /// team if you are interested.
-    ResourceCleaningUp = 12,
+    /// The message is at the 'debug' level: typically only useful for
+    /// software engineers working on the code the job is running.
+    /// Typically, Dataflow pipeline runners do not display log messages
+    /// at this level by default.
+    JobMessageDebug = 1,
+    /// The message is at the 'detailed' level: somewhat verbose, but
+    /// potentially useful to users.  Typically, Dataflow pipeline
+    /// runners do not display log messages at this level by default.
+    /// These messages are displayed by default in the Dataflow
+    /// monitoring UI.
+    JobMessageDetailed = 2,
+    /// The message is at the 'basic' level: useful for keeping
+    /// track of the execution of a Dataflow pipeline.  Typically,
+    /// Dataflow pipeline runners display log messages at this level by
+    /// default, and these messages are displayed by default in the
+    /// Dataflow monitoring UI.
+    JobMessageBasic = 5,
+    /// The message is at the 'warning' level: indicating a condition
+    /// pertaining to a job which may require human intervention.
+    /// Typically, Dataflow pipeline runners display log messages at this
+    /// level by default, and these messages are displayed by default in
+    /// the Dataflow monitoring UI.
+    JobMessageWarning = 3,
+    /// The message is at the 'error' level: indicating a condition
+    /// preventing a job from succeeding.  Typically, Dataflow pipeline
+    /// runners display log messages at this level by default, and these
+    /// messages are displayed by default in the Dataflow monitoring UI.
+    JobMessageError = 4,
 }
-/// Selector for how much information is returned in Job responses.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum JobView {
-    /// The job view to return isn't specified, or is unknown.
-    /// Responses will contain at least the `JOB_VIEW_SUMMARY` information,
-    /// and may contain additional information.
-    Unknown = 0,
-    /// Request summary information only:
-    /// Project ID, Job ID, job name, job type, job status, start/end time,
-    /// and Cloud SDK version details.
-    Summary = 1,
-    /// Request all information available for this job.
-    All = 2,
-    /// Request summary info and limited job description data for steps, labels and
-    /// environment.
-    Description = 3,
+impl JobMessageImportance {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobMessageImportance::Unknown => "JOB_MESSAGE_IMPORTANCE_UNKNOWN",
+            JobMessageImportance::JobMessageDebug => "JOB_MESSAGE_DEBUG",
+            JobMessageImportance::JobMessageDetailed => "JOB_MESSAGE_DETAILED",
+            JobMessageImportance::JobMessageBasic => "JOB_MESSAGE_BASIC",
+            JobMessageImportance::JobMessageWarning => "JOB_MESSAGE_WARNING",
+            JobMessageImportance::JobMessageError => "JOB_MESSAGE_ERROR",
+        }
+    }
 }
 /// Generated client implementations.
-pub mod jobs_v1_beta3_client {
+pub mod messages_v1_beta3_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    /// Provides a method to create and modify Google Cloud Dataflow jobs.
-    /// A Job is a multi-stage computation graph run by the Cloud Dataflow service.
+    use tonic::codegen::http::Uri;
+    /// The Dataflow Messages API is used for monitoring the progress of
+    /// Dataflow jobs.
     #[derive(Debug, Clone)]
-    pub struct JobsV1Beta3Client<T> {
+    pub struct MessagesV1Beta3Client<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> JobsV1Beta3Client<T>
+    impl<T> MessagesV1Beta3Client<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -2021,10 +2914,14 @@ pub mod jobs_v1_beta3_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> JobsV1Beta3Client<InterceptedService<T, F>>
+        ) -> MessagesV1Beta3Client<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2038,34 +2935,34 @@ pub mod jobs_v1_beta3_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            JobsV1Beta3Client::new(InterceptedService::new(inner, interceptor))
+            MessagesV1Beta3Client::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates a Cloud Dataflow job.
+        /// Request the job status.
         ///
-        /// To create a job, we recommend using `projects.locations.jobs.create` with a
-        /// [regional endpoint]
+        /// To request the status of a job, we recommend using
+        /// `projects.locations.jobs.messages.list` with a [regional endpoint]
         /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-        /// `projects.jobs.create` is not recommended, as your job will always start
-        /// in `us-central1`.
-        pub async fn create_job(
+        /// `projects.jobs.messages.list` is not recommended, as you can only request
+        /// the status of jobs that are running in `us-central1`.
+        pub async fn list_job_messages(
             &mut self,
-            request: impl tonic::IntoRequest<super::CreateJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::ListJobMessagesRequest>,
+        ) -> Result<tonic::Response<super::ListJobMessagesResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2077,146 +2974,7 @@ pub mod jobs_v1_beta3_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/CreateJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the state of the specified Cloud Dataflow job.
-        ///
-        /// To get the state of a job, we recommend using `projects.locations.jobs.get`
-        /// with a [regional endpoint]
-        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-        /// `projects.jobs.get` is not recommended, as you can only get the state of
-        /// jobs that are running in `us-central1`.
-        pub async fn get_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/GetJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the state of an existing Cloud Dataflow job.
-        ///
-        /// To update the state of an existing job, we recommend using
-        /// `projects.locations.jobs.update` with a [regional endpoint]
-        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-        /// `projects.jobs.update` is not recommended, as you can only update the state
-        /// of jobs that are running in `us-central1`.
-        pub async fn update_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/UpdateJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List the jobs of a project.
-        ///
-        /// To list the jobs of a project in a region, we recommend using
-        /// `projects.locations.jobs.list` with a [regional endpoint]
-        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). To
-        /// list the all jobs across all regions, use `projects.jobs.aggregated`. Using
-        /// `projects.jobs.list` is not recommended, as you can only get the list of
-        /// jobs that are running in `us-central1`.
-        pub async fn list_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListJobsRequest>,
-        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/ListJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List the jobs of a project across all regions.
-        pub async fn aggregated_list_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListJobsRequest>,
-        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/AggregatedListJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Check for existence of active jobs in the given project across all regions.
-        pub async fn check_active_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CheckActiveJobsRequest>,
-        ) -> Result<tonic::Response<super::CheckActiveJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/CheckActiveJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Snapshot the state of a streaming job.
-        pub async fn snapshot_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SnapshotJobRequest>,
-        ) -> Result<tonic::Response<super::Snapshot>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.JobsV1Beta3/SnapshotJob",
+                "/google.dataflow.v1beta3.MessagesV1Beta3/ListJobMessages",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2566,6 +3324,19 @@ pub mod sdk_info {
         /// Python.
         Python = 2,
     }
+    impl Language {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Language::Unknown => "UNKNOWN",
+                Language::Java => "JAVA",
+                Language::Python => "PYTHON",
+            }
+        }
+    }
 }
 /// RuntimeMetadata describing a runtime environment.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2641,6 +3412,17 @@ pub mod get_template_request {
         /// template.
         MetadataOnly = 0,
     }
+    impl TemplateView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TemplateView::MetadataOnly => "METADATA_ONLY",
+            }
+        }
+    }
     /// The template from which to create the job.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Template {
@@ -2681,6 +3463,19 @@ pub mod get_template_response {
         Legacy = 1,
         /// Flex Template.
         Flex = 2,
+    }
+    impl TemplateType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TemplateType::Unknown => "UNKNOWN",
+                TemplateType::Legacy => "LEGACY",
+                TemplateType::Flex => "FLEX",
+            }
+        }
     }
 }
 /// Parameters to provide to the template being launched.
@@ -2808,10 +3603,31 @@ pub enum ParameterType {
     /// The parameter specifies a Pub/Sub Subscription.
     PubsubSubscription = 9,
 }
+impl ParameterType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ParameterType::Default => "DEFAULT",
+            ParameterType::Text => "TEXT",
+            ParameterType::GcsReadBucket => "GCS_READ_BUCKET",
+            ParameterType::GcsWriteBucket => "GCS_WRITE_BUCKET",
+            ParameterType::GcsReadFile => "GCS_READ_FILE",
+            ParameterType::GcsWriteFile => "GCS_WRITE_FILE",
+            ParameterType::GcsReadFolder => "GCS_READ_FOLDER",
+            ParameterType::GcsWriteFolder => "GCS_WRITE_FOLDER",
+            ParameterType::PubsubTopic => "PUBSUB_TOPIC",
+            ParameterType::PubsubSubscription => "PUBSUB_SUBSCRIPTION",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod templates_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides a method to create Cloud Dataflow jobs from templates.
     #[derive(Debug, Clone)]
     pub struct TemplatesServiceClient<T> {
@@ -2826,6 +3642,10 @@ pub mod templates_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2847,19 +3667,19 @@ pub mod templates_service_client {
         {
             TemplatesServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a Cloud Dataflow job from a template.
@@ -2928,6 +3748,7 @@ pub mod templates_service_client {
 pub mod flex_templates_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Provides a service for Flex templates. This feature is not ready yet.
     #[derive(Debug, Clone)]
     pub struct FlexTemplatesServiceClient<T> {
@@ -2942,6 +3763,10 @@ pub mod flex_templates_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2963,19 +3788,19 @@ pub mod flex_templates_service_client {
         {
             FlexTemplatesServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Launch a job with a FlexTemplate.
@@ -2999,501 +3824,4 @@ pub mod flex_templates_service_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
-}
-/// A particular message pertaining to a Dataflow job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobMessage {
-    /// Deprecated.
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
-    /// The timestamp of the message.
-    #[prost(message, optional, tag="2")]
-    pub time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The text of the message.
-    #[prost(string, tag="3")]
-    pub message_text: ::prost::alloc::string::String,
-    /// Importance level of the message.
-    #[prost(enumeration="JobMessageImportance", tag="4")]
-    pub message_importance: i32,
-}
-/// A rich message format, including a human readable string, a key for
-/// identifying the message, and structured data associated with the message for
-/// programmatic consumption.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StructuredMessage {
-    /// Human-readable version of message.
-    #[prost(string, tag="1")]
-    pub message_text: ::prost::alloc::string::String,
-    /// Identifier for this message type.  Used by external systems to
-    /// internationalize or personalize message.
-    #[prost(string, tag="2")]
-    pub message_key: ::prost::alloc::string::String,
-    /// The structured data associated with this message.
-    #[prost(message, repeated, tag="3")]
-    pub parameters: ::prost::alloc::vec::Vec<structured_message::Parameter>,
-}
-/// Nested message and enum types in `StructuredMessage`.
-pub mod structured_message {
-    /// Structured data associated with this message.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Parameter {
-        /// Key or name for this parameter.
-        #[prost(string, tag="1")]
-        pub key: ::prost::alloc::string::String,
-        /// Value for this parameter.
-        #[prost(message, optional, tag="2")]
-        pub value: ::core::option::Option<::prost_types::Value>,
-    }
-}
-/// A structured message reporting an autoscaling decision made by the Dataflow
-/// service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AutoscalingEvent {
-    /// The current number of workers the job has.
-    #[prost(int64, tag="1")]
-    pub current_num_workers: i64,
-    /// The target number of workers the worker pool wants to resize to use.
-    #[prost(int64, tag="2")]
-    pub target_num_workers: i64,
-    /// The type of autoscaling event to report.
-    #[prost(enumeration="autoscaling_event::AutoscalingEventType", tag="3")]
-    pub event_type: i32,
-    /// A message describing why the system decided to adjust the current
-    /// number of workers, why it failed, or why the system decided to
-    /// not make any changes to the number of workers.
-    #[prost(message, optional, tag="4")]
-    pub description: ::core::option::Option<StructuredMessage>,
-    /// The time this event was emitted to indicate a new target or current
-    /// num_workers value.
-    #[prost(message, optional, tag="5")]
-    pub time: ::core::option::Option<::prost_types::Timestamp>,
-    /// A short and friendly name for the worker pool this event refers to.
-    #[prost(string, tag="7")]
-    pub worker_pool: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `AutoscalingEvent`.
-pub mod autoscaling_event {
-    /// Indicates the type of autoscaling event.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AutoscalingEventType {
-        /// Default type for the enum.  Value should never be returned.
-        TypeUnknown = 0,
-        /// The TARGET_NUM_WORKERS_CHANGED type should be used when the target
-        /// worker pool size has changed at the start of an actuation. An event
-        /// should always be specified as TARGET_NUM_WORKERS_CHANGED if it reflects
-        /// a change in the target_num_workers.
-        TargetNumWorkersChanged = 1,
-        /// The CURRENT_NUM_WORKERS_CHANGED type should be used when actual worker
-        /// pool size has been changed, but the target_num_workers has not changed.
-        CurrentNumWorkersChanged = 2,
-        /// The ACTUATION_FAILURE type should be used when we want to report
-        /// an error to the user indicating why the current number of workers
-        /// in the pool could not be changed.
-        /// Displayed in the current status and history widgets.
-        ActuationFailure = 3,
-        /// Used when we want to report to the user a reason why we are
-        /// not currently adjusting the number of workers.
-        /// Should specify both target_num_workers, current_num_workers and a
-        /// decision_message.
-        NoChange = 4,
-    }
-}
-/// Request to list job messages.
-/// Up to max_results messages will be returned in the time range specified
-/// starting with the oldest messages first. If no time range is specified
-/// the results with start with the oldest message.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobMessagesRequest {
-    /// A project id.
-    #[prost(string, tag="1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The job to get messages about.
-    #[prost(string, tag="2")]
-    pub job_id: ::prost::alloc::string::String,
-    /// Filter to only get messages with importance >= level
-    #[prost(enumeration="JobMessageImportance", tag="3")]
-    pub minimum_importance: i32,
-    /// If specified, determines the maximum number of messages to
-    /// return.  If unspecified, the service may choose an appropriate
-    /// default, or may return an arbitrarily large number of results.
-    #[prost(int32, tag="4")]
-    pub page_size: i32,
-    /// If supplied, this should be the value of next_page_token returned
-    /// by an earlier call. This will cause the next page of results to
-    /// be returned.
-    #[prost(string, tag="5")]
-    pub page_token: ::prost::alloc::string::String,
-    /// If specified, return only messages with timestamps >= start_time.
-    /// The default is the job creation time (i.e. beginning of messages).
-    #[prost(message, optional, tag="6")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Return only messages with timestamps < end_time. The default is now
-    /// (i.e. return up to the latest messages available).
-    #[prost(message, optional, tag="7")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The [regional endpoint]
-    /// (<https://cloud.google.com/dataflow/docs/concepts/regional-endpoints>) that
-    /// contains the job specified by job_id.
-    #[prost(string, tag="8")]
-    pub location: ::prost::alloc::string::String,
-}
-/// Response to a request to list job messages.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobMessagesResponse {
-    /// Messages in ascending timestamp order.
-    #[prost(message, repeated, tag="1")]
-    pub job_messages: ::prost::alloc::vec::Vec<JobMessage>,
-    /// The token to obtain the next page of results if there are more.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Autoscaling events in ascending timestamp order.
-    #[prost(message, repeated, tag="3")]
-    pub autoscaling_events: ::prost::alloc::vec::Vec<AutoscalingEvent>,
-}
-/// Indicates the importance of the message.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum JobMessageImportance {
-    /// The message importance isn't specified, or is unknown.
-    Unknown = 0,
-    /// The message is at the 'debug' level: typically only useful for
-    /// software engineers working on the code the job is running.
-    /// Typically, Dataflow pipeline runners do not display log messages
-    /// at this level by default.
-    JobMessageDebug = 1,
-    /// The message is at the 'detailed' level: somewhat verbose, but
-    /// potentially useful to users.  Typically, Dataflow pipeline
-    /// runners do not display log messages at this level by default.
-    /// These messages are displayed by default in the Dataflow
-    /// monitoring UI.
-    JobMessageDetailed = 2,
-    /// The message is at the 'basic' level: useful for keeping
-    /// track of the execution of a Dataflow pipeline.  Typically,
-    /// Dataflow pipeline runners display log messages at this level by
-    /// default, and these messages are displayed by default in the
-    /// Dataflow monitoring UI.
-    JobMessageBasic = 5,
-    /// The message is at the 'warning' level: indicating a condition
-    /// pertaining to a job which may require human intervention.
-    /// Typically, Dataflow pipeline runners display log messages at this
-    /// level by default, and these messages are displayed by default in
-    /// the Dataflow monitoring UI.
-    JobMessageWarning = 3,
-    /// The message is at the 'error' level: indicating a condition
-    /// preventing a job from succeeding.  Typically, Dataflow pipeline
-    /// runners display log messages at this level by default, and these
-    /// messages are displayed by default in the Dataflow monitoring UI.
-    JobMessageError = 4,
-}
-/// Generated client implementations.
-pub mod messages_v1_beta3_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// The Dataflow Messages API is used for monitoring the progress of
-    /// Dataflow jobs.
-    #[derive(Debug, Clone)]
-    pub struct MessagesV1Beta3Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> MessagesV1Beta3Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MessagesV1Beta3Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            MessagesV1Beta3Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Request the job status.
-        ///
-        /// To request the status of a job, we recommend using
-        /// `projects.locations.jobs.messages.list` with a [regional endpoint]
-        /// (https://cloud.google.com/dataflow/docs/concepts/regional-endpoints). Using
-        /// `projects.jobs.messages.list` is not recommended, as you can only request
-        /// the status of jobs that are running in `us-central1`.
-        pub async fn list_job_messages(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListJobMessagesRequest>,
-        ) -> Result<tonic::Response<super::ListJobMessagesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.dataflow.v1beta3.MessagesV1Beta3/ListJobMessages",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Global topology of the streaming Dataflow job, including all
-/// computations and their sharded locations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TopologyConfig {
-    /// The computations associated with a streaming Dataflow job.
-    #[prost(message, repeated, tag="1")]
-    pub computations: ::prost::alloc::vec::Vec<ComputationTopology>,
-    /// The disks assigned to a streaming Dataflow job.
-    #[prost(message, repeated, tag="2")]
-    pub data_disk_assignments: ::prost::alloc::vec::Vec<DataDiskAssignment>,
-    /// Maps user stage names to stable computation names.
-    #[prost(btree_map="string, string", tag="3")]
-    pub user_stage_to_computation_name_map: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The size (in bits) of keys that will be assigned to source messages.
-    #[prost(int32, tag="4")]
-    pub forwarding_key_bits: i32,
-    /// Version number for persistent state.
-    #[prost(int32, tag="5")]
-    pub persistent_state_version: i32,
-}
-/// Identifies a pubsub location to use for transferring data into or
-/// out of a streaming Dataflow job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PubsubLocation {
-    /// A pubsub topic, in the form of
-    /// "pubsub.googleapis.com/topics/<project-id>/<topic-name>"
-    #[prost(string, tag="1")]
-    pub topic: ::prost::alloc::string::String,
-    /// A pubsub subscription, in the form of
-    /// "pubsub.googleapis.com/subscriptions/<project-id>/<subscription-name>"
-    #[prost(string, tag="2")]
-    pub subscription: ::prost::alloc::string::String,
-    /// If set, contains a pubsub label from which to extract record timestamps.
-    /// If left empty, record timestamps will be generated upon arrival.
-    #[prost(string, tag="3")]
-    pub timestamp_label: ::prost::alloc::string::String,
-    /// If set, contains a pubsub label from which to extract record ids.
-    /// If left empty, record deduplication will be strictly best effort.
-    #[prost(string, tag="4")]
-    pub id_label: ::prost::alloc::string::String,
-    /// Indicates whether the pipeline allows late-arriving data.
-    #[prost(bool, tag="5")]
-    pub drop_late_data: bool,
-    /// If set, specifies the pubsub subscription that will be used for tracking
-    /// custom time timestamps for watermark estimation.
-    #[prost(string, tag="6")]
-    pub tracking_subscription: ::prost::alloc::string::String,
-    /// If true, then the client has requested to get pubsub attributes.
-    #[prost(bool, tag="7")]
-    pub with_attributes: bool,
-}
-/// Identifies the location of a streaming computation stage, for
-/// stage-to-stage communication.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamingStageLocation {
-    /// Identifies the particular stream within the streaming Dataflow
-    /// job.
-    #[prost(string, tag="1")]
-    pub stream_id: ::prost::alloc::string::String,
-}
-/// Identifies the location of a streaming side input.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamingSideInputLocation {
-    /// Identifies the particular side input within the streaming Dataflow job.
-    #[prost(string, tag="1")]
-    pub tag: ::prost::alloc::string::String,
-    /// Identifies the state family where this side input is stored.
-    #[prost(string, tag="2")]
-    pub state_family: ::prost::alloc::string::String,
-}
-/// Identifies the location of a custom souce.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomSourceLocation {
-    /// Whether this source is stateful.
-    #[prost(bool, tag="1")]
-    pub stateful: bool,
-}
-/// Describes a stream of data, either as input to be processed or as
-/// output of a streaming Dataflow job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamLocation {
-    /// A specification of a stream's location.
-    #[prost(oneof="stream_location::Location", tags="1, 2, 3, 4")]
-    pub location: ::core::option::Option<stream_location::Location>,
-}
-/// Nested message and enum types in `StreamLocation`.
-pub mod stream_location {
-    /// A specification of a stream's location.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Location {
-        /// The stream is part of another computation within the current
-        /// streaming Dataflow job.
-        #[prost(message, tag="1")]
-        StreamingStageLocation(super::StreamingStageLocation),
-        /// The stream is a pubsub stream.
-        #[prost(message, tag="2")]
-        PubsubLocation(super::PubsubLocation),
-        /// The stream is a streaming side input.
-        #[prost(message, tag="3")]
-        SideInputLocation(super::StreamingSideInputLocation),
-        /// The stream is a custom source.
-        #[prost(message, tag="4")]
-        CustomSourceLocation(super::CustomSourceLocation),
-    }
-}
-/// State family configuration.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StateFamilyConfig {
-    /// The state family value.
-    #[prost(string, tag="1")]
-    pub state_family: ::prost::alloc::string::String,
-    /// If true, this family corresponds to a read operation.
-    #[prost(bool, tag="2")]
-    pub is_read: bool,
-}
-/// All configuration data for a particular Computation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ComputationTopology {
-    /// The system stage name.
-    #[prost(string, tag="1")]
-    pub system_stage_name: ::prost::alloc::string::String,
-    /// The ID of the computation.
-    #[prost(string, tag="5")]
-    pub computation_id: ::prost::alloc::string::String,
-    /// The key ranges processed by the computation.
-    #[prost(message, repeated, tag="2")]
-    pub key_ranges: ::prost::alloc::vec::Vec<KeyRangeLocation>,
-    /// The inputs to the computation.
-    #[prost(message, repeated, tag="3")]
-    pub inputs: ::prost::alloc::vec::Vec<StreamLocation>,
-    /// The outputs from the computation.
-    #[prost(message, repeated, tag="4")]
-    pub outputs: ::prost::alloc::vec::Vec<StreamLocation>,
-    /// The state family values.
-    #[prost(message, repeated, tag="7")]
-    pub state_families: ::prost::alloc::vec::Vec<StateFamilyConfig>,
-}
-/// Location information for a specific key-range of a sharded computation.
-/// Currently we only support UTF-8 character splits to simplify encoding into
-/// JSON.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeyRangeLocation {
-    /// The start (inclusive) of the key range.
-    #[prost(string, tag="1")]
-    pub start: ::prost::alloc::string::String,
-    /// The end (exclusive) of the key range.
-    #[prost(string, tag="2")]
-    pub end: ::prost::alloc::string::String,
-    /// The physical location of this range assignment to be used for
-    /// streaming computation cross-worker message delivery.
-    #[prost(string, tag="3")]
-    pub delivery_endpoint: ::prost::alloc::string::String,
-    /// The name of the data disk where data for this range is stored.
-    /// This name is local to the Google Cloud Platform project and uniquely
-    /// identifies the disk within that project, for example
-    /// "myproject-1014-104817-4c2-harness-0-disk-1".
-    #[prost(string, tag="5")]
-    pub data_disk: ::prost::alloc::string::String,
-    /// DEPRECATED. The location of the persistent state for this range, as a
-    /// persistent directory in the worker local filesystem.
-    #[deprecated]
-    #[prost(string, tag="4")]
-    pub deprecated_persistent_directory: ::prost::alloc::string::String,
-}
-/// Describes mounted data disk.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MountedDataDisk {
-    /// The name of the data disk.
-    /// This name is local to the Google Cloud Platform project and uniquely
-    /// identifies the disk within that project, for example
-    /// "myproject-1014-104817-4c2-harness-0-disk-1".
-    #[prost(string, tag="1")]
-    pub data_disk: ::prost::alloc::string::String,
-}
-/// Data disk assignment for a given VM instance.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataDiskAssignment {
-    /// VM instance name the data disks mounted to, for example
-    /// "myproject-1014-104817-4c2-harness-0".
-    #[prost(string, tag="1")]
-    pub vm_instance: ::prost::alloc::string::String,
-    /// Mounted data disks. The order is important a data disk's 0-based index in
-    /// this list defines which persistent directory the disk is mounted to, for
-    /// example the list of { "myproject-1014-104817-4c2-harness-0-disk-0" },
-    /// { "myproject-1014-104817-4c2-harness-0-disk-1" }.
-    #[prost(string, repeated, tag="2")]
-    pub data_disks: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Data disk assignment information for a specific key-range of a sharded
-/// computation.
-/// Currently we only support UTF-8 character splits to simplify encoding into
-/// JSON.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeyRangeDataDiskAssignment {
-    /// The start (inclusive) of the key range.
-    #[prost(string, tag="1")]
-    pub start: ::prost::alloc::string::String,
-    /// The end (exclusive) of the key range.
-    #[prost(string, tag="2")]
-    pub end: ::prost::alloc::string::String,
-    /// The name of the data disk where data for this range is stored.
-    /// This name is local to the Google Cloud Platform project and uniquely
-    /// identifies the disk within that project, for example
-    /// "myproject-1014-104817-4c2-harness-0-disk-1".
-    #[prost(string, tag="3")]
-    pub data_disk: ::prost::alloc::string::String,
-}
-/// Describes full or partial data disk assignment information of the computation
-/// ranges.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamingComputationRanges {
-    /// The ID of the computation.
-    #[prost(string, tag="1")]
-    pub computation_id: ::prost::alloc::string::String,
-    /// Data disk assignments for ranges from this computation.
-    #[prost(message, repeated, tag="2")]
-    pub range_assignments: ::prost::alloc::vec::Vec<KeyRangeDataDiskAssignment>,
-}
-/// Streaming appliance snapshot configuration.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamingApplianceSnapshotConfig {
-    /// If set, indicates the snapshot id for the snapshot being performed.
-    #[prost(string, tag="1")]
-    pub snapshot_id: ::prost::alloc::string::String,
-    /// Indicates which endpoint is used to import appliance state.
-    #[prost(string, tag="2")]
-    pub import_state_endpoint: ::prost::alloc::string::String,
 }

@@ -212,6 +212,20 @@ pub mod account_linking {
         /// OAuth linking type.
         Oauth = 3,
     }
+    impl LinkingType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LinkingType::Unspecified => "LINKING_TYPE_UNSPECIFIED",
+                LinkingType::GoogleSignIn => "GOOGLE_SIGN_IN",
+                LinkingType::OauthAndGoogleSignIn => "OAUTH_AND_GOOGLE_SIGN_IN",
+                LinkingType::Oauth => "OAUTH",
+            }
+        }
+    }
     /// The OAuth2 grant type Google uses to guide the user to sign in to your
     /// App's web service.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -225,6 +239,19 @@ pub mod account_linking {
         /// Implicit code grant. Only requires you to provide authentication
         /// URL.
         Implicit = 2,
+    }
+    impl AuthGrantType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AuthGrantType::Unspecified => "AUTH_GRANT_TYPE_UNSPECIFIED",
+                AuthGrantType::AuthCode => "AUTH_CODE",
+                AuthGrantType::Implicit => "IMPLICIT",
+            }
+        }
     }
 }
 /// Styles applied to cards that are presented to users
@@ -289,6 +316,19 @@ pub mod theme_customization {
         Curved = 1,
         /// Rectangular corner for image.
         Angled = 2,
+    }
+    impl ImageCornerStyle {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ImageCornerStyle::Unspecified => "IMAGE_CORNER_STYLE_UNSPECIFIED",
+                ImageCornerStyle::Curved => "CURVED",
+                ImageCornerStyle::Angled => "ANGLED",
+            }
+        }
     }
 }
 /// Represents settings of an Actions project that are specific to a user locale.
@@ -398,6 +438,24 @@ pub mod capability_requirement {
         InteractiveCanvas = 8,
         /// Surface supports home storage.
         HomeStorage = 9,
+    }
+    impl SurfaceCapability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
+                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
+                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
+                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
+                SurfaceCapability::WebBrowser => "WEB_BROWSER",
+                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
+                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
+                SurfaceCapability::HomeStorage => "HOME_STORAGE",
+            }
+        }
     }
 }
 /// Represents settings of an Actions project that are not locale specific.
@@ -544,15 +602,46 @@ pub mod settings {
         /// Home Control category.
         HomeControl = 19,
     }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::BusinessAndFinance => "BUSINESS_AND_FINANCE",
+                Category::EducationAndReference => "EDUCATION_AND_REFERENCE",
+                Category::FoodAndDrink => "FOOD_AND_DRINK",
+                Category::GamesAndTrivia => "GAMES_AND_TRIVIA",
+                Category::HealthAndFitness => "HEALTH_AND_FITNESS",
+                Category::KidsAndFamily => "KIDS_AND_FAMILY",
+                Category::Lifestyle => "LIFESTYLE",
+                Category::Local => "LOCAL",
+                Category::MoviesAndTv => "MOVIES_AND_TV",
+                Category::MusicAndAudio => "MUSIC_AND_AUDIO",
+                Category::News => "NEWS",
+                Category::NoveltyAndHumor => "NOVELTY_AND_HUMOR",
+                Category::Productivity => "PRODUCTIVITY",
+                Category::Shopping => "SHOPPING",
+                Category::Social => "SOCIAL",
+                Category::Sports => "SPORTS",
+                Category::TravelAndTransportation => "TRAVEL_AND_TRANSPORTATION",
+                Category::Utilities => "UTILITIES",
+                Category::Weather => "WEATHER",
+                Category::HomeControl => "HOME_CONTROL",
+            }
+        }
+    }
 }
 /// Metadata for different types of webhooks. If you're using
 /// `inlineCloudFunction`, your source code must be in a directory with the same
 /// name as the value for the `executeFunction` key.
 /// For example, a value of `my_webhook` for the`executeFunction` key would have
 /// a code structure like this:
-///  - `/webhooks/my_webhook.yaml`
-///  - `/webhooks/my_webhook/index.js`
-///  - `/webhooks/my_webhook/package.json`
+///   - `/webhooks/my_webhook.yaml`
+///   - `/webhooks/my_webhook/index.js`
+///   - `/webhooks/my_webhook/package.json`
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Webhook {
     /// List of handlers for this webhook.
@@ -714,15 +803,15 @@ pub struct DataFile {
     /// Relative path of the data file from the project root in the SDK file
     /// structure.
     /// Allowed file paths:
-    ///     - Images: `resources/images/{multiple
-    ///     directories}?/{ImageName}.{extension}`
-    ///     - Audio: `resources/audio/{multiple
-    ///     directories}?/{AudioFileName}.{extension}`
-    ///     - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
+    ///      - Images: `resources/images/{multiple
+    ///      directories}?/{ImageName}.{extension}`
+    ///      - Audio: `resources/audio/{multiple
+    ///      directories}?/{AudioFileName}.{extension}`
+    ///      - Inline Cloud Function Code: `webhooks/{WebhookName}.zip`
     /// Allowed extensions:
-    ///     - Images: `png`, `jpg`, `jpeg`
-    ///     - Audio: `mp3`, `mpeg`
-    ///     - Inline Cloud Functions: `zip`
+    ///      - Images: `png`, `jpg`, `jpeg`
+    ///      - Audio: `mp3`, `mpeg`
+    ///      - Inline Cloud Functions: `zip`
     #[prost(string, tag="1")]
     pub file_path: ::prost::alloc::string::String,
     /// Required. The content type of this asset. Example: `text/html`. The content
@@ -868,6 +957,26 @@ pub mod version {
             /// The version has been deleted.
             Deleted = 9,
         }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::CreationInProgress => "CREATION_IN_PROGRESS",
+                    State::CreationFailed => "CREATION_FAILED",
+                    State::Created => "CREATED",
+                    State::ReviewInProgress => "REVIEW_IN_PROGRESS",
+                    State::Approved => "APPROVED",
+                    State::ConditionallyApproved => "CONDITIONALLY_APPROVED",
+                    State::Denied => "DENIED",
+                    State::UnderTakedown => "UNDER_TAKEDOWN",
+                    State::Deleted => "DELETED",
+                }
+            }
+        }
     }
 }
 /// Streaming RPC request for WriteDraft.
@@ -883,7 +992,7 @@ pub struct WriteDraftRequest {
     /// 2. The first request must have a ConfigFile with 'settings'.
     /// 3. The first request must have a ConfigFile with 'manifest'.
     /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-    ///    streamed before the DataFile corresponding to its source code.
+    ///     streamed before the DataFile corresponding to its source code.
     #[prost(message, optional, tag="4")]
     pub files: ::core::option::Option<Files>,
 }
@@ -946,7 +1055,7 @@ pub mod write_preview_request {
         /// 2. The first request must have a ConfigFile with 'settings'.
         /// 3. The first request must have a ConfigFile with 'manifest'.
         /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-        ///    streamed before the DataFile corresponding to its source code.
+        ///     streamed before the DataFile corresponding to its source code.
         #[prost(message, tag="5")]
         Files(super::Files),
         /// Content sourced from the project draft.
@@ -984,7 +1093,7 @@ pub struct CreateVersionRequest {
     /// 2. The first request must have a ConfigFile with 'settings'.
     /// 3. The first request must have a ConfigFile with 'manifest'.
     /// 4. The webhook ConfigFile corresponding to inline cloud function must be
-    ///    streamed before the DataFile corresponding to its source code.
+    ///     streamed before the DataFile corresponding to its source code.
     #[prost(message, optional, tag="5")]
     pub files: ::core::option::Option<Files>,
     /// Optional. The release channel to deploy the version, if specified. The supported
@@ -1170,6 +1279,7 @@ pub struct ListVersionsResponse {
 pub mod actions_sdk_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Actions SDK API which allows developers to build projects using the SDK.
     #[derive(Debug, Clone)]
     pub struct ActionsSdkClient<T> {
@@ -1184,6 +1294,10 @@ pub mod actions_sdk_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1205,19 +1319,19 @@ pub mod actions_sdk_client {
         {
             ActionsSdkClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Updates the project draft based on the model.
@@ -1726,6 +1840,21 @@ pub mod user_input {
         /// The action was triggered by a URL link.
         Url = 4,
     }
+    impl InputType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InputType::Unspecified => "INPUT_TYPE_UNSPECIFIED",
+                InputType::Touch => "TOUCH",
+                InputType::Voice => "VOICE",
+                InputType::Keyboard => "KEYBOARD",
+                InputType::Url => "URL",
+            }
+        }
+    }
 }
 /// Properties of device relevant to a conversation round.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1767,6 +1896,22 @@ pub mod device_properties {
         SmartDisplay = 4,
         /// KaiOS.
         KaiOs = 5,
+    }
+    impl Surface {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Surface::Unspecified => "SURFACE_UNSPECIFIED",
+                Surface::Speaker => "SPEAKER",
+                Surface::Phone => "PHONE",
+                Surface::Allo => "ALLO",
+                Surface::SmartDisplay => "SMART_DISPLAY",
+                Surface::KaiOs => "KAI_OS",
+            }
+        }
     }
 }
 /// Container that represents a location.
@@ -1875,6 +2020,7 @@ pub struct SetWebAndAppActivityControlRequest {
 pub mod actions_testing_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Actions Testing API which allows developers to run automated tests.
     #[derive(Debug, Clone)]
     pub struct ActionsTestingClient<T> {
@@ -1889,6 +2035,10 @@ pub mod actions_testing_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1910,19 +2060,19 @@ pub mod actions_testing_client {
         {
             ActionsTestingClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Plays one round of the conversation.

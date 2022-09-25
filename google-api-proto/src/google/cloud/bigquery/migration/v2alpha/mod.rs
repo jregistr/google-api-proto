@@ -1,28 +1,3 @@
-/// Assessment task config.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssessmentTaskDetails {
-    /// Required. The Cloud Storage path for assessment input files.
-    #[prost(string, tag="1")]
-    pub input_path: ::prost::alloc::string::String,
-    /// Required. The BigQuery dataset for output.
-    #[prost(string, tag="2")]
-    pub output_dataset: ::prost::alloc::string::String,
-    /// Optional. An optional Cloud Storage path to write the query logs (which is
-    /// then used as an input path on the translation task)
-    #[prost(string, tag="3")]
-    pub querylogs_path: ::prost::alloc::string::String,
-    /// Required. The data source or data warehouse type (eg: TERADATA/REDSHIFT)
-    /// from which the input data is extracted.
-    #[prost(string, tag="4")]
-    pub data_source: ::prost::alloc::string::String,
-}
-/// Details for an assessment task orchestration result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssessmentOrchestrationResultDetails {
-    /// Optional. The version used for the output table schemas.
-    #[prost(string, tag="1")]
-    pub output_tables_schema_version: ::prost::alloc::string::String,
-}
 /// Provides details for errors and the corresponding resources.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceErrorDetail {
@@ -60,6 +35,230 @@ pub struct ErrorLocation {
     /// means that there is no columns information.
     #[prost(int32, tag="2")]
     pub column: i32,
+}
+/// The request of translating a SQL query to Standard SQL.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslateQueryRequest {
+    /// Required. The name of the project to which this translation request belongs.
+    /// Example: `projects/foo/locations/bar`
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The source SQL dialect of `queries`.
+    #[prost(enumeration="translate_query_request::SqlTranslationSourceDialect", tag="2")]
+    pub source_dialect: i32,
+    /// Required. The query to be translated.
+    #[prost(string, tag="3")]
+    pub query: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `TranslateQueryRequest`.
+pub mod translate_query_request {
+    /// Supported SQL translation source dialects.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SqlTranslationSourceDialect {
+        /// SqlTranslationSourceDialect not specified.
+        Unspecified = 0,
+        /// Teradata SQL.
+        Teradata = 1,
+    }
+    impl SqlTranslationSourceDialect {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlTranslationSourceDialect::Unspecified => "SQL_TRANSLATION_SOURCE_DIALECT_UNSPECIFIED",
+                SqlTranslationSourceDialect::Teradata => "TERADATA",
+            }
+        }
+    }
+}
+/// The response of translating a SQL query to Standard SQL.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslateQueryResponse {
+    /// Output only. Immutable. The unique identifier for the SQL translation job.
+    /// Example: `projects/123/locations/us/translation/1234`
+    #[prost(string, tag="4")]
+    pub translation_job: ::prost::alloc::string::String,
+    /// The translated result. This will be empty if the translation fails.
+    #[prost(string, tag="1")]
+    pub translated_query: ::prost::alloc::string::String,
+    /// The list of errors encountered during the translation, if present.
+    #[prost(message, repeated, tag="2")]
+    pub errors: ::prost::alloc::vec::Vec<SqlTranslationError>,
+    /// The list of warnings encountered during the translation, if present,
+    /// indicates non-semantically correct translation.
+    #[prost(message, repeated, tag="3")]
+    pub warnings: ::prost::alloc::vec::Vec<SqlTranslationWarning>,
+}
+/// Structured error object capturing the error message and the location in the
+/// source text where the error occurs.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlTranslationErrorDetail {
+    /// Specifies the row from the source text where the error occurred.
+    #[prost(int64, tag="1")]
+    pub row: i64,
+    /// Specifie the column from the source texts where the error occurred.
+    #[prost(int64, tag="2")]
+    pub column: i64,
+    /// A human-readable description of the error.
+    #[prost(string, tag="3")]
+    pub message: ::prost::alloc::string::String,
+}
+/// The detailed error object if the SQL translation job fails.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlTranslationError {
+    /// The type of SQL translation error.
+    #[prost(enumeration="sql_translation_error::SqlTranslationErrorType", tag="1")]
+    pub error_type: i32,
+    /// Specifies the details of the error, including the error message and
+    /// location from the source text.
+    #[prost(message, optional, tag="2")]
+    pub error_detail: ::core::option::Option<SqlTranslationErrorDetail>,
+}
+/// Nested message and enum types in `SqlTranslationError`.
+pub mod sql_translation_error {
+    /// The error type of the SQL translation job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SqlTranslationErrorType {
+        /// SqlTranslationErrorType not specified.
+        Unspecified = 0,
+        /// Failed to parse the input text as a SQL query.
+        SqlParseError = 1,
+        /// Found unsupported functions in the input SQL query that are not able to
+        /// translate.
+        UnsupportedSqlFunction = 2,
+    }
+    impl SqlTranslationErrorType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlTranslationErrorType::Unspecified => "SQL_TRANSLATION_ERROR_TYPE_UNSPECIFIED",
+                SqlTranslationErrorType::SqlParseError => "SQL_PARSE_ERROR",
+                SqlTranslationErrorType::UnsupportedSqlFunction => "UNSUPPORTED_SQL_FUNCTION",
+            }
+        }
+    }
+}
+/// The detailed warning object if the SQL translation job is completed but not
+/// semantically correct.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlTranslationWarning {
+    /// Specifies the details of the warning, including the warning message and
+    /// location from the source text.
+    #[prost(message, optional, tag="1")]
+    pub warning_detail: ::core::option::Option<SqlTranslationErrorDetail>,
+}
+/// Generated client implementations.
+pub mod sql_translation_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Provides other SQL dialects to GoogleSQL translation operations.
+    #[derive(Debug, Clone)]
+    pub struct SqlTranslationServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SqlTranslationServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SqlTranslationServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SqlTranslationServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Translates input queries from source dialects to GoogleSQL.
+        pub async fn translate_query(
+            &mut self,
+            request: impl tonic::IntoRequest<super::TranslateQueryRequest>,
+        ) -> Result<tonic::Response<super::TranslateQueryResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.bigquery.migration.v2alpha.SqlTranslationService/TranslateQuery",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Assessment task config.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssessmentTaskDetails {
+    /// Required. The Cloud Storage path for assessment input files.
+    #[prost(string, tag="1")]
+    pub input_path: ::prost::alloc::string::String,
+    /// Required. The BigQuery dataset for output.
+    #[prost(string, tag="2")]
+    pub output_dataset: ::prost::alloc::string::String,
+    /// Optional. An optional Cloud Storage path to write the query logs (which is
+    /// then used as an input path on the translation task)
+    #[prost(string, tag="3")]
+    pub querylogs_path: ::prost::alloc::string::String,
+    /// Required. The data source or data warehouse type (eg: TERADATA/REDSHIFT)
+    /// from which the input data is extracted.
+    #[prost(string, tag="4")]
+    pub data_source: ::prost::alloc::string::String,
+}
+/// Details for an assessment task orchestration result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssessmentOrchestrationResultDetails {
+    /// Optional. The version used for the output table schemas.
+    #[prost(string, tag="1")]
+    pub output_tables_schema_version: ::prost::alloc::string::String,
 }
 /// The metrics object for a SubTask.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -229,6 +428,23 @@ pub mod translation_task_details {
         /// File encoding is UTF_16BE.
         Utf16be = 6,
     }
+    impl FileEncoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FileEncoding::Unspecified => "FILE_ENCODING_UNSPECIFIED",
+                FileEncoding::Utf8 => "UTF_8",
+                FileEncoding::Iso88591 => "ISO_8859_1",
+                FileEncoding::UsAscii => "US_ASCII",
+                FileEncoding::Utf16 => "UTF_16",
+                FileEncoding::Utf16le => "UTF_16LE",
+                FileEncoding::Utf16be => "UTF_16BE",
+            }
+        }
+    }
     /// The special token data type.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -249,6 +465,24 @@ pub mod translation_task_details {
         Date = 6,
         /// Token type as timestamp.
         Timestamp = 7,
+    }
+    impl TokenType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TokenType::Unspecified => "TOKEN_TYPE_UNSPECIFIED",
+                TokenType::String => "STRING",
+                TokenType::Int64 => "INT64",
+                TokenType::Numeric => "NUMERIC",
+                TokenType::Bool => "BOOL",
+                TokenType::Float64 => "FLOAT64",
+                TokenType::Date => "DATE",
+                TokenType::Timestamp => "TIMESTAMP",
+            }
+        }
     }
     /// The language specific settings for the translation task.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -293,6 +527,20 @@ pub mod identifier_settings {
         /// Identifiers will be in lower cases.
         Lower = 3,
     }
+    impl IdentifierCase {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IdentifierCase::Unspecified => "IDENTIFIER_CASE_UNSPECIFIED",
+                IdentifierCase::Original => "ORIGINAL",
+                IdentifierCase::Upper => "UPPER",
+                IdentifierCase::Lower => "LOWER",
+            }
+        }
+    }
     /// The SQL identifier rewrite mode.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -303,6 +551,19 @@ pub mod identifier_settings {
         None = 1,
         /// All SQL identifiers will be rewrite.
         RewriteAll = 2,
+    }
+    impl IdentifierRewriteMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IdentifierRewriteMode::Unspecified => "IDENTIFIER_REWRITE_MODE_UNSPECIFIED",
+                IdentifierRewriteMode::None => "NONE",
+                IdentifierRewriteMode::RewriteAll => "REWRITE_ALL",
+            }
+        }
     }
 }
 /// Teradata SQL specific translation task related settings.
@@ -388,6 +649,21 @@ pub mod migration_workflow {
         /// scheduled.
         Completed = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Draft => "DRAFT",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Completed => "COMPLETED",
+            }
+        }
+    }
 }
 /// A single task for a migration which has details about the configuration of
 /// the task.
@@ -444,6 +720,23 @@ pub mod migration_task {
         Succeeded = 5,
         /// The task finished unsuccessfully.
         Failed = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::Orchestrating => "ORCHESTRATING",
+                State::Running => "RUNNING",
+                State::Paused => "PAUSED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+            }
+        }
     }
     /// The details of the task.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -521,6 +814,22 @@ pub mod migration_subtask {
         /// The subtask is paused, i.e., it will not be scheduled. If it was already
         /// assigned,it might still finish but no new lease renewals will be granted.
         Paused = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Paused => "PAUSED",
+            }
+        }
     }
 }
 /// Additional information from the orchestrator when it is done with the
@@ -665,6 +974,7 @@ pub struct ListMigrationSubtasksResponse {
 pub mod migration_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to handle EDW migrations.
     #[derive(Debug, Clone)]
     pub struct MigrationServiceClient<T> {
@@ -679,6 +989,10 @@ pub mod migration_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -700,19 +1014,19 @@ pub mod migration_service_client {
         {
             MigrationServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a migration workflow.
@@ -861,175 +1175,6 @@ pub mod migration_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.migration.v2alpha.MigrationService/ListMigrationSubtasks",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// The request of translating a SQL query to Standard SQL.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslateQueryRequest {
-    /// Required. The name of the project to which this translation request belongs.
-    /// Example: `projects/foo/locations/bar`
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The source SQL dialect of `queries`.
-    #[prost(enumeration="translate_query_request::SqlTranslationSourceDialect", tag="2")]
-    pub source_dialect: i32,
-    /// Required. The query to be translated.
-    #[prost(string, tag="3")]
-    pub query: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `TranslateQueryRequest`.
-pub mod translate_query_request {
-    /// Supported SQL translation source dialects.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SqlTranslationSourceDialect {
-        /// SqlTranslationSourceDialect not specified.
-        Unspecified = 0,
-        /// Teradata SQL.
-        Teradata = 1,
-    }
-}
-/// The response of translating a SQL query to Standard SQL.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslateQueryResponse {
-    /// Output only. Immutable. The unique identifier for the SQL translation job.
-    /// Example: `projects/123/locations/us/translation/1234`
-    #[prost(string, tag="4")]
-    pub translation_job: ::prost::alloc::string::String,
-    /// The translated result. This will be empty if the translation fails.
-    #[prost(string, tag="1")]
-    pub translated_query: ::prost::alloc::string::String,
-    /// The list of errors encountered during the translation, if present.
-    #[prost(message, repeated, tag="2")]
-    pub errors: ::prost::alloc::vec::Vec<SqlTranslationError>,
-    /// The list of warnings encountered during the translation, if present,
-    /// indicates non-semantically correct translation.
-    #[prost(message, repeated, tag="3")]
-    pub warnings: ::prost::alloc::vec::Vec<SqlTranslationWarning>,
-}
-/// Structured error object capturing the error message and the location in the
-/// source text where the error occurs.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlTranslationErrorDetail {
-    /// Specifies the row from the source text where the error occurred.
-    #[prost(int64, tag="1")]
-    pub row: i64,
-    /// Specifie the column from the source texts where the error occurred.
-    #[prost(int64, tag="2")]
-    pub column: i64,
-    /// A human-readable description of the error.
-    #[prost(string, tag="3")]
-    pub message: ::prost::alloc::string::String,
-}
-/// The detailed error object if the SQL translation job fails.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlTranslationError {
-    /// The type of SQL translation error.
-    #[prost(enumeration="sql_translation_error::SqlTranslationErrorType", tag="1")]
-    pub error_type: i32,
-    /// Specifies the details of the error, including the error message and
-    /// location from the source text.
-    #[prost(message, optional, tag="2")]
-    pub error_detail: ::core::option::Option<SqlTranslationErrorDetail>,
-}
-/// Nested message and enum types in `SqlTranslationError`.
-pub mod sql_translation_error {
-    /// The error type of the SQL translation job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SqlTranslationErrorType {
-        /// SqlTranslationErrorType not specified.
-        Unspecified = 0,
-        /// Failed to parse the input text as a SQL query.
-        SqlParseError = 1,
-        /// Found unsupported functions in the input SQL query that are not able to
-        /// translate.
-        UnsupportedSqlFunction = 2,
-    }
-}
-/// The detailed warning object if the SQL translation job is completed but not
-/// semantically correct.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlTranslationWarning {
-    /// Specifies the details of the warning, including the warning message and
-    /// location from the source text.
-    #[prost(message, optional, tag="1")]
-    pub warning_detail: ::core::option::Option<SqlTranslationErrorDetail>,
-}
-/// Generated client implementations.
-pub mod sql_translation_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// Provides other SQL dialects to GoogleSQL translation operations.
-    #[derive(Debug, Clone)]
-    pub struct SqlTranslationServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SqlTranslationServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SqlTranslationServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SqlTranslationServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Translates input queries from source dialects to GoogleSQL.
-        pub async fn translate_query(
-            &mut self,
-            request: impl tonic::IntoRequest<super::TranslateQueryRequest>,
-        ) -> Result<tonic::Response<super::TranslateQueryResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.bigquery.migration.v2alpha.SqlTranslationService/TranslateQuery",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

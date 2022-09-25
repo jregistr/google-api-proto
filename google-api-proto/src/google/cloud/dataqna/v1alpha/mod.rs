@@ -1,11 +1,53 @@
+/// Feedback provided by a user.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserFeedback {
+    /// Required. The unique identifier for the user feedback.
+    /// User feedback is a singleton resource on a Question.
+    /// Example: `projects/foo/locations/bar/questions/1234/userFeedback`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Free form user feedback, such as a text box.
+    #[prost(string, tag="2")]
+    pub free_form_feedback: ::prost::alloc::string::String,
+    /// The user feedback rating
+    #[prost(enumeration="user_feedback::UserFeedbackRating", tag="3")]
+    pub rating: i32,
+}
+/// Nested message and enum types in `UserFeedback`.
+pub mod user_feedback {
+    /// Enumeration of feedback ratings.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum UserFeedbackRating {
+        /// No rating was specified.
+        Unspecified = 0,
+        /// The user provided positive feedback.
+        Positive = 1,
+        /// The user provided negative feedback.
+        Negative = 2,
+    }
+    impl UserFeedbackRating {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                UserFeedbackRating::Unspecified => "USER_FEEDBACK_RATING_UNSPECIFIED",
+                UserFeedbackRating::Positive => "POSITIVE",
+                UserFeedbackRating::Negative => "NEGATIVE",
+            }
+        }
+    }
+}
 /// Describes string annotation from both semantic and formatting perspectives.
 /// Example:
 ///
 /// User Query:
 ///
-///   top countries by population in Africa
+///    top countries by population in Africa
 ///
-///   0   4         14 17         28 31    37
+///    0   4         14 17         28 31    37
 ///
 /// Table Data:
 ///
@@ -16,13 +58,13 @@
 /// text_formatted = `"top countries by population in Africa"`
 ///
 /// html_formatted =
-///   `"top <b>countries</b> by <b>population</b> in <i>Africa</i>"`
+///    `"top <b>countries</b> by <b>population</b> in <i>Africa</i>"`
 ///
 /// ```
 /// markups = [
-///   {DIMENSION, 4, 12}, // 'countries'
-///   {METRIC, 17, 26}, // 'population'
-///   {FILTER, 31, 36}  // 'Africa'
+///    {DIMENSION, 4, 12}, // 'countries'
+///    {METRIC, 17, 26}, // 'population'
+///    {FILTER, 31, 36}  // 'Africa'
 /// ]
 /// ```
 ///
@@ -74,6 +116,289 @@ pub mod annotated_string {
         Blocked = 5,
         /// Markup for a substring that contains terms for row.
         Row = 6,
+    }
+    impl SemanticMarkupType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SemanticMarkupType::MarkupTypeUnspecified => "MARKUP_TYPE_UNSPECIFIED",
+                SemanticMarkupType::Metric => "METRIC",
+                SemanticMarkupType::Dimension => "DIMENSION",
+                SemanticMarkupType::Filter => "FILTER",
+                SemanticMarkupType::Unused => "UNUSED",
+                SemanticMarkupType::Blocked => "BLOCKED",
+                SemanticMarkupType::Row => "ROW",
+            }
+        }
+    }
+}
+/// Request for query suggestions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SuggestQueriesRequest {
+    /// Required. The parent of the suggestion query is the resource denoting the project and
+    /// location.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The scopes to which this search is restricted. The only supported scope
+    /// pattern is
+    /// `//bigquery.googleapis.com/projects/{GCP-PROJECT-ID}/datasets/{DATASET-ID}/tables/{TABLE-ID}`.
+    #[prost(string, repeated, tag="2")]
+    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// User query for which to generate suggestions. If the query is empty, zero
+    /// state suggestions are returned. This allows UIs to display suggestions
+    /// right away, helping the user to get a sense of what a query might look
+    /// like.
+    #[prost(string, tag="3")]
+    pub query: ::prost::alloc::string::String,
+    /// The requested suggestion type. Multiple suggestion types can be
+    /// requested, but there is no guarantee that the service will return
+    /// suggestions for each type. Suggestions for a requested type might rank
+    /// lower than suggestions for other types and the service may decide to cut
+    /// these suggestions off.
+    #[prost(enumeration="SuggestionType", repeated, tag="4")]
+    pub suggestion_types: ::prost::alloc::vec::Vec<i32>,
+}
+/// A suggestion for a query with a ranking score.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Suggestion {
+    /// Detailed information about the suggestion.
+    #[prost(message, optional, tag="1")]
+    pub suggestion_info: ::core::option::Option<SuggestionInfo>,
+    /// The score of the suggestion. This can be used to define ordering in UI.
+    /// The score represents confidence in the suggestion where higher is better.
+    /// All score values must be in the range [0, 1).
+    #[prost(double, tag="2")]
+    pub ranking_score: f64,
+    /// The type of the suggestion.
+    #[prost(enumeration="SuggestionType", tag="3")]
+    pub suggestion_type: i32,
+}
+/// Detailed information about the suggestion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SuggestionInfo {
+    /// Annotations for the suggestion. This provides information about which part
+    /// of the suggestion corresponds to what semantic meaning (e.g. a metric).
+    #[prost(message, optional, tag="1")]
+    pub annotated_suggestion: ::core::option::Option<AnnotatedString>,
+    /// Matches between user query and the annotated string.
+    #[prost(message, repeated, tag="2")]
+    pub query_matches: ::prost::alloc::vec::Vec<suggestion_info::MatchInfo>,
+}
+/// Nested message and enum types in `SuggestionInfo`.
+pub mod suggestion_info {
+    /// MatchInfo describes which part of suggestion matched with data in user
+    /// typed query. This can be used to highlight matching parts in the UI. This
+    /// is different from the annotations provided in annotated_suggestion. The
+    /// annotated_suggestion provides information about the semantic meaning, while
+    /// this provides information about how it relates to the input.
+    ///
+    /// Example:
+    /// user query: `top products`
+    ///
+    /// ```
+    /// annotated_suggestion {
+    ///   text_formatted = "top product_group"
+    ///   html_formatted = "top <b>product_group</b>"
+    ///   markups {
+    ///    {type: TEXT, start_char_index: 0, length: 3}
+    ///    {type: DIMENSION, start_char_index: 4, length: 13}
+    ///   }
+    /// }
+    ///
+    /// query_matches {
+    ///   { start_char_index: 0, length: 3 }
+    ///   { start_char_index: 4, length: 7}
+    /// }
+    /// ```
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MatchInfo {
+        /// Unicode character index of the string annotation.
+        #[prost(int32, tag="1")]
+        pub start_char_index: i32,
+        /// Count of unicode characters of this substring.
+        #[prost(int32, tag="2")]
+        pub length: i32,
+    }
+}
+/// Response to SuggestQueries.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SuggestQueriesResponse {
+    /// A list of suggestions.
+    #[prost(message, repeated, tag="1")]
+    pub suggestions: ::prost::alloc::vec::Vec<Suggestion>,
+}
+/// The type of suggestion.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SuggestionType {
+    /// No suggestiont type is specified.
+    Unspecified = 0,
+    /// Entity suggestion type. Suggestions are for single entities.
+    Entity = 1,
+    /// Template suggestion type. Suggestions are for full sentences.
+    Template = 2,
+}
+impl SuggestionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SuggestionType::Unspecified => "SUGGESTION_TYPE_UNSPECIFIED",
+            SuggestionType::Entity => "ENTITY",
+            SuggestionType::Template => "TEMPLATE",
+        }
+    }
+}
+/// Generated client implementations.
+pub mod auto_suggestion_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This stateless API provides automatic suggestions for natural language
+    /// queries for the data sources in the provided project and location.
+    ///
+    /// The service provides a resourceless operation `suggestQueries` that can be
+    /// called to get a list of suggestions for a given incomplete query and scope
+    /// (or list of scopes) under which the query is to be interpreted.
+    ///
+    /// There are two types of suggestions, ENTITY for single entity suggestions
+    /// and TEMPLATE for full sentences. By default, both types are returned.
+    ///
+    /// Example Request:
+    /// ```
+    /// GetSuggestions({
+    ///   parent: "locations/us/projects/my-project"
+    ///   scopes:
+    ///   "//bigquery.googleapis.com/projects/my-project/datasets/my-dataset/tables/my-table"
+    ///   query: "top it"
+    /// })
+    /// ```
+    ///
+    /// The service will retrieve information based on the given scope(s) and give
+    /// suggestions based on that (e.g. "top item" for "top it" if "item" is a known
+    /// dimension for the provided scope).
+    /// ```
+    /// suggestions {
+    ///   suggestion_info {
+    ///     annotated_suggestion {
+    ///       text_formatted: "top item by sum of usd_revenue_net"
+    ///       markups {
+    ///         type: DIMENSION
+    ///         start_char_index: 4
+    ///         length: 4
+    ///       }
+    ///       markups {
+    ///         type: METRIC
+    ///         start_char_index: 19
+    ///         length: 15
+    ///       }
+    ///     }
+    ///     query_matches {
+    ///       start_char_index: 0
+    ///       length: 6
+    ///     }
+    ///   }
+    ///   suggestion_type: TEMPLATE
+    ///   ranking_score: 0.9
+    /// }
+    /// suggestions {
+    ///   suggestion_info {
+    ///     annotated_suggestion {
+    ///       text_formatted: "item"
+    ///       markups {
+    ///         type: DIMENSION
+    ///         start_char_index: 4
+    ///         length: 2
+    ///       }
+    ///     }
+    ///     query_matches {
+    ///       start_char_index: 0
+    ///       length: 6
+    ///     }
+    ///   }
+    ///   suggestion_type: ENTITY
+    ///   ranking_score: 0.8
+    /// }
+    /// ```
+    #[derive(Debug, Clone)]
+    pub struct AutoSuggestionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AutoSuggestionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AutoSuggestionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AutoSuggestionServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets a list of suggestions based on a prefix string.
+        /// AutoSuggestion tolerance should be less than 1 second.
+        pub async fn suggest_queries(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SuggestQueriesRequest>,
+        ) -> Result<tonic::Response<super::SuggestQueriesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataqna.v1alpha.AutoSuggestionService/SuggestQueries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// The question resource represents a natural language query, its settings,
@@ -197,6 +522,20 @@ pub mod interpret_error {
         /// supported.
         FailedToAnswer = 3,
     }
+    impl InterpretErrorCode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InterpretErrorCode::Unspecified => "INTERPRET_ERROR_CODE_UNSPECIFIED",
+                InterpretErrorCode::InvalidQuery => "INVALID_QUERY",
+                InterpretErrorCode::FailedToUnderstand => "FAILED_TO_UNDERSTAND",
+                InterpretErrorCode::FailedToAnswer => "FAILED_TO_ANSWER",
+            }
+        }
+    }
 }
 /// Information about the backend status (such as BigQuery) of the execution.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -233,6 +572,21 @@ pub mod execution_info {
         /// The job completed unsuccessfully.
         Failed = 4,
     }
+    impl JobExecutionState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobExecutionState::Unspecified => "JOB_EXECUTION_STATE_UNSPECIFIED",
+                JobExecutionState::NotExecuted => "NOT_EXECUTED",
+                JobExecutionState::Running => "RUNNING",
+                JobExecutionState::Succeeded => "SUCCEEDED",
+                JobExecutionState::Failed => "FAILED",
+            }
+        }
+    }
 }
 /// BigQuery job information. This can be used to query the BigQuery API and
 /// retrieve the current job's status (using
@@ -261,7 +615,7 @@ pub struct Interpretation {
     #[prost(double, tag="2")]
     pub confidence: f64,
     /// A list of unused phrases. Clients should display a Did You Mean (DYM)
-    ///  dialog if this is non-empty, even if this is the only interpretation.
+    ///   dialog if this is non-empty, even if this is the only interpretation.
     #[prost(string, repeated, tag="3")]
     pub unused_phrases: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Human readable representation of the query.
@@ -372,6 +726,29 @@ pub mod interpretation_structure {
         /// give a hint to the user that the requested type was not understood.
         ChartNotUnderstood = 12,
     }
+    impl VisualizationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VisualizationType::Unspecified => "VISUALIZATION_TYPE_UNSPECIFIED",
+                VisualizationType::Table => "TABLE",
+                VisualizationType::BarChart => "BAR_CHART",
+                VisualizationType::ColumnChart => "COLUMN_CHART",
+                VisualizationType::Timeline => "TIMELINE",
+                VisualizationType::ScatterPlot => "SCATTER_PLOT",
+                VisualizationType::PieChart => "PIE_CHART",
+                VisualizationType::LineChart => "LINE_CHART",
+                VisualizationType::AreaChart => "AREA_CHART",
+                VisualizationType::ComboChart => "COMBO_CHART",
+                VisualizationType::Histogram => "HISTOGRAM",
+                VisualizationType::GenericChart => "GENERIC_CHART",
+                VisualizationType::ChartNotUnderstood => "CHART_NOT_UNDERSTOOD",
+            }
+        }
+    }
 }
 /// Configuriation of debug flags.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -432,33 +809,17 @@ pub enum InterpretEntity {
     /// A metric entity.
     Metric = 2,
 }
-/// Feedback provided by a user.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserFeedback {
-    /// Required. The unique identifier for the user feedback.
-    /// User feedback is a singleton resource on a Question.
-    /// Example: `projects/foo/locations/bar/questions/1234/userFeedback`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Free form user feedback, such as a text box.
-    #[prost(string, tag="2")]
-    pub free_form_feedback: ::prost::alloc::string::String,
-    /// The user feedback rating
-    #[prost(enumeration="user_feedback::UserFeedbackRating", tag="3")]
-    pub rating: i32,
-}
-/// Nested message and enum types in `UserFeedback`.
-pub mod user_feedback {
-    /// Enumeration of feedback ratings.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum UserFeedbackRating {
-        /// No rating was specified.
-        Unspecified = 0,
-        /// The user provided positive feedback.
-        Positive = 1,
-        /// The user provided negative feedback.
-        Negative = 2,
+impl InterpretEntity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            InterpretEntity::Unspecified => "INTERPRET_ENTITY_UNSPECIFIED",
+            InterpretEntity::Dimension => "DIMENSION",
+            InterpretEntity::Metric => "METRIC",
+        }
     }
 }
 /// A request to get a previously created question.
@@ -520,6 +881,7 @@ pub struct UpdateUserFeedbackRequest {
 pub mod question_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to interpret natural language queries.
     /// The service allows to create `Question` resources that are interpreted and
     /// are filled with one or more interpretations if the question could be
@@ -550,6 +912,10 @@ pub mod question_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -569,19 +935,19 @@ pub mod question_service_client {
         {
             QuestionServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Gets a previously created question.
@@ -682,254 +1048,6 @@ pub mod question_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.dataqna.v1alpha.QuestionService/UpdateUserFeedback",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request for query suggestions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestQueriesRequest {
-    /// Required. The parent of the suggestion query is the resource denoting the project and
-    /// location.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The scopes to which this search is restricted. The only supported scope
-    /// pattern is
-    /// `//bigquery.googleapis.com/projects/{GCP-PROJECT-ID}/datasets/{DATASET-ID}/tables/{TABLE-ID}`.
-    #[prost(string, repeated, tag="2")]
-    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// User query for which to generate suggestions. If the query is empty, zero
-    /// state suggestions are returned. This allows UIs to display suggestions
-    /// right away, helping the user to get a sense of what a query might look
-    /// like.
-    #[prost(string, tag="3")]
-    pub query: ::prost::alloc::string::String,
-    /// The requested suggestion type. Multiple suggestion types can be
-    /// requested, but there is no guarantee that the service will return
-    /// suggestions for each type. Suggestions for a requested type might rank
-    /// lower than suggestions for other types and the service may decide to cut
-    /// these suggestions off.
-    #[prost(enumeration="SuggestionType", repeated, tag="4")]
-    pub suggestion_types: ::prost::alloc::vec::Vec<i32>,
-}
-/// A suggestion for a query with a ranking score.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Suggestion {
-    /// Detailed information about the suggestion.
-    #[prost(message, optional, tag="1")]
-    pub suggestion_info: ::core::option::Option<SuggestionInfo>,
-    /// The score of the suggestion. This can be used to define ordering in UI.
-    /// The score represents confidence in the suggestion where higher is better.
-    /// All score values must be in the range [0, 1).
-    #[prost(double, tag="2")]
-    pub ranking_score: f64,
-    /// The type of the suggestion.
-    #[prost(enumeration="SuggestionType", tag="3")]
-    pub suggestion_type: i32,
-}
-/// Detailed information about the suggestion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestionInfo {
-    /// Annotations for the suggestion. This provides information about which part
-    /// of the suggestion corresponds to what semantic meaning (e.g. a metric).
-    #[prost(message, optional, tag="1")]
-    pub annotated_suggestion: ::core::option::Option<AnnotatedString>,
-    /// Matches between user query and the annotated string.
-    #[prost(message, repeated, tag="2")]
-    pub query_matches: ::prost::alloc::vec::Vec<suggestion_info::MatchInfo>,
-}
-/// Nested message and enum types in `SuggestionInfo`.
-pub mod suggestion_info {
-    /// MatchInfo describes which part of suggestion matched with data in user
-    /// typed query. This can be used to highlight matching parts in the UI. This
-    /// is different from the annotations provided in annotated_suggestion. The
-    /// annotated_suggestion provides information about the semantic meaning, while
-    /// this provides information about how it relates to the input.
-    ///
-    /// Example:
-    /// user query: `top products`
-    ///
-    /// ```
-    /// annotated_suggestion {
-    ///  text_formatted = "top product_group"
-    ///  html_formatted = "top <b>product_group</b>"
-    ///  markups {
-    ///   {type: TEXT, start_char_index: 0, length: 3}
-    ///   {type: DIMENSION, start_char_index: 4, length: 13}
-    ///  }
-    /// }
-    ///
-    /// query_matches {
-    ///  { start_char_index: 0, length: 3 }
-    ///  { start_char_index: 4, length: 7}
-    /// }
-    /// ```
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MatchInfo {
-        /// Unicode character index of the string annotation.
-        #[prost(int32, tag="1")]
-        pub start_char_index: i32,
-        /// Count of unicode characters of this substring.
-        #[prost(int32, tag="2")]
-        pub length: i32,
-    }
-}
-/// Response to SuggestQueries.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestQueriesResponse {
-    /// A list of suggestions.
-    #[prost(message, repeated, tag="1")]
-    pub suggestions: ::prost::alloc::vec::Vec<Suggestion>,
-}
-/// The type of suggestion.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SuggestionType {
-    /// No suggestiont type is specified.
-    Unspecified = 0,
-    /// Entity suggestion type. Suggestions are for single entities.
-    Entity = 1,
-    /// Template suggestion type. Suggestions are for full sentences.
-    Template = 2,
-}
-/// Generated client implementations.
-pub mod auto_suggestion_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// This stateless API provides automatic suggestions for natural language
-    /// queries for the data sources in the provided project and location.
-    ///
-    /// The service provides a resourceless operation `suggestQueries` that can be
-    /// called to get a list of suggestions for a given incomplete query and scope
-    /// (or list of scopes) under which the query is to be interpreted.
-    ///
-    /// There are two types of suggestions, ENTITY for single entity suggestions
-    /// and TEMPLATE for full sentences. By default, both types are returned.
-    ///
-    /// Example Request:
-    /// ```
-    /// GetSuggestions({
-    ///   parent: "locations/us/projects/my-project"
-    ///   scopes:
-    ///   "//bigquery.googleapis.com/projects/my-project/datasets/my-dataset/tables/my-table"
-    ///   query: "top it"
-    /// })
-    /// ```
-    ///
-    /// The service will retrieve information based on the given scope(s) and give
-    /// suggestions based on that (e.g. "top item" for "top it" if "item" is a known
-    /// dimension for the provided scope).
-    /// ```
-    /// suggestions {
-    ///   suggestion_info {
-    ///     annotated_suggestion {
-    ///       text_formatted: "top item by sum of usd_revenue_net"
-    ///       markups {
-    ///         type: DIMENSION
-    ///         start_char_index: 4
-    ///         length: 4
-    ///       }
-    ///       markups {
-    ///         type: METRIC
-    ///         start_char_index: 19
-    ///         length: 15
-    ///       }
-    ///     }
-    ///     query_matches {
-    ///       start_char_index: 0
-    ///       length: 6
-    ///     }
-    ///   }
-    ///   suggestion_type: TEMPLATE
-    ///   ranking_score: 0.9
-    /// }
-    /// suggestions {
-    ///   suggestion_info {
-    ///     annotated_suggestion {
-    ///       text_formatted: "item"
-    ///       markups {
-    ///         type: DIMENSION
-    ///         start_char_index: 4
-    ///         length: 2
-    ///       }
-    ///     }
-    ///     query_matches {
-    ///       start_char_index: 0
-    ///       length: 6
-    ///     }
-    ///   }
-    ///   suggestion_type: ENTITY
-    ///   ranking_score: 0.8
-    /// }
-    /// ```
-    #[derive(Debug, Clone)]
-    pub struct AutoSuggestionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AutoSuggestionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AutoSuggestionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AutoSuggestionServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Gets a list of suggestions based on a prefix string.
-        /// AutoSuggestion tolerance should be less than 1 second.
-        pub async fn suggest_queries(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SuggestQueriesRequest>,
-        ) -> Result<tonic::Response<super::SuggestQueriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataqna.v1alpha.AutoSuggestionService/SuggestQueries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

@@ -638,7 +638,7 @@ pub struct RollbackApiSpecRequest {
     /// Required. The revision ID to roll back to.
     /// It must be a revision of the same spec.
     ///
-    ///   Example: `c7cfa2a8`
+    ///    Example: `c7cfa2a8`
     #[prost(string, tag="2")]
     pub revision_id: ::prost::alloc::string::String,
 }
@@ -794,7 +794,7 @@ pub struct RollbackApiDeploymentRequest {
     /// Required. The revision ID to roll back to.
     /// It must be a revision of the same deployment.
     ///
-    ///   Example: `c7cfa2a8`
+    ///    Example: `c7cfa2a8`
     #[prost(string, tag="2")]
     pub revision_id: ::prost::alloc::string::String,
 }
@@ -903,6 +903,7 @@ pub struct DeleteArtifactRequest {
 pub mod registry_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The Registry service allows teams to manage descriptions of APIs.
     #[derive(Debug, Clone)]
     pub struct RegistryClient<T> {
@@ -917,6 +918,10 @@ pub mod registry_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -938,19 +943,19 @@ pub mod registry_client {
         {
             RegistryClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Returns matching APIs.
@@ -1798,11 +1803,29 @@ pub mod instance {
         /// The Instance encountered an error during a state change.
         Failed = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Inactive => "INACTIVE",
+                State::Creating => "CREATING",
+                State::Active => "ACTIVE",
+                State::Updating => "UPDATING",
+                State::Deleting => "DELETING",
+                State::Failed => "FAILED",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod provisioning_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The service that is used for managing the data plane provisioning of the
     /// Registry.
     #[derive(Debug, Clone)]
@@ -1818,6 +1841,10 @@ pub mod provisioning_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1839,19 +1866,19 @@ pub mod provisioning_client {
         {
             ProvisioningClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Provisions instance resources for the Registry.

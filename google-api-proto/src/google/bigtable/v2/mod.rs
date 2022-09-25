@@ -12,6 +12,111 @@ pub struct ResponseParams {
     #[prost(string, optional, tag="2")]
     pub cluster_id: ::core::option::Option<::prost::alloc::string::String>,
 }
+//
+// Messages related to RequestStats, part of the Slow Queries feature, that can
+// help understand the performance of requests.
+
+/// ReadIteratorStats captures information about the iteration of rows or cells
+/// over the course of a read, e.g. how many results were scanned in a read
+/// operation versus the results returned.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadIteratorStats {
+    /// The rows seen (scanned) as part of the request. This includes the count of
+    /// rows returned, as captured below.
+    #[prost(int64, tag="1")]
+    pub rows_seen_count: i64,
+    /// The rows returned as part of the request.
+    #[prost(int64, tag="2")]
+    pub rows_returned_count: i64,
+    /// The cells seen (scanned) as part of the request. This includes the count of
+    /// cells returned, as captured below.
+    #[prost(int64, tag="3")]
+    pub cells_seen_count: i64,
+    /// The cells returned as part of the request.
+    #[prost(int64, tag="4")]
+    pub cells_returned_count: i64,
+    /// The deletes seen as part of the request.
+    #[prost(int64, tag="5")]
+    pub deletes_seen_count: i64,
+}
+/// RequestLatencyStats provides a measurement of the latency of the request as
+/// it interacts with different systems over its lifetime, e.g. how long the
+/// request took to execute within a frontend server.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestLatencyStats {
+    /// The latency measured by the frontend server handling this request, from
+    /// when the request was received, to when this value is sent back in the
+    /// response. For more context on the component that is measuring this latency,
+    /// see: <https://cloud.google.com/bigtable/docs/overview>
+    ///
+    /// Note: This value may be slightly shorter than the value reported into
+    /// aggregate latency metrics in Monitoring for this request
+    /// (<https://cloud.google.com/bigtable/docs/monitoring-instance>) as this value
+    /// needs to be sent in the response before the latency measurement including
+    /// that transmission is finalized.
+    #[prost(message, optional, tag="1")]
+    pub frontend_server_latency: ::core::option::Option<::prost_types::Duration>,
+}
+/// ReadEfficiencyStats captures information about the efficiency of a read.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadEfficiencyStats {
+    /// Iteration stats describe how efficient the read is, e.g. comparing
+    /// rows seen vs. rows returned or cells seen vs cells returned can provide an
+    /// indication of read efficiency (the higher the ratio of seen to retuned the
+    /// better).
+    #[prost(message, optional, tag="1")]
+    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
+    /// Request latency stats describe the time taken to complete a request, from
+    /// the server side.
+    #[prost(message, optional, tag="2")]
+    pub request_latency_stats: ::core::option::Option<RequestLatencyStats>,
+}
+/// AllReadStats captures all known information about a read.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AllReadStats {
+    /// Iteration stats describe how efficient the read is, e.g. comparing
+    /// rows seen vs. rows returned or cells seen vs cells returned can provide an
+    /// indication of read efficiency (the higher the ratio of seen to retuned the
+    /// better).
+    #[prost(message, optional, tag="1")]
+    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
+    /// Request latency stats describe the time taken to complete a request, from
+    /// the server side.
+    #[prost(message, optional, tag="2")]
+    pub request_latency_stats: ::core::option::Option<RequestLatencyStats>,
+}
+/// RequestStats is the container for additional information pertaining to a
+/// single request, helpful for evaluating the performance of the sent request.
+/// Currently, there are the following supported methods:
+///    * google.bigtable.v2.ReadRows
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestStats {
+    /// Information pertaining to each request type received. The type is chosen
+    /// based on the requested view.
+    ///
+    /// See the messages above for additional context.
+    #[prost(oneof="request_stats::Stats", tags="1, 2")]
+    pub stats: ::core::option::Option<request_stats::Stats>,
+}
+/// Nested message and enum types in `RequestStats`.
+pub mod request_stats {
+    /// Information pertaining to each request type received. The type is chosen
+    /// based on the requested view.
+    ///
+    /// See the messages above for additional context.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Stats {
+        /// Available with the
+        /// ReadRowsRequest.RequestStatsView.REQUEST_STATS_EFFICIENCY view, see
+        /// package google.bigtable.v2.
+        #[prost(message, tag="1")]
+        ReadEfficiencyStats(super::ReadEfficiencyStats),
+        /// Available with the ReadRowsRequest.RequestStatsView.REQUEST_STATS_FULL
+        /// view, see package google.bigtable.v2.
+        #[prost(message, tag="2")]
+        AllReadStats(super::AllReadStats),
+    }
+}
 /// Specifies the complete (requested) contents of a single row of a table.
 /// Rows which exceed 256MiB in size cannot be read in full.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -275,23 +380,23 @@ pub mod row_filter {
         /// they will all appear in the output row in an unspecified mutual order.
         /// Consider the following example, with three filters:
         ///
-        ///                                  input row
-        ///                                      |
-        ///            -----------------------------------------------------
-        ///            |                         |                         |
-        ///           f(0)                      f(1)                      f(2)
-        ///            |                         |                         |
-        ///     1: foo,bar,10,x             foo,bar,10,z              far,bar,7,a
-        ///     2: foo,blah,11,z            far,blah,5,x              far,blah,5,x
-        ///            |                         |                         |
-        ///            -----------------------------------------------------
-        ///                                      |
-        ///     1:                      foo,bar,10,z   // could have switched with #2
-        ///     2:                      foo,bar,10,x   // could have switched with #1
-        ///     3:                      foo,blah,11,z
-        ///     4:                      far,bar,7,a
-        ///     5:                      far,blah,5,x   // identical to #6
-        ///     6:                      far,blah,5,x   // identical to #5
+        ///                                   input row
+        ///                                       |
+        ///             -----------------------------------------------------
+        ///             |                         |                         |
+        ///            f(0)                      f(1)                      f(2)
+        ///             |                         |                         |
+        ///      1: foo,bar,10,x             foo,bar,10,z              far,bar,7,a
+        ///      2: foo,blah,11,z            far,blah,5,x              far,blah,5,x
+        ///             |                         |                         |
+        ///             -----------------------------------------------------
+        ///                                       |
+        ///      1:                      foo,bar,10,z   // could have switched with #2
+        ///      2:                      foo,bar,10,x   // could have switched with #1
+        ///      3:                      foo,blah,11,z
+        ///      4:                      far,bar,7,a
+        ///      5:                      far,blah,5,x   // identical to #6
+        ///      6:                      far,blah,5,x   // identical to #5
         ///
         /// All interleaved filters are executed atomically.
         #[prost(message, repeated, tag="1")]
@@ -341,47 +446,47 @@ pub mod row_filter {
         /// the output of the read rather than to any parent filter. Consider the
         /// following example:
         ///
-        ///     Chain(
-        ///       FamilyRegex("A"),
-        ///       Interleave(
-        ///         All(),
-        ///         Chain(Label("foo"), Sink())
-        ///       ),
-        ///       QualifierRegex("B")
-        ///     )
+        ///      Chain(
+        ///        FamilyRegex("A"),
+        ///        Interleave(
+        ///          All(),
+        ///          Chain(Label("foo"), Sink())
+        ///        ),
+        ///        QualifierRegex("B")
+        ///      )
         ///
-        ///                         A,A,1,w
-        ///                         A,B,2,x
-        ///                         B,B,4,z
-        ///                            |
-        ///                     FamilyRegex("A")
-        ///                            |
-        ///                         A,A,1,w
-        ///                         A,B,2,x
-        ///                            |
-        ///               +------------+-------------+
-        ///               |                          |
-        ///             All()                    Label(foo)
-        ///               |                          |
-        ///            A,A,1,w              A,A,1,w,labels:\[foo\]
-        ///            A,B,2,x              A,B,2,x,labels:\[foo\]
-        ///               |                          |
-        ///               |                        Sink() --------------+
-        ///               |                          |                  |
-        ///               +------------+      x------+          A,A,1,w,labels:\[foo\]
-        ///                            |                        A,B,2,x,labels:\[foo\]
-        ///                         A,A,1,w                             |
-        ///                         A,B,2,x                             |
-        ///                            |                                |
-        ///                    QualifierRegex("B")                      |
-        ///                            |                                |
-        ///                         A,B,2,x                             |
-        ///                            |                                |
-        ///                            +--------------------------------+
-        ///                            |
-        ///                         A,A,1,w,labels:\[foo\]
-        ///                         A,B,2,x,labels:\[foo\]  // could be switched
-        ///                         A,B,2,x               // could be switched
+        ///                          A,A,1,w
+        ///                          A,B,2,x
+        ///                          B,B,4,z
+        ///                             |
+        ///                      FamilyRegex("A")
+        ///                             |
+        ///                          A,A,1,w
+        ///                          A,B,2,x
+        ///                             |
+        ///                +------------+-------------+
+        ///                |                          |
+        ///              All()                    Label(foo)
+        ///                |                          |
+        ///             A,A,1,w              A,A,1,w,labels:\[foo\]
+        ///             A,B,2,x              A,B,2,x,labels:\[foo\]
+        ///                |                          |
+        ///                |                        Sink() --------------+
+        ///                |                          |                  |
+        ///                +------------+      x------+          A,A,1,w,labels:\[foo\]
+        ///                             |                        A,B,2,x,labels:\[foo\]
+        ///                          A,A,1,w                             |
+        ///                          A,B,2,x                             |
+        ///                             |                                |
+        ///                     QualifierRegex("B")                      |
+        ///                             |                                |
+        ///                          A,B,2,x                             |
+        ///                             |                                |
+        ///                             +--------------------------------+
+        ///                             |
+        ///                          A,A,1,w,labels:\[foo\]
+        ///                          A,B,2,x,labels:\[foo\]  // could be switched
+        ///                          A,B,2,x               // could be switched
         ///
         /// Despite being excluded by the qualifier filter, a copy of every cell
         /// that reaches the sink is present in the final result.
@@ -601,111 +706,6 @@ pub mod read_modify_write_rule {
         IncrementAmount(i64),
     }
 }
-//
-// Messages related to RequestStats, part of the Slow Queries feature, that can
-// help understand the performance of requests.
-
-/// ReadIteratorStats captures information about the iteration of rows or cells
-/// over the course of a read, e.g. how many results were scanned in a read
-/// operation versus the results returned.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadIteratorStats {
-    /// The rows seen (scanned) as part of the request. This includes the count of
-    /// rows returned, as captured below.
-    #[prost(int64, tag="1")]
-    pub rows_seen_count: i64,
-    /// The rows returned as part of the request.
-    #[prost(int64, tag="2")]
-    pub rows_returned_count: i64,
-    /// The cells seen (scanned) as part of the request. This includes the count of
-    /// cells returned, as captured below.
-    #[prost(int64, tag="3")]
-    pub cells_seen_count: i64,
-    /// The cells returned as part of the request.
-    #[prost(int64, tag="4")]
-    pub cells_returned_count: i64,
-    /// The deletes seen as part of the request.
-    #[prost(int64, tag="5")]
-    pub deletes_seen_count: i64,
-}
-/// RequestLatencyStats provides a measurement of the latency of the request as
-/// it interacts with different systems over its lifetime, e.g. how long the
-/// request took to execute within a frontend server.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestLatencyStats {
-    /// The latency measured by the frontend server handling this request, from
-    /// when the request was received, to when this value is sent back in the
-    /// response. For more context on the component that is measuring this latency,
-    /// see: <https://cloud.google.com/bigtable/docs/overview>
-    ///
-    /// Note: This value may be slightly shorter than the value reported into
-    /// aggregate latency metrics in Monitoring for this request
-    /// (<https://cloud.google.com/bigtable/docs/monitoring-instance>) as this value
-    /// needs to be sent in the response before the latency measurement including
-    /// that transmission is finalized.
-    #[prost(message, optional, tag="1")]
-    pub frontend_server_latency: ::core::option::Option<::prost_types::Duration>,
-}
-/// ReadEfficiencyStats captures information about the efficiency of a read.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadEfficiencyStats {
-    /// Iteration stats describe how efficient the read is, e.g. comparing
-    /// rows seen vs. rows returned or cells seen vs cells returned can provide an
-    /// indication of read efficiency (the higher the ratio of seen to retuned the
-    /// better).
-    #[prost(message, optional, tag="1")]
-    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
-    /// Request latency stats describe the time taken to complete a request, from
-    /// the server side.
-    #[prost(message, optional, tag="2")]
-    pub request_latency_stats: ::core::option::Option<RequestLatencyStats>,
-}
-/// AllReadStats captures all known information about a read.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AllReadStats {
-    /// Iteration stats describe how efficient the read is, e.g. comparing
-    /// rows seen vs. rows returned or cells seen vs cells returned can provide an
-    /// indication of read efficiency (the higher the ratio of seen to retuned the
-    /// better).
-    #[prost(message, optional, tag="1")]
-    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
-    /// Request latency stats describe the time taken to complete a request, from
-    /// the server side.
-    #[prost(message, optional, tag="2")]
-    pub request_latency_stats: ::core::option::Option<RequestLatencyStats>,
-}
-/// RequestStats is the container for additional information pertaining to a
-/// single request, helpful for evaluating the performance of the sent request.
-/// Currently, there are the following supported methods:
-///   * google.bigtable.v2.ReadRows
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestStats {
-    /// Information pertaining to each request type received. The type is chosen
-    /// based on the requested view.
-    ///
-    /// See the messages above for additional context.
-    #[prost(oneof="request_stats::Stats", tags="1, 2")]
-    pub stats: ::core::option::Option<request_stats::Stats>,
-}
-/// Nested message and enum types in `RequestStats`.
-pub mod request_stats {
-    /// Information pertaining to each request type received. The type is chosen
-    /// based on the requested view.
-    ///
-    /// See the messages above for additional context.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Stats {
-        /// Available with the
-        /// ReadRowsRequest.RequestStatsView.REQUEST_STATS_EFFICIENCY view, see
-        /// package google.bigtable.v2.
-        #[prost(message, tag="1")]
-        ReadEfficiencyStats(super::ReadEfficiencyStats),
-        /// Available with the ReadRowsRequest.RequestStatsView.REQUEST_STATS_FULL
-        /// view, see package google.bigtable.v2.
-        #[prost(message, tag="2")]
-        AllReadStats(super::AllReadStats),
-    }
-}
 /// Request message for Bigtable.ReadRows.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReadRowsRequest {
@@ -754,6 +754,20 @@ pub mod read_rows_request {
         /// applicable to this read.
         RequestStatsFull = 3,
     }
+    impl RequestStatsView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RequestStatsView::Unspecified => "REQUEST_STATS_VIEW_UNSPECIFIED",
+                RequestStatsView::RequestStatsNone => "REQUEST_STATS_NONE",
+                RequestStatsView::RequestStatsEfficiency => "REQUEST_STATS_EFFICIENCY",
+                RequestStatsView::RequestStatsFull => "REQUEST_STATS_FULL",
+            }
+        }
+    }
 }
 /// Response message for Bigtable.ReadRows.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -773,23 +787,23 @@ pub struct ReadRowsResponse {
     ///
     /// If requested, provide enhanced query performance statistics. The semantics
     /// dictate:
-    ///   * request_stats is empty on every (streamed) response, except
-    ///   * request_stats has non-empty information after all chunks have been
-    ///     streamed, where the ReadRowsResponse message only contains
-    ///     request_stats.
-    ///       * For example, if a read request would have returned an empty
-    ///         response instead a single ReadRowsResponse is streamed with empty
-    ///         chunks and request_stats filled.
+    ///    * request_stats is empty on every (streamed) response, except
+    ///    * request_stats has non-empty information after all chunks have been
+    ///      streamed, where the ReadRowsResponse message only contains
+    ///      request_stats.
+    ///        * For example, if a read request would have returned an empty
+    ///          response instead a single ReadRowsResponse is streamed with empty
+    ///          chunks and request_stats filled.
     ///
     /// Visually, response messages will stream as follows:
-    ///    ... -> {chunks: \[...\]} -> {chunks: [], request_stats: {...}}
-    ///   \______________________/  \________________________________/
-    ///       Primary response         Trailer of RequestStats info
+    ///     ... -> {chunks: \[...\]} -> {chunks: [], request_stats: {...}}
+    ///    \______________________/  \________________________________/
+    ///        Primary response         Trailer of RequestStats info
     ///
     /// Or if the read did not return any values:
-    ///   {chunks: [], request_stats: {...}}
-    ///   \________________________________/
-    ///      Trailer of RequestStats info
+    ///    {chunks: [], request_stats: {...}}
+    ///    \________________________________/
+    ///       Trailer of RequestStats info
     #[prost(message, optional, tag="3")]
     pub request_stats: ::core::option::Option<RequestStats>,
 }
@@ -1078,6 +1092,7 @@ pub struct ReadModifyWriteRowResponse {
 pub mod bigtable_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for reading from and writing to existing Bigtable tables.
     #[derive(Debug, Clone)]
     pub struct BigtableClient<T> {
@@ -1092,6 +1107,10 @@ pub mod bigtable_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1113,19 +1132,19 @@ pub mod bigtable_client {
         {
             BigtableClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Streams back the contents of all requested rows in key order, optionally

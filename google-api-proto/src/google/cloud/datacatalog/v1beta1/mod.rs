@@ -1,225 +1,3 @@
-/// Timestamps about this resource according to a particular system.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SystemTimestamps {
-    /// The creation time of the resource within the given system.
-    #[prost(message, optional, tag="1")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last-modified time of the resource within the given system.
-    #[prost(message, optional, tag="2")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The expiration time of the resource within the given system.
-    /// Currently only apllicable to BigQuery resources.
-    #[prost(message, optional, tag="3")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// This enum describes all the possible systems that Data Catalog integrates
-/// with.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum IntegratedSystem {
-    /// Default unknown system.
-    Unspecified = 0,
-    /// BigQuery.
-    Bigquery = 1,
-    /// Cloud Pub/Sub.
-    CloudPubsub = 2,
-}
-/// Describes a Cloud Storage fileset entry.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsFilesetSpec {
-    /// Required. Patterns to identify a set of files in Google Cloud Storage.
-    /// See [Cloud Storage
-    /// documentation](<https://cloud.google.com/storage/docs/gsutil/addlhelp/WildcardNames>)
-    /// for more information. Note that bucket wildcards are currently not
-    /// supported.
-    ///
-    /// Examples of valid file_patterns:
-    ///
-    ///  * `gs://bucket_name/dir/*`: matches all files within `bucket_name/dir`
-    ///                              directory.
-    ///  * `gs://bucket_name/dir/**`: matches all files in `bucket_name/dir`
-    ///                               spanning all subdirectories.
-    ///  * `gs://bucket_name/file*`: matches files prefixed by `file` in
-    ///                              `bucket_name`
-    ///  * `gs://bucket_name/??.txt`: matches files with two characters followed by
-    ///                               `.txt` in `bucket_name`
-    ///  * `gs://bucket_name/\[aeiou\].txt`: matches files that contain a single
-    ///                                    vowel character followed by `.txt` in
-    ///                                    `bucket_name`
-    ///  * `gs://bucket_name/\[a-m\].txt`: matches files that contain `a`, `b`, ...
-    ///                                  or `m` followed by `.txt` in `bucket_name`
-    ///  * `gs://bucket_name/a/*/b`: matches all files in `bucket_name` that match
-    ///                              `a/*/b` pattern, such as `a/c/b`, `a/d/b`
-    ///  * `gs://another_bucket/a.txt`: matches `gs://another_bucket/a.txt`
-    ///
-    /// You can combine wildcards to provide more powerful matches, for example:
-    ///
-    ///  * `gs://bucket_name/\[a-m\]??.j*g`
-    #[prost(string, repeated, tag="1")]
-    pub file_patterns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. Sample files contained in this fileset, not all files contained in this
-    /// fileset are represented here.
-    #[prost(message, repeated, tag="2")]
-    pub sample_gcs_file_specs: ::prost::alloc::vec::Vec<GcsFileSpec>,
-}
-/// Specifications of a single file in Cloud Storage.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsFileSpec {
-    /// Required. The full file path. Example: `gs://bucket_name/a/b.txt`.
-    #[prost(string, tag="1")]
-    pub file_path: ::prost::alloc::string::String,
-    /// Output only. Timestamps about the Cloud Storage file.
-    #[prost(message, optional, tag="2")]
-    pub gcs_timestamps: ::core::option::Option<SystemTimestamps>,
-    /// Output only. The size of the file, in bytes.
-    #[prost(int64, tag="4")]
-    pub size_bytes: i64,
-}
-/// Represents a schema (e.g. BigQuery, GoogleSQL, Avro schema).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Schema {
-    /// Required. Schema of columns. A maximum of 10,000 columns and sub-columns can be
-    /// specified.
-    #[prost(message, repeated, tag="2")]
-    pub columns: ::prost::alloc::vec::Vec<ColumnSchema>,
-}
-/// Representation of a column within a schema. Columns could be nested inside
-/// other columns.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ColumnSchema {
-    /// Required. Name of the column.
-    #[prost(string, tag="6")]
-    pub column: ::prost::alloc::string::String,
-    /// Required. Type of the column.
-    #[prost(string, tag="1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// Optional. Description of the column. Default value is an empty string.
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. A column's mode indicates whether the values in this column are required,
-    /// nullable, etc. Only `NULLABLE`, `REQUIRED` and `REPEATED` are supported.
-    /// Default mode is `NULLABLE`.
-    #[prost(string, tag="3")]
-    pub mode: ::prost::alloc::string::String,
-    /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
-    #[prost(message, repeated, tag="7")]
-    pub subcolumns: ::prost::alloc::vec::Vec<ColumnSchema>,
-}
-/// A result that appears in the response of a search request. Each result
-/// captures details of one entry that matches the search.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchCatalogResult {
-    /// Type of the search result. This field can be used to determine which Get
-    /// method to call to fetch the full resource.
-    #[prost(enumeration="SearchResultType", tag="1")]
-    pub search_result_type: i32,
-    /// Sub-type of the search result. This is a dot-delimited description of the
-    /// resource's full type, and is the same as the value callers would provide in
-    /// the "type" search facet.  Examples: `entry.table`, `entry.dataStream`,
-    /// `tagTemplate`.
-    #[prost(string, tag="2")]
-    pub search_result_subtype: ::prost::alloc::string::String,
-    /// The relative resource name of the resource in URL format.
-    /// Examples:
-    ///
-    ///  * `projects/{project_id}/locations/{location_id}/entryGroups/{entry_group_id}/entries/{entry_id}`
-    ///  * `projects/{project_id}/tagTemplates/{tag_template_id}`
-    #[prost(string, tag="3")]
-    pub relative_resource_name: ::prost::alloc::string::String,
-    /// The full name of the cloud resource the entry belongs to. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name.>
-    /// Example:
-    ///
-    ///  * `//bigquery.googleapis.com/projects/projectId/datasets/datasetId/tables/tableId`
-    #[prost(string, tag="4")]
-    pub linked_resource: ::prost::alloc::string::String,
-}
-/// The different types of resources that can be returned in search.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SearchResultType {
-    /// Default unknown type.
-    Unspecified = 0,
-    /// An \[Entry][google.cloud.datacatalog.v1beta1.Entry\].
-    Entry = 1,
-    /// A \[TagTemplate][google.cloud.datacatalog.v1beta1.TagTemplate\].
-    TagTemplate = 2,
-    /// An \[EntryGroup][google.cloud.datacatalog.v1beta1.EntryGroup\].
-    EntryGroup = 3,
-}
-/// Describes a BigQuery table.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryTableSpec {
-    /// Output only. The table source type.
-    #[prost(enumeration="TableSourceType", tag="1")]
-    pub table_source_type: i32,
-    /// Output only.
-    #[prost(oneof="big_query_table_spec::TypeSpec", tags="2, 3")]
-    pub type_spec: ::core::option::Option<big_query_table_spec::TypeSpec>,
-}
-/// Nested message and enum types in `BigQueryTableSpec`.
-pub mod big_query_table_spec {
-    /// Output only.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TypeSpec {
-        /// Table view specification. This field should only be populated if
-        /// `table_source_type` is `BIGQUERY_VIEW`.
-        #[prost(message, tag="2")]
-        ViewSpec(super::ViewSpec),
-        /// Spec of a BigQuery table. This field should only be populated if
-        /// `table_source_type` is `BIGQUERY_TABLE`.
-        #[prost(message, tag="3")]
-        TableSpec(super::TableSpec),
-    }
-}
-/// Table view specification.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ViewSpec {
-    /// Output only. The query that defines the table view.
-    #[prost(string, tag="1")]
-    pub view_query: ::prost::alloc::string::String,
-}
-/// Normal BigQuery table spec.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableSpec {
-    /// Output only. If the table is a dated shard, i.e., with name pattern `\[prefix\]YYYYMMDD`,
-    /// `grouped_entry` is the Data Catalog resource name of the date sharded
-    /// grouped entry, for example,
-    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
-    /// Otherwise, `grouped_entry` is empty.
-    #[prost(string, tag="1")]
-    pub grouped_entry: ::prost::alloc::string::String,
-}
-/// Spec for a group of BigQuery tables with name pattern `\[prefix\]YYYYMMDD`.
-/// Context:
-/// <https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryDateShardedSpec {
-    /// Output only. The Data Catalog resource name of the dataset entry the current table
-    /// belongs to, for example,
-    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
-    #[prost(string, tag="1")]
-    pub dataset: ::prost::alloc::string::String,
-    /// Output only. The table name prefix of the shards. The name of any given shard is
-    /// `\[table_prefix\]YYYYMMDD`, for example, for shard `MyTable20180101`, the
-    /// `table_prefix` is `MyTable`.
-    #[prost(string, tag="2")]
-    pub table_prefix: ::prost::alloc::string::String,
-    /// Output only. Total number of shards.
-    #[prost(int64, tag="3")]
-    pub shard_count: i64,
-}
-/// Table source type.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TableSourceType {
-    /// Default unknown type.
-    Unspecified = 0,
-    /// Table view.
-    BigqueryView = 2,
-    /// BigQuery native table.
-    BigqueryTable = 5,
-}
 /// Tags are used to attach custom metadata to Data Catalog resources. Tags
 /// conform to the specifications within their tag template.
 ///
@@ -426,6 +204,21 @@ pub mod field_type {
         /// A timestamp.
         Timestamp = 4,
     }
+    impl PrimitiveType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
+                PrimitiveType::Double => "DOUBLE",
+                PrimitiveType::String => "STRING",
+                PrimitiveType::Bool => "BOOL",
+                PrimitiveType::Timestamp => "TIMESTAMP",
+            }
+        }
+    }
     /// Required.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TypeDecl {
@@ -435,6 +228,268 @@ pub mod field_type {
         /// Represents an enum type.
         #[prost(message, tag="2")]
         EnumType(EnumType),
+    }
+}
+/// This enum describes all the possible systems that Data Catalog integrates
+/// with.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum IntegratedSystem {
+    /// Default unknown system.
+    Unspecified = 0,
+    /// BigQuery.
+    Bigquery = 1,
+    /// Cloud Pub/Sub.
+    CloudPubsub = 2,
+}
+impl IntegratedSystem {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IntegratedSystem::Unspecified => "INTEGRATED_SYSTEM_UNSPECIFIED",
+            IntegratedSystem::Bigquery => "BIGQUERY",
+            IntegratedSystem::CloudPubsub => "CLOUD_PUBSUB",
+        }
+    }
+}
+/// Timestamps about this resource according to a particular system.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SystemTimestamps {
+    /// The creation time of the resource within the given system.
+    #[prost(message, optional, tag="1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last-modified time of the resource within the given system.
+    #[prost(message, optional, tag="2")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The expiration time of the resource within the given system.
+    /// Currently only apllicable to BigQuery resources.
+    #[prost(message, optional, tag="3")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Describes a Cloud Storage fileset entry.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsFilesetSpec {
+    /// Required. Patterns to identify a set of files in Google Cloud Storage.
+    /// See [Cloud Storage
+    /// documentation](<https://cloud.google.com/storage/docs/gsutil/addlhelp/WildcardNames>)
+    /// for more information. Note that bucket wildcards are currently not
+    /// supported.
+    ///
+    /// Examples of valid file_patterns:
+    ///
+    ///   * `gs://bucket_name/dir/*`: matches all files within `bucket_name/dir`
+    ///                               directory.
+    ///   * `gs://bucket_name/dir/**`: matches all files in `bucket_name/dir`
+    ///                                spanning all subdirectories.
+    ///   * `gs://bucket_name/file*`: matches files prefixed by `file` in
+    ///                               `bucket_name`
+    ///   * `gs://bucket_name/??.txt`: matches files with two characters followed by
+    ///                                `.txt` in `bucket_name`
+    ///   * `gs://bucket_name/\[aeiou\].txt`: matches files that contain a single
+    ///                                     vowel character followed by `.txt` in
+    ///                                     `bucket_name`
+    ///   * `gs://bucket_name/\[a-m\].txt`: matches files that contain `a`, `b`, ...
+    ///                                   or `m` followed by `.txt` in `bucket_name`
+    ///   * `gs://bucket_name/a/*/b`: matches all files in `bucket_name` that match
+    ///                               `a/*/b` pattern, such as `a/c/b`, `a/d/b`
+    ///   * `gs://another_bucket/a.txt`: matches `gs://another_bucket/a.txt`
+    ///
+    /// You can combine wildcards to provide more powerful matches, for example:
+    ///
+    ///   * `gs://bucket_name/\[a-m\]??.j*g`
+    #[prost(string, repeated, tag="1")]
+    pub file_patterns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. Sample files contained in this fileset, not all files contained in this
+    /// fileset are represented here.
+    #[prost(message, repeated, tag="2")]
+    pub sample_gcs_file_specs: ::prost::alloc::vec::Vec<GcsFileSpec>,
+}
+/// Specifications of a single file in Cloud Storage.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsFileSpec {
+    /// Required. The full file path. Example: `gs://bucket_name/a/b.txt`.
+    #[prost(string, tag="1")]
+    pub file_path: ::prost::alloc::string::String,
+    /// Output only. Timestamps about the Cloud Storage file.
+    #[prost(message, optional, tag="2")]
+    pub gcs_timestamps: ::core::option::Option<SystemTimestamps>,
+    /// Output only. The size of the file, in bytes.
+    #[prost(int64, tag="4")]
+    pub size_bytes: i64,
+}
+/// Represents a schema (e.g. BigQuery, GoogleSQL, Avro schema).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Schema {
+    /// Required. Schema of columns. A maximum of 10,000 columns and sub-columns can be
+    /// specified.
+    #[prost(message, repeated, tag="2")]
+    pub columns: ::prost::alloc::vec::Vec<ColumnSchema>,
+}
+/// Representation of a column within a schema. Columns could be nested inside
+/// other columns.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ColumnSchema {
+    /// Required. Name of the column.
+    #[prost(string, tag="6")]
+    pub column: ::prost::alloc::string::String,
+    /// Required. Type of the column.
+    #[prost(string, tag="1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Optional. Description of the column. Default value is an empty string.
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. A column's mode indicates whether the values in this column are required,
+    /// nullable, etc. Only `NULLABLE`, `REQUIRED` and `REPEATED` are supported.
+    /// Default mode is `NULLABLE`.
+    #[prost(string, tag="3")]
+    pub mode: ::prost::alloc::string::String,
+    /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
+    #[prost(message, repeated, tag="7")]
+    pub subcolumns: ::prost::alloc::vec::Vec<ColumnSchema>,
+}
+/// A result that appears in the response of a search request. Each result
+/// captures details of one entry that matches the search.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchCatalogResult {
+    /// Type of the search result. This field can be used to determine which Get
+    /// method to call to fetch the full resource.
+    #[prost(enumeration="SearchResultType", tag="1")]
+    pub search_result_type: i32,
+    /// Sub-type of the search result. This is a dot-delimited description of the
+    /// resource's full type, and is the same as the value callers would provide in
+    /// the "type" search facet.  Examples: `entry.table`, `entry.dataStream`,
+    /// `tagTemplate`.
+    #[prost(string, tag="2")]
+    pub search_result_subtype: ::prost::alloc::string::String,
+    /// The relative resource name of the resource in URL format.
+    /// Examples:
+    ///
+    ///   * `projects/{project_id}/locations/{location_id}/entryGroups/{entry_group_id}/entries/{entry_id}`
+    ///   * `projects/{project_id}/tagTemplates/{tag_template_id}`
+    #[prost(string, tag="3")]
+    pub relative_resource_name: ::prost::alloc::string::String,
+    /// The full name of the cloud resource the entry belongs to. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name.>
+    /// Example:
+    ///
+    ///   * `//bigquery.googleapis.com/projects/projectId/datasets/datasetId/tables/tableId`
+    #[prost(string, tag="4")]
+    pub linked_resource: ::prost::alloc::string::String,
+}
+/// The different types of resources that can be returned in search.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SearchResultType {
+    /// Default unknown type.
+    Unspecified = 0,
+    /// An \[Entry][google.cloud.datacatalog.v1beta1.Entry\].
+    Entry = 1,
+    /// A \[TagTemplate][google.cloud.datacatalog.v1beta1.TagTemplate\].
+    TagTemplate = 2,
+    /// An \[EntryGroup][google.cloud.datacatalog.v1beta1.EntryGroup\].
+    EntryGroup = 3,
+}
+impl SearchResultType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SearchResultType::Unspecified => "SEARCH_RESULT_TYPE_UNSPECIFIED",
+            SearchResultType::Entry => "ENTRY",
+            SearchResultType::TagTemplate => "TAG_TEMPLATE",
+            SearchResultType::EntryGroup => "ENTRY_GROUP",
+        }
+    }
+}
+/// Describes a BigQuery table.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryTableSpec {
+    /// Output only. The table source type.
+    #[prost(enumeration="TableSourceType", tag="1")]
+    pub table_source_type: i32,
+    /// Output only.
+    #[prost(oneof="big_query_table_spec::TypeSpec", tags="2, 3")]
+    pub type_spec: ::core::option::Option<big_query_table_spec::TypeSpec>,
+}
+/// Nested message and enum types in `BigQueryTableSpec`.
+pub mod big_query_table_spec {
+    /// Output only.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TypeSpec {
+        /// Table view specification. This field should only be populated if
+        /// `table_source_type` is `BIGQUERY_VIEW`.
+        #[prost(message, tag="2")]
+        ViewSpec(super::ViewSpec),
+        /// Spec of a BigQuery table. This field should only be populated if
+        /// `table_source_type` is `BIGQUERY_TABLE`.
+        #[prost(message, tag="3")]
+        TableSpec(super::TableSpec),
+    }
+}
+/// Table view specification.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewSpec {
+    /// Output only. The query that defines the table view.
+    #[prost(string, tag="1")]
+    pub view_query: ::prost::alloc::string::String,
+}
+/// Normal BigQuery table spec.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableSpec {
+    /// Output only. If the table is a dated shard, i.e., with name pattern `\[prefix\]YYYYMMDD`,
+    /// `grouped_entry` is the Data Catalog resource name of the date sharded
+    /// grouped entry, for example,
+    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
+    /// Otherwise, `grouped_entry` is empty.
+    #[prost(string, tag="1")]
+    pub grouped_entry: ::prost::alloc::string::String,
+}
+/// Spec for a group of BigQuery tables with name pattern `\[prefix\]YYYYMMDD`.
+/// Context:
+/// <https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryDateShardedSpec {
+    /// Output only. The Data Catalog resource name of the dataset entry the current table
+    /// belongs to, for example,
+    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
+    #[prost(string, tag="1")]
+    pub dataset: ::prost::alloc::string::String,
+    /// Output only. The table name prefix of the shards. The name of any given shard is
+    /// `\[table_prefix\]YYYYMMDD`, for example, for shard `MyTable20180101`, the
+    /// `table_prefix` is `MyTable`.
+    #[prost(string, tag="2")]
+    pub table_prefix: ::prost::alloc::string::String,
+    /// Output only. Total number of shards.
+    #[prost(int64, tag="3")]
+    pub shard_count: i64,
+}
+/// Table source type.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TableSourceType {
+    /// Default unknown type.
+    Unspecified = 0,
+    /// Table view.
+    BigqueryView = 2,
+    /// BigQuery native table.
+    BigqueryTable = 5,
+}
+impl TableSourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TableSourceType::Unspecified => "TABLE_SOURCE_TYPE_UNSPECIFIED",
+            TableSourceType::BigqueryView => "BIGQUERY_VIEW",
+            TableSourceType::BigqueryTable => "BIGQUERY_TABLE",
+        }
     }
 }
 /// Request message for
@@ -476,9 +531,9 @@ pub struct SearchCatalogRequest {
     /// Specifies the ordering of results, currently supported case-sensitive
     /// choices are:
     ///
-    ///   * `relevance`, only supports descending
-    ///   * `last_modified_timestamp \[asc|desc\]`, defaults to descending if not
-    ///     specified
+    ///    * `relevance`, only supports descending
+    ///    * `last_modified_timestamp \[asc|desc\]`, defaults to descending if not
+    ///      specified
     ///
     /// If not specified, defaults to `relevance` descending.
     #[prost(string, tag="5")]
@@ -637,21 +692,21 @@ pub struct UpdateEntryRequest {
     ///
     /// The following fields are modifiable:
     /// * For entries with type `DATA_STREAM`:
-    ///    * `schema`
+    ///     * `schema`
     /// * For entries with type `FILESET`
-    ///    * `schema`
-    ///    * `display_name`
-    ///    * `description`
-    ///    * `gcs_fileset_spec`
-    ///    * `gcs_fileset_spec.file_patterns`
+    ///     * `schema`
+    ///     * `display_name`
+    ///     * `description`
+    ///     * `gcs_fileset_spec`
+    ///     * `gcs_fileset_spec.file_patterns`
     /// * For entries with `user_specified_type`
-    ///    * `schema`
-    ///    * `display_name`
-    ///    * `description`
-    ///    * user_specified_type
-    ///    * user_specified_system
-    ///    * linked_resource
-    ///    * source_system_timestamps
+    ///     * `schema`
+    ///     * `display_name`
+    ///     * `description`
+    ///     * user_specified_type
+    ///     * user_specified_system
+    ///     * linked_resource
+    ///     * source_system_timestamps
     #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -697,19 +752,19 @@ pub mod lookup_entry_request {
         ///
         /// Examples:
         ///
-        ///  * //bigquery.googleapis.com/projects/projectId/datasets/datasetId/tables/tableId
-        ///  * //pubsub.googleapis.com/projects/projectId/topics/topicId
+        ///   * //bigquery.googleapis.com/projects/projectId/datasets/datasetId/tables/tableId
+        ///   * //pubsub.googleapis.com/projects/projectId/topics/topicId
         #[prost(string, tag="1")]
         LinkedResource(::prost::alloc::string::String),
         /// The SQL name of the entry. SQL names are case-sensitive.
         ///
         /// Examples:
         ///
-        ///   * `pubsub.project_id.topic_id`
-        ///   * ``pubsub.project_id.`topic.id.with.dots` ``
-        ///   * `bigquery.table.project_id.dataset_id.table_id`
-        ///   * `bigquery.dataset.project_id.dataset_id`
-        ///   * `datacatalog.entry.project_id.location_id.entry_group_id.entry_id`
+        ///    * `pubsub.project_id.topic_id`
+        ///    * ``pubsub.project_id.`topic.id.with.dots` ``
+        ///    * `bigquery.table.project_id.dataset_id.table_id`
+        ///    * `bigquery.dataset.project_id.dataset_id`
+        ///    * `datacatalog.entry.project_id.location_id.entry_group_id.entry_id`
         ///
         /// `*_id`s shoud satisfy the standard SQL rules for identifiers.
         /// <https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical.>
@@ -900,7 +955,7 @@ pub struct UpdateTagTemplateRequest {
     ///
     /// Allowed fields:
     ///
-    ///   * `display_name`
+    ///    * `display_name`
     ///
     /// If absent or empty, all of the allowed fields above will be updated.
     #[prost(message, optional, tag="2")]
@@ -998,9 +1053,9 @@ pub struct UpdateTagTemplateFieldRequest {
     /// Optional. The field mask specifies the parts of the template to be updated.
     /// Allowed fields:
     ///
-    ///   * `display_name`
-    ///   * `type.enum_type`
-    ///   * `is_required`
+    ///    * `display_name`
+    ///    * `type.enum_type`
+    ///    * `is_required`
     ///
     /// If `update_mask` is not set or empty, all of the allowed fields above will
     /// be updated.
@@ -1132,10 +1187,26 @@ pub enum EntryType {
     /// Cloud Storage fileset.
     Fileset = 4,
 }
+impl EntryType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            EntryType::Unspecified => "ENTRY_TYPE_UNSPECIFIED",
+            EntryType::Table => "TABLE",
+            EntryType::Model => "MODEL",
+            EntryType::DataStream => "DATA_STREAM",
+            EntryType::Fileset => "FILESET",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod data_catalog_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Data Catalog API service allows clients to discover, understand, and manage
     /// their data.
     #[derive(Debug, Clone)]
@@ -1151,6 +1222,10 @@ pub mod data_catalog_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1172,19 +1247,19 @@ pub mod data_catalog_client {
         {
             DataCatalogClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Searches Data Catalog for multiple resources like entries, tags that
@@ -1909,6 +1984,18 @@ pub mod taxonomy {
         /// tagged resources.
         FineGrainedAccessControl = 1,
     }
+    impl PolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyType::Unspecified => "POLICY_TYPE_UNSPECIFIED",
+                PolicyType::FineGrainedAccessControl => "FINE_GRAINED_ACCESS_CONTROL",
+            }
+        }
+    }
 }
 /// Denotes one policy tag in a taxonomy (e.g. ssn). Policy Tags can be defined
 /// in a hierarchy. For example, consider the following hierarchy:
@@ -2093,6 +2180,7 @@ pub struct GetPolicyTagRequest {
 pub mod policy_tag_manager_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The policy tag manager API service allows clients to manage their taxonomies
     /// and policy tags.
     #[derive(Debug, Clone)]
@@ -2108,6 +2196,10 @@ pub mod policy_tag_manager_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2129,19 +2221,19 @@ pub mod policy_tag_manager_client {
         {
             PolicyTagManagerClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a taxonomy in the specified project.
@@ -2531,6 +2623,7 @@ pub struct ExportTaxonomiesResponse {
 pub mod policy_tag_manager_serialization_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Policy tag manager serialization API service allows clients to manipulate
     /// their taxonomies and policy tags data with serialized format.
     #[derive(Debug, Clone)]
@@ -2546,6 +2639,10 @@ pub mod policy_tag_manager_serialization_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2569,19 +2666,19 @@ pub mod policy_tag_manager_serialization_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Imports all taxonomies and their policy tags to a project as new

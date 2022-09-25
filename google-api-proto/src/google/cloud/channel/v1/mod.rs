@@ -1,3 +1,244 @@
+/// Provides contextual information about a \[google.longrunning.Operation][google.longrunning.Operation\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// The RPC that initiated this Long Running Operation.
+    #[prost(enumeration="operation_metadata::OperationType", tag="1")]
+    pub operation_type: i32,
+}
+/// Nested message and enum types in `OperationMetadata`.
+pub mod operation_metadata {
+    /// RPCs that return a Long Running Operation.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum OperationType {
+        /// Not used.
+        Unspecified = 0,
+        /// Long Running Operation was triggered by CreateEntitlement.
+        CreateEntitlement = 1,
+        /// Long Running Operation was triggered by ChangeRenewalSettings.
+        ChangeRenewalSettings = 3,
+        /// Long Running Operation was triggered by StartPaidService.
+        StartPaidService = 5,
+        /// Long Running Operation was triggered by ActivateEntitlement.
+        ActivateEntitlement = 7,
+        /// Long Running Operation was triggered by SuspendEntitlement.
+        SuspendEntitlement = 8,
+        /// Long Running Operation was triggered by CancelEntitlement.
+        CancelEntitlement = 9,
+        /// Long Running Operation was triggered by TransferEntitlements.
+        TransferEntitlements = 10,
+        /// Long Running Operation was triggered by TransferEntitlementsToGoogle.
+        TransferEntitlementsToGoogle = 11,
+        /// Long Running Operation was triggered by ChangeOffer.
+        ChangeOffer = 14,
+        /// Long Running Operation was triggered by ChangeParameters.
+        ChangeParameters = 15,
+        /// Long Running Operation was triggered by ProvisionCloudIdentity.
+        ProvisionCloudIdentity = 16,
+    }
+    impl OperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+                OperationType::CreateEntitlement => "CREATE_ENTITLEMENT",
+                OperationType::ChangeRenewalSettings => "CHANGE_RENEWAL_SETTINGS",
+                OperationType::StartPaidService => "START_PAID_SERVICE",
+                OperationType::ActivateEntitlement => "ACTIVATE_ENTITLEMENT",
+                OperationType::SuspendEntitlement => "SUSPEND_ENTITLEMENT",
+                OperationType::CancelEntitlement => "CANCEL_ENTITLEMENT",
+                OperationType::TransferEntitlements => "TRANSFER_ENTITLEMENTS",
+                OperationType::TransferEntitlementsToGoogle => "TRANSFER_ENTITLEMENTS_TO_GOOGLE",
+                OperationType::ChangeOffer => "CHANGE_OFFER",
+                OperationType::ChangeParameters => "CHANGE_PARAMETERS",
+                OperationType::ProvisionCloudIdentity => "PROVISION_CLOUD_IDENTITY",
+            }
+        }
+    }
+}
+/// Required Edu Attributes
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EduData {
+    /// Designated institute type of customer.
+    #[prost(enumeration="edu_data::InstituteType", tag="1")]
+    pub institute_type: i32,
+    /// Size of the institute.
+    #[prost(enumeration="edu_data::InstituteSize", tag="2")]
+    pub institute_size: i32,
+    /// Web address for the edu customer's institution.
+    #[prost(string, tag="3")]
+    pub website: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `EduData`.
+pub mod edu_data {
+    /// Enum to specify the institute type.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum InstituteType {
+        /// Not used.
+        Unspecified = 0,
+        /// Elementary/Secondary Schools & Districts
+        K12 = 1,
+        /// Higher Education Universities & Colleges
+        University = 2,
+    }
+    impl InstituteType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InstituteType::Unspecified => "INSTITUTE_TYPE_UNSPECIFIED",
+                InstituteType::K12 => "K12",
+                InstituteType::University => "UNIVERSITY",
+            }
+        }
+    }
+    /// Number of students and staff the institute has.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum InstituteSize {
+        /// Not used.
+        Unspecified = 0,
+        /// 1 - 100
+        Size1100 = 1,
+        /// 101 - 500
+        Size101500 = 2,
+        /// 501 - 1,000
+        Size5011000 = 3,
+        /// 1,001 - 2,000
+        Size10012000 = 4,
+        /// 2,001 - 5,000
+        Size20015000 = 5,
+        /// 5,001 - 10,000
+        Size500110000 = 6,
+        /// 10,001 +
+        Size10001OrMore = 7,
+    }
+    impl InstituteSize {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InstituteSize::Unspecified => "INSTITUTE_SIZE_UNSPECIFIED",
+                InstituteSize::Size1100 => "SIZE_1_100",
+                InstituteSize::Size101500 => "SIZE_101_500",
+                InstituteSize::Size5011000 => "SIZE_501_1000",
+                InstituteSize::Size10012000 => "SIZE_1001_2000",
+                InstituteSize::Size20015000 => "SIZE_2001_5000",
+                InstituteSize::Size500110000 => "SIZE_5001_10000",
+                InstituteSize::Size10001OrMore => "SIZE_10001_OR_MORE",
+            }
+        }
+    }
+}
+/// Cloud Identity information for the Cloud Channel Customer.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CloudIdentityInfo {
+    /// CustomerType indicates verification type needed for using services.
+    #[prost(enumeration="cloud_identity_info::CustomerType", tag="1")]
+    pub customer_type: i32,
+    /// Output only. The primary domain name.
+    #[prost(string, tag="9")]
+    pub primary_domain: ::prost::alloc::string::String,
+    /// Output only. Whether the domain is verified.
+    /// This field is not returned for a Customer's cloud_identity_info resource.
+    /// Partners can use the domains.get() method of the Workspace SDK's
+    /// Directory API, or listen to the PRIMARY_DOMAIN_VERIFIED Pub/Sub event in
+    /// to track domain verification of their resolve Workspace customers.
+    #[prost(bool, tag="4")]
+    pub is_domain_verified: bool,
+    /// The alternate email.
+    #[prost(string, tag="6")]
+    pub alternate_email: ::prost::alloc::string::String,
+    /// Phone number associated with the Cloud Identity.
+    #[prost(string, tag="7")]
+    pub phone_number: ::prost::alloc::string::String,
+    /// Language code.
+    #[prost(string, tag="8")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Output only. URI of Customer's Admin console dashboard.
+    #[prost(string, tag="10")]
+    pub admin_console_uri: ::prost::alloc::string::String,
+    /// Edu information about the customer.
+    #[prost(message, optional, tag="22")]
+    pub edu_data: ::core::option::Option<EduData>,
+}
+/// Nested message and enum types in `CloudIdentityInfo`.
+pub mod cloud_identity_info {
+    /// CustomerType of the customer
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CustomerType {
+        /// Not used.
+        Unspecified = 0,
+        /// Domain-owning customer which needs domain verification to use services.
+        Domain = 1,
+        /// Team customer which needs email verification to use services.
+        Team = 2,
+    }
+    impl CustomerType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CustomerType::Unspecified => "CUSTOMER_TYPE_UNSPECIFIED",
+                CustomerType::Domain => "DOMAIN",
+                CustomerType::Team => "TEAM",
+            }
+        }
+    }
+}
+/// Data type and value of a parameter.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Value {
+    /// The kind of value.
+    #[prost(oneof="value::Kind", tags="1, 2, 3, 4, 5")]
+    pub kind: ::core::option::Option<value::Kind>,
+}
+/// Nested message and enum types in `Value`.
+pub mod value {
+    /// The kind of value.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// Represents an int64 value.
+        #[prost(int64, tag="1")]
+        Int64Value(i64),
+        /// Represents a string value.
+        #[prost(string, tag="2")]
+        StringValue(::prost::alloc::string::String),
+        /// Represents a double value.
+        #[prost(double, tag="3")]
+        DoubleValue(f64),
+        /// Represents an 'Any' proto value.
+        #[prost(message, tag="4")]
+        ProtoValue(::prost_types::Any),
+        /// Represents a boolean value.
+        #[prost(bool, tag="5")]
+        BoolValue(bool),
+    }
+}
+/// Information needed to create an Admin User for Google Workspace.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdminUser {
+    /// Primary email of the admin user.
+    #[prost(string, tag="1")]
+    pub email: ::prost::alloc::string::String,
+    /// Given name of the admin user.
+    #[prost(string, tag="2")]
+    pub given_name: ::prost::alloc::string::String,
+    /// Family name of the admin user.
+    #[prost(string, tag="3")]
+    pub family_name: ::prost::alloc::string::String,
+}
 /// A Product is the entity a customer uses when placing an order. For example,
 /// Google Workspace, Google Voice, etc.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -62,541 +303,16 @@ pub enum MediaType {
     /// Type of image.
     Image = 1,
 }
-/// Provides contextual information about a \[google.longrunning.Operation][google.longrunning.Operation\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// The RPC that initiated this Long Running Operation.
-    #[prost(enumeration="operation_metadata::OperationType", tag="1")]
-    pub operation_type: i32,
-}
-/// Nested message and enum types in `OperationMetadata`.
-pub mod operation_metadata {
-    /// RPCs that return a Long Running Operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum OperationType {
-        /// Not used.
-        Unspecified = 0,
-        /// Long Running Operation was triggered by CreateEntitlement.
-        CreateEntitlement = 1,
-        /// Long Running Operation was triggered by ChangeRenewalSettings.
-        ChangeRenewalSettings = 3,
-        /// Long Running Operation was triggered by StartPaidService.
-        StartPaidService = 5,
-        /// Long Running Operation was triggered by ActivateEntitlement.
-        ActivateEntitlement = 7,
-        /// Long Running Operation was triggered by SuspendEntitlement.
-        SuspendEntitlement = 8,
-        /// Long Running Operation was triggered by CancelEntitlement.
-        CancelEntitlement = 9,
-        /// Long Running Operation was triggered by TransferEntitlements.
-        TransferEntitlements = 10,
-        /// Long Running Operation was triggered by TransferEntitlementsToGoogle.
-        TransferEntitlementsToGoogle = 11,
-        /// Long Running Operation was triggered by ChangeOffer.
-        ChangeOffer = 14,
-        /// Long Running Operation was triggered by ChangeParameters.
-        ChangeParameters = 15,
-        /// Long Running Operation was triggered by ProvisionCloudIdentity.
-        ProvisionCloudIdentity = 16,
-    }
-}
-/// Required Edu Attributes
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EduData {
-    /// Designated institute type of customer.
-    #[prost(enumeration="edu_data::InstituteType", tag="1")]
-    pub institute_type: i32,
-    /// Size of the institute.
-    #[prost(enumeration="edu_data::InstituteSize", tag="2")]
-    pub institute_size: i32,
-    /// Web address for the edu customer's institution.
-    #[prost(string, tag="3")]
-    pub website: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `EduData`.
-pub mod edu_data {
-    /// Enum to specify the institute type.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum InstituteType {
-        /// Not used.
-        Unspecified = 0,
-        /// Elementary/Secondary Schools & Districts
-        K12 = 1,
-        /// Higher Education Universities & Colleges
-        University = 2,
-    }
-    /// Number of students and staff the institute has.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum InstituteSize {
-        /// Not used.
-        Unspecified = 0,
-        /// 1 - 100
-        Size1100 = 1,
-        /// 101 - 500
-        Size101500 = 2,
-        /// 501 - 1,000
-        Size5011000 = 3,
-        /// 1,001 - 2,000
-        Size10012000 = 4,
-        /// 2,001 - 5,000
-        Size20015000 = 5,
-        /// 5,001 - 10,000
-        Size500110000 = 6,
-        /// 10,001 +
-        Size10001OrMore = 7,
-    }
-}
-/// Cloud Identity information for the Cloud Channel Customer.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CloudIdentityInfo {
-    /// CustomerType indicates verification type needed for using services.
-    #[prost(enumeration="cloud_identity_info::CustomerType", tag="1")]
-    pub customer_type: i32,
-    /// Output only. The primary domain name.
-    #[prost(string, tag="9")]
-    pub primary_domain: ::prost::alloc::string::String,
-    /// Output only. Whether the domain is verified.
-    /// This field is not returned for a Customer's cloud_identity_info resource.
-    /// Partners can use the domains.get() method of the Workspace SDK's
-    /// Directory API, or listen to the PRIMARY_DOMAIN_VERIFIED Pub/Sub event in
-    /// to track domain verification of their resolve Workspace customers.
-    #[prost(bool, tag="4")]
-    pub is_domain_verified: bool,
-    /// The alternate email.
-    #[prost(string, tag="6")]
-    pub alternate_email: ::prost::alloc::string::String,
-    /// Phone number associated with the Cloud Identity.
-    #[prost(string, tag="7")]
-    pub phone_number: ::prost::alloc::string::String,
-    /// Language code.
-    #[prost(string, tag="8")]
-    pub language_code: ::prost::alloc::string::String,
-    /// Output only. URI of Customer's Admin console dashboard.
-    #[prost(string, tag="10")]
-    pub admin_console_uri: ::prost::alloc::string::String,
-    /// Edu information about the customer.
-    #[prost(message, optional, tag="22")]
-    pub edu_data: ::core::option::Option<EduData>,
-}
-/// Nested message and enum types in `CloudIdentityInfo`.
-pub mod cloud_identity_info {
-    /// CustomerType of the customer
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CustomerType {
-        /// Not used.
-        Unspecified = 0,
-        /// Domain-owning customer which needs domain verification to use services.
-        Domain = 1,
-        /// Team customer which needs email verification to use services.
-        Team = 2,
-    }
-}
-/// Data type and value of a parameter.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Value {
-    /// The kind of value.
-    #[prost(oneof="value::Kind", tags="1, 2, 3, 4, 5")]
-    pub kind: ::core::option::Option<value::Kind>,
-}
-/// Nested message and enum types in `Value`.
-pub mod value {
-    /// The kind of value.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// Represents an int64 value.
-        #[prost(int64, tag="1")]
-        Int64Value(i64),
-        /// Represents a string value.
-        #[prost(string, tag="2")]
-        StringValue(::prost::alloc::string::String),
-        /// Represents a double value.
-        #[prost(double, tag="3")]
-        DoubleValue(f64),
-        /// Represents an 'Any' proto value.
-        #[prost(message, tag="4")]
-        ProtoValue(::prost_types::Any),
-        /// Represents a boolean value.
-        #[prost(bool, tag="5")]
-        BoolValue(bool),
-    }
-}
-/// Information needed to create an Admin User for Google Workspace.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdminUser {
-    /// Primary email of the admin user.
-    #[prost(string, tag="1")]
-    pub email: ::prost::alloc::string::String,
-    /// Given name of the admin user.
-    #[prost(string, tag="2")]
-    pub given_name: ::prost::alloc::string::String,
-    /// Family name of the admin user.
-    #[prost(string, tag="3")]
-    pub family_name: ::prost::alloc::string::String,
-}
-/// Entity representing a customer of a reseller or distributor.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Customer {
-    /// Output only. Resource name of the customer.
-    /// Format: accounts/{account_id}/customers/{customer_id}
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Name of the organization that the customer entity represents.
-    #[prost(string, tag="2")]
-    pub org_display_name: ::prost::alloc::string::String,
-    /// Required. The organization address for the customer. To enforce US laws and
-    /// embargoes, we require a region and zip code. You must provide valid
-    /// addresses for every customer. To set the customer's language, use the
-    /// Customer-level language code.
-    #[prost(message, optional, tag="3")]
-    pub org_postal_address: ::core::option::Option<super::super::super::r#type::PostalAddress>,
-    /// Primary contact info.
-    #[prost(message, optional, tag="4")]
-    pub primary_contact_info: ::core::option::Option<ContactInfo>,
-    /// Secondary contact email. You need to provide an alternate email to create
-    /// different domains if a primary contact email already exists. Users will
-    /// receive a notification with credentials when you create an admin.google.com
-    /// account. Secondary emails are also recovery email addresses. Alternate
-    /// emails are optional when you create Team customers.
-    #[prost(string, tag="5")]
-    pub alternate_email: ::prost::alloc::string::String,
-    /// Required. The customer's primary domain. Must match the primary contact
-    /// email's domain.
-    #[prost(string, tag="6")]
-    pub domain: ::prost::alloc::string::String,
-    /// Output only. Time when the customer was created.
-    #[prost(message, optional, tag="7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Time when the customer was updated.
-    #[prost(message, optional, tag="8")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The customer's Cloud Identity ID if the customer has a Cloud
-    /// Identity resource.
-    #[prost(string, tag="9")]
-    pub cloud_identity_id: ::prost::alloc::string::String,
-    /// Optional. The BCP-47 language code, such as "en-US" or "sr-Latn". For more
-    /// information, see
-    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
-    #[prost(string, tag="10")]
-    pub language_code: ::prost::alloc::string::String,
-    /// Output only. Cloud Identity information for the customer.
-    /// Populated only if a Cloud Identity account exists for this customer.
-    #[prost(message, optional, tag="12")]
-    pub cloud_identity_info: ::core::option::Option<CloudIdentityInfo>,
-    /// Cloud Identity ID of the customer's channel partner.
-    /// Populated only if a channel partner exists for this customer.
-    #[prost(string, tag="13")]
-    pub channel_partner_id: ::prost::alloc::string::String,
-}
-/// Contact information for a customer account.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContactInfo {
-    /// The customer account contact's first name. Optional for Team customers.
-    #[prost(string, tag="1")]
-    pub first_name: ::prost::alloc::string::String,
-    /// The customer account contact's last name. Optional for Team customers.
-    #[prost(string, tag="2")]
-    pub last_name: ::prost::alloc::string::String,
-    /// Output only. The customer account contact's display name, formatted as a
-    /// combination of the customer's first and last name.
-    #[prost(string, tag="4")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The customer account's contact email. Required for entitlements that create
-    /// admin.google.com accounts, and serves as the customer's username for those
-    /// accounts. Use this email to invite Team customers.
-    #[prost(string, tag="5")]
-    pub email: ::prost::alloc::string::String,
-    /// Optional. The customer account contact's job title.
-    #[prost(string, tag="6")]
-    pub title: ::prost::alloc::string::String,
-    /// The customer account's contact phone number.
-    #[prost(string, tag="7")]
-    pub phone: ::prost::alloc::string::String,
-}
-/// Configuration for how a reseller will reprice a Customer.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerRepricingConfig {
-    /// Output only. Resource name of the CustomerRepricingConfig.
-    /// Format:
-    /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller before
-    /// sending it to customers.
-    #[prost(message, optional, tag="2")]
-    pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
-    /// mid-month.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Configuration for how a distributor will rebill a channel partner
-/// (also known as a distributor-authorized reseller).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelPartnerRepricingConfig {
-    /// Output only. Resource name of the ChannelPartnerRepricingConfig.
-    /// Format:
-    /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}/channelPartnerRepricingConfigs/{id}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller before
-    /// sending it to ChannelPartner.
-    #[prost(message, optional, tag="2")]
-    pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
-    /// mid-month.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Configuration for repricing a Google bill over a period of time.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RepricingConfig {
-    /// Required. The YearMonth when these adjustments activate. The Day field needs to be
-    /// "0" since we only accept YearMonth repricing boundaries.
-    #[prost(message, optional, tag="1")]
-    pub effective_invoice_month: ::core::option::Option<super::super::super::r#type::Date>,
-    /// Required. Information about the adjustment.
-    #[prost(message, optional, tag="2")]
-    pub adjustment: ::core::option::Option<RepricingAdjustment>,
-    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to use for this bill. Specifies the relative cost
-    /// based on repricing costs you will apply.
-    #[prost(enumeration="RebillingBasis", tag="3")]
-    pub rebilling_basis: i32,
-    /// Required. Defines the granularity for repricing.
-    #[prost(oneof="repricing_config::Granularity", tags="4, 5")]
-    pub granularity: ::core::option::Option<repricing_config::Granularity>,
-}
-/// Nested message and enum types in `RepricingConfig`.
-pub mod repricing_config {
-    /// Applies the repricing configuration at the entitlement level.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntitlementGranularity {
-        /// Resource name of the entitlement.
-        /// Format:
-        /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
-        #[prost(string, tag="1")]
-        pub entitlement: ::prost::alloc::string::String,
-    }
-    /// Applies the repricing configuration at the channel partner level.
-    /// The channel partner value is derived from the resource name. Takes an
-    /// empty json object.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ChannelPartnerGranularity {
-    }
-    /// Required. Defines the granularity for repricing.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Granularity {
-        /// Applies the repricing configuration at the entitlement level. This is
-        /// the only supported value for CustomerRepricingConfig.
-        #[prost(message, tag="4")]
-        EntitlementGranularity(EntitlementGranularity),
-        /// Applies the repricing configuration at the channel partner level.
-        /// This is the only supported value for ChannelPartnerRepricingConfig.
-        #[prost(message, tag="5")]
-        ChannelPartnerGranularity(ChannelPartnerGranularity),
-    }
-}
-/// A type that represents the various adjustments you can apply to a bill.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RepricingAdjustment {
-    /// A oneof that represents the different types for this adjustment.
-    #[prost(oneof="repricing_adjustment::Adjustment", tags="2")]
-    pub adjustment: ::core::option::Option<repricing_adjustment::Adjustment>,
-}
-/// Nested message and enum types in `RepricingAdjustment`.
-pub mod repricing_adjustment {
-    /// A oneof that represents the different types for this adjustment.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Adjustment {
-        /// Flat markup or markdown on an entire bill.
-        #[prost(message, tag="2")]
-        PercentageAdjustment(super::PercentageAdjustment),
-    }
-}
-/// An adjustment that applies a flat markup or markdown to an entire bill.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PercentageAdjustment {
-    /// The percentage of the bill to adjust.
-    /// For example:
-    /// Mark down by 1% => "-1.00"
-    /// Mark up by 1%   => "1.00"
-    /// Pass-Through    => "0.00"
-    #[prost(message, optional, tag="2")]
-    pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
-}
-/// Specifies the different costs that the modified bill can be based on.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RebillingBasis {
-    /// Not used.
-    Unspecified = 0,
-    /// Use the list cost, also known as the MSRP.
-    CostAtList = 1,
-    /// Pass through all discounts except the Reseller Program Discount. If this is
-    /// the default cost base and no adjustments are specified, the output cost
-    /// will be exactly what the customer would see if they viewed the bill in the
-    /// Google Cloud Console.
-    DirectCustomerCost = 2,
-}
-/// Entity representing a link between distributors and their indirect
-/// resellers in an n-tier resale channel.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelPartnerLink {
-    /// Output only. Resource name for the channel partner link, in the format
-    /// accounts/{account_id}/channelPartnerLinks/{id}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Cloud Identity ID of the linked reseller.
-    #[prost(string, tag="2")]
-    pub reseller_cloud_identity_id: ::prost::alloc::string::String,
-    /// Required. State of the channel partner link.
-    #[prost(enumeration="ChannelPartnerLinkState", tag="3")]
-    pub link_state: i32,
-    /// Output only. URI of the web page where partner accepts the link invitation.
-    #[prost(string, tag="4")]
-    pub invite_link_uri: ::prost::alloc::string::String,
-    /// Output only. Timestamp of when the channel partner link is created.
-    #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp of when the channel partner link is updated.
-    #[prost(message, optional, tag="6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Public identifier that a customer must use to generate a transfer token
-    /// to move to this distributor-reseller combination.
-    #[prost(string, tag="7")]
-    pub public_id: ::prost::alloc::string::String,
-    /// Output only. Cloud Identity info of the channel partner (IR).
-    #[prost(message, optional, tag="8")]
-    pub channel_partner_cloud_identity_info: ::core::option::Option<CloudIdentityInfo>,
-}
-/// The level of granularity the \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\] will display.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ChannelPartnerLinkView {
-    /// The default / unset value.
-    /// The API will default to the BASIC view.
-    Unspecified = 0,
-    /// Includes all fields except the
-    /// \[ChannelPartnerLink.channel_partner_cloud_identity_info][google.cloud.channel.v1.ChannelPartnerLink.channel_partner_cloud_identity_info\].
-    Basic = 1,
-    /// Includes all fields.
-    Full = 2,
-}
-/// ChannelPartnerLinkState represents state of a channel partner link.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ChannelPartnerLinkState {
-    /// Not used.
-    Unspecified = 0,
-    /// An invitation has been sent to the reseller to create a channel partner
-    /// link.
-    Invited = 1,
-    /// Status when the reseller is active.
-    Active = 2,
-    /// Status when the reseller has been revoked by the distributor.
-    Revoked = 3,
-    /// Status when the reseller is suspended by Google or distributor.
-    Suspended = 4,
-}
-/// Represents Pub/Sub message content describing customer update.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerEvent {
-    /// Resource name of the customer.
-    /// Format: accounts/{account_id}/customers/{customer_id}
-    #[prost(string, tag="1")]
-    pub customer: ::prost::alloc::string::String,
-    /// Type of event which happened on the customer.
-    #[prost(enumeration="customer_event::Type", tag="2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `CustomerEvent`.
-pub mod customer_event {
-    /// Type of customer event.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// Primary domain for customer was changed.
-        PrimaryDomainChanged = 1,
-        /// Primary domain of the customer has been verified.
-        PrimaryDomainVerified = 2,
-    }
-}
-/// Represents Pub/Sub message content describing entitlement update.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EntitlementEvent {
-    /// Resource name of an entitlement of the form:
-    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
-    #[prost(string, tag="1")]
-    pub entitlement: ::prost::alloc::string::String,
-    /// Type of event which happened on the entitlement.
-    #[prost(enumeration="entitlement_event::Type", tag="2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `EntitlementEvent`.
-pub mod entitlement_event {
-    /// Type of entitlement event.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// A new entitlement was created.
-        Created = 1,
-        /// The offer type associated with an entitlement was changed.
-        /// This is not triggered if an entitlement converts from a commit offer to a
-        /// flexible offer as part of a renewal.
-        PricePlanSwitched = 3,
-        /// Annual commitment for a commit plan was changed.
-        CommitmentChanged = 4,
-        /// An annual entitlement was renewed.
-        Renewed = 5,
-        /// Entitlement was suspended.
-        Suspended = 6,
-        /// Entitlement was unsuspended.
-        Activated = 7,
-        /// Entitlement was cancelled.
-        Cancelled = 8,
-        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
-        /// Business Standard to Google Workspace Business Plus).
-        SkuChanged = 9,
-        /// The renewal settings of an entitlement has changed.
-        RenewalSettingChanged = 10,
-        /// Paid service has started on trial entitlement.
-        PaidServiceStarted = 11,
-        /// License was assigned to or revoked from a user.
-        LicenseAssignmentChanged = 12,
-        /// License cap was changed for the entitlement.
-        LicenseCapChanged = 13,
-    }
-}
-/// Represents information which resellers will get as part of notification from
-/// Pub/Sub.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SubscriberEvent {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[prost(oneof="subscriber_event::Event", tags="1, 2")]
-    pub event: ::core::option::Option<subscriber_event::Event>,
-}
-/// Nested message and enum types in `SubscriberEvent`.
-pub mod subscriber_event {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// Customer event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag="1")]
-        CustomerEvent(super::CustomerEvent),
-        /// Entitlement event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag="2")]
-        EntitlementEvent(super::EntitlementEvent),
+impl MediaType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            MediaType::Unspecified => "MEDIA_TYPE_UNSPECIFIED",
+            MediaType::Image => "MEDIA_TYPE_IMAGE",
+        }
     }
 }
 /// Represents an offer made to resellers for purchase.
@@ -677,6 +393,20 @@ pub mod parameter_definition {
         String = 2,
         /// Double type.
         Double = 3,
+    }
+    impl ParameterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ParameterType::Unspecified => "PARAMETER_TYPE_UNSPECIFIED",
+                ParameterType::Int64 => "INT64",
+                ParameterType::String => "STRING",
+                ParameterType::Double => "DOUBLE",
+            }
+        }
     }
 }
 /// Represents the constraints for buying the Offer.
@@ -819,6 +549,20 @@ pub enum PromotionalOrderType {
     /// Orders for modifying an existing customer's promotion on the same SKU.
     PromotionSwitch = 3,
 }
+impl PromotionalOrderType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PromotionalOrderType::PromotionalTypeUnspecified => "PROMOTIONAL_TYPE_UNSPECIFIED",
+            PromotionalOrderType::NewUpgrade => "NEW_UPGRADE",
+            PromotionalOrderType::Transfer => "TRANSFER",
+            PromotionalOrderType::PromotionSwitch => "PROMOTION_SWITCH",
+        }
+    }
+}
 /// Describes how the reseller will be billed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -836,6 +580,22 @@ pub enum PaymentPlan {
     /// Price and ordering not available through API.
     Offline = 5,
 }
+impl PaymentPlan {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PaymentPlan::Unspecified => "PAYMENT_PLAN_UNSPECIFIED",
+            PaymentPlan::Commitment => "COMMITMENT",
+            PaymentPlan::Flexible => "FLEXIBLE",
+            PaymentPlan::Free => "FREE",
+            PaymentPlan::Trial => "TRIAL",
+            PaymentPlan::Offline => "OFFLINE",
+        }
+    }
+}
 /// Specifies when the payment needs to happen.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -846,6 +606,19 @@ pub enum PaymentType {
     Prepay = 1,
     /// Postpay. Reseller is charged at the end of the Payment cycle.
     Postpay = 2,
+}
+impl PaymentType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PaymentType::Unspecified => "PAYMENT_TYPE_UNSPECIFIED",
+            PaymentType::Prepay => "PREPAY",
+            PaymentType::Postpay => "POSTPAY",
+        }
+    }
 }
 /// Represents the type for a monetizable resource(any entity on which billing
 /// happens). For example, this could be MINUTES for Google Voice and GB for
@@ -874,6 +647,24 @@ pub enum ResourceType {
     /// For Google Cloud Platform subscriptions like Anthos or SAP.
     Subscription = 7,
 }
+impl ResourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ResourceType::Unspecified => "RESOURCE_TYPE_UNSPECIFIED",
+            ResourceType::Seat => "SEAT",
+            ResourceType::Mau => "MAU",
+            ResourceType::Gb => "GB",
+            ResourceType::LicensedUser => "LICENSED_USER",
+            ResourceType::Minutes => "MINUTES",
+            ResourceType::IaasUsage => "IAAS_USAGE",
+            ResourceType::Subscription => "SUBSCRIPTION",
+        }
+    }
+}
 /// Period Type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -886,6 +677,99 @@ pub enum PeriodType {
     Month = 2,
     /// Year.
     Year = 3,
+}
+impl PeriodType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PeriodType::Unspecified => "PERIOD_TYPE_UNSPECIFIED",
+            PeriodType::Day => "DAY",
+            PeriodType::Month => "MONTH",
+            PeriodType::Year => "YEAR",
+        }
+    }
+}
+/// Entity representing a customer of a reseller or distributor.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Customer {
+    /// Output only. Resource name of the customer.
+    /// Format: accounts/{account_id}/customers/{customer_id}
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Name of the organization that the customer entity represents.
+    #[prost(string, tag="2")]
+    pub org_display_name: ::prost::alloc::string::String,
+    /// Required. The organization address for the customer. To enforce US laws and
+    /// embargoes, we require a region and zip code. You must provide valid
+    /// addresses for every customer. To set the customer's language, use the
+    /// Customer-level language code.
+    #[prost(message, optional, tag="3")]
+    pub org_postal_address: ::core::option::Option<super::super::super::r#type::PostalAddress>,
+    /// Primary contact info.
+    #[prost(message, optional, tag="4")]
+    pub primary_contact_info: ::core::option::Option<ContactInfo>,
+    /// Secondary contact email. You need to provide an alternate email to create
+    /// different domains if a primary contact email already exists. Users will
+    /// receive a notification with credentials when you create an admin.google.com
+    /// account. Secondary emails are also recovery email addresses. Alternate
+    /// emails are optional when you create Team customers.
+    #[prost(string, tag="5")]
+    pub alternate_email: ::prost::alloc::string::String,
+    /// Required. The customer's primary domain. Must match the primary contact
+    /// email's domain.
+    #[prost(string, tag="6")]
+    pub domain: ::prost::alloc::string::String,
+    /// Output only. Time when the customer was created.
+    #[prost(message, optional, tag="7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Time when the customer was updated.
+    #[prost(message, optional, tag="8")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The customer's Cloud Identity ID if the customer has a Cloud
+    /// Identity resource.
+    #[prost(string, tag="9")]
+    pub cloud_identity_id: ::prost::alloc::string::String,
+    /// Optional. The BCP-47 language code, such as "en-US" or "sr-Latn". For more
+    /// information, see
+    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
+    #[prost(string, tag="10")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Output only. Cloud Identity information for the customer.
+    /// Populated only if a Cloud Identity account exists for this customer.
+    #[prost(message, optional, tag="12")]
+    pub cloud_identity_info: ::core::option::Option<CloudIdentityInfo>,
+    /// Cloud Identity ID of the customer's channel partner.
+    /// Populated only if a channel partner exists for this customer.
+    #[prost(string, tag="13")]
+    pub channel_partner_id: ::prost::alloc::string::String,
+}
+/// Contact information for a customer account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ContactInfo {
+    /// The customer account contact's first name. Optional for Team customers.
+    #[prost(string, tag="1")]
+    pub first_name: ::prost::alloc::string::String,
+    /// The customer account contact's last name. Optional for Team customers.
+    #[prost(string, tag="2")]
+    pub last_name: ::prost::alloc::string::String,
+    /// Output only. The customer account contact's display name, formatted as a
+    /// combination of the customer's first and last name.
+    #[prost(string, tag="4")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The customer account's contact email. Required for entitlements that create
+    /// admin.google.com accounts, and serves as the customer's username for those
+    /// accounts. Use this email to invite Team customers.
+    #[prost(string, tag="5")]
+    pub email: ::prost::alloc::string::String,
+    /// Optional. The customer account contact's job title.
+    #[prost(string, tag="6")]
+    pub title: ::prost::alloc::string::String,
+    /// The customer account's contact phone number.
+    #[prost(string, tag="7")]
+    pub phone: ::prost::alloc::string::String,
 }
 /// An entitlement is a representation of a customer's ability to use a service.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -957,6 +841,19 @@ pub mod entitlement {
         /// The entitlement is currently suspended.
         Suspended = 5,
     }
+    impl ProvisioningState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ProvisioningState::Unspecified => "PROVISIONING_STATE_UNSPECIFIED",
+                ProvisioningState::Active => "ACTIVE",
+                ProvisioningState::Suspended => "SUSPENDED",
+            }
+        }
+    }
     /// Suspension reason for an entitlement if \[provisioning_state][google.cloud.channel.v1.Entitlement.provisioning_state\] = SUSPENDED.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -974,6 +871,22 @@ pub mod entitlement {
         PendingTosAcceptance = 4,
         /// Other reasons (internal reasons, abuse, etc.).
         Other = 100,
+    }
+    impl SuspensionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SuspensionReason::Unspecified => "SUSPENSION_REASON_UNSPECIFIED",
+                SuspensionReason::ResellerInitiated => "RESELLER_INITIATED",
+                SuspensionReason::TrialEnded => "TRIAL_ENDED",
+                SuspensionReason::RenewalWithTypeCancel => "RENEWAL_WITH_TYPE_CANCEL",
+                SuspensionReason::PendingTosAcceptance => "PENDING_TOS_ACCEPTANCE",
+                SuspensionReason::Other => "OTHER",
+            }
+        }
     }
 }
 /// Definition for extended entitlement parameters.
@@ -1102,6 +1015,248 @@ pub mod transfer_eligibility {
         SkuNotEligible = 2,
         /// SKU subscription is suspended
         SkuSuspended = 3,
+    }
+    impl Reason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Reason::Unspecified => "REASON_UNSPECIFIED",
+                Reason::PendingTosAcceptance => "PENDING_TOS_ACCEPTANCE",
+                Reason::SkuNotEligible => "SKU_NOT_ELIGIBLE",
+                Reason::SkuSuspended => "SKU_SUSPENDED",
+            }
+        }
+    }
+}
+/// Entity representing a link between distributors and their indirect
+/// resellers in an n-tier resale channel.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelPartnerLink {
+    /// Output only. Resource name for the channel partner link, in the format
+    /// accounts/{account_id}/channelPartnerLinks/{id}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Cloud Identity ID of the linked reseller.
+    #[prost(string, tag="2")]
+    pub reseller_cloud_identity_id: ::prost::alloc::string::String,
+    /// Required. State of the channel partner link.
+    #[prost(enumeration="ChannelPartnerLinkState", tag="3")]
+    pub link_state: i32,
+    /// Output only. URI of the web page where partner accepts the link invitation.
+    #[prost(string, tag="4")]
+    pub invite_link_uri: ::prost::alloc::string::String,
+    /// Output only. Timestamp of when the channel partner link is created.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp of when the channel partner link is updated.
+    #[prost(message, optional, tag="6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Public identifier that a customer must use to generate a transfer token
+    /// to move to this distributor-reseller combination.
+    #[prost(string, tag="7")]
+    pub public_id: ::prost::alloc::string::String,
+    /// Output only. Cloud Identity info of the channel partner (IR).
+    #[prost(message, optional, tag="8")]
+    pub channel_partner_cloud_identity_info: ::core::option::Option<CloudIdentityInfo>,
+}
+/// The level of granularity the \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\] will display.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ChannelPartnerLinkView {
+    /// The default / unset value.
+    /// The API will default to the BASIC view.
+    Unspecified = 0,
+    /// Includes all fields except the
+    /// \[ChannelPartnerLink.channel_partner_cloud_identity_info][google.cloud.channel.v1.ChannelPartnerLink.channel_partner_cloud_identity_info\].
+    Basic = 1,
+    /// Includes all fields.
+    Full = 2,
+}
+impl ChannelPartnerLinkView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ChannelPartnerLinkView::Unspecified => "UNSPECIFIED",
+            ChannelPartnerLinkView::Basic => "BASIC",
+            ChannelPartnerLinkView::Full => "FULL",
+        }
+    }
+}
+/// ChannelPartnerLinkState represents state of a channel partner link.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ChannelPartnerLinkState {
+    /// Not used.
+    Unspecified = 0,
+    /// An invitation has been sent to the reseller to create a channel partner
+    /// link.
+    Invited = 1,
+    /// Status when the reseller is active.
+    Active = 2,
+    /// Status when the reseller has been revoked by the distributor.
+    Revoked = 3,
+    /// Status when the reseller is suspended by Google or distributor.
+    Suspended = 4,
+}
+impl ChannelPartnerLinkState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ChannelPartnerLinkState::Unspecified => "CHANNEL_PARTNER_LINK_STATE_UNSPECIFIED",
+            ChannelPartnerLinkState::Invited => "INVITED",
+            ChannelPartnerLinkState::Active => "ACTIVE",
+            ChannelPartnerLinkState::Revoked => "REVOKED",
+            ChannelPartnerLinkState::Suspended => "SUSPENDED",
+        }
+    }
+}
+/// Configuration for how a reseller will reprice a Customer.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerRepricingConfig {
+    /// Output only. Resource name of the CustomerRepricingConfig.
+    /// Format:
+    /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The configuration for bill modifications made by a reseller before
+    /// sending it to customers.
+    #[prost(message, optional, tag="2")]
+    pub repricing_config: ::core::option::Option<RepricingConfig>,
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
+    /// mid-month.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Configuration for how a distributor will rebill a channel partner
+/// (also known as a distributor-authorized reseller).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelPartnerRepricingConfig {
+    /// Output only. Resource name of the ChannelPartnerRepricingConfig.
+    /// Format:
+    /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}/channelPartnerRepricingConfigs/{id}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The configuration for bill modifications made by a reseller before
+    /// sending it to ChannelPartner.
+    #[prost(message, optional, tag="2")]
+    pub repricing_config: ::core::option::Option<RepricingConfig>,
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
+    /// mid-month.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Configuration for repricing a Google bill over a period of time.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingConfig {
+    /// Required. The YearMonth when these adjustments activate. The Day field needs to be
+    /// "0" since we only accept YearMonth repricing boundaries.
+    #[prost(message, optional, tag="1")]
+    pub effective_invoice_month: ::core::option::Option<super::super::super::r#type::Date>,
+    /// Required. Information about the adjustment.
+    #[prost(message, optional, tag="2")]
+    pub adjustment: ::core::option::Option<RepricingAdjustment>,
+    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to use for this bill. Specifies the relative cost
+    /// based on repricing costs you will apply.
+    #[prost(enumeration="RebillingBasis", tag="3")]
+    pub rebilling_basis: i32,
+    /// Required. Defines the granularity for repricing.
+    #[prost(oneof="repricing_config::Granularity", tags="4, 5")]
+    pub granularity: ::core::option::Option<repricing_config::Granularity>,
+}
+/// Nested message and enum types in `RepricingConfig`.
+pub mod repricing_config {
+    /// Applies the repricing configuration at the entitlement level.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntitlementGranularity {
+        /// Resource name of the entitlement.
+        /// Format:
+        /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+        #[prost(string, tag="1")]
+        pub entitlement: ::prost::alloc::string::String,
+    }
+    /// Applies the repricing configuration at the channel partner level.
+    /// The channel partner value is derived from the resource name. Takes an
+    /// empty json object.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ChannelPartnerGranularity {
+    }
+    /// Required. Defines the granularity for repricing.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Granularity {
+        /// Applies the repricing configuration at the entitlement level. This is
+        /// the only supported value for CustomerRepricingConfig.
+        #[prost(message, tag="4")]
+        EntitlementGranularity(EntitlementGranularity),
+        /// Applies the repricing configuration at the channel partner level.
+        /// This is the only supported value for ChannelPartnerRepricingConfig.
+        #[prost(message, tag="5")]
+        ChannelPartnerGranularity(ChannelPartnerGranularity),
+    }
+}
+/// A type that represents the various adjustments you can apply to a bill.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingAdjustment {
+    /// A oneof that represents the different types for this adjustment.
+    #[prost(oneof="repricing_adjustment::Adjustment", tags="2")]
+    pub adjustment: ::core::option::Option<repricing_adjustment::Adjustment>,
+}
+/// Nested message and enum types in `RepricingAdjustment`.
+pub mod repricing_adjustment {
+    /// A oneof that represents the different types for this adjustment.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Adjustment {
+        /// Flat markup or markdown on an entire bill.
+        #[prost(message, tag="2")]
+        PercentageAdjustment(super::PercentageAdjustment),
+    }
+}
+/// An adjustment that applies a flat markup or markdown to an entire bill.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PercentageAdjustment {
+    /// The percentage of the bill to adjust.
+    /// For example:
+    /// Mark down by 1% => "-1.00"
+    /// Mark up by 1%   => "1.00"
+    /// Pass-Through    => "0.00"
+    #[prost(message, optional, tag="2")]
+    pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
+}
+/// Specifies the different costs that the modified bill can be based on.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RebillingBasis {
+    /// Not used.
+    Unspecified = 0,
+    /// Use the list cost, also known as the MSRP.
+    CostAtList = 1,
+    /// Pass through all discounts except the Reseller Program Discount. If this is
+    /// the default cost base and no adjustments are specified, the output cost
+    /// will be exactly what the customer would see if they viewed the bill in the
+    /// Google Cloud Console.
+    DirectCustomerCost = 2,
+}
+impl RebillingBasis {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RebillingBasis::Unspecified => "REBILLING_BASIS_UNSPECIFIED",
+            RebillingBasis::CostAtList => "COST_AT_LIST",
+            RebillingBasis::DirectCustomerCost => "DIRECT_CUSTOMER_COST",
+        }
     }
 }
 /// Request message for \[CloudChannelService.CheckCloudIdentityAccountsExist][google.cloud.channel.v1.CloudChannelService.CheckCloudIdentityAccountsExist\].
@@ -2144,6 +2299,19 @@ pub mod list_purchasable_skus_request {
             /// SKU is a downgrade on the current entitlement.
             Downgrade = 2,
         }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Upgrade => "UPGRADE",
+                    ChangeType::Downgrade => "DOWNGRADE",
+                }
+            }
+        }
     }
     /// Defines the intended purchase.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -2323,6 +2491,7 @@ pub struct ListSubscribersResponse {
 pub mod cloud_channel_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// CloudChannelService lets Google cloud resellers and distributors manage
     /// their customers, channel partners, entitlements, and reports.
     ///
@@ -2357,6 +2526,10 @@ pub mod cloud_channel_service_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -2376,19 +2549,19 @@ pub mod cloud_channel_service_client {
         {
             CloudChannelServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// List [Customer][google.cloud.channel.v1.Customer]s.
@@ -4141,5 +4314,137 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+    }
+}
+/// Represents Pub/Sub message content describing customer update.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerEvent {
+    /// Resource name of the customer.
+    /// Format: accounts/{account_id}/customers/{customer_id}
+    #[prost(string, tag="1")]
+    pub customer: ::prost::alloc::string::String,
+    /// Type of event which happened on the customer.
+    #[prost(enumeration="customer_event::Type", tag="2")]
+    pub event_type: i32,
+}
+/// Nested message and enum types in `CustomerEvent`.
+pub mod customer_event {
+    /// Type of customer event.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Type {
+        /// Not used.
+        Unspecified = 0,
+        /// Primary domain for customer was changed.
+        PrimaryDomainChanged = 1,
+        /// Primary domain of the customer has been verified.
+        PrimaryDomainVerified = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
+                Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
+            }
+        }
+    }
+}
+/// Represents Pub/Sub message content describing entitlement update.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EntitlementEvent {
+    /// Resource name of an entitlement of the form:
+    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+    #[prost(string, tag="1")]
+    pub entitlement: ::prost::alloc::string::String,
+    /// Type of event which happened on the entitlement.
+    #[prost(enumeration="entitlement_event::Type", tag="2")]
+    pub event_type: i32,
+}
+/// Nested message and enum types in `EntitlementEvent`.
+pub mod entitlement_event {
+    /// Type of entitlement event.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Type {
+        /// Not used.
+        Unspecified = 0,
+        /// A new entitlement was created.
+        Created = 1,
+        /// The offer type associated with an entitlement was changed.
+        /// This is not triggered if an entitlement converts from a commit offer to a
+        /// flexible offer as part of a renewal.
+        PricePlanSwitched = 3,
+        /// Annual commitment for a commit plan was changed.
+        CommitmentChanged = 4,
+        /// An annual entitlement was renewed.
+        Renewed = 5,
+        /// Entitlement was suspended.
+        Suspended = 6,
+        /// Entitlement was unsuspended.
+        Activated = 7,
+        /// Entitlement was cancelled.
+        Cancelled = 8,
+        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
+        /// Business Standard to Google Workspace Business Plus).
+        SkuChanged = 9,
+        /// The renewal settings of an entitlement has changed.
+        RenewalSettingChanged = 10,
+        /// Paid service has started on trial entitlement.
+        PaidServiceStarted = 11,
+        /// License was assigned to or revoked from a user.
+        LicenseAssignmentChanged = 12,
+        /// License cap was changed for the entitlement.
+        LicenseCapChanged = 13,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Created => "CREATED",
+                Type::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
+                Type::CommitmentChanged => "COMMITMENT_CHANGED",
+                Type::Renewed => "RENEWED",
+                Type::Suspended => "SUSPENDED",
+                Type::Activated => "ACTIVATED",
+                Type::Cancelled => "CANCELLED",
+                Type::SkuChanged => "SKU_CHANGED",
+                Type::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
+                Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
+                Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
+                Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
+            }
+        }
+    }
+}
+/// Represents information which resellers will get as part of notification from
+/// Pub/Sub.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SubscriberEvent {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
+    #[prost(oneof="subscriber_event::Event", tags="1, 2")]
+    pub event: ::core::option::Option<subscriber_event::Event>,
+}
+/// Nested message and enum types in `SubscriberEvent`.
+pub mod subscriber_event {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// Customer event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag="1")]
+        CustomerEvent(super::CustomerEvent),
+        /// Entitlement event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag="2")]
+        EntitlementEvent(super::EntitlementEvent),
     }
 }

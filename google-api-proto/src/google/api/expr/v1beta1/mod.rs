@@ -195,13 +195,13 @@ pub mod expr {
     /// in a map:
     ///
     /// *  `all`, `exists`, `exists_one` -  test a predicate expression against
-    ///    the inputs and return `true` if the predicate is satisfied for all,
-    ///    any, or only one value `list.all(x, x < 10)`.
+    ///     the inputs and return `true` if the predicate is satisfied for all,
+    ///     any, or only one value `list.all(x, x < 10)`.
     /// *  `filter` - test a predicate expression against the inputs and return
-    ///    the subset of elements which satisfy the predicate:
-    ///    `payments.filter(p, p > 1000)`.
+    ///     the subset of elements which satisfy the predicate:
+    ///     `payments.filter(p, p > 1000)`.
     /// *  `map` - apply an expression to all elements in the input and return the
-    ///    output aggregate type: `[1, 2, 3].map(i, i * i)`.
+    ///     output aggregate type: `[1, 2, 3].map(i, i * i)`.
     ///
     /// The `has(m.x)` macro tests whether the property `x` is present in struct
     /// `m`. The semantics of this macro depend on the type of `m`. For proto2
@@ -309,6 +309,75 @@ pub mod literal {
         #[prost(bytes, tag="7")]
         BytesValue(::prost::bytes::Bytes),
     }
+}
+/// A declaration.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Decl {
+    /// The id of the declaration.
+    #[prost(int32, tag="1")]
+    pub id: i32,
+    /// The name of the declaration.
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+    /// The documentation string for the declaration.
+    #[prost(string, tag="3")]
+    pub doc: ::prost::alloc::string::String,
+    /// The kind of declaration.
+    #[prost(oneof="decl::Kind", tags="4, 5")]
+    pub kind: ::core::option::Option<decl::Kind>,
+}
+/// Nested message and enum types in `Decl`.
+pub mod decl {
+    /// The kind of declaration.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// An identifier declaration.
+        #[prost(message, tag="4")]
+        Ident(super::IdentDecl),
+        /// A function declaration.
+        #[prost(message, tag="5")]
+        Function(super::FunctionDecl),
+    }
+}
+/// The declared type of a variable.
+///
+/// Extends runtime type values with extra information used for type checking
+/// and dispatching.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeclType {
+    /// The expression id of the declared type, if applicable.
+    #[prost(int32, tag="1")]
+    pub id: i32,
+    /// The type name, e.g. 'int', 'my.type.Type' or 'T'
+    #[prost(string, tag="2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// An ordered list of type parameters, e.g. `<string, int>`.
+    /// Only applies to a subset of types, e.g. `map`, `list`.
+    #[prost(message, repeated, tag="4")]
+    pub type_params: ::prost::alloc::vec::Vec<DeclType>,
+}
+/// An identifier declaration.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IdentDecl {
+    /// Optional type of the identifier.
+    #[prost(message, optional, tag="3")]
+    pub r#type: ::core::option::Option<DeclType>,
+    /// Optional value of the identifier.
+    #[prost(message, optional, tag="4")]
+    pub value: ::core::option::Option<Expr>,
+}
+/// A function declaration.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FunctionDecl {
+    /// The function arguments.
+    #[prost(message, repeated, tag="1")]
+    pub args: ::prost::alloc::vec::Vec<IdentDecl>,
+    /// Optional declared return type.
+    #[prost(message, optional, tag="2")]
+    pub return_type: ::core::option::Option<DeclType>,
+    /// If the first argument of the function is the receiver.
+    #[prost(bool, tag="3")]
+    pub receiver_function: bool,
 }
 /// Represents a CEL value.
 ///
@@ -481,22 +550,22 @@ pub mod expr_value {
         /// unknowns *might* be included included when evaluation could result in
         /// different unknowns. For example:
         ///
-        ///     (<unknown\[1\]> || true) && <unknown\[2\]> -> <unknown\[2\]>
-        ///     <unknown\[1\]> || <unknown\[2\]> -> <unknown\[1,2\]>
-        ///     <unknown\[1\]>.foo -> <unknown\[1\]>
-        ///     foo(<unknown\[1\]>) -> <unknown\[1\]>
-        ///     <unknown\[1\]> + <unknown\[2\]> -> <unknown\[1\]> or <unknown[2[>
+        ///      (<unknown\[1\]> || true) && <unknown\[2\]> -> <unknown\[2\]>
+        ///      <unknown\[1\]> || <unknown\[2\]> -> <unknown\[1,2\]>
+        ///      <unknown\[1\]>.foo -> <unknown\[1\]>
+        ///      foo(<unknown\[1\]>) -> <unknown\[1\]>
+        ///      <unknown\[1\]> + <unknown\[2\]> -> <unknown\[1\]> or <unknown[2[>
         ///
         /// Unknown takes precidence over Error in cases where a `Value` can short
         /// circuit the result:
         ///
-        ///     <error> || <unknown> -> <unknown>
-        ///     <error> && <unknown> -> <unknown>
+        ///      <error> || <unknown> -> <unknown>
+        ///      <error> && <unknown> -> <unknown>
         ///
         /// Errors take precidence in all other cases:
         ///
-        ///     <unknown> + <error> -> <error>
-        ///     foo(<unknown>, <error>) -> <error>
+        ///      <unknown> + <error> -> <error>
+        ///      foo(<unknown>, <error>) -> <error>
         #[prost(message, tag="3")]
         Unknown(super::UnknownSet),
     }
@@ -525,73 +594,4 @@ pub struct IdRef {
     /// The expression id.
     #[prost(int32, tag="1")]
     pub id: i32,
-}
-/// A declaration.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Decl {
-    /// The id of the declaration.
-    #[prost(int32, tag="1")]
-    pub id: i32,
-    /// The name of the declaration.
-    #[prost(string, tag="2")]
-    pub name: ::prost::alloc::string::String,
-    /// The documentation string for the declaration.
-    #[prost(string, tag="3")]
-    pub doc: ::prost::alloc::string::String,
-    /// The kind of declaration.
-    #[prost(oneof="decl::Kind", tags="4, 5")]
-    pub kind: ::core::option::Option<decl::Kind>,
-}
-/// Nested message and enum types in `Decl`.
-pub mod decl {
-    /// The kind of declaration.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// An identifier declaration.
-        #[prost(message, tag="4")]
-        Ident(super::IdentDecl),
-        /// A function declaration.
-        #[prost(message, tag="5")]
-        Function(super::FunctionDecl),
-    }
-}
-/// The declared type of a variable.
-///
-/// Extends runtime type values with extra information used for type checking
-/// and dispatching.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeclType {
-    /// The expression id of the declared type, if applicable.
-    #[prost(int32, tag="1")]
-    pub id: i32,
-    /// The type name, e.g. 'int', 'my.type.Type' or 'T'
-    #[prost(string, tag="2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// An ordered list of type parameters, e.g. `<string, int>`.
-    /// Only applies to a subset of types, e.g. `map`, `list`.
-    #[prost(message, repeated, tag="4")]
-    pub type_params: ::prost::alloc::vec::Vec<DeclType>,
-}
-/// An identifier declaration.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IdentDecl {
-    /// Optional type of the identifier.
-    #[prost(message, optional, tag="3")]
-    pub r#type: ::core::option::Option<DeclType>,
-    /// Optional value of the identifier.
-    #[prost(message, optional, tag="4")]
-    pub value: ::core::option::Option<Expr>,
-}
-/// A function declaration.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FunctionDecl {
-    /// The function arguments.
-    #[prost(message, repeated, tag="1")]
-    pub args: ::prost::alloc::vec::Vec<IdentDecl>,
-    /// Optional declared return type.
-    #[prost(message, optional, tag="2")]
-    pub return_type: ::core::option::Option<DeclType>,
-    /// If the first argument of the function is the receiver.
-    #[prost(bool, tag="3")]
-    pub receiver_function: bool,
 }

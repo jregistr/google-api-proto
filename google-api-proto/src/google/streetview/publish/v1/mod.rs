@@ -222,6 +222,24 @@ pub mod photo {
         /// The recipient owns this photo due to a rights transfer.
         ReceivedViaTransfer = 7,
     }
+    impl TransferStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TransferStatus::Unknown => "TRANSFER_STATUS_UNKNOWN",
+                TransferStatus::NeverTransferred => "NEVER_TRANSFERRED",
+                TransferStatus::Pending => "PENDING",
+                TransferStatus::Completed => "COMPLETED",
+                TransferStatus::Rejected => "REJECTED",
+                TransferStatus::Expired => "EXPIRED",
+                TransferStatus::Cancelled => "CANCELLED",
+                TransferStatus::ReceivedViaTransfer => "RECEIVED_VIA_TRANSFER",
+            }
+        }
+    }
     /// Publication status of the photo in Google Maps.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -232,6 +250,19 @@ pub mod photo {
         Published = 1,
         /// The photo has been rejected for an unknown reason.
         RejectedUnknown = 2,
+    }
+    impl MapsPublishStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MapsPublishStatus::UnspecifiedMapsPublishStatus => "UNSPECIFIED_MAPS_PUBLISH_STATUS",
+                MapsPublishStatus::Published => "PUBLISHED",
+                MapsPublishStatus::RejectedUnknown => "REJECTED_UNKNOWN",
+            }
+        }
     }
 }
 /// A sequence of 360 photos along with metadata.
@@ -318,6 +349,18 @@ pub mod photo_sequence {
         /// GPS in Camera Motion Metadata Track (CAMM) takes precedence if it exists.
         CameraMotionMetadataTrack = 1,
     }
+    impl GpsSource {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GpsSource::PhotoSequence => "PHOTO_SEQUENCE",
+                GpsSource::CameraMotionMetadataTrack => "CAMERA_MOTION_METADATA_TRACK",
+            }
+        }
+    }
 }
 /// A rectangle in geographical coordinates.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -403,15 +446,15 @@ pub struct NotOutdoorsFailureDetails {
 /// The processing state of the sequence. The states move as follows:
 ///
 /// ```
-///      +-------------------------+
-///      |                         |
-///  +---v---+  +----------+  +----+----+
-///  |PENDING+-->PROCESSING+-->PROCESSED|
-///  +---+---+  +----+-----+  +----+----+
-///      |           |             |
-///      |        +--v---+         |
-///      +-------->FAILED<---------+
-///               +------+
+///       +-------------------------+
+///       |                         |
+///   +---v---+  +----------+  +----+----+
+///   |PENDING+-->PROCESSING+-->PROCESSED|
+///   +---+---+  +----+-----+  +----+----+
+///       |           |             |
+///       |        +--v---+         |
+///       +-------->FAILED<---------+
+///                +------+
 /// ```
 ///
 /// The sequence may move to FAILED from any state. Additionally, a processed
@@ -429,6 +472,21 @@ pub enum ProcessingState {
     Processed = 3,
     /// The sequence failed processing. See FailureReason for more details.
     Failed = 4,
+}
+impl ProcessingState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ProcessingState::Unspecified => "PROCESSING_STATE_UNSPECIFIED",
+            ProcessingState::Pending => "PENDING",
+            ProcessingState::Processing => "PROCESSING",
+            ProcessingState::Processed => "PROCESSED",
+            ProcessingState::Failed => "FAILED",
+        }
+    }
 }
 /// The possible reasons this \[PhotoSequence\]
 /// \[google.streetview.publish.v1.PhotoSequence\] failed to process.
@@ -484,6 +542,38 @@ pub enum ProcessingFailureReason {
     NotOutdoors = 18,
     /// Not enough video frames.
     InsufficientVideoFrames = 19,
+}
+impl ProcessingFailureReason {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ProcessingFailureReason::Unspecified => "PROCESSING_FAILURE_REASON_UNSPECIFIED",
+            ProcessingFailureReason::LowResolution => "LOW_RESOLUTION",
+            ProcessingFailureReason::Duplicate => "DUPLICATE",
+            ProcessingFailureReason::InsufficientGps => "INSUFFICIENT_GPS",
+            ProcessingFailureReason::NoOverlapGps => "NO_OVERLAP_GPS",
+            ProcessingFailureReason::InvalidGps => "INVALID_GPS",
+            ProcessingFailureReason::FailedToRefinePositions => "FAILED_TO_REFINE_POSITIONS",
+            ProcessingFailureReason::Takedown => "TAKEDOWN",
+            ProcessingFailureReason::CorruptVideo => "CORRUPT_VIDEO",
+            ProcessingFailureReason::Internal => "INTERNAL",
+            ProcessingFailureReason::InvalidVideoFormat => "INVALID_VIDEO_FORMAT",
+            ProcessingFailureReason::InvalidVideoDimensions => "INVALID_VIDEO_DIMENSIONS",
+            ProcessingFailureReason::InvalidCaptureTime => "INVALID_CAPTURE_TIME",
+            ProcessingFailureReason::GpsDataGap => "GPS_DATA_GAP",
+            ProcessingFailureReason::JumpyGps => "JUMPY_GPS",
+            ProcessingFailureReason::InvalidImu => "INVALID_IMU",
+            ProcessingFailureReason::InsufficientImu => "INSUFFICIENT_IMU",
+            ProcessingFailureReason::InsufficientOverlapTimeSeries => "INSUFFICIENT_OVERLAP_TIME_SERIES",
+            ProcessingFailureReason::ImuDataGap => "IMU_DATA_GAP",
+            ProcessingFailureReason::UnsupportedCamera => "UNSUPPORTED_CAMERA",
+            ProcessingFailureReason::NotOutdoors => "NOT_OUTDOORS",
+            ProcessingFailureReason::InsufficientVideoFrames => "INSUFFICIENT_VIDEO_FRAMES",
+        }
+    }
 }
 /// Request to create a \[Photo][google.streetview.publish.v1.Photo\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -584,7 +674,7 @@ pub struct PhotoResponse {
 /// * `pageSize` determines the maximum number of photos to return.
 /// * `pageToken` is the next page token value returned from a previous
 /// \[ListPhotos][google.streetview.publish.v1.StreetViewPublishService.ListPhotos\]
-///     request, if any.
+///      request, if any.
 /// * `filter` allows filtering by a given parameter. 'placeId' is the only
 /// parameter supported at the moment.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -734,6 +824,19 @@ pub mod create_photo_sequence_request {
         /// Extensible Device Metadata, <http://www.xdm.org>
         Xdm = 2,
     }
+    impl InputType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InputType::Unspecified => "INPUT_TYPE_UNSPECIFIED",
+                InputType::Video => "VIDEO",
+                InputType::Xdm => "XDM",
+            }
+        }
+    }
 }
 /// Request to get a \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\].
 ///
@@ -746,7 +849,7 @@ pub mod create_photo_sequence_request {
 ///
 /// * `view` controls if the download URL for the
 /// \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\] is
-///   returned.
+///    returned.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPhotoSequenceRequest {
     /// Required. ID of the photo sequence.
@@ -792,7 +895,7 @@ pub struct BatchDeletePhotosResponse {
 /// * `pageSize` determines the maximum number of photo sequences to return.
 /// * `pageToken` is the next page token value returned from a previous
 /// \[ListPhotoSequences][google.streetview.publish.v1.StreetViewPublishService.ListPhotoSequences\]
-///   request, if any.
+///    request, if any.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPhotoSequencesRequest {
     /// Optional. The maximum number of photo sequences to return.
@@ -834,14 +937,14 @@ pub struct ListPhotoSequencesResponse {
     /// Each item in the list can have three possible states,
     ///
     /// * `Operation.done` = false, if the processing of
-    ///   \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\] is not
-    ///   finished yet.
+    ///    \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\] is not
+    ///    finished yet.
     /// * `Operation.done` = true and `Operation.error` is populated, if there was
-    ///   an error in processing.
+    ///    an error in processing.
     /// * `Operation.done` = true and `Operation.response` contains a
-    ///   \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\] message,
-    ///   In each sequence, only
-    ///   \[Id][google.streetview.publish.v1.PhotoSequence.id\] is populated.
+    ///    \[PhotoSequence][google.streetview.publish.v1.PhotoSequence\] message,
+    ///    In each sequence, only
+    ///    \[Id][google.streetview.publish.v1.PhotoSequence.id\] is populated.
     #[prost(message, repeated, tag="1")]
     pub photo_sequences: ::prost::alloc::vec::Vec<super::super::super::longrunning::Operation>,
     /// Token to retrieve the next page of results, or empty if there are no more
@@ -860,10 +963,23 @@ pub enum PhotoView {
     /// Server responses include the download URL for the photo bytes.
     IncludeDownloadUrl = 1,
 }
+impl PhotoView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PhotoView::Basic => "BASIC",
+            PhotoView::IncludeDownloadUrl => "INCLUDE_DOWNLOAD_URL",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod street_view_publish_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Publishes and connects user-contributed photos on Street View.
     #[derive(Debug, Clone)]
     pub struct StreetViewPublishServiceClient<T> {
@@ -878,6 +994,10 @@ pub mod street_view_publish_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -901,19 +1021,19 @@ pub mod street_view_publish_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates an upload session to start uploading photo bytes.  The method uses

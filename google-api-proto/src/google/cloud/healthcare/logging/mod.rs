@@ -1,22 +1,26 @@
-/// A log entry for a Consent store QueryAccessibleData long-running operation.
+/// A log entry for a HL7v2 import long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryAccessibleDataLogEntry {
-    /// The resource being processed.
+pub struct ImportHl7V2LogEntry {
+    /// The source in Cloud Storage (for example,
+    /// `gs://{bucket_id}/{path/to/file}`).
     #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
+    pub source: ::prost::alloc::string::String,
     /// The error code and message.
     #[prost(message, optional, tag="2")]
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
-/// A log entry for a User Data Mapping indexing notification.
+/// A log entry for a HL7v2 store Pub/Sub notification.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConsentUserDataMappingLogEntry {
-    /// The User Data Mapping being indexed (for example,
-    /// `projects/{projectId}/locations/{locationId}/datasets/{datasetId}/consentStores/{storeId}/userDataMappings/{messageId}`).
+pub struct Hl7V2NotificationLogEntry {
+    /// The HL7v2 message being created (for example,
+    /// `projects/{projectId}/locations/{locationId}/datasets/{datasetId}/hl7V2Stores/{hl7v2StoreId}/messages/{hl7v2MessageId}`).
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
+    /// The Pub/Sub topic that the notification is published on.
+    #[prost(string, tag="2")]
+    pub pubsub_topic: ::prost::alloc::string::String,
     /// The error code and message.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag="3")]
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR import long-running operation.
@@ -104,10 +108,21 @@ pub struct FhirDeidentifyStreamToStoreLogEntry {
     #[prost(message, optional, tag="3")]
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
-/// A log entry for a de-identification long-running operation.
+/// A log entry for a Consent store QueryAccessibleData long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeidentifyLogEntry {
-    /// The resource being de-identified.
+pub struct QueryAccessibleDataLogEntry {
+    /// The resource being processed.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The error code and message.
+    #[prost(message, optional, tag="2")]
+    pub error: ::core::option::Option<super::super::super::rpc::Status>,
+}
+/// A log entry for a User Data Mapping indexing notification.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConsentUserDataMappingLogEntry {
+    /// The User Data Mapping being indexed (for example,
+    /// `projects/{projectId}/locations/{locationId}/datasets/{datasetId}/consentStores/{storeId}/userDataMappings/{messageId}`).
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
     /// The error code and message.
@@ -204,28 +219,13 @@ pub struct DicomStreamLogEntry {
     #[prost(message, optional, tag="3")]
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
-/// A log entry for a HL7v2 import long-running operation.
+/// A log entry for a de-identification long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportHl7V2LogEntry {
-    /// The source in Cloud Storage (for example,
-    /// `gs://{bucket_id}/{path/to/file}`).
-    #[prost(string, tag="1")]
-    pub source: ::prost::alloc::string::String,
-    /// The error code and message.
-    #[prost(message, optional, tag="2")]
-    pub error: ::core::option::Option<super::super::super::rpc::Status>,
-}
-/// A log entry for a HL7v2 store Pub/Sub notification.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Hl7V2NotificationLogEntry {
-    /// The HL7v2 message being created (for example,
-    /// `projects/{projectId}/locations/{locationId}/datasets/{datasetId}/hl7V2Stores/{hl7v2StoreId}/messages/{hl7v2MessageId}`).
+pub struct DeidentifyLogEntry {
+    /// The resource being de-identified.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The Pub/Sub topic that the notification is published on.
-    #[prost(string, tag="2")]
-    pub pubsub_topic: ::prost::alloc::string::String,
     /// The error code and message.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag="2")]
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }

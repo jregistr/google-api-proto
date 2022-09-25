@@ -72,6 +72,20 @@ pub mod node_taint {
         /// Currently enforced by NodeController.
         NoExecute = 3,
     }
+    impl Effect {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Effect::Unspecified => "EFFECT_UNSPECIFIED",
+                Effect::NoSchedule => "NO_SCHEDULE",
+                Effect::PreferNoSchedule => "PREFER_NO_SCHEDULE",
+                Effect::NoExecute => "NO_EXECUTE",
+            }
+        }
+    }
 }
 /// Fleet related configuration.
 ///
@@ -123,6 +137,19 @@ pub mod logging_component_config {
         SystemComponents = 1,
         /// This indicates that user workload logging component is enabled.
         Workloads = 2,
+    }
+    impl Component {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Component::Unspecified => "COMPONENT_UNSPECIFIED",
+                Component::SystemComponents => "SYSTEM_COMPONENTS",
+                Component::Workloads => "WORKLOADS",
+            }
+        }
     }
 }
 /// An Anthos cluster running on AWS.
@@ -231,6 +258,23 @@ pub mod aws_cluster {
         /// The DEGRADED state indicates the cluster requires user action to
         /// restore full functionality.
         Degraded = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Provisioning => "PROVISIONING",
+                State::Running => "RUNNING",
+                State::Reconciling => "RECONCILING",
+                State::Stopping => "STOPPING",
+                State::Error => "ERROR",
+                State::Degraded => "DEGRADED",
+            }
+        }
     }
 }
 /// ControlPlane defines common parameters between control plane nodes.
@@ -392,6 +436,19 @@ pub mod aws_volume_template {
         /// GP3 (General Purpose SSD volume type).
         Gp3 = 2,
     }
+    impl VolumeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VolumeType::Unspecified => "VOLUME_TYPE_UNSPECIFIED",
+                VolumeType::Gp2 => "GP2",
+                VolumeType::Gp3 => "GP3",
+            }
+        }
+    }
 }
 /// ClusterNetworking defines cluster-wide networking configuration.
 ///
@@ -506,6 +563,23 @@ pub mod aws_node_pool {
         /// The DEGRADED state indicates the node pool requires user action to
         /// restore full functionality.
         Degraded = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Provisioning => "PROVISIONING",
+                State::Running => "RUNNING",
+                State::Reconciling => "RECONCILING",
+                State::Stopping => "STOPPING",
+                State::Error => "ERROR",
+                State::Degraded => "DEGRADED",
+            }
+        }
     }
 }
 /// Parameters that describe the nodes in a cluster.
@@ -628,8 +702,8 @@ pub struct AwsConfigEncryption {
 /// Details of placement information for an instance.
 /// Limitations for using the `host` tenancy:
 ///
-///  * T3 instances that use the unlimited CPU credit option don't support host
-///  tenancy.
+///   * T3 instances that use the unlimited CPU credit option don't support host
+///   tenancy.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsInstancePlacement {
     /// Required. The tenancy for instance.
@@ -650,6 +724,20 @@ pub mod aws_instance_placement {
         Dedicated = 2,
         /// Launch this instance to a dedicated host.
         Host = 3,
+    }
+    impl Tenancy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Tenancy::Unspecified => "TENANCY_UNSPECIFIED",
+                Tenancy::Default => "DEFAULT",
+                Tenancy::Dedicated => "DEDICATED",
+                Tenancy::Host => "HOST",
+            }
+        }
     }
 }
 /// An Anthos cluster running on Azure.
@@ -779,6 +867,23 @@ pub mod azure_cluster {
         /// The DEGRADED state indicates the cluster requires user action to
         /// restore full functionality.
         Degraded = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Provisioning => "PROVISIONING",
+                State::Running => "RUNNING",
+                State::Reconciling => "RECONCILING",
+                State::Stopping => "STOPPING",
+                State::Error => "ERROR",
+                State::Degraded => "DEGRADED",
+            }
+        }
     }
 }
 /// ClusterNetworking contains cluster-wide networking configuration.
@@ -1133,6 +1238,23 @@ pub mod azure_node_pool {
         /// restore full functionality.
         Degraded = 6,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Provisioning => "PROVISIONING",
+                State::Running => "RUNNING",
+                State::Reconciling => "RECONCILING",
+                State::Stopping => "STOPPING",
+                State::Error => "ERROR",
+                State::Degraded => "DEGRADED",
+            }
+        }
+    }
 }
 /// Parameters that describe the configuration of all node machines
 /// on a given node pool.
@@ -1290,14 +1412,14 @@ pub struct UpdateAzureClusterRequest {
     /// this field. The elements of the repeated paths field can only include these
     /// fields from \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\]:
     ///
-    ///  *   `description`.
-    ///  *   `annotations`.
-    ///  *   `azureClient`.
-    ///  *   `control_plane.version`.
-    ///  *   `control_plane.vm_size`.
-    ///  *   `authorization.admin_users`.
-    ///  *   `control_plane.root_volume.size_gib`.
-    ///  *   `logging_config`
+    ///   *   `description`.
+    ///   *   `annotations`.
+    ///   *   `azureClient`.
+    ///   *   `control_plane.version`.
+    ///   *   `control_plane.vm_size`.
+    ///   *   `authorization.admin_users`.
+    ///   *   `control_plane.root_volume.size_gib`.
+    ///   *   `logging_config`
     #[prost(message, optional, tag="4")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -1425,11 +1547,11 @@ pub struct UpdateAzureNodePoolRequest {
     /// this field. The elements of the repeated paths field can only include these
     /// fields from \[AzureNodePool][google.cloud.gkemulticloud.v1.AzureNodePool\]:
     ///
-    ///  *.  `annotations`.
-    ///  *   `version`.
-    ///  *   `autoscaling.min_node_count`.
-    ///  *   `autoscaling.max_node_count`.
-    ///  *   `config.vm_size`.
+    ///   *.  `annotations`.
+    ///   *   `version`.
+    ///   *   `autoscaling.min_node_count`.
+    ///   *   `autoscaling.max_node_count`.
+    ///   *   `config.vm_size`.
     #[prost(message, optional, tag="3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -1659,6 +1781,7 @@ pub struct GenerateAzureAccessTokenResponse {
 pub mod azure_clusters_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The AzureClusters API provides a single centrally managed service
     /// to create and manage Anthos clusters that run on Azure infrastructure.
     #[derive(Debug, Clone)]
@@ -1674,6 +1797,10 @@ pub mod azure_clusters_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1695,19 +1822,19 @@ pub mod azure_clusters_client {
         {
             AzureClustersClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new [AzureClient][google.cloud.gkemulticloud.v1.AzureClient] resource on a given Google Cloud project
@@ -2140,26 +2267,26 @@ pub struct UpdateAwsClusterRequest {
     /// this field. The elements of the repeated paths field can only include these
     /// fields from \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\]:
     ///
-    ///  *   `description`.
-    ///  *   `annotations`.
-    ///  *   `control_plane.version`.
-    ///  *   `authorization.admin_users`.
-    ///  *   `control_plane.aws_services_authentication.role_arn`.
-    ///  *   `control_plane.aws_services_authentication.role_session_name`.
-    ///  *   `control_plane.config_encryption.kms_key_arn`.
-    ///  *   `control_plane.instance_type`.
-    ///  *   `control_plane.security_group_ids`.
-    ///  *   `control_plane.proxy_config`.
-    ///  *   `control_plane.proxy_config.secret_arn`.
-    ///  *   `control_plane.proxy_config.secret_version`.
-    ///  *   `control_plane.root_volume.iops`.
-    ///  *   `control_plane.root_volume.kms_key_arn`.
-    ///  *   `control_plane.root_volume.volume_type`.
-    ///  *   `control_plane.root_volume.size_gib`.
-    ///  *   `control_plane.ssh_config`.
-    ///  *   `control_plane.ssh_config.ec2_key_pair`.
-    ///  *   `control_plane.instance_placement.tenancy`.
-    ///  *   `logging_config`.
+    ///   *   `description`.
+    ///   *   `annotations`.
+    ///   *   `control_plane.version`.
+    ///   *   `authorization.admin_users`.
+    ///   *   `control_plane.aws_services_authentication.role_arn`.
+    ///   *   `control_plane.aws_services_authentication.role_session_name`.
+    ///   *   `control_plane.config_encryption.kms_key_arn`.
+    ///   *   `control_plane.instance_type`.
+    ///   *   `control_plane.security_group_ids`.
+    ///   *   `control_plane.proxy_config`.
+    ///   *   `control_plane.proxy_config.secret_arn`.
+    ///   *   `control_plane.proxy_config.secret_version`.
+    ///   *   `control_plane.root_volume.iops`.
+    ///   *   `control_plane.root_volume.kms_key_arn`.
+    ///   *   `control_plane.root_volume.volume_type`.
+    ///   *   `control_plane.root_volume.size_gib`.
+    ///   *   `control_plane.ssh_config`.
+    ///   *   `control_plane.ssh_config.ec2_key_pair`.
+    ///   *   `control_plane.instance_placement.tenancy`.
+    ///   *   `logging_config`.
     #[prost(message, optional, tag="4")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -2288,21 +2415,21 @@ pub struct UpdateAwsNodePoolRequest {
     /// this field. The elements of the repeated paths field can only include these
     /// fields from \[AwsNodePool][google.cloud.gkemulticloud.v1.AwsNodePool\]:
     ///
-    ///  *   `annotations`.
-    ///  *   `version`.
-    ///  *   `autoscaling.min_node_count`.
-    ///  *   `autoscaling.max_node_count`.
-    ///  *   `config.config_encryption.kms_key_arn`.
-    ///  *   `config.security_group_ids`.
-    ///  *   `config.root_volume.iops`.
-    ///  *   `config.root_volume.kms_key_arn`.
-    ///  *   `config.root_volume.volume_type`.
-    ///  *   `config.root_volume.size_gib`.
-    ///  *   `config.proxy_config`.
-    ///  *   `config.proxy_config.secret_arn`.
-    ///  *   `config.proxy_config.secret_version`.
-    ///  *   `config.ssh_config`.
-    ///  *   `config.ssh_config.ec2_key_pair`.
+    ///   *   `annotations`.
+    ///   *   `version`.
+    ///   *   `autoscaling.min_node_count`.
+    ///   *   `autoscaling.max_node_count`.
+    ///   *   `config.config_encryption.kms_key_arn`.
+    ///   *   `config.security_group_ids`.
+    ///   *   `config.root_volume.iops`.
+    ///   *   `config.root_volume.kms_key_arn`.
+    ///   *   `config.root_volume.volume_type`.
+    ///   *   `config.root_volume.size_gib`.
+    ///   *   `config.proxy_config`.
+    ///   *   `config.proxy_config.secret_arn`.
+    ///   *   `config.proxy_config.secret_version`.
+    ///   *   `config.ssh_config`.
+    ///   *   `config.ssh_config.ec2_key_pair`.
     #[prost(message, optional, tag="3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -2429,6 +2556,7 @@ pub struct GenerateAwsAccessTokenResponse {
 pub mod aws_clusters_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The AwsClusters API provides a single centrally managed service
     /// to create and manage Anthos clusters that run on AWS infrastructure.
     #[derive(Debug, Clone)]
@@ -2444,6 +2572,10 @@ pub mod aws_clusters_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -2465,19 +2597,19 @@ pub mod aws_clusters_client {
         {
             AwsClustersClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a new [AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster] resource on a given GCP project and region.

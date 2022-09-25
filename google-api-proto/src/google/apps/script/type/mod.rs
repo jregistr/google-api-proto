@@ -10,37 +10,6 @@ pub mod gmail;
 pub mod sheets;
 #[cfg(any(feature = "google-apps-script-type-slides"))]
 pub mod slides;
-/// The widget subset used by an add-on.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AddOnWidgetSet {
-    /// The list of widgets used in an add-on.
-    #[prost(enumeration="add_on_widget_set::WidgetType", repeated, tag="1")]
-    pub used_widgets: ::prost::alloc::vec::Vec<i32>,
-}
-/// Nested message and enum types in `AddOnWidgetSet`.
-pub mod add_on_widget_set {
-    /// The Widget type. DEFAULT is the basic widget set.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum WidgetType {
-        /// The default widget set.
-        Unspecified = 0,
-        /// The date picker.
-        DatePicker = 1,
-        /// Styled buttons include filled buttons and disabled buttons.
-        StyledButtons = 2,
-        /// Persistent forms allow persisting form values during actions.
-        PersistentForms = 3,
-        /// Fixed footer in card.
-        FixedFooter = 4,
-        /// Update the subject and recipients of a draft.
-        UpdateSubjectAndRecipients = 5,
-        /// The grid widget.
-        GridWidget = 6,
-        /// A Gmail add-on action that applies to the addon compose UI.
-        AddonComposeUiAction = 7,
-    }
-}
 // Common Manifest protos for G Suite extension-point configuration.
 
 /// Common format for declaring a  menu item, or button, that appears within a
@@ -101,6 +70,55 @@ pub mod universal_action_extension_point {
         /// Endpoint to be run by the UniversalAction.
         #[prost(string, tag="3")]
         RunFunction(::prost::alloc::string::String),
+    }
+}
+/// The widget subset used by an add-on.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AddOnWidgetSet {
+    /// The list of widgets used in an add-on.
+    #[prost(enumeration="add_on_widget_set::WidgetType", repeated, tag="1")]
+    pub used_widgets: ::prost::alloc::vec::Vec<i32>,
+}
+/// Nested message and enum types in `AddOnWidgetSet`.
+pub mod add_on_widget_set {
+    /// The Widget type. DEFAULT is the basic widget set.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum WidgetType {
+        /// The default widget set.
+        Unspecified = 0,
+        /// The date picker.
+        DatePicker = 1,
+        /// Styled buttons include filled buttons and disabled buttons.
+        StyledButtons = 2,
+        /// Persistent forms allow persisting form values during actions.
+        PersistentForms = 3,
+        /// Fixed footer in card.
+        FixedFooter = 4,
+        /// Update the subject and recipients of a draft.
+        UpdateSubjectAndRecipients = 5,
+        /// The grid widget.
+        GridWidget = 6,
+        /// A Gmail add-on action that applies to the addon compose UI.
+        AddonComposeUiAction = 7,
+    }
+    impl WidgetType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                WidgetType::Unspecified => "WIDGET_TYPE_UNSPECIFIED",
+                WidgetType::DatePicker => "DATE_PICKER",
+                WidgetType::StyledButtons => "STYLED_BUTTONS",
+                WidgetType::PersistentForms => "PERSISTENT_FORMS",
+                WidgetType::FixedFooter => "FIXED_FOOTER",
+                WidgetType::UpdateSubjectAndRecipients => "UPDATE_SUBJECT_AND_RECIPIENTS",
+                WidgetType::GridWidget => "GRID_WIDGET",
+                WidgetType::AddonComposeUiAction => "ADDON_COMPOSE_UI_ACTION",
+            }
+        }
     }
 }
 /// Add-on configuration that is shared across all add-on host applications.
@@ -180,4 +198,18 @@ pub enum HttpAuthorizationHeader {
     UserIdToken = 2,
     /// Do not send an Authentication header
     None = 3,
+}
+impl HttpAuthorizationHeader {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            HttpAuthorizationHeader::Unspecified => "HTTP_AUTHORIZATION_HEADER_UNSPECIFIED",
+            HttpAuthorizationHeader::SystemIdToken => "SYSTEM_ID_TOKEN",
+            HttpAuthorizationHeader::UserIdToken => "USER_ID_TOKEN",
+            HttpAuthorizationHeader::None => "NONE",
+        }
+    }
 }

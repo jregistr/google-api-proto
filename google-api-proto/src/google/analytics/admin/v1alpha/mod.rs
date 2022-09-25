@@ -137,6 +137,23 @@ pub mod access_string_filter {
         /// Partial match for the regular expression with the string value.
         PartialRegexp = 6,
     }
+    impl MatchType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                MatchType::Exact => "EXACT",
+                MatchType::BeginsWith => "BEGINS_WITH",
+                MatchType::EndsWith => "ENDS_WITH",
+                MatchType::Contains => "CONTAINS",
+                MatchType::FullRegexp => "FULL_REGEXP",
+                MatchType::PartialRegexp => "PARTIAL_REGEXP",
+            }
+        }
+    }
 }
 /// The result needs to be in a list of string values.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -176,6 +193,22 @@ pub mod access_numeric_filter {
         GreaterThan = 4,
         /// Greater than or equal
         GreaterThanOrEqual = 5,
+    }
+    impl Operation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                Operation::Equal => "EQUAL",
+                Operation::LessThan => "LESS_THAN",
+                Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                Operation::GreaterThan => "GREATER_THAN",
+                Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+            }
+        }
     }
 }
 /// To express that the result needs to be between two numbers (inclusive).
@@ -259,6 +292,20 @@ pub mod access_order_by {
             /// "25". Non-numeric dimension values all have equal ordering value below
             /// all numeric values.
             Numeric = 3,
+        }
+        impl OrderType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    OrderType::Unspecified => "ORDER_TYPE_UNSPECIFIED",
+                    OrderType::Alphanumeric => "ALPHANUMERIC",
+                    OrderType::CaseInsensitiveAlphanumeric => "CASE_INSENSITIVE_ALPHANUMERIC",
+                    OrderType::Numeric => "NUMERIC",
+                }
+            }
         }
     }
     /// Specify one type of order by for `OrderBy`.
@@ -350,6 +397,495 @@ pub struct AccessQuotaStatus {
     /// Quota remaining after this request.
     #[prost(int32, tag="2")]
     pub remaining: i32,
+}
+/// A specific filter for a single dimension or metric.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceDimensionOrMetricFilter {
+    /// Required. Immutable. The dimension name or metric name to filter.
+    #[prost(string, tag="1")]
+    pub field_name: ::prost::alloc::string::String,
+    /// Optional. Indicates whether this filter needs dynamic evaluation or not. If set to
+    /// true, users join the Audience if they ever met the condition (static
+    /// evaluation). If unset or set to false, user evaluation for an Audience is
+    /// dynamic; users are added to an Audience when they meet the conditions and
+    /// then removed when they no longer meet them.
+    ///
+    /// This can only be set when Audience scope is ACROSS_ALL_SESSIONS.
+    #[prost(bool, tag="6")]
+    pub at_any_point_in_time: bool,
+    /// Optional. If set, specifies the time window for which to evaluate data in number of
+    /// days. If not set, then audience data is evaluated against lifetime data
+    /// (i.e., infinite time window).
+    ///
+    /// For example, if set to 1 day, only the current day's data is evaluated. The
+    /// reference point is the current day when at_any_point_in_time is unset or
+    /// false.
+    ///
+    /// It can only be set when Audience scope is ACROSS_ALL_SESSIONS and cannot be
+    /// greater than 60 days.
+    #[prost(int32, tag="7")]
+    pub in_any_n_day_period: i32,
+    /// One of the above filters.
+    #[prost(oneof="audience_dimension_or_metric_filter::OneFilter", tags="2, 3, 4, 5")]
+    pub one_filter: ::core::option::Option<audience_dimension_or_metric_filter::OneFilter>,
+}
+/// Nested message and enum types in `AudienceDimensionOrMetricFilter`.
+pub mod audience_dimension_or_metric_filter {
+    /// A filter for a string-type dimension that matches a particular pattern.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StringFilter {
+        /// Required. The match type for the string filter.
+        #[prost(enumeration="string_filter::MatchType", tag="1")]
+        pub match_type: i32,
+        /// Required. The string value to be matched against.
+        #[prost(string, tag="2")]
+        pub value: ::prost::alloc::string::String,
+        /// Optional. If true, the match is case-sensitive. If false, the match is
+        /// case-insensitive.
+        #[prost(bool, tag="3")]
+        pub case_sensitive: bool,
+    }
+    /// Nested message and enum types in `StringFilter`.
+    pub mod string_filter {
+        /// The match type for the string filter.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum MatchType {
+            /// Unspecified
+            Unspecified = 0,
+            /// Exact match of the string value.
+            Exact = 1,
+            /// Begins with the string value.
+            BeginsWith = 2,
+            /// Ends with the string value.
+            EndsWith = 3,
+            /// Contains the string value.
+            Contains = 4,
+            /// Full regular expression matches with the string value.
+            FullRegexp = 5,
+            /// Partial regular expression matches with the string value.
+            PartialRegexp = 6,
+        }
+        impl MatchType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                    MatchType::Exact => "EXACT",
+                    MatchType::BeginsWith => "BEGINS_WITH",
+                    MatchType::EndsWith => "ENDS_WITH",
+                    MatchType::Contains => "CONTAINS",
+                    MatchType::FullRegexp => "FULL_REGEXP",
+                    MatchType::PartialRegexp => "PARTIAL_REGEXP",
+                }
+            }
+        }
+    }
+    /// A filter for a string dimension that matches a particular list of options.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InListFilter {
+        /// Required. The list of possible string values to match against. Must be non-empty.
+        #[prost(string, repeated, tag="1")]
+        pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. If true, the match is case-sensitive. If false, the match is
+        /// case-insensitive.
+        #[prost(bool, tag="2")]
+        pub case_sensitive: bool,
+    }
+    /// To represent a number.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct NumericValue {
+        /// One of a numeric value.
+        #[prost(oneof="numeric_value::OneValue", tags="1, 2")]
+        pub one_value: ::core::option::Option<numeric_value::OneValue>,
+    }
+    /// Nested message and enum types in `NumericValue`.
+    pub mod numeric_value {
+        /// One of a numeric value.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum OneValue {
+            /// Integer value.
+            #[prost(int64, tag="1")]
+            Int64Value(i64),
+            /// Double value.
+            #[prost(double, tag="2")]
+            DoubleValue(f64),
+        }
+    }
+    /// A filter for numeric or date values on a dimension or metric.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct NumericFilter {
+        /// Required. The operation applied to a numeric filter.
+        #[prost(enumeration="numeric_filter::Operation", tag="1")]
+        pub operation: i32,
+        /// Required. The numeric or date value to match against.
+        #[prost(message, optional, tag="2")]
+        pub value: ::core::option::Option<NumericValue>,
+    }
+    /// Nested message and enum types in `NumericFilter`.
+    pub mod numeric_filter {
+        /// The operation applied to a numeric filter.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Operation {
+            /// Unspecified.
+            Unspecified = 0,
+            /// Equal.
+            Equal = 1,
+            /// Less than.
+            LessThan = 2,
+            /// Less than or equal.
+            LessThanOrEqual = 3,
+            /// Greater than.
+            GreaterThan = 4,
+            /// Greater than or equal.
+            GreaterThanOrEqual = 5,
+        }
+        impl Operation {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                    Operation::Equal => "EQUAL",
+                    Operation::LessThan => "LESS_THAN",
+                    Operation::LessThanOrEqual => "LESS_THAN_OR_EQUAL",
+                    Operation::GreaterThan => "GREATER_THAN",
+                    Operation::GreaterThanOrEqual => "GREATER_THAN_OR_EQUAL",
+                }
+            }
+        }
+    }
+    /// A filter for numeric or date values between certain values on a dimension
+    /// or metric.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct BetweenFilter {
+        /// Required. Begins with this number, inclusive.
+        #[prost(message, optional, tag="1")]
+        pub from_value: ::core::option::Option<NumericValue>,
+        /// Required. Ends with this number, inclusive.
+        #[prost(message, optional, tag="2")]
+        pub to_value: ::core::option::Option<NumericValue>,
+    }
+    /// One of the above filters.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum OneFilter {
+        /// A filter for a string-type dimension that matches a particular pattern.
+        #[prost(message, tag="2")]
+        StringFilter(StringFilter),
+        /// A filter for a string dimension that matches a particular list of
+        /// options.
+        #[prost(message, tag="3")]
+        InListFilter(InListFilter),
+        /// A filter for numeric or date values on a dimension or metric.
+        #[prost(message, tag="4")]
+        NumericFilter(NumericFilter),
+        /// A filter for numeric or date values between certain values on a dimension
+        /// or metric.
+        #[prost(message, tag="5")]
+        BetweenFilter(BetweenFilter),
+    }
+}
+/// A filter that matches events of a single event name. If an event parameter
+/// is specified, only the subset of events that match both the single event name
+/// and the parameter filter expressions match this event filter.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceEventFilter {
+    /// Required. Immutable. The name of the event to match against.
+    #[prost(string, tag="1")]
+    pub event_name: ::prost::alloc::string::String,
+    /// Optional. If specified, this filter matches events that match both the single
+    /// event name and the parameter filter expressions. AudienceEventFilter
+    /// inside the parameter filter expression cannot be set (i.e., nested
+    /// event filters are not supported). This should be a single and_group of
+    /// dimension_or_metric_filter or not_expression; ANDs of ORs are not
+    /// supported. Also, if it includes a filter for "eventCount", only that one
+    /// will be considered; all the other filters will be ignored.
+    #[prost(message, optional, boxed, tag="2")]
+    pub event_parameter_filter_expression: ::core::option::Option<::prost::alloc::boxed::Box<AudienceFilterExpression>>,
+}
+/// A logical expression of Audience dimension, metric, or event filters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceFilterExpression {
+    /// The expression applied to a filter.
+    #[prost(oneof="audience_filter_expression::Expr", tags="1, 2, 3, 4, 5")]
+    pub expr: ::core::option::Option<audience_filter_expression::Expr>,
+}
+/// Nested message and enum types in `AudienceFilterExpression`.
+pub mod audience_filter_expression {
+    /// The expression applied to a filter.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Expr {
+        /// A list of expressions to be AND’ed together. It can only contain
+        /// AudienceFilterExpressions with or_group. This must be set for the top
+        /// level AudienceFilterExpression.
+        #[prost(message, tag="1")]
+        AndGroup(super::AudienceFilterExpressionList),
+        /// A list of expressions to OR’ed together. It cannot contain
+        /// AudienceFilterExpressions with and_group or or_group.
+        #[prost(message, tag="2")]
+        OrGroup(super::AudienceFilterExpressionList),
+        /// A filter expression to be NOT'ed (i.e., inverted, complemented). It
+        /// can only include a dimension_or_metric_filter. This cannot be set on the
+        /// top level AudienceFilterExpression.
+        #[prost(message, tag="3")]
+        NotExpression(::prost::alloc::boxed::Box<super::AudienceFilterExpression>),
+        /// A filter on a single dimension or metric. This cannot be set on the top
+        /// level AudienceFilterExpression.
+        #[prost(message, tag="4")]
+        DimensionOrMetricFilter(super::AudienceDimensionOrMetricFilter),
+        /// Creates a filter that matches a specific event. This cannot be set on the
+        /// top level AudienceFilterExpression.
+        #[prost(message, tag="5")]
+        EventFilter(::prost::alloc::boxed::Box<super::AudienceEventFilter>),
+    }
+}
+/// A list of Audience filter expressions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceFilterExpressionList {
+    /// A list of Audience filter expressions.
+    #[prost(message, repeated, tag="1")]
+    pub filter_expressions: ::prost::alloc::vec::Vec<AudienceFilterExpression>,
+}
+/// Defines a simple filter that a user must satisfy to be a member of the
+/// Audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceSimpleFilter {
+    /// Required. Immutable. Specifies the scope for this filter.
+    #[prost(enumeration="AudienceFilterScope", tag="1")]
+    pub scope: i32,
+    /// Required. Immutable. A logical expression of Audience dimension, metric, or event filters.
+    #[prost(message, optional, tag="2")]
+    pub filter_expression: ::core::option::Option<AudienceFilterExpression>,
+}
+/// Defines filters that must occur in a specific order for the user to be a
+/// member of the Audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceSequenceFilter {
+    /// Required. Immutable. Specifies the scope for this filter.
+    #[prost(enumeration="AudienceFilterScope", tag="1")]
+    pub scope: i32,
+    /// Optional. Defines the time period in which the whole sequence must occur.
+    #[prost(message, optional, tag="2")]
+    pub sequence_maximum_duration: ::core::option::Option<::prost_types::Duration>,
+    /// Required. An ordered sequence of steps. A user must complete each step in order to
+    /// join the sequence filter.
+    #[prost(message, repeated, tag="3")]
+    pub sequence_steps: ::prost::alloc::vec::Vec<audience_sequence_filter::AudienceSequenceStep>,
+}
+/// Nested message and enum types in `AudienceSequenceFilter`.
+pub mod audience_sequence_filter {
+    /// A condition that must occur in the specified step order for this user
+    /// to match the sequence.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AudienceSequenceStep {
+        /// Required. Immutable. Specifies the scope for this step.
+        #[prost(enumeration="super::AudienceFilterScope", tag="1")]
+        pub scope: i32,
+        /// Optional. If true, the event satisfying this step must be the very next event
+        /// after the event satisfying the last step. If unset or false, this
+        /// step indirectly follows the prior step; for example, there may be
+        /// events between the prior step and this step. It is ignored for the
+        /// first step.
+        #[prost(bool, tag="2")]
+        pub immediately_follows: bool,
+        /// Optional. When set, this step must be satisfied within the constraint_duration of
+        /// the previous step (i.e., t\[i\] - t\[i-1\] <= constraint_duration). If not
+        /// set, there is no duration requirement (the duration is effectively
+        /// unlimited). It is ignored for the first step.
+        #[prost(message, optional, tag="3")]
+        pub constraint_duration: ::core::option::Option<::prost_types::Duration>,
+        /// Required. Immutable. A logical expression of Audience dimension, metric, or event filters in
+        /// each step.
+        #[prost(message, optional, tag="4")]
+        pub filter_expression: ::core::option::Option<super::AudienceFilterExpression>,
+    }
+}
+/// A clause for defining either a simple or sequence filter. A filter can be
+/// inclusive (i.e., users satisfying the filter clause are included in the
+/// Audience) or exclusive (i.e., users satisfying the filter clause are
+/// excluded from the Audience).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceFilterClause {
+    /// Required. Specifies whether this is an include or exclude filter clause.
+    #[prost(enumeration="audience_filter_clause::AudienceClauseType", tag="1")]
+    pub clause_type: i32,
+    #[prost(oneof="audience_filter_clause::Filter", tags="2, 3")]
+    pub filter: ::core::option::Option<audience_filter_clause::Filter>,
+}
+/// Nested message and enum types in `AudienceFilterClause`.
+pub mod audience_filter_clause {
+    /// Specifies whether this is an include or exclude filter clause.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AudienceClauseType {
+        /// Unspecified clause type.
+        Unspecified = 0,
+        /// Users will be included in the Audience if the filter clause is met.
+        Include = 1,
+        /// Users will be excluded from the Audience if the filter clause is met.
+        Exclude = 2,
+    }
+    impl AudienceClauseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudienceClauseType::Unspecified => "AUDIENCE_CLAUSE_TYPE_UNSPECIFIED",
+                AudienceClauseType::Include => "INCLUDE",
+                AudienceClauseType::Exclude => "EXCLUDE",
+            }
+        }
+    }
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Filter {
+        /// A simple filter that a user must satisfy to be a member of the Audience.
+        #[prost(message, tag="2")]
+        SimpleFilter(super::AudienceSimpleFilter),
+        /// Filters that must occur in a specific order for the user to be a member
+        /// of the Audience.
+        #[prost(message, tag="3")]
+        SequenceFilter(super::AudienceSequenceFilter),
+    }
+}
+/// Specifies an event to log when a user joins the Audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceEventTrigger {
+    /// Required. The event name that will be logged.
+    #[prost(string, tag="1")]
+    pub event_name: ::prost::alloc::string::String,
+    /// Required. When to log the event.
+    #[prost(enumeration="audience_event_trigger::LogCondition", tag="2")]
+    pub log_condition: i32,
+}
+/// Nested message and enum types in `AudienceEventTrigger`.
+pub mod audience_event_trigger {
+    /// Determines when to log the event.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum LogCondition {
+        /// Log condition is not specified.
+        Unspecified = 0,
+        /// The event should be logged only when a user is joined.
+        AudienceJoined = 1,
+        /// The event should be logged whenever the Audience condition is met, even
+        /// if the user is already a member of the Audience.
+        AudienceMembershipRenewed = 2,
+    }
+    impl LogCondition {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LogCondition::Unspecified => "LOG_CONDITION_UNSPECIFIED",
+                LogCondition::AudienceJoined => "AUDIENCE_JOINED",
+                LogCondition::AudienceMembershipRenewed => "AUDIENCE_MEMBERSHIP_RENEWED",
+            }
+        }
+    }
+}
+/// A resource message representing a GA4 Audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Audience {
+    /// Output only. The resource name for this Audience resource.
+    /// Format: properties/{propertyId}/audiences/{audienceId}
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the Audience.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The description of the Audience.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Immutable. The duration a user should stay in an Audience. It cannot be set to more
+    /// than 540 days.
+    #[prost(int32, tag="4")]
+    pub membership_duration_days: i32,
+    /// Output only. It is automatically set by GA to false if this is an NPA Audience and is
+    /// excluded from ads personalization.
+    #[prost(bool, tag="5")]
+    pub ads_personalization_enabled: bool,
+    /// Optional. Specifies an event to log when a user joins the Audience. If not set, no
+    /// event is logged when a user joins the Audience.
+    #[prost(message, optional, tag="6")]
+    pub event_trigger: ::core::option::Option<AudienceEventTrigger>,
+    /// Immutable. Specifies how long an exclusion lasts for users that meet the exclusion
+    /// filter. It is applied to all EXCLUDE filter clauses and is ignored when
+    /// there is no EXCLUDE filter clause in the Audience.
+    #[prost(enumeration="audience::AudienceExclusionDurationMode", tag="7")]
+    pub exclusion_duration_mode: i32,
+    /// Required. Immutable. null Filter clauses that define the Audience. All clauses will be AND’ed
+    /// together.
+    #[prost(message, repeated, tag="8")]
+    pub filter_clauses: ::prost::alloc::vec::Vec<AudienceFilterClause>,
+}
+/// Nested message and enum types in `Audience`.
+pub mod audience {
+    /// Specifies how long an exclusion lasts for users that meet the exclusion
+    /// filter.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AudienceExclusionDurationMode {
+        /// Not specified.
+        Unspecified = 0,
+        /// Exclude users from the Audience during periods when they meet the
+        /// filter clause.
+        ExcludeTemporarily = 1,
+        /// Exclude users from the Audience if they've ever met the filter clause.
+        ExcludePermanently = 2,
+    }
+    impl AudienceExclusionDurationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudienceExclusionDurationMode::Unspecified => "AUDIENCE_EXCLUSION_DURATION_MODE_UNSPECIFIED",
+                AudienceExclusionDurationMode::ExcludeTemporarily => "EXCLUDE_TEMPORARILY",
+                AudienceExclusionDurationMode::ExcludePermanently => "EXCLUDE_PERMANENTLY",
+            }
+        }
+    }
+}
+/// Specifies how to evaluate users for joining an Audience.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AudienceFilterScope {
+    /// Scope is not specified.
+    Unspecified = 0,
+    /// User joins the Audience if the filter condition is met within one
+    /// event.
+    WithinSameEvent = 1,
+    /// User joins the Audience if the filter condition is met within one
+    /// session.
+    WithinSameSession = 2,
+    /// User joins the Audience if the filter condition is met by any event
+    /// across any session.
+    AcrossAllSessions = 3,
+}
+impl AudienceFilterScope {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AudienceFilterScope::Unspecified => "AUDIENCE_FILTER_SCOPE_UNSPECIFIED",
+            AudienceFilterScope::WithinSameEvent => "AUDIENCE_FILTER_SCOPE_WITHIN_SAME_EVENT",
+            AudienceFilterScope::WithinSameSession => "AUDIENCE_FILTER_SCOPE_WITHIN_SAME_SESSION",
+            AudienceFilterScope::AcrossAllSessions => "AUDIENCE_FILTER_SCOPE_ACROSS_ALL_SESSIONS",
+        }
+    }
 }
 /// A resource message representing a Google Analytics account.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -531,6 +1067,20 @@ pub mod data_stream {
         AndroidAppDataStream = 2,
         /// iOS app data stream.
         IosAppDataStream = 3,
+    }
+    impl DataStreamType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataStreamType::Unspecified => "DATA_STREAM_TYPE_UNSPECIFIED",
+                DataStreamType::WebDataStream => "WEB_DATA_STREAM",
+                DataStreamType::AndroidAppDataStream => "ANDROID_APP_DATA_STREAM",
+                DataStreamType::IosAppDataStream => "IOS_APP_DATA_STREAM",
+            }
+        }
     }
     /// Data for specific data stream types. The message that will be
     /// set corresponds to the type of this stream.
@@ -1048,6 +1598,19 @@ pub mod custom_dimension {
         /// Dimension scoped to a user.
         User = 2,
     }
+    impl DimensionScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DimensionScope::Unspecified => "DIMENSION_SCOPE_UNSPECIFIED",
+                DimensionScope::Event => "EVENT",
+                DimensionScope::User => "USER",
+            }
+        }
+    }
 }
 /// A definition for a custom metric.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1120,6 +1683,27 @@ pub mod custom_metric {
         /// This metric measures hours.
         Hours = 10,
     }
+    impl MeasurementUnit {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MeasurementUnit::Unspecified => "MEASUREMENT_UNIT_UNSPECIFIED",
+                MeasurementUnit::Standard => "STANDARD",
+                MeasurementUnit::Currency => "CURRENCY",
+                MeasurementUnit::Feet => "FEET",
+                MeasurementUnit::Meters => "METERS",
+                MeasurementUnit::Kilometers => "KILOMETERS",
+                MeasurementUnit::Miles => "MILES",
+                MeasurementUnit::Milliseconds => "MILLISECONDS",
+                MeasurementUnit::Seconds => "SECONDS",
+                MeasurementUnit::Minutes => "MINUTES",
+                MeasurementUnit::Hours => "HOURS",
+            }
+        }
+    }
     /// The scope of this metric.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -1128,6 +1712,18 @@ pub mod custom_metric {
         Unspecified = 0,
         /// Metric scoped to an event.
         Event = 1,
+    }
+    impl MetricScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MetricScope::Unspecified => "METRIC_SCOPE_UNSPECIFIED",
+                MetricScope::Event => "EVENT",
+            }
+        }
     }
     /// Labels that mark the data in this custom metric as data that should be
     /// restricted to specific users.
@@ -1140,6 +1736,19 @@ pub mod custom_metric {
         CostData = 1,
         /// Metric reports revenue data.
         RevenueData = 2,
+    }
+    impl RestrictedMetricType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RestrictedMetricType::Unspecified => "RESTRICTED_METRIC_TYPE_UNSPECIFIED",
+                RestrictedMetricType::CostData => "COST_DATA",
+                RestrictedMetricType::RevenueData => "REVENUE_DATA",
+            }
+        }
     }
 }
 /// Settings values for data retention. This is a singleton resource.
@@ -1178,6 +1787,22 @@ pub mod data_retention_settings {
         /// The data retention time duration is 50 months.
         /// Available to 360 properties only.
         FiftyMonths = 6,
+    }
+    impl RetentionDuration {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RetentionDuration::Unspecified => "RETENTION_DURATION_UNSPECIFIED",
+                RetentionDuration::TwoMonths => "TWO_MONTHS",
+                RetentionDuration::FourteenMonths => "FOURTEEN_MONTHS",
+                RetentionDuration::TwentySixMonths => "TWENTY_SIX_MONTHS",
+                RetentionDuration::ThirtyEightMonths => "THIRTY_EIGHT_MONTHS",
+                RetentionDuration::FiftyMonths => "FIFTY_MONTHS",
+            }
+        }
     }
 }
 /// The attribution settings used for a given property. This is a singleton
@@ -1221,6 +1846,19 @@ pub mod attribution_settings {
         /// 30-day lookback window.
         AcquisitionConversionEventLookbackWindow30Days = 2,
     }
+    impl AcquisitionConversionEventLookbackWindow {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AcquisitionConversionEventLookbackWindow::Unspecified => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_UNSPECIFIED",
+                AcquisitionConversionEventLookbackWindow::AcquisitionConversionEventLookbackWindow7Days => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_7_DAYS",
+                AcquisitionConversionEventLookbackWindow::AcquisitionConversionEventLookbackWindow30Days => "ACQUISITION_CONVERSION_EVENT_LOOKBACK_WINDOW_30_DAYS",
+            }
+        }
+    }
     /// How far back in time events should be considered for inclusion in a
     /// converting path for all conversions other than first app install/first site
     /// visit.
@@ -1235,6 +1873,20 @@ pub mod attribution_settings {
         OtherConversionEventLookbackWindow60Days = 2,
         /// 90-day lookback window.
         OtherConversionEventLookbackWindow90Days = 3,
+    }
+    impl OtherConversionEventLookbackWindow {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OtherConversionEventLookbackWindow::Unspecified => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_UNSPECIFIED",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow30Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_30_DAYS",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow60Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_60_DAYS",
+                OtherConversionEventLookbackWindow::OtherConversionEventLookbackWindow90Days => "OTHER_CONVERSION_EVENT_LOOKBACK_WINDOW_90_DAYS",
+            }
+        }
     }
     /// The reporting attribution model used to calculate conversion credit in this
     /// property's reports.
@@ -1267,6 +1919,24 @@ pub mod attribution_settings {
         /// Attributes 100% of the conversion value to the last Google Ads channel
         /// that the customer clicked through before converting.
         AdsPreferredLastClick = 7,
+    }
+    impl ReportingAttributionModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReportingAttributionModel::Unspecified => "REPORTING_ATTRIBUTION_MODEL_UNSPECIFIED",
+                ReportingAttributionModel::CrossChannelDataDriven => "CROSS_CHANNEL_DATA_DRIVEN",
+                ReportingAttributionModel::CrossChannelLastClick => "CROSS_CHANNEL_LAST_CLICK",
+                ReportingAttributionModel::CrossChannelFirstClick => "CROSS_CHANNEL_FIRST_CLICK",
+                ReportingAttributionModel::CrossChannelLinear => "CROSS_CHANNEL_LINEAR",
+                ReportingAttributionModel::CrossChannelPositionBased => "CROSS_CHANNEL_POSITION_BASED",
+                ReportingAttributionModel::CrossChannelTimeDecay => "CROSS_CHANNEL_TIME_DECAY",
+                ReportingAttributionModel::AdsPreferredLastClick => "ADS_PREFERRED_LAST_CLICK",
+            }
+        }
     }
 }
 /// The category selected for this property, used for industry benchmarking.
@@ -1328,6 +1998,43 @@ pub enum IndustryCategory {
     /// Shopping
     Shopping = 26,
 }
+impl IndustryCategory {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IndustryCategory::Unspecified => "INDUSTRY_CATEGORY_UNSPECIFIED",
+            IndustryCategory::Automotive => "AUTOMOTIVE",
+            IndustryCategory::BusinessAndIndustrialMarkets => "BUSINESS_AND_INDUSTRIAL_MARKETS",
+            IndustryCategory::Finance => "FINANCE",
+            IndustryCategory::Healthcare => "HEALTHCARE",
+            IndustryCategory::Technology => "TECHNOLOGY",
+            IndustryCategory::Travel => "TRAVEL",
+            IndustryCategory::Other => "OTHER",
+            IndustryCategory::ArtsAndEntertainment => "ARTS_AND_ENTERTAINMENT",
+            IndustryCategory::BeautyAndFitness => "BEAUTY_AND_FITNESS",
+            IndustryCategory::BooksAndLiterature => "BOOKS_AND_LITERATURE",
+            IndustryCategory::FoodAndDrink => "FOOD_AND_DRINK",
+            IndustryCategory::Games => "GAMES",
+            IndustryCategory::HobbiesAndLeisure => "HOBBIES_AND_LEISURE",
+            IndustryCategory::HomeAndGarden => "HOME_AND_GARDEN",
+            IndustryCategory::InternetAndTelecom => "INTERNET_AND_TELECOM",
+            IndustryCategory::LawAndGovernment => "LAW_AND_GOVERNMENT",
+            IndustryCategory::News => "NEWS",
+            IndustryCategory::OnlineCommunities => "ONLINE_COMMUNITIES",
+            IndustryCategory::PeopleAndSociety => "PEOPLE_AND_SOCIETY",
+            IndustryCategory::PetsAndAnimals => "PETS_AND_ANIMALS",
+            IndustryCategory::RealEstate => "REAL_ESTATE",
+            IndustryCategory::Reference => "REFERENCE",
+            IndustryCategory::Science => "SCIENCE",
+            IndustryCategory::Sports => "SPORTS",
+            IndustryCategory::JobsAndEducation => "JOBS_AND_EDUCATION",
+            IndustryCategory::Shopping => "SHOPPING",
+        }
+    }
+}
 /// Various levels of service for Google Analytics.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1338,6 +2045,19 @@ pub enum ServiceLevel {
     GoogleAnalyticsStandard = 1,
     /// The paid, premium version of Google Analytics.
     GoogleAnalytics360 = 2,
+}
+impl ServiceLevel {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ServiceLevel::Unspecified => "SERVICE_LEVEL_UNSPECIFIED",
+            ServiceLevel::GoogleAnalyticsStandard => "GOOGLE_ANALYTICS_STANDARD",
+            ServiceLevel::GoogleAnalytics360 => "GOOGLE_ANALYTICS_360",
+        }
+    }
 }
 /// Different kinds of actors that can make changes to Google Analytics
 /// resources.
@@ -1353,6 +2073,20 @@ pub enum ActorType {
     /// Changes made by Google Analytics support team staff.
     Support = 3,
 }
+impl ActorType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ActorType::Unspecified => "ACTOR_TYPE_UNSPECIFIED",
+            ActorType::User => "USER",
+            ActorType::System => "SYSTEM",
+            ActorType::Support => "SUPPORT",
+        }
+    }
+}
 /// Types of actions that may change a resource.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1365,6 +2099,20 @@ pub enum ActionType {
     Updated = 2,
     /// Resource was deleted in this change.
     Deleted = 3,
+}
+impl ActionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ActionType::Unspecified => "ACTION_TYPE_UNSPECIFIED",
+            ActionType::Created => "CREATED",
+            ActionType::Updated => "UPDATED",
+            ActionType::Deleted => "DELETED",
+        }
+    }
 }
 /// Types of resources whose changes may be returned from change history.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1403,6 +2151,32 @@ pub enum ChangeHistoryResourceType {
     /// AttributionSettings resource
     AttributionSettings = 20,
 }
+impl ChangeHistoryResourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ChangeHistoryResourceType::Unspecified => "CHANGE_HISTORY_RESOURCE_TYPE_UNSPECIFIED",
+            ChangeHistoryResourceType::Account => "ACCOUNT",
+            ChangeHistoryResourceType::Property => "PROPERTY",
+            ChangeHistoryResourceType::FirebaseLink => "FIREBASE_LINK",
+            ChangeHistoryResourceType::GoogleAdsLink => "GOOGLE_ADS_LINK",
+            ChangeHistoryResourceType::GoogleSignalsSettings => "GOOGLE_SIGNALS_SETTINGS",
+            ChangeHistoryResourceType::ConversionEvent => "CONVERSION_EVENT",
+            ChangeHistoryResourceType::MeasurementProtocolSecret => "MEASUREMENT_PROTOCOL_SECRET",
+            ChangeHistoryResourceType::CustomDimension => "CUSTOM_DIMENSION",
+            ChangeHistoryResourceType::CustomMetric => "CUSTOM_METRIC",
+            ChangeHistoryResourceType::DataRetentionSettings => "DATA_RETENTION_SETTINGS",
+            ChangeHistoryResourceType::DisplayVideo360AdvertiserLink => "DISPLAY_VIDEO_360_ADVERTISER_LINK",
+            ChangeHistoryResourceType::DisplayVideo360AdvertiserLinkProposal => "DISPLAY_VIDEO_360_ADVERTISER_LINK_PROPOSAL",
+            ChangeHistoryResourceType::SearchAds360Link => "SEARCH_ADS_360_LINK",
+            ChangeHistoryResourceType::DataStream => "DATA_STREAM",
+            ChangeHistoryResourceType::AttributionSettings => "ATTRIBUTION_SETTINGS",
+        }
+    }
+}
 /// Status of the Google Signals settings (i.e., whether this feature has been
 /// enabled for the property).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1415,6 +2189,19 @@ pub enum GoogleSignalsState {
     GoogleSignalsEnabled = 1,
     /// Google Signals is disabled.
     GoogleSignalsDisabled = 2,
+}
+impl GoogleSignalsState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GoogleSignalsState::Unspecified => "GOOGLE_SIGNALS_STATE_UNSPECIFIED",
+            GoogleSignalsState::GoogleSignalsEnabled => "GOOGLE_SIGNALS_ENABLED",
+            GoogleSignalsState::GoogleSignalsDisabled => "GOOGLE_SIGNALS_DISABLED",
+        }
+    }
 }
 /// Consent field of the Google Signals settings (i.e., whether the user has
 /// consented to the Google Signals terms of service.)
@@ -1430,6 +2217,19 @@ pub enum GoogleSignalsConsent {
     /// Terms of service have not been accepted
     NotConsented = 1,
 }
+impl GoogleSignalsConsent {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            GoogleSignalsConsent::Unspecified => "GOOGLE_SIGNALS_CONSENT_UNSPECIFIED",
+            GoogleSignalsConsent::Consented => "GOOGLE_SIGNALS_CONSENT_CONSENTED",
+            GoogleSignalsConsent::NotConsented => "GOOGLE_SIGNALS_CONSENT_NOT_CONSENTED",
+        }
+    }
+}
 /// An indication of which product the user initiated a link proposal from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1441,6 +2241,19 @@ pub enum LinkProposalInitiatingProduct {
     /// This proposal was created by a user from a linked product (not Google
     /// Analytics).
     LinkedProduct = 2,
+}
+impl LinkProposalInitiatingProduct {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LinkProposalInitiatingProduct::Unspecified => "LINK_PROPOSAL_INITIATING_PRODUCT_UNSPECIFIED",
+            LinkProposalInitiatingProduct::GoogleAnalytics => "GOOGLE_ANALYTICS",
+            LinkProposalInitiatingProduct::LinkedProduct => "LINKED_PRODUCT",
+        }
+    }
 }
 /// The state of a link proposal resource.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1469,6 +2282,23 @@ pub enum LinkProposalState {
     /// proposal will be automatically deleted after some time.
     Obsolete = 6,
 }
+impl LinkProposalState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LinkProposalState::Unspecified => "LINK_PROPOSAL_STATE_UNSPECIFIED",
+            LinkProposalState::AwaitingReviewFromGoogleAnalytics => "AWAITING_REVIEW_FROM_GOOGLE_ANALYTICS",
+            LinkProposalState::AwaitingReviewFromLinkedProduct => "AWAITING_REVIEW_FROM_LINKED_PRODUCT",
+            LinkProposalState::Withdrawn => "WITHDRAWN",
+            LinkProposalState::Declined => "DECLINED",
+            LinkProposalState::Expired => "EXPIRED",
+            LinkProposalState::Obsolete => "OBSOLETE",
+        }
+    }
+}
 /// Types of Property resources.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1482,408 +2312,19 @@ pub enum PropertyType {
     /// GA4 rollup property
     Rollup = 3,
 }
-/// A specific filter for a single dimension or metric.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceDimensionOrMetricFilter {
-    /// Required. Immutable. The dimension name or metric name to filter.
-    #[prost(string, tag="1")]
-    pub field_name: ::prost::alloc::string::String,
-    /// Optional. Indicates whether this filter needs dynamic evaluation or not. If set to
-    /// true, users join the Audience if they ever met the condition (static
-    /// evaluation). If unset or set to false, user evaluation for an Audience is
-    /// dynamic; users are added to an Audience when they meet the conditions and
-    /// then removed when they no longer meet them.
+impl PropertyType {
+    /// String value of the enum field names used in the ProtoBuf definition.
     ///
-    /// This can only be set when Audience scope is ACROSS_ALL_SESSIONS.
-    #[prost(bool, tag="6")]
-    pub at_any_point_in_time: bool,
-    /// Optional. If set, specifies the time window for which to evaluate data in number of
-    /// days. If not set, then audience data is evaluated against lifetime data
-    /// (i.e., infinite time window).
-    ///
-    /// For example, if set to 1 day, only the current day's data is evaluated. The
-    /// reference point is the current day when at_any_point_in_time is unset or
-    /// false.
-    ///
-    /// It can only be set when Audience scope is ACROSS_ALL_SESSIONS and cannot be
-    /// greater than 60 days.
-    #[prost(int32, tag="7")]
-    pub in_any_n_day_period: i32,
-    /// One of the above filters.
-    #[prost(oneof="audience_dimension_or_metric_filter::OneFilter", tags="2, 3, 4, 5")]
-    pub one_filter: ::core::option::Option<audience_dimension_or_metric_filter::OneFilter>,
-}
-/// Nested message and enum types in `AudienceDimensionOrMetricFilter`.
-pub mod audience_dimension_or_metric_filter {
-    /// A filter for a string-type dimension that matches a particular pattern.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StringFilter {
-        /// Required. The match type for the string filter.
-        #[prost(enumeration="string_filter::MatchType", tag="1")]
-        pub match_type: i32,
-        /// Required. The string value to be matched against.
-        #[prost(string, tag="2")]
-        pub value: ::prost::alloc::string::String,
-        /// Optional. If true, the match is case-sensitive. If false, the match is
-        /// case-insensitive.
-        #[prost(bool, tag="3")]
-        pub case_sensitive: bool,
-    }
-    /// Nested message and enum types in `StringFilter`.
-    pub mod string_filter {
-        /// The match type for the string filter.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum MatchType {
-            /// Unspecified
-            Unspecified = 0,
-            /// Exact match of the string value.
-            Exact = 1,
-            /// Begins with the string value.
-            BeginsWith = 2,
-            /// Ends with the string value.
-            EndsWith = 3,
-            /// Contains the string value.
-            Contains = 4,
-            /// Full regular expression matches with the string value.
-            FullRegexp = 5,
-            /// Partial regular expression matches with the string value.
-            PartialRegexp = 6,
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PropertyType::Unspecified => "PROPERTY_TYPE_UNSPECIFIED",
+            PropertyType::Ordinary => "PROPERTY_TYPE_ORDINARY",
+            PropertyType::Subproperty => "PROPERTY_TYPE_SUBPROPERTY",
+            PropertyType::Rollup => "PROPERTY_TYPE_ROLLUP",
         }
     }
-    /// A filter for a string dimension that matches a particular list of options.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InListFilter {
-        /// Required. The list of possible string values to match against. Must be non-empty.
-        #[prost(string, repeated, tag="1")]
-        pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. If true, the match is case-sensitive. If false, the match is
-        /// case-insensitive.
-        #[prost(bool, tag="2")]
-        pub case_sensitive: bool,
-    }
-    /// To represent a number.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct NumericValue {
-        /// One of a numeric value.
-        #[prost(oneof="numeric_value::OneValue", tags="1, 2")]
-        pub one_value: ::core::option::Option<numeric_value::OneValue>,
-    }
-    /// Nested message and enum types in `NumericValue`.
-    pub mod numeric_value {
-        /// One of a numeric value.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum OneValue {
-            /// Integer value.
-            #[prost(int64, tag="1")]
-            Int64Value(i64),
-            /// Double value.
-            #[prost(double, tag="2")]
-            DoubleValue(f64),
-        }
-    }
-    /// A filter for numeric or date values on a dimension or metric.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct NumericFilter {
-        /// Required. The operation applied to a numeric filter.
-        #[prost(enumeration="numeric_filter::Operation", tag="1")]
-        pub operation: i32,
-        /// Required. The numeric or date value to match against.
-        #[prost(message, optional, tag="2")]
-        pub value: ::core::option::Option<NumericValue>,
-    }
-    /// Nested message and enum types in `NumericFilter`.
-    pub mod numeric_filter {
-        /// The operation applied to a numeric filter.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Operation {
-            /// Unspecified.
-            Unspecified = 0,
-            /// Equal.
-            Equal = 1,
-            /// Less than.
-            LessThan = 2,
-            /// Less than or equal.
-            LessThanOrEqual = 3,
-            /// Greater than.
-            GreaterThan = 4,
-            /// Greater than or equal.
-            GreaterThanOrEqual = 5,
-        }
-    }
-    /// A filter for numeric or date values between certain values on a dimension
-    /// or metric.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct BetweenFilter {
-        /// Required. Begins with this number, inclusive.
-        #[prost(message, optional, tag="1")]
-        pub from_value: ::core::option::Option<NumericValue>,
-        /// Required. Ends with this number, inclusive.
-        #[prost(message, optional, tag="2")]
-        pub to_value: ::core::option::Option<NumericValue>,
-    }
-    /// One of the above filters.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum OneFilter {
-        /// A filter for a string-type dimension that matches a particular pattern.
-        #[prost(message, tag="2")]
-        StringFilter(StringFilter),
-        /// A filter for a string dimension that matches a particular list of
-        /// options.
-        #[prost(message, tag="3")]
-        InListFilter(InListFilter),
-        /// A filter for numeric or date values on a dimension or metric.
-        #[prost(message, tag="4")]
-        NumericFilter(NumericFilter),
-        /// A filter for numeric or date values between certain values on a dimension
-        /// or metric.
-        #[prost(message, tag="5")]
-        BetweenFilter(BetweenFilter),
-    }
-}
-/// A filter that matches events of a single event name. If an event parameter
-/// is specified, only the subset of events that match both the single event name
-/// and the parameter filter expressions match this event filter.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceEventFilter {
-    /// Required. Immutable. The name of the event to match against.
-    #[prost(string, tag="1")]
-    pub event_name: ::prost::alloc::string::String,
-    /// Optional. If specified, this filter matches events that match both the single
-    /// event name and the parameter filter expressions. AudienceEventFilter
-    /// inside the parameter filter expression cannot be set (i.e., nested
-    /// event filters are not supported). This should be a single and_group of
-    /// dimension_or_metric_filter or not_expression; ANDs of ORs are not
-    /// supported. Also, if it includes a filter for "eventCount", only that one
-    /// will be considered; all the other filters will be ignored.
-    #[prost(message, optional, boxed, tag="2")]
-    pub event_parameter_filter_expression: ::core::option::Option<::prost::alloc::boxed::Box<AudienceFilterExpression>>,
-}
-/// A logical expression of Audience dimension, metric, or event filters.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceFilterExpression {
-    /// The expression applied to a filter.
-    #[prost(oneof="audience_filter_expression::Expr", tags="1, 2, 3, 4, 5")]
-    pub expr: ::core::option::Option<audience_filter_expression::Expr>,
-}
-/// Nested message and enum types in `AudienceFilterExpression`.
-pub mod audience_filter_expression {
-    /// The expression applied to a filter.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Expr {
-        /// A list of expressions to be AND’ed together. It can only contain
-        /// AudienceFilterExpressions with or_group. This must be set for the top
-        /// level AudienceFilterExpression.
-        #[prost(message, tag="1")]
-        AndGroup(super::AudienceFilterExpressionList),
-        /// A list of expressions to OR’ed together. It cannot contain
-        /// AudienceFilterExpressions with and_group or or_group.
-        #[prost(message, tag="2")]
-        OrGroup(super::AudienceFilterExpressionList),
-        /// A filter expression to be NOT'ed (i.e., inverted, complemented). It
-        /// can only include a dimension_or_metric_filter. This cannot be set on the
-        /// top level AudienceFilterExpression.
-        #[prost(message, tag="3")]
-        NotExpression(::prost::alloc::boxed::Box<super::AudienceFilterExpression>),
-        /// A filter on a single dimension or metric. This cannot be set on the top
-        /// level AudienceFilterExpression.
-        #[prost(message, tag="4")]
-        DimensionOrMetricFilter(super::AudienceDimensionOrMetricFilter),
-        /// Creates a filter that matches a specific event. This cannot be set on the
-        /// top level AudienceFilterExpression.
-        #[prost(message, tag="5")]
-        EventFilter(::prost::alloc::boxed::Box<super::AudienceEventFilter>),
-    }
-}
-/// A list of Audience filter expressions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceFilterExpressionList {
-    /// A list of Audience filter expressions.
-    #[prost(message, repeated, tag="1")]
-    pub filter_expressions: ::prost::alloc::vec::Vec<AudienceFilterExpression>,
-}
-/// Defines a simple filter that a user must satisfy to be a member of the
-/// Audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceSimpleFilter {
-    /// Required. Immutable. Specifies the scope for this filter.
-    #[prost(enumeration="AudienceFilterScope", tag="1")]
-    pub scope: i32,
-    /// Required. Immutable. A logical expression of Audience dimension, metric, or event filters.
-    #[prost(message, optional, tag="2")]
-    pub filter_expression: ::core::option::Option<AudienceFilterExpression>,
-}
-/// Defines filters that must occur in a specific order for the user to be a
-/// member of the Audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceSequenceFilter {
-    /// Required. Immutable. Specifies the scope for this filter.
-    #[prost(enumeration="AudienceFilterScope", tag="1")]
-    pub scope: i32,
-    /// Optional. Defines the time period in which the whole sequence must occur.
-    #[prost(message, optional, tag="2")]
-    pub sequence_maximum_duration: ::core::option::Option<::prost_types::Duration>,
-    /// Required. An ordered sequence of steps. A user must complete each step in order to
-    /// join the sequence filter.
-    #[prost(message, repeated, tag="3")]
-    pub sequence_steps: ::prost::alloc::vec::Vec<audience_sequence_filter::AudienceSequenceStep>,
-}
-/// Nested message and enum types in `AudienceSequenceFilter`.
-pub mod audience_sequence_filter {
-    /// A condition that must occur in the specified step order for this user
-    /// to match the sequence.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AudienceSequenceStep {
-        /// Required. Immutable. Specifies the scope for this step.
-        #[prost(enumeration="super::AudienceFilterScope", tag="1")]
-        pub scope: i32,
-        /// Optional. If true, the event satisfying this step must be the very next event
-        /// after the event satisfying the last step. If unset or false, this
-        /// step indirectly follows the prior step; for example, there may be
-        /// events between the prior step and this step. It is ignored for the
-        /// first step.
-        #[prost(bool, tag="2")]
-        pub immediately_follows: bool,
-        /// Optional. When set, this step must be satisfied within the constraint_duration of
-        /// the previous step (i.e., t\[i\] - t\[i-1\] <= constraint_duration). If not
-        /// set, there is no duration requirement (the duration is effectively
-        /// unlimited). It is ignored for the first step.
-        #[prost(message, optional, tag="3")]
-        pub constraint_duration: ::core::option::Option<::prost_types::Duration>,
-        /// Required. Immutable. A logical expression of Audience dimension, metric, or event filters in
-        /// each step.
-        #[prost(message, optional, tag="4")]
-        pub filter_expression: ::core::option::Option<super::AudienceFilterExpression>,
-    }
-}
-/// A clause for defining either a simple or sequence filter. A filter can be
-/// inclusive (i.e., users satisfying the filter clause are included in the
-/// Audience) or exclusive (i.e., users satisfying the filter clause are
-/// excluded from the Audience).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceFilterClause {
-    /// Required. Specifies whether this is an include or exclude filter clause.
-    #[prost(enumeration="audience_filter_clause::AudienceClauseType", tag="1")]
-    pub clause_type: i32,
-    #[prost(oneof="audience_filter_clause::Filter", tags="2, 3")]
-    pub filter: ::core::option::Option<audience_filter_clause::Filter>,
-}
-/// Nested message and enum types in `AudienceFilterClause`.
-pub mod audience_filter_clause {
-    /// Specifies whether this is an include or exclude filter clause.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AudienceClauseType {
-        /// Unspecified clause type.
-        Unspecified = 0,
-        /// Users will be included in the Audience if the filter clause is met.
-        Include = 1,
-        /// Users will be excluded from the Audience if the filter clause is met.
-        Exclude = 2,
-    }
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Filter {
-        /// A simple filter that a user must satisfy to be a member of the Audience.
-        #[prost(message, tag="2")]
-        SimpleFilter(super::AudienceSimpleFilter),
-        /// Filters that must occur in a specific order for the user to be a member
-        /// of the Audience.
-        #[prost(message, tag="3")]
-        SequenceFilter(super::AudienceSequenceFilter),
-    }
-}
-/// Specifies an event to log when a user joins the Audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceEventTrigger {
-    /// Required. The event name that will be logged.
-    #[prost(string, tag="1")]
-    pub event_name: ::prost::alloc::string::String,
-    /// Required. When to log the event.
-    #[prost(enumeration="audience_event_trigger::LogCondition", tag="2")]
-    pub log_condition: i32,
-}
-/// Nested message and enum types in `AudienceEventTrigger`.
-pub mod audience_event_trigger {
-    /// Determines when to log the event.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum LogCondition {
-        /// Log condition is not specified.
-        Unspecified = 0,
-        /// The event should be logged only when a user is joined.
-        AudienceJoined = 1,
-        /// The event should be logged whenever the Audience condition is met, even
-        /// if the user is already a member of the Audience.
-        AudienceMembershipRenewed = 2,
-    }
-}
-/// A resource message representing a GA4 Audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Audience {
-    /// Output only. The resource name for this Audience resource.
-    /// Format: properties/{propertyId}/audiences/{audienceId}
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the Audience.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The description of the Audience.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Immutable. The duration a user should stay in an Audience. It cannot be set to more
-    /// than 540 days.
-    #[prost(int32, tag="4")]
-    pub membership_duration_days: i32,
-    /// Output only. It is automatically set by GA to false if this is an NPA Audience and is
-    /// excluded from ads personalization.
-    #[prost(bool, tag="5")]
-    pub ads_personalization_enabled: bool,
-    /// Optional. Specifies an event to log when a user joins the Audience. If not set, no
-    /// event is logged when a user joins the Audience.
-    #[prost(message, optional, tag="6")]
-    pub event_trigger: ::core::option::Option<AudienceEventTrigger>,
-    /// Immutable. Specifies how long an exclusion lasts for users that meet the exclusion
-    /// filter. It is applied to all EXCLUDE filter clauses and is ignored when
-    /// there is no EXCLUDE filter clause in the Audience.
-    #[prost(enumeration="audience::AudienceExclusionDurationMode", tag="7")]
-    pub exclusion_duration_mode: i32,
-    /// Required. Immutable. null Filter clauses that define the Audience. All clauses will be AND’ed
-    /// together.
-    #[prost(message, repeated, tag="8")]
-    pub filter_clauses: ::prost::alloc::vec::Vec<AudienceFilterClause>,
-}
-/// Nested message and enum types in `Audience`.
-pub mod audience {
-    /// Specifies how long an exclusion lasts for users that meet the exclusion
-    /// filter.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AudienceExclusionDurationMode {
-        /// Not specified.
-        Unspecified = 0,
-        /// Exclude users from the Audience during periods when they meet the
-        /// filter clause.
-        ExcludeTemporarily = 1,
-        /// Exclude users from the Audience if they've ever met the filter clause.
-        ExcludePermanently = 2,
-    }
-}
-/// Specifies how to evaluate users for joining an Audience.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AudienceFilterScope {
-    /// Scope is not specified.
-    Unspecified = 0,
-    /// User joins the Audience if the filter condition is met within one
-    /// event.
-    WithinSameEvent = 1,
-    /// User joins the Audience if the filter condition is met within one
-    /// session.
-    WithinSameSession = 2,
-    /// User joins the Audience if the filter condition is met by any event
-    /// across any session.
-    AcrossAllSessions = 3,
 }
 /// The request for a Data Access Record Report.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3197,6 +3638,7 @@ pub struct UpdateAttributionSettingsRequest {
 pub mod analytics_admin_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service Interface for the Analytics Admin API (GA4).
     #[derive(Debug, Clone)]
     pub struct AnalyticsAdminServiceClient<T> {
@@ -3211,6 +3653,10 @@ pub mod analytics_admin_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -3232,19 +3678,19 @@ pub mod analytics_admin_service_client {
         {
             AnalyticsAdminServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lookup for a single Account.

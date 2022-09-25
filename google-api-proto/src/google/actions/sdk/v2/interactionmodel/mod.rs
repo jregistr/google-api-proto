@@ -2,6 +2,28 @@
 pub mod prompt;
 #[cfg(any(feature = "google-actions-sdk-v2-interactionmodel-type"))]
 pub mod r#type;
+/// Entity sets describe the pre-defined set of entities that the values of
+/// built-in intent parameters can come from. Entity sets can be referenced from
+/// entity_set in built-in intent parameters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EntitySet {
+    /// Required. The list of entities this entity set supports.
+    #[prost(message, repeated, tag="1")]
+    pub entities: ::prost::alloc::vec::Vec<entity_set::Entity>,
+}
+/// Nested message and enum types in `EntitySet`.
+pub mod entity_set {
+    /// An entity a built-in intent parameter value can come from.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Entity {
+        /// Required. The ID of the entity.
+        /// For a list of built-in-intent parameters and their supported entities,
+        /// see
+        /// <https://developers.google.com/assistant/conversational/build/built-in-intents>
+        #[prost(string, tag="1")]
+        pub id: ::prost::alloc::string::String,
+    }
+}
 /// Defines a handler to be executed after an event. Examples of events are
 /// intent and condition based events in a scene.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -27,58 +49,26 @@ pub mod event_handler {
         StaticPromptName(::prost::alloc::string::String),
     }
 }
-/// Registers events that trigger as the result of a true condition.
+/// Defines a global intent handler. Global intent events are scoped to the
+/// entire Actions project and may be overridden by intent handlers in a scene.
+/// Intent names must be unique within an Actions project.
+///
+/// Global intents can be matched anytime during a session, allowing users to
+/// access common flows like  "get help" or "go back home." They can also be
+/// used to deep link users into specific flows when they invoke an Action.
+///
+/// Note, the intent name is specified in the name of the file.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConditionalEvent {
-    /// Required. Filter condition for this event to trigger. If condition is evaluated to
-    /// true then the associated `handler` will be triggered.
-    /// The following variable references are supported:
-    ///   `$session` - To reference data in session storage.
-    ///   `$user` - To reference data in user storage.
-    /// The following boolean operators are supported (with examples):
-    ///   `&&` - `session.params.counter > 0 && session.params.counter < 100`
-    ///   `||` - `session.params.foo == "John" || session.params.counter == "Adam"`
-    ///   `!`  - `!(session.params.counter == 5)`
-    /// The following comparisons are supported:
-    ///   `==`, `!=`, `<`, `>`, `<=`, `>=`
-    /// The following list and string operators are supported (with examples):
-    ///   `in`        - "Watermelon" in `session.params.fruitList`
-    ///   `size`      - `size(session.params.fruitList) > 2`
-    ///   `substring` - `session.params.fullName.contains("John")`
+pub struct GlobalIntentEvent {
+    /// Optional. Destination scene which the conversation should jump to. The state of the
+    /// current scene is destroyed on the transition.
     #[prost(string, tag="1")]
-    pub condition: ::prost::alloc::string::String,
-    /// Optional. Destination scene which the conversation should jump to when the associated
-    /// condition is evaluated to true. The state of the current scene is destroyed
-    /// on the transition.
-    #[prost(string, tag="2")]
     pub transition_to_scene: ::prost::alloc::string::String,
-    /// Optional. Event handler which is triggered when the associated condition is evaluated
-    /// to `true`. Should execute before transitioning to the destination scene.
-    /// Useful to generate Prompts in response to events.
-    #[prost(message, optional, tag="3")]
+    /// Optional. Event handler which is triggered when the intent is matched. Should execute
+    /// before transitioning to the destination scene. Useful to generate Prompts
+    /// in response to events.
+    #[prost(message, optional, tag="2")]
     pub handler: ::core::option::Option<EventHandler>,
-}
-/// Entity sets describe the pre-defined set of entities that the values of
-/// built-in intent parameters can come from. Entity sets can be referenced from
-/// entity_set in built-in intent parameters.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EntitySet {
-    /// Required. The list of entities this entity set supports.
-    #[prost(message, repeated, tag="1")]
-    pub entities: ::prost::alloc::vec::Vec<entity_set::Entity>,
-}
-/// Nested message and enum types in `EntitySet`.
-pub mod entity_set {
-    /// An entity a built-in intent parameter value can come from.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Entity {
-        /// Required. The ID of the entity.
-        /// For a list of built-in-intent parameters and their supported entities,
-        /// see
-        /// <https://developers.google.com/assistant/conversational/build/built-in-intents>
-        #[prost(string, tag="1")]
-        pub id: ::prost::alloc::string::String,
-    }
 }
 /// Intents map open-ended user input to structured objects. Spoken
 /// phrases are matched to intents with Google's Natural Language Understanding
@@ -100,7 +90,7 @@ pub struct Intent {
     /// `($<paramName> '<sample text>' auto=<true or false>)`
     /// `auto = true` means the part was auto annotated by NLU.
     /// `auto = false` means the part was annotated by the user. This is the
-    ///     default when auto is not specified.
+    ///      default when auto is not specified.
     /// Example:
     /// "Book a flight from ($source 'San Francisco' auto=false) to ($dest
     /// 'Vancouver')"
@@ -157,6 +147,53 @@ pub mod intent {
         }
     }
 }
+/// Registers events that trigger as the result of a true condition.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConditionalEvent {
+    /// Required. Filter condition for this event to trigger. If condition is evaluated to
+    /// true then the associated `handler` will be triggered.
+    /// The following variable references are supported:
+    ///    `$session` - To reference data in session storage.
+    ///    `$user` - To reference data in user storage.
+    /// The following boolean operators are supported (with examples):
+    ///    `&&` - `session.params.counter > 0 && session.params.counter < 100`
+    ///    `||` - `session.params.foo == "John" || session.params.counter == "Adam"`
+    ///    `!`  - `!(session.params.counter == 5)`
+    /// The following comparisons are supported:
+    ///    `==`, `!=`, `<`, `>`, `<=`, `>=`
+    /// The following list and string operators are supported (with examples):
+    ///    `in`        - "Watermelon" in `session.params.fruitList`
+    ///    `size`      - `size(session.params.fruitList) > 2`
+    ///    `substring` - `session.params.fullName.contains("John")`
+    #[prost(string, tag="1")]
+    pub condition: ::prost::alloc::string::String,
+    /// Optional. Destination scene which the conversation should jump to when the associated
+    /// condition is evaluated to true. The state of the current scene is destroyed
+    /// on the transition.
+    #[prost(string, tag="2")]
+    pub transition_to_scene: ::prost::alloc::string::String,
+    /// Optional. Event handler which is triggered when the associated condition is evaluated
+    /// to `true`. Should execute before transitioning to the destination scene.
+    /// Useful to generate Prompts in response to events.
+    #[prost(message, optional, tag="3")]
+    pub handler: ::core::option::Option<EventHandler>,
+}
+/// Registers Events which trigger as the result of an intent match.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IntentEvent {
+    /// Required. Intent triggering the event.
+    #[prost(string, tag="1")]
+    pub intent: ::prost::alloc::string::String,
+    /// Optional. Destination scene which the conversation should jump to. The state of the
+    /// current scene is destroyed on the transition.
+    #[prost(string, tag="2")]
+    pub transition_to_scene: ::prost::alloc::string::String,
+    /// Optional. Event handler which is triggered when the intent is matched. Should execute
+    /// before transitioning to the destination scene. Useful to generate prompts
+    /// in response to events.
+    #[prost(message, optional, tag="3")]
+    pub handler: ::core::option::Option<EventHandler>,
+}
 /// Configuration for a slot. Slots are single units of data that can be filled
 /// through natural language (ie. intent parameters), session parameters, and
 /// other sources.
@@ -186,19 +223,19 @@ pub struct Slot {
     /// transactions and user engagement.
     ///
     /// Example:
-    ///  For a slot of type actions.type.CompletePurchaseValue, the following
-    ///  config proposes a digital good order with a reference to a client defined
-    ///  session parameter `userSelectedSkuId`:
+    ///   For a slot of type actions.type.CompletePurchaseValue, the following
+    ///   config proposes a digital good order with a reference to a client defined
+    ///   session parameter `userSelectedSkuId`:
     ///
-    ///    {
-    ///      "@type": "type.googleapis.com/
-    ///                  google.actions.transactions.v3.CompletePurchaseValueSpec",
-    ///      "skuId": {
-    ///        "skuType": "SKU_TYPE_IN_APP",
-    ///        "id": "$session.params.userSelectedSkuId",
-    ///        "packageName": "com.example.company"
-    ///      }
-    ///    }
+    ///     {
+    ///       "@type": "type.googleapis.com/
+    ///                   google.actions.transactions.v3.CompletePurchaseValueSpec",
+    ///       "skuId": {
+    ///         "skuType": "SKU_TYPE_IN_APP",
+    ///         "id": "$session.params.userSelectedSkuId",
+    ///         "packageName": "com.example.company"
+    ///       }
+    ///     }
     #[prost(message, optional, tag="6")]
     pub config: ::core::option::Option<::prost_types::Value>,
     /// Optional. Configuration to populate a default value for this slot.
@@ -270,22 +307,6 @@ pub mod slot {
         pub constant: ::core::option::Option<::prost_types::Value>,
     }
 }
-/// Registers Events which trigger as the result of an intent match.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IntentEvent {
-    /// Required. Intent triggering the event.
-    #[prost(string, tag="1")]
-    pub intent: ::prost::alloc::string::String,
-    /// Optional. Destination scene which the conversation should jump to. The state of the
-    /// current scene is destroyed on the transition.
-    #[prost(string, tag="2")]
-    pub transition_to_scene: ::prost::alloc::string::String,
-    /// Optional. Event handler which is triggered when the intent is matched. Should execute
-    /// before transitioning to the destination scene. Useful to generate prompts
-    /// in response to events.
-    #[prost(message, optional, tag="3")]
-    pub handler: ::core::option::Option<EventHandler>,
-}
 /// Scene is the basic unit of control flow when designing a conversation. They
 /// can be chained together with other scenes, generate prompts for the end user,
 /// and define slots.
@@ -319,25 +340,4 @@ pub struct Scene {
     /// invalidated, the scene invalidated or other changes to scene state.
     #[prost(message, optional, tag="5")]
     pub on_slot_updated: ::core::option::Option<EventHandler>,
-}
-/// Defines a global intent handler. Global intent events are scoped to the
-/// entire Actions project and may be overridden by intent handlers in a scene.
-/// Intent names must be unique within an Actions project.
-///
-/// Global intents can be matched anytime during a session, allowing users to
-/// access common flows like  "get help" or "go back home." They can also be
-/// used to deep link users into specific flows when they invoke an Action.
-///
-/// Note, the intent name is specified in the name of the file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GlobalIntentEvent {
-    /// Optional. Destination scene which the conversation should jump to. The state of the
-    /// current scene is destroyed on the transition.
-    #[prost(string, tag="1")]
-    pub transition_to_scene: ::prost::alloc::string::String,
-    /// Optional. Event handler which is triggered when the intent is matched. Should execute
-    /// before transitioning to the destination scene. Useful to generate Prompts
-    /// in response to events.
-    #[prost(message, optional, tag="2")]
-    pub handler: ::core::option::Option<EventHandler>,
 }

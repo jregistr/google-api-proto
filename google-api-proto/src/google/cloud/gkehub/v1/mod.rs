@@ -20,7 +20,7 @@ pub struct Feature {
     ///
     /// The keys indicate which Membership the configuration is for, in the form:
     ///
-    ///     projects/{p}/locations/{l}/memberships/{m}
+    ///      projects/{p}/locations/{l}/memberships/{m}
     ///
     /// Where {p} is the project, {l} is a valid location and {m} is a valid
     /// Membership in this project at that location. {p} WILL match the Feature's
@@ -42,7 +42,7 @@ pub struct Feature {
     ///
     /// The keys indicate which Membership the state is for, in the form:
     ///
-    ///     projects/{p}/locations/{l}/memberships/{m}
+    ///      projects/{p}/locations/{l}/memberships/{m}
     ///
     /// Where {p} is the project number, {l} is a valid location and {m} is a valid
     /// Membership in this project at that location. {p} MUST match the Feature's
@@ -90,6 +90,22 @@ pub mod feature_resource_state {
         /// The Feature resource is being updated by the Hub Service.
         ServiceUpdating = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabling => "ENABLING",
+                State::Active => "ACTIVE",
+                State::Disabling => "DISABLING",
+                State::Updating => "UPDATING",
+                State::ServiceUpdating => "SERVICE_UPDATING",
+            }
+        }
+    }
 }
 /// FeatureState describes the high-level state of a Feature. It may be used to
 /// describe a Feature's state at the environ-level, or per-membershop, depending
@@ -126,6 +142,20 @@ pub mod feature_state {
         /// See the description and any associated Feature-specific details for more
         /// information.
         Error = 3,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::Ok => "OK",
+                Code::Warning => "WARNING",
+                Code::Error => "ERROR",
+            }
+        }
     }
 }
 /// CommonFeatureSpec contains Hub-wide configuration information
@@ -193,9 +223,9 @@ pub struct Membership {
     ///
     /// `membership_id` must be a valid RFC 1123 compliant DNS label:
     ///
-    ///   1. At most 63 characters in length
-    ///   2. It must consist of lower case alphanumeric characters or `-`
-    ///   3. It must start and end with an alphanumeric character
+    ///    1. At most 63 characters in length
+    ///    2. It must consist of lower case alphanumeric characters or `-`
+    ///    3. It must start and end with an alphanumeric character
     ///
     /// Which can be expressed as the regex: `\[a-z0-9]([-a-z0-9]*[a-z0-9\])?`,
     /// with a maximum length of 63 characters.
@@ -274,11 +304,11 @@ pub struct MembershipEndpoint {
     /// Optional. The in-cluster Kubernetes Resources that should be applied for a correctly
     /// registered cluster, in the steady state. These resources:
     ///
-    ///   * Ensure that the cluster is exclusively registered to one and only one
-    ///     Hub Membership.
-    ///   * Propagate Workload Pool Information available in the Membership
-    ///     Authority field.
-    ///   * Ensure proper initial configuration of default Hub Features.
+    ///    * Ensure that the cluster is exclusively registered to one and only one
+    ///      Hub Membership.
+    ///    * Propagate Workload Pool Information available in the Membership
+    ///      Authority field.
+    ///    * Ensure proper initial configuration of default Hub Features.
     #[prost(message, optional, tag="3")]
     pub kubernetes_resource: ::core::option::Option<KubernetesResource>,
 }
@@ -420,6 +450,22 @@ pub mod membership_state {
         /// The Membership is being updated by the Hub Service.
         ServiceUpdating = 5,
     }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::Unspecified => "CODE_UNSPECIFIED",
+                Code::Creating => "CREATING",
+                Code::Ready => "READY",
+                Code::Deleting => "DELETING",
+                Code::Updating => "UPDATING",
+                Code::ServiceUpdating => "SERVICE_UPDATING",
+            }
+        }
+    }
 }
 /// Authority encodes how Google will recognize identities from this Membership.
 /// See the workload identity documentation for more details:
@@ -480,21 +526,21 @@ pub struct ListMembershipsRequest {
     ///
     /// Examples:
     ///
-    ///   - Name is `bar` in project `foo-proj` and location `global`:
+    ///    - Name is `bar` in project `foo-proj` and location `global`:
     ///
-    ///       name = "projects/foo-proj/locations/global/membership/bar"
+    ///        name = "projects/foo-proj/locations/global/membership/bar"
     ///
-    ///   - Memberships that have a label called `foo`:
+    ///    - Memberships that have a label called `foo`:
     ///
-    ///       labels.foo:*
+    ///        labels.foo:*
     ///
-    ///   - Memberships that have a label called `foo` whose value is `bar`:
+    ///    - Memberships that have a label called `foo` whose value is `bar`:
     ///
-    ///       labels.foo = bar
+    ///        labels.foo = bar
     ///
-    ///   - Memberships in the CREATING state:
+    ///    - Memberships in the CREATING state:
     ///
-    ///       state = CREATING
+    ///        state = CREATING
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. One or more fields to compare and use to sort the output.
@@ -535,9 +581,9 @@ pub struct CreateMembershipRequest {
     /// Required. Client chosen ID for the membership. `membership_id` must be a valid RFC
     /// 1123 compliant DNS label:
     ///
-    ///   1. At most 63 characters in length
-    ///   2. It must consist of lower case alphanumeric characters or `-`
-    ///   3. It must start and end with an alphanumeric character
+    ///    1. At most 63 characters in length
+    ///    2. It must consist of lower case alphanumeric characters or `-`
+    ///    3. It must start and end with an alphanumeric character
     ///
     /// Which can be expressed as the regex: `\[a-z0-9]([-a-z0-9]*[a-z0-9\])?`,
     /// with a maximum length of 63 characters.
@@ -712,17 +758,17 @@ pub struct ListFeaturesRequest {
     ///
     /// Examples:
     ///
-    ///   - Feature with the name "servicemesh" in project "foo-proj":
+    ///    - Feature with the name "servicemesh" in project "foo-proj":
     ///
-    ///       name = "projects/foo-proj/locations/global/features/servicemesh"
+    ///        name = "projects/foo-proj/locations/global/features/servicemesh"
     ///
-    ///   - Features that have a label called `foo`:
+    ///    - Features that have a label called `foo`:
     ///
-    ///       labels.foo:*
+    ///        labels.foo:*
     ///
-    ///   - Features that have a label called `foo` whose value is `bar`:
+    ///    - Features that have a label called `foo` whose value is `bar`:
     ///
-    ///       labels.foo = bar
+    ///        labels.foo = bar
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
     /// One or more fields to compare and use to sort the output.
@@ -875,6 +921,7 @@ pub struct OperationMetadata {
 pub mod gke_hub_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// The GKE Hub service handles the registration of many Kubernetes clusters to
     /// Google Cloud, and the management of multi-cluster features over those
     /// clusters.
@@ -904,6 +951,10 @@ pub mod gke_hub_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -923,19 +974,19 @@ pub mod gke_hub_client {
         {
             GkeHubClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists Memberships in a given project and location.

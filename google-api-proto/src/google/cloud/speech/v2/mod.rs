@@ -245,13 +245,13 @@ pub struct Recognizer {
     ///
     /// - `latest_long`
     ///
-    ///   Best for long form content like media or conversation.
+    ///    Best for long form content like media or conversation.
     ///
     /// - `latest_short`
     ///
-    ///   Best for short form content like commands or single shot directed speech.
-    ///   When using this model, the service will stop transcribing audio after the
-    ///   first utterance is detected and completed.
+    ///    Best for short form content like commands or single shot directed speech.
+    ///    When using this model, the service will stop transcribing audio after the
+    ///    first utterance is detected and completed.
     ///
     /// When using this model,
     /// \[SEPARATE_RECOGNITION_PER_CHANNEL][google.cloud.speech.v2.RecognitionFeatures.MultiChannelMode.SEPARATE_RECOGNITION_PER_CHANNEL\]
@@ -339,6 +339,19 @@ pub mod recognizer {
         /// This Recognizer has been deleted.
         Deleted = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deleted => "DELETED",
+            }
+        }
+    }
 }
 /// Automatically detected decoding parameters.
 /// Supported for the following encodings:
@@ -392,6 +405,20 @@ pub mod explicit_decoding_config {
         Mulaw = 2,
         /// Headerless 8-bit companded alaw samples.
         Alaw = 3,
+    }
+    impl AudioEncoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudioEncoding::Unspecified => "AUDIO_ENCODING_UNSPECIFIED",
+                AudioEncoding::Linear16 => "LINEAR16",
+                AudioEncoding::Mulaw => "MULAW",
+                AudioEncoding::Alaw => "ALAW",
+            }
+        }
     }
 }
 /// Configuration to enable speaker diarization.
@@ -483,6 +510,18 @@ pub mod recognition_features {
         /// independently. This cannot be selected if the selected
         /// \[model][google.cloud.speech.v2.Recognizer.model\] is `latest_short`.
         SeparateRecognitionPerChannel = 1,
+    }
+    impl MultiChannelMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MultiChannelMode::Unspecified => "MULTI_CHANNEL_MODE_UNSPECIFIED",
+                MultiChannelMode::SeparateRecognitionPerChannel => "SEPARATE_RECOGNITION_PER_CHANNEL",
+            }
+        }
     }
 }
 /// Provides "hints" to the speech recognizer to favor specific words and phrases
@@ -1001,41 +1040,41 @@ pub struct StreamingRecognitionResult {
 /// 2. results { alternatives { transcript: "to be a" } stability: 0.01 }
 ///
 /// 3. results { alternatives { transcript: "to be" } stability: 0.9 }
-///    results { alternatives { transcript: " or not to be" } stability: 0.01 }
+///     results { alternatives { transcript: " or not to be" } stability: 0.01 }
 ///
 /// 4. results { alternatives { transcript: "to be or not to be"
-///                             confidence: 0.92 }
-///              alternatives { transcript: "to bee or not to bee" }
-///              is_final: true }
+///                              confidence: 0.92 }
+///               alternatives { transcript: "to bee or not to bee" }
+///               is_final: true }
 ///
 /// 5. results { alternatives { transcript: " that's" } stability: 0.01 }
 ///
 /// 6. results { alternatives { transcript: " that is" } stability: 0.9 }
-///    results { alternatives { transcript: " the question" } stability: 0.01 }
+///     results { alternatives { transcript: " the question" } stability: 0.01 }
 ///
 /// 7. results { alternatives { transcript: " that is the question"
-///                             confidence: 0.98 }
-///              alternatives { transcript: " that was the question" }
-///              is_final: true }
+///                              confidence: 0.98 }
+///               alternatives { transcript: " that was the question" }
+///               is_final: true }
 ///
 /// Notes:
 ///
 /// - Only two of the above responses #4 and #7 contain final results; they are
-///   indicated by `is_final: true`. Concatenating these together generates the
-///   full transcript: "to be or not to be that is the question".
+///    indicated by `is_final: true`. Concatenating these together generates the
+///    full transcript: "to be or not to be that is the question".
 ///
 /// - The others contain interim `results`. #3 and #6 contain two interim
-///   `results`: the first portion has a high stability and is less likely to
-///   change; the second portion has a low stability and is very likely to
-///   change. A UI designer might choose to show only high stability `results`.
+///    `results`: the first portion has a high stability and is less likely to
+///    change; the second portion has a low stability and is very likely to
+///    change. A UI designer might choose to show only high stability `results`.
 ///
 /// - The specific `stability` and `confidence` values shown above are only for
-///   illustrative purposes. Actual values may vary.
+///    illustrative purposes. Actual values may vary.
 ///
 /// - In each response, only one of these fields will be set:
-///     `error`,
-///     `speech_event_type`, or
-///     one or more (repeated) `results`.
+///      `error`,
+///      `speech_event_type`, or
+///      one or more (repeated) `results`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamingRecognizeResponse {
     /// This repeated list contains zero or more results that
@@ -1082,6 +1121,20 @@ pub mod streaming_recognize_response {
         /// speech starts and stops repeatedly throughout the stream. This event is
         /// only sent if `voice_activity_events` is set to true.
         SpeechActivityEnd = 3,
+    }
+    impl SpeechEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SpeechEventType::Unspecified => "SPEECH_EVENT_TYPE_UNSPECIFIED",
+                SpeechEventType::EndOfSingleUtterance => "END_OF_SINGLE_UTTERANCE",
+                SpeechEventType::SpeechActivityBegin => "SPEECH_ACTIVITY_BEGIN",
+                SpeechEventType::SpeechActivityEnd => "SPEECH_ACTIVITY_END",
+            }
+        }
     }
 }
 /// Message representing the config for the Speech-to-Text API. This includes an
@@ -1213,6 +1266,19 @@ pub mod custom_class {
         /// This CustomClass has been deleted.
         Deleted = 4,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deleted => "DELETED",
+            }
+        }
+    }
 }
 /// PhraseSet for biasing in speech recognition. A PhraseSet is used to provide
 /// "hints" to the speech recognizer to favor specific words and phrases in the
@@ -1321,6 +1387,19 @@ pub mod phrase_set {
         Active = 2,
         /// This PhraseSet has been deleted.
         Deleted = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Deleted => "DELETED",
+            }
+        }
     }
 }
 /// Request message for the
@@ -1595,6 +1674,7 @@ pub struct UndeletePhraseSetRequest {
 pub mod speech_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Enables speech transcription and resource management.
     #[derive(Debug, Clone)]
     pub struct SpeechClient<T> {
@@ -1609,6 +1689,10 @@ pub mod speech_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1630,19 +1714,19 @@ pub mod speech_client {
         {
             SpeechClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Creates a [Recognizer][google.cloud.speech.v2.Recognizer].

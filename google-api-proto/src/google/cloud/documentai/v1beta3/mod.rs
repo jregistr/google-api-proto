@@ -1,173 +1,145 @@
-/// A processor version is an implementation of a processor. Each processor
-/// can have multiple versions, pre-trained by Google internally or up-trained
-/// by the customer. At a time, a processor can only have one default version
-/// version. So the processor's behavior (when processing documents) is defined
-/// by a default version
+/// The schema defines the output of the processed document by a processor.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessorVersion {
-    /// The resource name of the processor version.
-    /// Format:
-    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}`
+pub struct DocumentSchema {
+    /// Display name to show to users.
     #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The display name of the processor version.
-    #[prost(string, tag="2")]
     pub display_name: ::prost::alloc::string::String,
-    /// The state of the processor version.
-    #[prost(enumeration="processor_version::State", tag="6")]
-    pub state: i32,
-    /// The time the processor version was created.
-    #[prost(message, optional, tag="7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The KMS key name used for encryption.
-    #[prost(string, tag="9")]
-    pub kms_key_name: ::prost::alloc::string::String,
-    /// The KMS key version with which data is encrypted.
-    #[prost(string, tag="10")]
-    pub kms_key_version_name: ::prost::alloc::string::String,
-    /// Denotes that this ProcessorVersion is managed by google.
-    #[prost(bool, tag="11")]
-    pub google_managed: bool,
-    /// If set, information about the eventual deprecation of this version.
-    #[prost(message, optional, tag="13")]
-    pub deprecation_info: ::core::option::Option<processor_version::DeprecationInfo>,
-}
-/// Nested message and enum types in `ProcessorVersion`.
-pub mod processor_version {
-    /// Information about the upcoming deprecation of this processor version.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DeprecationInfo {
-        /// The time at which this processor version will be deprecated.
-        #[prost(message, optional, tag="1")]
-        pub deprecation_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// If set, the processor version that will be used as a replacement.
-        #[prost(string, tag="2")]
-        pub replacement_processor_version: ::prost::alloc::string::String,
-    }
-    /// The possible states of the processor version.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// The processor version is in an unspecified state.
-        Unspecified = 0,
-        /// The processor version is deployed and can be used for processing.
-        Deployed = 1,
-        /// The processor version is being deployed.
-        Deploying = 2,
-        /// The processor version is not deployed and cannot be used for processing.
-        Undeployed = 3,
-        /// The processor version is being undeployed.
-        Undeploying = 4,
-        /// The processor version is being created.
-        Creating = 5,
-        /// The processor version is being deleted.
-        Deleting = 6,
-        /// The processor version failed and is in an indeterminate state.
-        Failed = 7,
-    }
-}
-/// The first-class citizen for Document AI. Each processor defines how to
-/// extract structural information from a document.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Processor {
-    /// Output only. Immutable. The resource name of the processor.
-    /// Format: `projects/{project}/locations/{location}/processors/{processor}`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The processor type, e.g., OCR_PROCESSOR, INVOICE_PROCESSOR, etc.
-    /// To get a list of processors types, see
-    /// \[FetchProcessorTypes][google.cloud.documentai.v1beta3.DocumentProcessorService.FetchProcessorTypes\].
+    /// Description of the schema.
     #[prost(string, tag="2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The display name of the processor.
-    #[prost(string, tag="3")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The state of the processor.
-    #[prost(enumeration="processor::State", tag="4")]
-    pub state: i32,
-    /// The default processor version.
-    #[prost(string, tag="9")]
-    pub default_processor_version: ::prost::alloc::string::String,
-    /// Output only. Immutable. The http endpoint that can be called to invoke processing.
-    #[prost(string, tag="6")]
-    pub process_endpoint: ::prost::alloc::string::String,
-    /// The time the processor was created.
-    #[prost(message, optional, tag="7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The KMS key used for encryption/decryption in CMEK scenarios.
-    /// See <https://cloud.google.com/security-key-management.>
-    #[prost(string, tag="8")]
-    pub kms_key_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Processor`.
-pub mod processor {
-    /// The possible states of the processor.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// The processor is in an unspecified state.
-        Unspecified = 0,
-        /// The processor is enabled, i.e., has an enabled version which can
-        /// currently serve processing requests and all the feature dependencies have
-        /// been successfully initialized.
-        Enabled = 1,
-        /// The processor is disabled.
-        Disabled = 2,
-        /// The processor is being enabled, will become ENABLED if successful.
-        Enabling = 3,
-        /// The processor is being disabled, will become DISABLED if successful.
-        Disabling = 4,
-        /// The processor is being created, will become either ENABLED (for
-        /// successful creation) or FAILED (for failed ones).
-        /// Once a processor is in this state, it can then be used for document
-        /// processing, but the feature dependencies of the processor might not be
-        /// fully created yet.
-        Creating = 5,
-        /// The processor failed during creation or initialization of feature
-        /// dependencies. The user should delete the processor and recreate one as
-        /// all the functionalities of the processor are disabled.
-        Failed = 6,
-        /// The processor is being deleted, will be removed if successful.
-        Deleting = 7,
-    }
-}
-/// The common metadata for long running operations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommonOperationMetadata {
-    /// The state of the operation.
-    #[prost(enumeration="common_operation_metadata::State", tag="1")]
-    pub state: i32,
-    /// A message providing more details about the current state of processing.
-    #[prost(string, tag="2")]
-    pub state_message: ::prost::alloc::string::String,
-    /// A related resource to this operation.
-    #[prost(string, tag="5")]
-    pub resource: ::prost::alloc::string::String,
-    /// The creation time of the operation.
-    #[prost(message, optional, tag="3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last update time of the operation.
+    pub description: ::prost::alloc::string::String,
+    /// Entity types of the schema.
+    #[prost(message, repeated, tag="3")]
+    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
+    /// Metadata of the schema.
     #[prost(message, optional, tag="4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub metadata: ::core::option::Option<document_schema::Metadata>,
 }
-/// Nested message and enum types in `CommonOperationMetadata`.
-pub mod common_operation_metadata {
-    /// State of the longrunning operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// Operation is still running.
-        Running = 1,
-        /// Operation is being cancelled.
-        Cancelling = 2,
-        /// Operation succeeded.
-        Succeeded = 3,
-        /// Operation failed.
-        Failed = 4,
-        /// Operation is cancelled.
-        Cancelled = 5,
+/// Nested message and enum types in `DocumentSchema`.
+pub mod document_schema {
+    /// EntityType is the wrapper of a label of the corresponding model with
+    /// detailed attributes and limitations for entity-based processors. Multiple
+    /// types can also compose a dependency tree to represent nested types.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntityType {
+        /// User defined name for the type.
+        #[prost(string, tag="13")]
+        pub display_name: ::prost::alloc::string::String,
+        /// Name of the type. It must be unique within the schema file and
+        /// cannot be a 'Common Type'.  Besides that we use the following naming
+        /// conventions:
+        /// - *use snake_casing*
+        /// - name matching is case-insensitive
+        /// - Maximum 64 characters.
+        /// - Must start with a letter.
+        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
+        ///    compatibility internal infrastructure and tooling can handle any ascii
+        ///    character)
+        /// - The '/' is sometimes used to denote a property of a type.  For example
+        ///    line_item/amount.  This convention is deprecated, but will still be
+        ///    honored for backward compatibility.
+        #[prost(string, tag="1")]
+        pub name: ::prost::alloc::string::String,
+        /// The entity type that this type is derived from.  For now, one and only
+        /// one should be set.
+        #[prost(string, repeated, tag="2")]
+        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Describing the nested structure, or composition of an entity.
+        #[prost(message, repeated, tag="6")]
+        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
+        #[prost(oneof="entity_type::ValueSource", tags="14")]
+        pub value_source: ::core::option::Option<entity_type::ValueSource>,
+    }
+    /// Nested message and enum types in `EntityType`.
+    pub mod entity_type {
+        /// Defines the a list of enum values.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EnumValues {
+            /// The individual values that this enum values type can include.
+            #[prost(string, repeated, tag="1")]
+            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        }
+        /// Defines properties that can be part of the entity type.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Property {
+            /// The name of the property.  Follows the same guidelines as the
+            /// EntityType name.
+            #[prost(string, tag="1")]
+            pub name: ::prost::alloc::string::String,
+            /// A reference to the value type of the property.  This type is subject
+            /// to the same conventions as the `Entity.base_types` field.
+            #[prost(string, tag="2")]
+            pub value_type: ::prost::alloc::string::String,
+            /// Occurrence type limits the number of instances an entity type appears
+            /// in the document.
+            #[prost(enumeration="property::OccurrenceType", tag="3")]
+            pub occurrence_type: i32,
+        }
+        /// Nested message and enum types in `Property`.
+        pub mod property {
+            /// Types of occurrences of the entity type in the document.  Note: this
+            /// represents the number of instances of an entity types, not number of
+            /// mentions of a given entity instance.
+            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+            #[repr(i32)]
+            pub enum OccurrenceType {
+                /// Unspecified occurrence type.
+                Unspecified = 0,
+                /// There will be zero or one instance of this entity type.
+                OptionalOnce = 1,
+                /// The entity type will appear zero or multiple times.
+                OptionalMultiple = 2,
+                /// The entity type will only appear exactly once.
+                RequiredOnce = 3,
+                /// The entity type will appear once or more times.
+                RequiredMultiple = 4,
+            }
+            impl OccurrenceType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
+                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
+                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
+                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
+                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
+                    }
+                }
+            }
+        }
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ValueSource {
+            /// If specified, lists all the possible values for this entity.  This
+            /// should not be more than a handful of values.  If the number of values
+            /// is >10 or could change frequently use the `EntityType.value_ontology`
+            /// field and specify a list of all possible values in a value ontology
+            /// file.
+            #[prost(message, tag="14")]
+            EnumValues(EnumValues),
+        }
+    }
+    /// Metadata for global schema behavior.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metadata {
+        /// If true, a `document` entity type can be applied to subdocument (
+        /// splitting). Otherwise, it can only be applied to the entire document
+        /// (classification).
+        #[prost(bool, tag="1")]
+        pub document_splitter: bool,
+        /// If true, on a given page, there can be multiple `document` annotations
+        /// covering it.
+        #[prost(bool, tag="2")]
+        pub document_allow_multiple_labels: bool,
+        /// If set, all the nested entities must be prefixed with the parents.
+        #[prost(bool, tag="6")]
+        pub prefixed_naming_on_properties: bool,
+        /// If set, we will skip the naming format validation in the schema. So the
+        /// string values in `DocumentSchema.EntityType.name` and
+        /// `DocumentSchema.EntityType.Property.name` will not be checked.
+        #[prost(bool, tag="7")]
+        pub skip_naming_validation: bool,
     }
 }
 /// Encodes the detailed information of a barcode.
@@ -175,123 +147,43 @@ pub mod common_operation_metadata {
 pub struct Barcode {
     /// Format of a barcode.
     /// The supported formats are:
-    ///   CODE_128: Code 128 type.
-    ///   CODE_39: Code 39 type.
-    ///   CODE_93: Code 93 type.
-    ///   CODABAR: Codabar type.
-    ///   DATA_MATRIX: 2D Data Matrix type.
-    ///   ITF: ITF type.
-    ///   EAN_13: EAN-13 type.
-    ///   EAN_8: EAN-8 type.
-    ///   QR_CODE: 2D QR code type.
-    ///   UPC_A: UPC-A type.
-    ///   UPC_E: UPC-E type.
-    ///   PDF417: PDF417 type.
-    ///   AZTEC: 2D Aztec code type.
-    ///   DATABAR: GS1 DataBar code type.
+    ///    CODE_128: Code 128 type.
+    ///    CODE_39: Code 39 type.
+    ///    CODE_93: Code 93 type.
+    ///    CODABAR: Codabar type.
+    ///    DATA_MATRIX: 2D Data Matrix type.
+    ///    ITF: ITF type.
+    ///    EAN_13: EAN-13 type.
+    ///    EAN_8: EAN-8 type.
+    ///    QR_CODE: 2D QR code type.
+    ///    UPC_A: UPC-A type.
+    ///    UPC_E: UPC-E type.
+    ///    PDF417: PDF417 type.
+    ///    AZTEC: 2D Aztec code type.
+    ///    DATABAR: GS1 DataBar code type.
     #[prost(string, tag="1")]
     pub format: ::prost::alloc::string::String,
     /// Value format describes the format of the value that a barcode
     /// encodes.
     /// The supported formats are:
-    ///   CONTACT_INFO: Contact information.
-    ///   EMAIL: Email address.
-    ///   ISBN: ISBN identifier.
-    ///   PHONE: Phone number.
-    ///   PRODUCT: Product.
-    ///   SMS: SMS message.
-    ///   TEXT: Text string.
-    ///   URL: URL address.
-    ///   WIFI: Wifi information.
-    ///   GEO: Geo-localization.
-    ///   CALENDAR_EVENT: Calendar event.
-    ///   DRIVER_LICENSE: Driver's license.
+    ///    CONTACT_INFO: Contact information.
+    ///    EMAIL: Email address.
+    ///    ISBN: ISBN identifier.
+    ///    PHONE: Phone number.
+    ///    PRODUCT: Product.
+    ///    SMS: SMS message.
+    ///    TEXT: Text string.
+    ///    URL: URL address.
+    ///    WIFI: Wifi information.
+    ///    GEO: Geo-localization.
+    ///    CALENDAR_EVENT: Calendar event.
+    ///    DRIVER_LICENSE: Driver's license.
     #[prost(string, tag="2")]
     pub value_format: ::prost::alloc::string::String,
     /// Raw value encoded in the barcode.
     /// For example, 'MEBKM:TITLE:Google;URL:<https://www.google.com;;'.>
     #[prost(string, tag="3")]
     pub raw_value: ::prost::alloc::string::String,
-}
-/// Payload message of raw document content (bytes).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RawDocument {
-    /// Inline document content.
-    #[prost(bytes="bytes", tag="1")]
-    pub content: ::prost::bytes::Bytes,
-    /// An IANA MIME type (RFC6838) indicating the nature and format of the
-    /// \[content\].
-    #[prost(string, tag="2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a document stored on Cloud Storage.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocument {
-    /// The Cloud Storage object uri.
-    #[prost(string, tag="1")]
-    pub gcs_uri: ::prost::alloc::string::String,
-    /// An IANA MIME type (RFC6838) of the content.
-    #[prost(string, tag="2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a set of documents on Cloud Storage.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocuments {
-    /// The list of documents.
-    #[prost(message, repeated, tag="1")]
-    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
-}
-/// Specifies all documents on Cloud Storage with a common prefix.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsPrefix {
-    /// The URI prefix.
-    #[prost(string, tag="1")]
-    pub gcs_uri_prefix: ::prost::alloc::string::String,
-}
-/// The common config to specify a set of documents used as input.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchDocumentsInputConfig {
-    /// The source.
-    #[prost(oneof="batch_documents_input_config::Source", tags="1, 2")]
-    pub source: ::core::option::Option<batch_documents_input_config::Source>,
-}
-/// Nested message and enum types in `BatchDocumentsInputConfig`.
-pub mod batch_documents_input_config {
-    /// The source.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// The set of documents that match the specified Cloud Storage \[gcs_prefix\].
-        #[prost(message, tag="1")]
-        GcsPrefix(super::GcsPrefix),
-        /// The set of documents individually specified on Cloud Storage.
-        #[prost(message, tag="2")]
-        GcsDocuments(super::GcsDocuments),
-    }
-}
-/// Config that controls the output of documents. All documents will be written
-/// as a JSON file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentOutputConfig {
-    /// The destination of the results.
-    #[prost(oneof="document_output_config::Destination", tags="1")]
-    pub destination: ::core::option::Option<document_output_config::Destination>,
-}
-/// Nested message and enum types in `DocumentOutputConfig`.
-pub mod document_output_config {
-    /// The configuration used when outputting documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GcsOutputConfig {
-        /// The Cloud Storage uri (a directory) of the output.
-        #[prost(string, tag="1")]
-        pub gcs_uri: ::prost::alloc::string::String,
-    }
-    /// The destination of the results.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// Output config to write the results to Cloud Storage.
-        #[prost(message, tag="1")]
-        GcsOutputConfig(GcsOutputConfig),
-    }
 }
 /// A vertex represents a 2D point in the image.
 /// NOTE: the vertex coordinates are in the same scale as the original image.
@@ -584,6 +476,21 @@ pub mod document {
                 /// Turn the head 90 degrees counterclockwise from upright to read.
                 PageLeft = 4,
             }
+            impl Orientation {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        Orientation::Unspecified => "ORIENTATION_UNSPECIFIED",
+                        Orientation::PageUp => "PAGE_UP",
+                        Orientation::PageRight => "PAGE_RIGHT",
+                        Orientation::PageDown => "PAGE_DOWN",
+                        Orientation::PageLeft => "PAGE_LEFT",
+                    }
+                }
+            }
         }
         /// A block has a set of lines (collected into paragraphs) that have a
         /// common line-spacing and orientation.
@@ -665,6 +572,20 @@ pub mod document {
                     WideSpace = 2,
                     /// A hyphen that indicates that a token has been split across lines.
                     Hyphen = 3,
+                }
+                impl Type {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            Type::Unspecified => "TYPE_UNSPECIFIED",
+                            Type::Space => "SPACE",
+                            Type::WideSpace => "WIDE_SPACE",
+                            Type::Hyphen => "HYPHEN",
+                        }
+                    }
                 }
             }
         }
@@ -1000,6 +921,24 @@ pub mod document {
                 /// References a \[Page.form_fields][google.cloud.documentai.v1beta3.Document.Page.form_fields\] element.
                 FormField = 7,
             }
+            impl LayoutType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        LayoutType::Unspecified => "LAYOUT_TYPE_UNSPECIFIED",
+                        LayoutType::Block => "BLOCK",
+                        LayoutType::Paragraph => "PARAGRAPH",
+                        LayoutType::Line => "LINE",
+                        LayoutType::Token => "TOKEN",
+                        LayoutType::VisualElement => "VISUAL_ELEMENT",
+                        LayoutType::Table => "TABLE",
+                        LayoutType::FormField => "FORM_FIELD",
+                    }
+                }
+            }
         }
     }
     /// Structure to identify provenance relationships between annotations in
@@ -1059,6 +998,23 @@ pub mod document {
             EvalApproved = 5,
             /// Element is skipped in the validation process.
             EvalSkipped = 6,
+        }
+        impl OperationType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+                    OperationType::Add => "ADD",
+                    OperationType::Remove => "REMOVE",
+                    OperationType::Replace => "REPLACE",
+                    OperationType::EvalRequested => "EVAL_REQUESTED",
+                    OperationType::EvalApproved => "EVAL_APPROVED",
+                    OperationType::EvalSkipped => "EVAL_SKIPPED",
+                }
+            }
         }
     }
     /// Contains past or forward revisions of this document.
@@ -1135,10 +1091,10 @@ pub mod document {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Optional. Currently supports Google Cloud Storage URI of the form
-        ///    `gs://bucket_name/object_name`. Object versioning is not supported.
-        ///    See [Google Cloud Storage Request
-        ///    URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
-        ///    info.
+        ///     `gs://bucket_name/object_name`. Object versioning is not supported.
+        ///     See [Google Cloud Storage Request
+        ///     URIs](<https://cloud.google.com/storage/docs/reference-uris>) for more
+        ///     info.
         #[prost(string, tag="1")]
         Uri(::prost::alloc::string::String),
         /// Optional. Inline document content, represented as a stream of bytes.
@@ -1148,133 +1104,139 @@ pub mod document {
         Content(::prost::bytes::Bytes),
     }
 }
-/// The schema defines the output of the processed document by a processor.
+/// The common metadata for long running operations.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentSchema {
-    /// Display name to show to users.
-    #[prost(string, tag="1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the schema.
+pub struct CommonOperationMetadata {
+    /// The state of the operation.
+    #[prost(enumeration="common_operation_metadata::State", tag="1")]
+    pub state: i32,
+    /// A message providing more details about the current state of processing.
     #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// Entity types of the schema.
-    #[prost(message, repeated, tag="3")]
-    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
-    /// Metadata of the schema.
+    pub state_message: ::prost::alloc::string::String,
+    /// A related resource to this operation.
+    #[prost(string, tag="5")]
+    pub resource: ::prost::alloc::string::String,
+    /// The creation time of the operation.
+    #[prost(message, optional, tag="3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last update time of the operation.
     #[prost(message, optional, tag="4")]
-    pub metadata: ::core::option::Option<document_schema::Metadata>,
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
-/// Nested message and enum types in `DocumentSchema`.
-pub mod document_schema {
-    /// EntityType is the wrapper of a label of the corresponding model with
-    /// detailed attributes and limitations for entity-based processors. Multiple
-    /// types can also compose a dependency tree to represent nested types.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntityType {
-        /// User defined name for the type.
-        #[prost(string, tag="13")]
-        pub display_name: ::prost::alloc::string::String,
-        /// Name of the type. It must be unique within the schema file and
-        /// cannot be a 'Common Type'.  Besides that we use the following naming
-        /// conventions:
-        /// - *use snake_casing*
-        /// - name matching is case-insensitive
-        /// - Maximum 64 characters.
-        /// - Must start with a letter.
-        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
-        ///   compatibility internal infrastructure and tooling can handle any ascii
-        ///   character)
-        /// - The '/' is sometimes used to denote a property of a type.  For example
-        ///   line_item/amount.  This convention is deprecated, but will still be
-        ///   honored for backward compatibility.
-        #[prost(string, tag="1")]
-        pub name: ::prost::alloc::string::String,
-        /// The entity type that this type is derived from.  For now, one and only
-        /// one should be set.
-        #[prost(string, repeated, tag="2")]
-        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Describing the nested structure, or composition of an entity.
-        #[prost(message, repeated, tag="6")]
-        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
-        #[prost(oneof="entity_type::ValueSource", tags="14")]
-        pub value_source: ::core::option::Option<entity_type::ValueSource>,
+/// Nested message and enum types in `CommonOperationMetadata`.
+pub mod common_operation_metadata {
+    /// State of the longrunning operation.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// Operation is still running.
+        Running = 1,
+        /// Operation is being cancelled.
+        Cancelling = 2,
+        /// Operation succeeded.
+        Succeeded = 3,
+        /// Operation failed.
+        Failed = 4,
+        /// Operation is cancelled.
+        Cancelled = 5,
     }
-    /// Nested message and enum types in `EntityType`.
-    pub mod entity_type {
-        /// Defines the a list of enum values.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EnumValues {
-            /// The individual values that this enum values type can include.
-            #[prost(string, repeated, tag="1")]
-            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        }
-        /// Defines properties that can be part of the entity type.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Property {
-            /// The name of the property.  Follows the same guidelines as the
-            /// EntityType name.
-            #[prost(string, tag="1")]
-            pub name: ::prost::alloc::string::String,
-            /// A reference to the value type of the property.  This type is subject
-            /// to the same conventions as the `Entity.base_types` field.
-            #[prost(string, tag="2")]
-            pub value_type: ::prost::alloc::string::String,
-            /// Occurrence type limits the number of instances an entity type appears
-            /// in the document.
-            #[prost(enumeration="property::OccurrenceType", tag="3")]
-            pub occurrence_type: i32,
-        }
-        /// Nested message and enum types in `Property`.
-        pub mod property {
-            /// Types of occurrences of the entity type in the document.  Note: this
-            /// represents the number of instances of an entity types, not number of
-            /// mentions of a given entity instance.
-            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-            #[repr(i32)]
-            pub enum OccurrenceType {
-                /// Unspecified occurrence type.
-                Unspecified = 0,
-                /// There will be zero or one instance of this entity type.
-                OptionalOnce = 1,
-                /// The entity type will appear zero or multiple times.
-                OptionalMultiple = 2,
-                /// The entity type will only appear exactly once.
-                RequiredOnce = 3,
-                /// The entity type will appear once or more times.
-                RequiredMultiple = 4,
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
             }
         }
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ValueSource {
-            /// If specified, lists all the possible values for this entity.  This
-            /// should not be more than a handful of values.  If the number of values
-            /// is >10 or could change frequently use the `EntityType.value_ontology`
-            /// field and specify a list of all possible values in a value ontology
-            /// file.
-            #[prost(message, tag="14")]
-            EnumValues(EnumValues),
-        }
     }
-    /// Metadata for global schema behavior.
+}
+/// Payload message of raw document content (bytes).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RawDocument {
+    /// Inline document content.
+    #[prost(bytes="bytes", tag="1")]
+    pub content: ::prost::bytes::Bytes,
+    /// An IANA MIME type (RFC6838) indicating the nature and format of the
+    /// \[content\].
+    #[prost(string, tag="2")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Specifies a document stored on Cloud Storage.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocument {
+    /// The Cloud Storage object uri.
+    #[prost(string, tag="1")]
+    pub gcs_uri: ::prost::alloc::string::String,
+    /// An IANA MIME type (RFC6838) of the content.
+    #[prost(string, tag="2")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Specifies a set of documents on Cloud Storage.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocuments {
+    /// The list of documents.
+    #[prost(message, repeated, tag="1")]
+    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
+}
+/// Specifies all documents on Cloud Storage with a common prefix.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsPrefix {
+    /// The URI prefix.
+    #[prost(string, tag="1")]
+    pub gcs_uri_prefix: ::prost::alloc::string::String,
+}
+/// The common config to specify a set of documents used as input.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchDocumentsInputConfig {
+    /// The source.
+    #[prost(oneof="batch_documents_input_config::Source", tags="1, 2")]
+    pub source: ::core::option::Option<batch_documents_input_config::Source>,
+}
+/// Nested message and enum types in `BatchDocumentsInputConfig`.
+pub mod batch_documents_input_config {
+    /// The source.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// The set of documents that match the specified Cloud Storage \[gcs_prefix\].
+        #[prost(message, tag="1")]
+        GcsPrefix(super::GcsPrefix),
+        /// The set of documents individually specified on Cloud Storage.
+        #[prost(message, tag="2")]
+        GcsDocuments(super::GcsDocuments),
+    }
+}
+/// Config that controls the output of documents. All documents will be written
+/// as a JSON file.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentOutputConfig {
+    /// The destination of the results.
+    #[prost(oneof="document_output_config::Destination", tags="1")]
+    pub destination: ::core::option::Option<document_output_config::Destination>,
+}
+/// Nested message and enum types in `DocumentOutputConfig`.
+pub mod document_output_config {
+    /// The configuration used when outputting documents.
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Metadata {
-        /// If true, a `document` entity type can be applied to subdocument (
-        /// splitting). Otherwise, it can only be applied to the entire document
-        /// (classification).
-        #[prost(bool, tag="1")]
-        pub document_splitter: bool,
-        /// If true, on a given page, there can be multiple `document` annotations
-        /// covering it.
-        #[prost(bool, tag="2")]
-        pub document_allow_multiple_labels: bool,
-        /// If set, all the nested entities must be prefixed with the parents.
-        #[prost(bool, tag="6")]
-        pub prefixed_naming_on_properties: bool,
-        /// If set, we will skip the naming format validation in the schema. So the
-        /// string values in `DocumentSchema.EntityType.name` and
-        /// `DocumentSchema.EntityType.Property.name` will not be checked.
-        #[prost(bool, tag="7")]
-        pub skip_naming_validation: bool,
+    pub struct GcsOutputConfig {
+        /// The Cloud Storage uri (a directory) of the output.
+        #[prost(string, tag="1")]
+        pub gcs_uri: ::prost::alloc::string::String,
+    }
+    /// The destination of the results.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// Output config to write the results to Cloud Storage.
+        #[prost(message, tag="1")]
+        GcsOutputConfig(GcsOutputConfig),
     }
 }
 /// A processor type is responsible for performing a certain document
@@ -1310,6 +1272,175 @@ pub mod processor_type {
         /// The location id, currently must be one of [us, eu].
         #[prost(string, tag="1")]
         pub location_id: ::prost::alloc::string::String,
+    }
+}
+/// A processor version is an implementation of a processor. Each processor
+/// can have multiple versions, pre-trained by Google internally or up-trained
+/// by the customer. At a time, a processor can only have one default version
+/// version. So the processor's behavior (when processing documents) is defined
+/// by a default version
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProcessorVersion {
+    /// The resource name of the processor version.
+    /// Format:
+    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The display name of the processor version.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The state of the processor version.
+    #[prost(enumeration="processor_version::State", tag="6")]
+    pub state: i32,
+    /// The time the processor version was created.
+    #[prost(message, optional, tag="7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The KMS key name used for encryption.
+    #[prost(string, tag="9")]
+    pub kms_key_name: ::prost::alloc::string::String,
+    /// The KMS key version with which data is encrypted.
+    #[prost(string, tag="10")]
+    pub kms_key_version_name: ::prost::alloc::string::String,
+    /// Denotes that this ProcessorVersion is managed by google.
+    #[prost(bool, tag="11")]
+    pub google_managed: bool,
+    /// If set, information about the eventual deprecation of this version.
+    #[prost(message, optional, tag="13")]
+    pub deprecation_info: ::core::option::Option<processor_version::DeprecationInfo>,
+}
+/// Nested message and enum types in `ProcessorVersion`.
+pub mod processor_version {
+    /// Information about the upcoming deprecation of this processor version.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DeprecationInfo {
+        /// The time at which this processor version will be deprecated.
+        #[prost(message, optional, tag="1")]
+        pub deprecation_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// If set, the processor version that will be used as a replacement.
+        #[prost(string, tag="2")]
+        pub replacement_processor_version: ::prost::alloc::string::String,
+    }
+    /// The possible states of the processor version.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// The processor version is in an unspecified state.
+        Unspecified = 0,
+        /// The processor version is deployed and can be used for processing.
+        Deployed = 1,
+        /// The processor version is being deployed.
+        Deploying = 2,
+        /// The processor version is not deployed and cannot be used for processing.
+        Undeployed = 3,
+        /// The processor version is being undeployed.
+        Undeploying = 4,
+        /// The processor version is being created.
+        Creating = 5,
+        /// The processor version is being deleted.
+        Deleting = 6,
+        /// The processor version failed and is in an indeterminate state.
+        Failed = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Deployed => "DEPLOYED",
+                State::Deploying => "DEPLOYING",
+                State::Undeployed => "UNDEPLOYED",
+                State::Undeploying => "UNDEPLOYING",
+                State::Creating => "CREATING",
+                State::Deleting => "DELETING",
+                State::Failed => "FAILED",
+            }
+        }
+    }
+}
+/// The first-class citizen for Document AI. Each processor defines how to
+/// extract structural information from a document.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Processor {
+    /// Output only. Immutable. The resource name of the processor.
+    /// Format: `projects/{project}/locations/{location}/processors/{processor}`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The processor type, e.g., OCR_PROCESSOR, INVOICE_PROCESSOR, etc.
+    /// To get a list of processors types, see
+    /// \[FetchProcessorTypes][google.cloud.documentai.v1beta3.DocumentProcessorService.FetchProcessorTypes\].
+    #[prost(string, tag="2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The display name of the processor.
+    #[prost(string, tag="3")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The state of the processor.
+    #[prost(enumeration="processor::State", tag="4")]
+    pub state: i32,
+    /// The default processor version.
+    #[prost(string, tag="9")]
+    pub default_processor_version: ::prost::alloc::string::String,
+    /// Output only. Immutable. The http endpoint that can be called to invoke processing.
+    #[prost(string, tag="6")]
+    pub process_endpoint: ::prost::alloc::string::String,
+    /// The time the processor was created.
+    #[prost(message, optional, tag="7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The KMS key used for encryption/decryption in CMEK scenarios.
+    /// See <https://cloud.google.com/security-key-management.>
+    #[prost(string, tag="8")]
+    pub kms_key_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Processor`.
+pub mod processor {
+    /// The possible states of the processor.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// The processor is in an unspecified state.
+        Unspecified = 0,
+        /// The processor is enabled, i.e., has an enabled version which can
+        /// currently serve processing requests and all the feature dependencies have
+        /// been successfully initialized.
+        Enabled = 1,
+        /// The processor is disabled.
+        Disabled = 2,
+        /// The processor is being enabled, will become ENABLED if successful.
+        Enabling = 3,
+        /// The processor is being disabled, will become DISABLED if successful.
+        Disabling = 4,
+        /// The processor is being created, will become either ENABLED (for
+        /// successful creation) or FAILED (for failed ones).
+        /// Once a processor is in this state, it can then be used for document
+        /// processing, but the feature dependencies of the processor might not be
+        /// fully created yet.
+        Creating = 5,
+        /// The processor failed during creation or initialization of feature
+        /// dependencies. The user should delete the processor and recreate one as
+        /// all the functionalities of the processor are disabled.
+        Failed = 6,
+        /// The processor is being deleted, will be removed if successful.
+        Deleting = 7,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabled => "ENABLED",
+                State::Disabled => "DISABLED",
+                State::Enabling => "ENABLING",
+                State::Disabling => "DISABLING",
+                State::Creating => "CREATING",
+                State::Failed => "FAILED",
+                State::Deleting => "DELETING",
+            }
+        }
     }
 }
 /// Request message for the process document method.
@@ -1386,6 +1517,21 @@ pub mod human_review_status {
         /// Some error happened during triggering human review, see the
         /// \[state_message\] for details.
         Error = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Skipped => "SKIPPED",
+                State::ValidationPassed => "VALIDATION_PASSED",
+                State::InProgress => "IN_PROGRESS",
+                State::Error => "ERROR",
+            }
+        }
     }
 }
 /// Response message for the process document method.
@@ -1528,6 +1674,23 @@ pub mod batch_process_metadata {
         Cancelled = 5,
         /// The batch processing has failed.
         Failed = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Waiting => "WAITING",
+                State::Running => "RUNNING",
+                State::Succeeded => "SUCCEEDED",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+                State::Failed => "FAILED",
+            }
+        }
     }
 }
 /// Request message for fetch processor types.
@@ -1818,6 +1981,18 @@ pub mod review_document_request {
         /// resource to the urgent task queue to respect this priority level.
         Urgent = 1,
     }
+    impl Priority {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Priority::Default => "DEFAULT",
+                Priority::Urgent => "URGENT",
+            }
+        }
+    }
     /// The document payload.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
@@ -1852,6 +2027,19 @@ pub mod review_document_response {
         Rejected = 1,
         /// The review operation is succeeded.
         Succeeded = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Rejected => "REJECTED",
+                State::Succeeded => "SUCCEEDED",
+            }
+        }
     }
 }
 /// The long running operation metadata for review document method.
@@ -1896,11 +2084,28 @@ pub mod review_document_operation_metadata {
         /// Operation is cancelled.
         Cancelled = 5,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Generated client implementations.
 pub mod document_processor_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service to call Cloud DocumentAI to process documents according to the
     /// processor's definition. Processors are built using state-of-the-art Google
     /// AI such as natural language, computer vision, and translation to extract
@@ -1918,6 +2123,10 @@ pub mod document_processor_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1941,19 +2150,19 @@ pub mod document_processor_service_client {
                 InterceptedService::new(inner, interceptor),
             )
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Processes a single document.

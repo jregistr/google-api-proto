@@ -63,6 +63,20 @@ pub mod replica_info {
         /// * Participate in leader election but are not eligible to become leader.
         Witness = 3,
     }
+    impl ReplicaType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReplicaType::TypeUnspecified => "TYPE_UNSPECIFIED",
+                ReplicaType::ReadWrite => "READ_WRITE",
+                ReplicaType::ReadOnly => "READ_ONLY",
+                ReplicaType::Witness => "WITNESS",
+            }
+        }
+    }
 }
 /// A possible configuration for a Cloud Spanner instance. Configurations
 /// define the geographic placement of nodes and their replication.
@@ -101,11 +115,11 @@ pub struct InstanceConfig {
     /// And they can be used as arguments to policy management rules (e.g. route,
     /// firewall, load balancing, etc.).
     ///
-    ///  * Label keys must be between 1 and 63 characters long and must conform to
-    ///    the following regular expression: `\[a-z][a-z0-9_-\]{0,62}`.
-    ///  * Label values must be between 0 and 63 characters long and must conform
-    ///    to the regular expression `\[a-z0-9_-\]{0,63}`.
-    ///  * No more than 64 labels can be associated with a given resource.
+    ///   * Label keys must be between 1 and 63 characters long and must conform to
+    ///     the following regular expression: `\[a-z][a-z0-9_-\]{0,62}`.
+    ///   * Label values must be between 0 and 63 characters long and must conform
+    ///     to the regular expression `\[a-z0-9_-\]{0,63}`.
+    ///   * No more than 64 labels can be associated with a given resource.
     ///
     /// See <https://goo.gl/xmQnxf> for more information on and examples of labels.
     ///
@@ -154,6 +168,19 @@ pub mod instance_config {
         /// User managed configuration.
         UserManaged = 2,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::GoogleManaged => "GOOGLE_MANAGED",
+                Type::UserManaged => "USER_MANAGED",
+            }
+        }
+    }
     /// Indicates the current state of the instance config.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -165,6 +192,19 @@ pub mod instance_config {
         /// The instance config is fully created and ready to be used to create
         /// instances.
         Ready = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+            }
+        }
     }
 }
 /// An isolated set of Cloud Spanner resources on which databases can be hosted.
@@ -219,11 +259,11 @@ pub struct Instance {
     /// And they can be used as arguments to policy management rules (e.g. route,
     /// firewall, load balancing, etc.).
     ///
-    ///  * Label keys must be between 1 and 63 characters long and must conform to
-    ///    the following regular expression: `\[a-z][a-z0-9_-\]{0,62}`.
-    ///  * Label values must be between 0 and 63 characters long and must conform
-    ///    to the regular expression `\[a-z0-9_-\]{0,63}`.
-    ///  * No more than 64 labels can be associated with a given resource.
+    ///   * Label keys must be between 1 and 63 characters long and must conform to
+    ///     the following regular expression: `\[a-z][a-z0-9_-\]{0,62}`.
+    ///   * Label values must be between 0 and 63 characters long and must conform
+    ///     to the regular expression `\[a-z0-9_-\]{0,63}`.
+    ///   * No more than 64 labels can be associated with a given resource.
     ///
     /// See <https://goo.gl/xmQnxf> for more information on and examples of labels.
     ///
@@ -260,6 +300,19 @@ pub mod instance {
         /// The instance is fully created and ready to do work such as
         /// creating databases.
         Ready = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Creating => "CREATING",
+                State::Ready => "READY",
+            }
+        }
     }
 }
 /// The request for
@@ -397,19 +450,19 @@ pub struct ListInstanceConfigOperationsRequest {
     /// The following fields in the \[Operation][google.longrunning.Operation\]
     /// are eligible for filtering:
     ///
-    ///   * `name` - The name of the long-running operation
-    ///   * `done` - False if the operation is in progress, else true.
-    ///   * `metadata.@type` - the type of metadata. For example, the type string
-    ///      for
-    ///      \[CreateInstanceConfigMetadata][google.spanner.admin.instance.v1.CreateInstanceConfigMetadata\]
-    ///      is
-    ///      `type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata`.
-    ///   * `metadata.<field_name>` - any field in metadata.value.
-    ///      `metadata.@type` must be specified first, if filtering on metadata
-    ///      fields.
-    ///   * `error` - Error associated with the long-running operation.
-    ///   * `response.@type` - the type of response.
-    ///   * `response.<field_name>` - any field in response.value.
+    ///    * `name` - The name of the long-running operation
+    ///    * `done` - False if the operation is in progress, else true.
+    ///    * `metadata.@type` - the type of metadata. For example, the type string
+    ///       for
+    ///       \[CreateInstanceConfigMetadata][google.spanner.admin.instance.v1.CreateInstanceConfigMetadata\]
+    ///       is
+    ///       `type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata`.
+    ///    * `metadata.<field_name>` - any field in metadata.value.
+    ///       `metadata.@type` must be specified first, if filtering on metadata
+    ///       fields.
+    ///    * `error` - Error associated with the long-running operation.
+    ///    * `response.@type` - the type of response.
+    ///    * `response.<field_name>` - any field in response.value.
     ///
     /// You can combine multiple expressions by enclosing each expression in
     /// parentheses. By default, expressions are combined with AND logic. However,
@@ -417,18 +470,18 @@ pub struct ListInstanceConfigOperationsRequest {
     ///
     /// Here are a few examples:
     ///
-    ///   * `done:true` - The operation is complete.
-    ///   * `(metadata.@type=` \
-    ///     `type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata)
-    ///     AND` \
-    ///     `(metadata.instance_config.name:custom-config) AND` \
-    ///     `(metadata.progress.start_time < \"2021-03-28T14:50:00Z\") AND` \
-    ///     `(error:*)` - Return operations where:
-    ///     * The operation's metadata type is
-    ///     \[CreateInstanceConfigMetadata][google.spanner.admin.instance.v1.CreateInstanceConfigMetadata\].
-    ///     * The instance config name contains "custom-config".
-    ///     * The operation started before 2021-03-28T14:50:00Z.
-    ///     * The operation resulted in an error.
+    ///    * `done:true` - The operation is complete.
+    ///    * `(metadata.@type=` \
+    ///      `type.googleapis.com/google.spanner.admin.instance.v1.CreateInstanceConfigMetadata)
+    ///      AND` \
+    ///      `(metadata.instance_config.name:custom-config) AND` \
+    ///      `(metadata.progress.start_time < \"2021-03-28T14:50:00Z\") AND` \
+    ///      `(error:*)` - Return operations where:
+    ///      * The operation's metadata type is
+    ///      \[CreateInstanceConfigMetadata][google.spanner.admin.instance.v1.CreateInstanceConfigMetadata\].
+    ///      * The instance config name contains "custom-config".
+    ///      * The operation started before 2021-03-28T14:50:00Z.
+    ///      * The operation resulted in an error.
     #[prost(string, tag="2")]
     pub filter: ::prost::alloc::string::String,
     /// Number of operations to be returned in the response. If 0 or
@@ -514,22 +567,22 @@ pub struct ListInstancesRequest {
     /// An expression for filtering the results of the request. Filter rules are
     /// case insensitive. The fields eligible for filtering are:
     ///
-    ///   * `name`
-    ///   * `display_name`
-    ///   * `labels.key` where key is the name of a label
+    ///    * `name`
+    ///    * `display_name`
+    ///    * `labels.key` where key is the name of a label
     ///
     /// Some examples of using filters are:
     ///
-    ///   * `name:*` --> The instance has a name.
-    ///   * `name:Howl` --> The instance's name contains the string "howl".
-    ///   * `name:HOWL` --> Equivalent to above.
-    ///   * `NAME:howl` --> Equivalent to above.
-    ///   * `labels.env:*` --> The instance has the label "env".
-    ///   * `labels.env:dev` --> The instance has the label "env" and the value of
-    ///                        the label contains the string "dev".
-    ///   * `name:howl labels.env:dev` --> The instance's name contains "howl" and
-    ///                                  it has the label "env" with its value
-    ///                                  containing "dev".
+    ///    * `name:*` --> The instance has a name.
+    ///    * `name:Howl` --> The instance's name contains the string "howl".
+    ///    * `name:HOWL` --> Equivalent to above.
+    ///    * `NAME:howl` --> Equivalent to above.
+    ///    * `labels.env:*` --> The instance has the label "env".
+    ///    * `labels.env:dev` --> The instance has the label "env" and the value of
+    ///                         the label contains the string "dev".
+    ///    * `name:howl labels.env:dev` --> The instance's name contains "howl" and
+    ///                                   it has the label "env" with its value
+    ///                                   containing "dev".
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
 }
@@ -651,6 +704,7 @@ pub struct UpdateInstanceConfigMetadata {
 pub mod instance_admin_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Cloud Spanner Instance Admin API
     ///
     /// The Cloud Spanner Instance Admin API can be used to create, delete,
@@ -687,6 +741,10 @@ pub mod instance_admin_client {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
@@ -706,19 +764,19 @@ pub mod instance_admin_client {
         {
             InstanceAdminClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the supported instance configurations for a given project.

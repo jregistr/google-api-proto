@@ -163,6 +163,179 @@ pub enum ResolutionStatus {
     /// The error group is muted and excluded by default on group stats requests.
     Muted = 4,
 }
+impl ResolutionStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ResolutionStatus::Unspecified => "RESOLUTION_STATUS_UNSPECIFIED",
+            ResolutionStatus::Open => "OPEN",
+            ResolutionStatus::Acknowledged => "ACKNOWLEDGED",
+            ResolutionStatus::Resolved => "RESOLVED",
+            ResolutionStatus::Muted => "MUTED",
+        }
+    }
+}
+/// A request for reporting an individual error event.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReportErrorEventRequest {
+    /// Required. The resource name of the Google Cloud Platform project. Written
+    /// as `projects/{projectId}`, where `{projectId}` is the
+    /// [Google Cloud Platform project
+    /// ID](<https://support.google.com/cloud/answer/6158840>).
+    ///
+    /// Example: // `projects/my-project-123`.
+    #[prost(string, tag="1")]
+    pub project_name: ::prost::alloc::string::String,
+    /// Required. The error event to be reported.
+    #[prost(message, optional, tag="2")]
+    pub event: ::core::option::Option<ReportedErrorEvent>,
+}
+/// Response for reporting an individual error event.
+/// Data may be added to this message in the future.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReportErrorEventResponse {
+}
+/// An error event which is reported to the Error Reporting system.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReportedErrorEvent {
+    /// Optional. Time when the event occurred.
+    /// If not provided, the time when the event was received by the
+    /// Error Reporting system will be used.
+    #[prost(message, optional, tag="1")]
+    pub event_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. The service context in which this error has occurred.
+    #[prost(message, optional, tag="2")]
+    pub service_context: ::core::option::Option<ServiceContext>,
+    /// Required. The error message.
+    /// If no `context.reportLocation` is provided, the message must contain a
+    /// header (typically consisting of the exception type name and an error
+    /// message) and an exception stack trace in one of the supported programming
+    /// languages and formats.
+    /// Supported languages are Java, Python, JavaScript, Ruby, C#, PHP, and Go.
+    /// Supported stack trace formats are:
+    ///
+    /// * **Java**: Must be the return value of
+    /// \[`Throwable.printStackTrace()`\](<https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html#printStackTrace%28%29>).
+    /// * **Python**: Must be the return value of
+    /// \[`traceback.format_exc()`\](<https://docs.python.org/2/library/traceback.html#traceback.format_exc>).
+    /// * **JavaScript**: Must be the value of
+    /// \[`error.stack`\](<https://github.com/v8/v8/wiki/Stack-Trace-API>) as returned
+    /// by V8.
+    /// * **Ruby**: Must contain frames returned by
+    /// \[`Exception.backtrace`\](<https://ruby-doc.org/core-2.2.0/Exception.html#method-i-backtrace>).
+    /// * **C#**: Must be the return value of
+    /// \[`Exception.ToString()`\](<https://msdn.microsoft.com/en-us/library/system.exception.tostring.aspx>).
+    /// * **PHP**: Must start with `PHP (Notice|Parse error|Fatal error|Warning)`
+    /// and contain the result of
+    /// \[`(string)$exception`\](<http://php.net/manual/en/exception.tostring.php>).
+    /// * **Go**: Must be the return value of
+    /// \[`runtime.Stack()`\](<https://golang.org/pkg/runtime/debug/#Stack>).
+    #[prost(string, tag="3")]
+    pub message: ::prost::alloc::string::String,
+    /// Optional. A description of the context in which the error occurred.
+    #[prost(message, optional, tag="4")]
+    pub context: ::core::option::Option<ErrorContext>,
+}
+/// Generated client implementations.
+pub mod report_errors_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// An API for reporting error events.
+    #[derive(Debug, Clone)]
+    pub struct ReportErrorsServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ReportErrorsServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ReportErrorsServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ReportErrorsServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Report an individual error event and record the event to a log.
+        ///
+        /// This endpoint accepts **either** an OAuth token,
+        /// **or** an [API key](https://support.google.com/cloud/answer/6158862)
+        /// for authentication. To use an API key, append it to the URL as the value of
+        /// a `key` parameter. For example:
+        ///
+        /// `POST
+        /// https://clouderrorreporting.googleapis.com/v1beta1/{projectName}/events:report?key=123ABC456`
+        ///
+        /// **Note:** [Error Reporting](/error-reporting) is a global service built
+        /// on Cloud Logging and doesn't analyze logs stored
+        /// in regional log buckets or logs routed to other Google Cloud projects.
+        ///
+        /// For more information, see
+        /// [Using Error Reporting with regionalized
+        /// logs](/error-reporting/docs/regionalization).
+        pub async fn report_error_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReportErrorEventRequest>,
+        ) -> Result<tonic::Response<super::ReportErrorEventResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.devtools.clouderrorreporting.v1beta1.ReportErrorsService/ReportErrorEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// A request to return an individual group.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGroupRequest {
@@ -186,6 +359,7 @@ pub struct UpdateGroupRequest {
 pub mod error_group_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service for retrieving and updating individual error groups.
     #[derive(Debug, Clone)]
     pub struct ErrorGroupServiceClient<T> {
@@ -200,6 +374,10 @@ pub mod error_group_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -221,19 +399,19 @@ pub mod error_group_service_client {
         {
             ErrorGroupServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Get the specified group.
@@ -505,6 +683,22 @@ pub mod query_time_range {
         /// Recommended minimum timed count duration: 1 day.
         Period30Days = 5,
     }
+    impl Period {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Period::Unspecified => "PERIOD_UNSPECIFIED",
+                Period::Period1Hour => "PERIOD_1_HOUR",
+                Period::Period6Hours => "PERIOD_6_HOURS",
+                Period::Period1Day => "PERIOD_1_DAY",
+                Period::Period1Week => "PERIOD_1_WEEK",
+                Period::Period30Days => "PERIOD_30_DAYS",
+            }
+        }
+    }
 }
 /// Specifies criteria for filtering a subset of service contexts.
 /// The fields in the filter correspond to the fields in `ServiceContext`.
@@ -562,6 +756,19 @@ pub enum TimedCountAlignment {
     /// first time period.
     AlignmentEqualAtEnd = 2,
 }
+impl TimedCountAlignment {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TimedCountAlignment::ErrorCountAlignmentUnspecified => "ERROR_COUNT_ALIGNMENT_UNSPECIFIED",
+            TimedCountAlignment::AlignmentEqualRounded => "ALIGNMENT_EQUAL_ROUNDED",
+            TimedCountAlignment::AlignmentEqualAtEnd => "ALIGNMENT_EQUAL_AT_END",
+        }
+    }
+}
 /// A sorting order of error groups.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -578,10 +785,26 @@ pub enum ErrorGroupOrder {
     /// Number of affected users in the given time window in descending order.
     AffectedUsersDesc = 4,
 }
+impl ErrorGroupOrder {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ErrorGroupOrder::GroupOrderUnspecified => "GROUP_ORDER_UNSPECIFIED",
+            ErrorGroupOrder::CountDesc => "COUNT_DESC",
+            ErrorGroupOrder::LastSeenDesc => "LAST_SEEN_DESC",
+            ErrorGroupOrder::CreatedDesc => "CREATED_DESC",
+            ErrorGroupOrder::AffectedUsersDesc => "AFFECTED_USERS_DESC",
+        }
+    }
+}
 /// Generated client implementations.
 pub mod error_stats_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// An API for retrieving and managing error statistics as well as data for
     /// individual events.
     #[derive(Debug, Clone)]
@@ -597,6 +820,10 @@ pub mod error_stats_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -618,19 +845,19 @@ pub mod error_stats_service_client {
         {
             ErrorStatsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Lists the specified groups.
@@ -690,159 +917,6 @@ pub mod error_stats_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.clouderrorreporting.v1beta1.ErrorStatsService/DeleteEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A request for reporting an individual error event.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReportErrorEventRequest {
-    /// Required. The resource name of the Google Cloud Platform project. Written
-    /// as `projects/{projectId}`, where `{projectId}` is the
-    /// [Google Cloud Platform project
-    /// ID](<https://support.google.com/cloud/answer/6158840>).
-    ///
-    /// Example: // `projects/my-project-123`.
-    #[prost(string, tag="1")]
-    pub project_name: ::prost::alloc::string::String,
-    /// Required. The error event to be reported.
-    #[prost(message, optional, tag="2")]
-    pub event: ::core::option::Option<ReportedErrorEvent>,
-}
-/// Response for reporting an individual error event.
-/// Data may be added to this message in the future.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReportErrorEventResponse {
-}
-/// An error event which is reported to the Error Reporting system.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReportedErrorEvent {
-    /// Optional. Time when the event occurred.
-    /// If not provided, the time when the event was received by the
-    /// Error Reporting system will be used.
-    #[prost(message, optional, tag="1")]
-    pub event_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. The service context in which this error has occurred.
-    #[prost(message, optional, tag="2")]
-    pub service_context: ::core::option::Option<ServiceContext>,
-    /// Required. The error message.
-    /// If no `context.reportLocation` is provided, the message must contain a
-    /// header (typically consisting of the exception type name and an error
-    /// message) and an exception stack trace in one of the supported programming
-    /// languages and formats.
-    /// Supported languages are Java, Python, JavaScript, Ruby, C#, PHP, and Go.
-    /// Supported stack trace formats are:
-    ///
-    /// * **Java**: Must be the return value of
-    /// \[`Throwable.printStackTrace()`\](<https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html#printStackTrace%28%29>).
-    /// * **Python**: Must be the return value of
-    /// \[`traceback.format_exc()`\](<https://docs.python.org/2/library/traceback.html#traceback.format_exc>).
-    /// * **JavaScript**: Must be the value of
-    /// \[`error.stack`\](<https://github.com/v8/v8/wiki/Stack-Trace-API>) as returned
-    /// by V8.
-    /// * **Ruby**: Must contain frames returned by
-    /// \[`Exception.backtrace`\](<https://ruby-doc.org/core-2.2.0/Exception.html#method-i-backtrace>).
-    /// * **C#**: Must be the return value of
-    /// \[`Exception.ToString()`\](<https://msdn.microsoft.com/en-us/library/system.exception.tostring.aspx>).
-    /// * **PHP**: Must start with `PHP (Notice|Parse error|Fatal error|Warning)`
-    /// and contain the result of
-    /// \[`(string)$exception`\](<http://php.net/manual/en/exception.tostring.php>).
-    /// * **Go**: Must be the return value of
-    /// \[`runtime.Stack()`\](<https://golang.org/pkg/runtime/debug/#Stack>).
-    #[prost(string, tag="3")]
-    pub message: ::prost::alloc::string::String,
-    /// Optional. A description of the context in which the error occurred.
-    #[prost(message, optional, tag="4")]
-    pub context: ::core::option::Option<ErrorContext>,
-}
-/// Generated client implementations.
-pub mod report_errors_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    /// An API for reporting error events.
-    #[derive(Debug, Clone)]
-    pub struct ReportErrorsServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ReportErrorsServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ReportErrorsServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ReportErrorsServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with `gzip`.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        /// Enable decompressing responses with `gzip`.
-        #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
-        }
-        /// Report an individual error event and record the event to a log.
-        ///
-        /// This endpoint accepts **either** an OAuth token,
-        /// **or** an [API key](https://support.google.com/cloud/answer/6158862)
-        /// for authentication. To use an API key, append it to the URL as the value of
-        /// a `key` parameter. For example:
-        ///
-        /// `POST
-        /// https://clouderrorreporting.googleapis.com/v1beta1/{projectName}/events:report?key=123ABC456`
-        ///
-        /// **Note:** [Error Reporting](/error-reporting) is a global service built
-        /// on Cloud Logging and doesn't analyze logs stored
-        /// in regional log buckets or logs routed to other Google Cloud projects.
-        ///
-        /// For more information, see
-        /// [Using Error Reporting with regionalized
-        /// logs](/error-reporting/docs/regionalization).
-        pub async fn report_error_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReportErrorEventRequest>,
-        ) -> Result<tonic::Response<super::ReportErrorEventResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.devtools.clouderrorreporting.v1beta1.ReportErrorsService/ReportErrorEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

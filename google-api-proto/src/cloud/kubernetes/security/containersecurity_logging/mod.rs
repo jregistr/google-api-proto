@@ -87,6 +87,19 @@ pub mod finding {
         /// Remediated means that the finding has been fixed on the asset.
         Remediated = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Remediated => "REMEDIATED",
+            }
+        }
+    }
     /// Specific details about the security finding if there are any.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Details {
@@ -106,6 +119,19 @@ pub enum FindingType {
     /// Workload vulnerabilities scanning.
     Vulnerability = 2,
 }
+impl FindingType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FindingType::Unspecified => "FINDING_TYPE_UNSPECIFIED",
+            FindingType::Misconfig => "FINDING_TYPE_MISCONFIG",
+            FindingType::Vulnerability => "FINDING_TYPE_VULNERABILITY",
+        }
+    }
+}
 /// Severity is an enumeration of all the possible severities of a violation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -120,4 +146,19 @@ pub enum Severity {
     Medium = 3,
     /// SEVERITY_LOW recommends being aware of the problem.
     Low = 4,
+}
+impl Severity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+            Severity::Critical => "SEVERITY_CRITICAL",
+            Severity::High => "SEVERITY_HIGH",
+            Severity::Medium => "SEVERITY_MEDIUM",
+            Severity::Low => "SEVERITY_LOW",
+        }
+    }
 }

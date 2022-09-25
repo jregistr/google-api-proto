@@ -241,8 +241,8 @@ pub struct StreamingRecognitionConfig {
     /// * `command_and_search`
     /// * `phone_call` AND additional field `useEnhanced`=`true`
     /// * The `model` field is left undefined. In this case the API auto-selects
-    ///   a model based on any other parameters that you set in
-    ///   `RecognitionConfig`.
+    ///    a model based on any other parameters that you set in
+    ///    `RecognitionConfig`.
     #[prost(bool, tag="2")]
     pub single_utterance: bool,
     /// If `true`, interim results (tentative hypotheses) may be
@@ -409,51 +409,51 @@ pub struct RecognitionConfig {
     /// explicitly specified, then we auto-select a model based on the parameters
     /// in the RecognitionConfig.
     /// <table>
-    ///   <tr>
-    ///     <td><b>Model</b></td>
-    ///     <td><b>Description</b></td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>latest_long</code></td>
-    ///     <td>Best for long form content like media or conversation.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>latest_short</code></td>
-    ///     <td>Best for short form content like commands or single shot directed
-    ///     speech.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>command_and_search</code></td>
-    ///     <td>Best for short queries such as voice commands or voice search.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>phone_call</code></td>
-    ///     <td>Best for audio that originated from a phone call (typically
-    ///     recorded at an 8khz sampling rate).</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>video</code></td>
-    ///     <td>Best for audio that originated from video or includes multiple
-    ///         speakers. Ideally the audio is recorded at a 16khz or greater
-    ///         sampling rate. This is a premium model that costs more than the
-    ///         standard rate.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>default</code></td>
-    ///     <td>Best for audio that is not one of the specific audio models.
-    ///         For example, long-form audio. Ideally the audio is high-fidelity,
-    ///         recorded at a 16khz or greater sampling rate.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>medical_conversation</code></td>
-    ///     <td>Best for audio that originated from a conversation between a
-    ///         medical provider and patient.</td>
-    ///   </tr>
-    ///   <tr>
-    ///     <td><code>medical_dictation</code></td>
-    ///     <td>Best for audio that originated from dictation notes by a medical
-    ///         provider.</td>
-    ///   </tr>
+    ///    <tr>
+    ///      <td><b>Model</b></td>
+    ///      <td><b>Description</b></td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>latest_long</code></td>
+    ///      <td>Best for long form content like media or conversation.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>latest_short</code></td>
+    ///      <td>Best for short form content like commands or single shot directed
+    ///      speech.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>command_and_search</code></td>
+    ///      <td>Best for short queries such as voice commands or voice search.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>phone_call</code></td>
+    ///      <td>Best for audio that originated from a phone call (typically
+    ///      recorded at an 8khz sampling rate).</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>video</code></td>
+    ///      <td>Best for audio that originated from video or includes multiple
+    ///          speakers. Ideally the audio is recorded at a 16khz or greater
+    ///          sampling rate. This is a premium model that costs more than the
+    ///          standard rate.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>default</code></td>
+    ///      <td>Best for audio that is not one of the specific audio models.
+    ///          For example, long-form audio. Ideally the audio is high-fidelity,
+    ///          recorded at a 16khz or greater sampling rate.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>medical_conversation</code></td>
+    ///      <td>Best for audio that originated from a conversation between a
+    ///          medical provider and patient.</td>
+    ///    </tr>
+    ///    <tr>
+    ///      <td><code>medical_dictation</code></td>
+    ///      <td>Best for audio that originated from dictation notes by a medical
+    ///          provider.</td>
+    ///    </tr>
     /// </table>
     #[prost(string, tag="13")]
     pub model: ::prost::alloc::string::String,
@@ -540,6 +540,26 @@ pub mod recognition_config {
         /// (\[OggOpus\](<https://wiki.xiph.org/OggOpus>)). `sample_rate_hertz` must be
         /// one of 8000, 12000, 16000, 24000, or 48000.
         WebmOpus = 9,
+    }
+    impl AudioEncoding {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AudioEncoding::EncodingUnspecified => "ENCODING_UNSPECIFIED",
+                AudioEncoding::Linear16 => "LINEAR16",
+                AudioEncoding::Flac => "FLAC",
+                AudioEncoding::Mulaw => "MULAW",
+                AudioEncoding::Amr => "AMR",
+                AudioEncoding::AmrWb => "AMR_WB",
+                AudioEncoding::OggOpus => "OGG_OPUS",
+                AudioEncoding::SpeexWithHeaderByte => "SPEEX_WITH_HEADER_BYTE",
+                AudioEncoding::Mp3 => "MP3",
+                AudioEncoding::WebmOpus => "WEBM_OPUS",
+            }
+        }
     }
 }
 /// Config to enable speaker diarization.
@@ -640,6 +660,25 @@ pub mod recognition_metadata {
         /// text-message, email or report.
         Dictation = 8,
     }
+    impl InteractionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InteractionType::Unspecified => "INTERACTION_TYPE_UNSPECIFIED",
+                InteractionType::Discussion => "DISCUSSION",
+                InteractionType::Presentation => "PRESENTATION",
+                InteractionType::PhoneCall => "PHONE_CALL",
+                InteractionType::Voicemail => "VOICEMAIL",
+                InteractionType::ProfessionallyProduced => "PROFESSIONALLY_PRODUCED",
+                InteractionType::VoiceSearch => "VOICE_SEARCH",
+                InteractionType::VoiceCommand => "VOICE_COMMAND",
+                InteractionType::Dictation => "DICTATION",
+            }
+        }
+    }
     /// Enumerates the types of capture settings describing an audio file.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -655,6 +694,20 @@ pub mod recognition_metadata {
         /// The speaker is more than 3 meters away from the microphone.
         Farfield = 3,
     }
+    impl MicrophoneDistance {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MicrophoneDistance::Unspecified => "MICROPHONE_DISTANCE_UNSPECIFIED",
+                MicrophoneDistance::Nearfield => "NEARFIELD",
+                MicrophoneDistance::Midfield => "MIDFIELD",
+                MicrophoneDistance::Farfield => "FARFIELD",
+            }
+        }
+    }
     /// The original media the speech was recorded on.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -665,6 +718,19 @@ pub mod recognition_metadata {
         Audio = 1,
         /// The speech data originally recorded on a video.
         Video = 2,
+    }
+    impl OriginalMediaType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OriginalMediaType::Unspecified => "ORIGINAL_MEDIA_TYPE_UNSPECIFIED",
+                OriginalMediaType::Audio => "AUDIO",
+                OriginalMediaType::Video => "VIDEO",
+            }
+        }
     }
     /// The type of device the speech was recorded with.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -684,6 +750,23 @@ pub mod recognition_metadata {
         OtherOutdoorDevice = 5,
         /// Speech was recorded indoors.
         OtherIndoorDevice = 6,
+    }
+    impl RecordingDeviceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RecordingDeviceType::Unspecified => "RECORDING_DEVICE_TYPE_UNSPECIFIED",
+                RecordingDeviceType::Smartphone => "SMARTPHONE",
+                RecordingDeviceType::Pc => "PC",
+                RecordingDeviceType::PhoneLine => "PHONE_LINE",
+                RecordingDeviceType::Vehicle => "VEHICLE",
+                RecordingDeviceType::OtherOutdoorDevice => "OTHER_OUTDOOR_DEVICE",
+                RecordingDeviceType::OtherIndoorDevice => "OTHER_INDOOR_DEVICE",
+            }
+        }
     }
 }
 /// Provides "hints" to the speech recognizer to favor specific words and phrases
@@ -819,41 +902,41 @@ pub struct LongRunningRecognizeMetadata {
 /// 2. results { alternatives { transcript: "to be a" } stability: 0.01 }
 ///
 /// 3. results { alternatives { transcript: "to be" } stability: 0.9 }
-///    results { alternatives { transcript: " or not to be" } stability: 0.01 }
+///     results { alternatives { transcript: " or not to be" } stability: 0.01 }
 ///
 /// 4. results { alternatives { transcript: "to be or not to be"
-///                             confidence: 0.92 }
-///              alternatives { transcript: "to bee or not to bee" }
-///              is_final: true }
+///                              confidence: 0.92 }
+///               alternatives { transcript: "to bee or not to bee" }
+///               is_final: true }
 ///
 /// 5. results { alternatives { transcript: " that's" } stability: 0.01 }
 ///
 /// 6. results { alternatives { transcript: " that is" } stability: 0.9 }
-///    results { alternatives { transcript: " the question" } stability: 0.01 }
+///     results { alternatives { transcript: " the question" } stability: 0.01 }
 ///
 /// 7. results { alternatives { transcript: " that is the question"
-///                             confidence: 0.98 }
-///              alternatives { transcript: " that was the question" }
-///              is_final: true }
+///                              confidence: 0.98 }
+///               alternatives { transcript: " that was the question" }
+///               is_final: true }
 ///
 /// Notes:
 ///
 /// - Only two of the above responses #4 and #7 contain final results; they are
-///   indicated by `is_final: true`. Concatenating these together generates the
-///   full transcript: "to be or not to be that is the question".
+///    indicated by `is_final: true`. Concatenating these together generates the
+///    full transcript: "to be or not to be that is the question".
 ///
 /// - The others contain interim `results`. #3 and #6 contain two interim
-///   `results`: the first portion has a high stability and is less likely to
-///   change; the second portion has a low stability and is very likely to
-///   change. A UI designer might choose to show only high stability `results`.
+///    `results`: the first portion has a high stability and is less likely to
+///    change; the second portion has a low stability and is very likely to
+///    change. A UI designer might choose to show only high stability `results`.
 ///
 /// - The specific `stability` and `confidence` values shown above are only for
-///   illustrative purposes. Actual values may vary.
+///    illustrative purposes. Actual values may vary.
 ///
 /// - In each response, only one of these fields will be set:
-///     `error`,
-///     `speech_event_type`, or
-///     one or more (repeated) `results`.
+///      `error`,
+///      `speech_event_type`, or
+///      one or more (repeated) `results`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamingRecognizeResponse {
     /// If set, returns a \[google.rpc.Status][google.rpc.Status\] message that
@@ -890,6 +973,18 @@ pub mod streaming_recognize_response {
         /// until the server closes the gRPC connection. This event is only sent if
         /// `single_utterance` was set to `true`, and is not used otherwise.
         EndOfSingleUtterance = 1,
+    }
+    impl SpeechEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SpeechEventType::SpeechEventUnspecified => "SPEECH_EVENT_UNSPECIFIED",
+                SpeechEventType::EndOfSingleUtterance => "END_OF_SINGLE_UTTERANCE",
+            }
+        }
     }
 }
 /// A streaming speech recognition result corresponding to a portion of the audio
@@ -1022,6 +1117,7 @@ pub struct WordInfo {
 pub mod speech_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that implements Google Cloud Speech API.
     #[derive(Debug, Clone)]
     pub struct SpeechClient<T> {
@@ -1036,6 +1132,10 @@ pub mod speech_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1057,19 +1157,19 @@ pub mod speech_client {
         {
             SpeechClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Performs synchronous speech recognition: receive results after all audio
@@ -1371,6 +1471,7 @@ pub struct DeleteCustomClassRequest {
 pub mod adaptation_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// Service that implements Google Cloud Speech Adaptation API.
     #[derive(Debug, Clone)]
     pub struct AdaptationClient<T> {
@@ -1385,6 +1486,10 @@ pub mod adaptation_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1406,19 +1511,19 @@ pub mod adaptation_client {
         {
             AdaptationClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Create a set of phrase hints. Each item in the set can be a single word or

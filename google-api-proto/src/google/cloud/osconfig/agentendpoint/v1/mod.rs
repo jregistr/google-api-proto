@@ -1,3 +1,554 @@
+/// An OS policy defines the desired state configuration for an instance.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OsPolicy {
+}
+/// Nested message and enum types in `OSPolicy`.
+pub mod os_policy {
+    /// An OS policy resource is used to define the desired state configuration
+    /// and provides a specific functionality like installing/removing packages,
+    /// executing a script etc.
+    ///
+    /// The system ensures that resources are always in their desired state by
+    /// taking necessary actions if they have drifted from their desired state.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Resource {
+        /// Required. The id of the resource with the following restrictions:
+        ///
+        /// * Must contain only lowercase letters, numbers, and hyphens.
+        /// * Must start with a letter.
+        /// * Must be between 1-63 characters.
+        /// * Must end with a number or a letter.
+        /// * Must be unique within the OS policy.
+        #[prost(string, tag="1")]
+        pub id: ::prost::alloc::string::String,
+        /// Resource type.
+        #[prost(oneof="resource::ResourceType", tags="2, 3, 4, 5")]
+        pub resource_type: ::core::option::Option<resource::ResourceType>,
+    }
+    /// Nested message and enum types in `Resource`.
+    pub mod resource {
+        /// A remote or local file.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct File {
+            /// Defaults to false. When false, files are subject to validations
+            /// based on the file type:
+            ///
+            /// Remote: A checksum must be specified.
+            /// Cloud Storage: An object generation number must be specified.
+            #[prost(bool, tag="4")]
+            pub allow_insecure: bool,
+            /// A specific type of file.
+            #[prost(oneof="file::Type", tags="1, 2, 3")]
+            pub r#type: ::core::option::Option<file::Type>,
+        }
+        /// Nested message and enum types in `File`.
+        pub mod file {
+            /// Specifies a file available via some URI.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Remote {
+                /// Required. URI from which to fetch the object. It should contain both the
+                /// protocol and path following the format `{protocol}://{location}`.
+                #[prost(string, tag="1")]
+                pub uri: ::prost::alloc::string::String,
+                /// SHA256 checksum of the remote file.
+                #[prost(string, tag="2")]
+                pub sha256_checksum: ::prost::alloc::string::String,
+            }
+            /// Specifies a file available as a Cloud Storage Object.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Gcs {
+                /// Required. Bucket of the Cloud Storage object.
+                #[prost(string, tag="1")]
+                pub bucket: ::prost::alloc::string::String,
+                /// Required. Name of the Cloud Storage object.
+                #[prost(string, tag="2")]
+                pub object: ::prost::alloc::string::String,
+                /// Generation number of the Cloud Storage object.
+                #[prost(int64, tag="3")]
+                pub generation: i64,
+            }
+            /// A specific type of file.
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Type {
+                /// A generic remote file.
+                #[prost(message, tag="1")]
+                Remote(Remote),
+                /// A Cloud Storage object.
+                #[prost(message, tag="2")]
+                Gcs(Gcs),
+                /// A local path to use.
+                #[prost(string, tag="3")]
+                LocalPath(::prost::alloc::string::String),
+            }
+        }
+        /// A resource that manages a system package.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct PackageResource {
+            /// Required. The desired state the agent should maintain for this package. The
+            /// default is to ensure the package is installed.
+            #[prost(enumeration="package_resource::DesiredState", tag="1")]
+            pub desired_state: i32,
+            /// A system package.
+            #[prost(oneof="package_resource::SystemPackage", tags="2, 3, 4, 5, 6, 7, 8")]
+            pub system_package: ::core::option::Option<package_resource::SystemPackage>,
+        }
+        /// Nested message and enum types in `PackageResource`.
+        pub mod package_resource {
+            /// A deb package file. dpkg packages only support INSTALLED state.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Deb {
+                /// Required. A deb package.
+                #[prost(message, optional, tag="1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Whether dependencies should also be installed.
+                /// install when false: `dpkg -i package`
+                /// install when true: `apt-get update && apt-get -y install
+                /// package.deb`
+                #[prost(bool, tag="2")]
+                pub pull_deps: bool,
+            }
+            /// A package managed by APT.
+            /// install: `apt-get update && apt-get -y install \[name\]`
+            /// remove: `apt-get -y remove \[name\]`
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Apt {
+                /// Required. Package name.
+                #[prost(string, tag="1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// An RPM package file. RPM packages only support INSTALLED state.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Rpm {
+                /// Required. An rpm package.
+                #[prost(message, optional, tag="1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Whether dependencies should also be installed.
+                /// install when false: `rpm --upgrade --replacepkgs package.rpm`
+                /// install when true: `yum -y install package.rpm` or
+                /// `zypper -y install package.rpm`
+                #[prost(bool, tag="2")]
+                pub pull_deps: bool,
+            }
+            /// A package managed by YUM.
+            /// install: `yum -y install package`
+            /// remove: `yum -y remove package`
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Yum {
+                /// Required. Package name.
+                #[prost(string, tag="1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// A package managed by Zypper.
+            /// install: `zypper -y install package`
+            /// remove: `zypper -y rm package`
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Zypper {
+                /// Required. Package name.
+                #[prost(string, tag="1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// A package managed by GooGet.
+            /// install: `googet -noconfirm install package`
+            /// remove: `googet -noconfirm remove package`
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct GooGet {
+                /// Required. Package name.
+                #[prost(string, tag="1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// An MSI package. MSI packages only support INSTALLED state.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Msi {
+                /// Required. The MSI package.
+                #[prost(message, optional, tag="1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Additional properties to use during installation.
+                /// This should be in the format of Property=Setting.
+                /// Appended to the defaults of "ACTION=INSTALL
+                /// REBOOT=ReallySuppress".
+                #[prost(string, repeated, tag="2")]
+                pub properties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// The desired state that the OS Config agent maintains on the VM.
+            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+            #[repr(i32)]
+            pub enum DesiredState {
+                /// Unspecified is invalid.
+                Unspecified = 0,
+                /// Ensure that the package is installed.
+                Installed = 1,
+                /// The agent ensures that the package is not installed and
+                /// uninstalls it if detected.
+                Removed = 2,
+            }
+            impl DesiredState {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
+                        DesiredState::Installed => "INSTALLED",
+                        DesiredState::Removed => "REMOVED",
+                    }
+                }
+            }
+            /// A system package.
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum SystemPackage {
+                /// A package managed by Apt.
+                #[prost(message, tag="2")]
+                Apt(Apt),
+                /// A deb package file.
+                #[prost(message, tag="3")]
+                Deb(Deb),
+                /// A package managed by YUM.
+                #[prost(message, tag="4")]
+                Yum(Yum),
+                /// A package managed by Zypper.
+                #[prost(message, tag="5")]
+                Zypper(Zypper),
+                /// An rpm package file.
+                #[prost(message, tag="6")]
+                Rpm(Rpm),
+                /// A package managed by GooGet.
+                #[prost(message, tag="7")]
+                Googet(GooGet),
+                /// An MSI package.
+                #[prost(message, tag="8")]
+                Msi(Msi),
+            }
+        }
+        /// A resource that manages a package repository.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct RepositoryResource {
+            /// A specific type of repository.
+            #[prost(oneof="repository_resource::Repository", tags="1, 2, 3, 4")]
+            pub repository: ::core::option::Option<repository_resource::Repository>,
+        }
+        /// Nested message and enum types in `RepositoryResource`.
+        pub mod repository_resource {
+            /// Represents a single apt package repository. These will be added to
+            /// a repo file that will be managed at
+            /// /etc/apt/sources.list.d/google_osconfig.list.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct AptRepository {
+                /// Required. Type of archive files in this repository. The default behavior is
+                /// DEB.
+                #[prost(enumeration="apt_repository::ArchiveType", tag="1")]
+                pub archive_type: i32,
+                /// Required. URI for this repository.
+                #[prost(string, tag="2")]
+                pub uri: ::prost::alloc::string::String,
+                /// Required. Distribution of this repository.
+                #[prost(string, tag="3")]
+                pub distribution: ::prost::alloc::string::String,
+                /// Required. List of components for this repository. Must contain at least one
+                /// item.
+                #[prost(string, repeated, tag="4")]
+                pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+                /// URI of the key file for this repository. The agent maintains a
+                /// keyring at /etc/apt/trusted.gpg.d/osconfig_agent_managed.gpg.
+                #[prost(string, tag="5")]
+                pub gpg_key: ::prost::alloc::string::String,
+            }
+            /// Nested message and enum types in `AptRepository`.
+            pub mod apt_repository {
+                /// Type of archive.
+                #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+                #[repr(i32)]
+                pub enum ArchiveType {
+                    /// Unspecified is invalid.
+                    Unspecified = 0,
+                    /// Deb indicates that the archive contains binary files.
+                    Deb = 1,
+                    /// Deb-src indicates that the archive contains source files.
+                    DebSrc = 2,
+                }
+                impl ArchiveType {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            ArchiveType::Unspecified => "ARCHIVE_TYPE_UNSPECIFIED",
+                            ArchiveType::Deb => "DEB",
+                            ArchiveType::DebSrc => "DEB_SRC",
+                        }
+                    }
+                }
+            }
+            /// Represents a single yum package repository. These are added to a
+            /// repo file that is managed at
+            /// `/etc/yum.repos.d/google_osconfig.repo`.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct YumRepository {
+                /// Required. A one word, unique name for this repository. This is  the `repo
+                /// id` in the yum config file and also the `display_name` if
+                /// `display_name` is omitted. This id is also used as the unique
+                /// identifier when checking for resource conflicts.
+                #[prost(string, tag="1")]
+                pub id: ::prost::alloc::string::String,
+                /// The display name of the repository.
+                #[prost(string, tag="2")]
+                pub display_name: ::prost::alloc::string::String,
+                /// Required. The location of the repository directory.
+                #[prost(string, tag="3")]
+                pub base_url: ::prost::alloc::string::String,
+                /// URIs of GPG keys.
+                #[prost(string, repeated, tag="4")]
+                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// Represents a single zypper package repository. These are added to a
+            /// repo file that is managed at
+            /// `/etc/zypp/repos.d/google_osconfig.repo`.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct ZypperRepository {
+                /// Required. A one word, unique name for this repository. This is the `repo
+                /// id` in the zypper config file and also the `display_name` if
+                /// `display_name` is omitted. This id is also used as the unique
+                /// identifier when checking for GuestPolicy conflicts.
+                #[prost(string, tag="1")]
+                pub id: ::prost::alloc::string::String,
+                /// The display name of the repository.
+                #[prost(string, tag="2")]
+                pub display_name: ::prost::alloc::string::String,
+                /// Required. The location of the repository directory.
+                #[prost(string, tag="3")]
+                pub base_url: ::prost::alloc::string::String,
+                /// URIs of GPG keys.
+                #[prost(string, repeated, tag="4")]
+                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// Represents a Goo package repository. These are added to a repo file
+            /// that is managed at
+            /// `C:/ProgramData/GooGet/repos/google_osconfig.repo`.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct GooRepository {
+                /// Required. The name of the repository.
+                #[prost(string, tag="1")]
+                pub name: ::prost::alloc::string::String,
+                /// Required. The url of the repository.
+                #[prost(string, tag="2")]
+                pub url: ::prost::alloc::string::String,
+            }
+            /// A specific type of repository.
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Repository {
+                /// An Apt Repository.
+                #[prost(message, tag="1")]
+                Apt(AptRepository),
+                /// A Yum Repository.
+                #[prost(message, tag="2")]
+                Yum(YumRepository),
+                /// A Zypper Repository.
+                #[prost(message, tag="3")]
+                Zypper(ZypperRepository),
+                /// A Goo Repository.
+                #[prost(message, tag="4")]
+                Goo(GooRepository),
+            }
+        }
+        /// A resource that contains custom validation and enforcement steps.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ExecResource {
+            /// Required. What to run to validate this resource is in the desired state.
+            /// An exit code of 100 indicates "in desired state", and exit code of 101
+            /// indicates "not in desired state". Any other exit code indicates a
+            /// failure running validate.
+            #[prost(message, optional, tag="1")]
+            pub validate: ::core::option::Option<exec_resource::Exec>,
+            /// What to run to bring this resource into the desired state.
+            /// A exit code of 100 indicates "success", any other exit code idicates a
+            /// failure running enforce.
+            #[prost(message, optional, tag="2")]
+            pub enforce: ::core::option::Option<exec_resource::Exec>,
+        }
+        /// Nested message and enum types in `ExecResource`.
+        pub mod exec_resource {
+            /// A file or script to execute.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Exec {
+                /// Optional arguments to pass to the source during execution.
+                #[prost(string, repeated, tag="3")]
+                pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+                /// Required. The script interpreter to use.
+                #[prost(enumeration="exec::Interpreter", tag="4")]
+                pub interpreter: i32,
+                /// Only recorded for enforce Exec.
+                /// Path to an output file (that is created by this Exec) whose
+                /// content will be recorded in OSPolicyResourceCompliance after a
+                /// successful run. Absence or failure to read this file will result in
+                /// this ExecResource being non-compliant. Output file size is limited to
+                /// 100K bytes.
+                #[prost(string, tag="5")]
+                pub output_file_path: ::prost::alloc::string::String,
+                /// What to execute.
+                #[prost(oneof="exec::Source", tags="1, 2")]
+                pub source: ::core::option::Option<exec::Source>,
+            }
+            /// Nested message and enum types in `Exec`.
+            pub mod exec {
+                /// The interpreter to use.
+                #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+                #[repr(i32)]
+                pub enum Interpreter {
+                    /// Invalid value, the request will return validation error.
+                    Unspecified = 0,
+                    /// If no interpreter is specified the
+                    /// source will be executed directly, which will likely only
+                    /// succeed for executables and scripts with shebang lines.
+                    /// [Wikipedia
+                    /// shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix>)).
+                    None = 1,
+                    /// Indicates that the script will be run with /bin/sh on Linux and
+                    /// cmd.exe on windows.
+                    Shell = 2,
+                    /// Indicates that the script will be run with powershell.
+                    Powershell = 3,
+                }
+                impl Interpreter {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            Interpreter::Unspecified => "INTERPRETER_UNSPECIFIED",
+                            Interpreter::None => "NONE",
+                            Interpreter::Shell => "SHELL",
+                            Interpreter::Powershell => "POWERSHELL",
+                        }
+                    }
+                }
+                /// What to execute.
+                #[derive(Clone, PartialEq, ::prost::Oneof)]
+                pub enum Source {
+                    /// A remote or local file.
+                    #[prost(message, tag="1")]
+                    File(super::super::File),
+                    /// An inline script.
+                    #[prost(string, tag="2")]
+                    Script(::prost::alloc::string::String),
+                }
+            }
+        }
+        /// A resource that manages the state of a file.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct FileResource {
+            /// Required. The absolute path of the file.
+            #[prost(string, tag="3")]
+            pub path: ::prost::alloc::string::String,
+            /// Required. Desired state of the file.
+            #[prost(enumeration="file_resource::DesiredState", tag="4")]
+            pub state: i32,
+            /// Consists of three octal digits which represent, in
+            /// order, the permissions of the owner, group, and other users for the
+            /// file (similarly to the numeric mode used in the linux chmod
+            /// utility). Each digit represents a three bit number with the 4 bit
+            /// corresponding to the read permissions, the 2 bit corresponds to the
+            /// write bit, and the one bit corresponds to the execute permission.
+            /// Default behavior is 755.
+            ///
+            /// Below are some examples of permissions and their associated values:
+            /// read, write, and execute: 7
+            /// read and execute: 5
+            /// read and write: 6
+            /// read only: 4
+            #[prost(string, tag="5")]
+            pub permissions: ::prost::alloc::string::String,
+            /// The source for the contents of the file.
+            #[prost(oneof="file_resource::Source", tags="1, 2")]
+            pub source: ::core::option::Option<file_resource::Source>,
+        }
+        /// Nested message and enum types in `FileResource`.
+        pub mod file_resource {
+            /// Desired state of the file.
+            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+            #[repr(i32)]
+            pub enum DesiredState {
+                /// Unspecified is invalid.
+                Unspecified = 0,
+                /// Ensure file at path is present.
+                Present = 1,
+                /// Ensure file at path is absent.
+                Absent = 2,
+                /// Ensure the contents of the file at path matches. If the file does
+                /// not exist it will be created.
+                ContentsMatch = 3,
+            }
+            impl DesiredState {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
+                        DesiredState::Present => "PRESENT",
+                        DesiredState::Absent => "ABSENT",
+                        DesiredState::ContentsMatch => "CONTENTS_MATCH",
+                    }
+                }
+            }
+            /// The source for the contents of the file.
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Source {
+                /// A remote or local source.
+                #[prost(message, tag="1")]
+                File(super::File),
+                /// A a file with this content.
+                #[prost(string, tag="2")]
+                Content(::prost::alloc::string::String),
+            }
+        }
+        /// Resource type.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ResourceType {
+            /// Package resource
+            #[prost(message, tag="2")]
+            Pkg(PackageResource),
+            /// Package repository resource
+            #[prost(message, tag="3")]
+            Repository(RepositoryResource),
+            /// Exec resource
+            #[prost(message, tag="4")]
+            Exec(ExecResource),
+            /// File resource
+            #[prost(message, tag="5")]
+            File(FileResource),
+        }
+    }
+    /// Policy mode
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Mode {
+        /// Invalid mode
+        Unspecified = 0,
+        /// This mode checks if the configuration resources in the policy are in
+        /// their desired state. No actions are performed if they are not in the
+        /// desired state. This mode is used for reporting purposes.
+        Validation = 1,
+        /// This mode checks if the configuration resources in the policy are in
+        /// their desired state, and if not, enforces the desired state.
+        Enforcement = 2,
+    }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Validation => "VALIDATION",
+                Mode::Enforcement => "ENFORCEMENT",
+            }
+        }
+    }
+}
 // OS Config Inventory is a service for collecting and reporting operating
 // system and package information on VM instances.
 
@@ -76,8 +627,8 @@ pub mod inventory {
             #[prost(message, tag="3")]
             ZypperPackage(super::VersionedPackage),
             /// Details of a Googet package.
-            ///  For details about the googet package manager, see
-            ///  <https://github.com/google/googet.>
+            ///   For details about the googet package manager, see
+            ///   <https://github.com/google/googet.>
             #[prost(message, tag="4")]
             GoogetPackage(super::VersionedPackage),
             /// Details of a Zypper patch.
@@ -264,6 +815,21 @@ pub mod os_policy_resource_config_step {
         /// during the current configuration run.
         DesiredStateCheckPostEnforcement = 4,
     }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Validation => "VALIDATION",
+                Type::DesiredStateCheck => "DESIRED_STATE_CHECK",
+                Type::DesiredStateEnforcement => "DESIRED_STATE_ENFORCEMENT",
+                Type::DesiredStateCheckPostEnforcement => "DESIRED_STATE_CHECK_POST_ENFORCEMENT",
+            }
+        }
+    }
     /// Supported outcomes for a configuration step.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
@@ -274,6 +840,19 @@ pub mod os_policy_resource_config_step {
         Succeeded = 1,
         /// The step failed.
         Failed = 2,
+    }
+    impl Outcome {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Outcome::Unspecified => "OUTCOME_UNSPECIFIED",
+                Outcome::Succeeded => "SUCCEEDED",
+                Outcome::Failed => "FAILED",
+            }
+        }
     }
 }
 /// Compliance data for an OS policy resource.
@@ -327,488 +906,19 @@ pub enum OsPolicyComplianceState {
     /// This state is only applicable to the instance.
     NoOsPoliciesApplicable = 4,
 }
-/// An OS policy defines the desired state configuration for an instance.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicy {
-}
-/// Nested message and enum types in `OSPolicy`.
-pub mod os_policy {
-    /// An OS policy resource is used to define the desired state configuration
-    /// and provides a specific functionality like installing/removing packages,
-    /// executing a script etc.
+impl OsPolicyComplianceState {
+    /// String value of the enum field names used in the ProtoBuf definition.
     ///
-    /// The system ensures that resources are always in their desired state by
-    /// taking necessary actions if they have drifted from their desired state.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Resource {
-        /// Required. The id of the resource with the following restrictions:
-        ///
-        /// * Must contain only lowercase letters, numbers, and hyphens.
-        /// * Must start with a letter.
-        /// * Must be between 1-63 characters.
-        /// * Must end with a number or a letter.
-        /// * Must be unique within the OS policy.
-        #[prost(string, tag="1")]
-        pub id: ::prost::alloc::string::String,
-        /// Resource type.
-        #[prost(oneof="resource::ResourceType", tags="2, 3, 4, 5")]
-        pub resource_type: ::core::option::Option<resource::ResourceType>,
-    }
-    /// Nested message and enum types in `Resource`.
-    pub mod resource {
-        /// A remote or local file.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct File {
-            /// Defaults to false. When false, files are subject to validations
-            /// based on the file type:
-            ///
-            /// Remote: A checksum must be specified.
-            /// Cloud Storage: An object generation number must be specified.
-            #[prost(bool, tag="4")]
-            pub allow_insecure: bool,
-            /// A specific type of file.
-            #[prost(oneof="file::Type", tags="1, 2, 3")]
-            pub r#type: ::core::option::Option<file::Type>,
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OsPolicyComplianceState::Unspecified => "OS_POLICY_COMPLIANCE_STATE_UNSPECIFIED",
+            OsPolicyComplianceState::Compliant => "COMPLIANT",
+            OsPolicyComplianceState::NonCompliant => "NON_COMPLIANT",
+            OsPolicyComplianceState::Unknown => "UNKNOWN",
+            OsPolicyComplianceState::NoOsPoliciesApplicable => "NO_OS_POLICIES_APPLICABLE",
         }
-        /// Nested message and enum types in `File`.
-        pub mod file {
-            /// Specifies a file available via some URI.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Remote {
-                /// Required. URI from which to fetch the object. It should contain both the
-                /// protocol and path following the format `{protocol}://{location}`.
-                #[prost(string, tag="1")]
-                pub uri: ::prost::alloc::string::String,
-                /// SHA256 checksum of the remote file.
-                #[prost(string, tag="2")]
-                pub sha256_checksum: ::prost::alloc::string::String,
-            }
-            /// Specifies a file available as a Cloud Storage Object.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Gcs {
-                /// Required. Bucket of the Cloud Storage object.
-                #[prost(string, tag="1")]
-                pub bucket: ::prost::alloc::string::String,
-                /// Required. Name of the Cloud Storage object.
-                #[prost(string, tag="2")]
-                pub object: ::prost::alloc::string::String,
-                /// Generation number of the Cloud Storage object.
-                #[prost(int64, tag="3")]
-                pub generation: i64,
-            }
-            /// A specific type of file.
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Type {
-                /// A generic remote file.
-                #[prost(message, tag="1")]
-                Remote(Remote),
-                /// A Cloud Storage object.
-                #[prost(message, tag="2")]
-                Gcs(Gcs),
-                /// A local path to use.
-                #[prost(string, tag="3")]
-                LocalPath(::prost::alloc::string::String),
-            }
-        }
-        /// A resource that manages a system package.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct PackageResource {
-            /// Required. The desired state the agent should maintain for this package. The
-            /// default is to ensure the package is installed.
-            #[prost(enumeration="package_resource::DesiredState", tag="1")]
-            pub desired_state: i32,
-            /// A system package.
-            #[prost(oneof="package_resource::SystemPackage", tags="2, 3, 4, 5, 6, 7, 8")]
-            pub system_package: ::core::option::Option<package_resource::SystemPackage>,
-        }
-        /// Nested message and enum types in `PackageResource`.
-        pub mod package_resource {
-            /// A deb package file. dpkg packages only support INSTALLED state.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Deb {
-                /// Required. A deb package.
-                #[prost(message, optional, tag="1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Whether dependencies should also be installed.
-                /// install when false: `dpkg -i package`
-                /// install when true: `apt-get update && apt-get -y install
-                /// package.deb`
-                #[prost(bool, tag="2")]
-                pub pull_deps: bool,
-            }
-            /// A package managed by APT.
-            /// install: `apt-get update && apt-get -y install \[name\]`
-            /// remove: `apt-get -y remove \[name\]`
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Apt {
-                /// Required. Package name.
-                #[prost(string, tag="1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// An RPM package file. RPM packages only support INSTALLED state.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Rpm {
-                /// Required. An rpm package.
-                #[prost(message, optional, tag="1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Whether dependencies should also be installed.
-                /// install when false: `rpm --upgrade --replacepkgs package.rpm`
-                /// install when true: `yum -y install package.rpm` or
-                /// `zypper -y install package.rpm`
-                #[prost(bool, tag="2")]
-                pub pull_deps: bool,
-            }
-            /// A package managed by YUM.
-            /// install: `yum -y install package`
-            /// remove: `yum -y remove package`
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Yum {
-                /// Required. Package name.
-                #[prost(string, tag="1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// A package managed by Zypper.
-            /// install: `zypper -y install package`
-            /// remove: `zypper -y rm package`
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Zypper {
-                /// Required. Package name.
-                #[prost(string, tag="1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// A package managed by GooGet.
-            /// install: `googet -noconfirm install package`
-            /// remove: `googet -noconfirm remove package`
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct GooGet {
-                /// Required. Package name.
-                #[prost(string, tag="1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// An MSI package. MSI packages only support INSTALLED state.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Msi {
-                /// Required. The MSI package.
-                #[prost(message, optional, tag="1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Additional properties to use during installation.
-                /// This should be in the format of Property=Setting.
-                /// Appended to the defaults of "ACTION=INSTALL
-                /// REBOOT=ReallySuppress".
-                #[prost(string, repeated, tag="2")]
-                pub properties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// The desired state that the OS Config agent maintains on the VM.
-            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-            #[repr(i32)]
-            pub enum DesiredState {
-                /// Unspecified is invalid.
-                Unspecified = 0,
-                /// Ensure that the package is installed.
-                Installed = 1,
-                /// The agent ensures that the package is not installed and
-                /// uninstalls it if detected.
-                Removed = 2,
-            }
-            /// A system package.
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum SystemPackage {
-                /// A package managed by Apt.
-                #[prost(message, tag="2")]
-                Apt(Apt),
-                /// A deb package file.
-                #[prost(message, tag="3")]
-                Deb(Deb),
-                /// A package managed by YUM.
-                #[prost(message, tag="4")]
-                Yum(Yum),
-                /// A package managed by Zypper.
-                #[prost(message, tag="5")]
-                Zypper(Zypper),
-                /// An rpm package file.
-                #[prost(message, tag="6")]
-                Rpm(Rpm),
-                /// A package managed by GooGet.
-                #[prost(message, tag="7")]
-                Googet(GooGet),
-                /// An MSI package.
-                #[prost(message, tag="8")]
-                Msi(Msi),
-            }
-        }
-        /// A resource that manages a package repository.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct RepositoryResource {
-            /// A specific type of repository.
-            #[prost(oneof="repository_resource::Repository", tags="1, 2, 3, 4")]
-            pub repository: ::core::option::Option<repository_resource::Repository>,
-        }
-        /// Nested message and enum types in `RepositoryResource`.
-        pub mod repository_resource {
-            /// Represents a single apt package repository. These will be added to
-            /// a repo file that will be managed at
-            /// /etc/apt/sources.list.d/google_osconfig.list.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct AptRepository {
-                /// Required. Type of archive files in this repository. The default behavior is
-                /// DEB.
-                #[prost(enumeration="apt_repository::ArchiveType", tag="1")]
-                pub archive_type: i32,
-                /// Required. URI for this repository.
-                #[prost(string, tag="2")]
-                pub uri: ::prost::alloc::string::String,
-                /// Required. Distribution of this repository.
-                #[prost(string, tag="3")]
-                pub distribution: ::prost::alloc::string::String,
-                /// Required. List of components for this repository. Must contain at least one
-                /// item.
-                #[prost(string, repeated, tag="4")]
-                pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-                /// URI of the key file for this repository. The agent maintains a
-                /// keyring at /etc/apt/trusted.gpg.d/osconfig_agent_managed.gpg.
-                #[prost(string, tag="5")]
-                pub gpg_key: ::prost::alloc::string::String,
-            }
-            /// Nested message and enum types in `AptRepository`.
-            pub mod apt_repository {
-                /// Type of archive.
-                #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-                #[repr(i32)]
-                pub enum ArchiveType {
-                    /// Unspecified is invalid.
-                    Unspecified = 0,
-                    /// Deb indicates that the archive contains binary files.
-                    Deb = 1,
-                    /// Deb-src indicates that the archive contains source files.
-                    DebSrc = 2,
-                }
-            }
-            /// Represents a single yum package repository. These are added to a
-            /// repo file that is managed at
-            /// `/etc/yum.repos.d/google_osconfig.repo`.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct YumRepository {
-                /// Required. A one word, unique name for this repository. This is  the `repo
-                /// id` in the yum config file and also the `display_name` if
-                /// `display_name` is omitted. This id is also used as the unique
-                /// identifier when checking for resource conflicts.
-                #[prost(string, tag="1")]
-                pub id: ::prost::alloc::string::String,
-                /// The display name of the repository.
-                #[prost(string, tag="2")]
-                pub display_name: ::prost::alloc::string::String,
-                /// Required. The location of the repository directory.
-                #[prost(string, tag="3")]
-                pub base_url: ::prost::alloc::string::String,
-                /// URIs of GPG keys.
-                #[prost(string, repeated, tag="4")]
-                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// Represents a single zypper package repository. These are added to a
-            /// repo file that is managed at
-            /// `/etc/zypp/repos.d/google_osconfig.repo`.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct ZypperRepository {
-                /// Required. A one word, unique name for this repository. This is the `repo
-                /// id` in the zypper config file and also the `display_name` if
-                /// `display_name` is omitted. This id is also used as the unique
-                /// identifier when checking for GuestPolicy conflicts.
-                #[prost(string, tag="1")]
-                pub id: ::prost::alloc::string::String,
-                /// The display name of the repository.
-                #[prost(string, tag="2")]
-                pub display_name: ::prost::alloc::string::String,
-                /// Required. The location of the repository directory.
-                #[prost(string, tag="3")]
-                pub base_url: ::prost::alloc::string::String,
-                /// URIs of GPG keys.
-                #[prost(string, repeated, tag="4")]
-                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// Represents a Goo package repository. These are added to a repo file
-            /// that is managed at
-            /// `C:/ProgramData/GooGet/repos/google_osconfig.repo`.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct GooRepository {
-                /// Required. The name of the repository.
-                #[prost(string, tag="1")]
-                pub name: ::prost::alloc::string::String,
-                /// Required. The url of the repository.
-                #[prost(string, tag="2")]
-                pub url: ::prost::alloc::string::String,
-            }
-            /// A specific type of repository.
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Repository {
-                /// An Apt Repository.
-                #[prost(message, tag="1")]
-                Apt(AptRepository),
-                /// A Yum Repository.
-                #[prost(message, tag="2")]
-                Yum(YumRepository),
-                /// A Zypper Repository.
-                #[prost(message, tag="3")]
-                Zypper(ZypperRepository),
-                /// A Goo Repository.
-                #[prost(message, tag="4")]
-                Goo(GooRepository),
-            }
-        }
-        /// A resource that contains custom validation and enforcement steps.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ExecResource {
-            /// Required. What to run to validate this resource is in the desired state.
-            /// An exit code of 100 indicates "in desired state", and exit code of 101
-            /// indicates "not in desired state". Any other exit code indicates a
-            /// failure running validate.
-            #[prost(message, optional, tag="1")]
-            pub validate: ::core::option::Option<exec_resource::Exec>,
-            /// What to run to bring this resource into the desired state.
-            /// A exit code of 100 indicates "success", any other exit code idicates a
-            /// failure running enforce.
-            #[prost(message, optional, tag="2")]
-            pub enforce: ::core::option::Option<exec_resource::Exec>,
-        }
-        /// Nested message and enum types in `ExecResource`.
-        pub mod exec_resource {
-            /// A file or script to execute.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Exec {
-                /// Optional arguments to pass to the source during execution.
-                #[prost(string, repeated, tag="3")]
-                pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-                /// Required. The script interpreter to use.
-                #[prost(enumeration="exec::Interpreter", tag="4")]
-                pub interpreter: i32,
-                /// Only recorded for enforce Exec.
-                /// Path to an output file (that is created by this Exec) whose
-                /// content will be recorded in OSPolicyResourceCompliance after a
-                /// successful run. Absence or failure to read this file will result in
-                /// this ExecResource being non-compliant. Output file size is limited to
-                /// 100K bytes.
-                #[prost(string, tag="5")]
-                pub output_file_path: ::prost::alloc::string::String,
-                /// What to execute.
-                #[prost(oneof="exec::Source", tags="1, 2")]
-                pub source: ::core::option::Option<exec::Source>,
-            }
-            /// Nested message and enum types in `Exec`.
-            pub mod exec {
-                /// The interpreter to use.
-                #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-                #[repr(i32)]
-                pub enum Interpreter {
-                    /// Invalid value, the request will return validation error.
-                    Unspecified = 0,
-                    /// If no interpreter is specified the
-                    /// source will be executed directly, which will likely only
-                    /// succeed for executables and scripts with shebang lines.
-                    /// [Wikipedia
-                    /// shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix>)).
-                    None = 1,
-                    /// Indicates that the script will be run with /bin/sh on Linux and
-                    /// cmd.exe on windows.
-                    Shell = 2,
-                    /// Indicates that the script will be run with powershell.
-                    Powershell = 3,
-                }
-                /// What to execute.
-                #[derive(Clone, PartialEq, ::prost::Oneof)]
-                pub enum Source {
-                    /// A remote or local file.
-                    #[prost(message, tag="1")]
-                    File(super::super::File),
-                    /// An inline script.
-                    #[prost(string, tag="2")]
-                    Script(::prost::alloc::string::String),
-                }
-            }
-        }
-        /// A resource that manages the state of a file.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct FileResource {
-            /// Required. The absolute path of the file.
-            #[prost(string, tag="3")]
-            pub path: ::prost::alloc::string::String,
-            /// Required. Desired state of the file.
-            #[prost(enumeration="file_resource::DesiredState", tag="4")]
-            pub state: i32,
-            /// Consists of three octal digits which represent, in
-            /// order, the permissions of the owner, group, and other users for the
-            /// file (similarly to the numeric mode used in the linux chmod
-            /// utility). Each digit represents a three bit number with the 4 bit
-            /// corresponding to the read permissions, the 2 bit corresponds to the
-            /// write bit, and the one bit corresponds to the execute permission.
-            /// Default behavior is 755.
-            ///
-            /// Below are some examples of permissions and their associated values:
-            /// read, write, and execute: 7
-            /// read and execute: 5
-            /// read and write: 6
-            /// read only: 4
-            #[prost(string, tag="5")]
-            pub permissions: ::prost::alloc::string::String,
-            /// The source for the contents of the file.
-            #[prost(oneof="file_resource::Source", tags="1, 2")]
-            pub source: ::core::option::Option<file_resource::Source>,
-        }
-        /// Nested message and enum types in `FileResource`.
-        pub mod file_resource {
-            /// Desired state of the file.
-            #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-            #[repr(i32)]
-            pub enum DesiredState {
-                /// Unspecified is invalid.
-                Unspecified = 0,
-                /// Ensure file at path is present.
-                Present = 1,
-                /// Ensure file at path is absent.
-                Absent = 2,
-                /// Ensure the contents of the file at path matches. If the file does
-                /// not exist it will be created.
-                ContentsMatch = 3,
-            }
-            /// The source for the contents of the file.
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Source {
-                /// A remote or local source.
-                #[prost(message, tag="1")]
-                File(super::File),
-                /// A a file with this content.
-                #[prost(string, tag="2")]
-                Content(::prost::alloc::string::String),
-            }
-        }
-        /// Resource type.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ResourceType {
-            /// Package resource
-            #[prost(message, tag="2")]
-            Pkg(PackageResource),
-            /// Package repository resource
-            #[prost(message, tag="3")]
-            Repository(RepositoryResource),
-            /// Exec resource
-            #[prost(message, tag="4")]
-            Exec(ExecResource),
-            /// File resource
-            #[prost(message, tag="5")]
-            File(FileResource),
-        }
-    }
-    /// Policy mode
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Mode {
-        /// Invalid mode
-        Unspecified = 0,
-        /// This mode checks if the configuration resources in the policy are in
-        /// their desired state. No actions are performed if they are not in the
-        /// desired state. This mode is used for reporting purposes.
-        Validation = 1,
-        /// This mode checks if the configuration resources in the policy are in
-        /// their desired state, and if not, enforces the desired state.
-        Enforcement = 2,
     }
 }
 /// Patch configuration specifications. Contains details on how to
@@ -866,6 +976,20 @@ pub mod patch_config {
         /// Never reboot the machine after the update completes.
         Never = 3,
     }
+    impl RebootConfig {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RebootConfig::Unspecified => "REBOOT_CONFIG_UNSPECIFIED",
+                RebootConfig::Default => "DEFAULT",
+                RebootConfig::Always => "ALWAYS",
+                RebootConfig::Never => "NEVER",
+            }
+        }
+    }
 }
 /// Apt patching will be performed by executing `apt-get update && apt-get
 /// upgrade`. Additional options can be set to control how this is executed.
@@ -897,6 +1021,19 @@ pub mod apt_settings {
         Dist = 1,
         /// Runs `apt-get upgrade`.
         Upgrade = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Dist => "DIST",
+                Type::Upgrade => "UPGRADE",
+            }
+        }
     }
 }
 /// Yum patching will be performed by executing `yum update`. Additional options
@@ -1016,6 +1153,26 @@ pub mod windows_update_settings {
         /// noncritical, non-security-related bug." \[1\]
         Update = 9,
     }
+    impl Classification {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Classification::Unspecified => "CLASSIFICATION_UNSPECIFIED",
+                Classification::Critical => "CRITICAL",
+                Classification::Security => "SECURITY",
+                Classification::Definition => "DEFINITION",
+                Classification::Driver => "DRIVER",
+                Classification::FeaturePack => "FEATURE_PACK",
+                Classification::ServicePack => "SERVICE_PACK",
+                Classification::Tool => "TOOL",
+                Classification::UpdateRollup => "UPDATE_ROLLUP",
+                Classification::Update => "UPDATE",
+            }
+        }
+    }
 }
 /// The strategy for retrying failed patches during the patch window.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1069,6 +1226,20 @@ pub mod exec_step_config {
         Shell = 1,
         /// Indicates that the file will be run with PowerShell.
         Powershell = 2,
+    }
+    impl Interpreter {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Interpreter::Unspecified => "INTERPRETER_UNSPECIFIED",
+                Interpreter::None => "NONE",
+                Interpreter::Shell => "SHELL",
+                Interpreter::Powershell => "POWERSHELL",
+            }
+        }
     }
     /// Location of the executable.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1171,6 +1342,21 @@ pub mod apply_patches_task_progress {
         /// The agent is currently rebooting the instance.
         Rebooting = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Started => "STARTED",
+                State::DownloadingPatches => "DOWNLOADING_PATCHES",
+                State::ApplyingPatches => "APPLYING_PATCHES",
+                State::Rebooting => "REBOOTING",
+            }
+        }
+    }
 }
 /// Information reported from the agent about applying patches execution.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1193,6 +1379,20 @@ pub mod apply_patches_task_output {
         SucceededRebootRequired = 2,
         /// Applying patches failed.
         Failed = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Succeeded => "SUCCEEDED",
+                State::SucceededRebootRequired => "SUCCEEDED_REBOOT_REQUIRED",
+                State::Failed => "FAILED",
+            }
+        }
     }
 }
 /// Message which instructs agent to execute the following command.
@@ -1220,6 +1420,18 @@ pub mod exec_step_task_progress {
         /// The agent has started the exec step task.
         Started = 1,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Started => "STARTED",
+            }
+        }
+    }
 }
 /// Information reported from the agent about the exec step execution.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1245,6 +1457,20 @@ pub mod exec_step_task_output {
         TimedOut = 2,
         /// The exec step task was cancelled before it started.
         Cancelled = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::TimedOut => "TIMED_OUT",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
 }
 /// Message which instructs OS Config agent to apply the desired state
@@ -1301,6 +1527,19 @@ pub mod apply_config_task_progress {
         /// The agent is in the process of applying the configuration.
         ApplyingConfig = 2,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Started => "STARTED",
+                State::ApplyingConfig => "APPLYING_CONFIG",
+            }
+        }
+    }
 }
 /// Information reported from the agent regarding the output of the task of
 /// applying desired state configuration.
@@ -1345,6 +1584,20 @@ pub mod apply_config_task_output {
         /// The apply config task was cancelled.
         Cancelled = 3,
     }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+    }
 }
 /// Specifies the current agent behavior.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1359,6 +1612,19 @@ pub enum TaskDirective {
     /// never repeat.
     Stop = 2,
 }
+impl TaskDirective {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TaskDirective::Unspecified => "TASK_DIRECTIVE_UNSPECIFIED",
+            TaskDirective::Continue => "CONTINUE",
+            TaskDirective::Stop => "STOP",
+        }
+    }
+}
 /// Specifies the type of task to perform.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1371,6 +1637,20 @@ pub enum TaskType {
     ExecStepTask = 2,
     /// The apply config task
     ApplyConfigTask = 3,
+}
+impl TaskType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TaskType::Unspecified => "TASK_TYPE_UNSPECIFIED",
+            TaskType::ApplyPatches => "APPLY_PATCHES",
+            TaskType::ExecStepTask => "EXEC_STEP_TASK",
+            TaskType::ApplyConfigTask => "APPLY_CONFIG_TASK",
+        }
+    }
 }
 /// A request message to receive task notifications.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1567,6 +1847,7 @@ pub struct ReportInventoryResponse {
 pub mod agent_endpoint_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
     /// OS Config agent endpoint API.
     #[derive(Debug, Clone)]
     pub struct AgentEndpointServiceClient<T> {
@@ -1581,6 +1862,10 @@ pub mod agent_endpoint_service_client {
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
             Self { inner }
         }
         pub fn with_interceptor<F>(
@@ -1602,19 +1887,19 @@ pub mod agent_endpoint_service_client {
         {
             AgentEndpointServiceClient::new(InterceptedService::new(inner, interceptor))
         }
-        /// Compress requests with `gzip`.
+        /// Compress requests with the given encoding.
         ///
         /// This requires the server to support it otherwise it might respond with an
         /// error.
         #[must_use]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
             self
         }
-        /// Enable decompressing responses with `gzip`.
+        /// Enable decompressing responses.
         #[must_use]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
             self
         }
         /// Stream established by client to receive Task notifications.
