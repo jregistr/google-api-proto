@@ -1526,8 +1526,8 @@ pub struct ClusterConfig {
     /// Optional. Metastore configuration.
     #[prost(message, optional, tag="20")]
     pub metastore_config: ::core::option::Option<MetastoreConfig>,
-    /// Optional. Dataproc metrics configuration.
-    #[prost(message, optional, tag="21")]
+    /// Optional. The config for Dataproc metrics.
+    #[prost(message, optional, tag="23")]
     pub dataproc_metric_config: ::core::option::Option<DataprocMetricConfig>,
 }
 /// Dataproc cluster config for a cluster that does not directly control the
@@ -2270,38 +2270,78 @@ pub struct MetastoreConfig {
     #[prost(string, tag="1")]
     pub dataproc_metastore_service: ::prost::alloc::string::String,
 }
-/// Specifies Dataproc OSS Metric.
+/// Dataproc metric config.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Metric {
-    /// Required. Specified source of metric collection
-    #[prost(enumeration="metric::MetricSource", tag="1")]
-    pub metric_source: i32,
-    /// Optional. The set of available OSS metrics to collect from the metric
-    /// source.
-    #[prost(string, repeated, tag="2")]
-    pub metric_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+pub struct DataprocMetricConfig {
+    /// Required. Metrics sources to enable.
+    #[prost(message, repeated, tag="1")]
+    pub metrics: ::prost::alloc::vec::Vec<dataproc_metric_config::Metric>,
 }
-/// Nested message and enum types in `Metric`.
-pub mod metric {
+/// Nested message and enum types in `DataprocMetricConfig`.
+pub mod dataproc_metric_config {
+    /// A Dataproc OSS metric.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metric {
+        /// Required. Default metrics are collected unless `metricOverrides` are
+        /// specified for the metric source (see [Available OSS metrics]
+        /// (<https://cloud.google.com/dataproc/docs/guides/monitoring#available_oss_metrics>)
+        /// for more information).
+        #[prost(enumeration="MetricSource", tag="1")]
+        pub metric_source: i32,
+        /// Optional. Specify one or more [available OSS metrics]
+        /// (<https://cloud.google.com/dataproc/docs/guides/monitoring#available_oss_metrics>)
+        /// to collect for the metric course (for the `SPARK` metric source, any
+        /// [Spark metric]
+        /// (<https://spark.apache.org/docs/latest/monitoring.html#metrics>) can be
+        /// specified).
+        ///
+        /// Provide metrics in the following format:
+        /// <code><var>METRIC_SOURCE</var>:<var>INSTANCE</var>:<var>GROUP</var>:<var>METRIC</var></code>
+        /// Use camelcase as appropriate.
+        ///
+        /// Examples:
+        ///
+        /// ```
+        /// yarn:ResourceManager:QueueMetrics:AppsCompleted
+        /// spark:driver:DAGScheduler:job.allJobs
+        /// sparkHistoryServer:JVM:Memory:NonHeapMemoryUsage.committed
+        /// hiveserver2:JVM:Memory:NonHeapMemoryUsage.used
+        /// ```
+        ///
+        /// Notes:
+        ///
+        /// * Only the specified overridden metrics will be collected for the
+        ///    metric source. For example, if one or more `spark:executive` metrics
+        ///    are listed as metric overrides, other `SPARK` metrics will not be
+        ///    collected. The collection of the default metrics for other OSS metric
+        ///    sources is unaffected. For example, if both `SPARK` andd `YARN` metric
+        ///    sources are enabled, and overrides are provided for Spark metrics only,
+        ///    all default YARN metrics will be collected.
+        #[prost(string, repeated, tag="2")]
+        pub metric_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// A source for the collection of Dataproc OSS metrics (see [available OSS
+    /// metrics]
+    /// (<https://cloud.google.com//dataproc/docs/guides/monitoring#available_oss_metrics>)).
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum MetricSource {
-        /// Unspecified metric source
+        /// Required unspecified metric source.
         Unspecified = 0,
         /// Default monitoring agent metrics. If this source is enabled,
-        /// Dataproc enables the monitoring agent in Compute Engine, and collects
-        /// default monitoring agent metrics, which are published with an
-        /// agent.googleapis.com prefix.
+        /// Dataproc enables the monitoring agent in Compute Engine,
+        /// and collects default monitoring agent metrics, which are published
+        /// with an `agent.googleapis.com` prefix.
         MonitoringAgentDefaults = 1,
-        /// HDFS metric source
+        /// HDFS metric source.
         Hdfs = 2,
-        /// SPARK metric source
+        /// Spark metric source.
         Spark = 3,
-        /// YARN metric source
+        /// YARN metric source.
         Yarn = 4,
-        /// Spark History Server metric source
+        /// Spark History Server metric source.
         SparkHistoryServer = 5,
-        /// Hiveserver2 metric source
+        /// Hiveserver2 metric source.
         Hiveserver2 = 6,
     }
     impl MetricSource {
@@ -2321,13 +2361,6 @@ pub mod metric {
             }
         }
     }
-}
-/// Specifies a Dataproc metric config
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataprocMetricConfig {
-    /// Configuration set of metrics to collect from the cluster
-    #[prost(message, repeated, tag="1")]
-    pub metrics: ::prost::alloc::vec::Vec<Metric>,
 }
 /// Contains cluster daemon metrics, such as HDFS and YARN stats.
 ///
