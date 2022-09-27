@@ -1,3 +1,36 @@
+/// Options for how to validate json schemas.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum JsonValidationOption {
+    /// As per the default behavior, no validation will be run. Will not override
+    /// any option set in a Task.
+    Unspecified = 0,
+    /// Do not run any validation against JSON schemas.
+    Skip = 1,
+    /// Validate all potential input JSON parameters against schemas specified in
+    /// IntegrationParameter.
+    PreExecution = 2,
+    /// Validate all potential output JSON parameters against schemas specified in
+    /// IntegrationParameter.
+    PostExecution = 3,
+    /// Perform both PRE_EXECUTION and POST_EXECUTION validations.
+    PrePostExecution = 4,
+}
+impl JsonValidationOption {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JsonValidationOption::Unspecified => "JSON_VALIDATION_OPTION_UNSPECIFIED",
+            JsonValidationOption::Skip => "SKIP",
+            JsonValidationOption::PreExecution => "PRE_EXECUTION",
+            JsonValidationOption::PostExecution => "POST_EXECUTION",
+            JsonValidationOption::PrePostExecution => "PRE_POST_EXECUTION",
+        }
+    }
+}
 /// The type of the parameter.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ValueType {
@@ -78,39 +111,6 @@ pub struct EventParameter {
     /// or any proto message.
     #[prost(message, optional, tag="2")]
     pub value: ::core::option::Option<ValueType>,
-}
-/// Options for how to validate json schemas.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum JsonValidationOption {
-    /// As per the default behavior, no validation will be run. Will not override
-    /// any option set in a Task.
-    Unspecified = 0,
-    /// Do not run any validation against JSON schemas.
-    Skip = 1,
-    /// Validate all potential input JSON parameters against schemas specified in
-    /// IntegrationParameter.
-    PreExecution = 2,
-    /// Validate all potential output JSON parameters against schemas specified in
-    /// IntegrationParameter.
-    PostExecution = 3,
-    /// Perform both PRE_EXECUTION and POST_EXECUTION validations.
-    PrePostExecution = 4,
-}
-impl JsonValidationOption {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            JsonValidationOption::Unspecified => "JSON_VALIDATION_OPTION_UNSPECIFIED",
-            JsonValidationOption::Skip => "SKIP",
-            JsonValidationOption::PreExecution => "PRE_EXECUTION",
-            JsonValidationOption::PostExecution => "POST_EXECUTION",
-            JsonValidationOption::PrePostExecution => "PRE_POST_EXECUTION",
-        }
-    }
 }
 /// The task configuration details. This is not the implementation of Task.
 /// There might be multiple TaskConfigs for the same Task.

@@ -1,3489 +1,3 @@
-/// Request message for \[CampaignExperimentService.MutateCampaignExperiments][google.ads.googleads.v11.services.CampaignExperimentService.MutateCampaignExperiments\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignExperimentsRequest {
-    /// Required. The ID of the customer whose campaign experiments are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign experiments.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignExperimentOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single update operation on a campaign experiment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignExperimentOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="campaign_experiment_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<campaign_experiment_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignExperimentOperation`.
-pub mod campaign_experiment_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The campaign experiment is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="1")]
-        Update(super::super::resources::CampaignExperiment),
-        /// Remove operation: The campaign experiment is expected to have a valid
-        /// resource name, in this format:
-        ///
-        /// `customers/{customer_id}/campaignExperiments/{campaign_experiment_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for campaign experiment mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignExperimentsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignExperimentResult>,
-}
-/// The result for the campaign experiment mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignExperimentResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign experiment with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub campaign_experiment: ::core::option::Option<super::resources::CampaignExperiment>,
-}
-/// Request message for \[CampaignExperimentService.CreateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.CreateCampaignExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateCampaignExperimentRequest {
-    /// Required. The ID of the customer whose campaign experiment is being created.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The campaign experiment to be created.
-    #[prost(message, optional, tag="2")]
-    pub campaign_experiment: ::core::option::Option<super::resources::CampaignExperiment>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// Message used as metadata returned in Long Running Operations for
-/// CreateCampaignExperimentRequest
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateCampaignExperimentMetadata {
-    /// Resource name of campaign experiment created.
-    #[prost(string, tag="1")]
-    pub campaign_experiment: ::prost::alloc::string::String,
-}
-/// Request message for \[CampaignExperimentService.GraduateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.GraduateCampaignExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GraduateCampaignExperimentRequest {
-    /// Required. The resource name of the campaign experiment to graduate.
-    #[prost(string, tag="1")]
-    pub campaign_experiment: ::prost::alloc::string::String,
-    /// Required. Resource name of the budget to attach to the campaign graduated from the
-    /// experiment.
-    #[prost(string, tag="2")]
-    pub campaign_budget: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// Response message for campaign experiment graduate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GraduateCampaignExperimentResponse {
-    /// The resource name of the campaign from the graduated experiment.
-    /// This campaign is the same one as CampaignExperiment.experiment_campaign.
-    #[prost(string, tag="1")]
-    pub graduated_campaign: ::prost::alloc::string::String,
-}
-/// Request message for \[CampaignExperimentService.PromoteCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.PromoteCampaignExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PromoteCampaignExperimentRequest {
-    /// Required. The resource name of the campaign experiment to promote.
-    #[prost(string, tag="1")]
-    pub campaign_experiment: ::prost::alloc::string::String,
-    /// If true, the request is validated but no Long Running Operation is created.
-    /// Only errors are returned.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// Request message for \[CampaignExperimentService.EndCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.EndCampaignExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndCampaignExperimentRequest {
-    /// Required. The resource name of the campaign experiment to end.
-    #[prost(string, tag="1")]
-    pub campaign_experiment: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// Request message for
-/// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCampaignExperimentAsyncErrorsRequest {
-    /// Required. The name of the campaign experiment from which to retrieve the async
-    /// errors.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Token of the page to retrieve. If not specified, the first
-    /// page of results will be returned. Use the value obtained from
-    /// `next_page_token` in the previous response in order to request
-    /// the next page of results.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Number of elements to retrieve in a single page.
-    /// When a page request is too large, the server may decide to
-    /// further limit the number of returned resources.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
-}
-/// Response message for
-/// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCampaignExperimentAsyncErrorsResponse {
-    /// Details of the errors when performing the asynchronous operation.
-    #[prost(message, repeated, tag="1")]
-    pub errors: ::prost::alloc::vec::Vec<super::super::super::super::rpc::Status>,
-    /// Pagination token used to retrieve the next page of results.
-    /// Pass the content of this string as the `page_token` attribute of
-    /// the next request. `next_page_token` is not returned for the last
-    /// page.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod campaign_experiment_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// CampaignExperimentService manages the life cycle of campaign experiments.
-    /// It is used to create new experiments from drafts, modify experiment
-    /// properties, promote changes in an experiment back to its base campaign,
-    /// graduate experiments into new stand-alone campaigns, and to remove an
-    /// experiment.
-    ///
-    /// An experiment consists of two variants or arms - the base campaign and the
-    /// experiment campaign, directing a fixed share of traffic to each arm.
-    /// A campaign experiment is created from a draft of changes to the base campaign
-    /// and will be a snapshot of changes in the draft at the time of creation.
-    #[derive(Debug, Clone)]
-    pub struct CampaignExperimentServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignExperimentServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignExperimentServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignExperimentServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a campaign experiment based on a campaign draft. The draft campaign
-        /// will be forked into a real campaign (called the experiment campaign) that
-        /// will begin serving ads if successfully created.
-        ///
-        /// The campaign experiment is created immediately with status INITIALIZING.
-        /// This method return a long running operation that tracks the forking of the
-        /// draft campaign. If the forking fails, a list of errors can be retrieved
-        /// using the ListCampaignExperimentAsyncErrors method. The operation's
-        /// metadata will be a StringValue containing the resource name of the created
-        /// campaign experiment.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignExperimentError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DateRangeError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        pub async fn create_campaign_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateCampaignExperimentRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/CreateCampaignExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates campaign experiments. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_campaign_experiments(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignExperimentsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignExperimentsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/MutateCampaignExperiments",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Graduates a campaign experiment to a full campaign. The base and experiment
-        /// campaigns will start running independently with their own budgets.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn graduate_campaign_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GraduateCampaignExperimentRequest>,
-        ) -> Result<
-            tonic::Response<super::GraduateCampaignExperimentResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/GraduateCampaignExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Promotes the changes in a experiment campaign back to the base campaign.
-        ///
-        /// The campaign experiment is updated immediately with status PROMOTING.
-        /// This method return a long running operation that tracks the promoting of
-        /// the experiment campaign. If the promoting fails, a list of errors can be
-        /// retrieved using the ListCampaignExperimentAsyncErrors method.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn promote_campaign_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PromoteCampaignExperimentRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/PromoteCampaignExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Immediately ends a campaign experiment, changing the experiment's scheduled
-        /// end date and without waiting for end of day. End date is updated to be the
-        /// time of the request.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn end_campaign_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::EndCampaignExperimentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/EndCampaignExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns all errors that occurred during CampaignExperiment create or
-        /// promote (whichever occurred last).
-        /// Supports standard list paging.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_campaign_experiment_async_errors(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListCampaignExperimentAsyncErrorsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListCampaignExperimentAsyncErrorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignExperimentService/ListCampaignExperimentAsyncErrors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[CustomConversionGoalService.MutateCustomConversionGoals][google.ads.googleads.v11.services.CustomConversionGoalService.MutateCustomConversionGoals\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomConversionGoalsRequest {
-    /// Required. The ID of the customer whose custom conversion goals are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual custom conversion goal.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomConversionGoalOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on a custom conversion goal.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomConversionGoalOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="custom_conversion_goal_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<custom_conversion_goal_operation::Operation>,
-}
-/// Nested message and enum types in `CustomConversionGoalOperation`.
-pub mod custom_conversion_goal_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new custom
-        /// conversion goal
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomConversionGoal),
-        /// Update operation: The custom conversion goal is expected to have a
-        /// valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CustomConversionGoal),
-        /// Remove operation: A resource name for the removed custom conversion goal
-        /// is expected, in this format:
-        ///
-        /// 'customers/{customer_id}/conversionActions/{ConversionGoal.custom_goal_config.conversion_type_ids}'
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a custom conversion goal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomConversionGoalsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomConversionGoalResult>,
-}
-/// The result for the custom conversion goal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomConversionGoalResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated CustomConversionGoal with only mutable fields after mutate.
-    /// The field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub custom_conversion_goal: ::core::option::Option<super::resources::CustomConversionGoal>,
-}
-/// Generated client implementations.
-pub mod custom_conversion_goal_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage custom conversion goal.
-    #[derive(Debug, Clone)]
-    pub struct CustomConversionGoalServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomConversionGoalServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomConversionGoalServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomConversionGoalServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes custom conversion goals. Operation statuses
-        /// are returned.
-        pub async fn mutate_custom_conversion_goals(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomConversionGoalsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomConversionGoalsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomConversionGoalService/MutateCustomConversionGoals",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CustomerLabelService.MutateCustomerLabels][google.ads.googleads.v11.services.CustomerLabelService.MutateCustomerLabels\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerLabelsRequest {
-    /// Required. ID of the customer whose customer-label relationships are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on customer-label relationships.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomerLabelOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation (create, remove) on a customer-label relationship.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerLabelOperation {
-    /// The mutate operation.
-    #[prost(oneof="customer_label_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<customer_label_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerLabelOperation`.
-pub mod customer_label_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new customer-label
-        /// relationship.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomerLabel),
-        /// Remove operation: A resource name for the customer-label relationship
-        /// being removed, in this format:
-        ///
-        /// `customers/{customer_id}/customerLabels/{label_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a customer labels mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerLabelsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomerLabelResult>,
-}
-/// The result for a customer label mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerLabelResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_label_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage labels on customers.
-    #[derive(Debug, Clone)]
-    pub struct CustomerLabelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerLabelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerLabelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerLabelServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates and removes customer-label relationships.
-        /// Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [LabelError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_customer_labels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerLabelsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerLabelsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerLabelService/MutateCustomerLabels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments][google.ads.googleads.v11.services.BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBiddingSeasonalityAdjustmentsRequest {
-    /// Required. ID of the customer whose seasonality adjustments are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual seasonality adjustments.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<BiddingSeasonalityAdjustmentOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove, update) on a seasonality adjustment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BiddingSeasonalityAdjustmentOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="bidding_seasonality_adjustment_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<bidding_seasonality_adjustment_operation::Operation>,
-}
-/// Nested message and enum types in `BiddingSeasonalityAdjustmentOperation`.
-pub mod bidding_seasonality_adjustment_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new seasonality
-        /// adjustment.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::BiddingSeasonalityAdjustment),
-        /// Update operation: The seasonality adjustment is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::BiddingSeasonalityAdjustment),
-        /// Remove operation: A resource name for the removed seasonality adjustment
-        /// is expected, in this format:
-        ///
-        /// `customers/{customer_id}/biddingSeasonalityAdjustments/{seasonality_adjustment_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for seasonality adjustments mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBiddingSeasonalityAdjustmentsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateBiddingSeasonalityAdjustmentsResult>,
-}
-/// The result for the seasonality adjustment mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBiddingSeasonalityAdjustmentsResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated bidding seasonality adjustment with only mutable fields after
-    /// mutate. The field will only be returned when response_content_type is set
-    /// to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub bidding_seasonality_adjustment: ::core::option::Option<super::resources::BiddingSeasonalityAdjustment>,
-}
-/// Generated client implementations.
-pub mod bidding_seasonality_adjustment_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage bidding seasonality adjustments.
-    #[derive(Debug, Clone)]
-    pub struct BiddingSeasonalityAdjustmentServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> BiddingSeasonalityAdjustmentServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> BiddingSeasonalityAdjustmentServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            BiddingSeasonalityAdjustmentServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes seasonality adjustments.
-        /// Operation statuses are returned.
-        pub async fn mutate_bidding_seasonality_adjustments(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::MutateBiddingSeasonalityAdjustmentsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::MutateBiddingSeasonalityAdjustmentsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.BiddingSeasonalityAdjustmentService/MutateBiddingSeasonalityAdjustments",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadClickConversionsRequest {
-    /// Required. The ID of the customer performing the upload.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The conversions that are being uploaded.
-    #[prost(message, repeated, tag="2")]
-    pub conversions: ::prost::alloc::vec::Vec<ClickConversion>,
-    /// Required. If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// This should always be set to true.
-    /// See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// Response message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadClickConversionsResponse {
-    /// Errors that pertain to conversion failures in the partial failure mode.
-    /// Returned when all errors occur inside the conversions. If any errors occur
-    /// outside the conversions (for example, auth errors), we return an RPC level
-    /// error. See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(message, optional, tag="1")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// Returned for successfully processed conversions. Proto will be empty for
-    /// rows that received an error. Results are not returned when validate_only is
-    /// true.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<ClickConversionResult>,
-}
-/// Request message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadCallConversionsRequest {
-    /// Required. The ID of the customer performing the upload.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The conversions that are being uploaded.
-    #[prost(message, repeated, tag="2")]
-    pub conversions: ::prost::alloc::vec::Vec<CallConversion>,
-    /// Required. If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// This should always be set to true.
-    /// See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// Response message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadCallConversionsResponse {
-    /// Errors that pertain to conversion failures in the partial failure mode.
-    /// Returned when all errors occur inside the conversions. If any errors occur
-    /// outside the conversions (for example, auth errors), we return an RPC level
-    /// error. See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(message, optional, tag="1")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// Returned for successfully processed conversions. Proto will be empty for
-    /// rows that received an error. Results are not returned when validate_only is
-    /// true.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<CallConversionResult>,
-}
-/// A click conversion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClickConversion {
-    /// The Google click ID (gclid) associated with this conversion.
-    #[prost(string, optional, tag="9")]
-    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
-    /// The click identifier for clicks associated with app conversions and
-    /// originating from iOS devices starting with iOS14.
-    #[prost(string, tag="18")]
-    pub gbraid: ::prost::alloc::string::String,
-    /// The click identifier for clicks associated with web conversions and
-    /// originating from iOS devices starting with iOS14.
-    #[prost(string, tag="19")]
-    pub wbraid: ::prost::alloc::string::String,
-    /// Resource name of the conversion action associated with this conversion.
-    /// Note: Although this resource name consists of a customer id and a
-    /// conversion action id, validation will ignore the customer id and use the
-    /// conversion action id as the sole identifier of the conversion action.
-    #[prost(string, optional, tag="10")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the conversion occurred. Must be after
-    /// the click time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="11")]
-    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// The value of the conversion for the advertiser.
-    #[prost(double, optional, tag="12")]
-    pub conversion_value: ::core::option::Option<f64>,
-    /// Currency associated with the conversion value. This is the ISO 4217
-    /// 3-character currency code. For example: USD, EUR.
-    #[prost(string, optional, tag="13")]
-    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// The order ID associated with the conversion. An order id can only be used
-    /// for one conversion per conversion action.
-    #[prost(string, optional, tag="14")]
-    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Additional data about externally attributed conversions. This field
-    /// is required for conversions with an externally attributed conversion
-    /// action, but should not be set otherwise.
-    #[prost(message, optional, tag="7")]
-    pub external_attribution_data: ::core::option::Option<ExternalAttributionData>,
-    /// The custom variables associated with this conversion.
-    #[prost(message, repeated, tag="15")]
-    pub custom_variables: ::prost::alloc::vec::Vec<CustomVariable>,
-    /// The cart data associated with this conversion.
-    #[prost(message, optional, tag="16")]
-    pub cart_data: ::core::option::Option<CartData>,
-    /// The user identifiers associated with this conversion. Only hashed_email and
-    /// hashed_phone_number are supported for conversion uploads. The maximum
-    /// number of user identifiers for each conversion is 5.
-    #[prost(message, repeated, tag="17")]
-    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
-    /// The environment this conversion was recorded on, for example, App or Web.
-    #[prost(enumeration="super::enums::conversion_environment_enum::ConversionEnvironment", tag="20")]
-    pub conversion_environment: i32,
-}
-/// A call conversion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CallConversion {
-    /// The caller id from which this call was placed. Caller id is expected to be
-    /// in E.164 format with preceding '+' sign, for example, "+16502531234".
-    #[prost(string, optional, tag="7")]
-    pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the call occurred. The timezone must be specified.
-    /// The format is "yyyy-mm-dd hh:mm:ss+|-hh:mm",
-    /// for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="8")]
-    pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// Resource name of the conversion action associated with this conversion.
-    /// Note: Although this resource name consists of a customer id and a
-    /// conversion action id, validation will ignore the customer id and use the
-    /// conversion action id as the sole identifier of the conversion action.
-    #[prost(string, optional, tag="9")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the conversion occurred. Must be after the call
-    /// time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="10")]
-    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// The value of the conversion for the advertiser.
-    #[prost(double, optional, tag="11")]
-    pub conversion_value: ::core::option::Option<f64>,
-    /// Currency associated with the conversion value. This is the ISO 4217
-    /// 3-character currency code. For example: USD, EUR.
-    #[prost(string, optional, tag="12")]
-    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// The custom variables associated with this conversion.
-    #[prost(message, repeated, tag="13")]
-    pub custom_variables: ::prost::alloc::vec::Vec<CustomVariable>,
-}
-/// Contains additional information about externally attributed conversions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExternalAttributionData {
-    /// Represents the fraction of the conversion that is attributed to the
-    /// Google Ads click.
-    #[prost(double, optional, tag="3")]
-    pub external_attribution_credit: ::core::option::Option<f64>,
-    /// Specifies the attribution model name.
-    #[prost(string, optional, tag="4")]
-    pub external_attribution_model: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Identifying information for a successfully processed ClickConversion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClickConversionResult {
-    /// The Google Click ID (gclid) associated with this conversion.
-    #[prost(string, optional, tag="4")]
-    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
-    /// The click identifier for clicks associated with app conversions and
-    /// originating from iOS devices starting with iOS14.
-    #[prost(string, tag="8")]
-    pub gbraid: ::prost::alloc::string::String,
-    /// The click identifier for clicks associated with web conversions and
-    /// originating from iOS devices starting with iOS14.
-    #[prost(string, tag="9")]
-    pub wbraid: ::prost::alloc::string::String,
-    /// Resource name of the conversion action associated with this conversion.
-    #[prost(string, optional, tag="5")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the conversion occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="6")]
-    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// The user identifiers associated with this conversion. Only hashed_email and
-    /// hashed_phone_number are supported for conversion uploads. The maximum
-    /// number of user identifiers for each conversion is 5.
-    #[prost(message, repeated, tag="7")]
-    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
-}
-/// Identifying information for a successfully processed CallConversionUpload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CallConversionResult {
-    /// The caller id from which this call was placed. Caller id is expected to be
-    /// in E.164 format with preceding '+' sign.
-    #[prost(string, optional, tag="5")]
-    pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the call occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="6")]
-    pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// Resource name of the conversion action associated with this conversion.
-    #[prost(string, optional, tag="7")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the conversion occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="8")]
-    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// A custom variable.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomVariable {
-    /// Resource name of the custom variable associated with this conversion.
-    /// Note: Although this resource name consists of a customer id and a
-    /// conversion custom variable id, validation will ignore the customer id and
-    /// use the conversion custom variable id as the sole identifier of the
-    /// conversion custom variable.
-    #[prost(string, tag="1")]
-    pub conversion_custom_variable: ::prost::alloc::string::String,
-    /// The value string of this custom variable.
-    /// The value of the custom variable should not contain private customer data,
-    /// such as email addresses or phone numbers.
-    #[prost(string, tag="2")]
-    pub value: ::prost::alloc::string::String,
-}
-/// Contains additional information about cart data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CartData {
-    /// The Merchant Center ID where the items are uploaded.
-    #[prost(int64, tag="6")]
-    pub merchant_id: i64,
-    /// The country code associated with the feed where the items are uploaded.
-    #[prost(string, tag="2")]
-    pub feed_country_code: ::prost::alloc::string::String,
-    /// The language code associated with the feed where the items are uploaded.
-    #[prost(string, tag="3")]
-    pub feed_language_code: ::prost::alloc::string::String,
-    /// Sum of all transaction level discounts, such as free shipping and
-    /// coupon discounts for the whole cart. The currency code is the same
-    /// as that in the ClickConversion message.
-    #[prost(double, tag="4")]
-    pub local_transaction_cost: f64,
-    /// Data of the items purchased.
-    #[prost(message, repeated, tag="5")]
-    pub items: ::prost::alloc::vec::Vec<cart_data::Item>,
-}
-/// Nested message and enum types in `CartData`.
-pub mod cart_data {
-    /// Contains data of the items purchased.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Item {
-        /// The shopping id of the item. Must be equal to the Merchant Center product
-        /// identifier.
-        #[prost(string, tag="1")]
-        pub product_id: ::prost::alloc::string::String,
-        /// Number of items sold.
-        #[prost(int32, tag="2")]
-        pub quantity: i32,
-        /// Unit price excluding tax, shipping, and any transaction
-        /// level discounts. The currency code is the same as that in the
-        /// ClickConversion message.
-        #[prost(double, tag="3")]
-        pub unit_price: f64,
-    }
-}
-/// Generated client implementations.
-pub mod conversion_upload_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to upload conversions.
-    #[derive(Debug, Clone)]
-    pub struct ConversionUploadServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ConversionUploadServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ConversionUploadServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ConversionUploadServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Processes the given click conversions.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ConversionUploadError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [PartialFailureError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn upload_click_conversions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadClickConversionsRequest>,
-        ) -> Result<
-            tonic::Response<super::UploadClickConversionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionUploadService/UploadClickConversions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Processes the given call conversions.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [PartialFailureError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn upload_call_conversions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadCallConversionsRequest>,
-        ) -> Result<
-            tonic::Response<super::UploadCallConversionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionUploadService/UploadCallConversions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CustomerClientLinkService.MutateCustomerClientLink][google.ads.googleads.v11.services.CustomerClientLinkService.MutateCustomerClientLink\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerClientLinkRequest {
-    /// Required. The ID of the customer whose customer link are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on the individual CustomerClientLink.
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<CustomerClientLinkOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// A single operation (create, update) on a CustomerClientLink.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerClientLinkOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="customer_client_link_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<customer_client_link_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerClientLinkOperation`.
-pub mod customer_client_link_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new link.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomerClientLink),
-        /// Update operation: The link is expected to have a valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CustomerClientLink),
-    }
-}
-/// Response message for a CustomerClientLink mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerClientLinkResponse {
-    /// A result that identifies the resource affected by the mutate request.
-    #[prost(message, optional, tag="1")]
-    pub result: ::core::option::Option<MutateCustomerClientLinkResult>,
-}
-/// The result for a single customer client link mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerClientLinkResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_client_link_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage customer client links.
-    #[derive(Debug, Clone)]
-    pub struct CustomerClientLinkServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerClientLinkServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerClientLinkServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerClientLinkServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or updates a customer client link. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [ManagerLinkError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_customer_client_link(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerClientLinkRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerClientLinkResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerClientLinkService/MutateCustomerClientLink",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[SharedSetService.MutateSharedSets][google.ads.googleads.v11.services.SharedSetService.MutateSharedSets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedSetsRequest {
-    /// Required. The ID of the customer whose shared sets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual shared sets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<SharedSetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on an shared set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SharedSetOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="shared_set_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<shared_set_operation::Operation>,
-}
-/// Nested message and enum types in `SharedSetOperation`.
-pub mod shared_set_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new shared set.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::SharedSet),
-        /// Update operation: The shared set is expected to have a valid resource
-        /// name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::SharedSet),
-        /// Remove operation: A resource name for the removed shared set is expected,
-        /// in this format:
-        ///
-        /// `customers/{customer_id}/sharedSets/{shared_set_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a shared set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedSetsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateSharedSetResult>,
-}
-/// The result for the shared set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedSetResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated shared set with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub shared_set: ::core::option::Option<super::resources::SharedSet>,
-}
-/// Generated client implementations.
-pub mod shared_set_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage shared sets.
-    #[derive(Debug, Clone)]
-    pub struct SharedSetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SharedSetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SharedSetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SharedSetServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes shared sets. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        ///   [SharedSetError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_shared_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateSharedSetsRequest>,
-        ) -> Result<tonic::Response<super::MutateSharedSetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.SharedSetService/MutateSharedSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CustomerService.MutateCustomer][google.ads.googleads.v11.services.CustomerService.MutateCustomer\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerRequest {
-    /// Required. The ID of the customer being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on the customer
-    #[prost(message, optional, tag="4")]
-    pub operation: ::core::option::Option<CustomerOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="5")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="6")]
-    pub response_content_type: i32,
-}
-/// Request message for \[CustomerService.CreateCustomerClient][google.ads.googleads.v11.services.CustomerService.CreateCustomerClient\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateCustomerClientRequest {
-    /// Required. The ID of the Manager under whom client customer is being created.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The new client customer to create. The resource name on this customer
-    /// will be ignored.
-    #[prost(message, optional, tag="2")]
-    pub customer_client: ::core::option::Option<super::resources::Customer>,
-    /// Email address of the user who should be invited on the created client
-    /// customer. Accessible only to customers on the allow-list.
-    #[prost(string, optional, tag="5")]
-    pub email_address: ::core::option::Option<::prost::alloc::string::String>,
-    /// The proposed role of user on the created client customer.
-    /// Accessible only to customers on the allow-list.
-    #[prost(enumeration="super::enums::access_role_enum::AccessRole", tag="4")]
-    pub access_role: i32,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="6")]
-    pub validate_only: bool,
-}
-/// A single update on a customer.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerOperation {
-    /// Mutate operation. Only updates are supported for customer.
-    #[prost(message, optional, tag="1")]
-    pub update: ::core::option::Option<super::resources::Customer>,
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Response message for CreateCustomerClient mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateCustomerClientResponse {
-    /// The resource name of the newly created customer. Customer resource names
-    /// have the form: `customers/{customer_id}`.
-    #[prost(string, tag="2")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Link for inviting user to access the created customer. Accessible to
-    /// allowlisted customers only.
-    #[prost(string, tag="3")]
-    pub invitation_link: ::prost::alloc::string::String,
-}
-/// Response message for customer mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerResponse {
-    /// Result for the mutate.
-    #[prost(message, optional, tag="2")]
-    pub result: ::core::option::Option<MutateCustomerResult>,
-}
-/// The result for the customer mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated customer with only mutable fields after mutate. The fields will
-    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub customer: ::core::option::Option<super::resources::Customer>,
-}
-/// Request message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAccessibleCustomersRequest {
-}
-/// Response message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAccessibleCustomersResponse {
-    /// Resource name of customers directly accessible by the
-    /// user authenticating the call.
-    #[prost(string, repeated, tag="1")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Generated client implementations.
-pub mod customer_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage customers.
-    #[derive(Debug, Clone)]
-    pub struct CustomerServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Updates a customer. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        ///   [UrlFieldError]()
-        pub async fn mutate_customer(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerRequest>,
-        ) -> Result<tonic::Response<super::MutateCustomerResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerService/MutateCustomer",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns resource names of customers directly accessible by the
-        /// user authenticating the call.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_accessible_customers(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListAccessibleCustomersRequest>,
-        ) -> Result<
-            tonic::Response<super::ListAccessibleCustomersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerService/ListAccessibleCustomers",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new client under manager. The new client customer is returned.
-        ///
-        /// List of thrown errors:
-        ///   [AccessInvitationError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CurrencyCodeError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [ManagerLinkError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        ///   [StringLengthError]()
-        ///   [TimeZoneError]()
-        pub async fn create_customer_client(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateCustomerClientRequest>,
-        ) -> Result<
-            tonic::Response<super::CreateCustomerClientResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerService/CreateCustomerClient",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionActionsRequest {
-    /// Required. The ID of the customer whose conversion actions are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual conversion actions.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ConversionActionOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on a conversion action.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionActionOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="conversion_action_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<conversion_action_operation::Operation>,
-}
-/// Nested message and enum types in `ConversionActionOperation`.
-pub mod conversion_action_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new conversion
-        /// action.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::ConversionAction),
-        /// Update operation: The conversion action is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::ConversionAction),
-        /// Remove operation: A resource name for the removed conversion action is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/conversionActions/{conversion_action_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionActionsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateConversionActionResult>,
-}
-/// The result for the conversion action mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionActionResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated conversion action with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub conversion_action: ::core::option::Option<super::resources::ConversionAction>,
-}
-/// Generated client implementations.
-pub mod conversion_action_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage conversion actions.
-    #[derive(Debug, Clone)]
-    pub struct ConversionActionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ConversionActionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ConversionActionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ConversionActionServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes conversion actions. Operation statuses are
-        /// returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ConversionActionError]()
-        ///   [CurrencyCodeError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_conversion_actions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateConversionActionsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateConversionActionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionActionService/MutateConversionActions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CampaignCriterionService.MutateCampaignCriteria][google.ads.googleads.v11.services.CampaignCriterionService.MutateCampaignCriteria\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignCriteriaRequest {
-    /// Required. The ID of the customer whose criteria are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual criteria.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignCriterionOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on a campaign criterion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignCriterionOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="campaign_criterion_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<campaign_criterion_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignCriterionOperation`.
-pub mod campaign_criterion_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new criterion.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignCriterion),
-        /// Update operation: The criterion is expected to have a valid resource
-        /// name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CampaignCriterion),
-        /// Remove operation: A resource name for the removed criterion is expected,
-        /// in this format:
-        ///
-        /// `customers/{customer_id}/campaignCriteria/{campaign_id}~{criterion_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for campaign criterion mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignCriteriaResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignCriterionResult>,
-}
-/// The result for the criterion mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignCriterionResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign criterion with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub campaign_criterion: ::core::option::Option<super::resources::CampaignCriterion>,
-}
-/// Generated client implementations.
-pub mod campaign_criterion_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage campaign criteria.
-    #[derive(Debug, Clone)]
-    pub struct CampaignCriterionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignCriterionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignCriterionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignCriterionServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes criteria. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AdxError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignCriterionError]()
-        ///   [CollectionSizeError]()
-        ///   [ContextError]()
-        ///   [CriterionError]()
-        ///   [DatabaseError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [FunctionError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperationAccessDeniedError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RegionCodeError]()
-        ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_campaign_criteria(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignCriteriaRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignCriteriaResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignCriterionService/MutateCampaignCriteria",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AdGroupAdLabelService.MutateAdGroupAdLabels][google.ads.googleads.v11.services.AdGroupAdLabelService.MutateAdGroupAdLabels\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupAdLabelsRequest {
-    /// Required. ID of the customer whose ad group ad labels are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on ad group ad labels.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AdGroupAdLabelOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation (create, remove) on an ad group ad label.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupAdLabelOperation {
-    /// The mutate operation.
-    #[prost(oneof="ad_group_ad_label_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<ad_group_ad_label_operation::Operation>,
-}
-/// Nested message and enum types in `AdGroupAdLabelOperation`.
-pub mod ad_group_ad_label_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new ad group ad
-        /// label.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AdGroupAdLabel),
-        /// Remove operation: A resource name for the ad group ad label
-        /// being removed, in this format:
-        ///
-        /// `customers/{customer_id}/adGroupAdLabels/{ad_group_id}~{ad_id}_{label_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an ad group ad labels mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupAdLabelsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateAdGroupAdLabelResult>,
-}
-/// The result for an ad group ad label mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupAdLabelResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod ad_group_ad_label_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage labels on ad group ads.
-    #[derive(Debug, Clone)]
-    pub struct AdGroupAdLabelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AdGroupAdLabelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AdGroupAdLabelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AdGroupAdLabelServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates and removes ad group ad labels.
-        /// Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [LabelError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_ad_group_ad_labels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAdGroupAdLabelsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateAdGroupAdLabelsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdGroupAdLabelService/MutateAdGroupAdLabels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateInsightsFinderReportRequest {
-    /// Required. The ID of the customer.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. A baseline audience for this report, typically all people in a region.
-    #[prost(message, optional, tag="2")]
-    pub baseline_audience: ::core::option::Option<BasicInsightsAudience>,
-    /// Required. The specific audience of interest for this report.  The insights in the
-    /// report will be based on attributes more prevalent in this audience than
-    /// in the report's baseline audience.
-    #[prost(message, optional, tag="3")]
-    pub specific_audience: ::core::option::Option<BasicInsightsAudience>,
-    /// The name of the customer being planned for.  This is a user-defined value.
-    #[prost(string, tag="4")]
-    pub customer_insights_group: ::prost::alloc::string::String,
-}
-/// The response message for
-/// \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\], containing the
-/// shareable URL for the report.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateInsightsFinderReportResponse {
-    /// An HTTPS URL providing a deep link into the Insights Finder UI with the
-    /// report inputs filled in according to the request.
-    #[prost(string, tag="1")]
-    pub saved_report_url: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateAudienceCompositionInsightsRequest {
-    /// Required. The ID of the customer.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The audience of interest for which insights are being requested.
-    #[prost(message, optional, tag="2")]
-    pub audience: ::core::option::Option<InsightsAudience>,
-    /// The one-month range of historical data to use for insights, in the format
-    /// "yyyy-mm". If unset, insights will be returned for the last thirty days of
-    /// data.
-    #[prost(string, tag="3")]
-    pub data_month: ::prost::alloc::string::String,
-    /// Required. The audience dimensions for which composition insights should be returned.
-    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", repeated, packed="false", tag="4")]
-    pub dimensions: ::prost::alloc::vec::Vec<i32>,
-    /// The name of the customer being planned for.  This is a user-defined value.
-    #[prost(string, tag="5")]
-    pub customer_insights_group: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateAudienceCompositionInsightsResponse {
-    /// The contents of the insights report, organized into sections.
-    /// Each section is associated with one of the AudienceInsightsDimension values
-    /// in the request. There may be more than one section per dimension.
-    #[prost(message, repeated, tag="1")]
-    pub sections: ::prost::alloc::vec::Vec<AudienceCompositionSection>,
-}
-/// Request message for
-/// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAudienceInsightsAttributesRequest {
-    /// Required. The ID of the customer.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The types of attributes to be returned.
-    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", repeated, packed="false", tag="2")]
-    pub dimensions: ::prost::alloc::vec::Vec<i32>,
-    /// Required. A free text query.  Attributes matching or related to this string will be
-    /// returned.
-    #[prost(string, tag="3")]
-    pub query_text: ::prost::alloc::string::String,
-    /// The name of the customer being planned for.  This is a user-defined value.
-    #[prost(string, tag="4")]
-    pub customer_insights_group: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAudienceInsightsAttributesResponse {
-    /// The attributes matching the search query.
-    #[prost(message, repeated, tag="1")]
-    pub attributes: ::prost::alloc::vec::Vec<AudienceInsightsAttributeMetadata>,
-}
-/// An audience attribute that can be used to request insights about the
-/// audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsAttribute {
-    /// An audience attribute.
-    #[prost(oneof="audience_insights_attribute::Attribute", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10")]
-    pub attribute: ::core::option::Option<audience_insights_attribute::Attribute>,
-}
-/// Nested message and enum types in `AudienceInsightsAttribute`.
-pub mod audience_insights_attribute {
-    /// An audience attribute.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Attribute {
-        /// An audience attribute defined by an age range.
-        #[prost(message, tag="1")]
-        AgeRange(super::super::common::AgeRangeInfo),
-        /// An audience attribute defined by a gender.
-        #[prost(message, tag="2")]
-        Gender(super::super::common::GenderInfo),
-        /// An audience attribute defiend by a geographic location.
-        #[prost(message, tag="3")]
-        Location(super::super::common::LocationInfo),
-        /// An Affinity or In-Market audience.
-        #[prost(message, tag="4")]
-        UserInterest(super::super::common::UserInterestInfo),
-        /// An audience attribute defined by interest in a topic represented by a
-        /// Knowledge Graph entity.
-        #[prost(message, tag="5")]
-        Entity(super::AudienceInsightsEntity),
-        /// An audience attribute defined by interest in a Product & Service
-        /// category.
-        #[prost(message, tag="6")]
-        Category(super::AudienceInsightsCategory),
-        /// A YouTube Dynamic Lineup
-        #[prost(message, tag="7")]
-        DynamicLineup(super::AudienceInsightsDynamicLineup),
-        /// A Parental Status value (parent, or not a parent).
-        #[prost(message, tag="8")]
-        ParentalStatus(super::super::common::ParentalStatusInfo),
-        /// A household income percentile range.
-        #[prost(message, tag="9")]
-        IncomeRange(super::super::common::IncomeRangeInfo),
-        /// A YouTube channel.
-        #[prost(message, tag="10")]
-        YoutubeChannel(super::super::common::YouTubeChannelInfo),
-    }
-}
-/// An entity or category representing a topic that defines an audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsTopic {
-    /// An entity or category attribute.
-    #[prost(oneof="audience_insights_topic::Topic", tags="1, 2")]
-    pub topic: ::core::option::Option<audience_insights_topic::Topic>,
-}
-/// Nested message and enum types in `AudienceInsightsTopic`.
-pub mod audience_insights_topic {
-    /// An entity or category attribute.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Topic {
-        /// A Knowledge Graph entity
-        #[prost(message, tag="1")]
-        Entity(super::AudienceInsightsEntity),
-        /// A Product & Service category
-        #[prost(message, tag="2")]
-        Category(super::AudienceInsightsCategory),
-    }
-}
-/// A Knowledge Graph entity, represented by its machine id.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsEntity {
-    /// Required. The machine id (mid) of the Knowledge Graph entity.
-    #[prost(string, tag="1")]
-    pub knowledge_graph_machine_id: ::prost::alloc::string::String,
-}
-/// A Product and Service category.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsCategory {
-    /// Required. The criterion id of the category.
-    #[prost(string, tag="1")]
-    pub category_id: ::prost::alloc::string::String,
-}
-/// A YouTube Dynamic Lineup.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsDynamicLineup {
-    /// Required. The numeric ID of the dynamic lineup.
-    #[prost(string, tag="1")]
-    pub dynamic_lineup_id: ::prost::alloc::string::String,
-}
-/// A description of an audience used for requesting insights.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BasicInsightsAudience {
-    /// Required. The countries for this audience.
-    #[prost(message, repeated, tag="1")]
-    pub country_location: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
-    /// Sub-country geographic location attributes.  If present, each of these
-    /// must be contained in one of the countries in this audience.
-    #[prost(message, repeated, tag="2")]
-    pub sub_country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
-    /// Gender for the audience.  If absent, the audience does not restrict by
-    /// gender.
-    #[prost(message, optional, tag="3")]
-    pub gender: ::core::option::Option<super::common::GenderInfo>,
-    /// Age ranges for the audience.  If absent, the audience represents all people
-    /// over 18 that match the other attributes.
-    #[prost(message, repeated, tag="4")]
-    pub age_ranges: ::prost::alloc::vec::Vec<super::common::AgeRangeInfo>,
-    /// User interests defining this audience.  Affinity and In-Market audiences
-    /// are supported.
-    #[prost(message, repeated, tag="5")]
-    pub user_interests: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
-    /// Topics, represented by Knowledge Graph entities and/or Product & Service
-    /// categories, that this audience is interested in.
-    #[prost(message, repeated, tag="6")]
-    pub topics: ::prost::alloc::vec::Vec<AudienceInsightsTopic>,
-}
-/// An audience attribute, with metadata about it, returned in response to a
-/// search.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceInsightsAttributeMetadata {
-    /// The type of the attribute.
-    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", tag="1")]
-    pub dimension: i32,
-    /// The attribute itself.
-    #[prost(message, optional, tag="2")]
-    pub attribute: ::core::option::Option<AudienceInsightsAttribute>,
-    /// The human-readable name of the attribute.
-    #[prost(string, tag="3")]
-    pub display_name: ::prost::alloc::string::String,
-    /// A relevance score for this attribute, between 0 and 1.
-    #[prost(double, tag="4")]
-    pub score: f64,
-    /// A string that supplements the display_name to identify the attribute.
-    /// If the dimension is TOPIC, this is a brief description of the
-    /// Knowledge Graph entity, such as "American singer-songwriter".
-    /// If the dimension is CATEGORY, this is the complete path to the category in
-    /// The Product & Service taxonomy, for example
-    /// "/Apparel/Clothing/Outerwear".
-    #[prost(string, tag="5")]
-    pub display_info: ::prost::alloc::string::String,
-    /// Metadata specific to the dimension of this attribute.
-    #[prost(oneof="audience_insights_attribute_metadata::DimensionMetadata", tags="6, 7")]
-    pub dimension_metadata: ::core::option::Option<audience_insights_attribute_metadata::DimensionMetadata>,
-}
-/// Nested message and enum types in `AudienceInsightsAttributeMetadata`.
-pub mod audience_insights_attribute_metadata {
-    /// Metadata specific to the dimension of this attribute.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DimensionMetadata {
-        /// Special metadata for a YouTube channel.
-        #[prost(message, tag="6")]
-        YoutubeChannelMetadata(super::YouTubeChannelAttributeMetadata),
-        /// Special metadata for a YouTube Dynamic Lineup.
-        #[prost(message, tag="7")]
-        DynamicAttributeMetadata(super::DynamicLineupAttributeMetadata),
-    }
-}
-/// Metadata associated with a YouTube channel attribute.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct YouTubeChannelAttributeMetadata {
-    /// The approximate number of subscribers to the YouTube channel.
-    #[prost(int64, tag="1")]
-    pub subscriber_count: i64,
-}
-/// Metadata associated with a Dynamic Lineup attribute.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DynamicLineupAttributeMetadata {
-    /// The national market associated with the lineup.
-    #[prost(message, optional, tag="1")]
-    pub inventory_country: ::core::option::Option<super::common::LocationInfo>,
-    /// The median number of impressions per month on this lineup.
-    #[prost(int64, optional, tag="2")]
-    pub median_monthly_inventory: ::core::option::Option<i64>,
-    /// The lower end of a range containing the number of channels in the lineup.
-    #[prost(int64, optional, tag="3")]
-    pub channel_count_lower_bound: ::core::option::Option<i64>,
-    /// The upper end of a range containing the number of channels in the lineup.
-    #[prost(int64, optional, tag="4")]
-    pub channel_count_upper_bound: ::core::option::Option<i64>,
-}
-/// A set of users, defined by various characteristics, for which insights can
-/// be requested in AudienceInsightsService.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightsAudience {
-    /// Required. The countries for the audience.
-    #[prost(message, repeated, tag="1")]
-    pub country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
-    /// Sub-country geographic location attributes.  If present, each of these
-    /// must be contained in one of the countries in this audience.  If absent, the
-    /// audience is geographically to the country_locations and no further.
-    #[prost(message, repeated, tag="2")]
-    pub sub_country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
-    /// Gender for the audience.  If absent, the audience does not restrict by
-    /// gender.
-    #[prost(message, optional, tag="3")]
-    pub gender: ::core::option::Option<super::common::GenderInfo>,
-    /// Age ranges for the audience.  If absent, the audience represents all people
-    /// over 18 that match the other attributes.
-    #[prost(message, repeated, tag="4")]
-    pub age_ranges: ::prost::alloc::vec::Vec<super::common::AgeRangeInfo>,
-    /// Parental status for the audience.  If absent, the audience does not
-    /// restrict by parental status.
-    #[prost(message, optional, tag="5")]
-    pub parental_status: ::core::option::Option<super::common::ParentalStatusInfo>,
-    /// Household income percentile ranges for the audience.  If absent, the
-    /// audience does not restrict by household income range.
-    #[prost(message, repeated, tag="6")]
-    pub income_ranges: ::prost::alloc::vec::Vec<super::common::IncomeRangeInfo>,
-    /// Dynamic lineups representing the YouTube content viewed by the audience.
-    #[prost(message, repeated, tag="7")]
-    pub dynamic_lineups: ::prost::alloc::vec::Vec<AudienceInsightsDynamicLineup>,
-    /// A combination of entity, category and user interest attributes defining the
-    /// audience. The combination has a logical AND-of-ORs structure: Attributes
-    /// within each InsightsAudienceAttributeGroup are combined with OR, and
-    /// the combinations themselves are combined together with AND.  For example,
-    /// the expression (Entity OR Affinity) AND (In-Market OR Category) can be
-    /// formed using two InsightsAudienceAttributeGroups with two Attributes
-    /// each.
-    #[prost(message, repeated, tag="8")]
-    pub topic_audience_combinations: ::prost::alloc::vec::Vec<InsightsAudienceAttributeGroup>,
-}
-/// A list of AudienceInsightsAttributes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightsAudienceAttributeGroup {
-    /// Required. A collection of audience attributes to be combined with logical OR.
-    /// Attributes need not all be the same dimension.  Only Knowledge Graph
-    /// entities, Product & Service Categories, and Affinity and In-Market
-    /// audiences are supported in this context.
-    #[prost(message, repeated, tag="1")]
-    pub attributes: ::prost::alloc::vec::Vec<AudienceInsightsAttribute>,
-}
-/// A collection of related attributes of the same type in an audience
-/// composition insights report.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceCompositionSection {
-    /// The type of the attributes in this section.
-    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", tag="1")]
-    pub dimension: i32,
-    /// The most relevant segments for this audience.  If dimension is GENDER,
-    /// AGE_RANGE or PARENTAL_STATUS, then this list of attributes is exhaustive.
-    #[prost(message, repeated, tag="3")]
-    pub top_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
-    /// Additional attributes for this audience, grouped into clusters.  Only
-    /// populated if dimension is YOUTUBE_CHANNEL.
-    #[prost(message, repeated, tag="4")]
-    pub clustered_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttributeCluster>,
-}
-/// A collection of related attributes, with metadata and metrics, in an audience
-/// composition insights report.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceCompositionAttributeCluster {
-    /// The name of this cluster of attributes
-    #[prost(string, tag="1")]
-    pub cluster_display_name: ::prost::alloc::string::String,
-    /// If the dimension associated with this cluster is YOUTUBE_CHANNEL, then
-    /// cluster_metrics are metrics associated with the cluster as a whole.
-    /// For other dimensions, this field is unset.
-    #[prost(message, optional, tag="3")]
-    pub cluster_metrics: ::core::option::Option<AudienceCompositionMetrics>,
-    /// The individual attributes that make up this cluster, with metadata and
-    /// metrics.
-    #[prost(message, repeated, tag="4")]
-    pub attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
-}
-/// The share and index metrics associated with an attribute in an audience
-/// composition insights report.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceCompositionMetrics {
-    /// The fraction (from 0 to 1 inclusive) of the baseline audience that match
-    /// the attribute.
-    #[prost(double, tag="1")]
-    pub baseline_audience_share: f64,
-    /// The fraction (from 0 to 1 inclusive) of the specific audience that match
-    /// the attribute.
-    #[prost(double, tag="2")]
-    pub audience_share: f64,
-    /// The ratio of audience_share to baseline_audience_share, or zero if this
-    /// ratio is undefined or is not meaningful.
-    #[prost(double, tag="3")]
-    pub index: f64,
-    /// A relevance score from 0 to 1 inclusive.
-    #[prost(double, tag="4")]
-    pub score: f64,
-}
-/// An audience attribute with metadata and metrics.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceCompositionAttribute {
-    /// The attribute with its metadata.
-    #[prost(message, optional, tag="1")]
-    pub attribute_metadata: ::core::option::Option<AudienceInsightsAttributeMetadata>,
-    /// Share and index metrics for the attribute.
-    #[prost(message, optional, tag="2")]
-    pub metrics: ::core::option::Option<AudienceCompositionMetrics>,
-}
-/// Generated client implementations.
-pub mod audience_insights_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Audience Insights Service helps users find information about groups of
-    /// people and how they can be reached with Google Ads.
-    #[derive(Debug, Clone)]
-    pub struct AudienceInsightsServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AudienceInsightsServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AudienceInsightsServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AudienceInsightsServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a saved report that can be viewed in the Insights Finder tool.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        pub async fn generate_insights_finder_report(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateInsightsFinderReportRequest>,
-        ) -> Result<
-            tonic::Response<super::GenerateInsightsFinderReportResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AudienceInsightsService/GenerateInsightsFinderReport",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches for audience attributes that can be used to generate insights.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        pub async fn list_audience_insights_attributes(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListAudienceInsightsAttributesRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListAudienceInsightsAttributesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AudienceInsightsService/ListAudienceInsightsAttributes",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns a collection of attributes that are represented in an audience of
-        /// interest, with metrics that compare each attribute's share of the audience
-        /// with its share of a baseline audience.
-        ///
-        /// List of thrown errors:
-        ///   [AudienceInsightsError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        pub async fn generate_audience_composition_insights(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::GenerateAudienceCompositionInsightsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::GenerateAudienceCompositionInsightsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AudienceInsightsService/GenerateAudienceCompositionInsights",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[ExperimentService.MutateExperiments][google.ads.googleads.v11.services.ExperimentService.MutateExperiments\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentsRequest {
-    /// Required. The ID of the customer whose experiments are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual experiments.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ExperimentOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation on an experiment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExperimentOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="experiment_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<experiment_operation::Operation>,
-}
-/// Nested message and enum types in `ExperimentOperation`.
-pub mod experiment_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation
-        #[prost(message, tag="1")]
-        Create(super::super::resources::Experiment),
-        /// Update operation: The experiment is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::Experiment),
-        /// Remove operation: The experiment is expected to have a valid
-        /// resource name, in this format:
-        ///
-        /// `customers/{customer_id}/experiments/{campaign_experiment_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for experiment mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="1")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateExperimentResult>,
-}
-/// The result for the campaign experiment mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for \[ExperimentService.EndExperiment][google.ads.googleads.v11.services.ExperimentService.EndExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndExperimentRequest {
-    /// Required. The resource name of the campaign experiment to end.
-    #[prost(string, tag="1")]
-    pub experiment: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// Request message for
-/// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListExperimentAsyncErrorsRequest {
-    /// Required. The name of the experiment from which to retrieve the async
-    /// errors.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Token of the page to retrieve. If not specified, the first
-    /// page of results will be returned. Use the value obtained from
-    /// `next_page_token` in the previous response in order to request
-    /// the next page of results.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Number of elements to retrieve in a single page.
-    /// When a page request is too large, the server may decide to
-    /// further limit the number of returned resources.
-    /// The maximum page size is 1000.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
-}
-/// Response message for
-/// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListExperimentAsyncErrorsResponse {
-    /// details of the errors when performing the asynchronous operation.
-    #[prost(message, repeated, tag="1")]
-    pub errors: ::prost::alloc::vec::Vec<super::super::super::super::rpc::Status>,
-    /// Pagination token used to retrieve the next page of results.
-    /// Pass the content of this string as the `page_token` attribute of
-    /// the next request. `next_page_token` is not returned for the last
-    /// page.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for \[ExperimentService.GraduateExperiment][google.ads.googleads.v11.services.ExperimentService.GraduateExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GraduateExperimentRequest {
-    /// Required. The experiment to be graduated.
-    #[prost(string, tag="1")]
-    pub experiment: ::prost::alloc::string::String,
-    /// Required. List of campaign budget mappings for graduation. Each campaign that
-    /// appears here will graduate, and will be assigned a new budget that is
-    /// paired with it in the mapping. The maximum size is one.
-    #[prost(message, repeated, tag="2")]
-    pub campaign_budget_mappings: ::prost::alloc::vec::Vec<CampaignBudgetMapping>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// The mapping of experiment campaign and budget to be graduated.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignBudgetMapping {
-    /// Required. The experiment campaign to graduate.
-    #[prost(string, tag="1")]
-    pub experiment_campaign: ::prost::alloc::string::String,
-    /// Required. The budget that should be attached to the graduating experiment campaign.
-    #[prost(string, tag="2")]
-    pub campaign_budget: ::prost::alloc::string::String,
-}
-/// Request message for \[ExperimentService.ScheduleExperiment][google.ads.googleads.v11.services.ExperimentService.ScheduleExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ScheduleExperimentRequest {
-    /// Required. The scheduled experiment.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// The metadata of the scheduled experiment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ScheduleExperimentMetadata {
-    /// Required. The scheduled experiment.
-    #[prost(string, tag="1")]
-    pub experiment: ::prost::alloc::string::String,
-}
-/// Request message for \[ExperimentService.PromoteExperiment][google.ads.googleads.v11.services.ExperimentService.PromoteExperiment\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PromoteExperimentRequest {
-    /// Required. The resource name of the experiment to promote.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// The metadata of the promoted experiment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PromoteExperimentMetadata {
-    /// Required. The promoted experiment.
-    #[prost(string, tag="1")]
-    pub experiment: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod experiment_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage experiments.
-    #[derive(Debug, Clone)]
-    pub struct ExperimentServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ExperimentServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ExperimentServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ExperimentServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes experiments. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_experiments(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateExperimentsRequest>,
-        ) -> Result<tonic::Response<super::MutateExperimentsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/MutateExperiments",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Immediately ends an experiment, changing the experiment's scheduled
-        /// end date and without waiting for end of day. End date is updated to be the
-        /// time of the request.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn end_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::EndExperimentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/EndExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns all errors that occurred during the last Experiment update (either
-        /// scheduling or promotion).
-        /// Supports standard list paging.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_experiment_async_errors(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListExperimentAsyncErrorsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListExperimentAsyncErrorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/ListExperimentAsyncErrors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Graduates an experiment to a full campaign.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn graduate_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GraduateExperimentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/GraduateExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Schedule an experiment. The in design campaign
-        /// will be converted into a real campaign (called the experiment campaign)
-        /// that will begin serving ads if successfully created.
-        ///
-        /// The experiment is scheduled immediately with status INITIALIZING.
-        /// This method returns a long running operation that tracks the forking of the
-        /// in design campaign. If the forking fails, a list of errors can be retrieved
-        /// using the ListExperimentAsyncErrors method. The operation's
-        /// metadata will be a string containing the resource name of the created
-        /// experiment.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DateRangeError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        pub async fn schedule_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ScheduleExperimentRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/ScheduleExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Promotes the trial campaign thus applying changes in the trial campaign
-        /// to the base campaign.
-        /// This method returns a long running operation that tracks the promotion of
-        /// the experiment campaign. If it fails, a list of errors can be retrieved
-        /// using the ListExperimentAsyncErrors method. The operation's
-        /// metadata will be a string containing the resource name of the created
-        /// experiment.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn promote_experiment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PromoteExperimentRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentService/PromoteExperiment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Request message for \[CustomerFeedService.MutateCustomerFeeds][google.ads.googleads.v11.services.CustomerFeedService.MutateCustomerFeeds\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerFeedsRequest {
@@ -3669,3581 +183,6 @@ pub mod customer_feed_service_client {
         }
     }
 }
-/// Request message for \[AdGroupFeedService.MutateAdGroupFeeds][google.ads.googleads.v11.services.AdGroupFeedService.MutateAdGroupFeeds\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupFeedsRequest {
-    /// Required. The ID of the customer whose ad group feeds are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual ad group feeds.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AdGroupFeedOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on an ad group feed.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupFeedOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="ad_group_feed_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<ad_group_feed_operation::Operation>,
-}
-/// Nested message and enum types in `AdGroupFeedOperation`.
-pub mod ad_group_feed_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new ad group feed.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AdGroupFeed),
-        /// Update operation: The ad group feed is expected to have a valid resource
-        /// name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::AdGroupFeed),
-        /// Remove operation: A resource name for the removed ad group feed is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/adGroupFeeds/{ad_group_id}~{feed_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an ad group feed mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupFeedsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateAdGroupFeedResult>,
-}
-/// The result for the ad group feed mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupFeedResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated ad group feed with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub ad_group_feed: ::core::option::Option<super::resources::AdGroupFeed>,
-}
-/// Generated client implementations.
-pub mod ad_group_feed_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage ad group feeds.
-    #[derive(Debug, Clone)]
-    pub struct AdGroupFeedServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AdGroupFeedServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AdGroupFeedServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AdGroupFeedServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes ad group feeds. Operation statuses are
-        /// returned.
-        ///
-        /// List of thrown errors:
-        ///   [AdGroupFeedError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [DatabaseError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [FunctionError]()
-        ///   [FunctionParsingError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_ad_group_feeds(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAdGroupFeedsRequest>,
-        ) -> Result<tonic::Response<super::MutateAdGroupFeedsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdGroupFeedService/MutateAdGroupFeeds",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AssetSetAssetService.MutateAssetSetAssets][google.ads.googleads.v11.services.AssetSetAssetService.MutateAssetSetAssets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetSetAssetsRequest {
-    /// Required. The ID of the customer whose asset set assets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual asset set assets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AssetSetAssetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on an asset set asset.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetSetAssetOperation {
-    /// The mutate operation.
-    #[prost(oneof="asset_set_asset_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<asset_set_asset_operation::Operation>,
-}
-/// Nested message and enum types in `AssetSetAssetOperation`.
-pub mod asset_set_asset_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new asset set
-        /// asset
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AssetSetAsset),
-        /// Remove operation: A resource name for the removed asset set asset is
-        /// expected, in this format:
-        /// `customers/{customer_id}/assetSetAssets/{asset_set_id}~{asset_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an asset set asset mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetSetAssetsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateAssetSetAssetResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the asset set asset mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetSetAssetResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated asset set asset with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub asset_set_asset: ::core::option::Option<super::resources::AssetSetAsset>,
-}
-/// Generated client implementations.
-pub mod asset_set_asset_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage asset set asset.
-    #[derive(Debug, Clone)]
-    pub struct AssetSetAssetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AssetSetAssetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AssetSetAssetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AssetSetAssetServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes asset set assets. Operation statuses are
-        /// returned.
-        pub async fn mutate_asset_set_assets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAssetSetAssetsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateAssetSetAssetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AssetSetAssetService/MutateAssetSetAssets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[MediaFileService.MutateMediaFiles][google.ads.googleads.v11.services.MediaFileService.MutateMediaFiles\]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateMediaFilesRequest {
-    /// Required. The ID of the customer whose media files are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual media file.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<MediaFileOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation to create media file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaFileOperation {
-    /// The mutate operation.
-    #[prost(oneof="media_file_operation::Operation", tags="1")]
-    pub operation: ::core::option::Option<media_file_operation::Operation>,
-}
-/// Nested message and enum types in `MediaFileOperation`.
-pub mod media_file_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new media file.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::MediaFile),
-    }
-}
-/// Response message for a media file mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateMediaFilesResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateMediaFileResult>,
-}
-/// The result for the media file mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateMediaFileResult {
-    /// The resource name returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated media file with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub media_file: ::core::option::Option<super::resources::MediaFile>,
-}
-/// Generated client implementations.
-pub mod media_file_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage media files.
-    #[derive(Debug, Clone)]
-    pub struct MediaFileServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> MediaFileServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MediaFileServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            MediaFileServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates media files. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [ImageError]()
-        ///   [InternalError]()
-        ///   [MediaBundleError]()
-        ///   [MediaFileError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_media_files(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateMediaFilesRequest>,
-        ) -> Result<tonic::Response<super::MutateMediaFilesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.MediaFileService/MutateMediaFiles",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadUserDataRequest {
-    /// Required. The ID of the customer for which to update the user data.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to be done.
-    #[prost(message, repeated, tag="3")]
-    pub operations: ::prost::alloc::vec::Vec<UserDataOperation>,
-    /// Metadata of the request.
-    #[prost(oneof="upload_user_data_request::Metadata", tags="2")]
-    pub metadata: ::core::option::Option<upload_user_data_request::Metadata>,
-}
-/// Nested message and enum types in `UploadUserDataRequest`.
-pub mod upload_user_data_request {
-    /// Metadata of the request.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Metadata {
-        /// Metadata for data updates to a Customer Match user list.
-        #[prost(message, tag="2")]
-        CustomerMatchUserListMetadata(super::super::common::CustomerMatchUserListMetadata),
-    }
-}
-/// Operation to be made for the UploadUserDataRequest.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserDataOperation {
-    /// Operation to be made for the UploadUserDataRequest.
-    #[prost(oneof="user_data_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<user_data_operation::Operation>,
-}
-/// Nested message and enum types in `UserDataOperation`.
-pub mod user_data_operation {
-    /// Operation to be made for the UploadUserDataRequest.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// The list of user data to be appended to the user list.
-        #[prost(message, tag="1")]
-        Create(super::super::common::UserData),
-        /// The list of user data to be removed from the user list.
-        #[prost(message, tag="2")]
-        Remove(super::super::common::UserData),
-    }
-}
-/// Response message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
-/// Uploads made through this service will not be visible under the 'Segment
-/// members' section for the Customer Match List in the Google Ads UI.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadUserDataResponse {
-    /// The date time at which the request was received by API, formatted as
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="3")]
-    pub upload_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// Number of upload data operations received by API.
-    #[prost(int32, optional, tag="4")]
-    pub received_operations_count: ::core::option::Option<i32>,
-}
-/// Generated client implementations.
-pub mod user_data_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage user data uploads.
-    /// Any uploads made to a Customer Match list through this service will be
-    /// eligible for matching as per the customer matching process. See
-    /// https://support.google.com/google-ads/answer/7474263. However, the uploads
-    /// made through this service will not be visible under the 'Segment members'
-    /// section for the Customer Match List in the Google Ads UI.
-    #[derive(Debug, Clone)]
-    pub struct UserDataServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> UserDataServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> UserDataServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            UserDataServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Uploads the given user data.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [OfflineUserDataJobError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        ///   [UserDataError]()
-        pub async fn upload_user_data(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadUserDataRequest>,
-        ) -> Result<tonic::Response<super::UploadUserDataResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.UserDataService/UploadUserData",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AdService.GetAd][google.ads.googleads.v11.services.AdService.GetAd\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAdRequest {
-    /// Required. The resource name of the ad to fetch.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for \[AdService.MutateAds][google.ads.googleads.v11.services.AdService.MutateAds\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdsRequest {
-    /// Required. The ID of the customer whose ads are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual ads.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AdOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="4")]
-    pub partial_failure: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// A single update operation on an ad.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Configuration for how policies are validated.
-    #[prost(message, optional, tag="3")]
-    pub policy_validation_parameter: ::core::option::Option<super::common::PolicyValidationParameter>,
-    /// The mutate operation.
-    #[prost(oneof="ad_operation::Operation", tags="1")]
-    pub operation: ::core::option::Option<ad_operation::Operation>,
-}
-/// Nested message and enum types in `AdOperation`.
-pub mod ad_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The ad is expected to have a valid resource name
-        /// in this format:
-        ///
-        /// `customers/{customer_id}/ads/{ad_id}`
-        #[prost(message, tag="1")]
-        Update(super::super::resources::Ad),
-    }
-}
-/// Response message for an ad mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateAdResult>,
-}
-/// The result for the ad mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdResult {
-    /// The resource name returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated ad with only mutable fields after mutate. The field will only
-    /// be returned when response_content_type is set to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub ad: ::core::option::Option<super::resources::Ad>,
-}
-/// Generated client implementations.
-pub mod ad_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage ads.
-    #[derive(Debug, Clone)]
-    pub struct AdServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AdServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AdServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AdServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns the requested ad in full detail.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn get_ad(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAdRequest>,
-        ) -> Result<tonic::Response<super::super::resources::Ad>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdService/GetAd",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates ads. Operation statuses are returned. Updating ads is not supported
-        /// for TextAd, ExpandedDynamicSearchAd, GmailAd and ImageAd.
-        ///
-        /// List of thrown errors:
-        ///   [AdCustomizerError]()
-        ///   [AdError]()
-        ///   [AdSharingError]()
-        ///   [AdxError]()
-        ///   [AssetError]()
-        ///   [AssetLinkError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [FeedAttributeReferenceError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [FunctionError]()
-        ///   [FunctionParsingError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [ImageError]()
-        ///   [InternalError]()
-        ///   [ListOperationError]()
-        ///   [MediaBundleError]()
-        ///   [MediaFileError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [PolicyFindingError]()
-        ///   [PolicyViolationError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        ///   [UrlFieldError]()
-        pub async fn mutate_ads(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAdsRequest>,
-        ) -> Result<tonic::Response<super::MutateAdsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdService/MutateAds",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AdGroupService.MutateAdGroups][google.ads.googleads.v11.services.AdGroupService.MutateAdGroups\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupsRequest {
-    /// Required. The ID of the customer whose ad groups are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual ad groups.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AdGroupOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on an ad group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="ad_group_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<ad_group_operation::Operation>,
-}
-/// Nested message and enum types in `AdGroupOperation`.
-pub mod ad_group_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new ad group.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AdGroup),
-        /// Update operation: The ad group is expected to have a valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::AdGroup),
-        /// Remove operation: A resource name for the removed ad group is expected,
-        /// in this format:
-        ///
-        /// `customers/{customer_id}/adGroups/{ad_group_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an ad group mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateAdGroupResult>,
-}
-/// The result for the ad group mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated ad group with only mutable fields after mutate. The field will
-    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub ad_group: ::core::option::Option<super::resources::AdGroup>,
-}
-/// Generated client implementations.
-pub mod ad_group_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage ad groups.
-    #[derive(Debug, Clone)]
-    pub struct AdGroupServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AdGroupServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AdGroupServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AdGroupServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes ad groups. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AdGroupError]()
-        ///   [AdxError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [BiddingError]()
-        ///   [BiddingStrategyError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [ListOperationError]()
-        ///   [MultiplierError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperationAccessDeniedError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        ///   [SettingError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        ///   [UrlFieldError]()
-        pub async fn mutate_ad_groups(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAdGroupsRequest>,
-        ) -> Result<tonic::Response<super::MutateAdGroupsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdGroupService/MutateAdGroups",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[ExtensionFeedItemService.MutateExtensionFeedItems][google.ads.googleads.v11.services.ExtensionFeedItemService.MutateExtensionFeedItems\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExtensionFeedItemsRequest {
-    /// Required. The ID of the customer whose extension feed items are being
-    /// modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual extension feed items.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ExtensionFeedItemOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on an extension feed item.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtensionFeedItemOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="extension_feed_item_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<extension_feed_item_operation::Operation>,
-}
-/// Nested message and enum types in `ExtensionFeedItemOperation`.
-pub mod extension_feed_item_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new extension
-        /// feed item.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::ExtensionFeedItem),
-        /// Update operation: The extension feed item is expected to have a
-        /// valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::ExtensionFeedItem),
-        /// Remove operation: A resource name for the removed extension feed item
-        /// is expected, in this format:
-        ///
-        /// `customers/{customer_id}/extensionFeedItems/{feed_item_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an extension feed item mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExtensionFeedItemsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateExtensionFeedItemResult>,
-}
-/// The result for the extension feed item mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExtensionFeedItemResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated extension feed item with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub extension_feed_item: ::core::option::Option<super::resources::ExtensionFeedItem>,
-}
-/// Generated client implementations.
-pub mod extension_feed_item_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage extension feed items.
-    #[derive(Debug, Clone)]
-    pub struct ExtensionFeedItemServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ExtensionFeedItemServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ExtensionFeedItemServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ExtensionFeedItemServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes extension feed items. Operation
-        /// statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [CountryCodeError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [ExtensionFeedItemError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [ImageError]()
-        ///   [InternalError]()
-        ///   [LanguageCodeError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [OperationAccessDeniedError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringLengthError]()
-        ///   [UrlFieldError]()
-        pub async fn mutate_extension_feed_items(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateExtensionFeedItemsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateExtensionFeedItemsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExtensionFeedItemService/MutateExtensionFeedItems",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[ConversionGoalCampaignConfigService.MutateConversionGoalCampaignConfig][\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionGoalCampaignConfigsRequest {
-    /// Required. The ID of the customer whose custom conversion goals are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual conversion goal campaign
-    /// config.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ConversionGoalCampaignConfigOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
-    pub response_content_type: i32,
-}
-/// A single operation (update) on a conversion goal campaign config.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionGoalCampaignConfigOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="conversion_goal_campaign_config_operation::Operation", tags="1")]
-    pub operation: ::core::option::Option<conversion_goal_campaign_config_operation::Operation>,
-}
-/// Nested message and enum types in `ConversionGoalCampaignConfigOperation`.
-pub mod conversion_goal_campaign_config_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The conversion goal campaign config is expected to have
-        /// a valid resource name.
-        #[prost(message, tag="1")]
-        Update(super::super::resources::ConversionGoalCampaignConfig),
-    }
-}
-/// Response message for a conversion goal campaign config mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionGoalCampaignConfigsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateConversionGoalCampaignConfigResult>,
-}
-/// The result for the conversion goal campaign config mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionGoalCampaignConfigResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated ConversionGoalCampaignConfig with only mutable fields after
-    /// mutate. The field will only be returned when response_content_type is set
-    /// to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub conversion_goal_campaign_config: ::core::option::Option<super::resources::ConversionGoalCampaignConfig>,
-}
-/// Generated client implementations.
-pub mod conversion_goal_campaign_config_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage conversion goal campaign config.
-    #[derive(Debug, Clone)]
-    pub struct ConversionGoalCampaignConfigServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ConversionGoalCampaignConfigServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ConversionGoalCampaignConfigServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ConversionGoalCampaignConfigServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes conversion goal campaign config. Operation
-        /// statuses are returned.
-        pub async fn mutate_conversion_goal_campaign_configs(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::MutateConversionGoalCampaignConfigsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::MutateConversionGoalCampaignConfigsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionGoalCampaignConfigService/MutateConversionGoalCampaignConfigs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[CustomerConversionGoalService.MutateCustomerConversionGoals][google.ads.googleads.v11.services.CustomerConversionGoalService.MutateCustomerConversionGoals\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerConversionGoalsRequest {
-    /// Required. The ID of the customer whose customer conversion goals are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual customer conversion goal.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomerConversionGoalOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// A single operation (update) on a customer conversion goal.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerConversionGoalOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="customer_conversion_goal_operation::Operation", tags="1")]
-    pub operation: ::core::option::Option<customer_conversion_goal_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerConversionGoalOperation`.
-pub mod customer_conversion_goal_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The customer conversion goal is expected to have a
-        /// valid resource name.
-        #[prost(message, tag="1")]
-        Update(super::super::resources::CustomerConversionGoal),
-    }
-}
-/// Response message for a customer conversion goal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerConversionGoalsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomerConversionGoalResult>,
-}
-/// The result for the customer conversion goal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerConversionGoalResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_conversion_goal_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage customer conversion goal.
-    #[derive(Debug, Clone)]
-    pub struct CustomerConversionGoalServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerConversionGoalServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerConversionGoalServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerConversionGoalServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes customer conversion goals. Operation statuses
-        /// are returned.
-        pub async fn mutate_customer_conversion_goals(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerConversionGoalsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerConversionGoalsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerConversionGoalService/MutateCustomerConversionGoals",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[ExperimentArmService.MutateExperimentArms][google.ads.googleads.v11.services.ExperimentArmService.MutateExperimentArms\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentArmsRequest {
-    /// Required. The ID of the customer whose experiments are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual experiment arm.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ExperimentArmOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation on an experiment arm.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExperimentArmOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="experiment_arm_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<experiment_arm_operation::Operation>,
-}
-/// Nested message and enum types in `ExperimentArmOperation`.
-pub mod experiment_arm_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation
-        #[prost(message, tag="1")]
-        Create(super::super::resources::ExperimentArm),
-        /// Update operation: The experiment arm is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::ExperimentArm),
-        /// Remove operation: The experiment arm is expected to have a valid
-        /// resource name, in this format:
-        ///
-        /// `customers/{customer_id}/experiments/{campaign_experiment_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for experiment arm mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentArmsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="1")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateExperimentArmResult>,
-}
-/// The result for the experiment arm mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateExperimentArmResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated experiment arm with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub experiment_arm: ::core::option::Option<super::resources::ExperimentArm>,
-}
-/// Generated client implementations.
-pub mod experiment_arm_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage experiment arms.
-    #[derive(Debug, Clone)]
-    pub struct ExperimentArmServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ExperimentArmServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ExperimentArmServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ExperimentArmServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes experiment arms. Operation statuses are
-        /// returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ExperimentArmError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_experiment_arms(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateExperimentArmsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateExperimentArmsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ExperimentArmService/MutateExperimentArms",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[SharedCriterionService.MutateSharedCriteria][google.ads.googleads.v11.services.SharedCriterionService.MutateSharedCriteria\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedCriteriaRequest {
-    /// Required. The ID of the customer whose shared criteria are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual shared criteria.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<SharedCriterionOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on an shared criterion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SharedCriterionOperation {
-    /// The mutate operation.
-    #[prost(oneof="shared_criterion_operation::Operation", tags="1, 3")]
-    pub operation: ::core::option::Option<shared_criterion_operation::Operation>,
-}
-/// Nested message and enum types in `SharedCriterionOperation`.
-pub mod shared_criterion_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new shared
-        /// criterion.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::SharedCriterion),
-        /// Remove operation: A resource name for the removed shared criterion is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/sharedCriteria/{shared_set_id}~{criterion_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a shared criterion mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedCriteriaResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateSharedCriterionResult>,
-}
-/// The result for the shared criterion mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateSharedCriterionResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated shared criterion with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub shared_criterion: ::core::option::Option<super::resources::SharedCriterion>,
-}
-/// Generated client implementations.
-pub mod shared_criterion_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage shared criteria.
-    #[derive(Debug, Clone)]
-    pub struct SharedCriterionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SharedCriterionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SharedCriterionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SharedCriterionServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or removes shared criteria. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CriterionError]()
-        ///   [DatabaseError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_shared_criteria(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateSharedCriteriaRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateSharedCriteriaResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.SharedCriterionService/MutateSharedCriteria",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[AssetGroupSignalService.MutateAssetGroupSignals][google.ads.googleads.v11.services.AssetGroupSignalService.MutateAssetGroupSignals\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupSignalsRequest {
-    /// Required. The ID of the customer whose asset group signals are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual asset group signals.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AssetGroupSignalOperation>,
-    /// If true, successful operations will be carried out and invalid operations
-    /// will return errors. If false, all operations will be carried out in one
-    /// transaction if and only if they are all valid. Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on an asset group signal.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetGroupSignalOperation {
-    /// The mutate operation. Update is not supported.
-    #[prost(oneof="asset_group_signal_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<asset_group_signal_operation::Operation>,
-}
-/// Nested message and enum types in `AssetGroupSignalOperation`.
-pub mod asset_group_signal_operation {
-    /// The mutate operation. Update is not supported.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new asset group
-        /// signal.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AssetGroupSignal),
-        /// Remove operation: A resource name for the removed asset group signal is
-        /// expected, in this format:
-        /// `customers/{customer_id}/assetGroupSignals/{asset_group_id}~{criterion_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an asset group signal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupSignalsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateAssetGroupSignalResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the asset group signal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupSignalResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated AssetGroupSignal with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub asset_group_signal: ::core::option::Option<super::resources::AssetGroupSignal>,
-}
-/// Generated client implementations.
-pub mod asset_group_signal_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage asset group signal.
-    #[derive(Debug, Clone)]
-    pub struct AssetGroupSignalServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AssetGroupSignalServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AssetGroupSignalServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AssetGroupSignalServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or removes asset group signals. Operation statuses are
-        /// returned.
-        pub async fn mutate_asset_group_signals(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAssetGroupSignalsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateAssetGroupSignalsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AssetGroupSignalService/MutateAssetGroupSignals",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CampaignSharedSetService.MutateCampaignSharedSets][google.ads.googleads.v11.services.CampaignSharedSetService.MutateCampaignSharedSets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignSharedSetsRequest {
-    /// Required. The ID of the customer whose campaign shared sets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign shared sets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignSharedSetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on an campaign shared set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignSharedSetOperation {
-    /// The mutate operation.
-    #[prost(oneof="campaign_shared_set_operation::Operation", tags="1, 3")]
-    pub operation: ::core::option::Option<campaign_shared_set_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignSharedSetOperation`.
-pub mod campaign_shared_set_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign
-        /// shared set.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignSharedSet),
-        /// Remove operation: A resource name for the removed campaign shared set is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a campaign shared set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignSharedSetsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignSharedSetResult>,
-}
-/// The result for the campaign shared set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignSharedSetResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign shared set with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub campaign_shared_set: ::core::option::Option<super::resources::CampaignSharedSet>,
-}
-/// Generated client implementations.
-pub mod campaign_shared_set_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage campaign shared sets.
-    #[derive(Debug, Clone)]
-    pub struct CampaignSharedSetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignSharedSetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignSharedSetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignSharedSetServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or removes campaign shared sets. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignSharedSetError]()
-        ///   [ContextError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [NotEmptyError]()
-        ///   [NullError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_campaign_shared_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignSharedSetsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignSharedSetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignSharedSetService/MutateCampaignSharedSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestKeywordThemeConstantsRequest {
-    /// The query text of a keyword theme that will be used to map to similar
-    /// keyword themes. For example, "plumber" or "roofer".
-    #[prost(string, tag="1")]
-    pub query_text: ::prost::alloc::string::String,
-    /// Upper-case, two-letter country code as defined by ISO-3166. This for
-    /// refining the scope of the query, default to 'US' if not set.
-    #[prost(string, tag="2")]
-    pub country_code: ::prost::alloc::string::String,
-    /// The two letter language code for get corresponding keyword theme for
-    /// refining the scope of the query, default to 'en' if not set.
-    #[prost(string, tag="3")]
-    pub language_code: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestKeywordThemeConstantsResponse {
-    /// Smart Campaign keyword theme suggestions.
-    #[prost(message, repeated, tag="1")]
-    pub keyword_theme_constants: ::prost::alloc::vec::Vec<super::resources::KeywordThemeConstant>,
-}
-/// Generated client implementations.
-pub mod keyword_theme_constant_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to fetch Smart Campaign keyword themes.
-    #[derive(Debug, Clone)]
-    pub struct KeywordThemeConstantServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> KeywordThemeConstantServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> KeywordThemeConstantServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            KeywordThemeConstantServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns KeywordThemeConstant suggestions by keyword themes.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn suggest_keyword_theme_constants(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SuggestKeywordThemeConstantsRequest>,
-        ) -> Result<
-            tonic::Response<super::SuggestKeywordThemeConstantsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.KeywordThemeConstantService/SuggestKeywordThemeConstants",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[FeedMappingService.MutateFeedMappings][google.ads.googleads.v11.services.FeedMappingService.MutateFeedMappings\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateFeedMappingsRequest {
-    /// Required. The ID of the customer whose feed mappings are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual feed mappings.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<FeedMappingOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on a feed mapping.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedMappingOperation {
-    /// The mutate operation.
-    #[prost(oneof="feed_mapping_operation::Operation", tags="1, 3")]
-    pub operation: ::core::option::Option<feed_mapping_operation::Operation>,
-}
-/// Nested message and enum types in `FeedMappingOperation`.
-pub mod feed_mapping_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new feed mapping.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::FeedMapping),
-        /// Remove operation: A resource name for the removed feed mapping is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/feedMappings/{feed_id}~{feed_mapping_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a feed mapping mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateFeedMappingsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateFeedMappingResult>,
-}
-/// The result for the feed mapping mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateFeedMappingResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated feed mapping with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub feed_mapping: ::core::option::Option<super::resources::FeedMapping>,
-}
-/// Generated client implementations.
-pub mod feed_mapping_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage feed mappings.
-    #[derive(Debug, Clone)]
-    pub struct FeedMappingServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> FeedMappingServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> FeedMappingServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            FeedMappingServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or removes feed mappings. Operation statuses are
-        /// returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [DistinctError]()
-        ///   [FeedMappingError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NotEmptyError]()
-        ///   [OperationAccessDeniedError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_feed_mappings(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateFeedMappingsRequest>,
-        ) -> Result<tonic::Response<super::MutateFeedMappingsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.FeedMappingService/MutateFeedMappings",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CampaignGroupService.MutateCampaignGroups][google.ads.googleads.v11.services.CampaignGroupService.MutateCampaignGroups\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignGroupsRequest {
-    /// Required. The ID of the customer whose campaign groups are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign groups.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignGroupOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on a campaign group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignGroupOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="campaign_group_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<campaign_group_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignGroupOperation`.
-pub mod campaign_group_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign
-        /// group.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignGroup),
-        /// Update operation: The campaign group is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CampaignGroup),
-        /// Remove operation: A resource name for the removed campaign group is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/campaignGroups/{campaign_group_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for campaign group mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignGroupsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignGroupResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the campaign group mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignGroupResult {
-    /// Required. Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign group with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub campaign_group: ::core::option::Option<super::resources::CampaignGroup>,
-}
-/// Generated client implementations.
-pub mod campaign_group_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage campaign groups.
-    #[derive(Debug, Clone)]
-    pub struct CampaignGroupServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignGroupServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignGroupServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignGroupServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates, or removes campaign groups. Operation statuses are
-        /// returned.
-        pub async fn mutate_campaign_groups(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignGroupsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignGroupsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignGroupService/MutateCampaignGroups",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CampaignAssetSetService.MutateCampaignAssetSets][google.ads.googleads.v11.services.CampaignAssetSetService.MutateCampaignAssetSets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetSetsRequest {
-    /// Required. The ID of the customer whose campaign asset sets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign asset sets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignAssetSetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, remove) on a campaign asset set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignAssetSetOperation {
-    /// The mutate operation.
-    #[prost(oneof="campaign_asset_set_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<campaign_asset_set_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignAssetSetOperation`.
-pub mod campaign_asset_set_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign asset
-        /// set.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignAssetSet),
-        /// Remove operation: A resource name for the removed campaign asset set is
-        /// expected, in this format:
-        /// `customers/{customer_id}/campaignAssetSets/{campaign_id}~{asset_set_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a campaign asset set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetSetsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetSetResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the campaign asset set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetSetResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign asset set with only mutable fields after mutate. The
-    /// field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub campaign_asset_set: ::core::option::Option<super::resources::CampaignAssetSet>,
-}
-/// Generated client implementations.
-pub mod campaign_asset_set_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage campaign asset set
-    #[derive(Debug, Clone)]
-    pub struct CampaignAssetSetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignAssetSetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignAssetSetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignAssetSetServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes campaign asset sets. Operation statuses are
-        /// returned.
-        pub async fn mutate_campaign_asset_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignAssetSetsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignAssetSetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignAssetSetService/MutateCampaignAssetSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CustomerManagerLinkService.MutateCustomerManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MutateCustomerManagerLink\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerManagerLinkRequest {
-    /// Required. The ID of the customer whose customer manager links are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual customer manager links.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomerManagerLinkOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// Request message for \[CustomerManagerLinkService.MoveManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MoveManagerLink\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MoveManagerLinkRequest {
-    /// Required. The ID of the client customer that is being moved.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The resource name of the previous CustomerManagerLink.
-    /// The resource name has the form:
-    /// `customers/{customer_id}/customerManagerLinks/{manager_customer_id}~{manager_link_id}`
-    #[prost(string, tag="2")]
-    pub previous_customer_manager_link: ::prost::alloc::string::String,
-    /// Required. The resource name of the new manager customer that the client wants to move
-    /// to. Customer resource names have the format: "customers/{customer_id}"
-    #[prost(string, tag="3")]
-    pub new_manager: ::prost::alloc::string::String,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// Updates the status of a CustomerManagerLink.
-/// The following actions are possible:
-/// 1. Update operation with status ACTIVE accepts a pending invitation.
-/// 2. Update operation with status REFUSED declines a pending invitation.
-/// 3. Update operation with status INACTIVE terminates link to manager.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerManagerLinkOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="customer_manager_link_operation::Operation", tags="2")]
-    pub operation: ::core::option::Option<customer_manager_link_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerManagerLinkOperation`.
-pub mod customer_manager_link_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The link is expected to have a valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CustomerManagerLink),
-    }
-}
-/// Response message for a CustomerManagerLink mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerManagerLinkResponse {
-    /// A result that identifies the resource affected by the mutate request.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomerManagerLinkResult>,
-}
-/// Response message for a CustomerManagerLink moveManagerLink.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MoveManagerLinkResponse {
-    /// Returned for successful operations. Represents a CustomerManagerLink
-    /// resource of the newly created link between client customer and new manager
-    /// customer.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// The result for the customer manager link mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerManagerLinkResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_manager_link_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage customer-manager links.
-    #[derive(Debug, Clone)]
-    pub struct CustomerManagerLinkServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerManagerLinkServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerManagerLinkServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerManagerLinkServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Updates customer manager links. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [ManagerLinkError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_customer_manager_link(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerManagerLinkRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerManagerLinkResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerManagerLinkService/MutateCustomerManagerLink",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Moves a client customer to a new manager customer.
-        /// This simplifies the complex request that requires two operations to move
-        /// a client customer to a new manager, for example:
-        /// 1. Update operation with Status INACTIVE (previous manager) and,
-        /// 2. Update operation with Status ACTIVE (new manager).
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn move_manager_link(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MoveManagerLinkRequest>,
-        ) -> Result<tonic::Response<super::MoveManagerLinkResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerManagerLinkService/MoveManagerLink",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[CustomerUserAccessInvitation.MutateCustomerUserAccessInvitation][\]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessInvitationRequest {
-    /// Required. The ID of the customer whose access invitation is being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on the access invitation
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<CustomerUserAccessInvitationOperation>,
-}
-/// A single operation (create or remove) on customer user access invitation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerUserAccessInvitationOperation {
-    /// The mutate operation
-    #[prost(oneof="customer_user_access_invitation_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<customer_user_access_invitation_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerUserAccessInvitationOperation`.
-pub mod customer_user_access_invitation_operation {
-    /// The mutate operation
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new access
-        /// invitation.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomerUserAccessInvitation),
-        /// Remove operation: A resource name for the revoke invitation is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/customerUserAccessInvitations/{invitation_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for access invitation mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessInvitationResponse {
-    /// Result for the mutate.
-    #[prost(message, optional, tag="1")]
-    pub result: ::core::option::Option<MutateCustomerUserAccessInvitationResult>,
-}
-/// The result for the access invitation mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessInvitationResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_user_access_invitation_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service manages the access invitation extended to users for a given
-    /// customer.
-    #[derive(Debug, Clone)]
-    pub struct CustomerUserAccessInvitationServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerUserAccessInvitationServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerUserAccessInvitationServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerUserAccessInvitationServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or removes an access invitation.
-        ///
-        /// List of thrown errors:
-        ///   [AccessInvitationError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_customer_user_access_invitation(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::MutateCustomerUserAccessInvitationRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerUserAccessInvitationResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerUserAccessInvitationService/MutateCustomerUserAccessInvitation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRuleSetsRequest {
-    /// Required. The ID of the customer whose conversion value rule sets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual conversion value rule sets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ConversionValueRuleSetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="5")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
-    pub response_content_type: i32,
-}
-/// A single operation (create, update, remove) on a conversion value rule set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionValueRuleSetOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="conversion_value_rule_set_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<conversion_value_rule_set_operation::Operation>,
-}
-/// Nested message and enum types in `ConversionValueRuleSetOperation`.
-pub mod conversion_value_rule_set_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new conversion
-        /// value rule set.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::ConversionValueRuleSet),
-        /// Update operation: The conversion value rule set is expected to have a
-        /// valid resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::ConversionValueRuleSet),
-        /// Remove operation: A resource name for the removed conversion value rule
-        /// set is expected, in this format:
-        ///
-        /// `customers/{customer_id}/conversionValueRuleSets/{conversion_value_rule_set_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for
-/// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRuleSetsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleSetResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the conversion value rule set mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRuleSetResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated conversion value rule set with only mutable fields after
-    /// mutate. The field will only be returned when response_content_type is set
-    /// to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub conversion_value_rule_set: ::core::option::Option<super::resources::ConversionValueRuleSet>,
-}
-/// Generated client implementations.
-pub mod conversion_value_rule_set_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage conversion value rule sets.
-    #[derive(Debug, Clone)]
-    pub struct ConversionValueRuleSetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ConversionValueRuleSetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ConversionValueRuleSetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ConversionValueRuleSetServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes conversion value rule sets. Operation statuses
-        /// are returned.
-        pub async fn mutate_conversion_value_rule_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateConversionValueRuleSetsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateConversionValueRuleSetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionValueRuleSetService/MutateConversionValueRuleSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CampaignLabelService.MutateCampaignLabels][google.ads.googleads.v11.services.CampaignLabelService.MutateCampaignLabels\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignLabelsRequest {
-    /// Required. ID of the customer whose campaign-label relationships are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on campaign-label relationships.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignLabelOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation (create, remove) on a campaign-label relationship.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignLabelOperation {
-    /// The mutate operation.
-    #[prost(oneof="campaign_label_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<campaign_label_operation::Operation>,
-}
-/// Nested message and enum types in `CampaignLabelOperation`.
-pub mod campaign_label_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign-label
-        /// relationship.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignLabel),
-        /// Remove operation: A resource name for the campaign-label relationship
-        /// being removed, in this format:
-        ///
-        /// `customers/{customer_id}/campaignLabels/{campaign_id}~{label_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for a campaign labels mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignLabelsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignLabelResult>,
-}
-/// The result for a campaign label mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignLabelResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod campaign_label_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage labels on campaigns.
-    #[derive(Debug, Clone)]
-    pub struct CampaignLabelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CampaignLabelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CampaignLabelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CampaignLabelServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates and removes campaign-label relationships.
-        /// Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [LabelError]()
-        ///   [MutateError]()
-        ///   [NewResourceCreationError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_campaign_labels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignLabelsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignLabelsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignLabelService/MutateCampaignLabels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Request message for
 /// \[AdGroupCriterionCustomizerService.MutateAdGroupCriterionCustomizers][google.ads.googleads.v11.services.AdGroupCriterionCustomizerService.MutateAdGroupCriterionCustomizers\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -7409,444 +348,6 @@ pub mod ad_group_criterion_customizer_service_client {
         }
     }
 }
-/// Request message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordIdeasRequest {
-    /// The ID of the customer with the recommendation.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// The resource name of the language to target.
-    /// Each keyword belongs to some set of languages; a keyword is included if
-    /// language is one of its languages.
-    /// If not set, all keywords will be included.
-    #[prost(string, optional, tag="14")]
-    pub language: ::core::option::Option<::prost::alloc::string::String>,
-    /// The resource names of the location to target. Maximum is 10.
-    /// An empty list MAY be used to specify all targeting geos.
-    #[prost(string, repeated, tag="15")]
-    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If true, adult keywords will be included in response.
-    /// The default value is false.
-    #[prost(bool, tag="10")]
-    pub include_adult_keywords: bool,
-    /// Token of the page to retrieve. If not specified, the first
-    /// page of results will be returned. To request next page of results use the
-    /// value obtained from `next_page_token` in the previous response.
-    /// The request fields must match across pages.
-    #[prost(string, tag="12")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Number of results to retrieve in a single page.
-    /// A maximum of 10,000 results may be returned, if the page_size
-    /// exceeds this, it is ignored.
-    /// If unspecified, at most 10,000 results will be returned.
-    /// The server may decide to further limit the number of returned resources.
-    /// If the response contains fewer than 10,000 results it may not be assumed
-    /// as last page of results.
-    #[prost(int32, tag="13")]
-    pub page_size: i32,
-    /// Targeting network.
-    /// If not set, Google Search And Partners Network will be used.
-    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="9")]
-    pub keyword_plan_network: i32,
-    /// The keyword annotations to include in response.
-    #[prost(enumeration="super::enums::keyword_plan_keyword_annotation_enum::KeywordPlanKeywordAnnotation", repeated, tag="17")]
-    pub keyword_annotation: ::prost::alloc::vec::Vec<i32>,
-    /// The aggregate fields to include in response.
-    #[prost(message, optional, tag="16")]
-    pub aggregate_metrics: ::core::option::Option<super::common::KeywordPlanAggregateMetrics>,
-    /// The options for historical metrics data.
-    #[prost(message, optional, tag="18")]
-    pub historical_metrics_options: ::core::option::Option<super::common::HistoricalMetricsOptions>,
-    /// The type of seed to generate keyword ideas.
-    #[prost(oneof="generate_keyword_ideas_request::Seed", tags="2, 3, 5, 11")]
-    pub seed: ::core::option::Option<generate_keyword_ideas_request::Seed>,
-}
-/// Nested message and enum types in `GenerateKeywordIdeasRequest`.
-pub mod generate_keyword_ideas_request {
-    /// The type of seed to generate keyword ideas.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Seed {
-        /// A Keyword and a specific Url to generate ideas from
-        /// for example, cars, www.example.com/cars.
-        #[prost(message, tag="2")]
-        KeywordAndUrlSeed(super::KeywordAndUrlSeed),
-        /// A Keyword or phrase to generate ideas from, for example, cars.
-        #[prost(message, tag="3")]
-        KeywordSeed(super::KeywordSeed),
-        /// A specific url to generate ideas from, for example, www.example.com/cars.
-        #[prost(message, tag="5")]
-        UrlSeed(super::UrlSeed),
-        /// The site to generate ideas from, for example, www.example.com.
-        #[prost(message, tag="11")]
-        SiteSeed(super::SiteSeed),
-    }
-}
-/// Keyword And Url Seed
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordAndUrlSeed {
-    /// The URL to crawl in order to generate keyword ideas.
-    #[prost(string, optional, tag="3")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Requires at least one keyword.
-    #[prost(string, repeated, tag="4")]
-    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Keyword Seed
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordSeed {
-    /// Requires at least one keyword.
-    #[prost(string, repeated, tag="2")]
-    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Site Seed
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SiteSeed {
-    /// The domain name of the site. If the customer requesting the ideas doesn't
-    /// own the site provided only public information is returned.
-    #[prost(string, optional, tag="2")]
-    pub site: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Url Seed
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UrlSeed {
-    /// The URL to crawl in order to generate keyword ideas.
-    #[prost(string, optional, tag="2")]
-    pub url: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Response message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordIdeaResponse {
-    /// Results of generating keyword ideas.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<GenerateKeywordIdeaResult>,
-    /// The aggregate metrics for all keyword ideas.
-    #[prost(message, optional, tag="4")]
-    pub aggregate_metric_results: ::core::option::Option<super::common::KeywordPlanAggregateMetricResults>,
-    /// Pagination token used to retrieve the next page of results.
-    /// Pass the content of this string as the `page_token` attribute of
-    /// the next request.
-    /// `next_page_token` is not returned for the last page.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Total number of results available.
-    #[prost(int64, tag="3")]
-    pub total_size: i64,
-}
-/// The result of generating keyword ideas.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordIdeaResult {
-    /// Text of the keyword idea.
-    /// As in Keyword Plan historical metrics, this text may not be an actual
-    /// keyword, but the canonical form of multiple keywords.
-    /// See KeywordPlanKeywordHistoricalMetrics message in KeywordPlanService.
-    #[prost(string, optional, tag="5")]
-    pub text: ::core::option::Option<::prost::alloc::string::String>,
-    /// The historical metrics for the keyword.
-    #[prost(message, optional, tag="3")]
-    pub keyword_idea_metrics: ::core::option::Option<super::common::KeywordPlanHistoricalMetrics>,
-    /// The annotations for the keyword.
-    /// The annotation data is only provided if requested.
-    #[prost(message, optional, tag="6")]
-    pub keyword_annotations: ::core::option::Option<super::common::KeywordAnnotations>,
-    /// The list of close variants from the requested keywords that
-    /// are combined into this GenerateKeywordIdeaResult. See
-    /// <https://support.google.com/google-ads/answer/9342105> for the
-    /// definition of "close variants".
-    #[prost(string, repeated, tag="7")]
-    pub close_variants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Request message for
-/// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordHistoricalMetricsRequest {
-    /// The ID of the customer with the recommendation.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// A list of keywords to get historical metrics.
-    /// Not all inputs will be returned as a result of near-exact deduplication.
-    /// For example, if stats for "car" and "cars" are requested, only "car" will
-    /// be returned.
-    /// A maximum of 10,000 keywords can be used.
-    #[prost(string, repeated, tag="2")]
-    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The resource name of the language to target.
-    /// Each keyword belongs to some set of languages; a keyword is included if
-    /// language is one of its languages.
-    /// If not set, all keywords will be included.
-    #[prost(string, optional, tag="4")]
-    pub language: ::core::option::Option<::prost::alloc::string::String>,
-    /// If true, adult keywords will be included in response.
-    /// The default value is false.
-    #[prost(bool, tag="5")]
-    pub include_adult_keywords: bool,
-    /// The resource names of the location to target. Maximum is 10.
-    /// An empty list MAY be used to specify all targeting geos.
-    #[prost(string, repeated, tag="6")]
-    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Targeting network.
-    /// If not set, Google Search And Partners Network will be used.
-    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="7")]
-    pub keyword_plan_network: i32,
-    /// The aggregate fields to include in response.
-    #[prost(message, optional, tag="8")]
-    pub aggregate_metrics: ::core::option::Option<super::common::KeywordPlanAggregateMetrics>,
-    /// The options for historical metrics data.
-    #[prost(message, optional, tag="3")]
-    pub historical_metrics_options: ::core::option::Option<super::common::HistoricalMetricsOptions>,
-}
-/// Response message for
-/// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordHistoricalMetricsResponse {
-    /// List of keywords and their historical metrics.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<GenerateKeywordHistoricalMetricsResult>,
-    /// The aggregate metrics for all keywords.
-    #[prost(message, optional, tag="2")]
-    pub aggregate_metric_results: ::core::option::Option<super::common::KeywordPlanAggregateMetricResults>,
-}
-/// The result of generating keyword historical metrics.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateKeywordHistoricalMetricsResult {
-    /// The text of the query associated with one or more keywords.
-    /// Note that we de-dupe your keywords list, eliminating close variants
-    /// before returning the keywords as text. For example, if your request
-    /// originally contained the keywords "car" and "cars", the returned search
-    /// query will only contain "cars". The list of de-duped queries will be
-    /// included in close_variants field.
-    #[prost(string, optional, tag="1")]
-    pub text: ::core::option::Option<::prost::alloc::string::String>,
-    /// The list of close variants from the requested keywords whose stats
-    /// are combined into this GenerateKeywordHistoricalMetricsResult.
-    #[prost(string, repeated, tag="3")]
-    pub close_variants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The historical metrics for text and its close variants
-    #[prost(message, optional, tag="2")]
-    pub keyword_metrics: ::core::option::Option<super::common::KeywordPlanHistoricalMetrics>,
-}
-/// Request message for
-/// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateAdGroupThemesRequest {
-    /// Required. The ID of the customer.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. A list of keywords to group into the provided AdGroups.
-    #[prost(string, repeated, tag="2")]
-    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. A list of resource names of AdGroups to group keywords into.
-    ///   Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
-    #[prost(string, repeated, tag="3")]
-    pub ad_groups: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Response message for
-/// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateAdGroupThemesResponse {
-    /// A list of suggested AdGroup/keyword pairings.
-    #[prost(message, repeated, tag="1")]
-    pub ad_group_keyword_suggestions: ::prost::alloc::vec::Vec<AdGroupKeywordSuggestion>,
-    /// A list of provided AdGroups that could not be used as suggestions.
-    #[prost(message, repeated, tag="2")]
-    pub unusable_ad_groups: ::prost::alloc::vec::Vec<UnusableAdGroup>,
-}
-/// The suggested text and AdGroup/Campaign pairing for a given keyword.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupKeywordSuggestion {
-    /// The original keyword text.
-    #[prost(string, tag="1")]
-    pub keyword_text: ::prost::alloc::string::String,
-    /// The normalized version of keyword_text for BROAD/EXACT/PHRASE suggestions.
-    #[prost(string, tag="2")]
-    pub suggested_keyword_text: ::prost::alloc::string::String,
-    /// The suggested keyword match type.
-    #[prost(enumeration="super::enums::keyword_match_type_enum::KeywordMatchType", tag="3")]
-    pub suggested_match_type: i32,
-    /// The suggested AdGroup for the keyword.
-    /// Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
-    #[prost(string, tag="4")]
-    pub suggested_ad_group: ::prost::alloc::string::String,
-    /// The suggested Campaign for the keyword.
-    /// Resource name format: `customers/{customer_id}/campaigns/{campaign_id}`
-    #[prost(string, tag="5")]
-    pub suggested_campaign: ::prost::alloc::string::String,
-}
-/// An AdGroup/Campaign pair that could not be used as a suggestion for keywords.
-///
-/// AdGroups may not be usable if the AdGroup
-/// * belongs to Campaign that is not ENABLED or PAUSED
-/// * is itself not ENABLED
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UnusableAdGroup {
-    /// The AdGroup resource name.
-    /// Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
-    #[prost(string, tag="1")]
-    pub ad_group: ::prost::alloc::string::String,
-    /// The Campaign resource name.
-    /// Resource name format: `customers/{customer_id}/campaigns/{campaign_id}`
-    #[prost(string, tag="2")]
-    pub campaign: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod keyword_plan_idea_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to generate keyword ideas.
-    #[derive(Debug, Clone)]
-    pub struct KeywordPlanIdeaServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> KeywordPlanIdeaServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> KeywordPlanIdeaServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            KeywordPlanIdeaServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns a list of keyword ideas.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [KeywordPlanIdeaError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn generate_keyword_ideas(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateKeywordIdeasRequest>,
-        ) -> Result<tonic::Response<super::GenerateKeywordIdeaResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateKeywordIdeas",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns a list of keyword historical metrics.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn generate_keyword_historical_metrics(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::GenerateKeywordHistoricalMetricsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::GenerateKeywordHistoricalMetricsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateKeywordHistoricalMetrics",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns a list of suggested AdGroups and suggested modifications
-        /// (text, match type) for the given keywords.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn generate_ad_group_themes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateAdGroupThemesRequest>,
-        ) -> Result<
-            tonic::Response<super::GenerateAdGroupThemesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateAdGroupThemes",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Request message for \[FeedItemSetLinkService.MutateFeedItemSetLinks][google.ads.googleads.v11.services.FeedItemSetLinkService.MutateFeedItemSetLinks\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetLinksRequest {
@@ -8005,322 +506,34 @@ pub mod feed_item_set_link_service_client {
         }
     }
 }
-/// Request message for fetching the invoices of a given billing setup that were
-/// issued during a given month.
+/// Request message for
+/// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListInvoicesRequest {
-    /// Required. The ID of the customer to fetch invoices for.
+pub struct CreateAccountLinkRequest {
+    /// Required. The ID of the customer for which the account link is created.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The billing setup resource name of the requested invoices.
-    ///
-    /// `customers/{customer_id}/billingSetups/{billing_setup_id}`
-    #[prost(string, tag="2")]
-    pub billing_setup: ::prost::alloc::string::String,
-    /// Required. The issue year to retrieve invoices, in yyyy format. Only
-    /// invoices issued in 2019 or later can be retrieved.
-    #[prost(string, tag="3")]
-    pub issue_year: ::prost::alloc::string::String,
-    /// Required. The issue month to retrieve invoices.
-    #[prost(enumeration="super::enums::month_of_year_enum::MonthOfYear", tag="4")]
-    pub issue_month: i32,
+    /// Required. The account link to be created.
+    #[prost(message, optional, tag="2")]
+    pub account_link: ::core::option::Option<super::resources::AccountLink>,
 }
-/// Response message for \[InvoiceService.ListInvoices][google.ads.googleads.v11.services.InvoiceService.ListInvoices\].
+/// Response message for
+/// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListInvoicesResponse {
-    /// The list of invoices that match the billing setup and time period.
-    #[prost(message, repeated, tag="1")]
-    pub invoices: ::prost::alloc::vec::Vec<super::resources::Invoice>,
-}
-/// Generated client implementations.
-pub mod invoice_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service to fetch invoices issued for a billing setup during a given month.
-    #[derive(Debug, Clone)]
-    pub struct InvoiceServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> InvoiceServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InvoiceServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            InvoiceServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns all invoices associated with a billing setup, for a given month.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [InvoiceError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_invoices(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListInvoicesRequest>,
-        ) -> Result<tonic::Response<super::ListInvoicesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.InvoiceService/ListInvoices",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AssetService.MutateAssets][google.ads.googleads.v11.services.AssetService.MutateAssets\]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetsRequest {
-    /// Required. The ID of the customer whose assets are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual assets.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AssetOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="5")]
-    pub partial_failure: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="3")]
-    pub response_content_type: i32,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation to create an asset. Supported asset types are
-/// YoutubeVideoAsset, MediaBundleAsset, ImageAsset, and LeadFormAsset. TextAsset
-/// should be created with Ad inline.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="asset_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<asset_operation::Operation>,
-}
-/// Nested message and enum types in `AssetOperation`.
-pub mod asset_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new asset.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::Asset),
-        /// Update operation: The asset is expected to have a valid resource name in
-        /// this format:
-        ///
-        /// `customers/{customer_id}/assets/{asset_id}`
-        #[prost(message, tag="2")]
-        Update(super::super::resources::Asset),
-    }
-}
-/// Response message for an asset mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetsResponse {
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateAssetResult>,
-}
-/// The result for the asset mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetResult {
-    /// The resource name returned for successful operations.
+pub struct CreateAccountLinkResponse {
+    /// Returned for successful operations. Resource name of the account link.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The mutated asset with only mutable fields after mutate. The field will
-    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub asset: ::core::option::Option<super::resources::Asset>,
 }
-/// Generated client implementations.
-pub mod asset_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage assets. Asset types can be created with AssetService are
-    /// YoutubeVideoAsset, MediaBundleAsset and ImageAsset. TextAsset should be
-    /// created with Ad inline.
-    #[derive(Debug, Clone)]
-    pub struct AssetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AssetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AssetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AssetServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates assets. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AssetError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CollectionSizeError]()
-        ///   [CurrencyCodeError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
-        ///   [DistinctError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [IdError]()
-        ///   [InternalError]()
-        ///   [ListOperationError]()
-        ///   [MediaUploadError]()
-        ///   [MutateError]()
-        ///   [NotAllowlistedError]()
-        ///   [NotEmptyError]()
-        ///   [OperatorError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [RequestError]()
-        ///   [SizeLimitError]()
-        ///   [StringFormatError]()
-        ///   [StringLengthError]()
-        ///   [UrlFieldError]()
-        ///   [YoutubeVideoRegistrationError]()
-        pub async fn mutate_assets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAssetsRequest>,
-        ) -> Result<tonic::Response<super::MutateAssetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AssetService/MutateAssets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[AdGroupCustomizerService.MutateAdGroupCustomizers][google.ads.googleads.v11.services.AdGroupCustomizerService.MutateAdGroupCustomizers\].
+/// Request message for \[AccountLinkService.MutateAccountLink][google.ads.googleads.v11.services.AccountLinkService.MutateAccountLink\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupCustomizersRequest {
-    /// Required. The ID of the customer whose ad group customizers are being modified.
+pub struct MutateAccountLinkRequest {
+    /// Required. The ID of the customer being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual ad group customizers.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AdGroupCustomizerOperation>,
+    /// Required. The operation to perform on the link.
+    #[prost(message, optional, tag="2")]
+    pub operation: ::core::option::Option<AccountLinkOperation>,
     /// If true, successful operations will be carried out and invalid
     /// operations will return errors. If false, all operations will be carried
     /// out in one transaction if and only if they are all valid.
@@ -8331,195 +544,40 @@ pub struct MutateAdGroupCustomizersRequest {
     /// returned, not results.
     #[prost(bool, tag="4")]
     pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
 }
-/// A single operation (create, remove) on an customizer attribute.
+/// A single update on an account link.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupCustomizerOperation {
-    /// The mutate operation.
-    #[prost(oneof="ad_group_customizer_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<ad_group_customizer_operation::Operation>,
-}
-/// Nested message and enum types in `AdGroupCustomizerOperation`.
-pub mod ad_group_customizer_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new ad group
-        /// customizer
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AdGroupCustomizer),
-        /// Remove operation: A resource name for the removed ad group customizer is
-        /// expected, in this format:
-        /// `customers/{customer_id}/adGroupCustomizers/{ad_group_id}~{customizer_attribute_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for an ad group customizer mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupCustomizersResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateAdGroupCustomizerResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-}
-/// The result for the ad group customizer mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAdGroupCustomizerResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The mutated AdGroupCustomizer with only mutable fields after mutate.
-    /// The field will only be returned when response_content_type is set to
-    /// "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub ad_group_customizer: ::core::option::Option<super::resources::AdGroupCustomizer>,
-}
-/// Generated client implementations.
-pub mod ad_group_customizer_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage ad group customizer
-    #[derive(Debug, Clone)]
-    pub struct AdGroupCustomizerServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AdGroupCustomizerServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AdGroupCustomizerServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AdGroupCustomizerServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates, updates or removes ad group customizers. Operation statuses are
-        /// returned.
-        pub async fn mutate_ad_group_customizers(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateAdGroupCustomizersRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateAdGroupCustomizersResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AdGroupCustomizerService/MutateAdGroupCustomizers",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[AssetGroupService.MutateAssetGroups][google.ads.googleads.v11.services.AssetGroupService.MutateAssetGroups\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupsRequest {
-    /// Required. The ID of the customer whose asset groups are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual asset groups.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<AssetGroupOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// A single operation (create, remove) on an asset group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetGroupOperation {
+pub struct AccountLinkOperation {
     /// FieldMask that determines which resource fields are modified in an update.
     #[prost(message, optional, tag="4")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="asset_group_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<asset_group_operation::Operation>,
+    /// The operation to perform.
+    #[prost(oneof="account_link_operation::Operation", tags="2, 3")]
+    pub operation: ::core::option::Option<account_link_operation::Operation>,
 }
-/// Nested message and enum types in `AssetGroupOperation`.
-pub mod asset_group_operation {
-    /// The mutate operation.
+/// Nested message and enum types in `AccountLinkOperation`.
+pub mod account_link_operation {
+    /// The operation to perform.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Create operation: No resource name is expected for the new asset group
-        #[prost(message, tag="1")]
-        Create(super::super::resources::AssetGroup),
-        /// Update operation: The asset group is expected to have a valid resource
-        /// name.
+        /// Update operation: The account link is expected to have
+        /// a valid resource name.
         #[prost(message, tag="2")]
-        Update(super::super::resources::AssetGroup),
-        /// Remove operation: A resource name for the removed asset group is
+        Update(super::super::resources::AccountLink),
+        /// Remove operation: A resource name for the account link to remove is
         /// expected, in this format:
-        /// `customers/{customer_id}/assetGroups/{asset_group_id}`
+        ///
+        /// `customers/{customer_id}/accountLinks/{account_link_id}`
         #[prost(string, tag="3")]
         Remove(::prost::alloc::string::String),
     }
 }
-/// Response message for an asset group mutate.
+/// Response message for account link mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateAssetGroupResult>,
+pub struct MutateAccountLinkResponse {
+    /// Result for the mutate.
+    #[prost(message, optional, tag="1")]
+    pub result: ::core::option::Option<MutateAccountLinkResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
     /// operations. If any errors occur outside the operations (for example, auth
@@ -8527,24 +585,25 @@ pub struct MutateAssetGroupsResponse {
     #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
 }
-/// The result for the asset group mutate.
+/// The result for the account link mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAssetGroupResult {
+pub struct MutateAccountLinkResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
-pub mod asset_group_service_client {
+pub mod account_link_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage asset group
+    /// This service allows management of links between Google Ads accounts and other
+    /// accounts.
     #[derive(Debug, Clone)]
-    pub struct AssetGroupServiceClient<T> {
+    pub struct AccountLinkServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> AssetGroupServiceClient<T>
+    impl<T> AccountLinkServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -8562,7 +621,7 @@ pub mod asset_group_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> AssetGroupServiceClient<InterceptedService<T, F>>
+        ) -> AccountLinkServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -8576,7 +635,7 @@ pub mod asset_group_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            AssetGroupServiceClient::new(InterceptedService::new(inner, interceptor))
+            AccountLinkServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -8593,12 +652,23 @@ pub mod asset_group_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates, updates or removes asset groups. Operation statuses are
-        /// returned.
-        pub async fn mutate_asset_groups(
+        /// Creates an account link.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [ThirdPartyAppAnalyticsLinkError]()
+        pub async fn create_account_link(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateAssetGroupsRequest>,
-        ) -> Result<tonic::Response<super::MutateAssetGroupsResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::CreateAccountLinkRequest>,
+        ) -> Result<tonic::Response<super::CreateAccountLinkResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8610,7 +680,41 @@ pub mod asset_group_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AssetGroupService/MutateAssetGroups",
+                "/google.ads.googleads.v11.services.AccountLinkService/CreateAccountLink",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates or removes an account link.
+        /// From V5, create is not supported through
+        /// AccountLinkService.MutateAccountLink. Use
+        /// AccountLinkService.CreateAccountLink instead.
+        ///
+        /// List of thrown errors:
+        ///   [AccountLinkError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_account_link(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAccountLinkRequest>,
+        ) -> Result<tonic::Response<super::MutateAccountLinkResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AccountLinkService/MutateAccountLink",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8889,6 +993,800 @@ pub mod offline_user_data_job_service_client {
         }
     }
 }
+/// Request message for \[CampaignDraftService.MutateCampaignDrafts][google.ads.googleads.v11.services.CampaignDraftService.MutateCampaignDrafts\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignDraftsRequest {
+    /// Required. The ID of the customer whose campaign drafts are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual campaign drafts.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignDraftOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// Request message for \[CampaignDraftService.PromoteCampaignDraft][google.ads.googleads.v11.services.CampaignDraftService.PromoteCampaignDraft\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PromoteCampaignDraftRequest {
+    /// Required. The resource name of the campaign draft to promote.
+    #[prost(string, tag="1")]
+    pub campaign_draft: ::prost::alloc::string::String,
+    /// If true, the request is validated but no Long Running Operation is created.
+    /// Only errors are returned.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// A single operation (create, update, remove) on a campaign draft.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignDraftOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="campaign_draft_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<campaign_draft_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignDraftOperation`.
+pub mod campaign_draft_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new campaign
+        /// draft.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignDraft),
+        /// Update operation: The campaign draft is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CampaignDraft),
+        /// Remove operation: The campaign draft is expected to have a valid
+        /// resource name, in this format:
+        ///
+        /// `customers/{customer_id}/campaignDrafts/{base_campaign_id}~{draft_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for campaign draft mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignDraftsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignDraftResult>,
+}
+/// The result for the campaign draft mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignDraftResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated campaign draft with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub campaign_draft: ::core::option::Option<super::resources::CampaignDraft>,
+}
+/// Request message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCampaignDraftAsyncErrorsRequest {
+    /// Required. The name of the campaign draft from which to retrieve the async errors.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Token of the page to retrieve. If not specified, the first
+    /// page of results will be returned. Use the value obtained from
+    /// `next_page_token` in the previous response in order to request
+    /// the next page of results.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Number of elements to retrieve in a single page.
+    /// When a page request is too large, the server may decide to
+    /// further limit the number of returned resources.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+}
+/// Response message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCampaignDraftAsyncErrorsResponse {
+    /// Details of the errors when performing the asynchronous operation.
+    #[prost(message, repeated, tag="1")]
+    pub errors: ::prost::alloc::vec::Vec<super::super::super::super::rpc::Status>,
+    /// Pagination token used to retrieve the next page of results.
+    /// Pass the content of this string as the `page_token` attribute of
+    /// the next request. `next_page_token` is not returned for the last
+    /// page.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod campaign_draft_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage campaign drafts.
+    #[derive(Debug, Clone)]
+    pub struct CampaignDraftServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignDraftServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignDraftServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignDraftServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes campaign drafts. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignDraftError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_campaign_drafts(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignDraftsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignDraftsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignDraftService/MutateCampaignDrafts",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Promotes the changes in a draft back to the base campaign.
+        ///
+        /// This method returns a Long Running Operation (LRO) indicating if the
+        /// Promote is done. Use [Operations.GetOperation] to poll the LRO until it
+        /// is done. Only a done status is returned in the response. See the status
+        /// in the Campaign Draft resource to determine if the promotion was
+        /// successful. If the LRO failed, use
+        /// [CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors] to view the list of
+        /// error reasons.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignDraftError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn promote_campaign_draft(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PromoteCampaignDraftRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignDraftService/PromoteCampaignDraft",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns all errors that occurred during CampaignDraft promote. Throws an
+        /// error if called before campaign draft is promoted.
+        /// Supports standard list paging.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_campaign_draft_async_errors(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListCampaignDraftAsyncErrorsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListCampaignDraftAsyncErrorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignDraftService/ListCampaignDraftAsyncErrors",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CustomerClientLinkService.MutateCustomerClientLink][google.ads.googleads.v11.services.CustomerClientLinkService.MutateCustomerClientLink\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerClientLinkRequest {
+    /// Required. The ID of the customer whose customer link are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The operation to perform on the individual CustomerClientLink.
+    #[prost(message, optional, tag="2")]
+    pub operation: ::core::option::Option<CustomerClientLinkOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// A single operation (create, update) on a CustomerClientLink.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerClientLinkOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="customer_client_link_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<customer_client_link_operation::Operation>,
+}
+/// Nested message and enum types in `CustomerClientLinkOperation`.
+pub mod customer_client_link_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new link.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomerClientLink),
+        /// Update operation: The link is expected to have a valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CustomerClientLink),
+    }
+}
+/// Response message for a CustomerClientLink mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerClientLinkResponse {
+    /// A result that identifies the resource affected by the mutate request.
+    #[prost(message, optional, tag="1")]
+    pub result: ::core::option::Option<MutateCustomerClientLinkResult>,
+}
+/// The result for a single customer client link mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerClientLinkResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod customer_client_link_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage customer client links.
+    #[derive(Debug, Clone)]
+    pub struct CustomerClientLinkServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerClientLinkServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerClientLinkServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerClientLinkServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or updates a customer client link. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [ManagerLinkError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_customer_client_link(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomerClientLinkRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomerClientLinkResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerClientLinkService/MutateCustomerClientLink",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CampaignAssetService.MutateCampaignAssets][google.ads.googleads.v11.services.CampaignAssetService.MutateCampaignAssets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignAssetsRequest {
+    /// Required. The ID of the customer whose campaign assets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual campaign assets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignAssetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a campaign asset.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignAssetOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="campaign_asset_operation::Operation", tags="1, 3, 2")]
+    pub operation: ::core::option::Option<campaign_asset_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignAssetOperation`.
+pub mod campaign_asset_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new campaign
+        /// asset.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignAsset),
+        /// Update operation: The campaign asset is expected to have a valid resource
+        /// name.
+        #[prost(message, tag="3")]
+        Update(super::super::resources::CampaignAsset),
+        /// Remove operation: A resource name for the removed campaign asset is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/campaignAssets/{campaign_id}~{asset_id}~{field_type}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a campaign asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignAssetsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetResult>,
+}
+/// The result for the campaign asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignAssetResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated campaign asset with only mutable fields after
+    /// mutate. The field will only be returned when response_content_type is set
+    /// to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub campaign_asset: ::core::option::Option<super::resources::CampaignAsset>,
+}
+/// Generated client implementations.
+pub mod campaign_asset_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage campaign assets.
+    #[derive(Debug, Clone)]
+    pub struct CampaignAssetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignAssetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignAssetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignAssetServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes campaign assets. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AssetLinkError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ContextError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NotAllowlistedError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_campaign_assets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignAssetsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignAssetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignAssetService/MutateCampaignAssets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[CustomerNegativeCriterionService.MutateCustomerNegativeCriteria][google.ads.googleads.v11.services.CustomerNegativeCriterionService.MutateCustomerNegativeCriteria\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerNegativeCriteriaRequest {
+    /// Required. The ID of the customer whose criteria are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual criteria.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomerNegativeCriterionOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create or remove) on a customer level negative criterion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerNegativeCriterionOperation {
+    /// The mutate operation.
+    #[prost(oneof="customer_negative_criterion_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<customer_negative_criterion_operation::Operation>,
+}
+/// Nested message and enum types in `CustomerNegativeCriterionOperation`.
+pub mod customer_negative_criterion_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new criterion.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomerNegativeCriterion),
+        /// Remove operation: A resource name for the removed criterion is expected,
+        /// in this format:
+        ///
+        /// `customers/{customer_id}/customerNegativeCriteria/{criterion_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for customer negative criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerNegativeCriteriaResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomerNegativeCriteriaResult>,
+}
+/// The result for the criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerNegativeCriteriaResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated criterion with only mutable fields after mutate. The field will
+    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub customer_negative_criterion: ::core::option::Option<super::resources::CustomerNegativeCriterion>,
+}
+/// Generated client implementations.
+pub mod customer_negative_criterion_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage customer negative criteria.
+    #[derive(Debug, Clone)]
+    pub struct CustomerNegativeCriterionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerNegativeCriterionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerNegativeCriterionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerNegativeCriterionServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes criteria. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CriterionError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_customer_negative_criteria(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::MutateCustomerNegativeCriteriaRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::MutateCustomerNegativeCriteriaResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerNegativeCriterionService/MutateCustomerNegativeCriteria",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for \[AdGroupAdService.MutateAdGroupAds][google.ads.googleads.v11.services.AdGroupAdService.MutateAdGroupAds\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdsRequest {
@@ -9091,6 +1989,1664 @@ pub mod ad_group_ad_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.AdGroupAdService/MutateAdGroupAds",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AssetService.MutateAssets][google.ads.googleads.v11.services.AssetService.MutateAssets\]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetsRequest {
+    /// Required. The ID of the customer whose assets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual assets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AssetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="5")]
+    pub partial_failure: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="3")]
+    pub response_content_type: i32,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation to create an asset. Supported asset types are
+/// YoutubeVideoAsset, MediaBundleAsset, ImageAsset, and LeadFormAsset. TextAsset
+/// should be created with Ad inline.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="asset_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<asset_operation::Operation>,
+}
+/// Nested message and enum types in `AssetOperation`.
+pub mod asset_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new asset.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::Asset),
+        /// Update operation: The asset is expected to have a valid resource name in
+        /// this format:
+        ///
+        /// `customers/{customer_id}/assets/{asset_id}`
+        #[prost(message, tag="2")]
+        Update(super::super::resources::Asset),
+    }
+}
+/// Response message for an asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateAssetResult>,
+}
+/// The result for the asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetResult {
+    /// The resource name returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated asset with only mutable fields after mutate. The field will
+    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub asset: ::core::option::Option<super::resources::Asset>,
+}
+/// Generated client implementations.
+pub mod asset_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage assets. Asset types can be created with AssetService are
+    /// YoutubeVideoAsset, MediaBundleAsset and ImageAsset. TextAsset should be
+    /// created with Ad inline.
+    #[derive(Debug, Clone)]
+    pub struct AssetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AssetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AssetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AssetServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates assets. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AssetError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [CurrencyCodeError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [ListOperationError]()
+        ///   [MediaUploadError]()
+        ///   [MutateError]()
+        ///   [NotAllowlistedError]()
+        ///   [NotEmptyError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        ///   [UrlFieldError]()
+        ///   [YoutubeVideoRegistrationError]()
+        pub async fn mutate_assets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAssetsRequest>,
+        ) -> Result<tonic::Response<super::MutateAssetsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AssetService/MutateAssets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[SharedCriterionService.MutateSharedCriteria][google.ads.googleads.v11.services.SharedCriterionService.MutateSharedCriteria\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedCriteriaRequest {
+    /// Required. The ID of the customer whose shared criteria are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual shared criteria.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<SharedCriterionOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on an shared criterion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SharedCriterionOperation {
+    /// The mutate operation.
+    #[prost(oneof="shared_criterion_operation::Operation", tags="1, 3")]
+    pub operation: ::core::option::Option<shared_criterion_operation::Operation>,
+}
+/// Nested message and enum types in `SharedCriterionOperation`.
+pub mod shared_criterion_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new shared
+        /// criterion.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::SharedCriterion),
+        /// Remove operation: A resource name for the removed shared criterion is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/sharedCriteria/{shared_set_id}~{criterion_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a shared criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedCriteriaResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateSharedCriterionResult>,
+}
+/// The result for the shared criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedCriterionResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated shared criterion with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub shared_criterion: ::core::option::Option<super::resources::SharedCriterion>,
+}
+/// Generated client implementations.
+pub mod shared_criterion_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage shared criteria.
+    #[derive(Debug, Clone)]
+    pub struct SharedCriterionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SharedCriterionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SharedCriterionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SharedCriterionServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes shared criteria. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CriterionError]()
+        ///   [DatabaseError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_shared_criteria(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateSharedCriteriaRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateSharedCriteriaResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.SharedCriterionService/MutateSharedCriteria",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[SharedSetService.MutateSharedSets][google.ads.googleads.v11.services.SharedSetService.MutateSharedSets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedSetsRequest {
+    /// Required. The ID of the customer whose shared sets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual shared sets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<SharedSetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on an shared set.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SharedSetOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="shared_set_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<shared_set_operation::Operation>,
+}
+/// Nested message and enum types in `SharedSetOperation`.
+pub mod shared_set_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new shared set.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::SharedSet),
+        /// Update operation: The shared set is expected to have a valid resource
+        /// name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::SharedSet),
+        /// Remove operation: A resource name for the removed shared set is expected,
+        /// in this format:
+        ///
+        /// `customers/{customer_id}/sharedSets/{shared_set_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a shared set mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedSetsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateSharedSetResult>,
+}
+/// The result for the shared set mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateSharedSetResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated shared set with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub shared_set: ::core::option::Option<super::resources::SharedSet>,
+}
+/// Generated client implementations.
+pub mod shared_set_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage shared sets.
+    #[derive(Debug, Clone)]
+    pub struct SharedSetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SharedSetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SharedSetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SharedSetServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes shared sets. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        ///   [SharedSetError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_shared_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateSharedSetsRequest>,
+        ) -> Result<tonic::Response<super::MutateSharedSetsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.SharedSetService/MutateSharedSets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPlannableLocationsRequest {
+}
+/// The list of plannable locations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPlannableLocationsResponse {
+    /// The list of locations available for planning.
+    /// See
+    /// <https://developers.google.com/google-ads/api/reference/data/geotargets>
+    /// for sample locations.
+    #[prost(message, repeated, tag="1")]
+    pub plannable_locations: ::prost::alloc::vec::Vec<PlannableLocation>,
+}
+/// A plannable location: country, metro region, province, etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlannableLocation {
+    /// The location identifier.
+    #[prost(string, optional, tag="4")]
+    pub id: ::core::option::Option<::prost::alloc::string::String>,
+    /// The unique location name in English.
+    #[prost(string, optional, tag="5")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// The parent country (not present if location is a country).
+    /// If present, will always be a GeoTargetConstant ID. Additional information
+    /// such as country name is provided by
+    /// \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\] or
+    /// \[GoogleAdsService.Search/SearchStream][\].
+    #[prost(int64, optional, tag="6")]
+    pub parent_country_id: ::core::option::Option<i64>,
+    /// The ISO-3166-1 alpha-2 country code that is associated with the location.
+    #[prost(string, optional, tag="7")]
+    pub country_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// The location's type. Location types correspond to target_type returned by
+    /// searching location type in \[GoogleAdsService.Search/SearchStream][\].
+    #[prost(string, optional, tag="8")]
+    pub location_type: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Request to list available products in a given location.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPlannableProductsRequest {
+    /// Required. The ID of the selected location for planning. To list the available
+    /// plannable location IDs use \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+    #[prost(string, tag="2")]
+    pub plannable_location_id: ::prost::alloc::string::String,
+}
+/// A response with all available products.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPlannableProductsResponse {
+    /// The list of products available for planning and related targeting metadata.
+    #[prost(message, repeated, tag="1")]
+    pub product_metadata: ::prost::alloc::vec::Vec<ProductMetadata>,
+}
+/// The metadata associated with an available plannable product.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductMetadata {
+    /// The code associated with the ad product (for example: BUMPER,
+    /// TRUEVIEW_IN_STREAM).
+    /// To list the available plannable product codes use
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(string, optional, tag="4")]
+    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// The name associated with the ad product.
+    #[prost(string, tag="3")]
+    pub plannable_product_name: ::prost::alloc::string::String,
+    /// The allowed plannable targeting for this product.
+    #[prost(message, optional, tag="2")]
+    pub plannable_targeting: ::core::option::Option<PlannableTargeting>,
+}
+/// The targeting for which traffic metrics will be reported.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlannableTargeting {
+    /// Allowed plannable age ranges for the product for which metrics will be
+    /// reported. Actual targeting is computed by mapping this age range onto
+    /// standard Google common.AgeRangeInfo values.
+    #[prost(enumeration="super::enums::reach_plan_age_range_enum::ReachPlanAgeRange", repeated, tag="1")]
+    pub age_ranges: ::prost::alloc::vec::Vec<i32>,
+    /// Targetable genders for the ad product.
+    #[prost(message, repeated, tag="2")]
+    pub genders: ::prost::alloc::vec::Vec<super::common::GenderInfo>,
+    /// Targetable devices for the ad product.
+    /// TABLET device targeting is automatically applied to reported metrics
+    /// when MOBILE targeting is selected for CPM_MASTHEAD,
+    /// GOOGLE_PREFERRED_BUMPER, and GOOGLE_PREFERRED_SHORT products.
+    #[prost(message, repeated, tag="3")]
+    pub devices: ::prost::alloc::vec::Vec<super::common::DeviceInfo>,
+    /// Targetable networks for the ad product.
+    #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", repeated, tag="4")]
+    pub networks: ::prost::alloc::vec::Vec<i32>,
+    /// Targetable YouTube Select Lineups for the ad product.
+    #[prost(message, repeated, tag="5")]
+    pub youtube_select_lineups: ::prost::alloc::vec::Vec<YouTubeSelectLineUp>,
+}
+/// Request message for \[ReachPlanService.GenerateProductMixIdeas][google.ads.googleads.v11.services.ReachPlanService.GenerateProductMixIdeas\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateProductMixIdeasRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The ID of the location, this is one of the IDs returned by
+    /// \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+    #[prost(string, tag="6")]
+    pub plannable_location_id: ::prost::alloc::string::String,
+    /// Required. Currency code.
+    /// Three-character ISO 4217 currency code.
+    #[prost(string, tag="7")]
+    pub currency_code: ::prost::alloc::string::String,
+    /// Required. Total budget.
+    /// Amount in micros. One million is equivalent to one unit.
+    #[prost(int64, tag="8")]
+    pub budget_micros: i64,
+    /// The preferences of the suggested product mix.
+    /// An unset preference is interpreted as all possible values are allowed,
+    /// unless explicitly specified.
+    #[prost(message, optional, tag="5")]
+    pub preferences: ::core::option::Option<Preferences>,
+}
+/// Set of preferences about the planned mix.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Preferences {
+    /// True if ad skippable.
+    /// If not set, default is any value.
+    #[prost(bool, optional, tag="6")]
+    pub is_skippable: ::core::option::Option<bool>,
+    /// True if ad start with sound.
+    /// If not set, default is any value.
+    #[prost(bool, optional, tag="7")]
+    pub starts_with_sound: ::core::option::Option<bool>,
+    /// The length of the ad.
+    /// If not set, default is any value.
+    #[prost(enumeration="super::enums::reach_plan_ad_length_enum::ReachPlanAdLength", tag="3")]
+    pub ad_length: i32,
+    /// True if ad will only show on the top content.
+    /// If not set, default is false.
+    #[prost(bool, optional, tag="8")]
+    pub top_content_only: ::core::option::Option<bool>,
+    /// True if the price is guaranteed. The cost of serving the ad is agreed
+    /// upfront and not subject to an auction.
+    /// If not set, default is any value.
+    #[prost(bool, optional, tag="9")]
+    pub has_guaranteed_price: ::core::option::Option<bool>,
+}
+/// The suggested product mix.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateProductMixIdeasResponse {
+    /// A list of products (ad formats) and the associated budget allocation idea.
+    #[prost(message, repeated, tag="1")]
+    pub product_allocation: ::prost::alloc::vec::Vec<ProductAllocation>,
+}
+/// An allocation of a part of the budget on a given product.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductAllocation {
+    /// Selected product for planning. The product codes returned are within the
+    /// set of the ones returned by ListPlannableProducts when using the same
+    /// location ID.
+    #[prost(string, optional, tag="3")]
+    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// The value to be allocated for the suggested product in requested currency.
+    /// Amount in micros. One million is equivalent to one unit.
+    #[prost(int64, optional, tag="4")]
+    pub budget_micros: ::core::option::Option<i64>,
+}
+/// Request message for \[ReachPlanService.GenerateReachForecast][google.ads.googleads.v11.services.ReachPlanService.GenerateReachForecast\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateReachForecastRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// The currency code.
+    /// Three-character ISO 4217 currency code.
+    #[prost(string, optional, tag="9")]
+    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// Required. Campaign duration.
+    #[prost(message, optional, tag="3")]
+    pub campaign_duration: ::core::option::Option<CampaignDuration>,
+    /// Chosen cookie frequency cap to be applied to each planned product.
+    /// This is equivalent to the frequency cap exposed in Google Ads when creating
+    /// a campaign, it represents the maximum number of times an ad can be shown to
+    /// the same user.
+    /// If not specified, no cap is applied.
+    ///
+    /// This field is deprecated in v4 and will eventually be removed.
+    /// Use cookie_frequency_cap_setting instead.
+    #[prost(int32, optional, tag="10")]
+    pub cookie_frequency_cap: ::core::option::Option<i32>,
+    /// Chosen cookie frequency cap to be applied to each planned product.
+    /// This is equivalent to the frequency cap exposed in Google Ads when creating
+    /// a campaign, it represents the maximum number of times an ad can be shown to
+    /// the same user during a specified time interval.
+    /// If not specified, a default of 0 (no cap) is applied.
+    ///
+    /// This field replaces the deprecated cookie_frequency_cap field.
+    #[prost(message, optional, tag="8")]
+    pub cookie_frequency_cap_setting: ::core::option::Option<FrequencyCap>,
+    /// Chosen minimum effective frequency (the number of times a person was
+    /// exposed to the ad) for the reported reach metrics \[1-10\].
+    /// This won't affect the targeting, but just the reporting.
+    /// If not specified, a default of 1 is applied.
+    ///
+    /// This field cannot be combined with the effective_frequency_limit field.
+    #[prost(int32, optional, tag="11")]
+    pub min_effective_frequency: ::core::option::Option<i32>,
+    /// The highest minimum effective frequency (the number of times a person was
+    /// exposed to the ad) value \[1-10\] to include in
+    /// Forecast.effective_frequency_breakdowns.
+    /// If not specified, Forecast.effective_frequency_breakdowns will not be
+    /// provided.
+    ///
+    /// The effective frequency value provided here will also be used as the
+    /// minimum effective frequency for the reported reach metrics.
+    ///
+    /// This field cannot be combined with the min_effective_frequency field.
+    #[prost(message, optional, tag="12")]
+    pub effective_frequency_limit: ::core::option::Option<EffectiveFrequencyLimit>,
+    /// The targeting to be applied to all products selected in the product mix.
+    ///
+    /// This is planned targeting: execution details might vary based on the
+    /// advertising product, consult an implementation specialist.
+    ///
+    /// See specific metrics for details on how targeting affects them.
+    #[prost(message, optional, tag="6")]
+    pub targeting: ::core::option::Option<Targeting>,
+    /// Required. The products to be forecast.
+    /// The max number of allowed planned products is 15.
+    #[prost(message, repeated, tag="7")]
+    pub planned_products: ::prost::alloc::vec::Vec<PlannedProduct>,
+    /// Controls the forecast metrics returned in the response.
+    #[prost(message, optional, tag="13")]
+    pub forecast_metric_options: ::core::option::Option<ForecastMetricOptions>,
+    /// The name of the customer being planned for. This is a user-defined value.
+    /// Required if targeting.audience_targeting is set.
+    #[prost(string, optional, tag="14")]
+    pub customer_reach_group: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Effective frequency limit.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EffectiveFrequencyLimit {
+    /// The highest effective frequency value to include in
+    /// Forecast.effective_frequency_breakdowns.
+    /// This field supports frequencies 1-10, inclusive.
+    #[prost(int32, tag="1")]
+    pub effective_frequency_breakdown_limit: i32,
+}
+/// A rule specifying the maximum number of times an ad can be shown to a user
+/// over a particular time period.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FrequencyCap {
+    /// Required. The number of impressions, inclusive.
+    #[prost(int32, tag="3")]
+    pub impressions: i32,
+    /// Required. The type of time unit.
+    #[prost(enumeration="super::enums::frequency_cap_time_unit_enum::FrequencyCapTimeUnit", tag="2")]
+    pub time_unit: i32,
+}
+/// The targeting for which traffic metrics will be reported.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Targeting {
+    /// Required. The ID of the selected location. Plannable location IDs can be
+    /// obtained from \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+    #[prost(string, optional, tag="6")]
+    pub plannable_location_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Targeted age range.
+    /// An unset value is equivalent to targeting all ages.
+    #[prost(enumeration="super::enums::reach_plan_age_range_enum::ReachPlanAgeRange", tag="2")]
+    pub age_range: i32,
+    /// Targeted genders.
+    /// An unset value is equivalent to targeting MALE and FEMALE.
+    #[prost(message, repeated, tag="3")]
+    pub genders: ::prost::alloc::vec::Vec<super::common::GenderInfo>,
+    /// Targeted devices.
+    /// If not specified, targets all applicable devices. Applicable devices vary
+    /// by product and region and can be obtained from
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(message, repeated, tag="4")]
+    pub devices: ::prost::alloc::vec::Vec<super::common::DeviceInfo>,
+    /// Targetable network for the ad product.
+    /// If not specified, targets all applicable networks. Applicable networks vary
+    /// by product and region and can be obtained from
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", tag="5")]
+    pub network: i32,
+    /// Targeted audiences.
+    /// If not specified, does not target any specific audience.
+    #[prost(message, optional, tag="7")]
+    pub audience_targeting: ::core::option::Option<AudienceTargeting>,
+}
+/// The duration of a planned campaign.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignDuration {
+    /// The duration value in days.
+    ///
+    /// This field cannot be combined with the date_range field.
+    #[prost(int32, optional, tag="2")]
+    pub duration_in_days: ::core::option::Option<i32>,
+    /// Date range of the campaign.
+    /// Dates are in the yyyy-mm-dd format and inclusive.
+    /// The end date must be < 1 year in the future and the
+    /// date range must be <= 92 days long.
+    ///
+    /// This field cannot be combined with the duration_in_days field.
+    #[prost(message, optional, tag="3")]
+    pub date_range: ::core::option::Option<super::common::DateRange>,
+}
+/// A product being planned for reach.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlannedProduct {
+    /// Required. Selected product for planning.
+    /// The code associated with the ad product (for example: Trueview, Bumper).
+    /// To list the available plannable product codes use
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(string, optional, tag="3")]
+    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// Required. Maximum budget allocation in micros for the selected product.
+    /// The value is specified in the selected planning currency_code.
+    /// For example: 1 000 000$ = 1 000 000 000 000 micros.
+    #[prost(int64, optional, tag="4")]
+    pub budget_micros: ::core::option::Option<i64>,
+    /// Targeting settings for the selected product.
+    /// To list the available targeting for each product use
+    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
+    #[prost(message, optional, tag="5")]
+    pub advanced_product_targeting: ::core::option::Option<AdvancedProductTargeting>,
+}
+/// Response message containing the generated reach curve.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateReachForecastResponse {
+    /// Reference on target audiences for this curve.
+    #[prost(message, optional, tag="1")]
+    pub on_target_audience_metrics: ::core::option::Option<OnTargetAudienceMetrics>,
+    /// The generated reach curve for the planned product mix.
+    #[prost(message, optional, tag="2")]
+    pub reach_curve: ::core::option::Option<ReachCurve>,
+}
+/// The reach curve for the planned products.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReachCurve {
+    /// All points on the reach curve.
+    #[prost(message, repeated, tag="1")]
+    pub reach_forecasts: ::prost::alloc::vec::Vec<ReachForecast>,
+}
+/// A point on reach curve.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReachForecast {
+    /// The cost in micros.
+    #[prost(int64, tag="5")]
+    pub cost_micros: i64,
+    /// Forecasted traffic metrics for this point.
+    #[prost(message, optional, tag="2")]
+    pub forecast: ::core::option::Option<Forecast>,
+    /// The forecasted allocation and traffic metrics for each planned product
+    /// at this point on the reach curve.
+    #[prost(message, repeated, tag="4")]
+    pub planned_product_reach_forecasts: ::prost::alloc::vec::Vec<PlannedProductReachForecast>,
+}
+/// Forecasted traffic metrics for the planned products and targeting.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Forecast {
+    /// Number of unique people reached at least
+    /// GenerateReachForecastRequest.min_effective_frequency or
+    /// GenerateReachForecastRequest.effective_frequency_limit times that exactly
+    /// matches the Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the on_target_reach
+    /// value will be rounded to 0.
+    #[prost(int64, optional, tag="5")]
+    pub on_target_reach: ::core::option::Option<i64>,
+    /// Total number of unique people reached at least
+    /// GenerateReachForecastRequest.min_effective_frequency or
+    /// GenerateReachForecastRequest.effective_frequency_limit times. This includes
+    /// people that may fall outside the specified Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the total_reach
+    /// value will be rounded to 0.
+    #[prost(int64, optional, tag="6")]
+    pub total_reach: ::core::option::Option<i64>,
+    /// Number of ad impressions that exactly matches the Targeting.
+    #[prost(int64, optional, tag="7")]
+    pub on_target_impressions: ::core::option::Option<i64>,
+    /// Total number of ad impressions. This includes impressions that may fall
+    /// outside the specified Targeting, due to insufficient information on
+    /// signed-in users.
+    #[prost(int64, optional, tag="8")]
+    pub total_impressions: ::core::option::Option<i64>,
+    /// Number of times the ad's impressions were considered viewable.
+    /// See <https://support.google.com/google-ads/answer/7029393> for
+    /// more information about what makes an ad viewable and how
+    /// viewability is measured.
+    #[prost(int64, optional, tag="9")]
+    pub viewable_impressions: ::core::option::Option<i64>,
+    /// A list of effective frequency forecasts. The list is ordered starting with
+    /// 1+ and ending with the value set in
+    /// GenerateReachForecastRequest.effective_frequency_limit. If no
+    /// effective_frequency_limit was set, this list will be empty.
+    #[prost(message, repeated, tag="10")]
+    pub effective_frequency_breakdowns: ::prost::alloc::vec::Vec<EffectiveFrequencyBreakdown>,
+    /// Number of unique people reached that exactly matches the Targeting
+    /// including co-viewers.
+    #[prost(int64, optional, tag="11")]
+    pub on_target_coview_reach: ::core::option::Option<i64>,
+    /// Number of unique people reached including co-viewers. This includes
+    /// people that may fall outside the specified Targeting.
+    #[prost(int64, optional, tag="12")]
+    pub total_coview_reach: ::core::option::Option<i64>,
+    /// Number of ad impressions that exactly matches the Targeting including
+    /// co-viewers.
+    #[prost(int64, optional, tag="13")]
+    pub on_target_coview_impressions: ::core::option::Option<i64>,
+    /// Total number of ad impressions including co-viewers. This includes
+    /// impressions that may fall outside the specified Targeting, due to
+    /// insufficient information on signed-in users.
+    #[prost(int64, optional, tag="14")]
+    pub total_coview_impressions: ::core::option::Option<i64>,
+}
+/// The forecasted allocation and traffic metrics for a specific product
+/// at a point on the reach curve.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlannedProductReachForecast {
+    /// Selected product for planning. The product codes returned are within the
+    /// set of the ones returned by ListPlannableProducts when using the same
+    /// location ID.
+    #[prost(string, tag="1")]
+    pub plannable_product_code: ::prost::alloc::string::String,
+    /// The cost in micros. This may differ from the product's input allocation
+    /// if one or more planned products cannot fulfill the budget because of
+    /// limited inventory.
+    #[prost(int64, tag="2")]
+    pub cost_micros: i64,
+    /// Forecasted traffic metrics for this product.
+    #[prost(message, optional, tag="3")]
+    pub planned_product_forecast: ::core::option::Option<PlannedProductForecast>,
+}
+/// Forecasted traffic metrics for a planned product.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlannedProductForecast {
+    /// Number of unique people reached that exactly matches the Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the on_target_reach
+    /// value will be rounded to 0.
+    #[prost(int64, tag="1")]
+    pub on_target_reach: i64,
+    /// Number of unique people reached. This includes people that may fall
+    /// outside the specified Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the total_reach
+    /// value will be rounded to 0.
+    #[prost(int64, tag="2")]
+    pub total_reach: i64,
+    /// Number of ad impressions that exactly matches the Targeting.
+    #[prost(int64, tag="3")]
+    pub on_target_impressions: i64,
+    /// Total number of ad impressions. This includes impressions that may fall
+    /// outside the specified Targeting, due to insufficient information on
+    /// signed-in users.
+    #[prost(int64, tag="4")]
+    pub total_impressions: i64,
+    /// Number of times the ad's impressions were considered viewable.
+    /// See <https://support.google.com/google-ads/answer/7029393> for
+    /// more information about what makes an ad viewable and how
+    /// viewability is measured.
+    #[prost(int64, optional, tag="5")]
+    pub viewable_impressions: ::core::option::Option<i64>,
+    /// Number of unique people reached that exactly matches the Targeting
+    /// including co-viewers.
+    #[prost(int64, optional, tag="6")]
+    pub on_target_coview_reach: ::core::option::Option<i64>,
+    /// Number of unique people reached including co-viewers. This includes
+    /// people that may fall outside the specified Targeting.
+    #[prost(int64, optional, tag="7")]
+    pub total_coview_reach: ::core::option::Option<i64>,
+    /// Number of ad impressions that exactly matches the Targeting including
+    /// co-viewers.
+    #[prost(int64, optional, tag="8")]
+    pub on_target_coview_impressions: ::core::option::Option<i64>,
+    /// Total number of ad impressions including co-viewers. This includes
+    /// impressions that may fall outside the specified Targeting, due to
+    /// insufficient information on signed-in users.
+    #[prost(int64, optional, tag="9")]
+    pub total_coview_impressions: ::core::option::Option<i64>,
+}
+/// Audience metrics for the planned products.
+/// These metrics consider the following targeting dimensions:
+///
+/// - Location
+/// - PlannableAgeRange
+/// - Gender
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OnTargetAudienceMetrics {
+    /// Reference audience size matching the considered targeting for YouTube.
+    #[prost(int64, optional, tag="3")]
+    pub youtube_audience_size: ::core::option::Option<i64>,
+    /// Reference audience size matching the considered targeting for Census.
+    #[prost(int64, optional, tag="4")]
+    pub census_audience_size: ::core::option::Option<i64>,
+}
+/// A breakdown of the number of unique people reached at a given effective
+/// frequency.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EffectiveFrequencyBreakdown {
+    /// The effective frequency \[1-10\].
+    #[prost(int32, tag="1")]
+    pub effective_frequency: i32,
+    /// The number of unique people reached at least effective_frequency times that
+    /// exactly matches the Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the on_target_reach
+    /// value will be rounded to 0.
+    #[prost(int64, tag="2")]
+    pub on_target_reach: i64,
+    /// Total number of unique people reached at least effective_frequency times.
+    /// This includes people that may fall outside the specified Targeting.
+    ///
+    /// Note that a minimum number of unique people must be reached in order for
+    /// data to be reported. If the minimum number is not met, the total_reach
+    /// value will be rounded to 0.
+    #[prost(int64, tag="3")]
+    pub total_reach: i64,
+    /// The number of users (including co-viewing users) reached for the associated
+    /// effective_frequency value.
+    #[prost(int64, optional, tag="4")]
+    pub effective_coview_reach: ::core::option::Option<i64>,
+    /// The number of users (including co-viewing users) reached for the associated
+    /// effective_frequency value within the specified plan demographic.
+    #[prost(int64, optional, tag="5")]
+    pub on_target_effective_coview_reach: ::core::option::Option<i64>,
+}
+/// Controls forecast metrics to return.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ForecastMetricOptions {
+    /// Indicates whether to include co-view metrics in the response forecast.
+    #[prost(bool, tag="1")]
+    pub include_coview: bool,
+}
+/// Audience targeting for reach forecast.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceTargeting {
+    /// List of audiences based on user interests to be targeted.
+    #[prost(message, repeated, tag="1")]
+    pub user_interest: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
+}
+/// Advanced targeting settings for products.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdvancedProductTargeting {
+    /// Targeting options for this product.
+    #[prost(oneof="advanced_product_targeting::AdvancedTargeting", tags="1")]
+    pub advanced_targeting: ::core::option::Option<advanced_product_targeting::AdvancedTargeting>,
+}
+/// Nested message and enum types in `AdvancedProductTargeting`.
+pub mod advanced_product_targeting {
+    /// Targeting options for this product.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum AdvancedTargeting {
+        /// Settings for YouTube Select targeting.
+        #[prost(message, tag="1")]
+        YoutubeSelectSettings(super::YouTubeSelectSettings),
+    }
+}
+/// Request settings for YouTube Select Lineups
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeSelectSettings {
+    /// Lineup for YouTube Select Targeting.
+    #[prost(int64, tag="1")]
+    pub lineup_id: i64,
+}
+/// A Plannable YouTube Select Lineup for product targeting.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeSelectLineUp {
+    /// The ID of the YouTube Select Lineup.
+    #[prost(int64, tag="1")]
+    pub lineup_id: i64,
+    /// The unique name of the YouTube Select Lineup.
+    #[prost(string, tag="2")]
+    pub lineup_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod reach_plan_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Reach Plan Service gives users information about audience size that can
+    /// be reached through advertisement on YouTube. In particular,
+    /// GenerateReachForecast provides estimated number of people of specified
+    /// demographics that can be reached by an ad in a given market by a campaign of
+    /// certain duration with a defined budget.
+    #[derive(Debug, Clone)]
+    pub struct ReachPlanServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ReachPlanServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ReachPlanServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ReachPlanServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Returns the list of plannable locations (for example, countries).
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_plannable_locations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPlannableLocationsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPlannableLocationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ReachPlanService/ListPlannableLocations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the list of per-location plannable YouTube ad formats with allowed
+        /// targeting.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_plannable_products(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPlannableProductsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPlannableProductsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ReachPlanService/ListPlannableProducts",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Generates a product mix ideas given a set of preferences. This method
+        /// helps the advertiser to obtain a good mix of ad formats and budget
+        /// allocations based on its preferences.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [ReachPlanError]()
+        ///   [RequestError]()
+        pub async fn generate_product_mix_ideas(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateProductMixIdeasRequest>,
+        ) -> Result<
+            tonic::Response<super::GenerateProductMixIdeasResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ReachPlanService/GenerateProductMixIdeas",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Generates a reach forecast for a given targeting / product mix.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [ReachPlanError]()
+        ///   [RequestError]()
+        pub async fn generate_reach_forecast(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateReachForecastRequest>,
+        ) -> Result<
+            tonic::Response<super::GenerateReachForecastResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ReachPlanService/GenerateReachForecast",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRulesRequest {
+    /// Required. The ID of the customer whose conversion value rules are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual conversion value rules.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ConversionValueRuleOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="5")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a conversion value rule.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionValueRuleOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="conversion_value_rule_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<conversion_value_rule_operation::Operation>,
+}
+/// Nested message and enum types in `ConversionValueRuleOperation`.
+pub mod conversion_value_rule_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new conversion
+        /// value rule.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::ConversionValueRule),
+        /// Update operation: The conversion value rule is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::ConversionValueRule),
+        /// Remove operation: A resource name for the removed conversion value rule
+        /// is expected, in this format:
+        ///
+        /// `customers/{customer_id}/conversionValueRules/{conversion_value_rule_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for
+/// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRulesResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the conversion value rule mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRuleResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated conversion value rule with only mutable fields after
+    /// mutate. The field will only be returned when response_content_type is set
+    /// to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub conversion_value_rule: ::core::option::Option<super::resources::ConversionValueRule>,
+}
+/// Generated client implementations.
+pub mod conversion_value_rule_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage conversion value rules.
+    #[derive(Debug, Clone)]
+    pub struct ConversionValueRuleServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ConversionValueRuleServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ConversionValueRuleServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ConversionValueRuleServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes conversion value rules. Operation statuses are
+        /// returned.
+        pub async fn mutate_conversion_value_rules(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateConversionValueRulesRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateConversionValueRulesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ConversionValueRuleService/MutateConversionValueRules",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AdGroupAdLabelService.MutateAdGroupAdLabels][google.ads.googleads.v11.services.AdGroupAdLabelService.MutateAdGroupAdLabels\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupAdLabelsRequest {
+    /// Required. ID of the customer whose ad group ad labels are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on ad group ad labels.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AdGroupAdLabelOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation (create, remove) on an ad group ad label.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupAdLabelOperation {
+    /// The mutate operation.
+    #[prost(oneof="ad_group_ad_label_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<ad_group_ad_label_operation::Operation>,
+}
+/// Nested message and enum types in `AdGroupAdLabelOperation`.
+pub mod ad_group_ad_label_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new ad group ad
+        /// label.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AdGroupAdLabel),
+        /// Remove operation: A resource name for the ad group ad label
+        /// being removed, in this format:
+        ///
+        /// `customers/{customer_id}/adGroupAdLabels/{ad_group_id}~{ad_id}_{label_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an ad group ad labels mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupAdLabelsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateAdGroupAdLabelResult>,
+}
+/// The result for an ad group ad label mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupAdLabelResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod ad_group_ad_label_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage labels on ad group ads.
+    #[derive(Debug, Clone)]
+    pub struct AdGroupAdLabelServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AdGroupAdLabelServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AdGroupAdLabelServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AdGroupAdLabelServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates and removes ad group ad labels.
+        /// Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [LabelError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_ad_group_ad_labels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAdGroupAdLabelsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateAdGroupAdLabelsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdGroupAdLabelService/MutateAdGroupAdLabels",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -9837,6 +4393,166 @@ pub mod ad_group_criterion_service_client {
     }
 }
 /// Request message for
+/// \[AdGroupCustomizerService.MutateAdGroupCustomizers][google.ads.googleads.v11.services.AdGroupCustomizerService.MutateAdGroupCustomizers\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupCustomizersRequest {
+    /// Required. The ID of the customer whose ad group customizers are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual ad group customizers.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AdGroupCustomizerOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on an customizer attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupCustomizerOperation {
+    /// The mutate operation.
+    #[prost(oneof="ad_group_customizer_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<ad_group_customizer_operation::Operation>,
+}
+/// Nested message and enum types in `AdGroupCustomizerOperation`.
+pub mod ad_group_customizer_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new ad group
+        /// customizer
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AdGroupCustomizer),
+        /// Remove operation: A resource name for the removed ad group customizer is
+        /// expected, in this format:
+        /// `customers/{customer_id}/adGroupCustomizers/{ad_group_id}~{customizer_attribute_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an ad group customizer mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupCustomizersResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateAdGroupCustomizerResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="2")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the ad group customizer mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupCustomizerResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated AdGroupCustomizer with only mutable fields after mutate.
+    /// The field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub ad_group_customizer: ::core::option::Option<super::resources::AdGroupCustomizer>,
+}
+/// Generated client implementations.
+pub mod ad_group_customizer_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage ad group customizer
+    #[derive(Debug, Clone)]
+    pub struct AdGroupCustomizerServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AdGroupCustomizerServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AdGroupCustomizerServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AdGroupCustomizerServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes ad group customizers. Operation statuses are
+        /// returned.
+        pub async fn mutate_ad_group_customizers(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAdGroupCustomizersRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateAdGroupCustomizersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdGroupCustomizerService/MutateAdGroupCustomizers",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
 /// \[AdGroupExtensionSettingService.MutateAdGroupExtensionSettings][google.ads.googleads.v11.services.AdGroupExtensionSettingService.MutateAdGroupExtensionSettings\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupExtensionSettingsRequest {
@@ -10038,6 +4754,191 @@ pub mod ad_group_extension_setting_service_client {
         }
     }
 }
+/// Request message for \[AdGroupFeedService.MutateAdGroupFeeds][google.ads.googleads.v11.services.AdGroupFeedService.MutateAdGroupFeeds\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupFeedsRequest {
+    /// Required. The ID of the customer whose ad group feeds are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual ad group feeds.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AdGroupFeedOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on an ad group feed.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupFeedOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="ad_group_feed_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<ad_group_feed_operation::Operation>,
+}
+/// Nested message and enum types in `AdGroupFeedOperation`.
+pub mod ad_group_feed_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new ad group feed.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AdGroupFeed),
+        /// Update operation: The ad group feed is expected to have a valid resource
+        /// name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::AdGroupFeed),
+        /// Remove operation: A resource name for the removed ad group feed is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/adGroupFeeds/{ad_group_id}~{feed_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an ad group feed mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupFeedsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateAdGroupFeedResult>,
+}
+/// The result for the ad group feed mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupFeedResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated ad group feed with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub ad_group_feed: ::core::option::Option<super::resources::AdGroupFeed>,
+}
+/// Generated client implementations.
+pub mod ad_group_feed_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage ad group feeds.
+    #[derive(Debug, Clone)]
+    pub struct AdGroupFeedServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AdGroupFeedServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AdGroupFeedServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AdGroupFeedServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes ad group feeds. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AdGroupFeedError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [DatabaseError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [FunctionError]()
+        ///   [FunctionParsingError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_ad_group_feeds(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAdGroupFeedsRequest>,
+        ) -> Result<tonic::Response<super::MutateAdGroupFeedsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdGroupFeedService/MutateAdGroupFeeds",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for \[AdGroupLabelService.MutateAdGroupLabels][google.ads.googleads.v11.services.AdGroupLabelService.MutateAdGroupLabels\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupLabelsRequest {
@@ -10192,6 +5093,197 @@ pub mod ad_group_label_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.AdGroupLabelService/MutateAdGroupLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AdGroupService.MutateAdGroups][google.ads.googleads.v11.services.AdGroupService.MutateAdGroups\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupsRequest {
+    /// Required. The ID of the customer whose ad groups are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual ad groups.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AdGroupOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on an ad group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="ad_group_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<ad_group_operation::Operation>,
+}
+/// Nested message and enum types in `AdGroupOperation`.
+pub mod ad_group_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new ad group.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AdGroup),
+        /// Update operation: The ad group is expected to have a valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::AdGroup),
+        /// Remove operation: A resource name for the removed ad group is expected,
+        /// in this format:
+        ///
+        /// `customers/{customer_id}/adGroups/{ad_group_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an ad group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateAdGroupResult>,
+}
+/// The result for the ad group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdGroupResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated ad group with only mutable fields after mutate. The field will
+    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub ad_group: ::core::option::Option<super::resources::AdGroup>,
+}
+/// Generated client implementations.
+pub mod ad_group_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage ad groups.
+    #[derive(Debug, Clone)]
+    pub struct AdGroupServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AdGroupServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AdGroupServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AdGroupServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes ad groups. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AdGroupError]()
+        ///   [AdxError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [BiddingError]()
+        ///   [BiddingStrategyError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [ListOperationError]()
+        ///   [MultiplierError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperationAccessDeniedError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        ///   [SettingError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        ///   [UrlFieldError]()
+        pub async fn mutate_ad_groups(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAdGroupsRequest>,
+        ) -> Result<tonic::Response<super::MutateAdGroupsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdGroupService/MutateAdGroups",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -10367,6 +5459,237 @@ pub mod ad_parameter_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.AdParameterService/MutateAdParameters",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AdService.GetAd][google.ads.googleads.v11.services.AdService.GetAd\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAdRequest {
+    /// Required. The resource name of the ad to fetch.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Request message for \[AdService.MutateAds][google.ads.googleads.v11.services.AdService.MutateAds\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdsRequest {
+    /// Required. The ID of the customer whose ads are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual ads.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AdOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="4")]
+    pub partial_failure: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// A single update operation on an ad.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Configuration for how policies are validated.
+    #[prost(message, optional, tag="3")]
+    pub policy_validation_parameter: ::core::option::Option<super::common::PolicyValidationParameter>,
+    /// The mutate operation.
+    #[prost(oneof="ad_operation::Operation", tags="1")]
+    pub operation: ::core::option::Option<ad_operation::Operation>,
+}
+/// Nested message and enum types in `AdOperation`.
+pub mod ad_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Update operation: The ad is expected to have a valid resource name
+        /// in this format:
+        ///
+        /// `customers/{customer_id}/ads/{ad_id}`
+        #[prost(message, tag="1")]
+        Update(super::super::resources::Ad),
+    }
+}
+/// Response message for an ad mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateAdResult>,
+}
+/// The result for the ad mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAdResult {
+    /// The resource name returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated ad with only mutable fields after mutate. The field will only
+    /// be returned when response_content_type is set to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub ad: ::core::option::Option<super::resources::Ad>,
+}
+/// Generated client implementations.
+pub mod ad_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage ads.
+    #[derive(Debug, Clone)]
+    pub struct AdServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AdServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AdServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AdServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Returns the requested ad in full detail.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn get_ad(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAdRequest>,
+        ) -> Result<tonic::Response<super::super::resources::Ad>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdService/GetAd",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates ads. Operation statuses are returned. Updating ads is not supported
+        /// for TextAd, ExpandedDynamicSearchAd, GmailAd and ImageAd.
+        ///
+        /// List of thrown errors:
+        ///   [AdCustomizerError]()
+        ///   [AdError]()
+        ///   [AdSharingError]()
+        ///   [AdxError]()
+        ///   [AssetError]()
+        ///   [AssetLinkError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [FeedAttributeReferenceError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [FunctionError]()
+        ///   [FunctionParsingError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [ImageError]()
+        ///   [InternalError]()
+        ///   [ListOperationError]()
+        ///   [MediaBundleError]()
+        ///   [MediaFileError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [PolicyFindingError]()
+        ///   [PolicyViolationError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        ///   [UrlFieldError]()
+        pub async fn mutate_ads(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAdsRequest>,
+        ) -> Result<tonic::Response<super::MutateAdsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AdService/MutateAds",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -10688,6 +6011,467 @@ pub mod asset_group_listing_group_filter_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.AssetGroupListingGroupFilterService/MutateAssetGroupListingGroupFilters",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AssetGroupService.MutateAssetGroups][google.ads.googleads.v11.services.AssetGroupService.MutateAssetGroups\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupsRequest {
+    /// Required. The ID of the customer whose asset groups are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual asset groups.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AssetGroupOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation (create, remove) on an asset group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetGroupOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="asset_group_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<asset_group_operation::Operation>,
+}
+/// Nested message and enum types in `AssetGroupOperation`.
+pub mod asset_group_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new asset group
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AssetGroup),
+        /// Update operation: The asset group is expected to have a valid resource
+        /// name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::AssetGroup),
+        /// Remove operation: A resource name for the removed asset group is
+        /// expected, in this format:
+        /// `customers/{customer_id}/assetGroups/{asset_group_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an asset group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateAssetGroupResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="2")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the asset group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod asset_group_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage asset group
+    #[derive(Debug, Clone)]
+    pub struct AssetGroupServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AssetGroupServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AssetGroupServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AssetGroupServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes asset groups. Operation statuses are
+        /// returned.
+        pub async fn mutate_asset_groups(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAssetGroupsRequest>,
+        ) -> Result<tonic::Response<super::MutateAssetGroupsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AssetGroupService/MutateAssetGroups",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[AssetGroupSignalService.MutateAssetGroupSignals][google.ads.googleads.v11.services.AssetGroupSignalService.MutateAssetGroupSignals\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupSignalsRequest {
+    /// Required. The ID of the customer whose asset group signals are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual asset group signals.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AssetGroupSignalOperation>,
+    /// If true, successful operations will be carried out and invalid operations
+    /// will return errors. If false, all operations will be carried out in one
+    /// transaction if and only if they are all valid. Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on an asset group signal.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetGroupSignalOperation {
+    /// The mutate operation. Update is not supported.
+    #[prost(oneof="asset_group_signal_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<asset_group_signal_operation::Operation>,
+}
+/// Nested message and enum types in `AssetGroupSignalOperation`.
+pub mod asset_group_signal_operation {
+    /// The mutate operation. Update is not supported.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new asset group
+        /// signal.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AssetGroupSignal),
+        /// Remove operation: A resource name for the removed asset group signal is
+        /// expected, in this format:
+        /// `customers/{customer_id}/assetGroupSignals/{asset_group_id}~{criterion_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an asset group signal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupSignalsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateAssetGroupSignalResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="2")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the asset group signal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetGroupSignalResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated AssetGroupSignal with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub asset_group_signal: ::core::option::Option<super::resources::AssetGroupSignal>,
+}
+/// Generated client implementations.
+pub mod asset_group_signal_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage asset group signal.
+    #[derive(Debug, Clone)]
+    pub struct AssetGroupSignalServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AssetGroupSignalServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AssetGroupSignalServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AssetGroupSignalServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes asset group signals. Operation statuses are
+        /// returned.
+        pub async fn mutate_asset_group_signals(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAssetGroupSignalsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateAssetGroupSignalsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AssetGroupSignalService/MutateAssetGroupSignals",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AssetSetAssetService.MutateAssetSetAssets][google.ads.googleads.v11.services.AssetSetAssetService.MutateAssetSetAssets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetSetAssetsRequest {
+    /// Required. The ID of the customer whose asset set assets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual asset set assets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<AssetSetAssetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on an asset set asset.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetSetAssetOperation {
+    /// The mutate operation.
+    #[prost(oneof="asset_set_asset_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<asset_set_asset_operation::Operation>,
+}
+/// Nested message and enum types in `AssetSetAssetOperation`.
+pub mod asset_set_asset_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new asset set
+        /// asset
+        #[prost(message, tag="1")]
+        Create(super::super::resources::AssetSetAsset),
+        /// Remove operation: A resource name for the removed asset set asset is
+        /// expected, in this format:
+        /// `customers/{customer_id}/assetSetAssets/{asset_set_id}~{asset_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an asset set asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetSetAssetsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateAssetSetAssetResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="2")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the asset set asset mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateAssetSetAssetResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated asset set asset with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub asset_set_asset: ::core::option::Option<super::resources::AssetSetAsset>,
+}
+/// Generated client implementations.
+pub mod asset_set_asset_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage asset set asset.
+    #[derive(Debug, Clone)]
+    pub struct AssetSetAssetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AssetSetAssetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AssetSetAssetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AssetSetAssetServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes asset set assets. Operation statuses are
+        /// returned.
+        pub async fn mutate_asset_set_assets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateAssetSetAssetsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateAssetSetAssetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AssetSetAssetService/MutateAssetSetAssets",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -11176,6 +6960,176 @@ pub mod bidding_data_exclusion_service_client {
         }
     }
 }
+/// Request message for
+/// \[BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments][google.ads.googleads.v11.services.BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBiddingSeasonalityAdjustmentsRequest {
+    /// Required. ID of the customer whose seasonality adjustments are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual seasonality adjustments.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<BiddingSeasonalityAdjustmentOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove, update) on a seasonality adjustment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BiddingSeasonalityAdjustmentOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="bidding_seasonality_adjustment_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<bidding_seasonality_adjustment_operation::Operation>,
+}
+/// Nested message and enum types in `BiddingSeasonalityAdjustmentOperation`.
+pub mod bidding_seasonality_adjustment_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new seasonality
+        /// adjustment.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::BiddingSeasonalityAdjustment),
+        /// Update operation: The seasonality adjustment is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::BiddingSeasonalityAdjustment),
+        /// Remove operation: A resource name for the removed seasonality adjustment
+        /// is expected, in this format:
+        ///
+        /// `customers/{customer_id}/biddingSeasonalityAdjustments/{seasonality_adjustment_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for seasonality adjustments mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBiddingSeasonalityAdjustmentsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateBiddingSeasonalityAdjustmentsResult>,
+}
+/// The result for the seasonality adjustment mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBiddingSeasonalityAdjustmentsResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated bidding seasonality adjustment with only mutable fields after
+    /// mutate. The field will only be returned when response_content_type is set
+    /// to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub bidding_seasonality_adjustment: ::core::option::Option<super::resources::BiddingSeasonalityAdjustment>,
+}
+/// Generated client implementations.
+pub mod bidding_seasonality_adjustment_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage bidding seasonality adjustments.
+    #[derive(Debug, Clone)]
+    pub struct BiddingSeasonalityAdjustmentServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> BiddingSeasonalityAdjustmentServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BiddingSeasonalityAdjustmentServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            BiddingSeasonalityAdjustmentServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes seasonality adjustments.
+        /// Operation statuses are returned.
+        pub async fn mutate_bidding_seasonality_adjustments(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::MutateBiddingSeasonalityAdjustmentsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::MutateBiddingSeasonalityAdjustmentsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.BiddingSeasonalityAdjustmentService/MutateBiddingSeasonalityAdjustments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for \[BiddingStrategyService.MutateBiddingStrategies][google.ads.googleads.v11.services.BiddingStrategyService.MutateBiddingStrategies\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingStrategiesRequest {
@@ -11371,15 +7325,15 @@ pub mod bidding_strategy_service_client {
         }
     }
 }
-/// Request message for \[CampaignAssetService.MutateCampaignAssets][google.ads.googleads.v11.services.CampaignAssetService.MutateCampaignAssets\].
+/// Request message for \[CampaignAssetSetService.MutateCampaignAssetSets][google.ads.googleads.v11.services.CampaignAssetSetService.MutateCampaignAssetSets\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetsRequest {
-    /// Required. The ID of the customer whose campaign assets are being modified.
+pub struct MutateCampaignAssetSetsRequest {
+    /// Required. The ID of the customer whose campaign asset sets are being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign assets.
+    /// Required. The list of operations to perform on individual campaign asset sets.
     #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignAssetOperation>,
+    pub operations: ::prost::alloc::vec::Vec<CampaignAssetSetOperation>,
     /// If true, successful operations will be carried out and invalid
     /// operations will return errors. If false, all operations will be carried
     /// out in one transaction if and only if they are all valid.
@@ -11395,73 +7349,65 @@ pub struct MutateCampaignAssetsRequest {
     #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
     pub response_content_type: i32,
 }
-/// A single operation (create, update, remove) on a campaign asset.
+/// A single operation (create, remove) on a campaign asset set.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignAssetOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+pub struct CampaignAssetSetOperation {
     /// The mutate operation.
-    #[prost(oneof="campaign_asset_operation::Operation", tags="1, 3, 2")]
-    pub operation: ::core::option::Option<campaign_asset_operation::Operation>,
+    #[prost(oneof="campaign_asset_set_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<campaign_asset_set_operation::Operation>,
 }
-/// Nested message and enum types in `CampaignAssetOperation`.
-pub mod campaign_asset_operation {
+/// Nested message and enum types in `CampaignAssetSetOperation`.
+pub mod campaign_asset_set_operation {
     /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign
-        /// asset.
+        /// Create operation: No resource name is expected for the new campaign asset
+        /// set.
         #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignAsset),
-        /// Update operation: The campaign asset is expected to have a valid resource
-        /// name.
-        #[prost(message, tag="3")]
-        Update(super::super::resources::CampaignAsset),
-        /// Remove operation: A resource name for the removed campaign asset is
+        Create(super::super::resources::CampaignAssetSet),
+        /// Remove operation: A resource name for the removed campaign asset set is
         /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/campaignAssets/{campaign_id}~{asset_id}~{field_type}`
+        /// `customers/{customer_id}/campaignAssetSets/{campaign_id}~{asset_set_id}`
         #[prost(string, tag="2")]
         Remove(::prost::alloc::string::String),
     }
 }
-/// Response message for a campaign asset mutate.
+/// Response message for a campaign asset set mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetsResponse {
+pub struct MutateCampaignAssetSetsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetSetResult>,
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
     /// operations. If any errors occur outside the operations (for example, auth
     /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag="2")]
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetResult>,
 }
-/// The result for the campaign asset mutate.
+/// The result for the campaign asset set mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignAssetResult {
+pub struct MutateCampaignAssetSetResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign asset with only mutable fields after
-    /// mutate. The field will only be returned when response_content_type is set
-    /// to "MUTABLE_RESOURCE".
+    /// The mutated campaign asset set with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
     #[prost(message, optional, tag="2")]
-    pub campaign_asset: ::core::option::Option<super::resources::CampaignAsset>,
+    pub campaign_asset_set: ::core::option::Option<super::resources::CampaignAssetSet>,
 }
 /// Generated client implementations.
-pub mod campaign_asset_service_client {
+pub mod campaign_asset_set_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage campaign assets.
+    /// Service to manage campaign asset set
     #[derive(Debug, Clone)]
-    pub struct CampaignAssetServiceClient<T> {
+    pub struct CampaignAssetSetServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> CampaignAssetServiceClient<T>
+    impl<T> CampaignAssetSetServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -11479,7 +7425,7 @@ pub mod campaign_asset_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CampaignAssetServiceClient<InterceptedService<T, F>>
+        ) -> CampaignAssetSetServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -11493,7 +7439,9 @@ pub mod campaign_asset_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            CampaignAssetServiceClient::new(InterceptedService::new(inner, interceptor))
+            CampaignAssetSetServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -11510,27 +7458,13 @@ pub mod campaign_asset_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates, updates, or removes campaign assets. Operation statuses are
+        /// Creates, updates or removes campaign asset sets. Operation statuses are
         /// returned.
-        ///
-        /// List of thrown errors:
-        ///   [AssetLinkError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [ContextError]()
-        ///   [DatabaseError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [NotAllowlistedError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_campaign_assets(
+        pub async fn mutate_campaign_asset_sets(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignAssetsRequest>,
+            request: impl tonic::IntoRequest<super::MutateCampaignAssetSetsRequest>,
         ) -> Result<
-            tonic::Response<super::MutateCampaignAssetsResponse>,
+            tonic::Response<super::MutateCampaignAssetSetsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -11544,7 +7478,7 @@ pub mod campaign_asset_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignAssetService/MutateCampaignAssets",
+                "/google.ads.googleads.v11.services.CampaignAssetSetService/MutateCampaignAssetSets",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -12062,6 +7996,202 @@ pub mod campaign_conversion_goal_service_client {
         }
     }
 }
+/// Request message for \[CampaignCriterionService.MutateCampaignCriteria][google.ads.googleads.v11.services.CampaignCriterionService.MutateCampaignCriteria\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignCriteriaRequest {
+    /// Required. The ID of the customer whose criteria are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual criteria.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignCriterionOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a campaign criterion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignCriterionOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="campaign_criterion_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<campaign_criterion_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignCriterionOperation`.
+pub mod campaign_criterion_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new criterion.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignCriterion),
+        /// Update operation: The criterion is expected to have a valid resource
+        /// name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CampaignCriterion),
+        /// Remove operation: A resource name for the removed criterion is expected,
+        /// in this format:
+        ///
+        /// `customers/{customer_id}/campaignCriteria/{campaign_id}~{criterion_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for campaign criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignCriteriaResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignCriterionResult>,
+}
+/// The result for the criterion mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignCriterionResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated campaign criterion with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub campaign_criterion: ::core::option::Option<super::resources::CampaignCriterion>,
+}
+/// Generated client implementations.
+pub mod campaign_criterion_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage campaign criteria.
+    #[derive(Debug, Clone)]
+    pub struct CampaignCriterionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignCriterionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignCriterionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignCriterionServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes criteria. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AdxError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignCriterionError]()
+        ///   [CollectionSizeError]()
+        ///   [ContextError]()
+        ///   [CriterionError]()
+        ///   [DatabaseError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [FunctionError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperationAccessDeniedError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RegionCodeError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_campaign_criteria(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignCriteriaRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignCriteriaResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignCriterionService/MutateCampaignCriteria",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for
 /// \[CampaignCustomizerService.MutateCampaignCustomizers][google.ads.googleads.v11.services.CampaignCustomizerService.MutateCampaignCustomizers\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -12222,15 +8352,15 @@ pub mod campaign_customizer_service_client {
         }
     }
 }
-/// Request message for \[CampaignDraftService.MutateCampaignDrafts][google.ads.googleads.v11.services.CampaignDraftService.MutateCampaignDrafts\].
+/// Request message for \[CampaignExperimentService.MutateCampaignExperiments][google.ads.googleads.v11.services.CampaignExperimentService.MutateCampaignExperiments\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignDraftsRequest {
-    /// Required. The ID of the customer whose campaign drafts are being modified.
+pub struct MutateCampaignExperimentsRequest {
+    /// Required. The ID of the customer whose campaign experiments are being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual campaign drafts.
+    /// Required. The list of operations to perform on individual campaign experiments.
     #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CampaignDraftOperation>,
+    pub operations: ::prost::alloc::vec::Vec<CampaignExperimentOperation>,
     /// If true, successful operations will be carried out and invalid
     /// operations will return errors. If false, all operations will be carried
     /// out in one transaction if and only if they are all valid.
@@ -12246,51 +8376,36 @@ pub struct MutateCampaignDraftsRequest {
     #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
     pub response_content_type: i32,
 }
-/// Request message for \[CampaignDraftService.PromoteCampaignDraft][google.ads.googleads.v11.services.CampaignDraftService.PromoteCampaignDraft\].
+/// A single update operation on a campaign experiment.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PromoteCampaignDraftRequest {
-    /// Required. The resource name of the campaign draft to promote.
-    #[prost(string, tag="1")]
-    pub campaign_draft: ::prost::alloc::string::String,
-    /// If true, the request is validated but no Long Running Operation is created.
-    /// Only errors are returned.
-    #[prost(bool, tag="2")]
-    pub validate_only: bool,
-}
-/// A single operation (create, update, remove) on a campaign draft.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignDraftOperation {
+pub struct CampaignExperimentOperation {
     /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag="3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// The mutate operation.
-    #[prost(oneof="campaign_draft_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<campaign_draft_operation::Operation>,
+    #[prost(oneof="campaign_experiment_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<campaign_experiment_operation::Operation>,
 }
-/// Nested message and enum types in `CampaignDraftOperation`.
-pub mod campaign_draft_operation {
+/// Nested message and enum types in `CampaignExperimentOperation`.
+pub mod campaign_experiment_operation {
     /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Create operation: No resource name is expected for the new campaign
-        /// draft.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CampaignDraft),
-        /// Update operation: The campaign draft is expected to have a valid
+        /// Update operation: The campaign experiment is expected to have a valid
         /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CampaignDraft),
-        /// Remove operation: The campaign draft is expected to have a valid
+        #[prost(message, tag="1")]
+        Update(super::super::resources::CampaignExperiment),
+        /// Remove operation: The campaign experiment is expected to have a valid
         /// resource name, in this format:
         ///
-        /// `customers/{customer_id}/campaignDrafts/{base_campaign_id}~{draft_id}`
-        #[prost(string, tag="3")]
+        /// `customers/{customer_id}/campaignExperiments/{campaign_experiment_id}`
+        #[prost(string, tag="2")]
         Remove(::prost::alloc::string::String),
     }
 }
-/// Response message for campaign draft mutate.
+/// Response message for campaign experiment mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignDraftsResponse {
+pub struct MutateCampaignExperimentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
     /// operations. If any errors occur outside the operations (for example, auth
@@ -12299,24 +8414,93 @@ pub struct MutateCampaignDraftsResponse {
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
     #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCampaignDraftResult>,
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignExperimentResult>,
 }
-/// The result for the campaign draft mutate.
+/// The result for the campaign experiment mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCampaignDraftResult {
+pub struct MutateCampaignExperimentResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The mutated campaign draft with only mutable fields after mutate. The field
-    /// will only be returned when response_content_type is set to
+    /// The mutated campaign experiment with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
     /// "MUTABLE_RESOURCE".
     #[prost(message, optional, tag="2")]
-    pub campaign_draft: ::core::option::Option<super::resources::CampaignDraft>,
+    pub campaign_experiment: ::core::option::Option<super::resources::CampaignExperiment>,
 }
-/// Request message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+/// Request message for \[CampaignExperimentService.CreateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.CreateCampaignExperiment\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCampaignDraftAsyncErrorsRequest {
-    /// Required. The name of the campaign draft from which to retrieve the async errors.
+pub struct CreateCampaignExperimentRequest {
+    /// Required. The ID of the customer whose campaign experiment is being created.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The campaign experiment to be created.
+    #[prost(message, optional, tag="2")]
+    pub campaign_experiment: ::core::option::Option<super::resources::CampaignExperiment>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// Message used as metadata returned in Long Running Operations for
+/// CreateCampaignExperimentRequest
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateCampaignExperimentMetadata {
+    /// Resource name of campaign experiment created.
+    #[prost(string, tag="1")]
+    pub campaign_experiment: ::prost::alloc::string::String,
+}
+/// Request message for \[CampaignExperimentService.GraduateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.GraduateCampaignExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GraduateCampaignExperimentRequest {
+    /// Required. The resource name of the campaign experiment to graduate.
+    #[prost(string, tag="1")]
+    pub campaign_experiment: ::prost::alloc::string::String,
+    /// Required. Resource name of the budget to attach to the campaign graduated from the
+    /// experiment.
+    #[prost(string, tag="2")]
+    pub campaign_budget: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// Response message for campaign experiment graduate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GraduateCampaignExperimentResponse {
+    /// The resource name of the campaign from the graduated experiment.
+    /// This campaign is the same one as CampaignExperiment.experiment_campaign.
+    #[prost(string, tag="1")]
+    pub graduated_campaign: ::prost::alloc::string::String,
+}
+/// Request message for \[CampaignExperimentService.PromoteCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.PromoteCampaignExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PromoteCampaignExperimentRequest {
+    /// Required. The resource name of the campaign experiment to promote.
+    #[prost(string, tag="1")]
+    pub campaign_experiment: ::prost::alloc::string::String,
+    /// If true, the request is validated but no Long Running Operation is created.
+    /// Only errors are returned.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// Request message for \[CampaignExperimentService.EndCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.EndCampaignExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndCampaignExperimentRequest {
+    /// Required. The resource name of the campaign experiment to end.
+    #[prost(string, tag="1")]
+    pub campaign_experiment: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// Request message for
+/// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCampaignExperimentAsyncErrorsRequest {
+    /// Required. The name of the campaign experiment from which to retrieve the async
+    /// errors.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
     /// Token of the page to retrieve. If not specified, the first
@@ -12331,9 +8515,10 @@ pub struct ListCampaignDraftAsyncErrorsRequest {
     #[prost(int32, tag="3")]
     pub page_size: i32,
 }
-/// Response message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+/// Response message for
+/// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCampaignDraftAsyncErrorsResponse {
+pub struct ListCampaignExperimentAsyncErrorsResponse {
     /// Details of the errors when performing the asynchronous operation.
     #[prost(message, repeated, tag="1")]
     pub errors: ::prost::alloc::vec::Vec<super::super::super::super::rpc::Status>,
@@ -12345,16 +8530,25 @@ pub struct ListCampaignDraftAsyncErrorsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
-pub mod campaign_draft_service_client {
+pub mod campaign_experiment_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage campaign drafts.
+    /// CampaignExperimentService manages the life cycle of campaign experiments.
+    /// It is used to create new experiments from drafts, modify experiment
+    /// properties, promote changes in an experiment back to its base campaign,
+    /// graduate experiments into new stand-alone campaigns, and to remove an
+    /// experiment.
+    ///
+    /// An experiment consists of two variants or arms - the base campaign and the
+    /// experiment campaign, directing a fixed share of traffic to each arm.
+    /// A campaign experiment is created from a draft of changes to the base campaign
+    /// and will be a snapshot of changes in the draft at the time of creation.
     #[derive(Debug, Clone)]
-    pub struct CampaignDraftServiceClient<T> {
+    pub struct CampaignExperimentServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> CampaignDraftServiceClient<T>
+    impl<T> CampaignExperimentServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -12372,7 +8566,7 @@ pub mod campaign_draft_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CampaignDraftServiceClient<InterceptedService<T, F>>
+        ) -> CampaignExperimentServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -12386,7 +8580,9 @@ pub mod campaign_draft_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            CampaignDraftServiceClient::new(InterceptedService::new(inner, interceptor))
+            CampaignExperimentServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -12403,63 +8599,33 @@ pub mod campaign_draft_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates, updates, or removes campaign drafts. Operation statuses are
-        /// returned.
+        /// Creates a campaign experiment based on a campaign draft. The draft campaign
+        /// will be forked into a real campaign (called the experiment campaign) that
+        /// will begin serving ads if successfully created.
+        ///
+        /// The campaign experiment is created immediately with status INITIALIZING.
+        /// This method return a long running operation that tracks the forking of the
+        /// draft campaign. If the forking fails, a list of errors can be retrieved
+        /// using the ListCampaignExperimentAsyncErrors method. The operation's
+        /// metadata will be a StringValue containing the resource name of the created
+        /// campaign experiment.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
-        ///   [CampaignDraftError]()
+        ///   [CampaignExperimentError]()
         ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DateRangeError]()
         ///   [FieldError]()
         ///   [HeaderError]()
         ///   [InternalError]()
-        ///   [MutateError]()
         ///   [QuotaError]()
+        ///   [RangeError]()
         ///   [RequestError]()
-        pub async fn mutate_campaign_drafts(
+        pub async fn create_campaign_experiment(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateCampaignDraftsRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCampaignDraftsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignDraftService/MutateCampaignDrafts",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Promotes the changes in a draft back to the base campaign.
-        ///
-        /// This method returns a Long Running Operation (LRO) indicating if the
-        /// Promote is done. Use [Operations.GetOperation] to poll the LRO until it
-        /// is done. Only a done status is returned in the response. See the status
-        /// in the Campaign Draft resource to determine if the promotion was
-        /// successful. If the LRO failed, use
-        /// [CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors] to view the list of
-        /// error reasons.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CampaignDraftError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn promote_campaign_draft(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PromoteCampaignDraftRequest>,
+            request: impl tonic::IntoRequest<super::CreateCampaignExperimentRequest>,
         ) -> Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
@@ -12475,26 +8641,25 @@ pub mod campaign_draft_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignDraftService/PromoteCampaignDraft",
+                "/google.ads.googleads.v11.services.CampaignExperimentService/CreateCampaignExperiment",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Returns all errors that occurred during CampaignDraft promote. Throws an
-        /// error if called before campaign draft is promoted.
-        /// Supports standard list paging.
+        /// Updates campaign experiments. Operation statuses are returned.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
+        ///   [CampaignExperimentError]()
         ///   [HeaderError]()
         ///   [InternalError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        pub async fn list_campaign_draft_async_errors(
+        pub async fn mutate_campaign_experiments(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListCampaignDraftAsyncErrorsRequest>,
+            request: impl tonic::IntoRequest<super::MutateCampaignExperimentsRequest>,
         ) -> Result<
-            tonic::Response<super::ListCampaignDraftAsyncErrorsResponse>,
+            tonic::Response<super::MutateCampaignExperimentsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -12508,7 +8673,143 @@ pub mod campaign_draft_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CampaignDraftService/ListCampaignDraftAsyncErrors",
+                "/google.ads.googleads.v11.services.CampaignExperimentService/MutateCampaignExperiments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Graduates a campaign experiment to a full campaign. The base and experiment
+        /// campaigns will start running independently with their own budgets.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn graduate_campaign_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GraduateCampaignExperimentRequest>,
+        ) -> Result<
+            tonic::Response<super::GraduateCampaignExperimentResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignExperimentService/GraduateCampaignExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Promotes the changes in a experiment campaign back to the base campaign.
+        ///
+        /// The campaign experiment is updated immediately with status PROMOTING.
+        /// This method return a long running operation that tracks the promoting of
+        /// the experiment campaign. If the promoting fails, a list of errors can be
+        /// retrieved using the ListCampaignExperimentAsyncErrors method.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn promote_campaign_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PromoteCampaignExperimentRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignExperimentService/PromoteCampaignExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Immediately ends a campaign experiment, changing the experiment's scheduled
+        /// end date and without waiting for end of day. End date is updated to be the
+        /// time of the request.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn end_campaign_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EndCampaignExperimentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignExperimentService/EndCampaignExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns all errors that occurred during CampaignExperiment create or
+        /// promote (whichever occurred last).
+        /// Supports standard list paging.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_campaign_experiment_async_errors(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListCampaignExperimentAsyncErrorsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::ListCampaignExperimentAsyncErrorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignExperimentService/ListCampaignExperimentAsyncErrors",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -12901,6 +9202,333 @@ pub mod campaign_feed_service_client {
         }
     }
 }
+/// Request message for \[CampaignGroupService.MutateCampaignGroups][google.ads.googleads.v11.services.CampaignGroupService.MutateCampaignGroups\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignGroupsRequest {
+    /// Required. The ID of the customer whose campaign groups are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual campaign groups.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignGroupOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a campaign group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignGroupOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="campaign_group_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<campaign_group_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignGroupOperation`.
+pub mod campaign_group_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new campaign
+        /// group.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignGroup),
+        /// Update operation: The campaign group is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CampaignGroup),
+        /// Remove operation: A resource name for the removed campaign group is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/campaignGroups/{campaign_group_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for campaign group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignGroupsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignGroupResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the campaign group mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignGroupResult {
+    /// Required. Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated campaign group with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub campaign_group: ::core::option::Option<super::resources::CampaignGroup>,
+}
+/// Generated client implementations.
+pub mod campaign_group_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage campaign groups.
+    #[derive(Debug, Clone)]
+    pub struct CampaignGroupServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignGroupServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignGroupServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignGroupServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes campaign groups. Operation statuses are
+        /// returned.
+        pub async fn mutate_campaign_groups(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignGroupsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignGroupsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignGroupService/MutateCampaignGroups",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CampaignLabelService.MutateCampaignLabels][google.ads.googleads.v11.services.CampaignLabelService.MutateCampaignLabels\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignLabelsRequest {
+    /// Required. ID of the customer whose campaign-label relationships are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on campaign-label relationships.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignLabelOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation (create, remove) on a campaign-label relationship.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignLabelOperation {
+    /// The mutate operation.
+    #[prost(oneof="campaign_label_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<campaign_label_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignLabelOperation`.
+pub mod campaign_label_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new campaign-label
+        /// relationship.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignLabel),
+        /// Remove operation: A resource name for the campaign-label relationship
+        /// being removed, in this format:
+        ///
+        /// `customers/{customer_id}/campaignLabels/{campaign_id}~{label_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a campaign labels mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignLabelsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignLabelResult>,
+}
+/// The result for a campaign label mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignLabelResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod campaign_label_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage labels on campaigns.
+    #[derive(Debug, Clone)]
+    pub struct CampaignLabelServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignLabelServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignLabelServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignLabelServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates and removes campaign-label relationships.
+        /// Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [LabelError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_campaign_labels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignLabelsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignLabelsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignLabelService/MutateCampaignLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for \[CampaignService.MutateCampaigns][google.ads.googleads.v11.services.CampaignService.MutateCampaigns\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignsRequest {
@@ -13097,6 +9725,374 @@ pub mod campaign_service_client {
         }
     }
 }
+/// Request message for \[CampaignSharedSetService.MutateCampaignSharedSets][google.ads.googleads.v11.services.CampaignSharedSetService.MutateCampaignSharedSets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignSharedSetsRequest {
+    /// Required. The ID of the customer whose campaign shared sets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual campaign shared sets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CampaignSharedSetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on an campaign shared set.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignSharedSetOperation {
+    /// The mutate operation.
+    #[prost(oneof="campaign_shared_set_operation::Operation", tags="1, 3")]
+    pub operation: ::core::option::Option<campaign_shared_set_operation::Operation>,
+}
+/// Nested message and enum types in `CampaignSharedSetOperation`.
+pub mod campaign_shared_set_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new campaign
+        /// shared set.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CampaignSharedSet),
+        /// Remove operation: A resource name for the removed campaign shared set is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a campaign shared set mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignSharedSetsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCampaignSharedSetResult>,
+}
+/// The result for the campaign shared set mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCampaignSharedSetResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated campaign shared set with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub campaign_shared_set: ::core::option::Option<super::resources::CampaignSharedSet>,
+}
+/// Generated client implementations.
+pub mod campaign_shared_set_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage campaign shared sets.
+    #[derive(Debug, Clone)]
+    pub struct CampaignSharedSetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CampaignSharedSetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CampaignSharedSetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CampaignSharedSetServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes campaign shared sets. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CampaignSharedSetError]()
+        ///   [ContextError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_campaign_shared_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCampaignSharedSetsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCampaignSharedSetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CampaignSharedSetService/MutateCampaignSharedSets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionActionsRequest {
+    /// Required. The ID of the customer whose conversion actions are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual conversion actions.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ConversionActionOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a conversion action.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionActionOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="conversion_action_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<conversion_action_operation::Operation>,
+}
+/// Nested message and enum types in `ConversionActionOperation`.
+pub mod conversion_action_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new conversion
+        /// action.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::ConversionAction),
+        /// Update operation: The conversion action is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::ConversionAction),
+        /// Remove operation: A resource name for the removed conversion action is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/conversionActions/{conversion_action_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionActionsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateConversionActionResult>,
+}
+/// The result for the conversion action mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionActionResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated conversion action with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub conversion_action: ::core::option::Option<super::resources::ConversionAction>,
+}
+/// Generated client implementations.
+pub mod conversion_action_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage conversion actions.
+    #[derive(Debug, Clone)]
+    pub struct ConversionActionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ConversionActionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ConversionActionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ConversionActionServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes conversion actions. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ConversionActionError]()
+        ///   [CurrencyCodeError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_conversion_actions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateConversionActionsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateConversionActionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ConversionActionService/MutateConversionActions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for
 /// \[ConversionCustomVariableService.MutateConversionCustomVariables][google.ads.googleads.v11.services.ConversionCustomVariableService.MutateConversionCustomVariables\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -13275,21 +10271,16 @@ pub mod conversion_custom_variable_service_client {
     }
 }
 /// Request message for
-/// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+/// \[ConversionGoalCampaignConfigService.MutateConversionGoalCampaignConfig][\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRulesRequest {
-    /// Required. The ID of the customer whose conversion value rules are being modified.
+pub struct MutateConversionGoalCampaignConfigsRequest {
+    /// Required. The ID of the customer whose custom conversion goals are being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual conversion value rules.
+    /// Required. The list of operations to perform on individual conversion goal campaign
+    /// config.
     #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<ConversionValueRuleOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="5")]
-    pub partial_failure: bool,
+    pub operations: ::prost::alloc::vec::Vec<ConversionGoalCampaignConfigOperation>,
     /// If true, the request is validated but not executed. Only errors are
     /// returned, not results.
     #[prost(bool, tag="3")]
@@ -13299,74 +10290,57 @@ pub struct MutateConversionValueRulesRequest {
     #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
     pub response_content_type: i32,
 }
-/// A single operation (create, update, remove) on a conversion value rule.
+/// A single operation (update) on a conversion goal campaign config.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionValueRuleOperation {
+pub struct ConversionGoalCampaignConfigOperation {
     /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag="2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// The mutate operation.
-    #[prost(oneof="conversion_value_rule_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<conversion_value_rule_operation::Operation>,
+    #[prost(oneof="conversion_goal_campaign_config_operation::Operation", tags="1")]
+    pub operation: ::core::option::Option<conversion_goal_campaign_config_operation::Operation>,
 }
-/// Nested message and enum types in `ConversionValueRuleOperation`.
-pub mod conversion_value_rule_operation {
+/// Nested message and enum types in `ConversionGoalCampaignConfigOperation`.
+pub mod conversion_goal_campaign_config_operation {
     /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Create operation: No resource name is expected for the new conversion
-        /// value rule.
+        /// Update operation: The conversion goal campaign config is expected to have
+        /// a valid resource name.
         #[prost(message, tag="1")]
-        Create(super::super::resources::ConversionValueRule),
-        /// Update operation: The conversion value rule is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::ConversionValueRule),
-        /// Remove operation: A resource name for the removed conversion value rule
-        /// is expected, in this format:
-        ///
-        /// `customers/{customer_id}/conversionValueRules/{conversion_value_rule_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
+        Update(super::super::resources::ConversionGoalCampaignConfig),
     }
 }
-/// Response message for
-/// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+/// Response message for a conversion goal campaign config mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRulesResponse {
+pub struct MutateConversionGoalCampaignConfigsResponse {
     /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
-    #[prost(message, optional, tag="3")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateConversionGoalCampaignConfigResult>,
 }
-/// The result for the conversion value rule mutate.
+/// The result for the conversion goal campaign config mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateConversionValueRuleResult {
+pub struct MutateConversionGoalCampaignConfigResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The mutated conversion value rule with only mutable fields after
+    /// The mutated ConversionGoalCampaignConfig with only mutable fields after
     /// mutate. The field will only be returned when response_content_type is set
     /// to "MUTABLE_RESOURCE".
     #[prost(message, optional, tag="2")]
-    pub conversion_value_rule: ::core::option::Option<super::resources::ConversionValueRule>,
+    pub conversion_goal_campaign_config: ::core::option::Option<super::resources::ConversionGoalCampaignConfig>,
 }
 /// Generated client implementations.
-pub mod conversion_value_rule_service_client {
+pub mod conversion_goal_campaign_config_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage conversion value rules.
+    /// Service to manage conversion goal campaign config.
     #[derive(Debug, Clone)]
-    pub struct ConversionValueRuleServiceClient<T> {
+    pub struct ConversionGoalCampaignConfigServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> ConversionValueRuleServiceClient<T>
+    impl<T> ConversionGoalCampaignConfigServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -13384,7 +10358,7 @@ pub mod conversion_value_rule_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> ConversionValueRuleServiceClient<InterceptedService<T, F>>
+        ) -> ConversionGoalCampaignConfigServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -13398,7 +10372,7 @@ pub mod conversion_value_rule_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            ConversionValueRuleServiceClient::new(
+            ConversionGoalCampaignConfigServiceClient::new(
                 InterceptedService::new(inner, interceptor),
             )
         }
@@ -13417,13 +10391,15 @@ pub mod conversion_value_rule_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates, updates, or removes conversion value rules. Operation statuses are
-        /// returned.
-        pub async fn mutate_conversion_value_rules(
+        /// Creates, updates or removes conversion goal campaign config. Operation
+        /// statuses are returned.
+        pub async fn mutate_conversion_goal_campaign_configs(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateConversionValueRulesRequest>,
+            request: impl tonic::IntoRequest<
+                super::MutateConversionGoalCampaignConfigsRequest,
+            >,
         ) -> Result<
-            tonic::Response<super::MutateConversionValueRulesResponse>,
+            tonic::Response<super::MutateConversionGoalCampaignConfigsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -13437,7 +10413,332 @@ pub mod conversion_value_rule_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionValueRuleService/MutateConversionValueRules",
+                "/google.ads.googleads.v11.services.ConversionGoalCampaignConfigService/MutateConversionGoalCampaignConfigs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRuleSetsRequest {
+    /// Required. The ID of the customer whose conversion value rule sets are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual conversion value rule sets.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ConversionValueRuleSetOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="5")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on a conversion value rule set.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionValueRuleSetOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="conversion_value_rule_set_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<conversion_value_rule_set_operation::Operation>,
+}
+/// Nested message and enum types in `ConversionValueRuleSetOperation`.
+pub mod conversion_value_rule_set_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new conversion
+        /// value rule set.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::ConversionValueRuleSet),
+        /// Update operation: The conversion value rule set is expected to have a
+        /// valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::ConversionValueRuleSet),
+        /// Remove operation: A resource name for the removed conversion value rule
+        /// set is expected, in this format:
+        ///
+        /// `customers/{customer_id}/conversionValueRuleSets/{conversion_value_rule_set_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for
+/// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRuleSetsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateConversionValueRuleSetResult>,
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="2")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// The result for the conversion value rule set mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateConversionValueRuleSetResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated conversion value rule set with only mutable fields after
+    /// mutate. The field will only be returned when response_content_type is set
+    /// to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub conversion_value_rule_set: ::core::option::Option<super::resources::ConversionValueRuleSet>,
+}
+/// Generated client implementations.
+pub mod conversion_value_rule_set_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage conversion value rule sets.
+    #[derive(Debug, Clone)]
+    pub struct ConversionValueRuleSetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ConversionValueRuleSetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ConversionValueRuleSetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ConversionValueRuleSetServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes conversion value rule sets. Operation statuses
+        /// are returned.
+        pub async fn mutate_conversion_value_rule_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateConversionValueRuleSetsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateConversionValueRuleSetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ConversionValueRuleSetService/MutateConversionValueRuleSets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[CustomConversionGoalService.MutateCustomConversionGoals][google.ads.googleads.v11.services.CustomConversionGoalService.MutateCustomConversionGoals\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomConversionGoalsRequest {
+    /// Required. The ID of the customer whose custom conversion goals are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual custom conversion goal.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomConversionGoalOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on a custom conversion goal.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomConversionGoalOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="custom_conversion_goal_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<custom_conversion_goal_operation::Operation>,
+}
+/// Nested message and enum types in `CustomConversionGoalOperation`.
+pub mod custom_conversion_goal_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new custom
+        /// conversion goal
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomConversionGoal),
+        /// Update operation: The custom conversion goal is expected to have a
+        /// valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CustomConversionGoal),
+        /// Remove operation: A resource name for the removed custom conversion goal
+        /// is expected, in this format:
+        ///
+        /// 'customers/{customer_id}/conversionActions/{ConversionGoal.custom_goal_config.conversion_type_ids}'
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a custom conversion goal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomConversionGoalsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomConversionGoalResult>,
+}
+/// The result for the custom conversion goal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomConversionGoalResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated CustomConversionGoal with only mutable fields after mutate.
+    /// The field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub custom_conversion_goal: ::core::option::Option<super::resources::CustomConversionGoal>,
+}
+/// Generated client implementations.
+pub mod custom_conversion_goal_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage custom conversion goal.
+    #[derive(Debug, Clone)]
+    pub struct CustomConversionGoalServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomConversionGoalServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomConversionGoalServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomConversionGoalServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes custom conversion goals. Operation statuses
+        /// are returned.
+        pub async fn mutate_custom_conversion_goals(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomConversionGoalsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomConversionGoalsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomConversionGoalService/MutateCustomConversionGoals",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -13614,6 +10915,143 @@ pub mod customer_asset_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.CustomerAssetService/MutateCustomerAssets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[CustomerConversionGoalService.MutateCustomerConversionGoals][google.ads.googleads.v11.services.CustomerConversionGoalService.MutateCustomerConversionGoals\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerConversionGoalsRequest {
+    /// Required. The ID of the customer whose customer conversion goals are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual customer conversion goal.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomerConversionGoalOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// A single operation (update) on a customer conversion goal.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerConversionGoalOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="customer_conversion_goal_operation::Operation", tags="1")]
+    pub operation: ::core::option::Option<customer_conversion_goal_operation::Operation>,
+}
+/// Nested message and enum types in `CustomerConversionGoalOperation`.
+pub mod customer_conversion_goal_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Update operation: The customer conversion goal is expected to have a
+        /// valid resource name.
+        #[prost(message, tag="1")]
+        Update(super::super::resources::CustomerConversionGoal),
+    }
+}
+/// Response message for a customer conversion goal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerConversionGoalsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomerConversionGoalResult>,
+}
+/// The result for the customer conversion goal mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerConversionGoalResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod customer_conversion_goal_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage customer conversion goal.
+    #[derive(Debug, Clone)]
+    pub struct CustomerConversionGoalServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerConversionGoalServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerConversionGoalServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerConversionGoalServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates or removes customer conversion goals. Operation statuses
+        /// are returned.
+        pub async fn mutate_customer_conversion_goals(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomerConversionGoalsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomerConversionGoalsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerConversionGoalService/MutateCustomerConversionGoals",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -13978,16 +11416,15 @@ pub mod customer_extension_setting_service_client {
         }
     }
 }
-/// Request message for
-/// \[CustomerNegativeCriterionService.MutateCustomerNegativeCriteria][google.ads.googleads.v11.services.CustomerNegativeCriterionService.MutateCustomerNegativeCriteria\].
+/// Request message for \[CustomerLabelService.MutateCustomerLabels][google.ads.googleads.v11.services.CustomerLabelService.MutateCustomerLabels\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerNegativeCriteriaRequest {
-    /// Required. The ID of the customer whose criteria are being modified.
+pub struct MutateCustomerLabelsRequest {
+    /// Required. ID of the customer whose customer-label relationships are being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual criteria.
+    /// Required. The list of operations to perform on customer-label relationships.
     #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomerNegativeCriterionOperation>,
+    pub operations: ::prost::alloc::vec::Vec<CustomerLabelOperation>,
     /// If true, successful operations will be carried out and invalid
     /// operations will return errors. If false, all operations will be carried
     /// out in one transaction if and only if they are all valid.
@@ -13998,37 +11435,34 @@ pub struct MutateCustomerNegativeCriteriaRequest {
     /// returned, not results.
     #[prost(bool, tag="4")]
     pub validate_only: bool,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned post mutation.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
-    pub response_content_type: i32,
 }
-/// A single operation (create or remove) on a customer level negative criterion.
+/// A single operation (create, remove) on a customer-label relationship.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerNegativeCriterionOperation {
+pub struct CustomerLabelOperation {
     /// The mutate operation.
-    #[prost(oneof="customer_negative_criterion_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<customer_negative_criterion_operation::Operation>,
+    #[prost(oneof="customer_label_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<customer_label_operation::Operation>,
 }
-/// Nested message and enum types in `CustomerNegativeCriterionOperation`.
-pub mod customer_negative_criterion_operation {
+/// Nested message and enum types in `CustomerLabelOperation`.
+pub mod customer_label_operation {
     /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Create operation: No resource name is expected for the new criterion.
+        /// Create operation: No resource name is expected for the new customer-label
+        /// relationship.
         #[prost(message, tag="1")]
-        Create(super::super::resources::CustomerNegativeCriterion),
-        /// Remove operation: A resource name for the removed criterion is expected,
-        /// in this format:
+        Create(super::super::resources::CustomerLabel),
+        /// Remove operation: A resource name for the customer-label relationship
+        /// being removed, in this format:
         ///
-        /// `customers/{customer_id}/customerNegativeCriteria/{criterion_id}`
+        /// `customers/{customer_id}/customerLabels/{label_id}`
         #[prost(string, tag="2")]
         Remove(::prost::alloc::string::String),
     }
 }
-/// Response message for customer negative criterion mutate.
+/// Response message for a customer labels mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerNegativeCriteriaResponse {
+pub struct MutateCustomerLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
     /// Returned only when partial_failure = true and all errors occur inside the
     /// operations. If any errors occur outside the operations (for example, auth
@@ -14037,30 +11471,26 @@ pub struct MutateCustomerNegativeCriteriaResponse {
     pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// All results for the mutate.
     #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomerNegativeCriteriaResult>,
+    pub results: ::prost::alloc::vec::Vec<MutateCustomerLabelResult>,
 }
-/// The result for the criterion mutate.
+/// The result for a customer label mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerNegativeCriteriaResult {
+pub struct MutateCustomerLabelResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The mutated criterion with only mutable fields after mutate. The field will
-    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
-    #[prost(message, optional, tag="2")]
-    pub customer_negative_criterion: ::core::option::Option<super::resources::CustomerNegativeCriterion>,
 }
 /// Generated client implementations.
-pub mod customer_negative_criterion_service_client {
+pub mod customer_label_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage customer negative criteria.
+    /// Service to manage labels on customers.
     #[derive(Debug, Clone)]
-    pub struct CustomerNegativeCriterionServiceClient<T> {
+    pub struct CustomerLabelServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> CustomerNegativeCriterionServiceClient<T>
+    impl<T> CustomerLabelServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -14078,7 +11508,7 @@ pub mod customer_negative_criterion_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CustomerNegativeCriterionServiceClient<InterceptedService<T, F>>
+        ) -> CustomerLabelServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -14092,9 +11522,7 @@ pub mod customer_negative_criterion_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            CustomerNegativeCriterionServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
+            CustomerLabelServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -14111,26 +11539,24 @@ pub mod customer_negative_criterion_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates or removes criteria. Operation statuses are returned.
+        /// Creates and removes customer-label relationships.
+        /// Operation statuses are returned.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
-        ///   [CriterionError]()
         ///   [DatabaseError]()
-        ///   [FieldError]()
         ///   [HeaderError]()
         ///   [InternalError]()
+        ///   [LabelError]()
         ///   [MutateError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        pub async fn mutate_customer_negative_criteria(
+        pub async fn mutate_customer_labels(
             &mut self,
-            request: impl tonic::IntoRequest<
-                super::MutateCustomerNegativeCriteriaRequest,
-            >,
+            request: impl tonic::IntoRequest<super::MutateCustomerLabelsRequest>,
         ) -> Result<
-            tonic::Response<super::MutateCustomerNegativeCriteriaResponse>,
+            tonic::Response<super::MutateCustomerLabelsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -14144,7 +11570,260 @@ pub mod customer_negative_criterion_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerNegativeCriterionService/MutateCustomerNegativeCriteria",
+                "/google.ads.googleads.v11.services.CustomerLabelService/MutateCustomerLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CustomerService.MutateCustomer][google.ads.googleads.v11.services.CustomerService.MutateCustomer\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerRequest {
+    /// Required. The ID of the customer being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The operation to perform on the customer
+    #[prost(message, optional, tag="4")]
+    pub operation: ::core::option::Option<CustomerOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="5")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="6")]
+    pub response_content_type: i32,
+}
+/// Request message for \[CustomerService.CreateCustomerClient][google.ads.googleads.v11.services.CustomerService.CreateCustomerClient\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateCustomerClientRequest {
+    /// Required. The ID of the Manager under whom client customer is being created.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The new client customer to create. The resource name on this customer
+    /// will be ignored.
+    #[prost(message, optional, tag="2")]
+    pub customer_client: ::core::option::Option<super::resources::Customer>,
+    /// Email address of the user who should be invited on the created client
+    /// customer. Accessible only to customers on the allow-list.
+    #[prost(string, optional, tag="5")]
+    pub email_address: ::core::option::Option<::prost::alloc::string::String>,
+    /// The proposed role of user on the created client customer.
+    /// Accessible only to customers on the allow-list.
+    #[prost(enumeration="super::enums::access_role_enum::AccessRole", tag="4")]
+    pub access_role: i32,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="6")]
+    pub validate_only: bool,
+}
+/// A single update on a customer.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerOperation {
+    /// Mutate operation. Only updates are supported for customer.
+    #[prost(message, optional, tag="1")]
+    pub update: ::core::option::Option<super::resources::Customer>,
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Response message for CreateCustomerClient mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateCustomerClientResponse {
+    /// The resource name of the newly created customer. Customer resource names
+    /// have the form: `customers/{customer_id}`.
+    #[prost(string, tag="2")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Link for inviting user to access the created customer. Accessible to
+    /// allowlisted customers only.
+    #[prost(string, tag="3")]
+    pub invitation_link: ::prost::alloc::string::String,
+}
+/// Response message for customer mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerResponse {
+    /// Result for the mutate.
+    #[prost(message, optional, tag="2")]
+    pub result: ::core::option::Option<MutateCustomerResult>,
+}
+/// The result for the customer mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated customer with only mutable fields after mutate. The fields will
+    /// only be returned when response_content_type is set to "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub customer: ::core::option::Option<super::resources::Customer>,
+}
+/// Request message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAccessibleCustomersRequest {
+}
+/// Response message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAccessibleCustomersResponse {
+    /// Resource name of customers directly accessible by the
+    /// user authenticating the call.
+    #[prost(string, repeated, tag="1")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod customer_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage customers.
+    #[derive(Debug, Clone)]
+    pub struct CustomerServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Updates a customer. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [UrlFieldError]()
+        pub async fn mutate_customer(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomerRequest>,
+        ) -> Result<tonic::Response<super::MutateCustomerResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerService/MutateCustomer",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns resource names of customers directly accessible by the
+        /// user authenticating the call.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_accessible_customers(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAccessibleCustomersRequest>,
+        ) -> Result<
+            tonic::Response<super::ListAccessibleCustomersResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerService/ListAccessibleCustomers",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new client under manager. The new client customer is returned.
+        ///
+        /// List of thrown errors:
+        ///   [AccessInvitationError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CurrencyCodeError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [ManagerLinkError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [StringLengthError]()
+        ///   [TimeZoneError]()
+        pub async fn create_customer_client(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateCustomerClientRequest>,
+        ) -> Result<
+            tonic::Response<super::CreateCustomerClientResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerService/CreateCustomerClient",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -14308,6 +11987,818 @@ pub mod customizer_attribute_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.CustomizerAttributeService/MutateCustomizerAttributes",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[ExperimentArmService.MutateExperimentArms][google.ads.googleads.v11.services.ExperimentArmService.MutateExperimentArms\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentArmsRequest {
+    /// Required. The ID of the customer whose experiments are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual experiment arm.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ExperimentArmOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation on an experiment arm.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExperimentArmOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="experiment_arm_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<experiment_arm_operation::Operation>,
+}
+/// Nested message and enum types in `ExperimentArmOperation`.
+pub mod experiment_arm_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation
+        #[prost(message, tag="1")]
+        Create(super::super::resources::ExperimentArm),
+        /// Update operation: The experiment arm is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::ExperimentArm),
+        /// Remove operation: The experiment arm is expected to have a valid
+        /// resource name, in this format:
+        ///
+        /// `customers/{customer_id}/experiments/{campaign_experiment_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for experiment arm mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentArmsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateExperimentArmResult>,
+}
+/// The result for the experiment arm mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentArmResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated experiment arm with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub experiment_arm: ::core::option::Option<super::resources::ExperimentArm>,
+}
+/// Generated client implementations.
+pub mod experiment_arm_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage experiment arms.
+    #[derive(Debug, Clone)]
+    pub struct ExperimentArmServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ExperimentArmServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ExperimentArmServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ExperimentArmServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes experiment arms. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentArmError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_experiment_arms(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateExperimentArmsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateExperimentArmsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentArmService/MutateExperimentArms",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[ExperimentService.MutateExperiments][google.ads.googleads.v11.services.ExperimentService.MutateExperiments\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentsRequest {
+    /// Required. The ID of the customer whose experiments are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual experiments.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ExperimentOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation on an experiment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExperimentOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="experiment_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<experiment_operation::Operation>,
+}
+/// Nested message and enum types in `ExperimentOperation`.
+pub mod experiment_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation
+        #[prost(message, tag="1")]
+        Create(super::super::resources::Experiment),
+        /// Update operation: The experiment is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::Experiment),
+        /// Remove operation: The experiment is expected to have a valid
+        /// resource name, in this format:
+        ///
+        /// `customers/{customer_id}/experiments/{campaign_experiment_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for experiment mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateExperimentResult>,
+}
+/// The result for the campaign experiment mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExperimentResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Request message for \[ExperimentService.EndExperiment][google.ads.googleads.v11.services.ExperimentService.EndExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndExperimentRequest {
+    /// Required. The resource name of the campaign experiment to end.
+    #[prost(string, tag="1")]
+    pub experiment: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// Request message for
+/// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListExperimentAsyncErrorsRequest {
+    /// Required. The name of the experiment from which to retrieve the async
+    /// errors.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Token of the page to retrieve. If not specified, the first
+    /// page of results will be returned. Use the value obtained from
+    /// `next_page_token` in the previous response in order to request
+    /// the next page of results.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Number of elements to retrieve in a single page.
+    /// When a page request is too large, the server may decide to
+    /// further limit the number of returned resources.
+    /// The maximum page size is 1000.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+}
+/// Response message for
+/// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListExperimentAsyncErrorsResponse {
+    /// details of the errors when performing the asynchronous operation.
+    #[prost(message, repeated, tag="1")]
+    pub errors: ::prost::alloc::vec::Vec<super::super::super::super::rpc::Status>,
+    /// Pagination token used to retrieve the next page of results.
+    /// Pass the content of this string as the `page_token` attribute of
+    /// the next request. `next_page_token` is not returned for the last
+    /// page.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for \[ExperimentService.GraduateExperiment][google.ads.googleads.v11.services.ExperimentService.GraduateExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GraduateExperimentRequest {
+    /// Required. The experiment to be graduated.
+    #[prost(string, tag="1")]
+    pub experiment: ::prost::alloc::string::String,
+    /// Required. List of campaign budget mappings for graduation. Each campaign that
+    /// appears here will graduate, and will be assigned a new budget that is
+    /// paired with it in the mapping. The maximum size is one.
+    #[prost(message, repeated, tag="2")]
+    pub campaign_budget_mappings: ::prost::alloc::vec::Vec<CampaignBudgetMapping>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// The mapping of experiment campaign and budget to be graduated.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignBudgetMapping {
+    /// Required. The experiment campaign to graduate.
+    #[prost(string, tag="1")]
+    pub experiment_campaign: ::prost::alloc::string::String,
+    /// Required. The budget that should be attached to the graduating experiment campaign.
+    #[prost(string, tag="2")]
+    pub campaign_budget: ::prost::alloc::string::String,
+}
+/// Request message for \[ExperimentService.ScheduleExperiment][google.ads.googleads.v11.services.ExperimentService.ScheduleExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScheduleExperimentRequest {
+    /// Required. The scheduled experiment.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// The metadata of the scheduled experiment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ScheduleExperimentMetadata {
+    /// Required. The scheduled experiment.
+    #[prost(string, tag="1")]
+    pub experiment: ::prost::alloc::string::String,
+}
+/// Request message for \[ExperimentService.PromoteExperiment][google.ads.googleads.v11.services.ExperimentService.PromoteExperiment\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PromoteExperimentRequest {
+    /// Required. The resource name of the experiment to promote.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="2")]
+    pub validate_only: bool,
+}
+/// The metadata of the promoted experiment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PromoteExperimentMetadata {
+    /// Required. The promoted experiment.
+    #[prost(string, tag="1")]
+    pub experiment: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod experiment_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage experiments.
+    #[derive(Debug, Clone)]
+    pub struct ExperimentServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ExperimentServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ExperimentServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ExperimentServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes experiments. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_experiments(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateExperimentsRequest>,
+        ) -> Result<tonic::Response<super::MutateExperimentsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/MutateExperiments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Immediately ends an experiment, changing the experiment's scheduled
+        /// end date and without waiting for end of day. End date is updated to be the
+        /// time of the request.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn end_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::EndExperimentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/EndExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns all errors that occurred during the last Experiment update (either
+        /// scheduling or promotion).
+        /// Supports standard list paging.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_experiment_async_errors(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListExperimentAsyncErrorsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListExperimentAsyncErrorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/ListExperimentAsyncErrors",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Graduates an experiment to a full campaign.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn graduate_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GraduateExperimentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/GraduateExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Schedule an experiment. The in design campaign
+        /// will be converted into a real campaign (called the experiment campaign)
+        /// that will begin serving ads if successfully created.
+        ///
+        /// The experiment is scheduled immediately with status INITIALIZING.
+        /// This method returns a long running operation that tracks the forking of the
+        /// in design campaign. If the forking fails, a list of errors can be retrieved
+        /// using the ListExperimentAsyncErrors method. The operation's
+        /// metadata will be a string containing the resource name of the created
+        /// experiment.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DateRangeError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        pub async fn schedule_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ScheduleExperimentRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/ScheduleExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Promotes the trial campaign thus applying changes in the trial campaign
+        /// to the base campaign.
+        /// This method returns a long running operation that tracks the promotion of
+        /// the experiment campaign. If it fails, a list of errors can be retrieved
+        /// using the ListExperimentAsyncErrors method. The operation's
+        /// metadata will be a string containing the resource name of the created
+        /// experiment.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [ExperimentError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn promote_experiment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PromoteExperimentRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExperimentService/PromoteExperiment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[ExtensionFeedItemService.MutateExtensionFeedItems][google.ads.googleads.v11.services.ExtensionFeedItemService.MutateExtensionFeedItems\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExtensionFeedItemsRequest {
+    /// Required. The ID of the customer whose extension feed items are being
+    /// modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual extension feed items.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<ExtensionFeedItemOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, update, remove) on an extension feed item.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtensionFeedItemOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="extension_feed_item_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<extension_feed_item_operation::Operation>,
+}
+/// Nested message and enum types in `ExtensionFeedItemOperation`.
+pub mod extension_feed_item_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new extension
+        /// feed item.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::ExtensionFeedItem),
+        /// Update operation: The extension feed item is expected to have a
+        /// valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::ExtensionFeedItem),
+        /// Remove operation: A resource name for the removed extension feed item
+        /// is expected, in this format:
+        ///
+        /// `customers/{customer_id}/extensionFeedItems/{feed_item_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for an extension feed item mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExtensionFeedItemsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateExtensionFeedItemResult>,
+}
+/// The result for the extension feed item mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateExtensionFeedItemResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated extension feed item with only mutable fields after mutate. The
+    /// field will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub extension_feed_item: ::core::option::Option<super::resources::ExtensionFeedItem>,
+}
+/// Generated client implementations.
+pub mod extension_feed_item_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage extension feed items.
+    #[derive(Debug, Clone)]
+    pub struct ExtensionFeedItemServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ExtensionFeedItemServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ExtensionFeedItemServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ExtensionFeedItemServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates, updates, or removes extension feed items. Operation
+        /// statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [CountryCodeError]()
+        ///   [DatabaseError]()
+        ///   [DateError]()
+        ///   [DistinctError]()
+        ///   [ExtensionFeedItemError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [ImageError]()
+        ///   [InternalError]()
+        ///   [LanguageCodeError]()
+        ///   [MutateError]()
+        ///   [NewResourceCreationError]()
+        ///   [OperationAccessDeniedError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringLengthError]()
+        ///   [UrlFieldError]()
+        pub async fn mutate_extension_feed_items(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateExtensionFeedItemsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateExtensionFeedItemsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ExtensionFeedItemService/MutateExtensionFeedItems",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -14833,6 +13324,181 @@ pub mod feed_item_target_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.FeedItemTargetService/MutateFeedItemTargets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[FeedMappingService.MutateFeedMappings][google.ads.googleads.v11.services.FeedMappingService.MutateFeedMappings\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateFeedMappingsRequest {
+    /// Required. The ID of the customer whose feed mappings are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual feed mappings.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<FeedMappingOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation (create, remove) on a feed mapping.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeedMappingOperation {
+    /// The mutate operation.
+    #[prost(oneof="feed_mapping_operation::Operation", tags="1, 3")]
+    pub operation: ::core::option::Option<feed_mapping_operation::Operation>,
+}
+/// Nested message and enum types in `FeedMappingOperation`.
+pub mod feed_mapping_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new feed mapping.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::FeedMapping),
+        /// Remove operation: A resource name for the removed feed mapping is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/feedMappings/{feed_id}~{feed_mapping_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for a feed mapping mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateFeedMappingsResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateFeedMappingResult>,
+}
+/// The result for the feed mapping mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateFeedMappingResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated feed mapping with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub feed_mapping: ::core::option::Option<super::resources::FeedMapping>,
+}
+/// Generated client implementations.
+pub mod feed_mapping_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage feed mappings.
+    #[derive(Debug, Clone)]
+    pub struct FeedMappingServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> FeedMappingServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> FeedMappingServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            FeedMappingServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes feed mappings. Operation statuses are
+        /// returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [DistinctError]()
+        ///   [FeedMappingError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [NotEmptyError]()
+        ///   [OperationAccessDeniedError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_feed_mappings(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateFeedMappingsRequest>,
+        ) -> Result<tonic::Response<super::MutateFeedMappingsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.FeedMappingService/MutateFeedMappings",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -16429,6 +15095,176 @@ pub mod label_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.googleads.v11.services.LabelService/MutateLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[MediaFileService.MutateMediaFiles][google.ads.googleads.v11.services.MediaFileService.MutateMediaFiles\]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateMediaFilesRequest {
+    /// Required. The ID of the customer whose media files are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual media file.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<MediaFileOperation>,
+    /// If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// Default is false.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned post mutation.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="5")]
+    pub response_content_type: i32,
+}
+/// A single operation to create media file.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MediaFileOperation {
+    /// The mutate operation.
+    #[prost(oneof="media_file_operation::Operation", tags="1")]
+    pub operation: ::core::option::Option<media_file_operation::Operation>,
+}
+/// Nested message and enum types in `MediaFileOperation`.
+pub mod media_file_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new media file.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::MediaFile),
+    }
+}
+/// Response message for a media file mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateMediaFilesResponse {
+    /// Errors that pertain to operation failures in the partial failure mode.
+    /// Returned only when partial_failure = true and all errors occur inside the
+    /// operations. If any errors occur outside the operations (for example, auth
+    /// errors), we return an RPC level error.
+    #[prost(message, optional, tag="3")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateMediaFileResult>,
+}
+/// The result for the media file mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateMediaFileResult {
+    /// The resource name returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The mutated media file with only mutable fields after mutate. The field
+    /// will only be returned when response_content_type is set to
+    /// "MUTABLE_RESOURCE".
+    #[prost(message, optional, tag="2")]
+    pub media_file: ::core::option::Option<super::resources::MediaFile>,
+}
+/// Generated client implementations.
+pub mod media_file_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage media files.
+    #[derive(Debug, Clone)]
+    pub struct MediaFileServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> MediaFileServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MediaFileServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            MediaFileServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates media files. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [DistinctError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [IdError]()
+        ///   [ImageError]()
+        ///   [InternalError]()
+        ///   [MediaBundleError]()
+        ///   [MediaFileError]()
+        ///   [NewResourceCreationError]()
+        ///   [NotEmptyError]()
+        ///   [NullError]()
+        ///   [OperatorError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        ///   [SizeLimitError]()
+        ///   [StringFormatError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_media_files(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateMediaFilesRequest>,
+        ) -> Result<tonic::Response<super::MutateMediaFilesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.MediaFileService/MutateMediaFiles",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -18253,158 +17089,42 @@ pub mod google_ads_service_client {
         }
     }
 }
-/// Request message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
+/// Request message for
+/// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBatchJobRequest {
-    /// Required. The ID of the customer for which to create a batch job.
+pub struct SuggestKeywordThemeConstantsRequest {
+    /// The query text of a keyword theme that will be used to map to similar
+    /// keyword themes. For example, "plumber" or "roofer".
     #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on an individual batch job.
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<BatchJobOperation>,
-}
-/// A single operation on a batch job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchJobOperation {
-    /// The mutate operation.
-    #[prost(oneof="batch_job_operation::Operation", tags="1, 4")]
-    pub operation: ::core::option::Option<batch_job_operation::Operation>,
-}
-/// Nested message and enum types in `BatchJobOperation`.
-pub mod batch_job_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new batch job.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::BatchJob),
-        /// Remove operation: The batch job must not have been run. A resource name
-        /// for the removed batch job is expected, in this format:
-        ///
-        /// `customers/{customer_id}/batchJobs/{batch_job_id}`
-        #[prost(string, tag="4")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBatchJobResponse {
-    /// The result for the mutate.
-    #[prost(message, optional, tag="1")]
-    pub result: ::core::option::Option<MutateBatchJobResult>,
-}
-/// The result for the batch job mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateBatchJobResult {
-    /// The resource name of the batch job.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for \[BatchJobService.RunBatchJob][google.ads.googleads.v11.services.BatchJobService.RunBatchJob\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunBatchJobRequest {
-    /// Required. The resource name of the BatchJob to run.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AddBatchJobOperationsRequest {
-    /// Required. The resource name of the batch job.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// A token used to enforce sequencing.
-    ///
-    /// The first AddBatchJobOperations request for a batch job should not set
-    /// sequence_token. Subsequent requests must set sequence_token to the value of
-    /// next_sequence_token received in the previous AddBatchJobOperations
-    /// response.
+    pub query_text: ::prost::alloc::string::String,
+    /// Upper-case, two-letter country code as defined by ISO-3166. This for
+    /// refining the scope of the query, default to 'US' if not set.
     #[prost(string, tag="2")]
-    pub sequence_token: ::prost::alloc::string::String,
-    /// Required. The list of mutates being added.
-    ///
-    /// Operations can use negative integers as temp ids to signify dependencies
-    /// between entities created in this batch job. For example, a customer with
-    /// id = 1234 can create a campaign and an ad group in that same campaign by
-    /// creating a campaign in the first operation with the resource name
-    /// explicitly set to "customers/1234/campaigns/-1", and creating an ad group
-    /// in the second operation with the campaign field also set to
-    /// "customers/1234/campaigns/-1".
-    #[prost(message, repeated, tag="3")]
-    pub mutate_operations: ::prost::alloc::vec::Vec<MutateOperation>,
+    pub country_code: ::prost::alloc::string::String,
+    /// The two letter language code for get corresponding keyword theme for
+    /// refining the scope of the query, default to 'en' if not set.
+    #[prost(string, tag="3")]
+    pub language_code: ::prost::alloc::string::String,
 }
-/// Response message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
+/// Response message for
+/// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AddBatchJobOperationsResponse {
-    /// The total number of operations added so far for this batch job.
-    #[prost(int64, tag="1")]
-    pub total_operations: i64,
-    /// The sequence token to be used when calling AddBatchJobOperations again if
-    /// more operations need to be added. The next AddBatchJobOperations request
-    /// must set the sequence_token field to the value of this field.
-    #[prost(string, tag="2")]
-    pub next_sequence_token: ::prost::alloc::string::String,
-}
-/// Request message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBatchJobResultsRequest {
-    /// Required. The resource name of the batch job whose results are being listed.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Token of the page to retrieve. If not specified, the first
-    /// page of results will be returned. Use the value obtained from
-    /// `next_page_token` in the previous response in order to request
-    /// the next page of results.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Number of elements to retrieve in a single page.
-    /// When a page request is too large, the server may decide to
-    /// further limit the number of returned resources.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
-    /// The response content type setting. Determines whether the mutable resource
-    /// or just the resource name should be returned.
-    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
-    pub response_content_type: i32,
-}
-/// Response message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBatchJobResultsResponse {
-    /// The list of rows that matched the query.
+pub struct SuggestKeywordThemeConstantsResponse {
+    /// Smart Campaign keyword theme suggestions.
     #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<BatchJobResult>,
-    /// Pagination token used to retrieve the next page of results.
-    /// Pass the content of this string as the `page_token` attribute of
-    /// the next request. `next_page_token` is not returned for the last
-    /// page.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// An individual batch job result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchJobResult {
-    /// Index of the mutate operation.
-    #[prost(int64, tag="1")]
-    pub operation_index: i64,
-    /// Response for the mutate.
-    /// May be empty if errors occurred.
-    #[prost(message, optional, tag="2")]
-    pub mutate_operation_response: ::core::option::Option<MutateOperationResponse>,
-    /// Details of the errors when processing the operation.
-    #[prost(message, optional, tag="3")]
-    pub status: ::core::option::Option<super::super::super::super::rpc::Status>,
+    pub keyword_theme_constants: ::prost::alloc::vec::Vec<super::resources::KeywordThemeConstant>,
 }
 /// Generated client implementations.
-pub mod batch_job_service_client {
+pub mod keyword_theme_constant_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage batch jobs.
+    /// Service to fetch Smart Campaign keyword themes.
     #[derive(Debug, Clone)]
-    pub struct BatchJobServiceClient<T> {
+    pub struct KeywordThemeConstantServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> BatchJobServiceClient<T>
+    impl<T> KeywordThemeConstantServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -18422,7 +17142,7 @@ pub mod batch_job_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> BatchJobServiceClient<InterceptedService<T, F>>
+        ) -> KeywordThemeConstantServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -18436,7 +17156,9 @@ pub mod batch_job_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            BatchJobServiceClient::new(InterceptedService::new(inner, interceptor))
+            KeywordThemeConstantServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -18453,7 +17175,7 @@ pub mod batch_job_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Mutates a batch job.
+        /// Returns KeywordThemeConstant suggestions by keyword themes.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
@@ -18462,75 +17184,11 @@ pub mod batch_job_service_client {
         ///   [InternalError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        pub async fn mutate_batch_job(
+        pub async fn suggest_keyword_theme_constants(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateBatchJobRequest>,
-        ) -> Result<tonic::Response<super::MutateBatchJobResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.BatchJobService/MutateBatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the results of the batch job. The job must be done.
-        /// Supports standard list paging.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [BatchJobError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_batch_job_results(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListBatchJobResultsRequest>,
-        ) -> Result<tonic::Response<super::ListBatchJobResultsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.BatchJobService/ListBatchJobResults",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Runs the batch job.
-        ///
-        /// The Operation.metadata field type is BatchJobMetadata. When finished, the
-        /// long running operation will not contain errors or a response. Instead, use
-        /// ListBatchJobResults to get the results of the job.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [BatchJobError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn run_batch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RunBatchJobRequest>,
+            request: impl tonic::IntoRequest<super::SuggestKeywordThemeConstantsRequest>,
         ) -> Result<
-            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Response<super::SuggestKeywordThemeConstantsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -18544,26 +17202,102 @@ pub mod batch_job_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.BatchJobService/RunBatchJob",
+                "/google.ads.googleads.v11.services.KeywordThemeConstantService/SuggestKeywordThemeConstants",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Add operations to the batch job.
+    }
+}
+/// Request message for
+/// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RegenerateShareableLinkIdRequest {
+    /// Resource name of the third party app analytics link.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RegenerateShareableLinkIdResponse {
+}
+/// Generated client implementations.
+pub mod third_party_app_analytics_link_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service allows management of links between Google Ads and third party
+    /// app analytics.
+    #[derive(Debug, Clone)]
+    pub struct ThirdPartyAppAnalyticsLinkServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ThirdPartyAppAnalyticsLinkServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ThirdPartyAppAnalyticsLinkServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ThirdPartyAppAnalyticsLinkServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Regenerate ThirdPartyAppAnalyticsLink.shareable_link_id that should be
+        /// provided to the third party when setting up app analytics.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
-        ///   [BatchJobError]()
         ///   [HeaderError]()
         ///   [InternalError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        ///   [ResourceCountLimitExceededError]()
-        pub async fn add_batch_job_operations(
+        pub async fn regenerate_shareable_link_id(
             &mut self,
-            request: impl tonic::IntoRequest<super::AddBatchJobOperationsRequest>,
+            request: impl tonic::IntoRequest<super::RegenerateShareableLinkIdRequest>,
         ) -> Result<
-            tonic::Response<super::AddBatchJobOperationsResponse>,
+            tonic::Response<super::RegenerateShareableLinkIdResponse>,
             tonic::Status,
         > {
             self.inner
@@ -18577,7 +17311,250 @@ pub mod batch_job_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.BatchJobService/AddBatchJobOperations",
+                "/google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService/RegenerateShareableLinkId",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadConversionAdjustmentsRequest {
+    /// Required. The ID of the customer performing the upload.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The conversion adjustments that are being uploaded.
+    #[prost(message, repeated, tag="2")]
+    pub conversion_adjustments: ::prost::alloc::vec::Vec<ConversionAdjustment>,
+    /// Required. If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried out
+    /// in one transaction if and only if they are all valid. This should always be
+    /// set to true.
+    /// See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// Response message for
+/// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadConversionAdjustmentsResponse {
+    /// Errors that pertain to conversion adjustment failures in the partial
+    /// failure mode. Returned when all errors occur inside the adjustments. If any
+    /// errors occur outside the adjustments (for example, auth errors), we return
+    /// an RPC level error. See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// Returned for successfully processed conversion adjustments. Proto will be
+    /// empty for rows that received an error. Results are not returned when
+    /// validate_only is true.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<ConversionAdjustmentResult>,
+}
+/// A conversion adjustment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionAdjustment {
+    /// For adjustments, uniquely identifies a conversion that was reported
+    /// without an order ID specified. If the adjustment_type is ENHANCEMENT, this
+    /// value is optional but may be set in addition to the order_id.
+    #[prost(message, optional, tag="12")]
+    pub gclid_date_time_pair: ::core::option::Option<GclidDateTimePair>,
+    /// The order ID of the conversion to be adjusted. If the conversion was
+    /// reported with an order ID specified, that order ID must be used as the
+    /// identifier here. The order ID is required for enhancements.
+    #[prost(string, optional, tag="13")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Resource name of the conversion action associated with this conversion
+    /// adjustment. Note: Although this resource name consists of a customer id and
+    /// a conversion action id, validation will ignore the customer id and use the
+    /// conversion action id as the sole identifier of the conversion action.
+    #[prost(string, optional, tag="8")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the adjustment occurred. Must be after the
+    /// conversion_date_time. The timezone must be specified. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="9")]
+    pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// The adjustment type.
+    #[prost(enumeration="super::enums::conversion_adjustment_type_enum::ConversionAdjustmentType", tag="5")]
+    pub adjustment_type: i32,
+    /// Information needed to restate the conversion's value.
+    /// Required for restatements. Should not be supplied for retractions. An error
+    /// will be returned if provided for a retraction.
+    /// NOTE: If you want to upload a second restatement with a different adjusted
+    /// value, it must have a new, more recent, adjustment occurrence time.
+    /// Otherwise, it will be treated as a duplicate of the previous restatement
+    /// and ignored.
+    #[prost(message, optional, tag="6")]
+    pub restatement_value: ::core::option::Option<RestatementValue>,
+    /// The user identifiers to enhance the original conversion.
+    /// ConversionAdjustmentUploadService only accepts user identifiers in
+    /// enhancements. The maximum number of user identifiers for each
+    /// enhancement is 5.
+    #[prost(message, repeated, tag="10")]
+    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
+    /// The user agent to enhance the original conversion. This can be found in
+    /// your user's HTTP request header when they convert on your web page.
+    /// Example, "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X)". User
+    /// agent can only be specified in enhancements with user identifiers. This
+    /// should match the user agent of the request that sent the original
+    /// conversion so the conversion and its enhancement are either both attributed
+    /// as same-device or both attributed as cross-device.
+    #[prost(string, optional, tag="11")]
+    pub user_agent: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Contains information needed to restate a conversion's value.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RestatementValue {
+    /// The restated conversion value. This is the value of the conversion after
+    /// restatement. For example, to change the value of a conversion from 100 to
+    /// 70, an adjusted value of 70 should be reported.
+    /// NOTE: If you want to upload a second restatement with a different adjusted
+    /// value, it must have a new, more recent, adjustment occurrence time.
+    /// Otherwise, it will be treated as a duplicate of the previous restatement
+    /// and ignored.
+    #[prost(double, optional, tag="3")]
+    pub adjusted_value: ::core::option::Option<f64>,
+    /// The currency of the restated value. If not provided, then the default
+    /// currency from the conversion action is used, and if that is not set then
+    /// the account currency is used. This is the ISO 4217 3-character currency
+    /// code for example, USD or EUR.
+    #[prost(string, optional, tag="4")]
+    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Uniquely identifies a conversion that was reported without an order ID
+/// specified.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GclidDateTimePair {
+    /// Google click ID (gclid) associated with the original conversion for this
+    /// adjustment.
+    #[prost(string, optional, tag="3")]
+    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the original conversion for this adjustment
+    /// occurred. The timezone must be specified. The format is "yyyy-mm-dd
+    /// hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="4")]
+    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Information identifying a successfully processed ConversionAdjustment.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionAdjustmentResult {
+    /// The gclid and conversion date time of the conversion.
+    #[prost(message, optional, tag="9")]
+    pub gclid_date_time_pair: ::core::option::Option<GclidDateTimePair>,
+    /// The order ID of the conversion to be adjusted.
+    #[prost(string, tag="10")]
+    pub order_id: ::prost::alloc::string::String,
+    /// Resource name of the conversion action associated with this conversion
+    /// adjustment.
+    #[prost(string, optional, tag="7")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the adjustment occurred. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="8")]
+    pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// The adjustment type.
+    #[prost(enumeration="super::enums::conversion_adjustment_type_enum::ConversionAdjustmentType", tag="5")]
+    pub adjustment_type: i32,
+}
+/// Generated client implementations.
+pub mod conversion_adjustment_upload_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to upload conversion adjustments.
+    #[derive(Debug, Clone)]
+    pub struct ConversionAdjustmentUploadServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ConversionAdjustmentUploadServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ConversionAdjustmentUploadServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ConversionAdjustmentUploadServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Processes the given conversion adjustments.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [PartialFailureError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn upload_conversion_adjustments(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadConversionAdjustmentsRequest>,
+        ) -> Result<
+            tonic::Response<super::UploadConversionAdjustmentsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ConversionAdjustmentUploadService/UploadConversionAdjustments",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -18818,70 +17795,300 @@ pub mod merchant_center_link_service_client {
         }
     }
 }
-/// Request message for \[CustomInterestService.MutateCustomInterests][google.ads.googleads.v11.services.CustomInterestService.MutateCustomInterests\].
+/// Request message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomInterestsRequest {
-    /// Required. The ID of the customer whose custom interests are being modified.
+pub struct UploadClickConversionsRequest {
+    /// Required. The ID of the customer performing the upload.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual custom interests.
+    /// Required. The conversions that are being uploaded.
     #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomInterestOperation>,
+    pub conversions: ::prost::alloc::vec::Vec<ClickConversion>,
+    /// Required. If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// This should always be set to true.
+    /// See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
     /// If true, the request is validated but not executed. Only errors are
     /// returned, not results.
     #[prost(bool, tag="4")]
     pub validate_only: bool,
 }
-/// A single operation (create, update) on a custom interest.
+/// Response message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomInterestOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="custom_interest_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<custom_interest_operation::Operation>,
+pub struct UploadClickConversionsResponse {
+    /// Errors that pertain to conversion failures in the partial failure mode.
+    /// Returned when all errors occur inside the conversions. If any errors occur
+    /// outside the conversions (for example, auth errors), we return an RPC level
+    /// error. See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// Returned for successfully processed conversions. Proto will be empty for
+    /// rows that received an error. Results are not returned when validate_only is
+    /// true.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<ClickConversionResult>,
 }
-/// Nested message and enum types in `CustomInterestOperation`.
-pub mod custom_interest_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new custom
-        /// interest.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomInterest),
-        /// Update operation: The custom interest is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CustomInterest),
+/// Request message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadCallConversionsRequest {
+    /// Required. The ID of the customer performing the upload.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The conversions that are being uploaded.
+    #[prost(message, repeated, tag="2")]
+    pub conversions: ::prost::alloc::vec::Vec<CallConversion>,
+    /// Required. If true, successful operations will be carried out and invalid
+    /// operations will return errors. If false, all operations will be carried
+    /// out in one transaction if and only if they are all valid.
+    /// This should always be set to true.
+    /// See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(bool, tag="3")]
+    pub partial_failure: bool,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// Response message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadCallConversionsResponse {
+    /// Errors that pertain to conversion failures in the partial failure mode.
+    /// Returned when all errors occur inside the conversions. If any errors occur
+    /// outside the conversions (for example, auth errors), we return an RPC level
+    /// error. See
+    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
+    /// for more information about partial failure.
+    #[prost(message, optional, tag="1")]
+    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// Returned for successfully processed conversions. Proto will be empty for
+    /// rows that received an error. Results are not returned when validate_only is
+    /// true.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<CallConversionResult>,
+}
+/// A click conversion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickConversion {
+    /// The Google click ID (gclid) associated with this conversion.
+    #[prost(string, optional, tag="9")]
+    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
+    /// The click identifier for clicks associated with app conversions and
+    /// originating from iOS devices starting with iOS14.
+    #[prost(string, tag="18")]
+    pub gbraid: ::prost::alloc::string::String,
+    /// The click identifier for clicks associated with web conversions and
+    /// originating from iOS devices starting with iOS14.
+    #[prost(string, tag="19")]
+    pub wbraid: ::prost::alloc::string::String,
+    /// Resource name of the conversion action associated with this conversion.
+    /// Note: Although this resource name consists of a customer id and a
+    /// conversion action id, validation will ignore the customer id and use the
+    /// conversion action id as the sole identifier of the conversion action.
+    #[prost(string, optional, tag="10")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the conversion occurred. Must be after
+    /// the click time. The timezone must be specified. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="11")]
+    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// The value of the conversion for the advertiser.
+    #[prost(double, optional, tag="12")]
+    pub conversion_value: ::core::option::Option<f64>,
+    /// Currency associated with the conversion value. This is the ISO 4217
+    /// 3-character currency code. For example: USD, EUR.
+    #[prost(string, optional, tag="13")]
+    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// The order ID associated with the conversion. An order id can only be used
+    /// for one conversion per conversion action.
+    #[prost(string, optional, tag="14")]
+    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Additional data about externally attributed conversions. This field
+    /// is required for conversions with an externally attributed conversion
+    /// action, but should not be set otherwise.
+    #[prost(message, optional, tag="7")]
+    pub external_attribution_data: ::core::option::Option<ExternalAttributionData>,
+    /// The custom variables associated with this conversion.
+    #[prost(message, repeated, tag="15")]
+    pub custom_variables: ::prost::alloc::vec::Vec<CustomVariable>,
+    /// The cart data associated with this conversion.
+    #[prost(message, optional, tag="16")]
+    pub cart_data: ::core::option::Option<CartData>,
+    /// The user identifiers associated with this conversion. Only hashed_email and
+    /// hashed_phone_number are supported for conversion uploads. The maximum
+    /// number of user identifiers for each conversion is 5.
+    #[prost(message, repeated, tag="17")]
+    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
+    /// The environment this conversion was recorded on, for example, App or Web.
+    #[prost(enumeration="super::enums::conversion_environment_enum::ConversionEnvironment", tag="20")]
+    pub conversion_environment: i32,
+}
+/// A call conversion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CallConversion {
+    /// The caller id from which this call was placed. Caller id is expected to be
+    /// in E.164 format with preceding '+' sign, for example, "+16502531234".
+    #[prost(string, optional, tag="7")]
+    pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the call occurred. The timezone must be specified.
+    /// The format is "yyyy-mm-dd hh:mm:ss+|-hh:mm",
+    /// for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="8")]
+    pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// Resource name of the conversion action associated with this conversion.
+    /// Note: Although this resource name consists of a customer id and a
+    /// conversion action id, validation will ignore the customer id and use the
+    /// conversion action id as the sole identifier of the conversion action.
+    #[prost(string, optional, tag="9")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the conversion occurred. Must be after the call
+    /// time. The timezone must be specified. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="10")]
+    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// The value of the conversion for the advertiser.
+    #[prost(double, optional, tag="11")]
+    pub conversion_value: ::core::option::Option<f64>,
+    /// Currency associated with the conversion value. This is the ISO 4217
+    /// 3-character currency code. For example: USD, EUR.
+    #[prost(string, optional, tag="12")]
+    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// The custom variables associated with this conversion.
+    #[prost(message, repeated, tag="13")]
+    pub custom_variables: ::prost::alloc::vec::Vec<CustomVariable>,
+}
+/// Contains additional information about externally attributed conversions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExternalAttributionData {
+    /// Represents the fraction of the conversion that is attributed to the
+    /// Google Ads click.
+    #[prost(double, optional, tag="3")]
+    pub external_attribution_credit: ::core::option::Option<f64>,
+    /// Specifies the attribution model name.
+    #[prost(string, optional, tag="4")]
+    pub external_attribution_model: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Identifying information for a successfully processed ClickConversion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClickConversionResult {
+    /// The Google Click ID (gclid) associated with this conversion.
+    #[prost(string, optional, tag="4")]
+    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
+    /// The click identifier for clicks associated with app conversions and
+    /// originating from iOS devices starting with iOS14.
+    #[prost(string, tag="8")]
+    pub gbraid: ::prost::alloc::string::String,
+    /// The click identifier for clicks associated with web conversions and
+    /// originating from iOS devices starting with iOS14.
+    #[prost(string, tag="9")]
+    pub wbraid: ::prost::alloc::string::String,
+    /// Resource name of the conversion action associated with this conversion.
+    #[prost(string, optional, tag="5")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the conversion occurred. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="6")]
+    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// The user identifiers associated with this conversion. Only hashed_email and
+    /// hashed_phone_number are supported for conversion uploads. The maximum
+    /// number of user identifiers for each conversion is 5.
+    #[prost(message, repeated, tag="7")]
+    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
+}
+/// Identifying information for a successfully processed CallConversionUpload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CallConversionResult {
+    /// The caller id from which this call was placed. Caller id is expected to be
+    /// in E.164 format with preceding '+' sign.
+    #[prost(string, optional, tag="5")]
+    pub caller_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the call occurred. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="6")]
+    pub call_start_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// Resource name of the conversion action associated with this conversion.
+    #[prost(string, optional, tag="7")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// The date time at which the conversion occurred. The format is
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="8")]
+    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// A custom variable.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomVariable {
+    /// Resource name of the custom variable associated with this conversion.
+    /// Note: Although this resource name consists of a customer id and a
+    /// conversion custom variable id, validation will ignore the customer id and
+    /// use the conversion custom variable id as the sole identifier of the
+    /// conversion custom variable.
+    #[prost(string, tag="1")]
+    pub conversion_custom_variable: ::prost::alloc::string::String,
+    /// The value string of this custom variable.
+    /// The value of the custom variable should not contain private customer data,
+    /// such as email addresses or phone numbers.
+    #[prost(string, tag="2")]
+    pub value: ::prost::alloc::string::String,
+}
+/// Contains additional information about cart data.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CartData {
+    /// The Merchant Center ID where the items are uploaded.
+    #[prost(int64, tag="6")]
+    pub merchant_id: i64,
+    /// The country code associated with the feed where the items are uploaded.
+    #[prost(string, tag="2")]
+    pub feed_country_code: ::prost::alloc::string::String,
+    /// The language code associated with the feed where the items are uploaded.
+    #[prost(string, tag="3")]
+    pub feed_language_code: ::prost::alloc::string::String,
+    /// Sum of all transaction level discounts, such as free shipping and
+    /// coupon discounts for the whole cart. The currency code is the same
+    /// as that in the ClickConversion message.
+    #[prost(double, tag="4")]
+    pub local_transaction_cost: f64,
+    /// Data of the items purchased.
+    #[prost(message, repeated, tag="5")]
+    pub items: ::prost::alloc::vec::Vec<cart_data::Item>,
+}
+/// Nested message and enum types in `CartData`.
+pub mod cart_data {
+    /// Contains data of the items purchased.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Item {
+        /// The shopping id of the item. Must be equal to the Merchant Center product
+        /// identifier.
+        #[prost(string, tag="1")]
+        pub product_id: ::prost::alloc::string::String,
+        /// Number of items sold.
+        #[prost(int32, tag="2")]
+        pub quantity: i32,
+        /// Unit price excluding tax, shipping, and any transaction
+        /// level discounts. The currency code is the same as that in the
+        /// ClickConversion message.
+        #[prost(double, tag="3")]
+        pub unit_price: f64,
     }
 }
-/// Response message for custom interest mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomInterestsResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomInterestResult>,
-}
-/// The result for the custom interest mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomInterestResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
 /// Generated client implementations.
-pub mod custom_interest_service_client {
+pub mod conversion_upload_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage custom interests.
+    /// Service to upload conversions.
     #[derive(Debug, Clone)]
-    pub struct CustomInterestServiceClient<T> {
+    pub struct ConversionUploadServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> CustomInterestServiceClient<T>
+    impl<T> ConversionUploadServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -18899,7 +18106,7 @@ pub mod custom_interest_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> CustomInterestServiceClient<InterceptedService<T, F>>
+        ) -> ConversionUploadServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -18913,7 +18120,9 @@ pub mod custom_interest_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            CustomInterestServiceClient::new(InterceptedService::new(inner, interceptor))
+            ConversionUploadServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -18930,25 +18139,22 @@ pub mod custom_interest_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates or updates custom interests. Operation statuses are returned.
+        /// Processes the given click conversions.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
-        ///   [CriterionError]()
-        ///   [CustomInterestError]()
+        ///   [ConversionUploadError]()
         ///   [HeaderError]()
         ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [PolicyViolationError]()
+        ///   [PartialFailureError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_custom_interests(
+        pub async fn upload_click_conversions(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomInterestsRequest>,
+            request: impl tonic::IntoRequest<super::UploadClickConversionsRequest>,
         ) -> Result<
-            tonic::Response<super::MutateCustomInterestsResponse>,
+            tonic::Response<super::UploadClickConversionsResponse>,
             tonic::Status,
         > {
             self.inner
@@ -18962,7 +18168,208 @@ pub mod custom_interest_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomInterestService/MutateCustomInterests",
+                "/google.ads.googleads.v11.services.ConversionUploadService/UploadClickConversions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Processes the given call conversions.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [PartialFailureError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn upload_call_conversions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadCallConversionsRequest>,
+        ) -> Result<
+            tonic::Response<super::UploadCallConversionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.ConversionUploadService/UploadCallConversions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SuggestGeoTargetConstantsRequest {
+    /// If possible, returned geo targets are translated using this locale. If not,
+    /// en is used by default. This is also used as a hint for returned geo
+    /// targets.
+    #[prost(string, optional, tag="6")]
+    pub locale: ::core::option::Option<::prost::alloc::string::String>,
+    /// Returned geo targets are restricted to this country code.
+    #[prost(string, optional, tag="7")]
+    pub country_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// Required. A selector of geo target constants.
+    #[prost(oneof="suggest_geo_target_constants_request::Query", tags="1, 2")]
+    pub query: ::core::option::Option<suggest_geo_target_constants_request::Query>,
+}
+/// Nested message and enum types in `SuggestGeoTargetConstantsRequest`.
+pub mod suggest_geo_target_constants_request {
+    /// A list of location names.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LocationNames {
+        /// A list of location names.
+        #[prost(string, repeated, tag="2")]
+        pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// A list of geo target constant resource names.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GeoTargets {
+        /// A list of geo target constant resource names.
+        #[prost(string, repeated, tag="2")]
+        pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// Required. A selector of geo target constants.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Query {
+        /// The location names to search by. At most 25 names can be set.
+        #[prost(message, tag="1")]
+        LocationNames(LocationNames),
+        /// The geo target constant resource names to filter by.
+        #[prost(message, tag="2")]
+        GeoTargets(GeoTargets),
+    }
+}
+/// Response message for \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SuggestGeoTargetConstantsResponse {
+    /// Geo target constant suggestions.
+    #[prost(message, repeated, tag="1")]
+    pub geo_target_constant_suggestions: ::prost::alloc::vec::Vec<GeoTargetConstantSuggestion>,
+}
+/// A geo target constant suggestion.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GeoTargetConstantSuggestion {
+    /// The language this GeoTargetConstantSuggestion is currently translated to.
+    /// It affects the name of geo target fields. For example, if locale=en, then
+    /// name=Spain. If locale=es, then name=España. The default locale will be
+    /// returned if no translation exists for the locale in the request.
+    #[prost(string, optional, tag="6")]
+    pub locale: ::core::option::Option<::prost::alloc::string::String>,
+    /// Approximate user population that will be targeted, rounded to the
+    /// nearest 100.
+    #[prost(int64, optional, tag="7")]
+    pub reach: ::core::option::Option<i64>,
+    /// If the request searched by location name, this is the location name that
+    /// matched the geo target.
+    #[prost(string, optional, tag="8")]
+    pub search_term: ::core::option::Option<::prost::alloc::string::String>,
+    /// The GeoTargetConstant result.
+    #[prost(message, optional, tag="4")]
+    pub geo_target_constant: ::core::option::Option<super::resources::GeoTargetConstant>,
+    /// The list of parents of the geo target constant.
+    #[prost(message, repeated, tag="5")]
+    pub geo_target_constant_parents: ::prost::alloc::vec::Vec<super::resources::GeoTargetConstant>,
+}
+/// Generated client implementations.
+pub mod geo_target_constant_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to fetch geo target constants.
+    #[derive(Debug, Clone)]
+    pub struct GeoTargetConstantServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> GeoTargetConstantServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> GeoTargetConstantServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            GeoTargetConstantServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Returns GeoTargetConstant suggestions by location name or by resource name.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [GeoTargetConstantSuggestionError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn suggest_geo_target_constants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SuggestGeoTargetConstantsRequest>,
+        ) -> Result<
+            tonic::Response<super::SuggestGeoTargetConstantsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.GeoTargetConstantService/SuggestGeoTargetConstants",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -19121,103 +18528,89 @@ pub mod billing_setup_service_client {
     }
 }
 /// Request message for
-/// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
+/// \[AccountBudgetProposalService.MutateAccountBudgetProposal][google.ads.googleads.v11.services.AccountBudgetProposalService.MutateAccountBudgetProposal\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAccountLinkRequest {
-    /// Required. The ID of the customer for which the account link is created.
+pub struct MutateAccountBudgetProposalRequest {
+    /// Required. The ID of the customer.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The account link to be created.
+    /// Required. The operation to perform on an individual account-level budget proposal.
     #[prost(message, optional, tag="2")]
-    pub account_link: ::core::option::Option<super::resources::AccountLink>,
-}
-/// Response message for
-/// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAccountLinkResponse {
-    /// Returned for successful operations. Resource name of the account link.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for \[AccountLinkService.MutateAccountLink][google.ads.googleads.v11.services.AccountLinkService.MutateAccountLink\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountLinkRequest {
-    /// Required. The ID of the customer being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on the link.
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<AccountLinkOperation>,
-    /// If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried
-    /// out in one transaction if and only if they are all valid.
-    /// Default is false.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
+    pub operation: ::core::option::Option<AccountBudgetProposalOperation>,
     /// If true, the request is validated but not executed. Only errors are
     /// returned, not results.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag="3")]
     pub validate_only: bool,
 }
-/// A single update on an account link.
+/// A single operation to propose the creation of a new account-level budget or
+/// edit/end/remove an existing one.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLinkOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
+pub struct AccountBudgetProposalOperation {
+    /// FieldMask that determines which budget fields are modified.  While budgets
+    /// may be modified, proposals that propose such modifications are final.
+    /// Therefore, update operations are not supported for proposals.
+    ///
+    /// Proposals that modify budgets have the 'update' proposal type.  Specifying
+    /// a mask for any other proposal type is considered an error.
+    #[prost(message, optional, tag="3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The operation to perform.
-    #[prost(oneof="account_link_operation::Operation", tags="2, 3")]
-    pub operation: ::core::option::Option<account_link_operation::Operation>,
+    /// The mutate operation.
+    #[prost(oneof="account_budget_proposal_operation::Operation", tags="2, 1")]
+    pub operation: ::core::option::Option<account_budget_proposal_operation::Operation>,
 }
-/// Nested message and enum types in `AccountLinkOperation`.
-pub mod account_link_operation {
-    /// The operation to perform.
+/// Nested message and enum types in `AccountBudgetProposalOperation`.
+pub mod account_budget_proposal_operation {
+    /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
-        /// Update operation: The account link is expected to have
-        /// a valid resource name.
+        /// Create operation: A new proposal to create a new budget, edit an
+        /// existing budget, end an actively running budget, or remove an approved
+        /// budget scheduled to start in the future.
+        /// No resource name is expected for the new proposal.
         #[prost(message, tag="2")]
-        Update(super::super::resources::AccountLink),
-        /// Remove operation: A resource name for the account link to remove is
-        /// expected, in this format:
+        Create(super::super::resources::AccountBudgetProposal),
+        /// Remove operation: A resource name for the removed proposal is expected,
+        /// in this format:
         ///
-        /// `customers/{customer_id}/accountLinks/{account_link_id}`
-        #[prost(string, tag="3")]
+        /// `customers/{customer_id}/accountBudgetProposals/{account_budget_proposal_id}`
+        /// A request may be cancelled iff it is pending.
+        #[prost(string, tag="1")]
         Remove(::prost::alloc::string::String),
     }
 }
-/// Response message for account link mutate.
+/// Response message for account-level budget mutate operations.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountLinkResponse {
-    /// Result for the mutate.
-    #[prost(message, optional, tag="1")]
-    pub result: ::core::option::Option<MutateAccountLinkResult>,
-    /// Errors that pertain to operation failures in the partial failure mode.
-    /// Returned only when partial_failure = true and all errors occur inside the
-    /// operations. If any errors occur outside the operations (for example, auth
-    /// errors), we return an RPC level error.
+pub struct MutateAccountBudgetProposalResponse {
+    /// The result of the mutate.
     #[prost(message, optional, tag="2")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    pub result: ::core::option::Option<MutateAccountBudgetProposalResult>,
 }
-/// The result for the account link mutate.
+/// The result for the account budget proposal mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountLinkResult {
+pub struct MutateAccountBudgetProposalResult {
     /// Returned for successful operations.
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
-pub mod account_link_service_client {
+pub mod account_budget_proposal_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// This service allows management of links between Google Ads accounts and other
-    /// accounts.
+    /// A service for managing account-level budgets through proposals.
+    ///
+    /// A proposal is a request to create a new budget or make changes to an
+    /// existing one.
+    ///
+    /// Mutates:
+    /// The CREATE operation creates a new proposal.
+    /// UPDATE operations aren't supported.
+    /// The REMOVE operation cancels a pending proposal.
     #[derive(Debug, Clone)]
-    pub struct AccountLinkServiceClient<T> {
+    pub struct AccountBudgetProposalServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> AccountLinkServiceClient<T>
+    impl<T> AccountBudgetProposalServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -19235,7 +18628,7 @@ pub mod account_link_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> AccountLinkServiceClient<InterceptedService<T, F>>
+        ) -> AccountBudgetProposalServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -19249,7 +18642,9 @@ pub mod account_link_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            AccountLinkServiceClient::new(InterceptedService::new(inner, interceptor))
+            AccountBudgetProposalServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -19266,57 +18661,30 @@ pub mod account_link_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates an account link.
+        /// Creates, updates, or removes account budget proposals.  Operation statuses
+        /// are returned.
         ///
         /// List of thrown errors:
+        ///   [AccountBudgetProposalError]()
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
         ///   [DatabaseError]()
+        ///   [DateError]()
         ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        ///   [ThirdPartyAppAnalyticsLinkError]()
-        pub async fn create_account_link(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateAccountLinkRequest>,
-        ) -> Result<tonic::Response<super::CreateAccountLinkResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AccountLinkService/CreateAccountLink",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates or removes an account link.
-        /// From V5, create is not supported through
-        /// AccountLinkService.MutateAccountLink. Use
-        /// AccountLinkService.CreateAccountLink instead.
-        ///
-        /// List of thrown errors:
-        ///   [AccountLinkError]()
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
         ///   [FieldMaskError]()
         ///   [HeaderError]()
         ///   [InternalError]()
         ///   [MutateError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        pub async fn mutate_account_link(
+        ///   [StringLengthError]()
+        pub async fn mutate_account_budget_proposal(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateAccountLinkRequest>,
-        ) -> Result<tonic::Response<super::MutateAccountLinkResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::MutateAccountBudgetProposalRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateAccountBudgetProposalResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -19328,605 +18696,75 @@ pub mod account_link_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AccountLinkService/MutateAccountLink",
+                "/google.ads.googleads.v11.services.AccountBudgetProposalService/MutateAccountBudgetProposal",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
-/// Request message for \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+/// Mutate Request for
+/// \[CustomerUserAccessService.MutateCustomerUserAccess][google.ads.googleads.v11.services.CustomerUserAccessService.MutateCustomerUserAccess\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPlannableLocationsRequest {
-}
-/// The list of plannable locations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPlannableLocationsResponse {
-    /// The list of locations available for planning.
-    /// See
-    /// <https://developers.google.com/google-ads/api/reference/data/geotargets>
-    /// for sample locations.
-    #[prost(message, repeated, tag="1")]
-    pub plannable_locations: ::prost::alloc::vec::Vec<PlannableLocation>,
-}
-/// A plannable location: country, metro region, province, etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlannableLocation {
-    /// The location identifier.
-    #[prost(string, optional, tag="4")]
-    pub id: ::core::option::Option<::prost::alloc::string::String>,
-    /// The unique location name in English.
-    #[prost(string, optional, tag="5")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// The parent country (not present if location is a country).
-    /// If present, will always be a GeoTargetConstant ID. Additional information
-    /// such as country name is provided by
-    /// \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\] or
-    /// \[GoogleAdsService.Search/SearchStream][\].
-    #[prost(int64, optional, tag="6")]
-    pub parent_country_id: ::core::option::Option<i64>,
-    /// The ISO-3166-1 alpha-2 country code that is associated with the location.
-    #[prost(string, optional, tag="7")]
-    pub country_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// The location's type. Location types correspond to target_type returned by
-    /// searching location type in \[GoogleAdsService.Search/SearchStream][\].
-    #[prost(string, optional, tag="8")]
-    pub location_type: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Request to list available products in a given location.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPlannableProductsRequest {
-    /// Required. The ID of the selected location for planning. To list the available
-    /// plannable location IDs use \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
-    #[prost(string, tag="2")]
-    pub plannable_location_id: ::prost::alloc::string::String,
-}
-/// A response with all available products.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPlannableProductsResponse {
-    /// The list of products available for planning and related targeting metadata.
-    #[prost(message, repeated, tag="1")]
-    pub product_metadata: ::prost::alloc::vec::Vec<ProductMetadata>,
-}
-/// The metadata associated with an available plannable product.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProductMetadata {
-    /// The code associated with the ad product (for example: BUMPER,
-    /// TRUEVIEW_IN_STREAM).
-    /// To list the available plannable product codes use
-    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
-    #[prost(string, optional, tag="4")]
-    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// The name associated with the ad product.
-    #[prost(string, tag="3")]
-    pub plannable_product_name: ::prost::alloc::string::String,
-    /// The allowed plannable targeting for this product.
-    #[prost(message, optional, tag="2")]
-    pub plannable_targeting: ::core::option::Option<PlannableTargeting>,
-}
-/// The targeting for which traffic metrics will be reported.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlannableTargeting {
-    /// Allowed plannable age ranges for the product for which metrics will be
-    /// reported. Actual targeting is computed by mapping this age range onto
-    /// standard Google common.AgeRangeInfo values.
-    #[prost(enumeration="super::enums::reach_plan_age_range_enum::ReachPlanAgeRange", repeated, tag="1")]
-    pub age_ranges: ::prost::alloc::vec::Vec<i32>,
-    /// Targetable genders for the ad product.
-    #[prost(message, repeated, tag="2")]
-    pub genders: ::prost::alloc::vec::Vec<super::common::GenderInfo>,
-    /// Targetable devices for the ad product.
-    /// TABLET device targeting is automatically applied to reported metrics
-    /// when MOBILE targeting is selected for CPM_MASTHEAD,
-    /// GOOGLE_PREFERRED_BUMPER, and GOOGLE_PREFERRED_SHORT products.
-    #[prost(message, repeated, tag="3")]
-    pub devices: ::prost::alloc::vec::Vec<super::common::DeviceInfo>,
-    /// Targetable networks for the ad product.
-    #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", repeated, tag="4")]
-    pub networks: ::prost::alloc::vec::Vec<i32>,
-    /// Targetable YouTube Select Lineups for the ad product.
-    #[prost(message, repeated, tag="5")]
-    pub youtube_select_lineups: ::prost::alloc::vec::Vec<YouTubeSelectLineUp>,
-}
-/// Request message for \[ReachPlanService.GenerateProductMixIdeas][google.ads.googleads.v11.services.ReachPlanService.GenerateProductMixIdeas\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateProductMixIdeasRequest {
-    /// Required. The ID of the customer.
+pub struct MutateCustomerUserAccessRequest {
+    /// Required. The ID of the customer being modified.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The ID of the location, this is one of the IDs returned by
-    /// \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
-    #[prost(string, tag="6")]
-    pub plannable_location_id: ::prost::alloc::string::String,
-    /// Required. Currency code.
-    /// Three-character ISO 4217 currency code.
-    #[prost(string, tag="7")]
-    pub currency_code: ::prost::alloc::string::String,
-    /// Required. Total budget.
-    /// Amount in micros. One million is equivalent to one unit.
-    #[prost(int64, tag="8")]
-    pub budget_micros: i64,
-    /// The preferences of the suggested product mix.
-    /// An unset preference is interpreted as all possible values are allowed,
-    /// unless explicitly specified.
-    #[prost(message, optional, tag="5")]
-    pub preferences: ::core::option::Option<Preferences>,
-}
-/// Set of preferences about the planned mix.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Preferences {
-    /// True if ad skippable.
-    /// If not set, default is any value.
-    #[prost(bool, optional, tag="6")]
-    pub is_skippable: ::core::option::Option<bool>,
-    /// True if ad start with sound.
-    /// If not set, default is any value.
-    #[prost(bool, optional, tag="7")]
-    pub starts_with_sound: ::core::option::Option<bool>,
-    /// The length of the ad.
-    /// If not set, default is any value.
-    #[prost(enumeration="super::enums::reach_plan_ad_length_enum::ReachPlanAdLength", tag="3")]
-    pub ad_length: i32,
-    /// True if ad will only show on the top content.
-    /// If not set, default is false.
-    #[prost(bool, optional, tag="8")]
-    pub top_content_only: ::core::option::Option<bool>,
-    /// True if the price is guaranteed. The cost of serving the ad is agreed
-    /// upfront and not subject to an auction.
-    /// If not set, default is any value.
-    #[prost(bool, optional, tag="9")]
-    pub has_guaranteed_price: ::core::option::Option<bool>,
-}
-/// The suggested product mix.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateProductMixIdeasResponse {
-    /// A list of products (ad formats) and the associated budget allocation idea.
-    #[prost(message, repeated, tag="1")]
-    pub product_allocation: ::prost::alloc::vec::Vec<ProductAllocation>,
-}
-/// An allocation of a part of the budget on a given product.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProductAllocation {
-    /// Selected product for planning. The product codes returned are within the
-    /// set of the ones returned by ListPlannableProducts when using the same
-    /// location ID.
-    #[prost(string, optional, tag="3")]
-    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// The value to be allocated for the suggested product in requested currency.
-    /// Amount in micros. One million is equivalent to one unit.
-    #[prost(int64, optional, tag="4")]
-    pub budget_micros: ::core::option::Option<i64>,
-}
-/// Request message for \[ReachPlanService.GenerateReachForecast][google.ads.googleads.v11.services.ReachPlanService.GenerateReachForecast\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateReachForecastRequest {
-    /// Required. The ID of the customer.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// The currency code.
-    /// Three-character ISO 4217 currency code.
-    #[prost(string, optional, tag="9")]
-    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// Required. Campaign duration.
-    #[prost(message, optional, tag="3")]
-    pub campaign_duration: ::core::option::Option<CampaignDuration>,
-    /// Chosen cookie frequency cap to be applied to each planned product.
-    /// This is equivalent to the frequency cap exposed in Google Ads when creating
-    /// a campaign, it represents the maximum number of times an ad can be shown to
-    /// the same user.
-    /// If not specified, no cap is applied.
-    ///
-    /// This field is deprecated in v4 and will eventually be removed.
-    /// Use cookie_frequency_cap_setting instead.
-    #[prost(int32, optional, tag="10")]
-    pub cookie_frequency_cap: ::core::option::Option<i32>,
-    /// Chosen cookie frequency cap to be applied to each planned product.
-    /// This is equivalent to the frequency cap exposed in Google Ads when creating
-    /// a campaign, it represents the maximum number of times an ad can be shown to
-    /// the same user during a specified time interval.
-    /// If not specified, a default of 0 (no cap) is applied.
-    ///
-    /// This field replaces the deprecated cookie_frequency_cap field.
-    #[prost(message, optional, tag="8")]
-    pub cookie_frequency_cap_setting: ::core::option::Option<FrequencyCap>,
-    /// Chosen minimum effective frequency (the number of times a person was
-    /// exposed to the ad) for the reported reach metrics \[1-10\].
-    /// This won't affect the targeting, but just the reporting.
-    /// If not specified, a default of 1 is applied.
-    ///
-    /// This field cannot be combined with the effective_frequency_limit field.
-    #[prost(int32, optional, tag="11")]
-    pub min_effective_frequency: ::core::option::Option<i32>,
-    /// The highest minimum effective frequency (the number of times a person was
-    /// exposed to the ad) value \[1-10\] to include in
-    /// Forecast.effective_frequency_breakdowns.
-    /// If not specified, Forecast.effective_frequency_breakdowns will not be
-    /// provided.
-    ///
-    /// The effective frequency value provided here will also be used as the
-    /// minimum effective frequency for the reported reach metrics.
-    ///
-    /// This field cannot be combined with the min_effective_frequency field.
-    #[prost(message, optional, tag="12")]
-    pub effective_frequency_limit: ::core::option::Option<EffectiveFrequencyLimit>,
-    /// The targeting to be applied to all products selected in the product mix.
-    ///
-    /// This is planned targeting: execution details might vary based on the
-    /// advertising product, consult an implementation specialist.
-    ///
-    /// See specific metrics for details on how targeting affects them.
-    #[prost(message, optional, tag="6")]
-    pub targeting: ::core::option::Option<Targeting>,
-    /// Required. The products to be forecast.
-    /// The max number of allowed planned products is 15.
-    #[prost(message, repeated, tag="7")]
-    pub planned_products: ::prost::alloc::vec::Vec<PlannedProduct>,
-    /// Controls the forecast metrics returned in the response.
-    #[prost(message, optional, tag="13")]
-    pub forecast_metric_options: ::core::option::Option<ForecastMetricOptions>,
-    /// The name of the customer being planned for. This is a user-defined value.
-    /// Required if targeting.audience_targeting is set.
-    #[prost(string, optional, tag="14")]
-    pub customer_reach_group: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Effective frequency limit.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EffectiveFrequencyLimit {
-    /// The highest effective frequency value to include in
-    /// Forecast.effective_frequency_breakdowns.
-    /// This field supports frequencies 1-10, inclusive.
-    #[prost(int32, tag="1")]
-    pub effective_frequency_breakdown_limit: i32,
-}
-/// A rule specifying the maximum number of times an ad can be shown to a user
-/// over a particular time period.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FrequencyCap {
-    /// Required. The number of impressions, inclusive.
-    #[prost(int32, tag="3")]
-    pub impressions: i32,
-    /// Required. The type of time unit.
-    #[prost(enumeration="super::enums::frequency_cap_time_unit_enum::FrequencyCapTimeUnit", tag="2")]
-    pub time_unit: i32,
-}
-/// The targeting for which traffic metrics will be reported.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Targeting {
-    /// Required. The ID of the selected location. Plannable location IDs can be
-    /// obtained from \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
-    #[prost(string, optional, tag="6")]
-    pub plannable_location_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Targeted age range.
-    /// An unset value is equivalent to targeting all ages.
-    #[prost(enumeration="super::enums::reach_plan_age_range_enum::ReachPlanAgeRange", tag="2")]
-    pub age_range: i32,
-    /// Targeted genders.
-    /// An unset value is equivalent to targeting MALE and FEMALE.
-    #[prost(message, repeated, tag="3")]
-    pub genders: ::prost::alloc::vec::Vec<super::common::GenderInfo>,
-    /// Targeted devices.
-    /// If not specified, targets all applicable devices. Applicable devices vary
-    /// by product and region and can be obtained from
-    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
-    #[prost(message, repeated, tag="4")]
-    pub devices: ::prost::alloc::vec::Vec<super::common::DeviceInfo>,
-    /// Targetable network for the ad product.
-    /// If not specified, targets all applicable networks. Applicable networks vary
-    /// by product and region and can be obtained from
-    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
-    #[prost(enumeration="super::enums::reach_plan_network_enum::ReachPlanNetwork", tag="5")]
-    pub network: i32,
-    /// Targeted audiences.
-    /// If not specified, does not target any specific audience.
-    #[prost(message, optional, tag="7")]
-    pub audience_targeting: ::core::option::Option<AudienceTargeting>,
-}
-/// The duration of a planned campaign.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignDuration {
-    /// The duration value in days.
-    ///
-    /// This field cannot be combined with the date_range field.
-    #[prost(int32, optional, tag="2")]
-    pub duration_in_days: ::core::option::Option<i32>,
-    /// Date range of the campaign.
-    /// Dates are in the yyyy-mm-dd format and inclusive.
-    /// The end date must be < 1 year in the future and the
-    /// date range must be <= 92 days long.
-    ///
-    /// This field cannot be combined with the duration_in_days field.
-    #[prost(message, optional, tag="3")]
-    pub date_range: ::core::option::Option<super::common::DateRange>,
-}
-/// A product being planned for reach.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlannedProduct {
-    /// Required. Selected product for planning.
-    /// The code associated with the ad product (for example: Trueview, Bumper).
-    /// To list the available plannable product codes use
-    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
-    #[prost(string, optional, tag="3")]
-    pub plannable_product_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// Required. Maximum budget allocation in micros for the selected product.
-    /// The value is specified in the selected planning currency_code.
-    /// For example: 1 000 000$ = 1 000 000 000 000 micros.
-    #[prost(int64, optional, tag="4")]
-    pub budget_micros: ::core::option::Option<i64>,
-    /// Targeting settings for the selected product.
-    /// To list the available targeting for each product use
-    /// \[ReachPlanService.ListPlannableProducts][google.ads.googleads.v11.services.ReachPlanService.ListPlannableProducts\].
-    #[prost(message, optional, tag="5")]
-    pub advanced_product_targeting: ::core::option::Option<AdvancedProductTargeting>,
-}
-/// Response message containing the generated reach curve.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateReachForecastResponse {
-    /// Reference on target audiences for this curve.
-    #[prost(message, optional, tag="1")]
-    pub on_target_audience_metrics: ::core::option::Option<OnTargetAudienceMetrics>,
-    /// The generated reach curve for the planned product mix.
+    /// Required. The operation to perform on the customer
     #[prost(message, optional, tag="2")]
-    pub reach_curve: ::core::option::Option<ReachCurve>,
+    pub operation: ::core::option::Option<CustomerUserAccessOperation>,
 }
-/// The reach curve for the planned products.
+/// A single operation (update, remove) on customer user access.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReachCurve {
-    /// All points on the reach curve.
-    #[prost(message, repeated, tag="1")]
-    pub reach_forecasts: ::prost::alloc::vec::Vec<ReachForecast>,
-}
-/// A point on reach curve.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReachForecast {
-    /// The cost in micros.
-    #[prost(int64, tag="5")]
-    pub cost_micros: i64,
-    /// Forecasted traffic metrics for this point.
-    #[prost(message, optional, tag="2")]
-    pub forecast: ::core::option::Option<Forecast>,
-    /// The forecasted allocation and traffic metrics for each planned product
-    /// at this point on the reach curve.
-    #[prost(message, repeated, tag="4")]
-    pub planned_product_reach_forecasts: ::prost::alloc::vec::Vec<PlannedProductReachForecast>,
-}
-/// Forecasted traffic metrics for the planned products and targeting.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Forecast {
-    /// Number of unique people reached at least
-    /// GenerateReachForecastRequest.min_effective_frequency or
-    /// GenerateReachForecastRequest.effective_frequency_limit times that exactly
-    /// matches the Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the on_target_reach
-    /// value will be rounded to 0.
-    #[prost(int64, optional, tag="5")]
-    pub on_target_reach: ::core::option::Option<i64>,
-    /// Total number of unique people reached at least
-    /// GenerateReachForecastRequest.min_effective_frequency or
-    /// GenerateReachForecastRequest.effective_frequency_limit times. This includes
-    /// people that may fall outside the specified Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the total_reach
-    /// value will be rounded to 0.
-    #[prost(int64, optional, tag="6")]
-    pub total_reach: ::core::option::Option<i64>,
-    /// Number of ad impressions that exactly matches the Targeting.
-    #[prost(int64, optional, tag="7")]
-    pub on_target_impressions: ::core::option::Option<i64>,
-    /// Total number of ad impressions. This includes impressions that may fall
-    /// outside the specified Targeting, due to insufficient information on
-    /// signed-in users.
-    #[prost(int64, optional, tag="8")]
-    pub total_impressions: ::core::option::Option<i64>,
-    /// Number of times the ad's impressions were considered viewable.
-    /// See <https://support.google.com/google-ads/answer/7029393> for
-    /// more information about what makes an ad viewable and how
-    /// viewability is measured.
-    #[prost(int64, optional, tag="9")]
-    pub viewable_impressions: ::core::option::Option<i64>,
-    /// A list of effective frequency forecasts. The list is ordered starting with
-    /// 1+ and ending with the value set in
-    /// GenerateReachForecastRequest.effective_frequency_limit. If no
-    /// effective_frequency_limit was set, this list will be empty.
-    #[prost(message, repeated, tag="10")]
-    pub effective_frequency_breakdowns: ::prost::alloc::vec::Vec<EffectiveFrequencyBreakdown>,
-    /// Number of unique people reached that exactly matches the Targeting
-    /// including co-viewers.
-    #[prost(int64, optional, tag="11")]
-    pub on_target_coview_reach: ::core::option::Option<i64>,
-    /// Number of unique people reached including co-viewers. This includes
-    /// people that may fall outside the specified Targeting.
-    #[prost(int64, optional, tag="12")]
-    pub total_coview_reach: ::core::option::Option<i64>,
-    /// Number of ad impressions that exactly matches the Targeting including
-    /// co-viewers.
-    #[prost(int64, optional, tag="13")]
-    pub on_target_coview_impressions: ::core::option::Option<i64>,
-    /// Total number of ad impressions including co-viewers. This includes
-    /// impressions that may fall outside the specified Targeting, due to
-    /// insufficient information on signed-in users.
-    #[prost(int64, optional, tag="14")]
-    pub total_coview_impressions: ::core::option::Option<i64>,
-}
-/// The forecasted allocation and traffic metrics for a specific product
-/// at a point on the reach curve.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlannedProductReachForecast {
-    /// Selected product for planning. The product codes returned are within the
-    /// set of the ones returned by ListPlannableProducts when using the same
-    /// location ID.
-    #[prost(string, tag="1")]
-    pub plannable_product_code: ::prost::alloc::string::String,
-    /// The cost in micros. This may differ from the product's input allocation
-    /// if one or more planned products cannot fulfill the budget because of
-    /// limited inventory.
-    #[prost(int64, tag="2")]
-    pub cost_micros: i64,
-    /// Forecasted traffic metrics for this product.
+pub struct CustomerUserAccessOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
     #[prost(message, optional, tag="3")]
-    pub planned_product_forecast: ::core::option::Option<PlannedProductForecast>,
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="customer_user_access_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<customer_user_access_operation::Operation>,
 }
-/// Forecasted traffic metrics for a planned product.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlannedProductForecast {
-    /// Number of unique people reached that exactly matches the Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the on_target_reach
-    /// value will be rounded to 0.
-    #[prost(int64, tag="1")]
-    pub on_target_reach: i64,
-    /// Number of unique people reached. This includes people that may fall
-    /// outside the specified Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the total_reach
-    /// value will be rounded to 0.
-    #[prost(int64, tag="2")]
-    pub total_reach: i64,
-    /// Number of ad impressions that exactly matches the Targeting.
-    #[prost(int64, tag="3")]
-    pub on_target_impressions: i64,
-    /// Total number of ad impressions. This includes impressions that may fall
-    /// outside the specified Targeting, due to insufficient information on
-    /// signed-in users.
-    #[prost(int64, tag="4")]
-    pub total_impressions: i64,
-    /// Number of times the ad's impressions were considered viewable.
-    /// See <https://support.google.com/google-ads/answer/7029393> for
-    /// more information about what makes an ad viewable and how
-    /// viewability is measured.
-    #[prost(int64, optional, tag="5")]
-    pub viewable_impressions: ::core::option::Option<i64>,
-    /// Number of unique people reached that exactly matches the Targeting
-    /// including co-viewers.
-    #[prost(int64, optional, tag="6")]
-    pub on_target_coview_reach: ::core::option::Option<i64>,
-    /// Number of unique people reached including co-viewers. This includes
-    /// people that may fall outside the specified Targeting.
-    #[prost(int64, optional, tag="7")]
-    pub total_coview_reach: ::core::option::Option<i64>,
-    /// Number of ad impressions that exactly matches the Targeting including
-    /// co-viewers.
-    #[prost(int64, optional, tag="8")]
-    pub on_target_coview_impressions: ::core::option::Option<i64>,
-    /// Total number of ad impressions including co-viewers. This includes
-    /// impressions that may fall outside the specified Targeting, due to
-    /// insufficient information on signed-in users.
-    #[prost(int64, optional, tag="9")]
-    pub total_coview_impressions: ::core::option::Option<i64>,
-}
-/// Audience metrics for the planned products.
-/// These metrics consider the following targeting dimensions:
-///
-/// - Location
-/// - PlannableAgeRange
-/// - Gender
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OnTargetAudienceMetrics {
-    /// Reference audience size matching the considered targeting for YouTube.
-    #[prost(int64, optional, tag="3")]
-    pub youtube_audience_size: ::core::option::Option<i64>,
-    /// Reference audience size matching the considered targeting for Census.
-    #[prost(int64, optional, tag="4")]
-    pub census_audience_size: ::core::option::Option<i64>,
-}
-/// A breakdown of the number of unique people reached at a given effective
-/// frequency.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EffectiveFrequencyBreakdown {
-    /// The effective frequency \[1-10\].
-    #[prost(int32, tag="1")]
-    pub effective_frequency: i32,
-    /// The number of unique people reached at least effective_frequency times that
-    /// exactly matches the Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the on_target_reach
-    /// value will be rounded to 0.
-    #[prost(int64, tag="2")]
-    pub on_target_reach: i64,
-    /// Total number of unique people reached at least effective_frequency times.
-    /// This includes people that may fall outside the specified Targeting.
-    ///
-    /// Note that a minimum number of unique people must be reached in order for
-    /// data to be reported. If the minimum number is not met, the total_reach
-    /// value will be rounded to 0.
-    #[prost(int64, tag="3")]
-    pub total_reach: i64,
-    /// The number of users (including co-viewing users) reached for the associated
-    /// effective_frequency value.
-    #[prost(int64, optional, tag="4")]
-    pub effective_coview_reach: ::core::option::Option<i64>,
-    /// The number of users (including co-viewing users) reached for the associated
-    /// effective_frequency value within the specified plan demographic.
-    #[prost(int64, optional, tag="5")]
-    pub on_target_effective_coview_reach: ::core::option::Option<i64>,
-}
-/// Controls forecast metrics to return.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ForecastMetricOptions {
-    /// Indicates whether to include co-view metrics in the response forecast.
-    #[prost(bool, tag="1")]
-    pub include_coview: bool,
-}
-/// Audience targeting for reach forecast.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AudienceTargeting {
-    /// List of audiences based on user interests to be targeted.
-    #[prost(message, repeated, tag="1")]
-    pub user_interest: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
-}
-/// Advanced targeting settings for products.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdvancedProductTargeting {
-    /// Targeting options for this product.
-    #[prost(oneof="advanced_product_targeting::AdvancedTargeting", tags="1")]
-    pub advanced_targeting: ::core::option::Option<advanced_product_targeting::AdvancedTargeting>,
-}
-/// Nested message and enum types in `AdvancedProductTargeting`.
-pub mod advanced_product_targeting {
-    /// Targeting options for this product.
+/// Nested message and enum types in `CustomerUserAccessOperation`.
+pub mod customer_user_access_operation {
+    /// The mutate operation.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum AdvancedTargeting {
-        /// Settings for YouTube Select targeting.
+    pub enum Operation {
+        /// Update operation: The customer user access is expected to have a valid
+        /// resource name.
         #[prost(message, tag="1")]
-        YoutubeSelectSettings(super::YouTubeSelectSettings),
+        Update(super::super::resources::CustomerUserAccess),
+        /// Remove operation: A resource name for the removed access is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/customerUserAccesses/{CustomerUserAccess.user_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
     }
 }
-/// Request settings for YouTube Select Lineups
+/// Response message for customer user access mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct YouTubeSelectSettings {
-    /// Lineup for YouTube Select Targeting.
-    #[prost(int64, tag="1")]
-    pub lineup_id: i64,
+pub struct MutateCustomerUserAccessResponse {
+    /// Result for the mutate.
+    #[prost(message, optional, tag="1")]
+    pub result: ::core::option::Option<MutateCustomerUserAccessResult>,
 }
-/// A Plannable YouTube Select Lineup for product targeting.
+/// The result for the customer user access mutate.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct YouTubeSelectLineUp {
-    /// The ID of the YouTube Select Lineup.
-    #[prost(int64, tag="1")]
-    pub lineup_id: i64,
-    /// The unique name of the YouTube Select Lineup.
-    #[prost(string, tag="2")]
-    pub lineup_name: ::prost::alloc::string::String,
+pub struct MutateCustomerUserAccessResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
-pub mod reach_plan_service_client {
+pub mod customer_user_access_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Reach Plan Service gives users information about audience size that can
-    /// be reached through advertisement on YouTube. In particular,
-    /// GenerateReachForecast provides estimated number of people of specified
-    /// demographics that can be reached by an ad in a given market by a campaign of
-    /// certain duration with a defined budget.
+    /// This service manages the permissions of a user on a given customer.
     #[derive(Debug, Clone)]
-    pub struct ReachPlanServiceClient<T> {
+    pub struct CustomerUserAccessServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> ReachPlanServiceClient<T>
+    impl<T> CustomerUserAccessServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -19944,7 +18782,7 @@ pub mod reach_plan_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> ReachPlanServiceClient<InterceptedService<T, F>>
+        ) -> CustomerUserAccessServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -19958,7 +18796,9 @@ pub mod reach_plan_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            ReachPlanServiceClient::new(InterceptedService::new(inner, interceptor))
+            CustomerUserAccessServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -19975,20 +18815,24 @@ pub mod reach_plan_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Returns the list of plannable locations (for example, countries).
+        /// Updates, removes permission of a user on a given customer. Operation
+        /// statuses are returned.
         ///
         /// List of thrown errors:
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
+        ///   [CustomerUserAccessError]()
+        ///   [FieldMaskError]()
         ///   [HeaderError]()
         ///   [InternalError]()
+        ///   [MutateError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        pub async fn list_plannable_locations(
+        pub async fn mutate_customer_user_access(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListPlannableLocationsRequest>,
+            request: impl tonic::IntoRequest<super::MutateCustomerUserAccessRequest>,
         ) -> Result<
-            tonic::Response<super::ListPlannableLocationsResponse>,
+            tonic::Response<super::MutateCustomerUserAccessResponse>,
             tonic::Status,
         > {
             self.inner
@@ -20002,107 +18846,7 @@ pub mod reach_plan_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ReachPlanService/ListPlannableLocations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the list of per-location plannable YouTube ad formats with allowed
-        /// targeting.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn list_plannable_products(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPlannableProductsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListPlannableProductsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ReachPlanService/ListPlannableProducts",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Generates a product mix ideas given a set of preferences. This method
-        /// helps the advertiser to obtain a good mix of ad formats and budget
-        /// allocations based on its preferences.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [ReachPlanError]()
-        ///   [RequestError]()
-        pub async fn generate_product_mix_ideas(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateProductMixIdeasRequest>,
-        ) -> Result<
-            tonic::Response<super::GenerateProductMixIdeasResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ReachPlanService/GenerateProductMixIdeas",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Generates a reach forecast for a given targeting / product mix.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [FieldError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RangeError]()
-        ///   [ReachPlanError]()
-        ///   [RequestError]()
-        pub async fn generate_reach_forecast(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateReachForecastRequest>,
-        ) -> Result<
-            tonic::Response<super::GenerateReachForecastResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ReachPlanService/GenerateReachForecast",
+                "/google.ads.googleads.v11.services.CustomerUserAccessService/MutateCustomerUserAccess",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -20609,6 +19353,2148 @@ pub mod recommendation_service_client {
         }
     }
 }
+/// Request message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadUserDataRequest {
+    /// Required. The ID of the customer for which to update the user data.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to be done.
+    #[prost(message, repeated, tag="3")]
+    pub operations: ::prost::alloc::vec::Vec<UserDataOperation>,
+    /// Metadata of the request.
+    #[prost(oneof="upload_user_data_request::Metadata", tags="2")]
+    pub metadata: ::core::option::Option<upload_user_data_request::Metadata>,
+}
+/// Nested message and enum types in `UploadUserDataRequest`.
+pub mod upload_user_data_request {
+    /// Metadata of the request.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Metadata {
+        /// Metadata for data updates to a Customer Match user list.
+        #[prost(message, tag="2")]
+        CustomerMatchUserListMetadata(super::super::common::CustomerMatchUserListMetadata),
+    }
+}
+/// Operation to be made for the UploadUserDataRequest.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserDataOperation {
+    /// Operation to be made for the UploadUserDataRequest.
+    #[prost(oneof="user_data_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<user_data_operation::Operation>,
+}
+/// Nested message and enum types in `UserDataOperation`.
+pub mod user_data_operation {
+    /// Operation to be made for the UploadUserDataRequest.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// The list of user data to be appended to the user list.
+        #[prost(message, tag="1")]
+        Create(super::super::common::UserData),
+        /// The list of user data to be removed from the user list.
+        #[prost(message, tag="2")]
+        Remove(super::super::common::UserData),
+    }
+}
+/// Response message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
+/// Uploads made through this service will not be visible under the 'Segment
+/// members' section for the Customer Match List in the Google Ads UI.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadUserDataResponse {
+    /// The date time at which the request was received by API, formatted as
+    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
+    #[prost(string, optional, tag="3")]
+    pub upload_date_time: ::core::option::Option<::prost::alloc::string::String>,
+    /// Number of upload data operations received by API.
+    #[prost(int32, optional, tag="4")]
+    pub received_operations_count: ::core::option::Option<i32>,
+}
+/// Generated client implementations.
+pub mod user_data_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage user data uploads.
+    /// Any uploads made to a Customer Match list through this service will be
+    /// eligible for matching as per the customer matching process. See
+    /// https://support.google.com/google-ads/answer/7474263. However, the uploads
+    /// made through this service will not be visible under the 'Segment members'
+    /// section for the Customer Match List in the Google Ads UI.
+    #[derive(Debug, Clone)]
+    pub struct UserDataServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> UserDataServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UserDataServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            UserDataServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Uploads the given user data.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [OfflineUserDataJobError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [UserDataError]()
+        pub async fn upload_user_data(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadUserDataRequest>,
+        ) -> Result<tonic::Response<super::UploadUserDataResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.UserDataService/UploadUserData",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
+/// \[CustomerUserAccessInvitation.MutateCustomerUserAccessInvitation][\]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerUserAccessInvitationRequest {
+    /// Required. The ID of the customer whose access invitation is being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The operation to perform on the access invitation
+    #[prost(message, optional, tag="2")]
+    pub operation: ::core::option::Option<CustomerUserAccessInvitationOperation>,
+}
+/// A single operation (create or remove) on customer user access invitation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerUserAccessInvitationOperation {
+    /// The mutate operation
+    #[prost(oneof="customer_user_access_invitation_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<customer_user_access_invitation_operation::Operation>,
+}
+/// Nested message and enum types in `CustomerUserAccessInvitationOperation`.
+pub mod customer_user_access_invitation_operation {
+    /// The mutate operation
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new access
+        /// invitation.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomerUserAccessInvitation),
+        /// Remove operation: A resource name for the revoke invitation is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/customerUserAccessInvitations/{invitation_id}`
+        #[prost(string, tag="2")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for access invitation mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerUserAccessInvitationResponse {
+    /// Result for the mutate.
+    #[prost(message, optional, tag="1")]
+    pub result: ::core::option::Option<MutateCustomerUserAccessInvitationResult>,
+}
+/// The result for the access invitation mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerUserAccessInvitationResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod customer_user_access_invitation_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service manages the access invitation extended to users for a given
+    /// customer.
+    #[derive(Debug, Clone)]
+    pub struct CustomerUserAccessInvitationServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerUserAccessInvitationServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerUserAccessInvitationServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerUserAccessInvitationServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or removes an access invitation.
+        ///
+        /// List of thrown errors:
+        ///   [AccessInvitationError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_customer_user_access_invitation(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::MutateCustomerUserAccessInvitationRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::MutateCustomerUserAccessInvitationResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerUserAccessInvitationService/MutateCustomerUserAccessInvitation",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordIdeasRequest {
+    /// The ID of the customer with the recommendation.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// The resource name of the language to target.
+    /// Each keyword belongs to some set of languages; a keyword is included if
+    /// language is one of its languages.
+    /// If not set, all keywords will be included.
+    #[prost(string, optional, tag="14")]
+    pub language: ::core::option::Option<::prost::alloc::string::String>,
+    /// The resource names of the location to target. Maximum is 10.
+    /// An empty list MAY be used to specify all targeting geos.
+    #[prost(string, repeated, tag="15")]
+    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If true, adult keywords will be included in response.
+    /// The default value is false.
+    #[prost(bool, tag="10")]
+    pub include_adult_keywords: bool,
+    /// Token of the page to retrieve. If not specified, the first
+    /// page of results will be returned. To request next page of results use the
+    /// value obtained from `next_page_token` in the previous response.
+    /// The request fields must match across pages.
+    #[prost(string, tag="12")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Number of results to retrieve in a single page.
+    /// A maximum of 10,000 results may be returned, if the page_size
+    /// exceeds this, it is ignored.
+    /// If unspecified, at most 10,000 results will be returned.
+    /// The server may decide to further limit the number of returned resources.
+    /// If the response contains fewer than 10,000 results it may not be assumed
+    /// as last page of results.
+    #[prost(int32, tag="13")]
+    pub page_size: i32,
+    /// Targeting network.
+    /// If not set, Google Search And Partners Network will be used.
+    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="9")]
+    pub keyword_plan_network: i32,
+    /// The keyword annotations to include in response.
+    #[prost(enumeration="super::enums::keyword_plan_keyword_annotation_enum::KeywordPlanKeywordAnnotation", repeated, tag="17")]
+    pub keyword_annotation: ::prost::alloc::vec::Vec<i32>,
+    /// The aggregate fields to include in response.
+    #[prost(message, optional, tag="16")]
+    pub aggregate_metrics: ::core::option::Option<super::common::KeywordPlanAggregateMetrics>,
+    /// The options for historical metrics data.
+    #[prost(message, optional, tag="18")]
+    pub historical_metrics_options: ::core::option::Option<super::common::HistoricalMetricsOptions>,
+    /// The type of seed to generate keyword ideas.
+    #[prost(oneof="generate_keyword_ideas_request::Seed", tags="2, 3, 5, 11")]
+    pub seed: ::core::option::Option<generate_keyword_ideas_request::Seed>,
+}
+/// Nested message and enum types in `GenerateKeywordIdeasRequest`.
+pub mod generate_keyword_ideas_request {
+    /// The type of seed to generate keyword ideas.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Seed {
+        /// A Keyword and a specific Url to generate ideas from
+        /// for example, cars, www.example.com/cars.
+        #[prost(message, tag="2")]
+        KeywordAndUrlSeed(super::KeywordAndUrlSeed),
+        /// A Keyword or phrase to generate ideas from, for example, cars.
+        #[prost(message, tag="3")]
+        KeywordSeed(super::KeywordSeed),
+        /// A specific url to generate ideas from, for example, www.example.com/cars.
+        #[prost(message, tag="5")]
+        UrlSeed(super::UrlSeed),
+        /// The site to generate ideas from, for example, www.example.com.
+        #[prost(message, tag="11")]
+        SiteSeed(super::SiteSeed),
+    }
+}
+/// Keyword And Url Seed
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordAndUrlSeed {
+    /// The URL to crawl in order to generate keyword ideas.
+    #[prost(string, optional, tag="3")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    /// Requires at least one keyword.
+    #[prost(string, repeated, tag="4")]
+    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Keyword Seed
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordSeed {
+    /// Requires at least one keyword.
+    #[prost(string, repeated, tag="2")]
+    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Site Seed
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SiteSeed {
+    /// The domain name of the site. If the customer requesting the ideas doesn't
+    /// own the site provided only public information is returned.
+    #[prost(string, optional, tag="2")]
+    pub site: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Url Seed
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UrlSeed {
+    /// The URL to crawl in order to generate keyword ideas.
+    #[prost(string, optional, tag="2")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Response message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordIdeaResponse {
+    /// Results of generating keyword ideas.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<GenerateKeywordIdeaResult>,
+    /// The aggregate metrics for all keyword ideas.
+    #[prost(message, optional, tag="4")]
+    pub aggregate_metric_results: ::core::option::Option<super::common::KeywordPlanAggregateMetricResults>,
+    /// Pagination token used to retrieve the next page of results.
+    /// Pass the content of this string as the `page_token` attribute of
+    /// the next request.
+    /// `next_page_token` is not returned for the last page.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Total number of results available.
+    #[prost(int64, tag="3")]
+    pub total_size: i64,
+}
+/// The result of generating keyword ideas.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordIdeaResult {
+    /// Text of the keyword idea.
+    /// As in Keyword Plan historical metrics, this text may not be an actual
+    /// keyword, but the canonical form of multiple keywords.
+    /// See KeywordPlanKeywordHistoricalMetrics message in KeywordPlanService.
+    #[prost(string, optional, tag="5")]
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
+    /// The historical metrics for the keyword.
+    #[prost(message, optional, tag="3")]
+    pub keyword_idea_metrics: ::core::option::Option<super::common::KeywordPlanHistoricalMetrics>,
+    /// The annotations for the keyword.
+    /// The annotation data is only provided if requested.
+    #[prost(message, optional, tag="6")]
+    pub keyword_annotations: ::core::option::Option<super::common::KeywordAnnotations>,
+    /// The list of close variants from the requested keywords that
+    /// are combined into this GenerateKeywordIdeaResult. See
+    /// <https://support.google.com/google-ads/answer/9342105> for the
+    /// definition of "close variants".
+    #[prost(string, repeated, tag="7")]
+    pub close_variants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request message for
+/// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordHistoricalMetricsRequest {
+    /// The ID of the customer with the recommendation.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// A list of keywords to get historical metrics.
+    /// Not all inputs will be returned as a result of near-exact deduplication.
+    /// For example, if stats for "car" and "cars" are requested, only "car" will
+    /// be returned.
+    /// A maximum of 10,000 keywords can be used.
+    #[prost(string, repeated, tag="2")]
+    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The resource name of the language to target.
+    /// Each keyword belongs to some set of languages; a keyword is included if
+    /// language is one of its languages.
+    /// If not set, all keywords will be included.
+    #[prost(string, optional, tag="4")]
+    pub language: ::core::option::Option<::prost::alloc::string::String>,
+    /// If true, adult keywords will be included in response.
+    /// The default value is false.
+    #[prost(bool, tag="5")]
+    pub include_adult_keywords: bool,
+    /// The resource names of the location to target. Maximum is 10.
+    /// An empty list MAY be used to specify all targeting geos.
+    #[prost(string, repeated, tag="6")]
+    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Targeting network.
+    /// If not set, Google Search And Partners Network will be used.
+    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="7")]
+    pub keyword_plan_network: i32,
+    /// The aggregate fields to include in response.
+    #[prost(message, optional, tag="8")]
+    pub aggregate_metrics: ::core::option::Option<super::common::KeywordPlanAggregateMetrics>,
+    /// The options for historical metrics data.
+    #[prost(message, optional, tag="3")]
+    pub historical_metrics_options: ::core::option::Option<super::common::HistoricalMetricsOptions>,
+}
+/// Response message for
+/// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordHistoricalMetricsResponse {
+    /// List of keywords and their historical metrics.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<GenerateKeywordHistoricalMetricsResult>,
+    /// The aggregate metrics for all keywords.
+    #[prost(message, optional, tag="2")]
+    pub aggregate_metric_results: ::core::option::Option<super::common::KeywordPlanAggregateMetricResults>,
+}
+/// The result of generating keyword historical metrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateKeywordHistoricalMetricsResult {
+    /// The text of the query associated with one or more keywords.
+    /// Note that we de-dupe your keywords list, eliminating close variants
+    /// before returning the keywords as text. For example, if your request
+    /// originally contained the keywords "car" and "cars", the returned search
+    /// query will only contain "cars". The list of de-duped queries will be
+    /// included in close_variants field.
+    #[prost(string, optional, tag="1")]
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
+    /// The list of close variants from the requested keywords whose stats
+    /// are combined into this GenerateKeywordHistoricalMetricsResult.
+    #[prost(string, repeated, tag="3")]
+    pub close_variants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The historical metrics for text and its close variants
+    #[prost(message, optional, tag="2")]
+    pub keyword_metrics: ::core::option::Option<super::common::KeywordPlanHistoricalMetrics>,
+}
+/// Request message for
+/// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAdGroupThemesRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. A list of keywords to group into the provided AdGroups.
+    #[prost(string, repeated, tag="2")]
+    pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. A list of resource names of AdGroups to group keywords into.
+    ///   Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
+    #[prost(string, repeated, tag="3")]
+    pub ad_groups: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Response message for
+/// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAdGroupThemesResponse {
+    /// A list of suggested AdGroup/keyword pairings.
+    #[prost(message, repeated, tag="1")]
+    pub ad_group_keyword_suggestions: ::prost::alloc::vec::Vec<AdGroupKeywordSuggestion>,
+    /// A list of provided AdGroups that could not be used as suggestions.
+    #[prost(message, repeated, tag="2")]
+    pub unusable_ad_groups: ::prost::alloc::vec::Vec<UnusableAdGroup>,
+}
+/// The suggested text and AdGroup/Campaign pairing for a given keyword.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupKeywordSuggestion {
+    /// The original keyword text.
+    #[prost(string, tag="1")]
+    pub keyword_text: ::prost::alloc::string::String,
+    /// The normalized version of keyword_text for BROAD/EXACT/PHRASE suggestions.
+    #[prost(string, tag="2")]
+    pub suggested_keyword_text: ::prost::alloc::string::String,
+    /// The suggested keyword match type.
+    #[prost(enumeration="super::enums::keyword_match_type_enum::KeywordMatchType", tag="3")]
+    pub suggested_match_type: i32,
+    /// The suggested AdGroup for the keyword.
+    /// Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
+    #[prost(string, tag="4")]
+    pub suggested_ad_group: ::prost::alloc::string::String,
+    /// The suggested Campaign for the keyword.
+    /// Resource name format: `customers/{customer_id}/campaigns/{campaign_id}`
+    #[prost(string, tag="5")]
+    pub suggested_campaign: ::prost::alloc::string::String,
+}
+/// An AdGroup/Campaign pair that could not be used as a suggestion for keywords.
+///
+/// AdGroups may not be usable if the AdGroup
+/// * belongs to Campaign that is not ENABLED or PAUSED
+/// * is itself not ENABLED
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UnusableAdGroup {
+    /// The AdGroup resource name.
+    /// Resource name format: `customers/{customer_id}/adGroups/{ad_group_id}`
+    #[prost(string, tag="1")]
+    pub ad_group: ::prost::alloc::string::String,
+    /// The Campaign resource name.
+    /// Resource name format: `customers/{customer_id}/campaigns/{campaign_id}`
+    #[prost(string, tag="2")]
+    pub campaign: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod keyword_plan_idea_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to generate keyword ideas.
+    #[derive(Debug, Clone)]
+    pub struct KeywordPlanIdeaServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> KeywordPlanIdeaServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> KeywordPlanIdeaServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            KeywordPlanIdeaServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Returns a list of keyword ideas.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [KeywordPlanIdeaError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn generate_keyword_ideas(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateKeywordIdeasRequest>,
+        ) -> Result<tonic::Response<super::GenerateKeywordIdeaResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateKeywordIdeas",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns a list of keyword historical metrics.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn generate_keyword_historical_metrics(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GenerateKeywordHistoricalMetricsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::GenerateKeywordHistoricalMetricsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateKeywordHistoricalMetrics",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns a list of suggested AdGroups and suggested modifications
+        /// (text, match type) for the given keywords.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CollectionSizeError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn generate_ad_group_themes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateAdGroupThemesRequest>,
+        ) -> Result<
+            tonic::Response<super::GenerateAdGroupThemesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.KeywordPlanIdeaService/GenerateAdGroupThemes",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CustomInterestService.MutateCustomInterests][google.ads.googleads.v11.services.CustomInterestService.MutateCustomInterests\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomInterestsRequest {
+    /// Required. The ID of the customer whose custom interests are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual custom interests.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomInterestOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// A single operation (create, update) on a custom interest.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomInterestOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="custom_interest_operation::Operation", tags="1, 2")]
+    pub operation: ::core::option::Option<custom_interest_operation::Operation>,
+}
+/// Nested message and enum types in `CustomInterestOperation`.
+pub mod custom_interest_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new custom
+        /// interest.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomInterest),
+        /// Update operation: The custom interest is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CustomInterest),
+    }
+}
+/// Response message for custom interest mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomInterestsResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="2")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomInterestResult>,
+}
+/// The result for the custom interest mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomInterestResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod custom_interest_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage custom interests.
+    #[derive(Debug, Clone)]
+    pub struct CustomInterestServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomInterestServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomInterestServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomInterestServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or updates custom interests. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CriterionError]()
+        ///   [CustomInterestError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [PolicyViolationError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [StringLengthError]()
+        pub async fn mutate_custom_interests(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomInterestsRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomInterestsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomInterestService/MutateCustomInterests",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CustomerManagerLinkService.MutateCustomerManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MutateCustomerManagerLink\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerManagerLinkRequest {
+    /// Required. The ID of the customer whose customer manager links are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual customer manager links.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomerManagerLinkOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// Request message for \[CustomerManagerLinkService.MoveManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MoveManagerLink\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MoveManagerLinkRequest {
+    /// Required. The ID of the client customer that is being moved.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The resource name of the previous CustomerManagerLink.
+    /// The resource name has the form:
+    /// `customers/{customer_id}/customerManagerLinks/{manager_customer_id}~{manager_link_id}`
+    #[prost(string, tag="2")]
+    pub previous_customer_manager_link: ::prost::alloc::string::String,
+    /// Required. The resource name of the new manager customer that the client wants to move
+    /// to. Customer resource names have the format: "customers/{customer_id}"
+    #[prost(string, tag="3")]
+    pub new_manager: ::prost::alloc::string::String,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="4")]
+    pub validate_only: bool,
+}
+/// Updates the status of a CustomerManagerLink.
+/// The following actions are possible:
+/// 1. Update operation with status ACTIVE accepts a pending invitation.
+/// 2. Update operation with status REFUSED declines a pending invitation.
+/// 3. Update operation with status INACTIVE terminates link to manager.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerManagerLinkOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="customer_manager_link_operation::Operation", tags="2")]
+    pub operation: ::core::option::Option<customer_manager_link_operation::Operation>,
+}
+/// Nested message and enum types in `CustomerManagerLinkOperation`.
+pub mod customer_manager_link_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Update operation: The link is expected to have a valid resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CustomerManagerLink),
+    }
+}
+/// Response message for a CustomerManagerLink mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerManagerLinkResponse {
+    /// A result that identifies the resource affected by the mutate request.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomerManagerLinkResult>,
+}
+/// Response message for a CustomerManagerLink moveManagerLink.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MoveManagerLinkResponse {
+    /// Returned for successful operations. Represents a CustomerManagerLink
+    /// resource of the newly created link between client customer and new manager
+    /// customer.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// The result for the customer manager link mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerManagerLinkResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod customer_manager_link_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage customer-manager links.
+    #[derive(Debug, Clone)]
+    pub struct CustomerManagerLinkServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerManagerLinkServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerManagerLinkServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerManagerLinkServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Updates customer manager links. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [ManagerLinkError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_customer_manager_link(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomerManagerLinkRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomerManagerLinkResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerManagerLinkService/MutateCustomerManagerLink",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Moves a client customer to a new manager customer.
+        /// This simplifies the complex request that requires two operations to move
+        /// a client customer to a new manager, for example:
+        /// 1. Update operation with Status INACTIVE (previous manager) and,
+        /// 2. Update operation with Status ACTIVE (new manager).
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [DatabaseError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn move_manager_link(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MoveManagerLinkRequest>,
+        ) -> Result<tonic::Response<super::MoveManagerLinkResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomerManagerLinkService/MoveManagerLink",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[CustomAudienceService.MutateCustomAudiences][google.ads.googleads.v11.services.CustomAudienceService.MutateCustomAudiences\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomAudiencesRequest {
+    /// Required. The ID of the customer whose custom audiences are being modified.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The list of operations to perform on individual custom audiences.
+    #[prost(message, repeated, tag="2")]
+    pub operations: ::prost::alloc::vec::Vec<CustomAudienceOperation>,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag="3")]
+    pub validate_only: bool,
+}
+/// A single operation (create, update) on a custom audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomAudienceOperation {
+    /// FieldMask that determines which resource fields are modified in an update.
+    #[prost(message, optional, tag="4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// The mutate operation.
+    #[prost(oneof="custom_audience_operation::Operation", tags="1, 2, 3")]
+    pub operation: ::core::option::Option<custom_audience_operation::Operation>,
+}
+/// Nested message and enum types in `CustomAudienceOperation`.
+pub mod custom_audience_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new custom
+        /// audience.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::CustomAudience),
+        /// Update operation: The custom audience is expected to have a valid
+        /// resource name.
+        #[prost(message, tag="2")]
+        Update(super::super::resources::CustomAudience),
+        /// Remove operation: A resource name for the removed custom audience is
+        /// expected, in this format:
+        ///
+        /// `customers/{customer_id}/customAudiences/{custom_audience_id}`
+        #[prost(string, tag="3")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for custom audience mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomAudiencesResponse {
+    /// All results for the mutate.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<MutateCustomAudienceResult>,
+}
+/// The result for the custom audience mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomAudienceResult {
+    /// Returned for successful operations.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod custom_audience_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage custom audiences.
+    #[derive(Debug, Clone)]
+    pub struct CustomAudienceServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomAudienceServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomAudienceServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomAudienceServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or updates custom audiences. Operation statuses are returned.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [CustomAudienceError]()
+        ///   [CustomInterestError]()
+        ///   [FieldError]()
+        ///   [FieldMaskError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        ///   [OperationAccessDeniedError]()
+        ///   [PolicyViolationError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn mutate_custom_audiences(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateCustomAudiencesRequest>,
+        ) -> Result<
+            tonic::Response<super::MutateCustomAudiencesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.CustomAudienceService/MutateCustomAudiences",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateInsightsFinderReportRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. A baseline audience for this report, typically all people in a region.
+    #[prost(message, optional, tag="2")]
+    pub baseline_audience: ::core::option::Option<BasicInsightsAudience>,
+    /// Required. The specific audience of interest for this report.  The insights in the
+    /// report will be based on attributes more prevalent in this audience than
+    /// in the report's baseline audience.
+    #[prost(message, optional, tag="3")]
+    pub specific_audience: ::core::option::Option<BasicInsightsAudience>,
+    /// The name of the customer being planned for.  This is a user-defined value.
+    #[prost(string, tag="4")]
+    pub customer_insights_group: ::prost::alloc::string::String,
+}
+/// The response message for
+/// \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\], containing the
+/// shareable URL for the report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateInsightsFinderReportResponse {
+    /// An HTTPS URL providing a deep link into the Insights Finder UI with the
+    /// report inputs filled in according to the request.
+    #[prost(string, tag="1")]
+    pub saved_report_url: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAudienceCompositionInsightsRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The audience of interest for which insights are being requested.
+    #[prost(message, optional, tag="2")]
+    pub audience: ::core::option::Option<InsightsAudience>,
+    /// The one-month range of historical data to use for insights, in the format
+    /// "yyyy-mm". If unset, insights will be returned for the last thirty days of
+    /// data.
+    #[prost(string, tag="3")]
+    pub data_month: ::prost::alloc::string::String,
+    /// Required. The audience dimensions for which composition insights should be returned.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", repeated, packed="false", tag="4")]
+    pub dimensions: ::prost::alloc::vec::Vec<i32>,
+    /// The name of the customer being planned for.  This is a user-defined value.
+    #[prost(string, tag="5")]
+    pub customer_insights_group: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateAudienceCompositionInsightsResponse {
+    /// The contents of the insights report, organized into sections.
+    /// Each section is associated with one of the AudienceInsightsDimension values
+    /// in the request. There may be more than one section per dimension.
+    #[prost(message, repeated, tag="1")]
+    pub sections: ::prost::alloc::vec::Vec<AudienceCompositionSection>,
+}
+/// Request message for
+/// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAudienceInsightsAttributesRequest {
+    /// Required. The ID of the customer.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The types of attributes to be returned.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", repeated, packed="false", tag="2")]
+    pub dimensions: ::prost::alloc::vec::Vec<i32>,
+    /// Required. A free text query.  Attributes matching or related to this string will be
+    /// returned.
+    #[prost(string, tag="3")]
+    pub query_text: ::prost::alloc::string::String,
+    /// The name of the customer being planned for.  This is a user-defined value.
+    #[prost(string, tag="4")]
+    pub customer_insights_group: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAudienceInsightsAttributesResponse {
+    /// The attributes matching the search query.
+    #[prost(message, repeated, tag="1")]
+    pub attributes: ::prost::alloc::vec::Vec<AudienceInsightsAttributeMetadata>,
+}
+/// An audience attribute that can be used to request insights about the
+/// audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsAttribute {
+    /// An audience attribute.
+    #[prost(oneof="audience_insights_attribute::Attribute", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10")]
+    pub attribute: ::core::option::Option<audience_insights_attribute::Attribute>,
+}
+/// Nested message and enum types in `AudienceInsightsAttribute`.
+pub mod audience_insights_attribute {
+    /// An audience attribute.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Attribute {
+        /// An audience attribute defined by an age range.
+        #[prost(message, tag="1")]
+        AgeRange(super::super::common::AgeRangeInfo),
+        /// An audience attribute defined by a gender.
+        #[prost(message, tag="2")]
+        Gender(super::super::common::GenderInfo),
+        /// An audience attribute defiend by a geographic location.
+        #[prost(message, tag="3")]
+        Location(super::super::common::LocationInfo),
+        /// An Affinity or In-Market audience.
+        #[prost(message, tag="4")]
+        UserInterest(super::super::common::UserInterestInfo),
+        /// An audience attribute defined by interest in a topic represented by a
+        /// Knowledge Graph entity.
+        #[prost(message, tag="5")]
+        Entity(super::AudienceInsightsEntity),
+        /// An audience attribute defined by interest in a Product & Service
+        /// category.
+        #[prost(message, tag="6")]
+        Category(super::AudienceInsightsCategory),
+        /// A YouTube Dynamic Lineup
+        #[prost(message, tag="7")]
+        DynamicLineup(super::AudienceInsightsDynamicLineup),
+        /// A Parental Status value (parent, or not a parent).
+        #[prost(message, tag="8")]
+        ParentalStatus(super::super::common::ParentalStatusInfo),
+        /// A household income percentile range.
+        #[prost(message, tag="9")]
+        IncomeRange(super::super::common::IncomeRangeInfo),
+        /// A YouTube channel.
+        #[prost(message, tag="10")]
+        YoutubeChannel(super::super::common::YouTubeChannelInfo),
+    }
+}
+/// An entity or category representing a topic that defines an audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsTopic {
+    /// An entity or category attribute.
+    #[prost(oneof="audience_insights_topic::Topic", tags="1, 2")]
+    pub topic: ::core::option::Option<audience_insights_topic::Topic>,
+}
+/// Nested message and enum types in `AudienceInsightsTopic`.
+pub mod audience_insights_topic {
+    /// An entity or category attribute.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Topic {
+        /// A Knowledge Graph entity
+        #[prost(message, tag="1")]
+        Entity(super::AudienceInsightsEntity),
+        /// A Product & Service category
+        #[prost(message, tag="2")]
+        Category(super::AudienceInsightsCategory),
+    }
+}
+/// A Knowledge Graph entity, represented by its machine id.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsEntity {
+    /// Required. The machine id (mid) of the Knowledge Graph entity.
+    #[prost(string, tag="1")]
+    pub knowledge_graph_machine_id: ::prost::alloc::string::String,
+}
+/// A Product and Service category.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsCategory {
+    /// Required. The criterion id of the category.
+    #[prost(string, tag="1")]
+    pub category_id: ::prost::alloc::string::String,
+}
+/// A YouTube Dynamic Lineup.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsDynamicLineup {
+    /// Required. The numeric ID of the dynamic lineup.
+    #[prost(string, tag="1")]
+    pub dynamic_lineup_id: ::prost::alloc::string::String,
+}
+/// A description of an audience used for requesting insights.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BasicInsightsAudience {
+    /// Required. The countries for this audience.
+    #[prost(message, repeated, tag="1")]
+    pub country_location: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Sub-country geographic location attributes.  If present, each of these
+    /// must be contained in one of the countries in this audience.
+    #[prost(message, repeated, tag="2")]
+    pub sub_country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Gender for the audience.  If absent, the audience does not restrict by
+    /// gender.
+    #[prost(message, optional, tag="3")]
+    pub gender: ::core::option::Option<super::common::GenderInfo>,
+    /// Age ranges for the audience.  If absent, the audience represents all people
+    /// over 18 that match the other attributes.
+    #[prost(message, repeated, tag="4")]
+    pub age_ranges: ::prost::alloc::vec::Vec<super::common::AgeRangeInfo>,
+    /// User interests defining this audience.  Affinity and In-Market audiences
+    /// are supported.
+    #[prost(message, repeated, tag="5")]
+    pub user_interests: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
+    /// Topics, represented by Knowledge Graph entities and/or Product & Service
+    /// categories, that this audience is interested in.
+    #[prost(message, repeated, tag="6")]
+    pub topics: ::prost::alloc::vec::Vec<AudienceInsightsTopic>,
+}
+/// An audience attribute, with metadata about it, returned in response to a
+/// search.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceInsightsAttributeMetadata {
+    /// The type of the attribute.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", tag="1")]
+    pub dimension: i32,
+    /// The attribute itself.
+    #[prost(message, optional, tag="2")]
+    pub attribute: ::core::option::Option<AudienceInsightsAttribute>,
+    /// The human-readable name of the attribute.
+    #[prost(string, tag="3")]
+    pub display_name: ::prost::alloc::string::String,
+    /// A relevance score for this attribute, between 0 and 1.
+    #[prost(double, tag="4")]
+    pub score: f64,
+    /// A string that supplements the display_name to identify the attribute.
+    /// If the dimension is TOPIC, this is a brief description of the
+    /// Knowledge Graph entity, such as "American singer-songwriter".
+    /// If the dimension is CATEGORY, this is the complete path to the category in
+    /// The Product & Service taxonomy, for example
+    /// "/Apparel/Clothing/Outerwear".
+    #[prost(string, tag="5")]
+    pub display_info: ::prost::alloc::string::String,
+    /// Metadata specific to the dimension of this attribute.
+    #[prost(oneof="audience_insights_attribute_metadata::DimensionMetadata", tags="6, 7")]
+    pub dimension_metadata: ::core::option::Option<audience_insights_attribute_metadata::DimensionMetadata>,
+}
+/// Nested message and enum types in `AudienceInsightsAttributeMetadata`.
+pub mod audience_insights_attribute_metadata {
+    /// Metadata specific to the dimension of this attribute.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DimensionMetadata {
+        /// Special metadata for a YouTube channel.
+        #[prost(message, tag="6")]
+        YoutubeChannelMetadata(super::YouTubeChannelAttributeMetadata),
+        /// Special metadata for a YouTube Dynamic Lineup.
+        #[prost(message, tag="7")]
+        DynamicAttributeMetadata(super::DynamicLineupAttributeMetadata),
+    }
+}
+/// Metadata associated with a YouTube channel attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YouTubeChannelAttributeMetadata {
+    /// The approximate number of subscribers to the YouTube channel.
+    #[prost(int64, tag="1")]
+    pub subscriber_count: i64,
+}
+/// Metadata associated with a Dynamic Lineup attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DynamicLineupAttributeMetadata {
+    /// The national market associated with the lineup.
+    #[prost(message, optional, tag="1")]
+    pub inventory_country: ::core::option::Option<super::common::LocationInfo>,
+    /// The median number of impressions per month on this lineup.
+    #[prost(int64, optional, tag="2")]
+    pub median_monthly_inventory: ::core::option::Option<i64>,
+    /// The lower end of a range containing the number of channels in the lineup.
+    #[prost(int64, optional, tag="3")]
+    pub channel_count_lower_bound: ::core::option::Option<i64>,
+    /// The upper end of a range containing the number of channels in the lineup.
+    #[prost(int64, optional, tag="4")]
+    pub channel_count_upper_bound: ::core::option::Option<i64>,
+}
+/// A set of users, defined by various characteristics, for which insights can
+/// be requested in AudienceInsightsService.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightsAudience {
+    /// Required. The countries for the audience.
+    #[prost(message, repeated, tag="1")]
+    pub country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Sub-country geographic location attributes.  If present, each of these
+    /// must be contained in one of the countries in this audience.  If absent, the
+    /// audience is geographically to the country_locations and no further.
+    #[prost(message, repeated, tag="2")]
+    pub sub_country_locations: ::prost::alloc::vec::Vec<super::common::LocationInfo>,
+    /// Gender for the audience.  If absent, the audience does not restrict by
+    /// gender.
+    #[prost(message, optional, tag="3")]
+    pub gender: ::core::option::Option<super::common::GenderInfo>,
+    /// Age ranges for the audience.  If absent, the audience represents all people
+    /// over 18 that match the other attributes.
+    #[prost(message, repeated, tag="4")]
+    pub age_ranges: ::prost::alloc::vec::Vec<super::common::AgeRangeInfo>,
+    /// Parental status for the audience.  If absent, the audience does not
+    /// restrict by parental status.
+    #[prost(message, optional, tag="5")]
+    pub parental_status: ::core::option::Option<super::common::ParentalStatusInfo>,
+    /// Household income percentile ranges for the audience.  If absent, the
+    /// audience does not restrict by household income range.
+    #[prost(message, repeated, tag="6")]
+    pub income_ranges: ::prost::alloc::vec::Vec<super::common::IncomeRangeInfo>,
+    /// Dynamic lineups representing the YouTube content viewed by the audience.
+    #[prost(message, repeated, tag="7")]
+    pub dynamic_lineups: ::prost::alloc::vec::Vec<AudienceInsightsDynamicLineup>,
+    /// A combination of entity, category and user interest attributes defining the
+    /// audience. The combination has a logical AND-of-ORs structure: Attributes
+    /// within each InsightsAudienceAttributeGroup are combined with OR, and
+    /// the combinations themselves are combined together with AND.  For example,
+    /// the expression (Entity OR Affinity) AND (In-Market OR Category) can be
+    /// formed using two InsightsAudienceAttributeGroups with two Attributes
+    /// each.
+    #[prost(message, repeated, tag="8")]
+    pub topic_audience_combinations: ::prost::alloc::vec::Vec<InsightsAudienceAttributeGroup>,
+}
+/// A list of AudienceInsightsAttributes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightsAudienceAttributeGroup {
+    /// Required. A collection of audience attributes to be combined with logical OR.
+    /// Attributes need not all be the same dimension.  Only Knowledge Graph
+    /// entities, Product & Service Categories, and Affinity and In-Market
+    /// audiences are supported in this context.
+    #[prost(message, repeated, tag="1")]
+    pub attributes: ::prost::alloc::vec::Vec<AudienceInsightsAttribute>,
+}
+/// A collection of related attributes of the same type in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionSection {
+    /// The type of the attributes in this section.
+    #[prost(enumeration="super::enums::audience_insights_dimension_enum::AudienceInsightsDimension", tag="1")]
+    pub dimension: i32,
+    /// The most relevant segments for this audience.  If dimension is GENDER,
+    /// AGE_RANGE or PARENTAL_STATUS, then this list of attributes is exhaustive.
+    #[prost(message, repeated, tag="3")]
+    pub top_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
+    /// Additional attributes for this audience, grouped into clusters.  Only
+    /// populated if dimension is YOUTUBE_CHANNEL.
+    #[prost(message, repeated, tag="4")]
+    pub clustered_attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttributeCluster>,
+}
+/// A collection of related attributes, with metadata and metrics, in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionAttributeCluster {
+    /// The name of this cluster of attributes
+    #[prost(string, tag="1")]
+    pub cluster_display_name: ::prost::alloc::string::String,
+    /// If the dimension associated with this cluster is YOUTUBE_CHANNEL, then
+    /// cluster_metrics are metrics associated with the cluster as a whole.
+    /// For other dimensions, this field is unset.
+    #[prost(message, optional, tag="3")]
+    pub cluster_metrics: ::core::option::Option<AudienceCompositionMetrics>,
+    /// The individual attributes that make up this cluster, with metadata and
+    /// metrics.
+    #[prost(message, repeated, tag="4")]
+    pub attributes: ::prost::alloc::vec::Vec<AudienceCompositionAttribute>,
+}
+/// The share and index metrics associated with an attribute in an audience
+/// composition insights report.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionMetrics {
+    /// The fraction (from 0 to 1 inclusive) of the baseline audience that match
+    /// the attribute.
+    #[prost(double, tag="1")]
+    pub baseline_audience_share: f64,
+    /// The fraction (from 0 to 1 inclusive) of the specific audience that match
+    /// the attribute.
+    #[prost(double, tag="2")]
+    pub audience_share: f64,
+    /// The ratio of audience_share to baseline_audience_share, or zero if this
+    /// ratio is undefined or is not meaningful.
+    #[prost(double, tag="3")]
+    pub index: f64,
+    /// A relevance score from 0 to 1 inclusive.
+    #[prost(double, tag="4")]
+    pub score: f64,
+}
+/// An audience attribute with metadata and metrics.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AudienceCompositionAttribute {
+    /// The attribute with its metadata.
+    #[prost(message, optional, tag="1")]
+    pub attribute_metadata: ::core::option::Option<AudienceInsightsAttributeMetadata>,
+    /// Share and index metrics for the attribute.
+    #[prost(message, optional, tag="2")]
+    pub metrics: ::core::option::Option<AudienceCompositionMetrics>,
+}
+/// Generated client implementations.
+pub mod audience_insights_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Audience Insights Service helps users find information about groups of
+    /// people and how they can be reached with Google Ads.
+    #[derive(Debug, Clone)]
+    pub struct AudienceInsightsServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AudienceInsightsServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AudienceInsightsServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AudienceInsightsServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a saved report that can be viewed in the Insights Finder tool.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        pub async fn generate_insights_finder_report(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateInsightsFinderReportRequest>,
+        ) -> Result<
+            tonic::Response<super::GenerateInsightsFinderReportResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AudienceInsightsService/GenerateInsightsFinderReport",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Searches for audience attributes that can be used to generate insights.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        pub async fn list_audience_insights_attributes(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListAudienceInsightsAttributesRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::ListAudienceInsightsAttributesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AudienceInsightsService/ListAudienceInsightsAttributes",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns a collection of attributes that are represented in an audience of
+        /// interest, with metrics that compare each attribute's share of the audience
+        /// with its share of a baseline audience.
+        ///
+        /// List of thrown errors:
+        ///   [AudienceInsightsError]()
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RangeError]()
+        ///   [RequestError]()
+        pub async fn generate_audience_composition_insights(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GenerateAudienceCompositionInsightsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::GenerateAudienceCompositionInsightsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.AudienceInsightsService/GenerateAudienceCompositionInsights",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBatchJobRequest {
+    /// Required. The ID of the customer for which to create a batch job.
+    #[prost(string, tag="1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// Required. The operation to perform on an individual batch job.
+    #[prost(message, optional, tag="2")]
+    pub operation: ::core::option::Option<BatchJobOperation>,
+}
+/// A single operation on a batch job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchJobOperation {
+    /// The mutate operation.
+    #[prost(oneof="batch_job_operation::Operation", tags="1, 4")]
+    pub operation: ::core::option::Option<batch_job_operation::Operation>,
+}
+/// Nested message and enum types in `BatchJobOperation`.
+pub mod batch_job_operation {
+    /// The mutate operation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// Create operation: No resource name is expected for the new batch job.
+        #[prost(message, tag="1")]
+        Create(super::super::resources::BatchJob),
+        /// Remove operation: The batch job must not have been run. A resource name
+        /// for the removed batch job is expected, in this format:
+        ///
+        /// `customers/{customer_id}/batchJobs/{batch_job_id}`
+        #[prost(string, tag="4")]
+        Remove(::prost::alloc::string::String),
+    }
+}
+/// Response message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBatchJobResponse {
+    /// The result for the mutate.
+    #[prost(message, optional, tag="1")]
+    pub result: ::core::option::Option<MutateBatchJobResult>,
+}
+/// The result for the batch job mutate.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateBatchJobResult {
+    /// The resource name of the batch job.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Request message for \[BatchJobService.RunBatchJob][google.ads.googleads.v11.services.BatchJobService.RunBatchJob\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunBatchJobRequest {
+    /// Required. The resource name of the BatchJob to run.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Request message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AddBatchJobOperationsRequest {
+    /// Required. The resource name of the batch job.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// A token used to enforce sequencing.
+    ///
+    /// The first AddBatchJobOperations request for a batch job should not set
+    /// sequence_token. Subsequent requests must set sequence_token to the value of
+    /// next_sequence_token received in the previous AddBatchJobOperations
+    /// response.
+    #[prost(string, tag="2")]
+    pub sequence_token: ::prost::alloc::string::String,
+    /// Required. The list of mutates being added.
+    ///
+    /// Operations can use negative integers as temp ids to signify dependencies
+    /// between entities created in this batch job. For example, a customer with
+    /// id = 1234 can create a campaign and an ad group in that same campaign by
+    /// creating a campaign in the first operation with the resource name
+    /// explicitly set to "customers/1234/campaigns/-1", and creating an ad group
+    /// in the second operation with the campaign field also set to
+    /// "customers/1234/campaigns/-1".
+    #[prost(message, repeated, tag="3")]
+    pub mutate_operations: ::prost::alloc::vec::Vec<MutateOperation>,
+}
+/// Response message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AddBatchJobOperationsResponse {
+    /// The total number of operations added so far for this batch job.
+    #[prost(int64, tag="1")]
+    pub total_operations: i64,
+    /// The sequence token to be used when calling AddBatchJobOperations again if
+    /// more operations need to be added. The next AddBatchJobOperations request
+    /// must set the sequence_token field to the value of this field.
+    #[prost(string, tag="2")]
+    pub next_sequence_token: ::prost::alloc::string::String,
+}
+/// Request message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBatchJobResultsRequest {
+    /// Required. The resource name of the batch job whose results are being listed.
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Token of the page to retrieve. If not specified, the first
+    /// page of results will be returned. Use the value obtained from
+    /// `next_page_token` in the previous response in order to request
+    /// the next page of results.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Number of elements to retrieve in a single page.
+    /// When a page request is too large, the server may decide to
+    /// further limit the number of returned resources.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+    /// The response content type setting. Determines whether the mutable resource
+    /// or just the resource name should be returned.
+    #[prost(enumeration="super::enums::response_content_type_enum::ResponseContentType", tag="4")]
+    pub response_content_type: i32,
+}
+/// Response message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBatchJobResultsResponse {
+    /// The list of rows that matched the query.
+    #[prost(message, repeated, tag="1")]
+    pub results: ::prost::alloc::vec::Vec<BatchJobResult>,
+    /// Pagination token used to retrieve the next page of results.
+    /// Pass the content of this string as the `page_token` attribute of
+    /// the next request. `next_page_token` is not returned for the last
+    /// page.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// An individual batch job result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchJobResult {
+    /// Index of the mutate operation.
+    #[prost(int64, tag="1")]
+    pub operation_index: i64,
+    /// Response for the mutate.
+    /// May be empty if errors occurred.
+    #[prost(message, optional, tag="2")]
+    pub mutate_operation_response: ::core::option::Option<MutateOperationResponse>,
+    /// Details of the errors when processing the operation.
+    #[prost(message, optional, tag="3")]
+    pub status: ::core::option::Option<super::super::super::super::rpc::Status>,
+}
+/// Generated client implementations.
+pub mod batch_job_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage batch jobs.
+    #[derive(Debug, Clone)]
+    pub struct BatchJobServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> BatchJobServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> BatchJobServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            BatchJobServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Mutates a batch job.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        pub async fn mutate_batch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateBatchJobRequest>,
+        ) -> Result<tonic::Response<super::MutateBatchJobResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.BatchJobService/MutateBatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the results of the batch job. The job must be done.
+        /// Supports standard list paging.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [BatchJobError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn list_batch_job_results(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListBatchJobResultsRequest>,
+        ) -> Result<tonic::Response<super::ListBatchJobResultsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.BatchJobService/ListBatchJobResults",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Runs the batch job.
+        ///
+        /// The Operation.metadata field type is BatchJobMetadata. When finished, the
+        /// long running operation will not contain errors or a response. Instead, use
+        /// ListBatchJobResults to get the results of the job.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [BatchJobError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        pub async fn run_batch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RunBatchJobRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.BatchJobService/RunBatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Add operations to the batch job.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [BatchJobError]()
+        ///   [HeaderError]()
+        ///   [InternalError]()
+        ///   [QuotaError]()
+        ///   [RequestError]()
+        ///   [ResourceCountLimitExceededError]()
+        pub async fn add_batch_job_operations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AddBatchJobOperationsRequest>,
+        ) -> Result<
+            tonic::Response<super::AddBatchJobOperationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v11.services.BatchJobService/AddBatchJobOperations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for
 /// \[SmartCampaignSuggestService.SuggestSmartCampaignBudgets][\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -20937,592 +21823,6 @@ pub mod smart_campaign_suggest_service_client {
         }
     }
 }
-/// Request message for
-/// \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestGeoTargetConstantsRequest {
-    /// If possible, returned geo targets are translated using this locale. If not,
-    /// en is used by default. This is also used as a hint for returned geo
-    /// targets.
-    #[prost(string, optional, tag="6")]
-    pub locale: ::core::option::Option<::prost::alloc::string::String>,
-    /// Returned geo targets are restricted to this country code.
-    #[prost(string, optional, tag="7")]
-    pub country_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// Required. A selector of geo target constants.
-    #[prost(oneof="suggest_geo_target_constants_request::Query", tags="1, 2")]
-    pub query: ::core::option::Option<suggest_geo_target_constants_request::Query>,
-}
-/// Nested message and enum types in `SuggestGeoTargetConstantsRequest`.
-pub mod suggest_geo_target_constants_request {
-    /// A list of location names.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LocationNames {
-        /// A list of location names.
-        #[prost(string, repeated, tag="2")]
-        pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// A list of geo target constant resource names.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GeoTargets {
-        /// A list of geo target constant resource names.
-        #[prost(string, repeated, tag="2")]
-        pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// Required. A selector of geo target constants.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Query {
-        /// The location names to search by. At most 25 names can be set.
-        #[prost(message, tag="1")]
-        LocationNames(LocationNames),
-        /// The geo target constant resource names to filter by.
-        #[prost(message, tag="2")]
-        GeoTargets(GeoTargets),
-    }
-}
-/// Response message for \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SuggestGeoTargetConstantsResponse {
-    /// Geo target constant suggestions.
-    #[prost(message, repeated, tag="1")]
-    pub geo_target_constant_suggestions: ::prost::alloc::vec::Vec<GeoTargetConstantSuggestion>,
-}
-/// A geo target constant suggestion.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GeoTargetConstantSuggestion {
-    /// The language this GeoTargetConstantSuggestion is currently translated to.
-    /// It affects the name of geo target fields. For example, if locale=en, then
-    /// name=Spain. If locale=es, then name=España. The default locale will be
-    /// returned if no translation exists for the locale in the request.
-    #[prost(string, optional, tag="6")]
-    pub locale: ::core::option::Option<::prost::alloc::string::String>,
-    /// Approximate user population that will be targeted, rounded to the
-    /// nearest 100.
-    #[prost(int64, optional, tag="7")]
-    pub reach: ::core::option::Option<i64>,
-    /// If the request searched by location name, this is the location name that
-    /// matched the geo target.
-    #[prost(string, optional, tag="8")]
-    pub search_term: ::core::option::Option<::prost::alloc::string::String>,
-    /// The GeoTargetConstant result.
-    #[prost(message, optional, tag="4")]
-    pub geo_target_constant: ::core::option::Option<super::resources::GeoTargetConstant>,
-    /// The list of parents of the geo target constant.
-    #[prost(message, repeated, tag="5")]
-    pub geo_target_constant_parents: ::prost::alloc::vec::Vec<super::resources::GeoTargetConstant>,
-}
-/// Generated client implementations.
-pub mod geo_target_constant_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to fetch geo target constants.
-    #[derive(Debug, Clone)]
-    pub struct GeoTargetConstantServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> GeoTargetConstantServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> GeoTargetConstantServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            GeoTargetConstantServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns GeoTargetConstant suggestions by location name or by resource name.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [GeoTargetConstantSuggestionError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn suggest_geo_target_constants(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SuggestGeoTargetConstantsRequest>,
-        ) -> Result<
-            tonic::Response<super::SuggestGeoTargetConstantsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.GeoTargetConstantService/SuggestGeoTargetConstants",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Mutate Request for
-/// \[CustomerUserAccessService.MutateCustomerUserAccess][google.ads.googleads.v11.services.CustomerUserAccessService.MutateCustomerUserAccess\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessRequest {
-    /// Required. The ID of the customer being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on the customer
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<CustomerUserAccessOperation>,
-}
-/// A single operation (update, remove) on customer user access.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerUserAccessOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="customer_user_access_operation::Operation", tags="1, 2")]
-    pub operation: ::core::option::Option<customer_user_access_operation::Operation>,
-}
-/// Nested message and enum types in `CustomerUserAccessOperation`.
-pub mod customer_user_access_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Update operation: The customer user access is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="1")]
-        Update(super::super::resources::CustomerUserAccess),
-        /// Remove operation: A resource name for the removed access is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/customerUserAccesses/{CustomerUserAccess.user_id}`
-        #[prost(string, tag="2")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for customer user access mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessResponse {
-    /// Result for the mutate.
-    #[prost(message, optional, tag="1")]
-    pub result: ::core::option::Option<MutateCustomerUserAccessResult>,
-}
-/// The result for the customer user access mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomerUserAccessResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod customer_user_access_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service manages the permissions of a user on a given customer.
-    #[derive(Debug, Clone)]
-    pub struct CustomerUserAccessServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomerUserAccessServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomerUserAccessServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomerUserAccessServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Updates, removes permission of a user on a given customer. Operation
-        /// statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CustomerUserAccessError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_customer_user_access(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomerUserAccessRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomerUserAccessResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomerUserAccessService/MutateCustomerUserAccess",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for \[CustomAudienceService.MutateCustomAudiences][google.ads.googleads.v11.services.CustomAudienceService.MutateCustomAudiences\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomAudiencesRequest {
-    /// Required. The ID of the customer whose custom audiences are being modified.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The list of operations to perform on individual custom audiences.
-    #[prost(message, repeated, tag="2")]
-    pub operations: ::prost::alloc::vec::Vec<CustomAudienceOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// A single operation (create, update) on a custom audience.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomAudienceOperation {
-    /// FieldMask that determines which resource fields are modified in an update.
-    #[prost(message, optional, tag="4")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="custom_audience_operation::Operation", tags="1, 2, 3")]
-    pub operation: ::core::option::Option<custom_audience_operation::Operation>,
-}
-/// Nested message and enum types in `CustomAudienceOperation`.
-pub mod custom_audience_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: No resource name is expected for the new custom
-        /// audience.
-        #[prost(message, tag="1")]
-        Create(super::super::resources::CustomAudience),
-        /// Update operation: The custom audience is expected to have a valid
-        /// resource name.
-        #[prost(message, tag="2")]
-        Update(super::super::resources::CustomAudience),
-        /// Remove operation: A resource name for the removed custom audience is
-        /// expected, in this format:
-        ///
-        /// `customers/{customer_id}/customAudiences/{custom_audience_id}`
-        #[prost(string, tag="3")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for custom audience mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomAudiencesResponse {
-    /// All results for the mutate.
-    #[prost(message, repeated, tag="1")]
-    pub results: ::prost::alloc::vec::Vec<MutateCustomAudienceResult>,
-}
-/// The result for the custom audience mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateCustomAudienceResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod custom_audience_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage custom audiences.
-    #[derive(Debug, Clone)]
-    pub struct CustomAudienceServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomAudienceServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomAudienceServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomAudienceServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates or updates custom audiences. Operation statuses are returned.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [CustomAudienceError]()
-        ///   [CustomInterestError]()
-        ///   [FieldError]()
-        ///   [FieldMaskError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [MutateError]()
-        ///   [OperationAccessDeniedError]()
-        ///   [PolicyViolationError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn mutate_custom_audiences(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MutateCustomAudiencesRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateCustomAudiencesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.CustomAudienceService/MutateCustomAudiences",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RegenerateShareableLinkIdRequest {
-    /// Resource name of the third party app analytics link.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RegenerateShareableLinkIdResponse {
-}
-/// Generated client implementations.
-pub mod third_party_app_analytics_link_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service allows management of links between Google Ads and third party
-    /// app analytics.
-    #[derive(Debug, Clone)]
-    pub struct ThirdPartyAppAnalyticsLinkServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ThirdPartyAppAnalyticsLinkServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ThirdPartyAppAnalyticsLinkServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ThirdPartyAppAnalyticsLinkServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Regenerate ThirdPartyAppAnalyticsLink.shareable_link_id that should be
-        /// provided to the third party when setting up app analytics.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn regenerate_shareable_link_id(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RegenerateShareableLinkIdRequest>,
-        ) -> Result<
-            tonic::Response<super::RegenerateShareableLinkIdResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService/RegenerateShareableLinkId",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Request message for \[GoogleAdsFieldService.GetGoogleAdsField][google.ads.googleads.v11.services.GoogleAdsFieldService.GetGoogleAdsField\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGoogleAdsFieldRequest {
@@ -21686,90 +21986,44 @@ pub mod google_ads_field_service_client {
         }
     }
 }
-/// Request message for
-/// \[AccountBudgetProposalService.MutateAccountBudgetProposal][google.ads.googleads.v11.services.AccountBudgetProposalService.MutateAccountBudgetProposal\].
+/// Request message for fetching the invoices of a given billing setup that were
+/// issued during a given month.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountBudgetProposalRequest {
-    /// Required. The ID of the customer.
+pub struct ListInvoicesRequest {
+    /// Required. The ID of the customer to fetch invoices for.
     #[prost(string, tag="1")]
     pub customer_id: ::prost::alloc::string::String,
-    /// Required. The operation to perform on an individual account-level budget proposal.
-    #[prost(message, optional, tag="2")]
-    pub operation: ::core::option::Option<AccountBudgetProposalOperation>,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="3")]
-    pub validate_only: bool,
-}
-/// A single operation to propose the creation of a new account-level budget or
-/// edit/end/remove an existing one.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountBudgetProposalOperation {
-    /// FieldMask that determines which budget fields are modified.  While budgets
-    /// may be modified, proposals that propose such modifications are final.
-    /// Therefore, update operations are not supported for proposals.
+    /// Required. The billing setup resource name of the requested invoices.
     ///
-    /// Proposals that modify budgets have the 'update' proposal type.  Specifying
-    /// a mask for any other proposal type is considered an error.
-    #[prost(message, optional, tag="3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// The mutate operation.
-    #[prost(oneof="account_budget_proposal_operation::Operation", tags="2, 1")]
-    pub operation: ::core::option::Option<account_budget_proposal_operation::Operation>,
+    /// `customers/{customer_id}/billingSetups/{billing_setup_id}`
+    #[prost(string, tag="2")]
+    pub billing_setup: ::prost::alloc::string::String,
+    /// Required. The issue year to retrieve invoices, in yyyy format. Only
+    /// invoices issued in 2019 or later can be retrieved.
+    #[prost(string, tag="3")]
+    pub issue_year: ::prost::alloc::string::String,
+    /// Required. The issue month to retrieve invoices.
+    #[prost(enumeration="super::enums::month_of_year_enum::MonthOfYear", tag="4")]
+    pub issue_month: i32,
 }
-/// Nested message and enum types in `AccountBudgetProposalOperation`.
-pub mod account_budget_proposal_operation {
-    /// The mutate operation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// Create operation: A new proposal to create a new budget, edit an
-        /// existing budget, end an actively running budget, or remove an approved
-        /// budget scheduled to start in the future.
-        /// No resource name is expected for the new proposal.
-        #[prost(message, tag="2")]
-        Create(super::super::resources::AccountBudgetProposal),
-        /// Remove operation: A resource name for the removed proposal is expected,
-        /// in this format:
-        ///
-        /// `customers/{customer_id}/accountBudgetProposals/{account_budget_proposal_id}`
-        /// A request may be cancelled iff it is pending.
-        #[prost(string, tag="1")]
-        Remove(::prost::alloc::string::String),
-    }
-}
-/// Response message for account-level budget mutate operations.
+/// Response message for \[InvoiceService.ListInvoices][google.ads.googleads.v11.services.InvoiceService.ListInvoices\].
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountBudgetProposalResponse {
-    /// The result of the mutate.
-    #[prost(message, optional, tag="2")]
-    pub result: ::core::option::Option<MutateAccountBudgetProposalResult>,
-}
-/// The result for the account budget proposal mutate.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MutateAccountBudgetProposalResult {
-    /// Returned for successful operations.
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
+pub struct ListInvoicesResponse {
+    /// The list of invoices that match the billing setup and time period.
+    #[prost(message, repeated, tag="1")]
+    pub invoices: ::prost::alloc::vec::Vec<super::resources::Invoice>,
 }
 /// Generated client implementations.
-pub mod account_budget_proposal_service_client {
+pub mod invoice_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// A service for managing account-level budgets through proposals.
-    ///
-    /// A proposal is a request to create a new budget or make changes to an
-    /// existing one.
-    ///
-    /// Mutates:
-    /// The CREATE operation creates a new proposal.
-    /// UPDATE operations aren't supported.
-    /// The REMOVE operation cancels a pending proposal.
+    /// A service to fetch invoices issued for a billing setup during a given month.
     #[derive(Debug, Clone)]
-    pub struct AccountBudgetProposalServiceClient<T> {
+    pub struct InvoiceServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> AccountBudgetProposalServiceClient<T>
+    impl<T> InvoiceServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -21787,7 +22041,7 @@ pub mod account_budget_proposal_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> AccountBudgetProposalServiceClient<InterceptedService<T, F>>
+        ) -> InvoiceServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -21801,9 +22055,7 @@ pub mod account_budget_proposal_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            AccountBudgetProposalServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
+            InvoiceServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -21820,30 +22072,21 @@ pub mod account_budget_proposal_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Creates, updates, or removes account budget proposals.  Operation statuses
-        /// are returned.
+        /// Returns all invoices associated with a billing setup, for a given month.
         ///
         /// List of thrown errors:
-        ///   [AccountBudgetProposalError]()
         ///   [AuthenticationError]()
         ///   [AuthorizationError]()
-        ///   [DatabaseError]()
-        ///   [DateError]()
         ///   [FieldError]()
-        ///   [FieldMaskError]()
         ///   [HeaderError]()
         ///   [InternalError]()
-        ///   [MutateError]()
+        ///   [InvoiceError]()
         ///   [QuotaError]()
         ///   [RequestError]()
-        ///   [StringLengthError]()
-        pub async fn mutate_account_budget_proposal(
+        pub async fn list_invoices(
             &mut self,
-            request: impl tonic::IntoRequest<super::MutateAccountBudgetProposalRequest>,
-        ) -> Result<
-            tonic::Response<super::MutateAccountBudgetProposalResponse>,
-            tonic::Status,
-        > {
+            request: impl tonic::IntoRequest<super::ListInvoicesRequest>,
+        ) -> Result<tonic::Response<super::ListInvoicesResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -21855,250 +22098,7 @@ pub mod account_budget_proposal_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.AccountBudgetProposalService/MutateAccountBudgetProposal",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadConversionAdjustmentsRequest {
-    /// Required. The ID of the customer performing the upload.
-    #[prost(string, tag="1")]
-    pub customer_id: ::prost::alloc::string::String,
-    /// Required. The conversion adjustments that are being uploaded.
-    #[prost(message, repeated, tag="2")]
-    pub conversion_adjustments: ::prost::alloc::vec::Vec<ConversionAdjustment>,
-    /// Required. If true, successful operations will be carried out and invalid
-    /// operations will return errors. If false, all operations will be carried out
-    /// in one transaction if and only if they are all valid. This should always be
-    /// set to true.
-    /// See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(bool, tag="3")]
-    pub partial_failure: bool,
-    /// If true, the request is validated but not executed. Only errors are
-    /// returned, not results.
-    #[prost(bool, tag="4")]
-    pub validate_only: bool,
-}
-/// Response message for
-/// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UploadConversionAdjustmentsResponse {
-    /// Errors that pertain to conversion adjustment failures in the partial
-    /// failure mode. Returned when all errors occur inside the adjustments. If any
-    /// errors occur outside the adjustments (for example, auth errors), we return
-    /// an RPC level error. See
-    /// <https://developers.google.com/google-ads/api/docs/best-practices/partial-failures>
-    /// for more information about partial failure.
-    #[prost(message, optional, tag="1")]
-    pub partial_failure_error: ::core::option::Option<super::super::super::super::rpc::Status>,
-    /// Returned for successfully processed conversion adjustments. Proto will be
-    /// empty for rows that received an error. Results are not returned when
-    /// validate_only is true.
-    #[prost(message, repeated, tag="2")]
-    pub results: ::prost::alloc::vec::Vec<ConversionAdjustmentResult>,
-}
-/// A conversion adjustment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionAdjustment {
-    /// For adjustments, uniquely identifies a conversion that was reported
-    /// without an order ID specified. If the adjustment_type is ENHANCEMENT, this
-    /// value is optional but may be set in addition to the order_id.
-    #[prost(message, optional, tag="12")]
-    pub gclid_date_time_pair: ::core::option::Option<GclidDateTimePair>,
-    /// The order ID of the conversion to be adjusted. If the conversion was
-    /// reported with an order ID specified, that order ID must be used as the
-    /// identifier here. The order ID is required for enhancements.
-    #[prost(string, optional, tag="13")]
-    pub order_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Resource name of the conversion action associated with this conversion
-    /// adjustment. Note: Although this resource name consists of a customer id and
-    /// a conversion action id, validation will ignore the customer id and use the
-    /// conversion action id as the sole identifier of the conversion action.
-    #[prost(string, optional, tag="8")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the adjustment occurred. Must be after the
-    /// conversion_date_time. The timezone must be specified. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="9")]
-    pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// The adjustment type.
-    #[prost(enumeration="super::enums::conversion_adjustment_type_enum::ConversionAdjustmentType", tag="5")]
-    pub adjustment_type: i32,
-    /// Information needed to restate the conversion's value.
-    /// Required for restatements. Should not be supplied for retractions. An error
-    /// will be returned if provided for a retraction.
-    /// NOTE: If you want to upload a second restatement with a different adjusted
-    /// value, it must have a new, more recent, adjustment occurrence time.
-    /// Otherwise, it will be treated as a duplicate of the previous restatement
-    /// and ignored.
-    #[prost(message, optional, tag="6")]
-    pub restatement_value: ::core::option::Option<RestatementValue>,
-    /// The user identifiers to enhance the original conversion.
-    /// ConversionAdjustmentUploadService only accepts user identifiers in
-    /// enhancements. The maximum number of user identifiers for each
-    /// enhancement is 5.
-    #[prost(message, repeated, tag="10")]
-    pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
-    /// The user agent to enhance the original conversion. This can be found in
-    /// your user's HTTP request header when they convert on your web page.
-    /// Example, "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X)". User
-    /// agent can only be specified in enhancements with user identifiers. This
-    /// should match the user agent of the request that sent the original
-    /// conversion so the conversion and its enhancement are either both attributed
-    /// as same-device or both attributed as cross-device.
-    #[prost(string, optional, tag="11")]
-    pub user_agent: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Contains information needed to restate a conversion's value.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RestatementValue {
-    /// The restated conversion value. This is the value of the conversion after
-    /// restatement. For example, to change the value of a conversion from 100 to
-    /// 70, an adjusted value of 70 should be reported.
-    /// NOTE: If you want to upload a second restatement with a different adjusted
-    /// value, it must have a new, more recent, adjustment occurrence time.
-    /// Otherwise, it will be treated as a duplicate of the previous restatement
-    /// and ignored.
-    #[prost(double, optional, tag="3")]
-    pub adjusted_value: ::core::option::Option<f64>,
-    /// The currency of the restated value. If not provided, then the default
-    /// currency from the conversion action is used, and if that is not set then
-    /// the account currency is used. This is the ISO 4217 3-character currency
-    /// code for example, USD or EUR.
-    #[prost(string, optional, tag="4")]
-    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Uniquely identifies a conversion that was reported without an order ID
-/// specified.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GclidDateTimePair {
-    /// Google click ID (gclid) associated with the original conversion for this
-    /// adjustment.
-    #[prost(string, optional, tag="3")]
-    pub gclid: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the original conversion for this adjustment
-    /// occurred. The timezone must be specified. The format is "yyyy-mm-dd
-    /// hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="4")]
-    pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Information identifying a successfully processed ConversionAdjustment.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionAdjustmentResult {
-    /// The gclid and conversion date time of the conversion.
-    #[prost(message, optional, tag="9")]
-    pub gclid_date_time_pair: ::core::option::Option<GclidDateTimePair>,
-    /// The order ID of the conversion to be adjusted.
-    #[prost(string, tag="10")]
-    pub order_id: ::prost::alloc::string::String,
-    /// Resource name of the conversion action associated with this conversion
-    /// adjustment.
-    #[prost(string, optional, tag="7")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// The date time at which the adjustment occurred. The format is
-    /// "yyyy-mm-dd hh:mm:ss+|-hh:mm", for example, "2019-01-01 12:32:45-08:00".
-    #[prost(string, optional, tag="8")]
-    pub adjustment_date_time: ::core::option::Option<::prost::alloc::string::String>,
-    /// The adjustment type.
-    #[prost(enumeration="super::enums::conversion_adjustment_type_enum::ConversionAdjustmentType", tag="5")]
-    pub adjustment_type: i32,
-}
-/// Generated client implementations.
-pub mod conversion_adjustment_upload_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to upload conversion adjustments.
-    #[derive(Debug, Clone)]
-    pub struct ConversionAdjustmentUploadServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ConversionAdjustmentUploadServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ConversionAdjustmentUploadServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ConversionAdjustmentUploadServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Processes the given conversion adjustments.
-        ///
-        /// List of thrown errors:
-        ///   [AuthenticationError]()
-        ///   [AuthorizationError]()
-        ///   [HeaderError]()
-        ///   [InternalError]()
-        ///   [PartialFailureError]()
-        ///   [QuotaError]()
-        ///   [RequestError]()
-        pub async fn upload_conversion_adjustments(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UploadConversionAdjustmentsRequest>,
-        ) -> Result<
-            tonic::Response<super::UploadConversionAdjustmentsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.googleads.v11.services.ConversionAdjustmentUploadService/UploadConversionAdjustments",
+                "/google.ads.googleads.v11.services.InvoiceService/ListInvoices",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

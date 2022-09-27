@@ -1041,624 +1041,6 @@ impl CommuteMethod {
         }
     }
 }
-/// Auto-complete parameters.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryRequest {
-    /// Required. Resource name of tenant the completion is performed within.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenant/bar".
-    ///
-    /// If tenant id is unspecified, the default tenant is used, for
-    /// example, "projects/foo".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The query used to generate suggestions.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="2")]
-    pub query: ::prost::alloc::string::String,
-    /// The list of languages of the query. This is
-    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, repeated, tag="3")]
-    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. Completion result count.
-    ///
-    /// The maximum allowed page size is 10.
-    #[prost(int32, tag="4")]
-    pub page_size: i32,
-    /// If provided, restricts completion to specified company.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used, for
-    /// example, "projects/foo".
-    #[prost(string, tag="5")]
-    pub company: ::prost::alloc::string::String,
-    /// The scope of the completion. The defaults is \[CompletionScope.PUBLIC][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionScope.PUBLIC\].
-    #[prost(enumeration="complete_query_request::CompletionScope", tag="6")]
-    pub scope: i32,
-    /// The completion topic. The default is \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\].
-    #[prost(enumeration="complete_query_request::CompletionType", tag="7")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `CompleteQueryRequest`.
-pub mod complete_query_request {
-    /// Enum to specify the scope of completion.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CompletionScope {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggestions are based only on the data provided by the client.
-        Tenant = 1,
-        /// Suggestions are based on all jobs data in the system that's visible to
-        /// the client
-        Public = 2,
-    }
-    impl CompletionScope {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CompletionScope::Unspecified => "COMPLETION_SCOPE_UNSPECIFIED",
-                CompletionScope::Tenant => "TENANT",
-                CompletionScope::Public => "PUBLIC",
-            }
-        }
-    }
-    /// Enum to specify auto-completion topics.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CompletionType {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggest job titles for jobs autocomplete.
-        ///
-        /// For \[CompletionType.JOB_TITLE][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.JOB_TITLE\] type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are returned.
-        JobTitle = 1,
-        /// Suggest company names for jobs autocomplete.
-        ///
-        /// For \[CompletionType.COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\] type,
-        /// only companies having open jobs with the same \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are
-        /// returned.
-        CompanyName = 2,
-        /// Suggest both job titles and company names for jobs autocomplete.
-        ///
-        /// For \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\] type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] or companies having open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are returned.
-        Combined = 3,
-    }
-    impl CompletionType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CompletionType::Unspecified => "COMPLETION_TYPE_UNSPECIFIED",
-                CompletionType::JobTitle => "JOB_TITLE",
-                CompletionType::CompanyName => "COMPANY_NAME",
-                CompletionType::Combined => "COMBINED",
-            }
-        }
-    }
-}
-/// Response of auto-complete query.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryResponse {
-    /// Results of the matching job/company candidates.
-    #[prost(message, repeated, tag="1")]
-    pub completion_results: ::prost::alloc::vec::Vec<complete_query_response::CompletionResult>,
-    /// Additional information for the API invocation, such as the request
-    /// tracking id.
-    #[prost(message, optional, tag="2")]
-    pub metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Nested message and enum types in `CompleteQueryResponse`.
-pub mod complete_query_response {
-    /// Resource that represents completion results.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CompletionResult {
-        /// The suggestion for the query.
-        #[prost(string, tag="1")]
-        pub suggestion: ::prost::alloc::string::String,
-        /// The completion topic.
-        #[prost(enumeration="super::complete_query_request::CompletionType", tag="2")]
-        pub r#type: i32,
-        /// The URI of the company image for
-        /// \[COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
-        #[prost(string, tag="3")]
-        pub image_uri: ::prost::alloc::string::String,
-    }
-}
-/// Generated client implementations.
-pub mod completion_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service handles auto completion.
-    #[derive(Debug, Clone)]
-    pub struct CompletionClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CompletionClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CompletionClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CompletionClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Completes the specified prefix with keyword suggestions.
-        /// Intended for use by a job search auto-complete search box.
-        pub async fn complete_query(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
-        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.Completion/CompleteQuery",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A Tenant resource represents a tenant in the service. A tenant is a group or
-/// entity that shares common access with specific privileges for resources like
-/// profiles. Customer may create multiple tenants to provide data isolation for
-/// different groups.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Tenant {
-    /// Required during tenant update.
-    ///
-    /// The resource name for a tenant. This is generated by the service when a
-    /// tenant is created.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenants/bar".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Client side tenant identifier, used to uniquely identify the tenant.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="2")]
-    pub external_id: ::prost::alloc::string::String,
-    /// Indicates whether data owned by this tenant may be used to provide product
-    /// improvements across other tenants.
-    ///
-    /// Defaults behavior is \[DataUsageType.ISOLATED][google.cloud.talent.v4beta1.Tenant.DataUsageType.ISOLATED\] if it's unset.
-    #[prost(enumeration="tenant::DataUsageType", tag="3")]
-    pub usage_type: i32,
-    /// A list of keys of filterable \[Profile.custom_attributes][google.cloud.talent.v4beta1.Profile.custom_attributes\], whose
-    /// corresponding `string_values` are used in keyword searches. Profiles with
-    /// `string_values` under these specified field keys are returned if any
-    /// of the values match the search keyword. Custom field values with
-    /// parenthesis, brackets and special symbols are not searchable as-is,
-    /// and must be surrounded by quotes.
-    #[prost(string, repeated, tag="4")]
-    pub keyword_searchable_profile_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `Tenant`.
-pub mod tenant {
-    /// Enum that represents how user data owned by the tenant is used.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum DataUsageType {
-        /// Default value.
-        Unspecified = 0,
-        /// Data owned by this tenant is used to improve search/recommendation
-        /// quality across tenants.
-        Aggregated = 1,
-        /// Data owned by this tenant is used to improve search/recommendation
-        /// quality for this tenant only.
-        Isolated = 2,
-    }
-    impl DataUsageType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DataUsageType::Unspecified => "DATA_USAGE_TYPE_UNSPECIFIED",
-                DataUsageType::Aggregated => "AGGREGATED",
-                DataUsageType::Isolated => "ISOLATED",
-            }
-        }
-    }
-}
-/// The Request of the CreateTenant method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTenantRequest {
-    /// Required. Resource name of the project under which the tenant is created.
-    ///
-    /// The format is "projects/{project_id}", for example,
-    /// "projects/foo".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The tenant to be created.
-    #[prost(message, optional, tag="2")]
-    pub tenant: ::core::option::Option<Tenant>,
-}
-/// Request for getting a tenant by name.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTenantRequest {
-    /// Required. The resource name of the tenant to be retrieved.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenants/bar".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request for updating a specified tenant.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTenantRequest {
-    /// Required. The tenant resource to replace the current resource in the system.
-    #[prost(message, optional, tag="1")]
-    pub tenant: ::core::option::Option<Tenant>,
-    /// Strongly recommended for the best service experience.
-    ///
-    /// If \[update_mask][google.cloud.talent.v4beta1.UpdateTenantRequest.update_mask\] is provided, only the specified fields in
-    /// \[tenant][google.cloud.talent.v4beta1.UpdateTenantRequest.tenant\] are updated. Otherwise all the fields are updated.
-    ///
-    /// A field mask to specify the tenant fields to be updated. Only
-    /// top level fields of \[Tenant][google.cloud.talent.v4beta1.Tenant\] are supported.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Request to delete a tenant.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTenantRequest {
-    /// Required. The resource name of the tenant to be deleted.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenants/bar".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// List tenants for which the client has ACL visibility.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTenantsRequest {
-    /// Required. Resource name of the project under which the tenant is created.
-    ///
-    /// The format is "projects/{project_id}", for example,
-    /// "projects/foo".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The starting indicator from which to return results.
-    #[prost(string, tag="2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of tenants to be returned, at most 100.
-    /// Default is 100 if a non-positive number is provided.
-    #[prost(int32, tag="3")]
-    pub page_size: i32,
-}
-/// The List tenants response object.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTenantsResponse {
-    /// Tenants for the current client.
-    #[prost(message, repeated, tag="1")]
-    pub tenants: ::prost::alloc::vec::Vec<Tenant>,
-    /// A token to retrieve the next page of results.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Additional information for the API invocation, such as the request
-    /// tracking id.
-    #[prost(message, optional, tag="3")]
-    pub metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Generated client implementations.
-pub mod tenant_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service that handles tenant management, including CRUD and enumeration.
-    #[derive(Debug, Clone)]
-    pub struct TenantServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TenantServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TenantServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TenantServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a new tenant entity.
-        pub async fn create_tenant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTenantRequest>,
-        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.TenantService/CreateTenant",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Retrieves specified tenant.
-        pub async fn get_tenant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTenantRequest>,
-        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.TenantService/GetTenant",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates specified tenant.
-        pub async fn update_tenant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateTenantRequest>,
-        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.TenantService/UpdateTenant",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes specified tenant.
-        pub async fn delete_tenant(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteTenantRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.TenantService/DeleteTenant",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all tenants associated with the project.
-        pub async fn list_tenants(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTenantsRequest>,
-        ) -> Result<tonic::Response<super::ListTenantsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.TenantService/ListTenants",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A Company resource represents a company in the service. A company is the
-/// entity that owns job postings, that is, the hiring entity responsible for
-/// employing applicants for the job position.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Company {
-    /// Required during company update.
-    ///
-    /// The resource name for a company. This is generated by the service when a
-    /// company is created.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used. For
-    /// example, "projects/foo/companies/bar".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the company, for example, "Google LLC".
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. Client side company identifier, used to uniquely identify the
-    /// company.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="3")]
-    pub external_id: ::prost::alloc::string::String,
-    /// The employer's company size.
-    #[prost(enumeration="CompanySize", tag="4")]
-    pub size: i32,
-    /// The street address of the company's main headquarters, which may be
-    /// different from the job location. The service attempts
-    /// to geolocate the provided address, and populates a more specific
-    /// location wherever possible in \[DerivedInfo.headquarters_location][google.cloud.talent.v4beta1.Company.DerivedInfo.headquarters_location\].
-    #[prost(string, tag="5")]
-    pub headquarters_address: ::prost::alloc::string::String,
-    /// Set to true if it is the hiring agency that post jobs for other
-    /// employers.
-    ///
-    /// Defaults to false if not provided.
-    #[prost(bool, tag="6")]
-    pub hiring_agency: bool,
-    /// Equal Employment Opportunity legal disclaimer text to be
-    /// associated with all jobs, and typically to be displayed in all
-    /// roles.
-    ///
-    /// The maximum number of allowed characters is 500.
-    #[prost(string, tag="7")]
-    pub eeo_text: ::prost::alloc::string::String,
-    /// The URI representing the company's primary web site or home page,
-    /// for example, "<https://www.google.com".>
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag="8")]
-    pub website_uri: ::prost::alloc::string::String,
-    /// The URI to employer's career site or careers page on the employer's web
-    /// site, for example, "<https://careers.google.com".>
-    #[prost(string, tag="9")]
-    pub career_site_uri: ::prost::alloc::string::String,
-    /// A URI that hosts the employer's company logo.
-    #[prost(string, tag="10")]
-    pub image_uri: ::prost::alloc::string::String,
-    /// A list of keys of filterable \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\], whose
-    /// corresponding `string_values` are used in keyword searches. Jobs with
-    /// `string_values` under these specified field keys are returned if any
-    /// of the values match the search keyword. Custom field values with
-    /// parenthesis, brackets and special symbols are not searchable as-is,
-    /// and those keyword queries must be surrounded by quotes.
-    #[prost(string, repeated, tag="11")]
-    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. Derived details about the company.
-    #[prost(message, optional, tag="12")]
-    pub derived_info: ::core::option::Option<company::DerivedInfo>,
-    /// Output only. Indicates whether a company is flagged to be suspended from
-    /// public availability by the service when job content appears suspicious,
-    /// abusive, or spammy.
-    #[prost(bool, tag="13")]
-    pub suspended: bool,
-}
-/// Nested message and enum types in `Company`.
-pub mod company {
-    /// Derived details about the company.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DerivedInfo {
-        /// A structured headquarters location of the company, resolved from
-        /// \[Company.headquarters_address][google.cloud.talent.v4beta1.Company.headquarters_address\] if provided.
-        #[prost(message, optional, tag="1")]
-        pub headquarters_location: ::core::option::Option<super::Location>,
-    }
-}
 /// The query required to perform a search query.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobQuery {
@@ -3499,6 +2881,401 @@ pub mod job_service_client {
         }
     }
 }
+/// A Tenant resource represents a tenant in the service. A tenant is a group or
+/// entity that shares common access with specific privileges for resources like
+/// profiles. Customer may create multiple tenants to provide data isolation for
+/// different groups.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Tenant {
+    /// Required during tenant update.
+    ///
+    /// The resource name for a tenant. This is generated by the service when a
+    /// tenant is created.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenants/bar".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Client side tenant identifier, used to uniquely identify the tenant.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="2")]
+    pub external_id: ::prost::alloc::string::String,
+    /// Indicates whether data owned by this tenant may be used to provide product
+    /// improvements across other tenants.
+    ///
+    /// Defaults behavior is \[DataUsageType.ISOLATED][google.cloud.talent.v4beta1.Tenant.DataUsageType.ISOLATED\] if it's unset.
+    #[prost(enumeration="tenant::DataUsageType", tag="3")]
+    pub usage_type: i32,
+    /// A list of keys of filterable \[Profile.custom_attributes][google.cloud.talent.v4beta1.Profile.custom_attributes\], whose
+    /// corresponding `string_values` are used in keyword searches. Profiles with
+    /// `string_values` under these specified field keys are returned if any
+    /// of the values match the search keyword. Custom field values with
+    /// parenthesis, brackets and special symbols are not searchable as-is,
+    /// and must be surrounded by quotes.
+    #[prost(string, repeated, tag="4")]
+    pub keyword_searchable_profile_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `Tenant`.
+pub mod tenant {
+    /// Enum that represents how user data owned by the tenant is used.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum DataUsageType {
+        /// Default value.
+        Unspecified = 0,
+        /// Data owned by this tenant is used to improve search/recommendation
+        /// quality across tenants.
+        Aggregated = 1,
+        /// Data owned by this tenant is used to improve search/recommendation
+        /// quality for this tenant only.
+        Isolated = 2,
+    }
+    impl DataUsageType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataUsageType::Unspecified => "DATA_USAGE_TYPE_UNSPECIFIED",
+                DataUsageType::Aggregated => "AGGREGATED",
+                DataUsageType::Isolated => "ISOLATED",
+            }
+        }
+    }
+}
+/// The Request of the CreateTenant method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTenantRequest {
+    /// Required. Resource name of the project under which the tenant is created.
+    ///
+    /// The format is "projects/{project_id}", for example,
+    /// "projects/foo".
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The tenant to be created.
+    #[prost(message, optional, tag="2")]
+    pub tenant: ::core::option::Option<Tenant>,
+}
+/// Request for getting a tenant by name.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTenantRequest {
+    /// Required. The resource name of the tenant to be retrieved.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenants/bar".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request for updating a specified tenant.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateTenantRequest {
+    /// Required. The tenant resource to replace the current resource in the system.
+    #[prost(message, optional, tag="1")]
+    pub tenant: ::core::option::Option<Tenant>,
+    /// Strongly recommended for the best service experience.
+    ///
+    /// If \[update_mask][google.cloud.talent.v4beta1.UpdateTenantRequest.update_mask\] is provided, only the specified fields in
+    /// \[tenant][google.cloud.talent.v4beta1.UpdateTenantRequest.tenant\] are updated. Otherwise all the fields are updated.
+    ///
+    /// A field mask to specify the tenant fields to be updated. Only
+    /// top level fields of \[Tenant][google.cloud.talent.v4beta1.Tenant\] are supported.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request to delete a tenant.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTenantRequest {
+    /// Required. The resource name of the tenant to be deleted.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenants/bar".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// List tenants for which the client has ACL visibility.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTenantsRequest {
+    /// Required. Resource name of the project under which the tenant is created.
+    ///
+    /// The format is "projects/{project_id}", for example,
+    /// "projects/foo".
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The starting indicator from which to return results.
+    #[prost(string, tag="2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of tenants to be returned, at most 100.
+    /// Default is 100 if a non-positive number is provided.
+    #[prost(int32, tag="3")]
+    pub page_size: i32,
+}
+/// The List tenants response object.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTenantsResponse {
+    /// Tenants for the current client.
+    #[prost(message, repeated, tag="1")]
+    pub tenants: ::prost::alloc::vec::Vec<Tenant>,
+    /// A token to retrieve the next page of results.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Additional information for the API invocation, such as the request
+    /// tracking id.
+    #[prost(message, optional, tag="3")]
+    pub metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Generated client implementations.
+pub mod tenant_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service that handles tenant management, including CRUD and enumeration.
+    #[derive(Debug, Clone)]
+    pub struct TenantServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TenantServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TenantServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TenantServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a new tenant entity.
+        pub async fn create_tenant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTenantRequest>,
+        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.TenantService/CreateTenant",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Retrieves specified tenant.
+        pub async fn get_tenant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTenantRequest>,
+        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.TenantService/GetTenant",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates specified tenant.
+        pub async fn update_tenant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateTenantRequest>,
+        ) -> Result<tonic::Response<super::Tenant>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.TenantService/UpdateTenant",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes specified tenant.
+        pub async fn delete_tenant(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTenantRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.TenantService/DeleteTenant",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all tenants associated with the project.
+        pub async fn list_tenants(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTenantsRequest>,
+        ) -> Result<tonic::Response<super::ListTenantsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.TenantService/ListTenants",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A Company resource represents a company in the service. A company is the
+/// entity that owns job postings, that is, the hiring entity responsible for
+/// employing applicants for the job position.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Company {
+    /// Required during company update.
+    ///
+    /// The resource name for a company. This is generated by the service when a
+    /// company is created.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used. For
+    /// example, "projects/foo/companies/bar".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the company, for example, "Google LLC".
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. Client side company identifier, used to uniquely identify the
+    /// company.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="3")]
+    pub external_id: ::prost::alloc::string::String,
+    /// The employer's company size.
+    #[prost(enumeration="CompanySize", tag="4")]
+    pub size: i32,
+    /// The street address of the company's main headquarters, which may be
+    /// different from the job location. The service attempts
+    /// to geolocate the provided address, and populates a more specific
+    /// location wherever possible in \[DerivedInfo.headquarters_location][google.cloud.talent.v4beta1.Company.DerivedInfo.headquarters_location\].
+    #[prost(string, tag="5")]
+    pub headquarters_address: ::prost::alloc::string::String,
+    /// Set to true if it is the hiring agency that post jobs for other
+    /// employers.
+    ///
+    /// Defaults to false if not provided.
+    #[prost(bool, tag="6")]
+    pub hiring_agency: bool,
+    /// Equal Employment Opportunity legal disclaimer text to be
+    /// associated with all jobs, and typically to be displayed in all
+    /// roles.
+    ///
+    /// The maximum number of allowed characters is 500.
+    #[prost(string, tag="7")]
+    pub eeo_text: ::prost::alloc::string::String,
+    /// The URI representing the company's primary web site or home page,
+    /// for example, "<https://www.google.com".>
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="8")]
+    pub website_uri: ::prost::alloc::string::String,
+    /// The URI to employer's career site or careers page on the employer's web
+    /// site, for example, "<https://careers.google.com".>
+    #[prost(string, tag="9")]
+    pub career_site_uri: ::prost::alloc::string::String,
+    /// A URI that hosts the employer's company logo.
+    #[prost(string, tag="10")]
+    pub image_uri: ::prost::alloc::string::String,
+    /// A list of keys of filterable \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\], whose
+    /// corresponding `string_values` are used in keyword searches. Jobs with
+    /// `string_values` under these specified field keys are returned if any
+    /// of the values match the search keyword. Custom field values with
+    /// parenthesis, brackets and special symbols are not searchable as-is,
+    /// and those keyword queries must be surrounded by quotes.
+    #[prost(string, repeated, tag="11")]
+    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. Derived details about the company.
+    #[prost(message, optional, tag="12")]
+    pub derived_info: ::core::option::Option<company::DerivedInfo>,
+    /// Output only. Indicates whether a company is flagged to be suspended from
+    /// public availability by the service when job content appears suspicious,
+    /// abusive, or spammy.
+    #[prost(bool, tag="13")]
+    pub suspended: bool,
+}
+/// Nested message and enum types in `Company`.
+pub mod company {
+    /// Derived details about the company.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DerivedInfo {
+        /// A structured headquarters location of the company, resolved from
+        /// \[Company.headquarters_address][google.cloud.talent.v4beta1.Company.headquarters_address\] if provided.
+        #[prost(message, optional, tag="1")]
+        pub headquarters_location: ::core::option::Option<super::Location>,
+    }
+}
 /// An event issued when an end user interacts with the application that
 /// implements Cloud Talent Solution. Providing this information improves the
 /// quality of results for the API clients, enabling the
@@ -3673,6 +3450,331 @@ pub mod job_event {
                 JobEventType::SentCv => "SENT_CV",
                 JobEventType::InterviewGranted => "INTERVIEW_GRANTED",
             }
+        }
+    }
+}
+/// Auto-complete parameters.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryRequest {
+    /// Required. Resource name of tenant the completion is performed within.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenant/bar".
+    ///
+    /// If tenant id is unspecified, the default tenant is used, for
+    /// example, "projects/foo".
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The query used to generate suggestions.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag="2")]
+    pub query: ::prost::alloc::string::String,
+    /// The list of languages of the query. This is
+    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, repeated, tag="3")]
+    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. Completion result count.
+    ///
+    /// The maximum allowed page size is 10.
+    #[prost(int32, tag="4")]
+    pub page_size: i32,
+    /// If provided, restricts completion to specified company.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used, for
+    /// example, "projects/foo".
+    #[prost(string, tag="5")]
+    pub company: ::prost::alloc::string::String,
+    /// The scope of the completion. The defaults is \[CompletionScope.PUBLIC][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionScope.PUBLIC\].
+    #[prost(enumeration="complete_query_request::CompletionScope", tag="6")]
+    pub scope: i32,
+    /// The completion topic. The default is \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\].
+    #[prost(enumeration="complete_query_request::CompletionType", tag="7")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `CompleteQueryRequest`.
+pub mod complete_query_request {
+    /// Enum to specify the scope of completion.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CompletionScope {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggestions are based only on the data provided by the client.
+        Tenant = 1,
+        /// Suggestions are based on all jobs data in the system that's visible to
+        /// the client
+        Public = 2,
+    }
+    impl CompletionScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionScope::Unspecified => "COMPLETION_SCOPE_UNSPECIFIED",
+                CompletionScope::Tenant => "TENANT",
+                CompletionScope::Public => "PUBLIC",
+            }
+        }
+    }
+    /// Enum to specify auto-completion topics.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CompletionType {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggest job titles for jobs autocomplete.
+        ///
+        /// For \[CompletionType.JOB_TITLE][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.JOB_TITLE\] type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are returned.
+        JobTitle = 1,
+        /// Suggest company names for jobs autocomplete.
+        ///
+        /// For \[CompletionType.COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\] type,
+        /// only companies having open jobs with the same \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are
+        /// returned.
+        CompanyName = 2,
+        /// Suggest both job titles and company names for jobs autocomplete.
+        ///
+        /// For \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\] type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] or companies having open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\] are returned.
+        Combined = 3,
+    }
+    impl CompletionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionType::Unspecified => "COMPLETION_TYPE_UNSPECIFIED",
+                CompletionType::JobTitle => "JOB_TITLE",
+                CompletionType::CompanyName => "COMPANY_NAME",
+                CompletionType::Combined => "COMBINED",
+            }
+        }
+    }
+}
+/// Response of auto-complete query.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryResponse {
+    /// Results of the matching job/company candidates.
+    #[prost(message, repeated, tag="1")]
+    pub completion_results: ::prost::alloc::vec::Vec<complete_query_response::CompletionResult>,
+    /// Additional information for the API invocation, such as the request
+    /// tracking id.
+    #[prost(message, optional, tag="2")]
+    pub metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Nested message and enum types in `CompleteQueryResponse`.
+pub mod complete_query_response {
+    /// Resource that represents completion results.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CompletionResult {
+        /// The suggestion for the query.
+        #[prost(string, tag="1")]
+        pub suggestion: ::prost::alloc::string::String,
+        /// The completion topic.
+        #[prost(enumeration="super::complete_query_request::CompletionType", tag="2")]
+        pub r#type: i32,
+        /// The URI of the company image for
+        /// \[COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
+        #[prost(string, tag="3")]
+        pub image_uri: ::prost::alloc::string::String,
+    }
+}
+/// Generated client implementations.
+pub mod completion_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service handles auto completion.
+    #[derive(Debug, Clone)]
+    pub struct CompletionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CompletionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CompletionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CompletionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Completes the specified prefix with keyword suggestions.
+        /// Intended for use by a job search auto-complete search box.
+        pub async fn complete_query(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
+        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.Completion/CompleteQuery",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// The report event request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateClientEventRequest {
+    /// Required. Resource name of the tenant under which the event is created.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenant/bar". If tenant id is unspecified, a default tenant
+    /// is created, for example, "projects/foo".
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Events issued when end user interacts with customer's application that
+    /// uses Cloud Talent Solution.
+    #[prost(message, optional, tag="2")]
+    pub client_event: ::core::option::Option<ClientEvent>,
+}
+/// Generated client implementations.
+pub mod event_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service handles client event report.
+    #[derive(Debug, Clone)]
+    pub struct EventServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> EventServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> EventServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            EventServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Report events issued when end user interacts with customer's application
+        /// that uses Cloud Talent Solution. You may inspect the created events in
+        /// [self service
+        /// tools](https://console.cloud.google.com/talent-solution/overview).
+        /// [Learn
+        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
+        /// about self service tools.
+        pub async fn create_client_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
+        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.EventService/CreateClientEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
@@ -3933,108 +4035,6 @@ pub mod company_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.talent.v4beta1.CompanyService/ListCompanies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// The report event request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateClientEventRequest {
-    /// Required. Resource name of the tenant under which the event is created.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenant/bar". If tenant id is unspecified, a default tenant
-    /// is created, for example, "projects/foo".
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Events issued when end user interacts with customer's application that
-    /// uses Cloud Talent Solution.
-    #[prost(message, optional, tag="2")]
-    pub client_event: ::core::option::Option<ClientEvent>,
-}
-/// Generated client implementations.
-pub mod event_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service handles client event report.
-    #[derive(Debug, Clone)]
-    pub struct EventServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> EventServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> EventServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            EventServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Report events issued when end user interacts with customer's application
-        /// that uses Cloud Talent Solution. You may inspect the created events in
-        /// [self service
-        /// tools](https://console.cloud.google.com/talent-solution/overview).
-        /// [Learn
-        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
-        /// about self service tools.
-        pub async fn create_client_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
-        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.EventService/CreateClientEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

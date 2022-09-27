@@ -145,64 +145,6 @@ impl PolylineEncoding {
         }
     }
 }
-/// Traffic density indicator on a contiguous segment of a polyline or path.
-/// Given a path with points P_0, P_1, ... , P_N (zero-based index), the
-/// SpeedReadingInterval defines an interval and describes its traffic using the
-/// following categories.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpeedReadingInterval {
-    /// The starting index of this interval in the polyline.
-    #[prost(int32, optional, tag="1")]
-    pub start_polyline_point_index: ::core::option::Option<i32>,
-    /// The ending index of this interval in the polyline.
-    #[prost(int32, optional, tag="2")]
-    pub end_polyline_point_index: ::core::option::Option<i32>,
-    /// Traffic speed in this interval.
-    #[prost(enumeration="speed_reading_interval::Speed", tag="3")]
-    pub speed: i32,
-}
-/// Nested message and enum types in `SpeedReadingInterval`.
-pub mod speed_reading_interval {
-    /// The classification of polyline speed based on traffic data.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Speed {
-        /// Default value. This value is unused.
-        Unspecified = 0,
-        /// Normal speed, no slowdown is detected.
-        Normal = 1,
-        /// Slowdown detected, but no traffic jam formed.
-        Slow = 2,
-        /// Traffic jam detected.
-        TrafficJam = 3,
-    }
-    impl Speed {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Speed::Unspecified => "SPEED_UNSPECIFIED",
-                Speed::Normal => "NORMAL",
-                Speed::Slow => "SLOW",
-                Speed::TrafficJam => "TRAFFIC_JAM",
-            }
-        }
-    }
-}
-/// Encapsulates toll information on a `Route` or on a `RouteLeg`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TollInfo {
-    /// The monetary amount of tolls for the corresponding Route or RouteLeg.
-    /// This list contains a money amount for each currency that is expected
-    /// to be charged by the toll stations. Typically this list will contain only
-    /// one item for routes with tolls in one currency. For international trips,
-    /// this list may contain multiple items to reflect tolls in different
-    /// currencies.
-    #[prost(message, repeated, tag="1")]
-    pub estimated_price: ::prost::alloc::vec::Vec<super::super::super::r#type::Money>,
-}
 /// Encapsulates a location (a geographic point, and an optional heading).
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Location {
@@ -301,6 +243,64 @@ pub struct NavigationInstruction {
     /// Instructions for navigating this step.
     #[prost(string, tag="2")]
     pub instructions: ::prost::alloc::string::String,
+}
+/// Traffic density indicator on a contiguous segment of a polyline or path.
+/// Given a path with points P_0, P_1, ... , P_N (zero-based index), the
+/// SpeedReadingInterval defines an interval and describes its traffic using the
+/// following categories.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpeedReadingInterval {
+    /// The starting index of this interval in the polyline.
+    #[prost(int32, optional, tag="1")]
+    pub start_polyline_point_index: ::core::option::Option<i32>,
+    /// The ending index of this interval in the polyline.
+    #[prost(int32, optional, tag="2")]
+    pub end_polyline_point_index: ::core::option::Option<i32>,
+    /// Traffic speed in this interval.
+    #[prost(enumeration="speed_reading_interval::Speed", tag="3")]
+    pub speed: i32,
+}
+/// Nested message and enum types in `SpeedReadingInterval`.
+pub mod speed_reading_interval {
+    /// The classification of polyline speed based on traffic data.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Speed {
+        /// Default value. This value is unused.
+        Unspecified = 0,
+        /// Normal speed, no slowdown is detected.
+        Normal = 1,
+        /// Slowdown detected, but no traffic jam formed.
+        Slow = 2,
+        /// Traffic jam detected.
+        TrafficJam = 3,
+    }
+    impl Speed {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Speed::Unspecified => "SPEED_UNSPECIFIED",
+                Speed::Normal => "NORMAL",
+                Speed::Slow => "SLOW",
+                Speed::TrafficJam => "TRAFFIC_JAM",
+            }
+        }
+    }
+}
+/// Encapsulates toll information on a `Route` or on a `RouteLeg`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TollInfo {
+    /// The monetary amount of tolls for the corresponding Route or RouteLeg.
+    /// This list contains a money amount for each currency that is expected
+    /// to be charged by the toll stations. Typically this list will contain only
+    /// one item for routes with tolls in one currency. For international trips,
+    /// this list may contain multiple items to reflect tolls in different
+    /// currencies.
+    #[prost(message, repeated, tag="1")]
+    pub estimated_price: ::prost::alloc::vec::Vec<super::super::super::r#type::Money>,
 }
 /// Encapsulates a route, which consists of a series of connected road segments
 /// that join beginning, ending, and intermediate waypoints.
@@ -480,43 +480,6 @@ pub struct RouteLegStep {
     /// about, such as possible traffic zone restriction on a leg step.
     #[prost(message, optional, tag="7")]
     pub travel_advisory: ::core::option::Option<RouteLegStepTravelAdvisory>,
-}
-/// A set of values describing the vehicle's emission type.
-/// Applies only to the DRIVE travel mode.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum VehicleEmissionType {
-    /// No emission type specified. Default to GASOLINE.
-    Unspecified = 0,
-    /// Gasoline/petrol fueled vehicle.
-    Gasoline = 1,
-    /// Electricity powered vehicle.
-    Electric = 2,
-    /// Hybrid fuel (such as gasoline + electric) vehicle.
-    Hybrid = 3,
-}
-impl VehicleEmissionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            VehicleEmissionType::Unspecified => "VEHICLE_EMISSION_TYPE_UNSPECIFIED",
-            VehicleEmissionType::Gasoline => "GASOLINE",
-            VehicleEmissionType::Electric => "ELECTRIC",
-            VehicleEmissionType::Hybrid => "HYBRID",
-        }
-    }
-}
-/// Encapsulates the vehicle information, such as the license plate last
-/// character.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VehicleInfo {
-    /// Describes the vehicle's emission type.
-    /// Applies only to the DRIVE travel mode.
-    #[prost(enumeration="VehicleEmissionType", tag="2")]
-    pub emission_type: i32,
 }
 /// List of toll passes around the world that we support.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -823,6 +786,43 @@ impl TollPass {
             TollPass::UsWvNewellTollBridgeTicket => "US_WV_NEWELL_TOLL_BRIDGE_TICKET",
         }
     }
+}
+/// A set of values describing the vehicle's emission type.
+/// Applies only to the DRIVE travel mode.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VehicleEmissionType {
+    /// No emission type specified. Default to GASOLINE.
+    Unspecified = 0,
+    /// Gasoline/petrol fueled vehicle.
+    Gasoline = 1,
+    /// Electricity powered vehicle.
+    Electric = 2,
+    /// Hybrid fuel (such as gasoline + electric) vehicle.
+    Hybrid = 3,
+}
+impl VehicleEmissionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            VehicleEmissionType::Unspecified => "VEHICLE_EMISSION_TYPE_UNSPECIFIED",
+            VehicleEmissionType::Gasoline => "GASOLINE",
+            VehicleEmissionType::Electric => "ELECTRIC",
+            VehicleEmissionType::Hybrid => "HYBRID",
+        }
+    }
+}
+/// Encapsulates the vehicle information, such as the license plate last
+/// character.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VehicleInfo {
+    /// Describes the vehicle's emission type.
+    /// Applies only to the DRIVE travel mode.
+    #[prost(enumeration="VehicleEmissionType", tag="2")]
+    pub emission_type: i32,
 }
 /// Encapsulates a set of optional conditions to satisfy when calculating the
 /// routes.

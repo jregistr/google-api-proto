@@ -1,3 +1,15 @@
+/// Message that contains the resource name and display name of a folder
+/// resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Folder {
+    /// Full resource name of this folder. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub resource_folder: ::prost::alloc::string::String,
+    /// The user defined display name for this folder.
+    #[prost(string, tag="2")]
+    pub resource_folder_display_name: ::prost::alloc::string::String,
+}
 /// User specified security marks that are attached to the parent Security
 /// Command Center resource. Security marks are scoped within a Security Command
 /// Center organization -- they can be modified and viewed by all users who have
@@ -31,154 +43,6 @@ pub struct SecurityMarks {
     /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks"
     #[prost(string, tag="3")]
     pub canonical_name: ::prost::alloc::string::String,
-}
-/// Security Command Center finding.
-///
-/// A finding is a record of assessment data (security, risk, health or privacy)
-/// ingested into Security Command Center for presentation, notification,
-/// analysis, policy testing, and enforcement. For example, an XSS vulnerability
-/// in an App Engine application is a finding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Finding {
-    /// The relative resource name of this finding. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The relative resource name of the source the finding belongs to. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// This field is immutable after creation time.
-    /// For example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag="2")]
-    pub parent: ::prost::alloc::string::String,
-    /// For findings on Google Cloud resources, the full resource
-    /// name of the Google Cloud resource this finding is for. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    /// When the finding is for a non-Google Cloud resource, the resourceName can
-    /// be a customer or partner defined string. This field is immutable after
-    /// creation time.
-    #[prost(string, tag="3")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The state of the finding.
-    #[prost(enumeration="finding::State", tag="4")]
-    pub state: i32,
-    /// The additional taxonomy group within findings from a given source.
-    /// This field is immutable after creation time.
-    /// Example: "XSS_FLASH_INJECTION"
-    #[prost(string, tag="5")]
-    pub category: ::prost::alloc::string::String,
-    /// The URI that, if available, points to a web page outside of Security
-    /// Command Center where additional information about the finding can be found.
-    /// This field is guaranteed to be either empty or a well formed URL.
-    #[prost(string, tag="6")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Source specific properties. These properties are managed by the source
-    /// that writes the finding. The key names in the source_properties map must be
-    /// between 1 and 255 characters, and must start with a letter and contain
-    /// alphanumeric characters or underscores only.
-    #[prost(btree_map="string, message", tag="7")]
-    pub source_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
-    /// Output only. User specified security marks. These marks are entirely
-    /// managed by the user and come from the SecurityMarks resource that belongs
-    /// to the finding.
-    #[prost(message, optional, tag="8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the event took place, or when an update to the finding
-    /// occurred. For example, if the finding represents an open firewall it would
-    /// capture the time the detector believes the firewall became open. The
-    /// accuracy is determined by the detector. If the finding were to be resolved
-    /// afterward, this time would reflect when the finding was resolved. Must not
-    /// be set to a value greater than the current timestamp.
-    #[prost(message, optional, tag="9")]
-    pub event_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the finding was created in Security Command Center.
-    #[prost(message, optional, tag="10")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The severity of the finding. This field is managed by the source that
-    /// writes the finding.
-    #[prost(enumeration="finding::Severity", tag="13")]
-    pub severity: i32,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}",
-    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}" or
-    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag="14")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Finding`.
-pub mod finding {
-    /// The state of the finding.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// The finding requires attention and has not been addressed yet.
-        Active = 1,
-        /// The finding has been fixed, triaged as a non-issue or otherwise addressed
-        /// and is no longer active.
-        Inactive = 2,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Active => "ACTIVE",
-                State::Inactive => "INACTIVE",
-            }
-        }
-    }
-    /// The severity of the finding. This field is managed by the source that
-    /// writes the finding.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Severity {
-        /// No severity specified. The default value.
-        Unspecified = 0,
-        /// Critical severity.
-        Critical = 1,
-        /// High severity.
-        High = 2,
-        /// Medium severity.
-        Medium = 3,
-        /// Low severity.
-        Low = 4,
-    }
-    impl Severity {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
-                Severity::Critical => "CRITICAL",
-                Severity::High => "HIGH",
-                Severity::Medium => "MEDIUM",
-                Severity::Low => "LOW",
-            }
-        }
-    }
-}
-/// Message that contains the resource name and display name of a folder
-/// resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Folder {
-    /// Full resource name of this folder. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub resource_folder: ::prost::alloc::string::String,
-    /// The user defined display name for this folder.
-    #[prost(string, tag="2")]
-    pub resource_folder_display_name: ::prost::alloc::string::String,
 }
 /// Security Command Center representation of a Google Cloud
 /// resource.
@@ -281,132 +145,6 @@ pub mod asset {
         /// format details.
         #[prost(string, tag="1")]
         pub policy_blob: ::prost::alloc::string::String,
-    }
-}
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated/insecure libraries."
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}",
-    /// "folders/{folder_id}/sources/{source_id}" or
-    /// "projects/{project_number}/sources/{source_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag="14")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Information related to the Google Cloud resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Resource {
-    /// The full resource name of the resource. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The full resource name of project that the resource belongs to.
-    #[prost(string, tag="2")]
-    pub project: ::prost::alloc::string::String,
-    /// The human readable name of project that the resource belongs to.
-    #[prost(string, tag="3")]
-    pub project_display_name: ::prost::alloc::string::String,
-    /// The full resource name of resource's parent.
-    #[prost(string, tag="4")]
-    pub parent: ::prost::alloc::string::String,
-    /// The human readable name of resource's parent.
-    #[prost(string, tag="5")]
-    pub parent_display_name: ::prost::alloc::string::String,
-    /// Output only. Contains a Folder message for each folder in the assets ancestry.
-    /// The first folder is the deepest nested folder, and the last folder is the
-    /// folder directly under the Organization.
-    #[prost(message, repeated, tag="7")]
-    pub folders: ::prost::alloc::vec::Vec<Folder>,
-}
-/// Security Command Center's Notification
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationMessage {
-    /// Name of the notification config that generated current notification.
-    #[prost(string, tag="1")]
-    pub notification_config_name: ::prost::alloc::string::String,
-    /// The Cloud resource tied to the notification.
-    #[prost(message, optional, tag="3")]
-    pub resource: ::core::option::Option<Resource>,
-    /// Notification Event.
-    #[prost(oneof="notification_message::Event", tags="2")]
-    pub event: ::core::option::Option<notification_message::Event>,
-}
-/// Nested message and enum types in `NotificationMessage`.
-pub mod notification_message {
-    /// Notification Event.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// If it's a Finding based notification config, this field will be
-        /// populated.
-        #[prost(message, tag="2")]
-        Finding(super::Finding),
-    }
-}
-/// Response of asset discovery run
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Completed => "COMPLETED",
-                State::Superseded => "SUPERSEDED",
-                State::Terminated => "TERMINATED",
-            }
-        }
     }
 }
 /// Security Command Center notification configs.
@@ -569,6 +307,268 @@ pub mod organization_settings {
                     InclusionMode::IncludeOnly => "INCLUDE_ONLY",
                     InclusionMode::Exclude => "EXCLUDE",
                 }
+            }
+        }
+    }
+}
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated/insecure libraries."
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}",
+    /// "folders/{folder_id}/sources/{source_id}" or
+    /// "projects/{project_number}/sources/{source_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag="14")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Information related to the Google Cloud resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Resource {
+    /// The full resource name of the resource. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The full resource name of project that the resource belongs to.
+    #[prost(string, tag="2")]
+    pub project: ::prost::alloc::string::String,
+    /// The human readable name of project that the resource belongs to.
+    #[prost(string, tag="3")]
+    pub project_display_name: ::prost::alloc::string::String,
+    /// The full resource name of resource's parent.
+    #[prost(string, tag="4")]
+    pub parent: ::prost::alloc::string::String,
+    /// The human readable name of resource's parent.
+    #[prost(string, tag="5")]
+    pub parent_display_name: ::prost::alloc::string::String,
+    /// Output only. Contains a Folder message for each folder in the assets ancestry.
+    /// The first folder is the deepest nested folder, and the last folder is the
+    /// folder directly under the Organization.
+    #[prost(message, repeated, tag="7")]
+    pub folders: ::prost::alloc::vec::Vec<Folder>,
+}
+/// Security Command Center finding.
+///
+/// A finding is a record of assessment data (security, risk, health or privacy)
+/// ingested into Security Command Center for presentation, notification,
+/// analysis, policy testing, and enforcement. For example, an XSS vulnerability
+/// in an App Engine application is a finding.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Finding {
+    /// The relative resource name of this finding. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The relative resource name of the source the finding belongs to. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// This field is immutable after creation time.
+    /// For example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag="2")]
+    pub parent: ::prost::alloc::string::String,
+    /// For findings on Google Cloud resources, the full resource
+    /// name of the Google Cloud resource this finding is for. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    /// When the finding is for a non-Google Cloud resource, the resourceName can
+    /// be a customer or partner defined string. This field is immutable after
+    /// creation time.
+    #[prost(string, tag="3")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The state of the finding.
+    #[prost(enumeration="finding::State", tag="4")]
+    pub state: i32,
+    /// The additional taxonomy group within findings from a given source.
+    /// This field is immutable after creation time.
+    /// Example: "XSS_FLASH_INJECTION"
+    #[prost(string, tag="5")]
+    pub category: ::prost::alloc::string::String,
+    /// The URI that, if available, points to a web page outside of Security
+    /// Command Center where additional information about the finding can be found.
+    /// This field is guaranteed to be either empty or a well formed URL.
+    #[prost(string, tag="6")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Source specific properties. These properties are managed by the source
+    /// that writes the finding. The key names in the source_properties map must be
+    /// between 1 and 255 characters, and must start with a letter and contain
+    /// alphanumeric characters or underscores only.
+    #[prost(btree_map="string, message", tag="7")]
+    pub source_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
+    /// Output only. User specified security marks. These marks are entirely
+    /// managed by the user and come from the SecurityMarks resource that belongs
+    /// to the finding.
+    #[prost(message, optional, tag="8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the event took place, or when an update to the finding
+    /// occurred. For example, if the finding represents an open firewall it would
+    /// capture the time the detector believes the firewall became open. The
+    /// accuracy is determined by the detector. If the finding were to be resolved
+    /// afterward, this time would reflect when the finding was resolved. Must not
+    /// be set to a value greater than the current timestamp.
+    #[prost(message, optional, tag="9")]
+    pub event_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the finding was created in Security Command Center.
+    #[prost(message, optional, tag="10")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The severity of the finding. This field is managed by the source that
+    /// writes the finding.
+    #[prost(enumeration="finding::Severity", tag="13")]
+    pub severity: i32,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}",
+    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}" or
+    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag="14")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Finding`.
+pub mod finding {
+    /// The state of the finding.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// The finding requires attention and has not been addressed yet.
+        Active = 1,
+        /// The finding has been fixed, triaged as a non-issue or otherwise addressed
+        /// and is no longer active.
+        Inactive = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Inactive => "INACTIVE",
+            }
+        }
+    }
+    /// The severity of the finding. This field is managed by the source that
+    /// writes the finding.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Severity {
+        /// No severity specified. The default value.
+        Unspecified = 0,
+        /// Critical severity.
+        Critical = 1,
+        /// High severity.
+        High = 2,
+        /// Medium severity.
+        Medium = 3,
+        /// Low severity.
+        Low = 4,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Critical => "CRITICAL",
+                Severity::High => "HIGH",
+                Severity::Medium => "MEDIUM",
+                Severity::Low => "LOW",
+            }
+        }
+    }
+}
+/// Security Command Center's Notification
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationMessage {
+    /// Name of the notification config that generated current notification.
+    #[prost(string, tag="1")]
+    pub notification_config_name: ::prost::alloc::string::String,
+    /// The Cloud resource tied to the notification.
+    #[prost(message, optional, tag="3")]
+    pub resource: ::core::option::Option<Resource>,
+    /// Notification Event.
+    #[prost(oneof="notification_message::Event", tags="2")]
+    pub event: ::core::option::Option<notification_message::Event>,
+}
+/// Nested message and enum types in `NotificationMessage`.
+pub mod notification_message {
+    /// Notification Event.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// If it's a Finding based notification config, this field will be
+        /// populated.
+        #[prost(message, tag="2")]
+        Finding(super::Finding),
+    }
+}
+/// Response of asset discovery run
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
+    #[prost(message, optional, tag="2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
             }
         }
     }

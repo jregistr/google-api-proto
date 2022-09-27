@@ -1,3 +1,84 @@
+/// A set of field paths on a document.
+/// Used to restrict a get or update operation on a document to a subset of its
+/// fields.
+/// This is different from standard field masks, as this is always scoped to a
+/// \[Document][google.firestore.v1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1.Value\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentMask {
+    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1.Document.fields\] for a field
+    /// path syntax reference.
+    #[prost(string, repeated, tag="1")]
+    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A precondition on a document, used for conditional operations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Precondition {
+    /// The type of precondition.
+    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
+    pub condition_type: ::core::option::Option<precondition::ConditionType>,
+}
+/// Nested message and enum types in `Precondition`.
+pub mod precondition {
+    /// The type of precondition.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ConditionType {
+        /// When set to `true`, the target document must exist.
+        /// When set to `false`, the target document must not exist.
+        #[prost(bool, tag="1")]
+        Exists(bool),
+        /// When set, the target document must exist and have been last updated at
+        /// that time. Timestamp must be microsecond aligned.
+        #[prost(message, tag="2")]
+        UpdateTime(::prost_types::Timestamp),
+    }
+}
+/// Options for creating a new transaction.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TransactionOptions {
+    /// The mode of the transaction.
+    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
+    pub mode: ::core::option::Option<transaction_options::Mode>,
+}
+/// Nested message and enum types in `TransactionOptions`.
+pub mod transaction_options {
+    /// Options for a transaction that can be used to read and write documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadWrite {
+        /// An optional transaction to retry.
+        #[prost(bytes="bytes", tag="1")]
+        pub retry_transaction: ::prost::bytes::Bytes,
+    }
+    /// Options for a transaction that can only be used to read documents.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReadOnly {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
+        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
+    }
+    /// Nested message and enum types in `ReadOnly`.
+    pub mod read_only {
+        /// The consistency mode for this transaction. If not set, defaults to strong
+        /// consistency.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ConsistencySelector {
+            /// Reads documents at the given time.
+            /// This may not be older than 60 seconds.
+            #[prost(message, tag="2")]
+            ReadTime(::prost_types::Timestamp),
+        }
+    }
+    /// The mode of the transaction.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        /// The transaction can only be used for read operations.
+        #[prost(message, tag="2")]
+        ReadOnly(ReadOnly),
+        /// The transaction can be used for both read and write operations.
+        #[prost(message, tag="3")]
+        ReadWrite(ReadWrite),
+    }
+}
 /// A Firestore document.
 ///
 /// Must not exceed 1 MiB - 4 bytes.
@@ -127,102 +208,6 @@ pub struct MapValue {
     /// not exceed 1,500 bytes and cannot be empty.
     #[prost(btree_map="string, message", tag="1")]
     pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
-}
-/// The result of a single bucket from a Firestore aggregation query.
-///
-/// The keys of `aggregate_fields` are the same for all results in an aggregation
-/// query, unlike document queries which can have different fields present for
-/// each result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AggregationResult {
-    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
-    ///
-    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
-    /// assigned to the aggregation function on input and the size of this map
-    /// equals the number of aggregation functions in the query.
-    #[prost(btree_map="string, message", tag="2")]
-    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
-}
-/// A set of field paths on a document.
-/// Used to restrict a get or update operation on a document to a subset of its
-/// fields.
-/// This is different from standard field masks, as this is always scoped to a
-/// \[Document][google.firestore.v1.Document\], and takes in account the dynamic nature of \[Value][google.firestore.v1.Value\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentMask {
-    /// The list of field paths in the mask. See \[Document.fields][google.firestore.v1.Document.fields\] for a field
-    /// path syntax reference.
-    #[prost(string, repeated, tag="1")]
-    pub field_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A precondition on a document, used for conditional operations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Precondition {
-    /// The type of precondition.
-    #[prost(oneof="precondition::ConditionType", tags="1, 2")]
-    pub condition_type: ::core::option::Option<precondition::ConditionType>,
-}
-/// Nested message and enum types in `Precondition`.
-pub mod precondition {
-    /// The type of precondition.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ConditionType {
-        /// When set to `true`, the target document must exist.
-        /// When set to `false`, the target document must not exist.
-        #[prost(bool, tag="1")]
-        Exists(bool),
-        /// When set, the target document must exist and have been last updated at
-        /// that time. Timestamp must be microsecond aligned.
-        #[prost(message, tag="2")]
-        UpdateTime(::prost_types::Timestamp),
-    }
-}
-/// Options for creating a new transaction.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TransactionOptions {
-    /// The mode of the transaction.
-    #[prost(oneof="transaction_options::Mode", tags="2, 3")]
-    pub mode: ::core::option::Option<transaction_options::Mode>,
-}
-/// Nested message and enum types in `TransactionOptions`.
-pub mod transaction_options {
-    /// Options for a transaction that can be used to read and write documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadWrite {
-        /// An optional transaction to retry.
-        #[prost(bytes="bytes", tag="1")]
-        pub retry_transaction: ::prost::bytes::Bytes,
-    }
-    /// Options for a transaction that can only be used to read documents.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReadOnly {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[prost(oneof="read_only::ConsistencySelector", tags="2")]
-        pub consistency_selector: ::core::option::Option<read_only::ConsistencySelector>,
-    }
-    /// Nested message and enum types in `ReadOnly`.
-    pub mod read_only {
-        /// The consistency mode for this transaction. If not set, defaults to strong
-        /// consistency.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ConsistencySelector {
-            /// Reads documents at the given time.
-            /// This may not be older than 60 seconds.
-            #[prost(message, tag="2")]
-            ReadTime(::prost_types::Timestamp),
-        }
-    }
-    /// The mode of the transaction.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Mode {
-        /// The transaction can only be used for read operations.
-        #[prost(message, tag="2")]
-        ReadOnly(ReadOnly),
-        /// The transaction can be used for both read and write operations.
-        #[prost(message, tag="3")]
-        ReadWrite(ReadWrite),
-    }
 }
 /// A write on a document.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -996,6 +981,21 @@ pub struct Cursor {
     /// to the sort order defined by the query.
     #[prost(bool, tag="2")]
     pub before: bool,
+}
+/// The result of a single bucket from a Firestore aggregation query.
+///
+/// The keys of `aggregate_fields` are the same for all results in an aggregation
+/// query, unlike document queries which can have different fields present for
+/// each result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AggregationResult {
+    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
+    ///
+    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
+    /// assigned to the aggregation function on input and the size of this map
+    /// equals the number of aggregation functions in the query.
+    #[prost(btree_map="string, message", tag="2")]
+    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
 /// The request for \[Firestore.GetDocument][google.firestore.v1.Firestore.GetDocument\].
 #[derive(Clone, PartialEq, ::prost::Message)]

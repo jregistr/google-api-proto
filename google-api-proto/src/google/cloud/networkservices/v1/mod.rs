@@ -1,3 +1,850 @@
+/// Represents the metadata of the long-running operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// Output only. The time the operation was created.
+    #[prost(message, optional, tag="1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the operation finished running.
+    #[prost(message, optional, tag="2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Server-defined resource path for the target of the operation.
+    #[prost(string, tag="3")]
+    pub target: ::prost::alloc::string::String,
+    /// Output only. Name of the verb executed by the operation.
+    #[prost(string, tag="4")]
+    pub verb: ::prost::alloc::string::String,
+    /// Output only. Human-readable status of the operation, if any.
+    #[prost(string, tag="5")]
+    pub status_message: ::prost::alloc::string::String,
+    /// Output only. Identifies whether the user has requested cancellation
+    /// of the operation. Operations that have successfully been cancelled
+    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
+    /// corresponding to `Code.CANCELLED`.
+    #[prost(bool, tag="6")]
+    pub requested_cancellation: bool,
+    /// Output only. API version used to start the operation.
+    #[prost(string, tag="7")]
+    pub api_version: ::prost::alloc::string::String,
+}
+/// Specification of a port-based selector.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficPortSelector {
+    /// Optional. A list of ports. Can be port numbers or port range
+    /// (example, \[80-90\] specifies all ports from 80 to 90, including
+    /// 80 and 90) or named ports or * to specify all ports. If the
+    /// list is empty, all ports are selected.
+    #[prost(string, repeated, tag="1")]
+    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A definition of a matcher that selects endpoints to which the policies
+/// should be applied.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndpointMatcher {
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[prost(oneof="endpoint_matcher::MatcherType", tags="1")]
+    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
+}
+/// Nested message and enum types in `EndpointMatcher`.
+pub mod endpoint_matcher {
+    /// The matcher that is based on node metadata presented by xDS clients.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MetadataLabelMatcher {
+        /// Specifies how matching should be done.
+        ///
+        /// Supported values are:
+        /// MATCH_ANY: At least one of the Labels specified in the
+        ///    matcher should match the metadata presented by xDS client.
+        /// MATCH_ALL: The metadata presented by the xDS client should
+        ///    contain all of the labels specified here.
+        ///
+        /// The selection is determined based on the best match. For
+        /// example, suppose there are three EndpointPolicy
+        /// resources P1, P2 and P3 and if P1 has a the matcher as
+        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
+        /// MATCH_ALL <A:1,B:1,C:1>.
+        ///
+        /// If a client with label <A:1> connects, the config from P1
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1> connects, the config from P2
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1,C:1> connects, the config
+        /// from P3 will be selected.
+        ///
+        /// If there is more than one best match, (for example, if a
+        /// config P4 with selector <A:1,D:1> exists and if a client with
+        /// label <A:1,B:1,D:1> connects), an error will be thrown.
+        #[prost(enumeration="metadata_label_matcher::MetadataLabelMatchCriteria", tag="1")]
+        pub metadata_label_match_criteria: i32,
+        /// The list of label value pairs that must match labels in the
+        /// provided metadata based on filterMatchCriteria This list can
+        /// have at most 64 entries. The list can be empty if the match
+        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
+        /// matches any client).
+        #[prost(message, repeated, tag="2")]
+        pub metadata_labels: ::prost::alloc::vec::Vec<metadata_label_matcher::MetadataLabels>,
+    }
+    /// Nested message and enum types in `MetadataLabelMatcher`.
+    pub mod metadata_label_matcher {
+        /// Defines a name-pair value for a single label.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MetadataLabels {
+            /// Required. Label name presented as key in xDS Node Metadata.
+            #[prost(string, tag="1")]
+            pub label_name: ::prost::alloc::string::String,
+            /// Required. Label value presented as value corresponding to the above
+            /// key, in xDS Node Metadata.
+            #[prost(string, tag="2")]
+            pub label_value: ::prost::alloc::string::String,
+        }
+        /// Possible criteria values that define logic of how matching is made.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum MetadataLabelMatchCriteria {
+            /// Default value. Should not be used.
+            Unspecified = 0,
+            /// At least one of the Labels specified in the matcher should match the
+            /// metadata presented by xDS client.
+            MatchAny = 1,
+            /// The metadata presented by the xDS client should contain all of the
+            /// labels specified here.
+            MatchAll = 2,
+        }
+        impl MetadataLabelMatchCriteria {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetadataLabelMatchCriteria::Unspecified => "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED",
+                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
+                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
+                }
+            }
+        }
+    }
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MatcherType {
+        /// The matcher is based on node metadata presented by xDS clients.
+        #[prost(message, tag="1")]
+        MetadataLabelMatcher(MetadataLabelMatcher),
+    }
+}
+/// EndpointPolicy is a resource that helps apply desired configuration
+/// on the endpoints that match specific criteria.
+/// For example, this resource can be used to apply "authentication config"
+/// an all endpoints that serve on port 8080.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndpointPolicy {
+    /// Required. Name of the EndpointPolicy resource. It matches pattern
+    /// `projects/{project}/locations/global/endpointPolicies/{endpoint_policy}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Set of label tags associated with the EndpointPolicy resource.
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Required. The type of endpoint policy. This is primarily used to validate
+    /// the configuration.
+    #[prost(enumeration="endpoint_policy::EndpointPolicyType", tag="5")]
+    pub r#type: i32,
+    /// Optional. This field specifies the URL of AuthorizationPolicy resource that
+    /// applies authorization policies to the inbound traffic at the
+    /// matched endpoints. Refer to Authorization. If this field is not
+    /// specified, authorization is disabled(no authz checks) for this
+    /// endpoint.
+    #[prost(string, tag="7")]
+    pub authorization_policy: ::prost::alloc::string::String,
+    /// Required. A matcher that selects endpoints to which the policies should be applied.
+    #[prost(message, optional, tag="9")]
+    pub endpoint_matcher: ::core::option::Option<EndpointMatcher>,
+    /// Optional. Port selector for the (matched) endpoints. If no port selector is
+    /// provided, the matched config is applied to all ports.
+    #[prost(message, optional, tag="10")]
+    pub traffic_port_selector: ::core::option::Option<TrafficPortSelector>,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag="11")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. A URL referring to ServerTlsPolicy resource. ServerTlsPolicy is used to
+    /// determine the authentication policy to be applied to terminate the inbound
+    /// traffic at the identified backends. If this field is not set,
+    /// authentication is disabled(open) for this endpoint.
+    #[prost(string, tag="12")]
+    pub server_tls_policy: ::prost::alloc::string::String,
+    /// Optional. A URL referring to a ClientTlsPolicy resource. ClientTlsPolicy can be set
+    /// to specify the authentication for traffic from the proxy to the actual
+    /// endpoints. More specifically, it is applied to the outgoing traffic from
+    /// the proxy to the endpoint. This is typically used for sidecar model where
+    /// the proxy identifies itself as endpoint to the control plane, with the
+    /// connection between sidecar and endpoint requiring authentication. If this
+    /// field is not set, authentication is disabled(open). Applicable only when
+    /// EndpointPolicyType is SIDECAR_PROXY.
+    #[prost(string, tag="13")]
+    pub client_tls_policy: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `EndpointPolicy`.
+pub mod endpoint_policy {
+    /// The type of endpoint policy.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum EndpointPolicyType {
+        /// Default value. Must not be used.
+        Unspecified = 0,
+        /// Represents a proxy deployed as a sidecar.
+        SidecarProxy = 1,
+        /// Represents a proxyless gRPC backend.
+        GrpcServer = 2,
+    }
+    impl EndpointPolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EndpointPolicyType::Unspecified => "ENDPOINT_POLICY_TYPE_UNSPECIFIED",
+                EndpointPolicyType::SidecarProxy => "SIDECAR_PROXY",
+                EndpointPolicyType::GrpcServer => "GRPC_SERVER",
+            }
+        }
+    }
+}
+/// Request used with the ListEndpointPolicies method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEndpointPoliciesRequest {
+    /// Required. The project and location from which the EndpointPolicies should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of EndpointPolicies to return per call.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListEndpointPoliciesResponse`
+    /// Indicates that this is a continuation of a prior
+    /// `ListEndpointPolicies` call, and that the system should return the
+    /// next page of data.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListEndpointPolicies method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEndpointPoliciesResponse {
+    /// List of EndpointPolicy resources.
+    #[prost(message, repeated, tag="1")]
+    pub endpoint_policies: ::prost::alloc::vec::Vec<EndpointPolicy>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used with the GetEndpointPolicy method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetEndpointPolicyRequest {
+    /// Required. A name of the EndpointPolicy to get. Must be in the format
+    /// `projects/*/locations/global/endpointPolicies/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used with the CreateEndpointPolicy method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateEndpointPolicyRequest {
+    /// Required. The parent resource of the EndpointPolicy. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the EndpointPolicy resource to be created.
+    /// E.g. "CustomECS".
+    #[prost(string, tag="2")]
+    pub endpoint_policy_id: ::prost::alloc::string::String,
+    /// Required. EndpointPolicy resource to be created.
+    #[prost(message, optional, tag="3")]
+    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
+}
+/// Request used with the UpdateEndpointPolicy method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateEndpointPolicyRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// EndpointPolicy resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag="1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated EndpointPolicy resource.
+    #[prost(message, optional, tag="2")]
+    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
+}
+/// Request used with the DeleteEndpointPolicy method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteEndpointPolicyRequest {
+    /// Required. A name of the EndpointPolicy to delete. Must be in the format
+    /// `projects/*/locations/global/endpointPolicies/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Gateway represents the configuration for a proxy, typically a load balancer.
+/// It captures the ip:port over which the services are exposed by the proxy,
+/// along with any policy configurations. Routes have reference to to Gateways to
+/// dictate how requests should be routed by this Gateway.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Gateway {
+    /// Required. Name of the Gateway resource. It matches pattern
+    /// `projects/*/locations/*/gateways/<gateway_name>`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server-defined URL of this resource
+    #[prost(string, tag="13")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Set of label tags associated with the Gateway resource.
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag="5")]
+    pub description: ::prost::alloc::string::String,
+    /// Immutable. The type of the customer managed gateway.
+    /// This field is required. If unspecified, an error is returned.
+    #[prost(enumeration="gateway::Type", tag="6")]
+    pub r#type: i32,
+    /// Required. One or more ports that the Gateway must receive traffic on. The proxy binds
+    /// to the ports specified. Gateway listen on 0.0.0.0 on the ports specified
+    /// below.
+    #[prost(int32, repeated, packed="false", tag="11")]
+    pub ports: ::prost::alloc::vec::Vec<i32>,
+    /// Required. Immutable. Scope determines how configuration across multiple Gateway instances are
+    /// merged. The configuration for multiple Gateway instances with the same
+    /// scope will be merged as presented as a single coniguration to the
+    /// proxy/load balancer.
+    ///
+    /// Max length 64 characters.
+    /// Scope should start with a letter and can only have letters, numbers,
+    /// hyphens.
+    #[prost(string, tag="8")]
+    pub scope: ::prost::alloc::string::String,
+    /// Optional. A fully-qualified ServerTLSPolicy URL reference. Specifies how TLS
+    /// traffic is terminated. If empty, TLS termination is disabled.
+    #[prost(string, tag="9")]
+    pub server_tls_policy: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Gateway`.
+pub mod gateway {
+    /// The type of the customer-managed gateway.
+    /// Possible values are:
+    /// * OPEN_MESH
+    /// * SECURE_WEB_GATEWAY
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Type {
+        /// The type of the customer managed gateway is unspecified.
+        Unspecified = 0,
+        /// The type of the customer managed gateway is TrafficDirector Open
+        /// Mesh.
+        OpenMesh = 1,
+        /// The type of the customer managed gateway is SecureWebGateway (SWG).
+        SecureWebGateway = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::OpenMesh => "OPEN_MESH",
+                Type::SecureWebGateway => "SECURE_WEB_GATEWAY",
+            }
+        }
+    }
+}
+/// Request used with the ListGateways method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGatewaysRequest {
+    /// Required. The project and location from which the Gateways should be
+    /// listed, specified in the format `projects/*/locations/*`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Gateways to return per call.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListGatewaysResponse`
+    /// Indicates that this is a continuation of a prior `ListGateways` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListGateways method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGatewaysResponse {
+    /// List of Gateway resources.
+    #[prost(message, repeated, tag="1")]
+    pub gateways: ::prost::alloc::vec::Vec<Gateway>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetGateway method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGatewayRequest {
+    /// Required. A name of the Gateway to get. Must be in the format
+    /// `projects/*/locations/*/gateways/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the CreateGateway method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateGatewayRequest {
+    /// Required. The parent resource of the Gateway. Must be in the
+    /// format `projects/*/locations/*`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the Gateway resource to be created.
+    #[prost(string, tag="2")]
+    pub gateway_id: ::prost::alloc::string::String,
+    /// Required. Gateway resource to be created.
+    #[prost(message, optional, tag="3")]
+    pub gateway: ::core::option::Option<Gateway>,
+}
+/// Request used by the UpdateGateway method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateGatewayRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// Gateway resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag="1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated Gateway resource.
+    #[prost(message, optional, tag="2")]
+    pub gateway: ::core::option::Option<Gateway>,
+}
+/// Request used by the DeleteGateway method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteGatewayRequest {
+    /// Required. A name of the Gateway to delete. Must be in the format
+    /// `projects/*/locations/*/gateways/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// GrpcRoute is the resource defining how gRPC traffic routed by a Mesh
+/// or Gateway resource is routed.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GrpcRoute {
+    /// Required. Name of the GrpcRoute resource. It matches pattern
+    /// `projects/*/locations/global/grpcRoutes/<grpc_route_name>`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server-defined URL of this resource
+    #[prost(string, tag="12")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag="3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Set of label tags associated with the GrpcRoute resource.
+    #[prost(btree_map="string, string", tag="4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag="5")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Service hostnames with an optional port for which this route describes
+    /// traffic.
+    ///
+    /// Format: <hostname>\[:<port>\]
+    ///
+    /// Hostname is the fully qualified domain name of a network host. This matches
+    /// the RFC 1123 definition of a hostname with 2 notable exceptions:
+    ///   - IPs are not allowed.
+    ///   - A hostname may be prefixed with a wildcard label (*.). The wildcard
+    ///     label must appear by itself as the first label.
+    ///
+    /// Hostname can be "precise" which is a domain name without the terminating
+    /// dot of a network host (e.g. "foo.example.com") or "wildcard", which is a
+    /// domain name prefixed with a single wildcard label (e.g. *.example.com).
+    ///
+    /// Note that as per RFC1035 and RFC1123, a label must consist of lower case
+    /// alphanumeric characters or '-', and must start and end with an alphanumeric
+    /// character. No other punctuation is allowed.
+    ///
+    /// The routes associated with a Mesh or Gateway must have unique hostnames. If
+    /// you attempt to attach multiple routes with conflicting hostnames, the
+    /// configuration will be rejected.
+    ///
+    /// For example, while it is acceptable for routes for the hostnames
+    /// "*.foo.bar.com" and "*.bar.com" to be associated with the same route, it is
+    /// not possible to associate two routes both with "*.bar.com" or both with
+    /// "bar.com".
+    ///
+    /// If a port is specified, then gRPC clients must use the channel URI with the
+    /// port to match this rule (i.e. "xds:///service:123"), otherwise they must
+    /// supply the URI without a port (i.e. "xds:///service").
+    #[prost(string, repeated, tag="6")]
+    pub hostnames: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Meshes defines a list of meshes this GrpcRoute is attached to, as one of
+    /// the routing rules to route the requests served by the mesh.
+    ///
+    /// Each mesh reference should match the pattern:
+    /// `projects/*/locations/global/meshes/<mesh_name>`
+    #[prost(string, repeated, tag="9")]
+    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Gateways defines a list of gateways this GrpcRoute is attached to, as one
+    /// of the routing rules to route the requests served by the gateway.
+    ///
+    /// Each gateway reference should match the pattern:
+    /// `projects/*/locations/global/gateways/<gateway_name>`
+    #[prost(string, repeated, tag="10")]
+    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. A list of detailed rules defining how to route traffic.
+    ///
+    /// Within a single GrpcRoute, the GrpcRoute.RouteAction associated with the
+    /// first matching GrpcRoute.RouteRule will be executed. At least one rule
+    /// must be supplied.
+    #[prost(message, repeated, tag="7")]
+    pub rules: ::prost::alloc::vec::Vec<grpc_route::RouteRule>,
+}
+/// Nested message and enum types in `GrpcRoute`.
+pub mod grpc_route {
+    /// Specifies a match against a method.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MethodMatch {
+        /// Optional. Specifies how to match against the name. If not specified, a default
+        /// value of "EXACT" is used.
+        #[prost(enumeration="method_match::Type", tag="1")]
+        pub r#type: i32,
+        /// Required. Name of the service to match against. If unspecified, will match all
+        /// services.
+        #[prost(string, tag="2")]
+        pub grpc_service: ::prost::alloc::string::String,
+        /// Required. Name of the method to match against. If unspecified, will match all
+        /// methods.
+        #[prost(string, tag="3")]
+        pub grpc_method: ::prost::alloc::string::String,
+        /// Optional. Specifies that matches are case sensitive.  The default value is true.
+        /// case_sensitive must not be used with a type of REGULAR_EXPRESSION.
+        #[prost(bool, optional, tag="4")]
+        pub case_sensitive: ::core::option::Option<bool>,
+    }
+    /// Nested message and enum types in `MethodMatch`.
+    pub mod method_match {
+        /// The type of the match.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Type {
+            /// Unspecified.
+            Unspecified = 0,
+            /// Will only match the exact name provided.
+            Exact = 1,
+            /// Will interpret grpc_method and grpc_service as regexes. RE2 syntax is
+            /// supported.
+            RegularExpression = 2,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::Exact => "EXACT",
+                    Type::RegularExpression => "REGULAR_EXPRESSION",
+                }
+            }
+        }
+    }
+    /// A match against a collection of headers.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct HeaderMatch {
+        /// Optional. Specifies how to match against the value of the header. If not
+        /// specified, a default value of EXACT is used.
+        #[prost(enumeration="header_match::Type", tag="1")]
+        pub r#type: i32,
+        /// Required. The key of the header.
+        #[prost(string, tag="2")]
+        pub key: ::prost::alloc::string::String,
+        /// Required. The value of the header.
+        #[prost(string, tag="3")]
+        pub value: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `HeaderMatch`.
+    pub mod header_match {
+        /// The type of match.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum Type {
+            /// Unspecified.
+            Unspecified = 0,
+            /// Will only match the exact value provided.
+            Exact = 1,
+            /// Will match paths conforming to the prefix specified by value. RE2
+            /// syntax is supported.
+            RegularExpression = 2,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::Exact => "EXACT",
+                    Type::RegularExpression => "REGULAR_EXPRESSION",
+                }
+            }
+        }
+    }
+    /// Criteria for matching traffic. A RouteMatch will be considered to match
+    /// when all supplied fields match.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteMatch {
+        /// Optional. A gRPC method to match against. If this field is empty or omitted, will
+        /// match all methods.
+        #[prost(message, optional, tag="1")]
+        pub method: ::core::option::Option<MethodMatch>,
+        /// Optional. Specifies a collection of headers to match.
+        #[prost(message, repeated, tag="2")]
+        pub headers: ::prost::alloc::vec::Vec<HeaderMatch>,
+    }
+    /// The destination to which traffic will be routed.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Destination {
+        /// Optional. Specifies the proportion of requests forwarded to the backend referenced
+        /// by the serviceName field. This is computed as:
+        ///          weight/Sum(weights in this destination list).
+        /// For non-zero values, there may be some epsilon from the exact proportion
+        /// defined here depending on the precision an implementation supports.
+        ///
+        /// If only one serviceName is specified and it has a weight greater than 0,
+        /// 100% of the traffic is forwarded to that backend.
+        ///
+        /// If weights are specified for any one service name, they need to be
+        /// specified for all of them.
+        ///
+        /// If weights are unspecified for all services, then, traffic is distributed
+        /// in equal proportions to all of them.
+        #[prost(int32, optional, tag="2")]
+        pub weight: ::core::option::Option<i32>,
+        /// Specifies the kind of destination to which traffic will be routed.
+        #[prost(oneof="destination::DestinationType", tags="1")]
+        pub destination_type: ::core::option::Option<destination::DestinationType>,
+    }
+    /// Nested message and enum types in `Destination`.
+    pub mod destination {
+        /// Specifies the kind of destination to which traffic will be routed.
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum DestinationType {
+            /// Required. The URL of a destination service to which to route traffic. Must refer
+            /// to either a BackendService or ServiceDirectoryService.
+            #[prost(string, tag="1")]
+            ServiceName(::prost::alloc::string::String),
+        }
+    }
+    /// The specification for fault injection introduced into traffic to test the
+    /// resiliency of clients to destination service failure. As part of fault
+    /// injection, when clients send requests to a destination, delays can be
+    /// introduced on a percentage of requests before sending those requests to the
+    /// destination service. Similarly requests from clients can be aborted by for
+    /// a percentage of requests.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FaultInjectionPolicy {
+        /// The specification for injecting delay to client requests.
+        #[prost(message, optional, tag="1")]
+        pub delay: ::core::option::Option<fault_injection_policy::Delay>,
+        /// The specification for aborting to client requests.
+        #[prost(message, optional, tag="2")]
+        pub abort: ::core::option::Option<fault_injection_policy::Abort>,
+    }
+    /// Nested message and enum types in `FaultInjectionPolicy`.
+    pub mod fault_injection_policy {
+        /// Specification of how client requests are delayed as part of fault
+        /// injection before being sent to a destination.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Delay {
+            /// Specify a fixed delay before forwarding the request.
+            #[prost(message, optional, tag="1")]
+            pub fixed_delay: ::core::option::Option<::prost_types::Duration>,
+            /// The percentage of traffic on which delay will be injected.
+            ///
+            /// The value must be between [0, 100]
+            #[prost(int32, optional, tag="2")]
+            pub percentage: ::core::option::Option<i32>,
+        }
+        /// Specification of how client requests are aborted as part of fault
+        /// injection before being sent to a destination.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Abort {
+            /// The HTTP status code used to abort the request.
+            ///
+            /// The value must be between 200 and 599 inclusive.
+            #[prost(int32, optional, tag="1")]
+            pub http_status: ::core::option::Option<i32>,
+            /// The percentage of traffic which will be aborted.
+            ///
+            /// The value must be between [0, 100]
+            #[prost(int32, optional, tag="2")]
+            pub percentage: ::core::option::Option<i32>,
+        }
+    }
+    /// The specifications for retries.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RetryPolicy {
+        /// - connect-failure: Router will retry on failures connecting to Backend
+        ///     Services, for example due to connection timeouts.
+        /// - refused-stream: Router will retry if the backend service resets the
+        /// stream
+        ///     with a REFUSED_STREAM error code. This reset type indicates that it is
+        ///     safe to retry.
+        /// - cancelled: Router will retry if the gRPC status code in the response
+        /// header
+        ///     is set to cancelled
+        /// - deadline-exceeded: Router will retry if the gRPC status code in the
+        /// response
+        ///     header is set to deadline-exceeded
+        /// - resource-exhausted: Router will retry if the gRPC status code in the
+        ///     response header is set to resource-exhausted
+        /// - unavailable: Router will retry if the gRPC status code in the response
+        ///     header is set to unavailable
+        #[prost(string, repeated, tag="1")]
+        pub retry_conditions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Specifies the allowed number of retries. This number must be > 0. If not
+        /// specified, default to 1.
+        #[prost(uint32, tag="2")]
+        pub num_retries: u32,
+    }
+    /// Specifies how to route matched traffic.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteAction {
+        /// Optional. The destination services to which traffic should be forwarded. If
+        /// multiple destinations are specified, traffic will be split between
+        /// Backend Service(s) according to the weight field of these destinations.
+        #[prost(message, repeated, tag="1")]
+        pub destinations: ::prost::alloc::vec::Vec<Destination>,
+        /// Optional. The specification for fault injection introduced into traffic to test the
+        /// resiliency of clients to destination service failure. As part of fault
+        /// injection, when clients send requests to a destination, delays can be
+        /// introduced on a percentage of requests before sending those requests to
+        /// the destination service. Similarly requests from clients can be aborted
+        /// by for a percentage of requests.
+        ///
+        /// timeout and retry_policy will be ignored by clients that are configured
+        /// with a fault_injection_policy
+        #[prost(message, optional, tag="3")]
+        pub fault_injection_policy: ::core::option::Option<FaultInjectionPolicy>,
+        /// Optional. Specifies the timeout for selected route. Timeout is computed from the
+        /// time the request has been fully processed (i.e. end of stream) up until
+        /// the response has been completely processed. Timeout includes all retries.
+        #[prost(message, optional, tag="7")]
+        pub timeout: ::core::option::Option<::prost_types::Duration>,
+        /// Optional. Specifies the retry policy associated with this route.
+        #[prost(message, optional, tag="8")]
+        pub retry_policy: ::core::option::Option<RetryPolicy>,
+    }
+    /// Describes how to route traffic.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteRule {
+        /// Optional. Matches define conditions used for matching the rule against incoming
+        /// gRPC requests. Each match is independent, i.e. this rule will be matched
+        /// if ANY one of the matches is satisfied.  If no matches field is
+        /// specified, this rule will unconditionally match traffic.
+        #[prost(message, repeated, tag="1")]
+        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
+        /// Required. A detailed rule defining how to route traffic. This field is required.
+        #[prost(message, optional, tag="2")]
+        pub action: ::core::option::Option<RouteAction>,
+    }
+}
+/// Request used with the ListGrpcRoutes method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGrpcRoutesRequest {
+    /// Required. The project and location from which the GrpcRoutes should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of GrpcRoutes to return per call.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListGrpcRoutesResponse`
+    /// Indicates that this is a continuation of a prior `ListGrpcRoutes` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListGrpcRoutes method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGrpcRoutesResponse {
+    /// List of GrpcRoute resources.
+    #[prost(message, repeated, tag="1")]
+    pub grpc_routes: ::prost::alloc::vec::Vec<GrpcRoute>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetGrpcRoute method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGrpcRouteRequest {
+    /// Required. A name of the GrpcRoute to get. Must be in the format
+    /// `projects/*/locations/global/grpcRoutes/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the CreateGrpcRoute method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateGrpcRouteRequest {
+    /// Required. The parent resource of the GrpcRoute. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the GrpcRoute resource to be created.
+    #[prost(string, tag="2")]
+    pub grpc_route_id: ::prost::alloc::string::String,
+    /// Required. GrpcRoute resource to be created.
+    #[prost(message, optional, tag="3")]
+    pub grpc_route: ::core::option::Option<GrpcRoute>,
+}
+/// Request used by the UpdateGrpcRoute method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateGrpcRouteRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// GrpcRoute resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag="1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated GrpcRoute resource.
+    #[prost(message, optional, tag="2")]
+    pub grpc_route: ::core::option::Option<GrpcRoute>,
+}
+/// Request used by the DeleteGrpcRoute method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteGrpcRouteRequest {
+    /// Required. A name of the GrpcRoute to delete. Must be in the format
+    /// `projects/*/locations/global/grpcRoutes/*`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// HttpRoute is the resource defining how HTTP traffic should be routed by a
 /// Mesh or Gateway resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -605,853 +1452,6 @@ pub struct UpdateHttpRouteRequest {
 pub struct DeleteHttpRouteRequest {
     /// Required. A name of the HttpRoute to delete. Must be in the format
     /// `projects/*/locations/global/httpRoutes/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// GrpcRoute is the resource defining how gRPC traffic routed by a Mesh
-/// or Gateway resource is routed.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GrpcRoute {
-    /// Required. Name of the GrpcRoute resource. It matches pattern
-    /// `projects/*/locations/global/grpcRoutes/<grpc_route_name>`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server-defined URL of this resource
-    #[prost(string, tag="12")]
-    pub self_link: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the GrpcRoute resource.
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag="5")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Service hostnames with an optional port for which this route describes
-    /// traffic.
-    ///
-    /// Format: <hostname>\[:<port>\]
-    ///
-    /// Hostname is the fully qualified domain name of a network host. This matches
-    /// the RFC 1123 definition of a hostname with 2 notable exceptions:
-    ///   - IPs are not allowed.
-    ///   - A hostname may be prefixed with a wildcard label (*.). The wildcard
-    ///     label must appear by itself as the first label.
-    ///
-    /// Hostname can be "precise" which is a domain name without the terminating
-    /// dot of a network host (e.g. "foo.example.com") or "wildcard", which is a
-    /// domain name prefixed with a single wildcard label (e.g. *.example.com).
-    ///
-    /// Note that as per RFC1035 and RFC1123, a label must consist of lower case
-    /// alphanumeric characters or '-', and must start and end with an alphanumeric
-    /// character. No other punctuation is allowed.
-    ///
-    /// The routes associated with a Mesh or Gateway must have unique hostnames. If
-    /// you attempt to attach multiple routes with conflicting hostnames, the
-    /// configuration will be rejected.
-    ///
-    /// For example, while it is acceptable for routes for the hostnames
-    /// "*.foo.bar.com" and "*.bar.com" to be associated with the same route, it is
-    /// not possible to associate two routes both with "*.bar.com" or both with
-    /// "bar.com".
-    ///
-    /// If a port is specified, then gRPC clients must use the channel URI with the
-    /// port to match this rule (i.e. "xds:///service:123"), otherwise they must
-    /// supply the URI without a port (i.e. "xds:///service").
-    #[prost(string, repeated, tag="6")]
-    pub hostnames: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Meshes defines a list of meshes this GrpcRoute is attached to, as one of
-    /// the routing rules to route the requests served by the mesh.
-    ///
-    /// Each mesh reference should match the pattern:
-    /// `projects/*/locations/global/meshes/<mesh_name>`
-    #[prost(string, repeated, tag="9")]
-    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Gateways defines a list of gateways this GrpcRoute is attached to, as one
-    /// of the routing rules to route the requests served by the gateway.
-    ///
-    /// Each gateway reference should match the pattern:
-    /// `projects/*/locations/global/gateways/<gateway_name>`
-    #[prost(string, repeated, tag="10")]
-    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. A list of detailed rules defining how to route traffic.
-    ///
-    /// Within a single GrpcRoute, the GrpcRoute.RouteAction associated with the
-    /// first matching GrpcRoute.RouteRule will be executed. At least one rule
-    /// must be supplied.
-    #[prost(message, repeated, tag="7")]
-    pub rules: ::prost::alloc::vec::Vec<grpc_route::RouteRule>,
-}
-/// Nested message and enum types in `GrpcRoute`.
-pub mod grpc_route {
-    /// Specifies a match against a method.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MethodMatch {
-        /// Optional. Specifies how to match against the name. If not specified, a default
-        /// value of "EXACT" is used.
-        #[prost(enumeration="method_match::Type", tag="1")]
-        pub r#type: i32,
-        /// Required. Name of the service to match against. If unspecified, will match all
-        /// services.
-        #[prost(string, tag="2")]
-        pub grpc_service: ::prost::alloc::string::String,
-        /// Required. Name of the method to match against. If unspecified, will match all
-        /// methods.
-        #[prost(string, tag="3")]
-        pub grpc_method: ::prost::alloc::string::String,
-        /// Optional. Specifies that matches are case sensitive.  The default value is true.
-        /// case_sensitive must not be used with a type of REGULAR_EXPRESSION.
-        #[prost(bool, optional, tag="4")]
-        pub case_sensitive: ::core::option::Option<bool>,
-    }
-    /// Nested message and enum types in `MethodMatch`.
-    pub mod method_match {
-        /// The type of the match.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Type {
-            /// Unspecified.
-            Unspecified = 0,
-            /// Will only match the exact name provided.
-            Exact = 1,
-            /// Will interpret grpc_method and grpc_service as regexes. RE2 syntax is
-            /// supported.
-            RegularExpression = 2,
-        }
-        impl Type {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Type::Unspecified => "TYPE_UNSPECIFIED",
-                    Type::Exact => "EXACT",
-                    Type::RegularExpression => "REGULAR_EXPRESSION",
-                }
-            }
-        }
-    }
-    /// A match against a collection of headers.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct HeaderMatch {
-        /// Optional. Specifies how to match against the value of the header. If not
-        /// specified, a default value of EXACT is used.
-        #[prost(enumeration="header_match::Type", tag="1")]
-        pub r#type: i32,
-        /// Required. The key of the header.
-        #[prost(string, tag="2")]
-        pub key: ::prost::alloc::string::String,
-        /// Required. The value of the header.
-        #[prost(string, tag="3")]
-        pub value: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `HeaderMatch`.
-    pub mod header_match {
-        /// The type of match.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum Type {
-            /// Unspecified.
-            Unspecified = 0,
-            /// Will only match the exact value provided.
-            Exact = 1,
-            /// Will match paths conforming to the prefix specified by value. RE2
-            /// syntax is supported.
-            RegularExpression = 2,
-        }
-        impl Type {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Type::Unspecified => "TYPE_UNSPECIFIED",
-                    Type::Exact => "EXACT",
-                    Type::RegularExpression => "REGULAR_EXPRESSION",
-                }
-            }
-        }
-    }
-    /// Criteria for matching traffic. A RouteMatch will be considered to match
-    /// when all supplied fields match.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteMatch {
-        /// Optional. A gRPC method to match against. If this field is empty or omitted, will
-        /// match all methods.
-        #[prost(message, optional, tag="1")]
-        pub method: ::core::option::Option<MethodMatch>,
-        /// Optional. Specifies a collection of headers to match.
-        #[prost(message, repeated, tag="2")]
-        pub headers: ::prost::alloc::vec::Vec<HeaderMatch>,
-    }
-    /// The destination to which traffic will be routed.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Destination {
-        /// Optional. Specifies the proportion of requests forwarded to the backend referenced
-        /// by the serviceName field. This is computed as:
-        ///          weight/Sum(weights in this destination list).
-        /// For non-zero values, there may be some epsilon from the exact proportion
-        /// defined here depending on the precision an implementation supports.
-        ///
-        /// If only one serviceName is specified and it has a weight greater than 0,
-        /// 100% of the traffic is forwarded to that backend.
-        ///
-        /// If weights are specified for any one service name, they need to be
-        /// specified for all of them.
-        ///
-        /// If weights are unspecified for all services, then, traffic is distributed
-        /// in equal proportions to all of them.
-        #[prost(int32, optional, tag="2")]
-        pub weight: ::core::option::Option<i32>,
-        /// Specifies the kind of destination to which traffic will be routed.
-        #[prost(oneof="destination::DestinationType", tags="1")]
-        pub destination_type: ::core::option::Option<destination::DestinationType>,
-    }
-    /// Nested message and enum types in `Destination`.
-    pub mod destination {
-        /// Specifies the kind of destination to which traffic will be routed.
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum DestinationType {
-            /// Required. The URL of a destination service to which to route traffic. Must refer
-            /// to either a BackendService or ServiceDirectoryService.
-            #[prost(string, tag="1")]
-            ServiceName(::prost::alloc::string::String),
-        }
-    }
-    /// The specification for fault injection introduced into traffic to test the
-    /// resiliency of clients to destination service failure. As part of fault
-    /// injection, when clients send requests to a destination, delays can be
-    /// introduced on a percentage of requests before sending those requests to the
-    /// destination service. Similarly requests from clients can be aborted by for
-    /// a percentage of requests.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FaultInjectionPolicy {
-        /// The specification for injecting delay to client requests.
-        #[prost(message, optional, tag="1")]
-        pub delay: ::core::option::Option<fault_injection_policy::Delay>,
-        /// The specification for aborting to client requests.
-        #[prost(message, optional, tag="2")]
-        pub abort: ::core::option::Option<fault_injection_policy::Abort>,
-    }
-    /// Nested message and enum types in `FaultInjectionPolicy`.
-    pub mod fault_injection_policy {
-        /// Specification of how client requests are delayed as part of fault
-        /// injection before being sent to a destination.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Delay {
-            /// Specify a fixed delay before forwarding the request.
-            #[prost(message, optional, tag="1")]
-            pub fixed_delay: ::core::option::Option<::prost_types::Duration>,
-            /// The percentage of traffic on which delay will be injected.
-            ///
-            /// The value must be between [0, 100]
-            #[prost(int32, optional, tag="2")]
-            pub percentage: ::core::option::Option<i32>,
-        }
-        /// Specification of how client requests are aborted as part of fault
-        /// injection before being sent to a destination.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Abort {
-            /// The HTTP status code used to abort the request.
-            ///
-            /// The value must be between 200 and 599 inclusive.
-            #[prost(int32, optional, tag="1")]
-            pub http_status: ::core::option::Option<i32>,
-            /// The percentage of traffic which will be aborted.
-            ///
-            /// The value must be between [0, 100]
-            #[prost(int32, optional, tag="2")]
-            pub percentage: ::core::option::Option<i32>,
-        }
-    }
-    /// The specifications for retries.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RetryPolicy {
-        /// - connect-failure: Router will retry on failures connecting to Backend
-        ///     Services, for example due to connection timeouts.
-        /// - refused-stream: Router will retry if the backend service resets the
-        /// stream
-        ///     with a REFUSED_STREAM error code. This reset type indicates that it is
-        ///     safe to retry.
-        /// - cancelled: Router will retry if the gRPC status code in the response
-        /// header
-        ///     is set to cancelled
-        /// - deadline-exceeded: Router will retry if the gRPC status code in the
-        /// response
-        ///     header is set to deadline-exceeded
-        /// - resource-exhausted: Router will retry if the gRPC status code in the
-        ///     response header is set to resource-exhausted
-        /// - unavailable: Router will retry if the gRPC status code in the response
-        ///     header is set to unavailable
-        #[prost(string, repeated, tag="1")]
-        pub retry_conditions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Specifies the allowed number of retries. This number must be > 0. If not
-        /// specified, default to 1.
-        #[prost(uint32, tag="2")]
-        pub num_retries: u32,
-    }
-    /// Specifies how to route matched traffic.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteAction {
-        /// Optional. The destination services to which traffic should be forwarded. If
-        /// multiple destinations are specified, traffic will be split between
-        /// Backend Service(s) according to the weight field of these destinations.
-        #[prost(message, repeated, tag="1")]
-        pub destinations: ::prost::alloc::vec::Vec<Destination>,
-        /// Optional. The specification for fault injection introduced into traffic to test the
-        /// resiliency of clients to destination service failure. As part of fault
-        /// injection, when clients send requests to a destination, delays can be
-        /// introduced on a percentage of requests before sending those requests to
-        /// the destination service. Similarly requests from clients can be aborted
-        /// by for a percentage of requests.
-        ///
-        /// timeout and retry_policy will be ignored by clients that are configured
-        /// with a fault_injection_policy
-        #[prost(message, optional, tag="3")]
-        pub fault_injection_policy: ::core::option::Option<FaultInjectionPolicy>,
-        /// Optional. Specifies the timeout for selected route. Timeout is computed from the
-        /// time the request has been fully processed (i.e. end of stream) up until
-        /// the response has been completely processed. Timeout includes all retries.
-        #[prost(message, optional, tag="7")]
-        pub timeout: ::core::option::Option<::prost_types::Duration>,
-        /// Optional. Specifies the retry policy associated with this route.
-        #[prost(message, optional, tag="8")]
-        pub retry_policy: ::core::option::Option<RetryPolicy>,
-    }
-    /// Describes how to route traffic.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteRule {
-        /// Optional. Matches define conditions used for matching the rule against incoming
-        /// gRPC requests. Each match is independent, i.e. this rule will be matched
-        /// if ANY one of the matches is satisfied.  If no matches field is
-        /// specified, this rule will unconditionally match traffic.
-        #[prost(message, repeated, tag="1")]
-        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
-        /// Required. A detailed rule defining how to route traffic. This field is required.
-        #[prost(message, optional, tag="2")]
-        pub action: ::core::option::Option<RouteAction>,
-    }
-}
-/// Request used with the ListGrpcRoutes method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGrpcRoutesRequest {
-    /// Required. The project and location from which the GrpcRoutes should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of GrpcRoutes to return per call.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListGrpcRoutesResponse`
-    /// Indicates that this is a continuation of a prior `ListGrpcRoutes` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListGrpcRoutes method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGrpcRoutesResponse {
-    /// List of GrpcRoute resources.
-    #[prost(message, repeated, tag="1")]
-    pub grpc_routes: ::prost::alloc::vec::Vec<GrpcRoute>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetGrpcRoute method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGrpcRouteRequest {
-    /// Required. A name of the GrpcRoute to get. Must be in the format
-    /// `projects/*/locations/global/grpcRoutes/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the CreateGrpcRoute method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateGrpcRouteRequest {
-    /// Required. The parent resource of the GrpcRoute. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the GrpcRoute resource to be created.
-    #[prost(string, tag="2")]
-    pub grpc_route_id: ::prost::alloc::string::String,
-    /// Required. GrpcRoute resource to be created.
-    #[prost(message, optional, tag="3")]
-    pub grpc_route: ::core::option::Option<GrpcRoute>,
-}
-/// Request used by the UpdateGrpcRoute method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateGrpcRouteRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// GrpcRoute resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag="1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated GrpcRoute resource.
-    #[prost(message, optional, tag="2")]
-    pub grpc_route: ::core::option::Option<GrpcRoute>,
-}
-/// Request used by the DeleteGrpcRoute method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteGrpcRouteRequest {
-    /// Required. A name of the GrpcRoute to delete. Must be in the format
-    /// `projects/*/locations/global/grpcRoutes/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Represents the metadata of the long-running operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// Output only. The time the operation was created.
-    #[prost(message, optional, tag="1")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time the operation finished running.
-    #[prost(message, optional, tag="2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Server-defined resource path for the target of the operation.
-    #[prost(string, tag="3")]
-    pub target: ::prost::alloc::string::String,
-    /// Output only. Name of the verb executed by the operation.
-    #[prost(string, tag="4")]
-    pub verb: ::prost::alloc::string::String,
-    /// Output only. Human-readable status of the operation, if any.
-    #[prost(string, tag="5")]
-    pub status_message: ::prost::alloc::string::String,
-    /// Output only. Identifies whether the user has requested cancellation
-    /// of the operation. Operations that have successfully been cancelled
-    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
-    /// corresponding to `Code.CANCELLED`.
-    #[prost(bool, tag="6")]
-    pub requested_cancellation: bool,
-    /// Output only. API version used to start the operation.
-    #[prost(string, tag="7")]
-    pub api_version: ::prost::alloc::string::String,
-}
-/// Specification of a port-based selector.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficPortSelector {
-    /// Optional. A list of ports. Can be port numbers or port range
-    /// (example, \[80-90\] specifies all ports from 80 to 90, including
-    /// 80 and 90) or named ports or * to specify all ports. If the
-    /// list is empty, all ports are selected.
-    #[prost(string, repeated, tag="1")]
-    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A definition of a matcher that selects endpoints to which the policies
-/// should be applied.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndpointMatcher {
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[prost(oneof="endpoint_matcher::MatcherType", tags="1")]
-    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
-}
-/// Nested message and enum types in `EndpointMatcher`.
-pub mod endpoint_matcher {
-    /// The matcher that is based on node metadata presented by xDS clients.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MetadataLabelMatcher {
-        /// Specifies how matching should be done.
-        ///
-        /// Supported values are:
-        /// MATCH_ANY: At least one of the Labels specified in the
-        ///    matcher should match the metadata presented by xDS client.
-        /// MATCH_ALL: The metadata presented by the xDS client should
-        ///    contain all of the labels specified here.
-        ///
-        /// The selection is determined based on the best match. For
-        /// example, suppose there are three EndpointPolicy
-        /// resources P1, P2 and P3 and if P1 has a the matcher as
-        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
-        /// MATCH_ALL <A:1,B:1,C:1>.
-        ///
-        /// If a client with label <A:1> connects, the config from P1
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1> connects, the config from P2
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1,C:1> connects, the config
-        /// from P3 will be selected.
-        ///
-        /// If there is more than one best match, (for example, if a
-        /// config P4 with selector <A:1,D:1> exists and if a client with
-        /// label <A:1,B:1,D:1> connects), an error will be thrown.
-        #[prost(enumeration="metadata_label_matcher::MetadataLabelMatchCriteria", tag="1")]
-        pub metadata_label_match_criteria: i32,
-        /// The list of label value pairs that must match labels in the
-        /// provided metadata based on filterMatchCriteria This list can
-        /// have at most 64 entries. The list can be empty if the match
-        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
-        /// matches any client).
-        #[prost(message, repeated, tag="2")]
-        pub metadata_labels: ::prost::alloc::vec::Vec<metadata_label_matcher::MetadataLabels>,
-    }
-    /// Nested message and enum types in `MetadataLabelMatcher`.
-    pub mod metadata_label_matcher {
-        /// Defines a name-pair value for a single label.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MetadataLabels {
-            /// Required. Label name presented as key in xDS Node Metadata.
-            #[prost(string, tag="1")]
-            pub label_name: ::prost::alloc::string::String,
-            /// Required. Label value presented as value corresponding to the above
-            /// key, in xDS Node Metadata.
-            #[prost(string, tag="2")]
-            pub label_value: ::prost::alloc::string::String,
-        }
-        /// Possible criteria values that define logic of how matching is made.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum MetadataLabelMatchCriteria {
-            /// Default value. Should not be used.
-            Unspecified = 0,
-            /// At least one of the Labels specified in the matcher should match the
-            /// metadata presented by xDS client.
-            MatchAny = 1,
-            /// The metadata presented by the xDS client should contain all of the
-            /// labels specified here.
-            MatchAll = 2,
-        }
-        impl MetadataLabelMatchCriteria {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MetadataLabelMatchCriteria::Unspecified => "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED",
-                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
-                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
-                }
-            }
-        }
-    }
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MatcherType {
-        /// The matcher is based on node metadata presented by xDS clients.
-        #[prost(message, tag="1")]
-        MetadataLabelMatcher(MetadataLabelMatcher),
-    }
-}
-/// EndpointPolicy is a resource that helps apply desired configuration
-/// on the endpoints that match specific criteria.
-/// For example, this resource can be used to apply "authentication config"
-/// an all endpoints that serve on port 8080.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndpointPolicy {
-    /// Required. Name of the EndpointPolicy resource. It matches pattern
-    /// `projects/{project}/locations/global/endpointPolicies/{endpoint_policy}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the EndpointPolicy resource.
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Required. The type of endpoint policy. This is primarily used to validate
-    /// the configuration.
-    #[prost(enumeration="endpoint_policy::EndpointPolicyType", tag="5")]
-    pub r#type: i32,
-    /// Optional. This field specifies the URL of AuthorizationPolicy resource that
-    /// applies authorization policies to the inbound traffic at the
-    /// matched endpoints. Refer to Authorization. If this field is not
-    /// specified, authorization is disabled(no authz checks) for this
-    /// endpoint.
-    #[prost(string, tag="7")]
-    pub authorization_policy: ::prost::alloc::string::String,
-    /// Required. A matcher that selects endpoints to which the policies should be applied.
-    #[prost(message, optional, tag="9")]
-    pub endpoint_matcher: ::core::option::Option<EndpointMatcher>,
-    /// Optional. Port selector for the (matched) endpoints. If no port selector is
-    /// provided, the matched config is applied to all ports.
-    #[prost(message, optional, tag="10")]
-    pub traffic_port_selector: ::core::option::Option<TrafficPortSelector>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag="11")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. A URL referring to ServerTlsPolicy resource. ServerTlsPolicy is used to
-    /// determine the authentication policy to be applied to terminate the inbound
-    /// traffic at the identified backends. If this field is not set,
-    /// authentication is disabled(open) for this endpoint.
-    #[prost(string, tag="12")]
-    pub server_tls_policy: ::prost::alloc::string::String,
-    /// Optional. A URL referring to a ClientTlsPolicy resource. ClientTlsPolicy can be set
-    /// to specify the authentication for traffic from the proxy to the actual
-    /// endpoints. More specifically, it is applied to the outgoing traffic from
-    /// the proxy to the endpoint. This is typically used for sidecar model where
-    /// the proxy identifies itself as endpoint to the control plane, with the
-    /// connection between sidecar and endpoint requiring authentication. If this
-    /// field is not set, authentication is disabled(open). Applicable only when
-    /// EndpointPolicyType is SIDECAR_PROXY.
-    #[prost(string, tag="13")]
-    pub client_tls_policy: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `EndpointPolicy`.
-pub mod endpoint_policy {
-    /// The type of endpoint policy.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum EndpointPolicyType {
-        /// Default value. Must not be used.
-        Unspecified = 0,
-        /// Represents a proxy deployed as a sidecar.
-        SidecarProxy = 1,
-        /// Represents a proxyless gRPC backend.
-        GrpcServer = 2,
-    }
-    impl EndpointPolicyType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EndpointPolicyType::Unspecified => "ENDPOINT_POLICY_TYPE_UNSPECIFIED",
-                EndpointPolicyType::SidecarProxy => "SIDECAR_PROXY",
-                EndpointPolicyType::GrpcServer => "GRPC_SERVER",
-            }
-        }
-    }
-}
-/// Request used with the ListEndpointPolicies method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEndpointPoliciesRequest {
-    /// Required. The project and location from which the EndpointPolicies should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of EndpointPolicies to return per call.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListEndpointPoliciesResponse`
-    /// Indicates that this is a continuation of a prior
-    /// `ListEndpointPolicies` call, and that the system should return the
-    /// next page of data.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListEndpointPolicies method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEndpointPoliciesResponse {
-    /// List of EndpointPolicy resources.
-    #[prost(message, repeated, tag="1")]
-    pub endpoint_policies: ::prost::alloc::vec::Vec<EndpointPolicy>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used with the GetEndpointPolicy method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetEndpointPolicyRequest {
-    /// Required. A name of the EndpointPolicy to get. Must be in the format
-    /// `projects/*/locations/global/endpointPolicies/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used with the CreateEndpointPolicy method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateEndpointPolicyRequest {
-    /// Required. The parent resource of the EndpointPolicy. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the EndpointPolicy resource to be created.
-    /// E.g. "CustomECS".
-    #[prost(string, tag="2")]
-    pub endpoint_policy_id: ::prost::alloc::string::String,
-    /// Required. EndpointPolicy resource to be created.
-    #[prost(message, optional, tag="3")]
-    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
-}
-/// Request used with the UpdateEndpointPolicy method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateEndpointPolicyRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// EndpointPolicy resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag="1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated EndpointPolicy resource.
-    #[prost(message, optional, tag="2")]
-    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
-}
-/// Request used with the DeleteEndpointPolicy method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteEndpointPolicyRequest {
-    /// Required. A name of the EndpointPolicy to delete. Must be in the format
-    /// `projects/*/locations/global/endpointPolicies/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Gateway represents the configuration for a proxy, typically a load balancer.
-/// It captures the ip:port over which the services are exposed by the proxy,
-/// along with any policy configurations. Routes have reference to to Gateways to
-/// dictate how requests should be routed by this Gateway.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Gateway {
-    /// Required. Name of the Gateway resource. It matches pattern
-    /// `projects/*/locations/*/gateways/<gateway_name>`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server-defined URL of this resource
-    #[prost(string, tag="13")]
-    pub self_link: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag="3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the Gateway resource.
-    #[prost(btree_map="string, string", tag="4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag="5")]
-    pub description: ::prost::alloc::string::String,
-    /// Immutable. The type of the customer managed gateway.
-    /// This field is required. If unspecified, an error is returned.
-    #[prost(enumeration="gateway::Type", tag="6")]
-    pub r#type: i32,
-    /// Required. One or more ports that the Gateway must receive traffic on. The proxy binds
-    /// to the ports specified. Gateway listen on 0.0.0.0 on the ports specified
-    /// below.
-    #[prost(int32, repeated, packed="false", tag="11")]
-    pub ports: ::prost::alloc::vec::Vec<i32>,
-    /// Required. Immutable. Scope determines how configuration across multiple Gateway instances are
-    /// merged. The configuration for multiple Gateway instances with the same
-    /// scope will be merged as presented as a single coniguration to the
-    /// proxy/load balancer.
-    ///
-    /// Max length 64 characters.
-    /// Scope should start with a letter and can only have letters, numbers,
-    /// hyphens.
-    #[prost(string, tag="8")]
-    pub scope: ::prost::alloc::string::String,
-    /// Optional. A fully-qualified ServerTLSPolicy URL reference. Specifies how TLS
-    /// traffic is terminated. If empty, TLS termination is disabled.
-    #[prost(string, tag="9")]
-    pub server_tls_policy: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Gateway`.
-pub mod gateway {
-    /// The type of the customer-managed gateway.
-    /// Possible values are:
-    /// * OPEN_MESH
-    /// * SECURE_WEB_GATEWAY
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Type {
-        /// The type of the customer managed gateway is unspecified.
-        Unspecified = 0,
-        /// The type of the customer managed gateway is TrafficDirector Open
-        /// Mesh.
-        OpenMesh = 1,
-        /// The type of the customer managed gateway is SecureWebGateway (SWG).
-        SecureWebGateway = 2,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::OpenMesh => "OPEN_MESH",
-                Type::SecureWebGateway => "SECURE_WEB_GATEWAY",
-            }
-        }
-    }
-}
-/// Request used with the ListGateways method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGatewaysRequest {
-    /// Required. The project and location from which the Gateways should be
-    /// listed, specified in the format `projects/*/locations/*`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Gateways to return per call.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListGatewaysResponse`
-    /// Indicates that this is a continuation of a prior `ListGateways` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListGateways method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGatewaysResponse {
-    /// List of Gateway resources.
-    #[prost(message, repeated, tag="1")]
-    pub gateways: ::prost::alloc::vec::Vec<Gateway>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetGateway method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGatewayRequest {
-    /// Required. A name of the Gateway to get. Must be in the format
-    /// `projects/*/locations/*/gateways/*`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the CreateGateway method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateGatewayRequest {
-    /// Required. The parent resource of the Gateway. Must be in the
-    /// format `projects/*/locations/*`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the Gateway resource to be created.
-    #[prost(string, tag="2")]
-    pub gateway_id: ::prost::alloc::string::String,
-    /// Required. Gateway resource to be created.
-    #[prost(message, optional, tag="3")]
-    pub gateway: ::core::option::Option<Gateway>,
-}
-/// Request used by the UpdateGateway method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateGatewayRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// Gateway resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag="1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated Gateway resource.
-    #[prost(message, optional, tag="2")]
-    pub gateway: ::core::option::Option<Gateway>,
-}
-/// Request used by the DeleteGateway method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteGatewayRequest {
-    /// Required. A name of the Gateway to delete. Must be in the format
-    /// `projects/*/locations/*/gateways/*`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
