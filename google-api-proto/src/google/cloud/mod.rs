@@ -196,6 +196,8 @@ pub mod documentai;
 pub mod domains;
 #[cfg(any(feature = "google-cloud-edgecontainer-v1"))]
 pub mod edgecontainer;
+#[cfg(any(feature = "google-cloud-enterpriseknowledgegraph-v1"))]
+pub mod enterpriseknowledgegraph;
 #[cfg(any(feature = "google-cloud-essentialcontacts-v1"))]
 pub mod essentialcontacts;
 #[cfg(

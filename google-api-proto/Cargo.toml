@@ -185,6 +185,7 @@ google-cloud-domains-v1 = ["google-api", "google-cloud", "google-longrunning", "
 google-cloud-domains-v1alpha2 = ["google-api", "google-cloud", "google-longrunning", "google-type"]
 google-cloud-domains-v1beta1 = ["google-api", "google-cloud", "google-longrunning", "google-type"]
 google-cloud-edgecontainer-v1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc"]
+google-cloud-enterpriseknowledgegraph-v1 = ["google-api", "google-cloud", "google-rpc"]
 google-cloud-essentialcontacts-v1 = ["google-api", "google-cloud"]
 google-cloud-eventarc-publishing-v1 = ["google-api", "google-cloud"]
 google-cloud-eventarc-v1 = ["google-api", "google-cloud", "google-longrunning"]
