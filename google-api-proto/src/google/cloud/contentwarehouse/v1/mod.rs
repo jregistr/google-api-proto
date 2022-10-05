@@ -1,5 +1,4 @@
 /// Represents a set of rules from a single customer.
-/// Next id: 9
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleSet {
     /// The resource name of the rule set. Managed internally.
@@ -18,36 +17,6 @@ pub struct RuleSet {
     /// List of rules given by the customer.
     #[prost(message, repeated, tag="3")]
     pub rules: ::prost::alloc::vec::Vec<Rule>,
-    /// Records the user defined time after which the rule-set will become active.
-    #[prost(message, optional, tag="4")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The schedule with which the Ruleset is applied.
-    ///
-    /// The presence of this field means that the ruleset is asynchronous.
-    #[prost(enumeration="Schedule", tag="8")]
-    pub schedule: i32,
-    #[prost(oneof="rule_set::Expiration", tags="5, 7")]
-    pub expiration: ::core::option::Option<rule_set::Expiration>,
-}
-/// Nested message and enum types in `RuleSet`.
-pub mod rule_set {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Expiration {
-        /// The timestamp after which RuleSet will not be executed by Policy Engine.
-        #[prost(message, tag="5")]
-        ExpireTime(::prost_types::Timestamp),
-        /// Input only. The TTL (time to live) of the RuleSet.
-        ///
-        /// If it is set, \[expire_time][google.cloud.contentwarehouse.v1.RuleSet.expire_time\] is set as current timestamp plus \[ttl][google.cloud.contentwarehouse.v1.RuleSet.ttl\].
-        /// The derived \[expire_time][google.cloud.contentwarehouse.v1.RuleSet.expire_time\] is returned in the output and \[ttl][google.cloud.contentwarehouse.v1.RuleSet.ttl\] is left
-        /// blank when retrieving the \[RuleSet][google.cloud.contentwarehouse.v1.RuleSet\].
-        ///
-        /// If it is set, the RuleSet is not available for execution after current
-        /// timestamp plus \[ttl][google.cloud.contentwarehouse.v1.RuleSet.ttl\]. However, the RuleSet can still be retrieved by
-        /// \[RuleSetService.GetRuleSet][google.cloud.contentwarehouse.v1.RuleSetService.GetRuleSet\] and \[RuleSetService.ListRuleSets][google.cloud.contentwarehouse.v1.RuleSetService.ListRuleSets\].
-        #[prost(message, tag="7")]
-        Ttl(::prost_types::Duration),
-    }
 }
 /// Represents the rule for a content warehouse trigger.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -71,12 +40,6 @@ pub struct Rule {
     /// List of actions that are executed when the rule is satisfied.
     #[prost(message, repeated, tag="5")]
     pub actions: ::prost::alloc::vec::Vec<Action>,
-    /// Priority of the rule for execution sequence preference.
-    #[prost(float, tag="6")]
-    pub priority: f32,
-    /// Indicates if the policy is currently in use or not.
-    #[prost(bool, tag="7")]
-    pub enabled: bool,
 }
 /// Nested message and enum types in `Rule`.
 pub mod rule {
@@ -86,16 +49,8 @@ pub mod rule {
         Unknown = 0,
         /// Trigger for create document action.
         OnCreate = 1,
-        /// Trigger for read document action.
-        OnRead = 2,
-        /// Trigger for search document action.
-        OnSearch = 3,
         /// Trigger for update document action.
         OnUpdate = 4,
-        /// Trigger for delete document action.
-        OnDelete = 5,
-        /// Trigger for asynchronous document actions.
-        Async = 6,
     }
     impl TriggerType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -106,11 +61,7 @@ pub mod rule {
             match self {
                 TriggerType::Unknown => "UNKNOWN",
                 TriggerType::OnCreate => "ON_CREATE",
-                TriggerType::OnRead => "ON_READ",
-                TriggerType::OnSearch => "ON_SEARCH",
                 TriggerType::OnUpdate => "ON_UPDATE",
-                TriggerType::OnDelete => "ON_DELETE",
-                TriggerType::Async => "ASYNC",
             }
         }
     }
@@ -121,7 +72,7 @@ pub struct Action {
     /// ID of the action. Managed internally.
     #[prost(string, tag="1")]
     pub action_id: ::prost::alloc::string::String,
-    #[prost(oneof="action::Action", tags="2, 3, 4, 5, 6, 7, 8, 9, 10")]
+    #[prost(oneof="action::Action", tags="2, 3, 4, 5, 6, 9, 10")]
     pub action: ::core::option::Option<action::Action>,
 }
 /// Nested message and enum types in `Action`.
@@ -143,12 +94,6 @@ pub mod action {
         /// Action publish to Pub/Sub operation.
         #[prost(message, tag="6")]
         PublishToPubSub(super::PublishAction),
-        /// Action performing context evaluation operation.
-        #[prost(message, tag="7")]
-        ContextEvaluationAction(super::ContextEvaluationAction),
-        /// Action process expired data.
-        #[prost(message, tag="8")]
-        ExpiredDataHandlingAction(super::ExpiredDataHandlingAction),
         /// Action removing a document from a folder.
         #[prost(message, tag="9")]
         RemoveFromFolderAction(super::RemoveFromFolderAction),
@@ -219,38 +164,6 @@ pub struct DataUpdateAction {
     #[prost(btree_map="string, string", tag="1")]
     pub entries: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
-/// Represents the folder schema and corresponding condition.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FolderSchemaCondition {
-    /// Name of the folder schema consisting of the properties to be evaluated.
-    /// Format:
-    /// projects/{project_number}/locations/{location}/documentSchemas/{document_id}.
-    #[prost(string, tag="1")]
-    pub folder_schema: ::prost::alloc::string::String,
-    /// The filter condition.
-    /// The syntax for this expression is a subset of SQL syntax.
-    ///
-    /// Supported operators are: `=`, `!=`, `<`, `<=`, `>`, and `>=` where the left
-    /// of the operator is a property name and the right of the operator is a
-    /// number or a quoted string. You must escape backslash (\\) and quote (\")
-    /// characters. Supported functions are `LOWER(\[property_name\])` to perform a
-    /// case insensitive match and `EMPTY(\[property_name\])` to filter on the
-    /// existence of a key.
-    ///
-    /// Boolean expressions (AND/OR/NOT) are supported up to 3 levels of nesting
-    /// (for example, "((A AND B AND C) OR NOT D) AND E"), a maximum of 100
-    /// comparisons or functions are allowed in the expression. The expression must
-    /// be < 6000 bytes in length.
-    /// Example: "DOC.SSN = FOLDER.ssn"
-    /// In the above example, SSN property from the document under
-    /// process is evaluated against folders' ssn property.
-    /// The document under process will be added under the folder if the condition
-    /// is evaluated as true.
-    /// Note: FOLDER prefix is used to refer to target folder's properties.
-    /// DOC prefix is used to refer to properties in the under process document.
-    #[prost(string, tag="2")]
-    pub condition: ::prost::alloc::string::String,
-}
 /// Represents the action responsible for adding document under a folder.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddToFolderAction {
@@ -259,11 +172,6 @@ pub struct AddToFolderAction {
     /// projects/{project_number}/locations/{location}/documents/{document_id}.
     #[prost(string, repeated, tag="1")]
     pub folders: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If the folders info is not available then populate FolderSchemaConditions
-    /// for finding matching folders dynamically.
-    /// Filter conditions used to derive specific folders dynamically.
-    #[prost(message, repeated, tag="2")]
-    pub folder_schema_conditions: ::prost::alloc::vec::Vec<FolderSchemaCondition>,
 }
 /// Represents the action responsible for remove a document from a specific
 /// folder.
@@ -288,73 +196,6 @@ pub struct PublishAction {
     /// Messages to be published.
     #[prost(string, repeated, tag="2")]
     pub messages: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Represents the action responsible for performing context evaluation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContextEvaluationAction {
-    /// Filter condition for the documents to be included in the evaluation.
-    #[prost(string, tag="1")]
-    pub condition: ::prost::alloc::string::String,
-    /// Name of the variables input for the context evaluation.
-    #[prost(string, repeated, tag="2")]
-    pub variable_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. cloud Pub/Sub topic-id. If specified, information of the
-    /// updated documents will be published to this topic.
-    #[prost(string, tag="5")]
-    pub topic_id: ::prost::alloc::string::String,
-    #[prost(oneof="context_evaluation_action::ContextEvaluationMethod", tags="4, 6, 7")]
-    pub context_evaluation_method: ::core::option::Option<context_evaluation_action::ContextEvaluationMethod>,
-}
-/// Nested message and enum types in `ContextEvaluationAction`.
-pub mod context_evaluation_action {
-    /// User Cloud Function for context evaluation.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CloudFunctionInfo {
-        /// Url of the Cloud Function. The Cloud Function needs to live inside
-        /// consumer project.
-        #[prost(string, tag="3")]
-        pub cloud_function: ::prost::alloc::string::String,
-    }
-    /// Settings of user's webhook.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Webhook {
-        /// URL string for receiving a POST request every time webhook is triggered.
-        #[prost(string, tag="8")]
-        pub uri: ::prost::alloc::string::String,
-    }
-    /// Settings of service directory for webhook under VPCSC.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct WebhookWithServiceDirectory {
-        /// The service directory service resource name.
-        #[prost(string, tag="9")]
-        pub service: ::prost::alloc::string::String,
-        /// Detailed webhook settings.
-        #[prost(message, optional, tag="10")]
-        pub webhook: ::core::option::Option<Webhook>,
-    }
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ContextEvaluationMethod {
-        /// User Cloud Function for the context evaluation.
-        #[prost(message, tag="4")]
-        CloudFunctionInfo(CloudFunctionInfo),
-        /// User's webhook address for the context evaluation.
-        #[prost(message, tag="6")]
-        Webhook(Webhook),
-        /// User's webhook address integrated with service-directory.
-        #[prost(message, tag="7")]
-        WebhookWithServiceDirectory(WebhookWithServiceDirectory),
-    }
-}
-/// Represents the action responsible for handling expired data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExpiredDataHandlingAction {
-    /// Filter condition for the documents to be included in the evaluation.
-    #[prost(string, tag="1")]
-    pub condition: ::prost::alloc::string::String,
-    /// Expired data handling will publish errors to the Pub/Sub using topic-id
-    /// provided.
-    #[prost(string, tag="2")]
-    pub topic_id: ::prost::alloc::string::String,
 }
 /// Represents the action responsible for deleting the document.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -465,33 +306,6 @@ pub mod action_output {
         }
     }
 }
-/// Represents the schedule with which asynchronous RuleSets are applied.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Schedule {
-    /// Unspecified schedule.
-    Unspecified = 0,
-    /// Policy should be applied every calendar day at 00:00 PST.
-    Daily = 1,
-    /// Policy should be applied every Sunday at 00:00 PST.
-    Weekly = 2,
-    /// Policy should be applied the 1st of every calendar month at 00:00 PST.
-    Monthly = 3,
-}
-impl Schedule {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Schedule::Unspecified => "SCHEDULE_UNSPECIFIED",
-            Schedule::Daily => "SCHEDULE_DAILY",
-            Schedule::Weekly => "SCHEDULE_WEEKLY",
-            Schedule::Monthly => "SCHEDULE_MONTHLY",
-        }
-    }
-}
 /// A document schema used to define document structure.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentSchema {
@@ -523,8 +337,6 @@ pub struct DocumentSchema {
     pub description: ::prost::alloc::string::String,
 }
 /// Defines the metadata for a schema property.
-///
-/// Next ID: 18
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyDefinition {
     /// Required. The name of the metadata property.
@@ -555,7 +367,7 @@ pub struct PropertyDefinition {
     #[prost(bool, tag="14")]
     pub is_required: bool,
     /// Type of the property.
-    #[prost(oneof="property_definition::ValueTypeOptions", tags="7, 8, 9, 10, 11, 13, 15, 16, 17")]
+    #[prost(oneof="property_definition::ValueTypeOptions", tags="7, 8, 9, 10, 11, 13, 15, 16")]
     pub value_type_options: ::core::option::Option<property_definition::ValueTypeOptions>,
 }
 /// Nested message and enum types in `PropertyDefinition`.
@@ -589,10 +401,6 @@ pub mod property_definition {
         /// It is not supported by CMEK compliant deployment.
         #[prost(message, tag="16")]
         TimestampTypeOptions(super::TimestampTypeOptions),
-        /// Boolean property.
-        /// It is not supported by CMEK compliant deployment.
-        #[prost(message, tag="17")]
-        BooleanTypeOptions(super::BooleanTypeOptions),
     }
 }
 /// Configurations for an integer property.
@@ -619,10 +427,6 @@ pub struct MapTypeOptions {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimestampTypeOptions {
 }
-/// Configurations for a boolean property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BooleanTypeOptions {
-}
 /// Configurations for a nested structured data property.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyTypeOptions {
@@ -636,6 +440,11 @@ pub struct EnumTypeOptions {
     /// Required. List of possible enum values.
     #[prost(string, repeated, tag="1")]
     pub possible_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Make sure the Enum property value provided in the document is in the
+    /// possile value list during document creation. The validation check runs by
+    /// default.
+    #[prost(bool, tag="2")]
+    pub validation_check_disabled: bool,
 }
 /// Request message for DocumentSchemaService.CreateDocumentSchema.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -710,6 +519,7 @@ pub mod document_schema_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// This service lets you manage document schema.
     #[derive(Debug, Clone)]
     pub struct DocumentSchemaServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -943,39 +753,12 @@ pub struct ListRuleSetsResponse {
     #[prost(string, tag="2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for RuleSetService.ProcessAsyncRuleSets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessAsyncRuleSetsRequest {
-    /// Required. The Location under which all async rules are stored.
-    #[prost(string, tag="1")]
-    pub location: ::prost::alloc::string::String,
-    /// Required. The frequency category of async rules to process.
-    #[prost(enumeration="Schedule", tag="2")]
-    pub schedule: i32,
-    /// Optional. Timestamp to override inferred execution time.
-    #[prost(message, optional, tag="3")]
-    pub execution_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Document name filter to process only a subset of Documents.
-    #[prost(string, repeated, tag="4")]
-    pub document_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Response message for RuleSetService.ProcessAsyncRuleSets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessAsyncRuleSetsResponse {
-    /// True if the processing of asynchronous policies was entirely
-    /// successful.
-    #[prost(bool, tag="1")]
-    pub success: bool,
-    /// Contains the errors encountered during the processing of asynchronous
-    /// policies.
-    #[prost(message, repeated, tag="2")]
-    pub errors: ::prost::alloc::vec::Vec<RuleEngineOutput>,
-}
 /// Generated client implementations.
 pub mod rule_set_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// Service to manage customer specific RuleSets.
     #[derive(Debug, Clone)]
     pub struct RuleSetServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -1130,32 +913,8 @@ pub mod rule_set_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Runs asynchronous RuleSets.
-        pub async fn process_async_rule_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ProcessAsyncRuleSetsRequest>,
-        ) -> Result<
-            tonic::Response<super::ProcessAsyncRuleSetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.RuleSetService/ProcessAsyncRuleSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
     }
 }
-/// NEXT_ID: 13
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentQuery {
     /// The query string that matches against the full text of the document and
@@ -1624,8 +1383,6 @@ impl AccessControlMode {
     }
 }
 /// Defines the structure for content warehouse document proto.
-///
-/// Next ID: 20
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Document {
     /// The resource name of the document.
@@ -1756,7 +1513,7 @@ pub struct Property {
     /// Value of the Property parsed into a specific data type.
     /// Specific type value(s) obtained from Document AIs Property.mention_text
     /// field.
-    #[prost(oneof="property::Values", tags="2, 3, 4, 5, 6, 7, 8, 9, 10")]
+    #[prost(oneof="property::Values", tags="2, 3, 4, 5, 6, 7, 8, 9")]
     pub values: ::core::option::Option<property::Values>,
 }
 /// Nested message and enum types in `Property`.
@@ -1794,10 +1551,6 @@ pub mod property {
         /// It is not supported by CMEK compliant deployment.
         #[prost(message, tag="9")]
         TimestampValues(super::TimestampArray),
-        /// Boolean property values.
-        /// It is not supported by CMEK compliant deployment.
-        #[prost(message, tag="10")]
-        BooleanValues(super::BooleanArray),
     }
 }
 /// Integer values.
@@ -1842,13 +1595,6 @@ pub struct TimestampArray {
     /// List of timestamp values.
     #[prost(message, repeated, tag="1")]
     pub values: ::prost::alloc::vec::Vec<TimestampValue>,
-}
-/// Boolean values.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BooleanArray {
-    /// List of bool values.
-    #[prost(bool, repeated, tag="1")]
-    pub values: ::prost::alloc::vec::Vec<bool>,
 }
 /// Timestamp value type.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2005,8 +1751,6 @@ pub struct CreateDocumentRequest {
     pub create_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for DocumentService.GetDocument.
-///
-/// Next ID: 4
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDocumentRequest {
     /// Required. The name of the document to retrieve.
@@ -2059,6 +1803,7 @@ pub struct DeleteDocumentRequest {
     #[prost(message, optional, tag="2")]
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
+/// Request message for DocumentService.SearchDocuments.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchDocumentsRequest {
     /// Required. The parent, which owns this collection of documents.
@@ -2366,6 +2111,7 @@ pub mod document_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    /// This service lets you manage document.
     #[derive(Debug, Clone)]
     pub struct DocumentServiceClient<T> {
         inner: tonic::client::Grpc<T>,
