@@ -1456,9 +1456,10 @@ pub struct SessionEvent {
     /// The status of the event.
     #[prost(bool, tag="6")]
     pub event_succeeded: bool,
-    /// If the session is a warm pooled session.
+    /// If the session is associated with an Environment with fast startup enabled,
+    /// and was pre-created before being assigned to a user.
     #[prost(bool, tag="7")]
-    pub warm_pool_enabled: bool,
+    pub fast_startup_enabled: bool,
     /// The idle duration of a warm pooled session before it is assigned to user.
     #[prost(message, optional, tag="8")]
     pub unassigned_duration: ::core::option::Option<::prost_types::Duration>,
@@ -2853,21 +2854,21 @@ pub mod task {
     /// Config for running scheduled notebooks.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NotebookTaskConfig {
-        /// Required. Path to input notebook. This can be the GCS URI of the notebook file
-        /// or the path to a Notebook Content.
-        /// The execution args are accessible as environment variables
+        /// Required. Path to input notebook. This can be the Cloud Storage URI of the notebook
+        /// file or the path to a Notebook Content. The execution args are accessible
+        /// as environment variables
         /// (`TASK_key=value`).
         #[prost(string, tag="4")]
         pub notebook: ::prost::alloc::string::String,
         /// Optional. Infrastructure specification for the execution.
         #[prost(message, optional, tag="3")]
         pub infrastructure_spec: ::core::option::Option<InfrastructureSpec>,
-        /// Optional. GCS URIs of files to be placed in the working directory of each
+        /// Optional. Cloud Storage URIs of files to be placed in the working directory of each
         /// executor.
         #[prost(string, repeated, tag="5")]
         pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. GCS URIs of archives to be extracted into the working directory of
-        /// each executor. Supported file types: .jar, .tar, .tar.gz, .tgz, and
+        /// Optional. Cloud Storage URIs of archives to be extracted into the working directory
+        /// of each executor. Supported file types: .jar, .tar, .tar.gz, .tgz, and
         /// .zip.
         #[prost(string, repeated, tag="6")]
         pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
