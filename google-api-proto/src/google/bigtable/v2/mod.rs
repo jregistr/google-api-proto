@@ -602,14 +602,24 @@ pub mod read_modify_write_rule {
     }
 }
 //
-// Messages related to RequestStats, part of the Slow Queries feature, that can
+// Messages related to RequestStats, part of the Query Stats feature, that can
 // help understand the performance of requests.
+//
+// The layout of requests below is as follows:
+//    * RequestStats serves as the top-level container for statistics and
+//      measures related to Bigtable requests. This common object is returned as
+//      part of methods in the Data API.
+//    * RequestStats contains multiple *views* of related data, chosen by an
+//      option in the source Data API method. The view that is returned is
+//      designed to have all submessages (and their submessages, and so on)
+//      filled-in, to provide a comprehensive selection of statistics and
+//      measures related to the requested view.
 
-/// ReadIteratorStats captures information about the iteration of rows or cells
+/// ReadIterationStats captures information about the iteration of rows or cells
 /// over the course of a read, e.g. how many results were scanned in a read
 /// operation versus the results returned.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadIteratorStats {
+pub struct ReadIterationStats {
     /// The rows seen (scanned) as part of the request. This includes the count of
     /// rows returned, as captured below.
     #[prost(int64, tag="1")]
@@ -624,9 +634,6 @@ pub struct ReadIteratorStats {
     /// The cells returned as part of the request.
     #[prost(int64, tag="4")]
     pub cells_returned_count: i64,
-    /// The deletes seen as part of the request.
-    #[prost(int64, tag="5")]
-    pub deletes_seen_count: i64,
 }
 /// RequestLatencyStats provides a measurement of the latency of the request as
 /// it interacts with different systems over its lifetime, e.g. how long the
@@ -643,32 +650,25 @@ pub struct RequestLatencyStats {
     /// (<https://cloud.google.com/bigtable/docs/monitoring-instance>) as this value
     /// needs to be sent in the response before the latency measurement including
     /// that transmission is finalized.
+    ///
+    /// Note: This value includes the end-to-end latency of contacting nodes in
+    /// the targeted cluster, e.g. measuring from when the first byte arrives at
+    /// the frontend server, to when this value is sent back as the last value in
+    /// the response, including any latency incurred by contacting nodes, waiting
+    /// for results from nodes, and finally sending results from nodes back to the
+    /// caller.
     #[prost(message, optional, tag="1")]
     pub frontend_server_latency: ::core::option::Option<::prost_types::Duration>,
 }
-/// ReadEfficiencyStats captures information about the efficiency of a read.
+/// FullReadStatsView captures all known information about a read.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadEfficiencyStats {
+pub struct FullReadStatsView {
     /// Iteration stats describe how efficient the read is, e.g. comparing
     /// rows seen vs. rows returned or cells seen vs cells returned can provide an
     /// indication of read efficiency (the higher the ratio of seen to retuned the
     /// better).
     #[prost(message, optional, tag="1")]
-    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
-    /// Request latency stats describe the time taken to complete a request, from
-    /// the server side.
-    #[prost(message, optional, tag="2")]
-    pub request_latency_stats: ::core::option::Option<RequestLatencyStats>,
-}
-/// AllReadStats captures all known information about a read.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AllReadStats {
-    /// Iteration stats describe how efficient the read is, e.g. comparing
-    /// rows seen vs. rows returned or cells seen vs cells returned can provide an
-    /// indication of read efficiency (the higher the ratio of seen to retuned the
-    /// better).
-    #[prost(message, optional, tag="1")]
-    pub read_iterator_stats: ::core::option::Option<ReadIteratorStats>,
+    pub read_iteration_stats: ::core::option::Option<ReadIterationStats>,
     /// Request latency stats describe the time taken to complete a request, from
     /// the server side.
     #[prost(message, optional, tag="2")]
@@ -684,8 +684,8 @@ pub struct RequestStats {
     /// based on the requested view.
     ///
     /// See the messages above for additional context.
-    #[prost(oneof="request_stats::Stats", tags="1, 2")]
-    pub stats: ::core::option::Option<request_stats::Stats>,
+    #[prost(oneof="request_stats::StatsView", tags="1")]
+    pub stats_view: ::core::option::Option<request_stats::StatsView>,
 }
 /// Nested message and enum types in `RequestStats`.
 pub mod request_stats {
@@ -694,16 +694,11 @@ pub mod request_stats {
     ///
     /// See the messages above for additional context.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Stats {
-        /// Available with the
-        /// ReadRowsRequest.RequestStatsView.REQUEST_STATS_EFFICIENCY view, see
-        /// package google.bigtable.v2.
-        #[prost(message, tag="1")]
-        ReadEfficiencyStats(super::ReadEfficiencyStats),
+    pub enum StatsView {
         /// Available with the ReadRowsRequest.RequestStatsView.REQUEST_STATS_FULL
         /// view, see package google.bigtable.v2.
-        #[prost(message, tag="2")]
-        AllReadStats(super::AllReadStats),
+        #[prost(message, tag="1")]
+        FullReadStatsView(super::FullReadStatsView),
     }
 }
 /// Request message for Bigtable.ReadRows.
@@ -748,11 +743,9 @@ pub mod read_rows_request {
         /// Do not include any RequestStats in the response. This will leave the
         /// RequestStats embedded message unset in the response.
         RequestStatsNone = 1,
-        /// Include stats related to the efficiency of the read.
-        RequestStatsEfficiency = 2,
         /// Include the full set of available RequestStats in the response,
         /// applicable to this read.
-        RequestStatsFull = 3,
+        RequestStatsFull = 2,
     }
     impl RequestStatsView {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -763,7 +756,6 @@ pub mod read_rows_request {
             match self {
                 RequestStatsView::Unspecified => "REQUEST_STATS_VIEW_UNSPECIFIED",
                 RequestStatsView::RequestStatsNone => "REQUEST_STATS_NONE",
-                RequestStatsView::RequestStatsEfficiency => "REQUEST_STATS_EFFICIENCY",
                 RequestStatsView::RequestStatsFull => "REQUEST_STATS_FULL",
             }
         }
@@ -917,8 +909,8 @@ pub struct SampleRowKeysResponse {
 /// Request message for Bigtable.MutateRow.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateRowRequest {
-    /// Required. The unique name of the table to which the mutation should be
-    /// applied. Values are of the form
+    /// Required. The unique name of the table to which the mutation should be applied.
+    /// Values are of the form
     /// `projects/<project>/instances/<instance>/tables/<table>`.
     #[prost(string, tag="1")]
     pub table_name: ::prost::alloc::string::String,
@@ -929,9 +921,9 @@ pub struct MutateRowRequest {
     /// Required. The key of the row to which the mutation should be applied.
     #[prost(bytes="bytes", tag="2")]
     pub row_key: ::prost::bytes::Bytes,
-    /// Required. Changes to be atomically applied to the specified row. Entries
-    /// are applied in order, meaning that earlier mutations can be masked by later
-    /// ones. Must contain at least one entry and at most 100000.
+    /// Required. Changes to be atomically applied to the specified row. Entries are applied
+    /// in order, meaning that earlier mutations can be masked by later ones.
+    /// Must contain at least one entry and at most 100000.
     #[prost(message, repeated, tag="3")]
     pub mutations: ::prost::alloc::vec::Vec<Mutation>,
 }
@@ -942,8 +934,7 @@ pub struct MutateRowResponse {
 /// Request message for BigtableService.MutateRows.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateRowsRequest {
-    /// Required. The unique name of the table to which the mutations should be
-    /// applied.
+    /// Required. The unique name of the table to which the mutations should be applied.
     #[prost(string, tag="1")]
     pub table_name: ::prost::alloc::string::String,
     /// This value specifies routing for replication. If not specified, the
@@ -966,9 +957,10 @@ pub mod mutate_rows_request {
         /// The key of the row to which the `mutations` should be applied.
         #[prost(bytes="bytes", tag="1")]
         pub row_key: ::prost::bytes::Bytes,
-        /// Required. Changes to be atomically applied to the specified row.
-        /// Mutations are applied in order, meaning that earlier mutations can be
-        /// masked by later ones. You must specify at least one mutation.
+        /// Required. Changes to be atomically applied to the specified row. Mutations are
+        /// applied in order, meaning that earlier mutations can be masked by
+        /// later ones.
+        /// You must specify at least one mutation.
         #[prost(message, repeated, tag="2")]
         pub mutations: ::prost::alloc::vec::Vec<super::Mutation>,
     }
@@ -1000,8 +992,9 @@ pub mod mutate_rows_response {
 /// Request message for Bigtable.CheckAndMutateRow.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckAndMutateRowRequest {
-    /// Required. The unique name of the table to which the conditional mutation
-    /// should be applied. Values are of the form
+    /// Required. The unique name of the table to which the conditional mutation should be
+    /// applied.
+    /// Values are of the form
     /// `projects/<project>/instances/<instance>/tables/<table>`.
     #[prost(string, tag="1")]
     pub table_name: ::prost::alloc::string::String,
@@ -1009,8 +1002,7 @@ pub struct CheckAndMutateRowRequest {
     /// "default" application profile will be used.
     #[prost(string, tag="7")]
     pub app_profile_id: ::prost::alloc::string::String,
-    /// Required. The key of the row to which the conditional mutation should be
-    /// applied.
+    /// Required. The key of the row to which the conditional mutation should be applied.
     #[prost(bytes="bytes", tag="2")]
     pub row_key: ::prost::bytes::Bytes,
     /// The filter to be applied to the contents of the specified row. Depending
@@ -1045,9 +1037,8 @@ pub struct CheckAndMutateRowResponse {
 /// Request message for client connection keep-alive and warming.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PingAndWarmRequest {
-    /// Required. The unique name of the instance to check permissions for as well
-    /// as respond. Values are of the form
-    /// `projects/<project>/instances/<instance>`.
+    /// Required. The unique name of the instance to check permissions for as well as
+    /// respond. Values are of the form `projects/<project>/instances/<instance>`.
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// This value specifies routing for replication. If not specified, the
@@ -1062,8 +1053,9 @@ pub struct PingAndWarmResponse {
 /// Request message for Bigtable.ReadModifyWriteRow.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReadModifyWriteRowRequest {
-    /// Required. The unique name of the table to which the read/modify/write rules
-    /// should be applied. Values are of the form
+    /// Required. The unique name of the table to which the read/modify/write rules should be
+    /// applied.
+    /// Values are of the form
     /// `projects/<project>/instances/<instance>/tables/<table>`.
     #[prost(string, tag="1")]
     pub table_name: ::prost::alloc::string::String,
@@ -1071,13 +1063,12 @@ pub struct ReadModifyWriteRowRequest {
     /// "default" application profile will be used.
     #[prost(string, tag="4")]
     pub app_profile_id: ::prost::alloc::string::String,
-    /// Required. The key of the row to which the read/modify/write rules should be
-    /// applied.
+    /// Required. The key of the row to which the read/modify/write rules should be applied.
     #[prost(bytes="bytes", tag="2")]
     pub row_key: ::prost::bytes::Bytes,
-    /// Required. Rules specifying how the specified row's contents are to be
-    /// transformed into writes. Entries are applied in order, meaning that earlier
-    /// rules will affect the results of later ones.
+    /// Required. Rules specifying how the specified row's contents are to be transformed
+    /// into writes. Entries are applied in order, meaning that earlier rules will
+    /// affect the results of later ones.
     #[prost(message, repeated, tag="3")]
     pub rules: ::prost::alloc::vec::Vec<ReadModifyWriteRule>,
 }
