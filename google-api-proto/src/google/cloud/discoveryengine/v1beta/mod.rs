@@ -508,7 +508,7 @@ pub mod document_info {
 /// Detailed panel information associated with a user event.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PanelInfo {
-    /// The panel ID.
+    /// Required. The panel ID.
     #[prost(string, tag="2")]
     pub panel_id: ::prost::alloc::string::String,
     /// The display name of the panel.
