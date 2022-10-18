@@ -503,6 +503,8 @@ pub mod shell;
 pub mod speech;
 #[cfg(any(feature = "google-cloud-sql-v1", feature = "google-cloud-sql-v1beta4"))]
 pub mod sql;
+#[cfg(any(feature = "google-cloud-storageinsights-v1"))]
+pub mod storageinsights;
 #[cfg(any(feature = "google-cloud-stream-logging-v1"))]
 pub mod stream;
 #[cfg(

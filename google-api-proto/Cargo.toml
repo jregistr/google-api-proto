@@ -316,6 +316,7 @@ google-cloud-speech-v1p1beta1 = ["google-api", "google-cloud", "google-longrunni
 google-cloud-speech-v2 = ["google-api", "google-cloud", "google-longrunning", "google-rpc"]
 google-cloud-sql-v1 = ["google-api", "google-cloud"]
 google-cloud-sql-v1beta4 = ["google-api", "google-cloud"]
+google-cloud-storageinsights-v1 = ["google-api", "google-cloud", "google-rpc", "google-type"]
 google-cloud-stream-logging-v1 = ["google-cloud"]
 google-cloud-support-common = ["google-api", "google-cloud"]
 google-cloud-support-v1alpha1 = ["google-api", "google-cloud", "google-cloud-support-common"]
