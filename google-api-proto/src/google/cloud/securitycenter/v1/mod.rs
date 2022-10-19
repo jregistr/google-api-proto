@@ -1,369 +1,115 @@
-/// Represents what's commonly known as an Indicator of compromise (IoC) in
-/// computer forensics. This is an artifact observed on a network or in an
-/// operating system that, with high confidence, indicates a computer intrusion.
-/// Reference: <https://en.wikipedia.org/wiki/Indicator_of_compromise>
+/// Label represents a generic name=value label. Label has separate name and
+/// value fields to support filtering with contains().
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Indicator {
-    /// List of ip addresses associated to the Finding.
-    #[prost(string, repeated, tag="1")]
-    pub ip_addresses: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// List of domains associated to the Finding.
-    #[prost(string, repeated, tag="2")]
-    pub domains: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The list of matched signatures indicating that the given
-    /// process is present in the environment.
-    #[prost(message, repeated, tag="3")]
-    pub signatures: ::prost::alloc::vec::Vec<indicator::ProcessSignature>,
-    /// The list of URIs associated to the Findings.
-    #[prost(string, repeated, tag="4")]
-    pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+pub struct Label {
+    /// Label name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Label value.
+    #[prost(string, tag="2")]
+    pub value: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `Indicator`.
-pub mod indicator {
-    /// Indicates what signature matched this process.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ProcessSignature {
-        #[prost(oneof="process_signature::Signature", tags="6, 7")]
-        pub signature: ::core::option::Option<process_signature::Signature>,
+/// Container associated with the finding.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Container {
+    /// Container name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Container image URI provided when configuring a pod/container.
+    /// May identify a container image version using mutable tags.
+    #[prost(string, tag="2")]
+    pub uri: ::prost::alloc::string::String,
+    /// Optional container image id, when provided by the container runtime.
+    /// Uniquely identifies the container image launched using a container image
+    /// digest.
+    #[prost(string, tag="3")]
+    pub image_id: ::prost::alloc::string::String,
+    /// Container labels, as provided by the container runtime.
+    #[prost(message, repeated, tag="4")]
+    pub labels: ::prost::alloc::vec::Vec<Label>,
+}
+/// Represents a particular IAM binding, which captures a member's role addition,
+/// removal, or state.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IamBinding {
+    /// The action that was performed on a Binding.
+    #[prost(enumeration="iam_binding::Action", tag="1")]
+    pub action: i32,
+    /// Role that is assigned to "members".
+    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
+    #[prost(string, tag="2")]
+    pub role: ::prost::alloc::string::String,
+    /// A single identity requesting access for a Cloud Platform resource,
+    /// e.g. "foo@google.com".
+    #[prost(string, tag="3")]
+    pub member: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `IamBinding`.
+pub mod iam_binding {
+    /// The type of action performed on a Binding in a policy.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Action {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Addition of a Binding.
+        Add = 1,
+        /// Removal of a Binding.
+        Remove = 2,
     }
-    /// Nested message and enum types in `ProcessSignature`.
-    pub mod process_signature {
-        /// A signature corresponding to memory page hashes.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MemoryHashSignature {
-            /// The binary family.
-            #[prost(string, tag="1")]
-            pub binary_family: ::prost::alloc::string::String,
-            /// The list of memory hash detections contributing to the binary family
-            /// match.
-            #[prost(message, repeated, tag="4")]
-            pub detections: ::prost::alloc::vec::Vec<memory_hash_signature::Detection>,
-        }
-        /// Nested message and enum types in `MemoryHashSignature`.
-        pub mod memory_hash_signature {
-            /// Memory hash detection contributing to the binary family match.
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Detection {
-                /// The name of the binary associated with the memory hash
-                /// signature detection.
-                #[prost(string, tag="2")]
-                pub binary: ::prost::alloc::string::String,
-                /// The percentage of memory page hashes in the signature
-                /// that were matched.
-                #[prost(double, tag="3")]
-                pub percent_pages_matched: f64,
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::Add => "ADD",
+                Action::Remove => "REMOVE",
             }
         }
-        /// A signature corresponding to a YARA rule.
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct YaraRuleSignature {
-            /// The name of the YARA rule.
-            #[prost(string, tag="5")]
-            pub yara_rule: ::prost::alloc::string::String,
-        }
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Signature {
-            /// Signature indicating that a binary family was matched.
-            #[prost(message, tag="6")]
-            MemoryHashSignature(MemoryHashSignature),
-            /// Signature indicating that a YARA rule was matched.
-            #[prost(message, tag="7")]
-            YaraRuleSignature(YaraRuleSignature),
-        }
     }
 }
-/// Message that contains the resource name and display name of a folder
-/// resource.
+/// Response of asset discovery run
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Folder {
-    /// Full resource name of this folder. See:
-    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-    #[prost(string, tag="1")]
-    pub resource_folder: ::prost::alloc::string::String,
-    /// The user defined display name for this folder.
-    #[prost(string, tag="2")]
-    pub resource_folder_display_name: ::prost::alloc::string::String,
-}
-/// User specified security marks that are attached to the parent Security
-/// Command Center resource. Security marks are scoped within a Security Command
-/// Center organization -- they can be modified and viewed by all users who have
-/// proper permissions on the organization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SecurityMarks {
-    /// The relative resource name of the SecurityMarks. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Examples:
-    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Mutable user specified security marks belonging to the parent resource.
-    /// Constraints are as follows:
-    ///
-    ///    * Keys and values are treated as case insensitive
-    ///    * Keys must be between 1 - 256 characters (inclusive)
-    ///    * Keys must be letters, numbers, underscores, or dashes
-    ///    * Values have leading and trailing whitespace trimmed, remaining
-    ///      characters must be between 1 - 4096 characters (inclusive)
-    #[prost(btree_map="string, string", tag="2")]
-    pub marks: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// The canonical name of the marks.
-    /// Examples:
-    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
-    /// "folders/{folder_id}/assets/{asset_id}/securityMarks"
-    /// "projects/{project_number}/assets/{asset_id}/securityMarks"
-    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks"
-    #[prost(string, tag="3")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Security Command Center representation of a Google Cloud
-/// resource.
-///
-/// The Asset is a Security Command Center resource that captures information
-/// about a single Google Cloud resource. All modifications to an Asset are only
-/// within the context of Security Command Center and don't affect the referenced
-/// Google Cloud resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// The relative resource name of this asset. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/assets/{asset_id}".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
     #[prost(message, optional, tag="2")]
-    pub security_center_properties: ::core::option::Option<asset::SecurityCenterProperties>,
-    /// Resource managed properties. These properties are managed and defined by
-    /// the Google Cloud resource and cannot be modified by the user.
-    #[prost(btree_map="string, message", tag="7")]
-    pub resource_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
-    /// User specified security marks. These marks are entirely managed by the user
-    /// and come from the SecurityMarks resource that belongs to the asset.
-    #[prost(message, optional, tag="8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the asset was created in Security Command Center.
-    #[prost(message, optional, tag="9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the asset was last updated or added in Cloud SCC.
-    #[prost(message, optional, tag="10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[prost(message, optional, tag="11")]
-    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
-    /// The canonical name of the resource. It's either
-    /// "organizations/{organization_id}/assets/{asset_id}",
-    /// "folders/{folder_id}/assets/{asset_id}" or
-    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
-    /// ancestor of the resource.
-    #[prost(string, tag="13")]
-    pub canonical_name: ::prost::alloc::string::String,
+    pub duration: ::core::option::Option<::prost_types::Duration>,
 }
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SecurityCenterProperties {
-        /// The full resource name of the Google Cloud resource this asset
-        /// represents. This field is immutable after create time. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="1")]
-        pub resource_name: ::prost::alloc::string::String,
-        /// The type of the Google Cloud resource. Examples include: APPLICATION,
-        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
-        /// Security Command Center and/or the producer of the resource and is
-        /// immutable after create time.
-        #[prost(string, tag="2")]
-        pub resource_type: ::prost::alloc::string::String,
-        /// The full resource name of the immediate parent of the resource. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="3")]
-        pub resource_parent: ::prost::alloc::string::String,
-        /// The full resource name of the project the resource belongs to. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag="4")]
-        pub resource_project: ::prost::alloc::string::String,
-        /// Owners of the Google Cloud resource.
-        #[prost(string, repeated, tag="5")]
-        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The user defined display name for this resource.
-        #[prost(string, tag="6")]
-        pub resource_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the parent of this resource.
-        #[prost(string, tag="7")]
-        pub resource_parent_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the project of this resource.
-        #[prost(string, tag="8")]
-        pub resource_project_display_name: ::prost::alloc::string::String,
-        /// Contains a Folder message for each folder in the assets ancestry.
-        /// The first folder is the deepest nested folder, and the last folder is the
-        /// folder directly under the Organization.
-        #[prost(message, repeated, tag="10")]
-        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
     }
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IamPolicy {
-        /// The JSON representation of the Policy associated with the asset.
-        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
-        /// details.
-        #[prost(string, tag="1")]
-        pub policy_blob: ::prost::alloc::string::String,
-    }
-}
-/// A mute config is a Cloud SCC resource that contains the configuration
-/// to mute create/update events of findings.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MuteConfig {
-    /// This field will be ignored if provided on config creation. Format
-    /// "organizations/{organization}/muteConfigs/{mute_config}"
-    /// "folders/{folder}/muteConfigs/{mute_config}"
-    /// "projects/{project}/muteConfigs/{mute_config}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name to be displayed for the mute config.
-    #[deprecated]
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// A description of the mute config.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. An expression that defines the filter to apply across create/update events
-    /// of findings. While creating a filter string, be mindful of the
-    /// scope in which the mute configuration is being created. E.g., If a filter
-    /// contains project = X but is created under the project = Y scope, it might
-    /// not match any findings.
-    ///
-    /// The following field and operator combinations are supported:
-    ///
-    /// * severity: `=`, `:`
-    /// * category: `=`, `:`
-    /// * resource.name: `=`, `:`
-    /// * resource.project_name: `=`, `:`
-    /// * resource.project_display_name: `=`, `:`
-    /// * resource.folders.resource_folder: `=`, `:`
-    /// * resource.parent_name: `=`, `:`
-    /// * resource.parent_display_name: `=`, `:`
-    /// * resource.type: `=`, `:`
-    /// * finding_class: `=`, `:`
-    /// * indicator.ip_addresses: `=`, `:`
-    /// * indicator.domains: `=`, `:`
-    #[prost(string, tag="4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Output only. The time at which the mute config was created.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation.
-    #[prost(message, optional, tag="5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The most recent time at which the mute config was updated.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(message, optional, tag="6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Email address of the user who last edited the mute config.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(string, tag="7")]
-    pub most_recent_editor: ::prost::alloc::string::String,
-}
-/// Representation of third party SIEM/SOAR fields within SCC.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExternalSystem {
-    /// External System Name e.g. jira, demisto, etc.
-    ///   e.g.:
-    ///   `organizations/1234/sources/5678/findings/123456/externalSystems/jira`
-    /// `folders/1234/sources/5678/findings/123456/externalSystems/jira`
-    /// `projects/1234/sources/5678/findings/123456/externalSystems/jira`
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// References primary/secondary etc assignees in the external system.
-    #[prost(string, repeated, tag="2")]
-    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Identifier that's used to track the given finding in the external system.
-    #[prost(string, tag="3")]
-    pub external_uid: ::prost::alloc::string::String,
-    /// Most recent status of the corresponding finding's ticket/tracker in the
-    /// external system.
-    #[prost(string, tag="4")]
-    pub status: ::prost::alloc::string::String,
-    /// The most recent time when the corresponding finding's ticket/tracker was
-    /// updated in the external system.
-    #[prost(message, optional, tag="5")]
-    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Cloud Security Command Center (Cloud SCC) notification configs.
-///
-/// A notification config is a Cloud SCC resource that contains the configuration
-/// to send notifications for create/update events of findings, assets and etc.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationConfig {
-    /// The relative resource name of this notification config. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the notification config (max of 1024 characters).
-    #[prost(string, tag="2")]
-    pub description: ::prost::alloc::string::String,
-    /// The Pub/Sub topic to send notifications to. Its format is
-    /// "projects/\[project_id]/topics/[topic\]".
-    #[prost(string, tag="3")]
-    pub pubsub_topic: ::prost::alloc::string::String,
-    /// Output only. The service account that needs "pubsub.topics.publish"
-    /// permission to publish to the Pub/Sub topic.
-    #[prost(string, tag="4")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The config for triggering notifications.
-    #[prost(oneof="notification_config::NotifyConfig", tags="5")]
-    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
-}
-/// Nested message and enum types in `NotificationConfig`.
-pub mod notification_config {
-    /// The config for streaming-based notifications, which send each event as soon
-    /// as it is detected.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StreamingConfig {
-        /// Expression that defines the filter to apply across create/update events
-        /// of assets or findings as specified by the event type. The expression is a
-        /// list of zero or more restrictions combined via logical operators `AND`
-        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
-        /// `AND`.
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
         ///
-        /// Restrictions have the form `<field> <operator> <value>` and may have a
-        /// `-` character in front of them to indicate negation. The fields map to
-        /// those defined in the corresponding resource.
-        ///
-        /// The supported operators are:
-        ///
-        /// * `=` for all value types.
-        /// * `>`, `<`, `>=`, `<=` for integer values.
-        /// * `:`, meaning substring matching, for strings.
-        ///
-        /// The supported value types are:
-        ///
-        /// * string literals in quotes.
-        /// * integer literals without quotes.
-        /// * boolean literals `true` and `false` without quotes.
-        #[prost(string, tag="1")]
-        pub filter: ::prost::alloc::string::String,
-    }
-    /// The config for triggering notifications.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum NotifyConfig {
-        /// The config for triggering streaming-based notifications.
-        #[prost(message, tag="5")]
-        StreamingConfig(StreamingConfig),
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
+            }
+        }
     }
 }
 /// The details pertaining to specific contacts
@@ -454,73 +200,129 @@ pub mod organization_settings {
         }
     }
 }
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, and
-/// other tools.
+/// Message that contains the resource name and display name of a folder
+/// resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated or insecure libraries."
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}",
-    /// "folders/{folder_id}/sources/{source_id}" or
-    /// "projects/{project_number}/sources/{source_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag="14")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Information related to the Google Cloud resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Resource {
-    /// The full resource name of the resource. See:
+pub struct Folder {
+    /// Full resource name of this folder. See:
     /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
     #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name of the resource.
-    #[prost(string, tag="8")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The full resource type of the resource.
-    #[prost(string, tag="6")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The full resource name of project that the resource belongs to.
+    pub resource_folder: ::prost::alloc::string::String,
+    /// The user defined display name for this folder.
     #[prost(string, tag="2")]
-    pub project: ::prost::alloc::string::String,
-    /// The project ID that the resource belongs to.
+    pub resource_folder_display_name: ::prost::alloc::string::String,
+}
+/// Contains information about the IP connection associated with the finding.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connection {
+    /// Destination IP address. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(string, tag="1")]
+    pub destination_ip: ::prost::alloc::string::String,
+    /// Destination port. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(int32, tag="2")]
+    pub destination_port: i32,
+    /// Source IP address.
     #[prost(string, tag="3")]
-    pub project_display_name: ::prost::alloc::string::String,
-    /// The full resource name of resource's parent.
+    pub source_ip: ::prost::alloc::string::String,
+    /// Source port.
+    #[prost(int32, tag="4")]
+    pub source_port: i32,
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[prost(enumeration="connection::Protocol", tag="5")]
+    pub protocol: i32,
+}
+/// Nested message and enum types in `Connection`.
+pub mod connection {
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Protocol {
+        /// Unspecified protocol (not HOPOPT).
+        Unspecified = 0,
+        /// Internet Control Message Protocol.
+        Icmp = 1,
+        /// Transmission Control Protocol.
+        Tcp = 6,
+        /// User Datagram Protocol.
+        Udp = 17,
+        /// Generic Routing Encapsulation.
+        Gre = 47,
+        /// Encap Security Payload.
+        Esp = 50,
+    }
+    impl Protocol {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Protocol::Unspecified => "PROTOCOL_UNSPECIFIED",
+                Protocol::Icmp => "ICMP",
+                Protocol::Tcp => "TCP",
+                Protocol::Udp => "UDP",
+                Protocol::Gre => "GRE",
+                Protocol::Esp => "ESP",
+            }
+        }
+    }
+}
+/// A mute config is a Cloud SCC resource that contains the configuration
+/// to mute create/update events of findings.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MuteConfig {
+    /// This field will be ignored if provided on config creation. Format
+    /// "organizations/{organization}/muteConfigs/{mute_config}"
+    /// "folders/{folder}/muteConfigs/{mute_config}"
+    /// "projects/{project}/muteConfigs/{mute_config}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name to be displayed for the mute config.
+    #[deprecated]
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// A description of the mute config.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. An expression that defines the filter to apply across create/update events
+    /// of findings. While creating a filter string, be mindful of the
+    /// scope in which the mute configuration is being created. E.g., If a filter
+    /// contains project = X but is created under the project = Y scope, it might
+    /// not match any findings.
+    ///
+    /// The following field and operator combinations are supported:
+    ///
+    /// * severity: `=`, `:`
+    /// * category: `=`, `:`
+    /// * resource.name: `=`, `:`
+    /// * resource.project_name: `=`, `:`
+    /// * resource.project_display_name: `=`, `:`
+    /// * resource.folders.resource_folder: `=`, `:`
+    /// * resource.parent_name: `=`, `:`
+    /// * resource.parent_display_name: `=`, `:`
+    /// * resource.type: `=`, `:`
+    /// * finding_class: `=`, `:`
+    /// * indicator.ip_addresses: `=`, `:`
+    /// * indicator.domains: `=`, `:`
     #[prost(string, tag="4")]
-    pub parent: ::prost::alloc::string::String,
-    /// The human readable name of resource's parent.
-    #[prost(string, tag="5")]
-    pub parent_display_name: ::prost::alloc::string::String,
-    /// Output only. Contains a Folder message for each folder in the assets ancestry.
-    /// The first folder is the deepest nested folder, and the last folder is the
-    /// folder directly under the Organization.
-    #[prost(message, repeated, tag="7")]
-    pub folders: ::prost::alloc::vec::Vec<Folder>,
+    pub filter: ::prost::alloc::string::String,
+    /// Output only. The time at which the mute config was created.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation.
+    #[prost(message, optional, tag="5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The most recent time at which the mute config was updated.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(message, optional, tag="6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Email address of the user who last edited the mute config.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(string, tag="7")]
+    pub most_recent_editor: ::prost::alloc::string::String,
 }
 /// Contains compliance information about a security standard indicating unmet
 /// recommendations.
@@ -537,48 +339,67 @@ pub struct Compliance {
     #[prost(string, repeated, tag="3")]
     pub ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// Represents a particular IAM binding, which captures a member's role addition,
-/// removal, or state.
+/// User specified security marks that are attached to the parent Security
+/// Command Center resource. Security marks are scoped within a Security Command
+/// Center organization -- they can be modified and viewed by all users who have
+/// proper permissions on the organization.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IamBinding {
-    /// The action that was performed on a Binding.
-    #[prost(enumeration="iam_binding::Action", tag="1")]
-    pub action: i32,
-    /// Role that is assigned to "members".
-    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
-    #[prost(string, tag="2")]
-    pub role: ::prost::alloc::string::String,
-    /// A single identity requesting access for a Cloud Platform resource,
-    /// e.g. "foo@google.com".
+pub struct SecurityMarks {
+    /// The relative resource name of the SecurityMarks. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Examples:
+    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Mutable user specified security marks belonging to the parent resource.
+    /// Constraints are as follows:
+    ///
+    ///    * Keys and values are treated as case insensitive
+    ///    * Keys must be between 1 - 256 characters (inclusive)
+    ///    * Keys must be letters, numbers, underscores, or dashes
+    ///    * Values have leading and trailing whitespace trimmed, remaining
+    ///      characters must be between 1 - 4096 characters (inclusive)
+    #[prost(btree_map="string, string", tag="2")]
+    pub marks: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// The canonical name of the marks.
+    /// Examples:
+    /// "organizations/{organization_id}/assets/{asset_id}/securityMarks"
+    /// "folders/{folder_id}/assets/{asset_id}/securityMarks"
+    /// "projects/{project_number}/assets/{asset_id}/securityMarks"
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
+    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks"
+    /// "projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks"
     #[prost(string, tag="3")]
-    pub member: ::prost::alloc::string::String,
+    pub canonical_name: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `IamBinding`.
-pub mod iam_binding {
-    /// The type of action performed on a Binding in a policy.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Action {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Addition of a Binding.
-        Add = 1,
-        /// Removal of a Binding.
-        Remove = 2,
-    }
-    impl Action {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Action::Unspecified => "ACTION_UNSPECIFIED",
-                Action::Add => "ADD",
-                Action::Remove => "REMOVE",
-            }
-        }
-    }
+/// File information about the related binary/library used by an executable, or
+/// the script used by a script interpreter
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct File {
+    /// Absolute path of the file as a JSON encoded string.
+    #[prost(string, tag="1")]
+    pub path: ::prost::alloc::string::String,
+    /// Size of the file in bytes.
+    #[prost(int64, tag="2")]
+    pub size: i64,
+    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
+    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
+    /// of the entire file.
+    #[prost(string, tag="3")]
+    pub sha256: ::prost::alloc::string::String,
+    /// The length in bytes of the file prefix that was hashed.  If
+    /// hashed_size == size, any hashes reported represent the entire
+    /// file.
+    #[prost(int64, tag="4")]
+    pub hashed_size: i64,
+    /// True when the hash covers only a prefix of the file.
+    #[prost(bool, tag="5")]
+    pub partially_hashed: bool,
+    /// Prefix of the file contents as a JSON encoded string.
+    /// (Currently only populated for Malicious Script Executed findings.)
+    #[prost(string, tag="6")]
+    pub contents: ::prost::alloc::string::String,
 }
 /// Represents an access event.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -658,93 +479,6 @@ pub struct Geolocation {
     #[prost(string, tag="1")]
     pub region_code: ::prost::alloc::string::String,
 }
-/// Contains information about the IP connection associated with the finding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connection {
-    /// Destination IP address. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(string, tag="1")]
-    pub destination_ip: ::prost::alloc::string::String,
-    /// Destination port. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(int32, tag="2")]
-    pub destination_port: i32,
-    /// Source IP address.
-    #[prost(string, tag="3")]
-    pub source_ip: ::prost::alloc::string::String,
-    /// Source port.
-    #[prost(int32, tag="4")]
-    pub source_port: i32,
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[prost(enumeration="connection::Protocol", tag="5")]
-    pub protocol: i32,
-}
-/// Nested message and enum types in `Connection`.
-pub mod connection {
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Protocol {
-        /// Unspecified protocol (not HOPOPT).
-        Unspecified = 0,
-        /// Internet Control Message Protocol.
-        Icmp = 1,
-        /// Transmission Control Protocol.
-        Tcp = 6,
-        /// User Datagram Protocol.
-        Udp = 17,
-        /// Generic Routing Encapsulation.
-        Gre = 47,
-        /// Encap Security Payload.
-        Esp = 50,
-    }
-    impl Protocol {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Protocol::Unspecified => "PROTOCOL_UNSPECIFIED",
-                Protocol::Icmp => "ICMP",
-                Protocol::Tcp => "TCP",
-                Protocol::Udp => "UDP",
-                Protocol::Gre => "GRE",
-                Protocol::Esp => "ESP",
-            }
-        }
-    }
-}
-/// Label represents a generic name=value label. Label has separate name and
-/// value fields to support filtering with contains().
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Label {
-    /// Label name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Label value.
-    #[prost(string, tag="2")]
-    pub value: ::prost::alloc::string::String,
-}
-/// Container associated with the finding.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Container {
-    /// Container name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Container image URI provided when configuring a pod/container.
-    /// May identify a container image version using mutable tags.
-    #[prost(string, tag="2")]
-    pub uri: ::prost::alloc::string::String,
-    /// Optional container image id, when provided by the container runtime.
-    /// Uniquely identifies the container image launched using a container image
-    /// digest.
-    #[prost(string, tag="3")]
-    pub image_id: ::prost::alloc::string::String,
-    /// Container labels, as provided by the container runtime.
-    #[prost(message, repeated, tag="4")]
-    pub labels: ::prost::alloc::vec::Vec<Label>,
-}
 /// Represents database access information, such as queries.
 /// A database may be a sub-resource of an instance (as in the case of CloudSQL
 /// instances or Cloud Spanner instances), or the database instance itself.
@@ -801,6 +535,105 @@ pub struct ExfilResource {
     /// instance, or multiple files from the same Cloud Storage bucket.
     #[prost(string, repeated, tag="2")]
     pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Representation of third party SIEM/SOAR fields within SCC.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExternalSystem {
+    /// External System Name e.g. jira, demisto, etc.
+    ///   e.g.:
+    ///   `organizations/1234/sources/5678/findings/123456/externalSystems/jira`
+    /// `folders/1234/sources/5678/findings/123456/externalSystems/jira`
+    /// `projects/1234/sources/5678/findings/123456/externalSystems/jira`
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// References primary/secondary etc assignees in the external system.
+    #[prost(string, repeated, tag="2")]
+    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Identifier that's used to track the given finding in the external system.
+    #[prost(string, tag="3")]
+    pub external_uid: ::prost::alloc::string::String,
+    /// Most recent status of the corresponding finding's ticket/tracker in the
+    /// external system.
+    #[prost(string, tag="4")]
+    pub status: ::prost::alloc::string::String,
+    /// The most recent time when the corresponding finding's ticket/tracker was
+    /// updated in the external system.
+    #[prost(message, optional, tag="5")]
+    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Represents what's commonly known as an Indicator of compromise (IoC) in
+/// computer forensics. This is an artifact observed on a network or in an
+/// operating system that, with high confidence, indicates a computer intrusion.
+/// Reference: <https://en.wikipedia.org/wiki/Indicator_of_compromise>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Indicator {
+    /// List of ip addresses associated to the Finding.
+    #[prost(string, repeated, tag="1")]
+    pub ip_addresses: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// List of domains associated to the Finding.
+    #[prost(string, repeated, tag="2")]
+    pub domains: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The list of matched signatures indicating that the given
+    /// process is present in the environment.
+    #[prost(message, repeated, tag="3")]
+    pub signatures: ::prost::alloc::vec::Vec<indicator::ProcessSignature>,
+    /// The list of URIs associated to the Findings.
+    #[prost(string, repeated, tag="4")]
+    pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `Indicator`.
+pub mod indicator {
+    /// Indicates what signature matched this process.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ProcessSignature {
+        #[prost(oneof="process_signature::Signature", tags="6, 7")]
+        pub signature: ::core::option::Option<process_signature::Signature>,
+    }
+    /// Nested message and enum types in `ProcessSignature`.
+    pub mod process_signature {
+        /// A signature corresponding to memory page hashes.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MemoryHashSignature {
+            /// The binary family.
+            #[prost(string, tag="1")]
+            pub binary_family: ::prost::alloc::string::String,
+            /// The list of memory hash detections contributing to the binary family
+            /// match.
+            #[prost(message, repeated, tag="4")]
+            pub detections: ::prost::alloc::vec::Vec<memory_hash_signature::Detection>,
+        }
+        /// Nested message and enum types in `MemoryHashSignature`.
+        pub mod memory_hash_signature {
+            /// Memory hash detection contributing to the binary family match.
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Detection {
+                /// The name of the binary associated with the memory hash
+                /// signature detection.
+                #[prost(string, tag="2")]
+                pub binary: ::prost::alloc::string::String,
+                /// The percentage of memory page hashes in the signature
+                /// that were matched.
+                #[prost(double, tag="3")]
+                pub percent_pages_matched: f64,
+            }
+        }
+        /// A signature corresponding to a YARA rule.
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct YaraRuleSignature {
+            /// The name of the YARA rule.
+            #[prost(string, tag="5")]
+            pub yara_rule: ::prost::alloc::string::String,
+        }
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Signature {
+            /// Signature indicating that a binary family was matched.
+            #[prost(message, tag="6")]
+            MemoryHashSignature(MemoryHashSignature),
+            /// Signature indicating that a YARA rule was matched.
+            #[prost(message, tag="7")]
+            YaraRuleSignature(YaraRuleSignature),
+        }
+    }
 }
 /// Kubernetes related attributes.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1206,34 +1039,6 @@ pub mod mitre_attack {
             }
         }
     }
-}
-/// File information about the related binary/library used by an executable, or
-/// the script used by a script interpreter
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct File {
-    /// Absolute path of the file as a JSON encoded string.
-    #[prost(string, tag="1")]
-    pub path: ::prost::alloc::string::String,
-    /// Size of the file in bytes.
-    #[prost(int64, tag="2")]
-    pub size: i64,
-    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
-    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
-    /// of the entire file.
-    #[prost(string, tag="3")]
-    pub sha256: ::prost::alloc::string::String,
-    /// The length in bytes of the file prefix that was hashed.  If
-    /// hashed_size == size, any hashes reported represent the entire
-    /// file.
-    #[prost(int64, tag="4")]
-    pub hashed_size: i64,
-    /// True when the hash covers only a prefix of the file.
-    #[prost(bool, tag="5")]
-    pub partially_hashed: bool,
-    /// Prefix of the file contents as a JSON encoded string.
-    /// (Currently only populated for Malicious Script Executed findings.)
-    #[prost(string, tag="6")]
-    pub contents: ::prost::alloc::string::String,
 }
 /// Represents an operating system process.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1890,6 +1695,37 @@ pub mod finding {
         }
     }
 }
+/// Information related to the Google Cloud resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Resource {
+    /// The full resource name of the resource. See:
+    /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name of the resource.
+    #[prost(string, tag="8")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The full resource type of the resource.
+    #[prost(string, tag="6")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The full resource name of project that the resource belongs to.
+    #[prost(string, tag="2")]
+    pub project: ::prost::alloc::string::String,
+    /// The project ID that the resource belongs to.
+    #[prost(string, tag="3")]
+    pub project_display_name: ::prost::alloc::string::String,
+    /// The full resource name of resource's parent.
+    #[prost(string, tag="4")]
+    pub parent: ::prost::alloc::string::String,
+    /// The human readable name of resource's parent.
+    #[prost(string, tag="5")]
+    pub parent_display_name: ::prost::alloc::string::String,
+    /// Output only. Contains a Folder message for each folder in the assets ancestry.
+    /// The first folder is the deepest nested folder, and the last folder is the
+    /// folder directly under the Organization.
+    #[prost(message, repeated, tag="7")]
+    pub folders: ::prost::alloc::vec::Vec<Folder>,
+}
 /// Cloud SCC's Notification
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NotificationMessage {
@@ -1914,45 +1750,209 @@ pub mod notification_message {
         Finding(super::Finding),
     }
 }
-/// Response of asset discovery run
+/// Security Command Center representation of a Google Cloud
+/// resource.
+///
+/// The Asset is a Security Command Center resource that captures information
+/// about a single Google Cloud resource. All modifications to an Asset are only
+/// within the context of Security Command Center and don't affect the referenced
+/// Google Cloud resource.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
+pub struct Asset {
+    /// The relative resource name of this asset. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/assets/{asset_id}".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
     #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
+    pub security_center_properties: ::core::option::Option<asset::SecurityCenterProperties>,
+    /// Resource managed properties. These properties are managed and defined by
+    /// the Google Cloud resource and cannot be modified by the user.
+    #[prost(btree_map="string, message", tag="7")]
+    pub resource_properties: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost_types::Value>,
+    /// User specified security marks. These marks are entirely managed by the user
+    /// and come from the SecurityMarks resource that belongs to the asset.
+    #[prost(message, optional, tag="8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the asset was created in Security Command Center.
+    #[prost(message, optional, tag="9")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the asset was last updated or added in Cloud SCC.
+    #[prost(message, optional, tag="10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[prost(message, optional, tag="11")]
+    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
+    /// The canonical name of the resource. It's either
+    /// "organizations/{organization_id}/assets/{asset_id}",
+    /// "folders/{folder_id}/assets/{asset_id}" or
+    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
+    /// ancestor of the resource.
+    #[prost(string, tag="13")]
+    pub canonical_name: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SecurityCenterProperties {
+        /// The full resource name of the Google Cloud resource this asset
+        /// represents. This field is immutable after create time. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="1")]
+        pub resource_name: ::prost::alloc::string::String,
+        /// The type of the Google Cloud resource. Examples include: APPLICATION,
+        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
+        /// Security Command Center and/or the producer of the resource and is
+        /// immutable after create time.
+        #[prost(string, tag="2")]
+        pub resource_type: ::prost::alloc::string::String,
+        /// The full resource name of the immediate parent of the resource. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="3")]
+        pub resource_parent: ::prost::alloc::string::String,
+        /// The full resource name of the project the resource belongs to. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag="4")]
+        pub resource_project: ::prost::alloc::string::String,
+        /// Owners of the Google Cloud resource.
+        #[prost(string, repeated, tag="5")]
+        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The user defined display name for this resource.
+        #[prost(string, tag="6")]
+        pub resource_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the parent of this resource.
+        #[prost(string, tag="7")]
+        pub resource_parent_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the project of this resource.
+        #[prost(string, tag="8")]
+        pub resource_project_display_name: ::prost::alloc::string::String,
+        /// Contains a Folder message for each folder in the assets ancestry.
+        /// The first folder is the deepest nested folder, and the last folder is the
+        /// folder directly under the Organization.
+        #[prost(message, repeated, tag="10")]
+        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
     }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IamPolicy {
+        /// The JSON representation of the Policy associated with the asset.
+        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
+        /// details.
+        #[prost(string, tag="1")]
+        pub policy_blob: ::prost::alloc::string::String,
+    }
+}
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, and
+/// other tools.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated or insecure libraries."
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}",
+    /// "folders/{folder_id}/sources/{source_id}" or
+    /// "projects/{project_number}/sources/{source_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag="14")]
+    pub canonical_name: ::prost::alloc::string::String,
+}
+/// Cloud Security Command Center (Cloud SCC) notification configs.
+///
+/// A notification config is a Cloud SCC resource that contains the configuration
+/// to send notifications for create/update events of findings, assets and etc.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationConfig {
+    /// The relative resource name of this notification config. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/notificationConfigs/notify_public_bucket".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the notification config (max of 1024 characters).
+    #[prost(string, tag="2")]
+    pub description: ::prost::alloc::string::String,
+    /// The Pub/Sub topic to send notifications to. Its format is
+    /// "projects/\[project_id]/topics/[topic\]".
+    #[prost(string, tag="3")]
+    pub pubsub_topic: ::prost::alloc::string::String,
+    /// Output only. The service account that needs "pubsub.topics.publish"
+    /// permission to publish to the Pub/Sub topic.
+    #[prost(string, tag="4")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The config for triggering notifications.
+    #[prost(oneof="notification_config::NotifyConfig", tags="5")]
+    pub notify_config: ::core::option::Option<notification_config::NotifyConfig>,
+}
+/// Nested message and enum types in `NotificationConfig`.
+pub mod notification_config {
+    /// The config for streaming-based notifications, which send each event as soon
+    /// as it is detected.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StreamingConfig {
+        /// Expression that defines the filter to apply across create/update events
+        /// of assets or findings as specified by the event type. The expression is a
+        /// list of zero or more restrictions combined via logical operators `AND`
+        /// and `OR`. Parentheses are supported, and `OR` has higher precedence than
+        /// `AND`.
         ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Completed => "COMPLETED",
-                State::Superseded => "SUPERSEDED",
-                State::Terminated => "TERMINATED",
-            }
-        }
+        /// Restrictions have the form `<field> <operator> <value>` and may have a
+        /// `-` character in front of them to indicate negation. The fields map to
+        /// those defined in the corresponding resource.
+        ///
+        /// The supported operators are:
+        ///
+        /// * `=` for all value types.
+        /// * `>`, `<`, `>=`, `<=` for integer values.
+        /// * `:`, meaning substring matching, for strings.
+        ///
+        /// The supported value types are:
+        ///
+        /// * string literals in quotes.
+        /// * integer literals without quotes.
+        /// * boolean literals `true` and `false` without quotes.
+        #[prost(string, tag="1")]
+        pub filter: ::prost::alloc::string::String,
+    }
+    /// The config for triggering notifications.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum NotifyConfig {
+        /// The config for triggering streaming-based notifications.
+        #[prost(message, tag="5")]
+        StreamingConfig(StreamingConfig),
     }
 }
 /// Configures how to deliver Findings to BigQuery Instance.

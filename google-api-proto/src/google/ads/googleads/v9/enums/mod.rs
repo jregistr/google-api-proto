@@ -32,415 +32,78 @@ pub mod response_content_type_enum {
         }
     }
 }
-// Proto file describing matching function context types.
+// Proto file describing asset set status.
 
-/// Container for context types for an operand in a matching function.
+/// Container for enum describing possible statuses of an asset set.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MatchingFunctionContextTypeEnum {
+pub struct AssetSetStatusEnum {
 }
-/// Nested message and enum types in `MatchingFunctionContextTypeEnum`.
-pub mod matching_function_context_type_enum {
-    /// Possible context types for an operand in a matching function.
+/// Nested message and enum types in `AssetSetStatusEnum`.
+pub mod asset_set_status_enum {
+    /// The possible statuses of an asset set.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum MatchingFunctionContextType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Feed item id in the request context.
-        FeedItemId = 2,
-        /// The device being used (possible values are 'Desktop' or 'Mobile').
-        DeviceName = 3,
-        /// Feed item set id in the request context.
-        FeedItemSetId = 4,
-    }
-    impl MatchingFunctionContextType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MatchingFunctionContextType::Unspecified => "UNSPECIFIED",
-                MatchingFunctionContextType::Unknown => "UNKNOWN",
-                MatchingFunctionContextType::FeedItemId => "FEED_ITEM_ID",
-                MatchingFunctionContextType::DeviceName => "DEVICE_NAME",
-                MatchingFunctionContextType::FeedItemSetId => "FEED_ITEM_SET_ID",
-            }
-        }
-    }
-}
-// Proto file describing matching function operators.
-
-/// Container for enum describing matching function operator.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MatchingFunctionOperatorEnum {
-}
-/// Nested message and enum types in `MatchingFunctionOperatorEnum`.
-pub mod matching_function_operator_enum {
-    /// Possible operators in a matching function.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum MatchingFunctionOperator {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The IN operator.
-        In = 2,
-        /// The IDENTITY operator.
-        Identity = 3,
-        /// The EQUALS operator
-        Equals = 4,
-        /// Operator that takes two or more operands that are of type
-        /// FunctionOperand and checks that all the operands evaluate to true.
-        /// For functions related to ad formats, all the operands must be in
-        /// left_operands.
-        And = 5,
-        /// Operator that returns true if the elements in left_operands contain any
-        /// of the elements in right_operands. Otherwise, return false. The
-        /// right_operands must contain at least 1 and no more than 3
-        /// ConstantOperands.
-        ContainsAny = 6,
-    }
-    impl MatchingFunctionOperator {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MatchingFunctionOperator::Unspecified => "UNSPECIFIED",
-                MatchingFunctionOperator::Unknown => "UNKNOWN",
-                MatchingFunctionOperator::In => "IN",
-                MatchingFunctionOperator::Identity => "IDENTITY",
-                MatchingFunctionOperator::Equals => "EQUALS",
-                MatchingFunctionOperator::And => "AND",
-                MatchingFunctionOperator::ContainsAny => "CONTAINS_ANY",
-            }
-        }
-    }
-}
-// Proto file describing status of a feed link.
-
-/// Container for an enum describing possible statuses of a feed link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedLinkStatusEnum {
-}
-/// Nested message and enum types in `FeedLinkStatusEnum`.
-pub mod feed_link_status_enum {
-    /// Possible statuses of a feed link.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FeedLinkStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Feed link is enabled.
-        Enabled = 2,
-        /// Feed link has been removed.
-        Removed = 3,
-    }
-    impl FeedLinkStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FeedLinkStatus::Unspecified => "UNSPECIFIED",
-                FeedLinkStatus::Unknown => "UNKNOWN",
-                FeedLinkStatus::Enabled => "ENABLED",
-                FeedLinkStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
-// Proto file describing feed placeholder types.
-
-/// Container for enum describing possible placeholder types for a feed mapping.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlaceholderTypeEnum {
-}
-/// Nested message and enum types in `PlaceholderTypeEnum`.
-pub mod placeholder_type_enum {
-    /// Possible placeholder types for a feed mapping.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PlaceholderType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Lets you show links in your ad to pages from your website, including the
-        /// main landing page.
-        Sitelink = 2,
-        /// Lets you attach a phone number to an ad, allowing customers to call
-        /// directly from the ad.
-        Call = 3,
-        /// Lets you provide users with a link that points to a mobile app in
-        /// addition to a website.
-        App = 4,
-        /// Lets you show locations of businesses from your Business Profile
-        /// in your ad. This helps people find your locations by showing your
-        /// ads with your address, a map to your location, or the distance to your
-        /// business. This extension type is useful to draw customers to your
-        /// brick-and-mortar location.
-        Location = 5,
-        /// If you sell your product through retail chains, affiliate location
-        /// extensions let you show nearby stores that carry your products.
-        AffiliateLocation = 6,
-        /// Lets you include additional text with your search ads that provide
-        /// detailed information about your business, including products and services
-        /// you offer. Callouts appear in ads at the top and bottom of Google search
-        /// results.
-        Callout = 7,
-        /// Lets you add more info to your ad, specific to some predefined categories
-        /// such as types, brands, styles, etc. A minimum of 3 text (SNIPPETS) values
-        /// are required.
-        StructuredSnippet = 8,
-        /// Allows users to see your ad, click an icon, and contact you directly by
-        /// text message. With one tap on your ad, people can contact you to book an
-        /// appointment, get a quote, ask for information, or request a service.
-        Message = 9,
-        /// Lets you display prices for a list of items along with your ads. A price
-        /// feed is composed of three to eight price table rows.
-        Price = 10,
-        /// Allows you to highlight sales and other promotions that let users see how
-        /// they can save by buying now.
-        Promotion = 11,
-        /// Lets you dynamically inject custom data into the title and description
-        /// of your ads.
-        AdCustomizer = 12,
-        /// Indicates that this feed is for education dynamic remarketing.
-        DynamicEducation = 13,
-        /// Indicates that this feed is for flight dynamic remarketing.
-        DynamicFlight = 14,
-        /// Indicates that this feed is for a custom dynamic remarketing type. Use
-        /// this only if the other business types don't apply to your products or
-        /// services.
-        DynamicCustom = 15,
-        /// Indicates that this feed is for hotels and rentals dynamic remarketing.
-        DynamicHotel = 16,
-        /// Indicates that this feed is for real estate dynamic remarketing.
-        DynamicRealEstate = 17,
-        /// Indicates that this feed is for travel dynamic remarketing.
-        DynamicTravel = 18,
-        /// Indicates that this feed is for local deals dynamic remarketing.
-        DynamicLocal = 19,
-        /// Indicates that this feed is for job dynamic remarketing.
-        DynamicJob = 20,
-        /// Lets you attach an image to an ad.
-        Image = 21,
-    }
-    impl PlaceholderType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PlaceholderType::Unspecified => "UNSPECIFIED",
-                PlaceholderType::Unknown => "UNKNOWN",
-                PlaceholderType::Sitelink => "SITELINK",
-                PlaceholderType::Call => "CALL",
-                PlaceholderType::App => "APP",
-                PlaceholderType::Location => "LOCATION",
-                PlaceholderType::AffiliateLocation => "AFFILIATE_LOCATION",
-                PlaceholderType::Callout => "CALLOUT",
-                PlaceholderType::StructuredSnippet => "STRUCTURED_SNIPPET",
-                PlaceholderType::Message => "MESSAGE",
-                PlaceholderType::Price => "PRICE",
-                PlaceholderType::Promotion => "PROMOTION",
-                PlaceholderType::AdCustomizer => "AD_CUSTOMIZER",
-                PlaceholderType::DynamicEducation => "DYNAMIC_EDUCATION",
-                PlaceholderType::DynamicFlight => "DYNAMIC_FLIGHT",
-                PlaceholderType::DynamicCustom => "DYNAMIC_CUSTOM",
-                PlaceholderType::DynamicHotel => "DYNAMIC_HOTEL",
-                PlaceholderType::DynamicRealEstate => "DYNAMIC_REAL_ESTATE",
-                PlaceholderType::DynamicTravel => "DYNAMIC_TRAVEL",
-                PlaceholderType::DynamicLocal => "DYNAMIC_LOCAL",
-                PlaceholderType::DynamicJob => "DYNAMIC_JOB",
-                PlaceholderType::Image => "IMAGE",
-            }
-        }
-    }
-}
-// Proto file describing simulation modification methods.
-
-/// Container for enum describing the method by which a simulation modifies
-/// a field.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SimulationModificationMethodEnum {
-}
-/// Nested message and enum types in `SimulationModificationMethodEnum`.
-pub mod simulation_modification_method_enum {
-    /// Enum describing the method by which a simulation modifies a field.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SimulationModificationMethod {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The values in a simulation were applied to all children of a given
-        /// resource uniformly. Overrides on child resources were not respected.
-        Uniform = 2,
-        /// The values in a simulation were applied to the given resource.
-        /// Overrides on child resources were respected, and traffic estimates
-        /// do not include these resources.
-        Default = 3,
-        /// The values in a simulation were all scaled by the same factor.
-        /// For example, in a simulated TargetCpa campaign, the campaign target and
-        /// all ad group targets were scaled by a factor of X.
-        Scaling = 4,
-    }
-    impl SimulationModificationMethod {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SimulationModificationMethod::Unspecified => "UNSPECIFIED",
-                SimulationModificationMethod::Unknown => "UNKNOWN",
-                SimulationModificationMethod::Uniform => "UNIFORM",
-                SimulationModificationMethod::Default => "DEFAULT",
-                SimulationModificationMethod::Scaling => "SCALING",
-            }
-        }
-    }
-}
-// Proto file describing simulation types.
-
-/// Container for enum describing the field a simulation modifies.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SimulationTypeEnum {
-}
-/// Nested message and enum types in `SimulationTypeEnum`.
-pub mod simulation_type_enum {
-    /// Enum describing the field a simulation modifies.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SimulationType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The simulation is for a CPC bid.
-        CpcBid = 2,
-        /// The simulation is for a CPV bid.
-        CpvBid = 3,
-        /// The simulation is for a CPA target.
-        TargetCpa = 4,
-        /// The simulation is for a bid modifier.
-        BidModifier = 5,
-        /// The simulation is for a ROAS target.
-        TargetRoas = 6,
-        /// The simulation is for a percent CPC bid.
-        PercentCpcBid = 7,
-        /// The simulation is for an impression share target.
-        TargetImpressionShare = 8,
-        /// The simulation is for a budget.
-        Budget = 9,
-    }
-    impl SimulationType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SimulationType::Unspecified => "UNSPECIFIED",
-                SimulationType::Unknown => "UNKNOWN",
-                SimulationType::CpcBid => "CPC_BID",
-                SimulationType::CpvBid => "CPV_BID",
-                SimulationType::TargetCpa => "TARGET_CPA",
-                SimulationType::BidModifier => "BID_MODIFIER",
-                SimulationType::TargetRoas => "TARGET_ROAS",
-                SimulationType::PercentCpcBid => "PERCENT_CPC_BID",
-                SimulationType::TargetImpressionShare => "TARGET_IMPRESSION_SHARE",
-                SimulationType::Budget => "BUDGET",
-            }
-        }
-    }
-}
-// Proto file describing customizer attribute type.
-
-/// Container for enum describing possible types of a customizer attribute.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomizerAttributeTypeEnum {
-}
-/// Nested message and enum types in `CustomizerAttributeTypeEnum`.
-pub mod customizer_attribute_type_enum {
-    /// The possible types of a customizer attribute.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CustomizerAttributeType {
+    pub enum AssetSetStatus {
         /// The status has not been specified.
         Unspecified = 0,
         /// The received value is not known in this version.
+        /// This is a response-only value.
         Unknown = 1,
-        /// Text customizer.
-        Text = 2,
-        /// Number customizer.
-        Number = 3,
-        /// Price customizer consisting of a number and a currency.
-        Price = 4,
-        /// Percentage customizer consisting of a number and a '%'.
-        Percent = 5,
+        /// The asset set is enabled.
+        Enabled = 2,
+        /// The asset set is removed.
+        Removed = 3,
     }
-    impl CustomizerAttributeType {
+    impl AssetSetStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                CustomizerAttributeType::Unspecified => "UNSPECIFIED",
-                CustomizerAttributeType::Unknown => "UNKNOWN",
-                CustomizerAttributeType::Text => "TEXT",
-                CustomizerAttributeType::Number => "NUMBER",
-                CustomizerAttributeType::Price => "PRICE",
-                CustomizerAttributeType::Percent => "PERCENT",
+                AssetSetStatus::Unspecified => "UNSPECIFIED",
+                AssetSetStatus::Unknown => "UNKNOWN",
+                AssetSetStatus::Enabled => "ENABLED",
+                AssetSetStatus::Removed => "REMOVED",
             }
         }
     }
 }
-// Proto file describing customizer value status.
+// Proto file describing asset set type.
 
-/// Container for enum describing possible statuses of a customizer value.
+/// Container for enum describing possible types of an asset set.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomizerValueStatusEnum {
+pub struct AssetSetTypeEnum {
 }
-/// Nested message and enum types in `CustomizerValueStatusEnum`.
-pub mod customizer_value_status_enum {
-    /// The possible statuses of a customizer value.
+/// Nested message and enum types in `AssetSetTypeEnum`.
+pub mod asset_set_type_enum {
+    /// Possible types of an asset set.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum CustomizerValueStatus {
-        /// The status has not been specified.
+    pub enum AssetSetType {
+        /// Not specified.
         Unspecified = 0,
-        /// The received value is not known in this version.
+        /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The customizer value is enabled.
-        Enabled = 2,
-        /// The customizer value is removed.
-        Removed = 3,
+        /// Page feed.
+        PageFeed = 2,
+        /// Dynamic education feed.
+        DynamicEducation = 3,
+        /// Google Merchant Center asset set.
+        MerchantCenterFeed = 4,
     }
-    impl CustomizerValueStatus {
+    impl AssetSetType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                CustomizerValueStatus::Unspecified => "UNSPECIFIED",
-                CustomizerValueStatus::Unknown => "UNKNOWN",
-                CustomizerValueStatus::Enabled => "ENABLED",
-                CustomizerValueStatus::Removed => "REMOVED",
+                AssetSetType::Unspecified => "UNSPECIFIED",
+                AssetSetType::Unknown => "UNKNOWN",
+                AssetSetType::PageFeed => "PAGE_FEED",
+                AssetSetType::DynamicEducation => "DYNAMIC_EDUCATION",
+                AssetSetType::MerchantCenterFeed => "MERCHANT_CENTER_FEED",
             }
         }
     }
@@ -562,650 +225,6 @@ pub mod mobile_app_vendor_enum {
                 MobileAppVendor::Unknown => "UNKNOWN",
                 MobileAppVendor::AppleAppStore => "APPLE_APP_STORE",
                 MobileAppVendor::GoogleAppStore => "GOOGLE_APP_STORE",
-            }
-        }
-    }
-}
-// Proto file describing AccountBudgetProposal types.
-
-/// Message describing AccountBudgetProposal types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountBudgetProposalTypeEnum {
-}
-/// Nested message and enum types in `AccountBudgetProposalTypeEnum`.
-pub mod account_budget_proposal_type_enum {
-    /// The possible types of an AccountBudgetProposal.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AccountBudgetProposalType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Identifies a request to create a new budget.
-        Create = 2,
-        /// Identifies a request to edit an existing budget.
-        Update = 3,
-        /// Identifies a request to end a budget that has already started.
-        End = 4,
-        /// Identifies a request to remove a budget that hasn't started yet.
-        Remove = 5,
-    }
-    impl AccountBudgetProposalType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AccountBudgetProposalType::Unspecified => "UNSPECIFIED",
-                AccountBudgetProposalType::Unknown => "UNKNOWN",
-                AccountBudgetProposalType::Create => "CREATE",
-                AccountBudgetProposalType::Update => "UPDATE",
-                AccountBudgetProposalType::End => "END",
-                AccountBudgetProposalType::Remove => "REMOVE",
-            }
-        }
-    }
-}
-// Proto file describing AccountBudget statuses.
-
-/// Message describing AccountBudget statuses.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountBudgetStatusEnum {
-}
-/// Nested message and enum types in `AccountBudgetStatusEnum`.
-pub mod account_budget_status_enum {
-    /// The possible statuses of an AccountBudget.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AccountBudgetStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The account budget is pending approval.
-        Pending = 2,
-        /// The account budget has been approved.
-        Approved = 3,
-        /// The account budget has been cancelled by the user.
-        Cancelled = 4,
-    }
-    impl AccountBudgetStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AccountBudgetStatus::Unspecified => "UNSPECIFIED",
-                AccountBudgetStatus::Unknown => "UNKNOWN",
-                AccountBudgetStatus::Pending => "PENDING",
-                AccountBudgetStatus::Approved => "APPROVED",
-                AccountBudgetStatus::Cancelled => "CANCELLED",
-            }
-        }
-    }
-}
-// Proto file describing SpendingLimit types.
-
-/// Message describing spending limit types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpendingLimitTypeEnum {
-}
-/// Nested message and enum types in `SpendingLimitTypeEnum`.
-pub mod spending_limit_type_enum {
-    /// The possible spending limit types used by certain resources as an
-    /// alternative to absolute money values in micros.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SpendingLimitType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Infinite, indicates unlimited spending power.
-        Infinite = 2,
-    }
-    impl SpendingLimitType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SpendingLimitType::Unspecified => "UNSPECIFIED",
-                SpendingLimitType::Unknown => "UNKNOWN",
-                SpendingLimitType::Infinite => "INFINITE",
-            }
-        }
-    }
-}
-// Proto file describing TimeType types.
-
-/// Message describing time types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeTypeEnum {
-}
-/// Nested message and enum types in `TimeTypeEnum`.
-pub mod time_type_enum {
-    /// The possible time types used by certain resources as an alternative to
-    /// absolute timestamps.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum TimeType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// As soon as possible.
-        Now = 2,
-        /// An infinite point in the future.
-        Forever = 3,
-    }
-    impl TimeType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                TimeType::Unspecified => "UNSPECIFIED",
-                TimeType::Unknown => "UNKNOWN",
-                TimeType::Now => "NOW",
-                TimeType::Forever => "FOREVER",
-            }
-        }
-    }
-}
-// Proto file describing user identifier source
-
-/// Container for enum describing the source of the user identifier for offline
-/// Store Sales, click conversion, and conversion adjustment uploads.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserIdentifierSourceEnum {
-}
-/// Nested message and enum types in `UserIdentifierSourceEnum`.
-pub mod user_identifier_source_enum {
-    /// The type of user identifier source for offline Store Sales, click
-    /// conversion, and conversion adjustment uploads.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum UserIdentifierSource {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version
-        Unknown = 1,
-        /// Indicates that the user identifier was provided by the first party
-        /// (advertiser).
-        FirstParty = 2,
-        /// Indicates that the user identifier was provided by the third party
-        /// (partner).
-        ThirdParty = 3,
-    }
-    impl UserIdentifierSource {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                UserIdentifierSource::Unspecified => "UNSPECIFIED",
-                UserIdentifierSource::Unknown => "UNKNOWN",
-                UserIdentifierSource::FirstParty => "FIRST_PARTY",
-                UserIdentifierSource::ThirdParty => "THIRD_PARTY",
-            }
-        }
-    }
-}
-// Proto file describing offline user data job failure reasons.
-
-/// Container for enum describing reasons why an offline user data job
-/// failed to be processed.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJobFailureReasonEnum {
-}
-/// Nested message and enum types in `OfflineUserDataJobFailureReasonEnum`.
-pub mod offline_user_data_job_failure_reason_enum {
-    /// The failure reason of an offline user data job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum OfflineUserDataJobFailureReason {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The matched transactions are insufficient.
-        InsufficientMatchedTransactions = 2,
-        /// The uploaded transactions are insufficient.
-        InsufficientTransactions = 3,
-    }
-    impl OfflineUserDataJobFailureReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OfflineUserDataJobFailureReason::Unspecified => "UNSPECIFIED",
-                OfflineUserDataJobFailureReason::Unknown => "UNKNOWN",
-                OfflineUserDataJobFailureReason::InsufficientMatchedTransactions => "INSUFFICIENT_MATCHED_TRANSACTIONS",
-                OfflineUserDataJobFailureReason::InsufficientTransactions => "INSUFFICIENT_TRANSACTIONS",
-            }
-        }
-    }
-}
-/// Container for enum describing reasons match rate ranges for a customer match
-/// list upload.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJobMatchRateRangeEnum {
-}
-/// Nested message and enum types in `OfflineUserDataJobMatchRateRangeEnum`.
-pub mod offline_user_data_job_match_rate_range_enum {
-    /// The match rate range of an offline user data job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum OfflineUserDataJobMatchRateRange {
-        /// Not specified.
-        Unspecified = 0,
-        /// Default value for match rate range.
-        Unknown = 1,
-        /// Match rate range for offline data upload entity is between 0% and 19%.
-        MatchRangeLessThan20 = 2,
-        /// Match rate range for offline data upload entity is between 20% and 30%.
-        MatchRange20To30 = 3,
-        /// Match rate range for offline data upload entity is between 31% and 40%.
-        MatchRange31To40 = 4,
-        /// Match rate range for offline data upload entity is between 41% and 50%.
-        MatchRange41To50 = 5,
-        /// Match rate range for offline data upload entity is between 51% and 60%.
-        MatchRange51To60 = 6,
-        /// Match rate range for offline data upload entity is between 61% and 70%.
-        MatchRange61To70 = 7,
-        /// Match rate range for offline data upload entity is between 71% and 80%.
-        MatchRange71To80 = 8,
-        /// Match rate range for offline data upload entity is between 81% and 90%.
-        MatchRange81To90 = 9,
-        /// Match rate range for offline data upload entity more than or equal to
-        /// 91%.
-        MatchRange91To100 = 10,
-    }
-    impl OfflineUserDataJobMatchRateRange {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OfflineUserDataJobMatchRateRange::Unspecified => "UNSPECIFIED",
-                OfflineUserDataJobMatchRateRange::Unknown => "UNKNOWN",
-                OfflineUserDataJobMatchRateRange::MatchRangeLessThan20 => "MATCH_RANGE_LESS_THAN_20",
-                OfflineUserDataJobMatchRateRange::MatchRange20To30 => "MATCH_RANGE_20_TO_30",
-                OfflineUserDataJobMatchRateRange::MatchRange31To40 => "MATCH_RANGE_31_TO_40",
-                OfflineUserDataJobMatchRateRange::MatchRange41To50 => "MATCH_RANGE_41_TO_50",
-                OfflineUserDataJobMatchRateRange::MatchRange51To60 => "MATCH_RANGE_51_TO_60",
-                OfflineUserDataJobMatchRateRange::MatchRange61To70 => "MATCH_RANGE_61_TO_70",
-                OfflineUserDataJobMatchRateRange::MatchRange71To80 => "MATCH_RANGE_71_TO_80",
-                OfflineUserDataJobMatchRateRange::MatchRange81To90 => "MATCH_RANGE_81_TO_90",
-                OfflineUserDataJobMatchRateRange::MatchRange91To100 => "MATCH_RANGE_91_TO_100",
-            }
-        }
-    }
-}
-// Proto file describing offline user data job status.
-
-/// Container for enum describing status of an offline user data job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJobStatusEnum {
-}
-/// Nested message and enum types in `OfflineUserDataJobStatusEnum`.
-pub mod offline_user_data_job_status_enum {
-    /// The status of an offline user data job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum OfflineUserDataJobStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The job has been successfully created and pending for uploading.
-        Pending = 2,
-        /// Upload(s) have been accepted and data is being processed.
-        Running = 3,
-        /// Uploaded data has been successfully processed.
-        Success = 4,
-        /// Uploaded data has failed to be processed.
-        Failed = 5,
-    }
-    impl OfflineUserDataJobStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OfflineUserDataJobStatus::Unspecified => "UNSPECIFIED",
-                OfflineUserDataJobStatus::Unknown => "UNKNOWN",
-                OfflineUserDataJobStatus::Pending => "PENDING",
-                OfflineUserDataJobStatus::Running => "RUNNING",
-                OfflineUserDataJobStatus::Success => "SUCCESS",
-                OfflineUserDataJobStatus::Failed => "FAILED",
-            }
-        }
-    }
-}
-// Proto file describing offline user data job types.
-
-/// Container for enum describing types of an offline user data job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJobTypeEnum {
-}
-/// Nested message and enum types in `OfflineUserDataJobTypeEnum`.
-pub mod offline_user_data_job_type_enum {
-    /// The type of an offline user data job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum OfflineUserDataJobType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Store Sales Direct data for self service.
-        StoreSalesUploadFirstParty = 2,
-        /// Store Sales Direct data for third party.
-        StoreSalesUploadThirdParty = 3,
-        /// Customer Match user list data.
-        CustomerMatchUserList = 4,
-        /// Customer Match with attribute data.
-        CustomerMatchWithAttributes = 5,
-    }
-    impl OfflineUserDataJobType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OfflineUserDataJobType::Unspecified => "UNSPECIFIED",
-                OfflineUserDataJobType::Unknown => "UNKNOWN",
-                OfflineUserDataJobType::StoreSalesUploadFirstParty => "STORE_SALES_UPLOAD_FIRST_PARTY",
-                OfflineUserDataJobType::StoreSalesUploadThirdParty => "STORE_SALES_UPLOAD_THIRD_PARTY",
-                OfflineUserDataJobType::CustomerMatchUserList => "CUSTOMER_MATCH_USER_LIST",
-                OfflineUserDataJobType::CustomerMatchWithAttributes => "CUSTOMER_MATCH_WITH_ATTRIBUTES",
-            }
-        }
-    }
-}
-// Proto file describing mobile device types.
-
-/// Container for enum describing the types of mobile device.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MobileDeviceTypeEnum {
-}
-/// Nested message and enum types in `MobileDeviceTypeEnum`.
-pub mod mobile_device_type_enum {
-    /// The type of mobile device.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum MobileDeviceType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Mobile phones.
-        Mobile = 2,
-        /// Tablets.
-        Tablet = 3,
-    }
-    impl MobileDeviceType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MobileDeviceType::Unspecified => "UNSPECIFIED",
-                MobileDeviceType::Unknown => "UNKNOWN",
-                MobileDeviceType::Mobile => "MOBILE",
-                MobileDeviceType::Tablet => "TABLET",
-            }
-        }
-    }
-}
-// Proto file describing campaign draft status.
-
-/// Container for enum describing possible statuses of a campaign draft.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignDraftStatusEnum {
-}
-/// Nested message and enum types in `CampaignDraftStatusEnum`.
-pub mod campaign_draft_status_enum {
-    /// Possible statuses of a campaign draft.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CampaignDraftStatus {
-        /// The status has not been specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Initial state of the draft, the advertiser can start adding changes with
-        /// no effect on serving.
-        Proposed = 2,
-        /// The campaign draft is removed.
-        Removed = 3,
-        /// Advertiser requested to promote draft's changes back into the original
-        /// campaign. Advertiser can poll the long running operation returned by
-        /// the promote action to see the status of the promotion.
-        Promoting = 5,
-        /// The process to merge changes in the draft back to the original campaign
-        /// has completed successfully.
-        Promoted = 4,
-        /// The promotion failed after it was partially applied. Promote cannot be
-        /// attempted again safely, so the issue must be corrected in the original
-        /// campaign.
-        PromoteFailed = 6,
-    }
-    impl CampaignDraftStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CampaignDraftStatus::Unspecified => "UNSPECIFIED",
-                CampaignDraftStatus::Unknown => "UNKNOWN",
-                CampaignDraftStatus::Proposed => "PROPOSED",
-                CampaignDraftStatus::Removed => "REMOVED",
-                CampaignDraftStatus::Promoting => "PROMOTING",
-                CampaignDraftStatus::Promoted => "PROMOTED",
-                CampaignDraftStatus::PromoteFailed => "PROMOTE_FAILED",
-            }
-        }
-    }
-}
-/// Container for enum describing possible status of a manager and client link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ManagerLinkStatusEnum {
-}
-/// Nested message and enum types in `ManagerLinkStatusEnum`.
-pub mod manager_link_status_enum {
-    /// Possible statuses of a link.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ManagerLinkStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Indicates current in-effect relationship
-        Active = 2,
-        /// Indicates terminated relationship
-        Inactive = 3,
-        /// Indicates relationship has been requested by manager, but the client
-        /// hasn't accepted yet.
-        Pending = 4,
-        /// Relationship was requested by the manager, but the client has refused.
-        Refused = 5,
-        /// Indicates relationship has been requested by manager, but manager
-        /// canceled it.
-        Canceled = 6,
-    }
-    impl ManagerLinkStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ManagerLinkStatus::Unspecified => "UNSPECIFIED",
-                ManagerLinkStatus::Unknown => "UNKNOWN",
-                ManagerLinkStatus::Active => "ACTIVE",
-                ManagerLinkStatus::Inactive => "INACTIVE",
-                ManagerLinkStatus::Pending => "PENDING",
-                ManagerLinkStatus::Refused => "REFUSED",
-                ManagerLinkStatus::Canceled => "CANCELED",
-            }
-        }
-    }
-}
-// Proto file describing asset type.
-
-/// Container for enum describing the possible placements of an asset.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetFieldTypeEnum {
-}
-/// Nested message and enum types in `AssetFieldTypeEnum`.
-pub mod asset_field_type_enum {
-    /// Enum describing the possible placements of an asset.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AssetFieldType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The asset is linked for use as a headline.
-        Headline = 2,
-        /// The asset is linked for use as a description.
-        Description = 3,
-        /// The asset is linked for use as mandatory ad text.
-        MandatoryAdText = 4,
-        /// The asset is linked for use as a marketing image.
-        MarketingImage = 5,
-        /// The asset is linked for use as a media bundle.
-        MediaBundle = 6,
-        /// The asset is linked for use as a YouTube video.
-        YoutubeVideo = 7,
-        /// The asset is linked to indicate that a hotels campaign is "Book on
-        /// Google" enabled.
-        BookOnGoogle = 8,
-        /// The asset is linked for use as a Lead Form extension.
-        LeadForm = 9,
-        /// The asset is linked for use as a Promotion extension.
-        Promotion = 10,
-        /// The asset is linked for use as a Callout extension.
-        Callout = 11,
-        /// The asset is linked for use as a Structured Snippet extension.
-        StructuredSnippet = 12,
-        /// The asset is linked for use as a Sitelink extension.
-        Sitelink = 13,
-        /// The asset is linked for use as a Mobile App extension.
-        MobileApp = 14,
-        /// The asset is linked for use as a Hotel Callout extension.
-        HotelCallout = 15,
-        /// The asset is linked for use as a Call extension.
-        Call = 16,
-        /// The asset is linked for use as a Price extension.
-        Price = 24,
-        /// The asset is linked for use as a long headline.
-        LongHeadline = 17,
-        /// The asset is linked for use as a business name.
-        BusinessName = 18,
-        /// The asset is linked for use as a square marketing image.
-        SquareMarketingImage = 19,
-        /// The asset is linked for use as a portrait marketing image.
-        PortraitMarketingImage = 20,
-        /// The asset is linked for use as a logo.
-        Logo = 21,
-        /// The asset is linked for use as a landscape logo.
-        LandscapeLogo = 22,
-        /// The asset is linked for use as a non YouTube logo.
-        Video = 23,
-        /// The asset is linked for use to select a call-to-action.
-        CallToActionSelection = 25,
-    }
-    impl AssetFieldType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AssetFieldType::Unspecified => "UNSPECIFIED",
-                AssetFieldType::Unknown => "UNKNOWN",
-                AssetFieldType::Headline => "HEADLINE",
-                AssetFieldType::Description => "DESCRIPTION",
-                AssetFieldType::MandatoryAdText => "MANDATORY_AD_TEXT",
-                AssetFieldType::MarketingImage => "MARKETING_IMAGE",
-                AssetFieldType::MediaBundle => "MEDIA_BUNDLE",
-                AssetFieldType::YoutubeVideo => "YOUTUBE_VIDEO",
-                AssetFieldType::BookOnGoogle => "BOOK_ON_GOOGLE",
-                AssetFieldType::LeadForm => "LEAD_FORM",
-                AssetFieldType::Promotion => "PROMOTION",
-                AssetFieldType::Callout => "CALLOUT",
-                AssetFieldType::StructuredSnippet => "STRUCTURED_SNIPPET",
-                AssetFieldType::Sitelink => "SITELINK",
-                AssetFieldType::MobileApp => "MOBILE_APP",
-                AssetFieldType::HotelCallout => "HOTEL_CALLOUT",
-                AssetFieldType::Call => "CALL",
-                AssetFieldType::Price => "PRICE",
-                AssetFieldType::LongHeadline => "LONG_HEADLINE",
-                AssetFieldType::BusinessName => "BUSINESS_NAME",
-                AssetFieldType::SquareMarketingImage => "SQUARE_MARKETING_IMAGE",
-                AssetFieldType::PortraitMarketingImage => "PORTRAIT_MARKETING_IMAGE",
-                AssetFieldType::Logo => "LOGO",
-                AssetFieldType::LandscapeLogo => "LANDSCAPE_LOGO",
-                AssetFieldType::Video => "VIDEO",
-                AssetFieldType::CallToActionSelection => "CALL_TO_ACTION_SELECTION",
-            }
-        }
-    }
-}
-// Proto file describing status of an asset link.
-
-/// Container for enum describing possible statuses of an asset link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetLinkStatusEnum {
-}
-/// Nested message and enum types in `AssetLinkStatusEnum`.
-pub mod asset_link_status_enum {
-    /// Enum describing statuses of an asset link.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AssetLinkStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Asset link is enabled.
-        Enabled = 2,
-        /// Asset link has been removed.
-        Removed = 3,
-        /// Asset link is paused.
-        Paused = 4,
-    }
-    impl AssetLinkStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AssetLinkStatus::Unspecified => "UNSPECIFIED",
-                AssetLinkStatus::Unknown => "UNKNOWN",
-                AssetLinkStatus::Enabled => "ENABLED",
-                AssetLinkStatus::Removed => "REMOVED",
-                AssetLinkStatus::Paused => "PAUSED",
             }
         }
     }
@@ -2347,464 +1366,656 @@ pub mod criterion_type_enum {
         }
     }
 }
-// Proto file describing policy topic entry types.
+// Proto file describing operating system version operator types.
 
-/// Container for enum describing possible policy topic entry types.
+/// Container for enum describing the type of OS operators.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyTopicEntryTypeEnum {
+pub struct OperatingSystemVersionOperatorTypeEnum {
 }
-/// Nested message and enum types in `PolicyTopicEntryTypeEnum`.
-pub mod policy_topic_entry_type_enum {
-    /// The possible policy topic entry types.
+/// Nested message and enum types in `OperatingSystemVersionOperatorTypeEnum`.
+pub mod operating_system_version_operator_type_enum {
+    /// The type of operating system version.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum PolicyTopicEntryType {
-        /// No value has been specified.
+    pub enum OperatingSystemVersionOperatorType {
+        /// Not specified.
         Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
+        /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The resource will not be served.
-        Prohibited = 2,
-        /// The resource will not be served under some circumstances.
-        Limited = 4,
-        /// The resource cannot serve at all because of the current targeting
-        /// criteria.
-        FullyLimited = 8,
-        /// May be of interest, but does not limit how the resource is served.
-        Descriptive = 5,
-        /// Could increase coverage beyond normal.
-        Broadening = 6,
-        /// Constrained for all targeted countries, but may serve in other countries
-        /// through area of interest.
-        AreaOfInterestOnly = 7,
+        /// Equals to the specified version.
+        EqualsTo = 2,
+        /// Greater than or equals to the specified version.
+        GreaterThanEqualsTo = 4,
     }
-    impl PolicyTopicEntryType {
+    impl OperatingSystemVersionOperatorType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                PolicyTopicEntryType::Unspecified => "UNSPECIFIED",
-                PolicyTopicEntryType::Unknown => "UNKNOWN",
-                PolicyTopicEntryType::Prohibited => "PROHIBITED",
-                PolicyTopicEntryType::Limited => "LIMITED",
-                PolicyTopicEntryType::FullyLimited => "FULLY_LIMITED",
-                PolicyTopicEntryType::Descriptive => "DESCRIPTIVE",
-                PolicyTopicEntryType::Broadening => "BROADENING",
-                PolicyTopicEntryType::AreaOfInterestOnly => "AREA_OF_INTEREST_ONLY",
+                OperatingSystemVersionOperatorType::Unspecified => "UNSPECIFIED",
+                OperatingSystemVersionOperatorType::Unknown => "UNKNOWN",
+                OperatingSystemVersionOperatorType::EqualsTo => "EQUALS_TO",
+                OperatingSystemVersionOperatorType::GreaterThanEqualsTo => "GREATER_THAN_EQUALS_TO",
             }
         }
     }
 }
-// Proto file describing policy topic evidence destination mismatch url types.
+// Proto file describing campaign shared set statuses.
 
-/// Container for enum describing possible policy topic evidence destination
-/// mismatch url types.
+/// Container for enum describing types of campaign shared set statuses.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyTopicEvidenceDestinationMismatchUrlTypeEnum {
+pub struct CampaignSharedSetStatusEnum {
 }
-/// Nested message and enum types in `PolicyTopicEvidenceDestinationMismatchUrlTypeEnum`.
-pub mod policy_topic_evidence_destination_mismatch_url_type_enum {
-    /// The possible policy topic evidence destination mismatch url types.
+/// Nested message and enum types in `CampaignSharedSetStatusEnum`.
+pub mod campaign_shared_set_status_enum {
+    /// Enum listing the possible campaign shared set statuses.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum PolicyTopicEvidenceDestinationMismatchUrlType {
-        /// No value has been specified.
+    pub enum CampaignSharedSetStatus {
+        /// Not specified.
         Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
+        /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The display url.
-        DisplayUrl = 2,
-        /// The final url.
-        FinalUrl = 3,
-        /// The final mobile url.
-        FinalMobileUrl = 4,
-        /// The tracking url template, with substituted desktop url.
-        TrackingUrl = 5,
-        /// The tracking url template, with substituted mobile url.
-        MobileTrackingUrl = 6,
-    }
-    impl PolicyTopicEvidenceDestinationMismatchUrlType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyTopicEvidenceDestinationMismatchUrlType::Unspecified => "UNSPECIFIED",
-                PolicyTopicEvidenceDestinationMismatchUrlType::Unknown => "UNKNOWN",
-                PolicyTopicEvidenceDestinationMismatchUrlType::DisplayUrl => "DISPLAY_URL",
-                PolicyTopicEvidenceDestinationMismatchUrlType::FinalUrl => "FINAL_URL",
-                PolicyTopicEvidenceDestinationMismatchUrlType::FinalMobileUrl => "FINAL_MOBILE_URL",
-                PolicyTopicEvidenceDestinationMismatchUrlType::TrackingUrl => "TRACKING_URL",
-                PolicyTopicEvidenceDestinationMismatchUrlType::MobileTrackingUrl => "MOBILE_TRACKING_URL",
-            }
-        }
-    }
-}
-// Proto file describing device of destination not working policy topic
-// evidence.
-
-/// Container for enum describing possible policy topic evidence destination not
-/// working devices.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyTopicEvidenceDestinationNotWorkingDeviceEnum {
-}
-/// Nested message and enum types in `PolicyTopicEvidenceDestinationNotWorkingDeviceEnum`.
-pub mod policy_topic_evidence_destination_not_working_device_enum {
-    /// The possible policy topic evidence destination not working devices.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PolicyTopicEvidenceDestinationNotWorkingDevice {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// Landing page doesn't work on desktop device.
-        Desktop = 2,
-        /// Landing page doesn't work on Android device.
-        Android = 3,
-        /// Landing page doesn't work on iOS device.
-        Ios = 4,
-    }
-    impl PolicyTopicEvidenceDestinationNotWorkingDevice {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyTopicEvidenceDestinationNotWorkingDevice::Unspecified => "UNSPECIFIED",
-                PolicyTopicEvidenceDestinationNotWorkingDevice::Unknown => "UNKNOWN",
-                PolicyTopicEvidenceDestinationNotWorkingDevice::Desktop => "DESKTOP",
-                PolicyTopicEvidenceDestinationNotWorkingDevice::Android => "ANDROID",
-                PolicyTopicEvidenceDestinationNotWorkingDevice::Ios => "IOS",
-            }
-        }
-    }
-}
-// Proto file describing DNS error types of destination not working policy topic
-// evidence.
-
-/// Container for enum describing possible policy topic evidence destination not
-/// working DNS error types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyTopicEvidenceDestinationNotWorkingDnsErrorTypeEnum {
-}
-/// Nested message and enum types in `PolicyTopicEvidenceDestinationNotWorkingDnsErrorTypeEnum`.
-pub mod policy_topic_evidence_destination_not_working_dns_error_type_enum {
-    /// The possible policy topic evidence destination not working DNS error types.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PolicyTopicEvidenceDestinationNotWorkingDnsErrorType {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// Host name not found in DNS when fetching landing page.
-        HostnameNotFound = 2,
-        /// Google internal crawler issue when communicating with DNS. This error
-        /// doesn't mean the landing page doesn't work. Google will recrawl the
-        /// landing page.
-        GoogleCrawlerDnsIssue = 3,
-    }
-    impl PolicyTopicEvidenceDestinationNotWorkingDnsErrorType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::Unspecified => "UNSPECIFIED",
-                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::Unknown => "UNKNOWN",
-                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::HostnameNotFound => "HOSTNAME_NOT_FOUND",
-                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::GoogleCrawlerDnsIssue => "GOOGLE_CRAWLER_DNS_ISSUE",
-            }
-        }
-    }
-}
-// Proto file describing ad group status.
-
-/// Container for enum describing possible statuses of an AdGroupAd.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupAdStatusEnum {
-}
-/// Nested message and enum types in `AdGroupAdStatusEnum`.
-pub mod ad_group_ad_status_enum {
-    /// The possible statuses of an AdGroupAd.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AdGroupAdStatus {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The ad group ad is enabled.
+        /// The campaign shared set is enabled.
         Enabled = 2,
-        /// The ad group ad is paused.
-        Paused = 3,
-        /// The ad group ad is removed.
-        Removed = 4,
+        /// The campaign shared set is removed and can no longer be used.
+        Removed = 3,
     }
-    impl AdGroupAdStatus {
+    impl CampaignSharedSetStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                AdGroupAdStatus::Unspecified => "UNSPECIFIED",
-                AdGroupAdStatus::Unknown => "UNKNOWN",
-                AdGroupAdStatus::Enabled => "ENABLED",
-                AdGroupAdStatus::Paused => "PAUSED",
-                AdGroupAdStatus::Removed => "REMOVED",
+                CampaignSharedSetStatus::Unspecified => "UNSPECIFIED",
+                CampaignSharedSetStatus::Unknown => "UNKNOWN",
+                CampaignSharedSetStatus::Enabled => "ENABLED",
+                CampaignSharedSetStatus::Removed => "REMOVED",
             }
         }
     }
 }
-// Proto file describing ad strengths.
+// Proto file describing simulation modification methods.
 
-/// Container for enum describing possible ad strengths.
+/// Container for enum describing the method by which a simulation modifies
+/// a field.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdStrengthEnum {
+pub struct SimulationModificationMethodEnum {
 }
-/// Nested message and enum types in `AdStrengthEnum`.
-pub mod ad_strength_enum {
-    /// Enum listing the possible ad strengths.
+/// Nested message and enum types in `SimulationModificationMethodEnum`.
+pub mod simulation_modification_method_enum {
+    /// Enum describing the method by which a simulation modifies a field.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum AdStrength {
+    pub enum SimulationModificationMethod {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The ad strength is currently pending.
-        Pending = 2,
-        /// No ads could be generated.
-        NoAds = 3,
-        /// Poor strength.
-        Poor = 4,
-        /// Average strength.
-        Average = 5,
-        /// Good strength.
-        Good = 6,
-        /// Excellent strength.
-        Excellent = 7,
+        /// The values in a simulation were applied to all children of a given
+        /// resource uniformly. Overrides on child resources were not respected.
+        Uniform = 2,
+        /// The values in a simulation were applied to the given resource.
+        /// Overrides on child resources were respected, and traffic estimates
+        /// do not include these resources.
+        Default = 3,
+        /// The values in a simulation were all scaled by the same factor.
+        /// For example, in a simulated TargetCpa campaign, the campaign target and
+        /// all ad group targets were scaled by a factor of X.
+        Scaling = 4,
     }
-    impl AdStrength {
+    impl SimulationModificationMethod {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                AdStrength::Unspecified => "UNSPECIFIED",
-                AdStrength::Unknown => "UNKNOWN",
-                AdStrength::Pending => "PENDING",
-                AdStrength::NoAds => "NO_ADS",
-                AdStrength::Poor => "POOR",
-                AdStrength::Average => "AVERAGE",
-                AdStrength::Good => "GOOD",
-                AdStrength::Excellent => "EXCELLENT",
+                SimulationModificationMethod::Unspecified => "UNSPECIFIED",
+                SimulationModificationMethod::Unknown => "UNKNOWN",
+                SimulationModificationMethod::Uniform => "UNIFORM",
+                SimulationModificationMethod::Default => "DEFAULT",
+                SimulationModificationMethod::Scaling => "SCALING",
             }
         }
     }
 }
-// Proto file describing policy approval statuses.
+// Proto file describing simulation types.
 
-/// Container for enum describing possible policy approval statuses.
+/// Container for enum describing the field a simulation modifies.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyApprovalStatusEnum {
+pub struct SimulationTypeEnum {
 }
-/// Nested message and enum types in `PolicyApprovalStatusEnum`.
-pub mod policy_approval_status_enum {
-    /// The possible policy approval statuses. When there are several approval
-    /// statuses available the most severe one will be used. The order of severity
-    /// is DISAPPROVED, AREA_OF_INTEREST_ONLY, APPROVED_LIMITED and APPROVED.
+/// Nested message and enum types in `SimulationTypeEnum`.
+pub mod simulation_type_enum {
+    /// Enum describing the field a simulation modifies.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum PolicyApprovalStatus {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// Will not serve.
-        Disapproved = 2,
-        /// Serves with restrictions.
-        ApprovedLimited = 3,
-        /// Serves without restrictions.
-        Approved = 4,
-        /// Will not serve in targeted countries, but may serve for users who are
-        /// searching for information about the targeted countries.
-        AreaOfInterestOnly = 5,
-    }
-    impl PolicyApprovalStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyApprovalStatus::Unspecified => "UNSPECIFIED",
-                PolicyApprovalStatus::Unknown => "UNKNOWN",
-                PolicyApprovalStatus::Disapproved => "DISAPPROVED",
-                PolicyApprovalStatus::ApprovedLimited => "APPROVED_LIMITED",
-                PolicyApprovalStatus::Approved => "APPROVED",
-                PolicyApprovalStatus::AreaOfInterestOnly => "AREA_OF_INTEREST_ONLY",
-            }
-        }
-    }
-}
-// Proto file describing policy review statuses.
-
-/// Container for enum describing possible policy review statuses.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyReviewStatusEnum {
-}
-/// Nested message and enum types in `PolicyReviewStatusEnum`.
-pub mod policy_review_status_enum {
-    /// The possible policy review statuses.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PolicyReviewStatus {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// Currently under review.
-        ReviewInProgress = 2,
-        /// Primary review complete. Other reviews may be continuing.
-        Reviewed = 3,
-        /// The resource has been resubmitted for approval or its policy decision has
-        /// been appealed.
-        UnderAppeal = 4,
-        /// The resource is eligible and may be serving but could still undergo
-        /// further review.
-        EligibleMayServe = 5,
-    }
-    impl PolicyReviewStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyReviewStatus::Unspecified => "UNSPECIFIED",
-                PolicyReviewStatus::Unknown => "UNKNOWN",
-                PolicyReviewStatus::ReviewInProgress => "REVIEW_IN_PROGRESS",
-                PolicyReviewStatus::Reviewed => "REVIEWED",
-                PolicyReviewStatus::UnderAppeal => "UNDER_APPEAL",
-                PolicyReviewStatus::EligibleMayServe => "ELIGIBLE_MAY_SERVE",
-            }
-        }
-    }
-}
-// Proto file describing the performance label of an asset.
-
-/// Container for enum describing the performance label of an asset.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetPerformanceLabelEnum {
-}
-/// Nested message and enum types in `AssetPerformanceLabelEnum`.
-pub mod asset_performance_label_enum {
-    /// Enum describing the possible performance labels of an asset, usually
-    /// computed in the context of a linkage.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AssetPerformanceLabel {
+    pub enum SimulationType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// This asset does not yet have any performance informantion. This may be
-        /// because it is still under review.
-        Pending = 2,
-        /// The asset has started getting impressions but the stats are not
-        /// statistically significant enough to get an asset performance label.
-        Learning = 3,
-        /// Worst performing assets.
-        Low = 4,
-        /// Good performing assets.
-        Good = 5,
-        /// Best performing assets.
-        Best = 6,
+        /// The simulation is for a CPC bid.
+        CpcBid = 2,
+        /// The simulation is for a CPV bid.
+        CpvBid = 3,
+        /// The simulation is for a CPA target.
+        TargetCpa = 4,
+        /// The simulation is for a bid modifier.
+        BidModifier = 5,
+        /// The simulation is for a ROAS target.
+        TargetRoas = 6,
+        /// The simulation is for a percent CPC bid.
+        PercentCpcBid = 7,
+        /// The simulation is for an impression share target.
+        TargetImpressionShare = 8,
+        /// The simulation is for a budget.
+        Budget = 9,
     }
-    impl AssetPerformanceLabel {
+    impl SimulationType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                AssetPerformanceLabel::Unspecified => "UNSPECIFIED",
-                AssetPerformanceLabel::Unknown => "UNKNOWN",
-                AssetPerformanceLabel::Pending => "PENDING",
-                AssetPerformanceLabel::Learning => "LEARNING",
-                AssetPerformanceLabel::Low => "LOW",
-                AssetPerformanceLabel::Good => "GOOD",
-                AssetPerformanceLabel::Best => "BEST",
+                SimulationType::Unspecified => "UNSPECIFIED",
+                SimulationType::Unknown => "UNKNOWN",
+                SimulationType::CpcBid => "CPC_BID",
+                SimulationType::CpvBid => "CPV_BID",
+                SimulationType::TargetCpa => "TARGET_CPA",
+                SimulationType::BidModifier => "BID_MODIFIER",
+                SimulationType::TargetRoas => "TARGET_ROAS",
+                SimulationType::PercentCpcBid => "PERCENT_CPC_BID",
+                SimulationType::TargetImpressionShare => "TARGET_IMPRESSION_SHARE",
+                SimulationType::Budget => "BUDGET",
             }
         }
     }
 }
-// Proto file describing policy review statuses.
+// Proto file describing user identifier source
 
-/// Container for enum describing possible asset field types.
+/// Container for enum describing the source of the user identifier for offline
+/// Store Sales, click conversion, and conversion adjustment uploads.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ServedAssetFieldTypeEnum {
+pub struct UserIdentifierSourceEnum {
 }
-/// Nested message and enum types in `ServedAssetFieldTypeEnum`.
-pub mod served_asset_field_type_enum {
-    /// The possible asset field types.
+/// Nested message and enum types in `UserIdentifierSourceEnum`.
+pub mod user_identifier_source_enum {
+    /// The type of user identifier source for offline Store Sales, click
+    /// conversion, and conversion adjustment uploads.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum ServedAssetFieldType {
-        /// No value has been specified.
+    pub enum UserIdentifierSource {
+        /// Not specified.
         Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
+        /// Used for return value only. Represents value unknown in this version
         Unknown = 1,
-        /// The asset is used in headline 1.
-        Headline1 = 2,
-        /// The asset is used in headline 2.
-        Headline2 = 3,
-        /// The asset is used in headline 3.
-        Headline3 = 4,
-        /// The asset is used in description 1.
-        Description1 = 5,
-        /// The asset is used in description 2.
-        Description2 = 6,
+        /// Indicates that the user identifier was provided by the first party
+        /// (advertiser).
+        FirstParty = 2,
+        /// Indicates that the user identifier was provided by the third party
+        /// (partner).
+        ThirdParty = 3,
     }
-    impl ServedAssetFieldType {
+    impl UserIdentifierSource {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ServedAssetFieldType::Unspecified => "UNSPECIFIED",
-                ServedAssetFieldType::Unknown => "UNKNOWN",
-                ServedAssetFieldType::Headline1 => "HEADLINE_1",
-                ServedAssetFieldType::Headline2 => "HEADLINE_2",
-                ServedAssetFieldType::Headline3 => "HEADLINE_3",
-                ServedAssetFieldType::Description1 => "DESCRIPTION_1",
-                ServedAssetFieldType::Description2 => "DESCRIPTION_2",
+                UserIdentifierSource::Unspecified => "UNSPECIFIED",
+                UserIdentifierSource::Unknown => "UNKNOWN",
+                UserIdentifierSource::FirstParty => "FIRST_PARTY",
+                UserIdentifierSource::ThirdParty => "THIRD_PARTY",
+            }
+        }
+    }
+}
+// Proto file describing conversion adjustment type.
+
+/// Container for enum describing conversion adjustment types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionAdjustmentTypeEnum {
+}
+/// Nested message and enum types in `ConversionAdjustmentTypeEnum`.
+pub mod conversion_adjustment_type_enum {
+    /// The different actions advertisers can take to adjust the conversions that
+    /// they already reported. Retractions negate a conversion. Restatements change
+    /// the value of a conversion.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ConversionAdjustmentType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Represents value unknown in this version.
+        Unknown = 1,
+        /// Negates a conversion so that its total value and count are both zero.
+        Retraction = 2,
+        /// Changes the value of a conversion.
+        Restatement = 3,
+        /// Supplements an existing conversion with provided user identifiers and
+        /// user agent, which can be used by Google to enhance the conversion count.
+        Enhancement = 4,
+    }
+    impl ConversionAdjustmentType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionAdjustmentType::Unspecified => "UNSPECIFIED",
+                ConversionAdjustmentType::Unknown => "UNKNOWN",
+                ConversionAdjustmentType::Retraction => "RETRACTION",
+                ConversionAdjustmentType::Restatement => "RESTATEMENT",
+                ConversionAdjustmentType::Enhancement => "ENHANCEMENT",
+            }
+        }
+    }
+}
+// Proto file describing offline user data job failure reasons.
+
+/// Container for enum describing reasons why an offline user data job
+/// failed to be processed.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJobFailureReasonEnum {
+}
+/// Nested message and enum types in `OfflineUserDataJobFailureReasonEnum`.
+pub mod offline_user_data_job_failure_reason_enum {
+    /// The failure reason of an offline user data job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum OfflineUserDataJobFailureReason {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The matched transactions are insufficient.
+        InsufficientMatchedTransactions = 2,
+        /// The uploaded transactions are insufficient.
+        InsufficientTransactions = 3,
+    }
+    impl OfflineUserDataJobFailureReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OfflineUserDataJobFailureReason::Unspecified => "UNSPECIFIED",
+                OfflineUserDataJobFailureReason::Unknown => "UNKNOWN",
+                OfflineUserDataJobFailureReason::InsufficientMatchedTransactions => "INSUFFICIENT_MATCHED_TRANSACTIONS",
+                OfflineUserDataJobFailureReason::InsufficientTransactions => "INSUFFICIENT_TRANSACTIONS",
+            }
+        }
+    }
+}
+/// Container for enum describing reasons match rate ranges for a customer match
+/// list upload.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJobMatchRateRangeEnum {
+}
+/// Nested message and enum types in `OfflineUserDataJobMatchRateRangeEnum`.
+pub mod offline_user_data_job_match_rate_range_enum {
+    /// The match rate range of an offline user data job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum OfflineUserDataJobMatchRateRange {
+        /// Not specified.
+        Unspecified = 0,
+        /// Default value for match rate range.
+        Unknown = 1,
+        /// Match rate range for offline data upload entity is between 0% and 19%.
+        MatchRangeLessThan20 = 2,
+        /// Match rate range for offline data upload entity is between 20% and 30%.
+        MatchRange20To30 = 3,
+        /// Match rate range for offline data upload entity is between 31% and 40%.
+        MatchRange31To40 = 4,
+        /// Match rate range for offline data upload entity is between 41% and 50%.
+        MatchRange41To50 = 5,
+        /// Match rate range for offline data upload entity is between 51% and 60%.
+        MatchRange51To60 = 6,
+        /// Match rate range for offline data upload entity is between 61% and 70%.
+        MatchRange61To70 = 7,
+        /// Match rate range for offline data upload entity is between 71% and 80%.
+        MatchRange71To80 = 8,
+        /// Match rate range for offline data upload entity is between 81% and 90%.
+        MatchRange81To90 = 9,
+        /// Match rate range for offline data upload entity more than or equal to
+        /// 91%.
+        MatchRange91To100 = 10,
+    }
+    impl OfflineUserDataJobMatchRateRange {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OfflineUserDataJobMatchRateRange::Unspecified => "UNSPECIFIED",
+                OfflineUserDataJobMatchRateRange::Unknown => "UNKNOWN",
+                OfflineUserDataJobMatchRateRange::MatchRangeLessThan20 => "MATCH_RANGE_LESS_THAN_20",
+                OfflineUserDataJobMatchRateRange::MatchRange20To30 => "MATCH_RANGE_20_TO_30",
+                OfflineUserDataJobMatchRateRange::MatchRange31To40 => "MATCH_RANGE_31_TO_40",
+                OfflineUserDataJobMatchRateRange::MatchRange41To50 => "MATCH_RANGE_41_TO_50",
+                OfflineUserDataJobMatchRateRange::MatchRange51To60 => "MATCH_RANGE_51_TO_60",
+                OfflineUserDataJobMatchRateRange::MatchRange61To70 => "MATCH_RANGE_61_TO_70",
+                OfflineUserDataJobMatchRateRange::MatchRange71To80 => "MATCH_RANGE_71_TO_80",
+                OfflineUserDataJobMatchRateRange::MatchRange81To90 => "MATCH_RANGE_81_TO_90",
+                OfflineUserDataJobMatchRateRange::MatchRange91To100 => "MATCH_RANGE_91_TO_100",
+            }
+        }
+    }
+}
+// Proto file describing offline user data job status.
+
+/// Container for enum describing status of an offline user data job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJobStatusEnum {
+}
+/// Nested message and enum types in `OfflineUserDataJobStatusEnum`.
+pub mod offline_user_data_job_status_enum {
+    /// The status of an offline user data job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum OfflineUserDataJobStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The job has been successfully created and pending for uploading.
+        Pending = 2,
+        /// Upload(s) have been accepted and data is being processed.
+        Running = 3,
+        /// Uploaded data has been successfully processed.
+        Success = 4,
+        /// Uploaded data has failed to be processed.
+        Failed = 5,
+    }
+    impl OfflineUserDataJobStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OfflineUserDataJobStatus::Unspecified => "UNSPECIFIED",
+                OfflineUserDataJobStatus::Unknown => "UNKNOWN",
+                OfflineUserDataJobStatus::Pending => "PENDING",
+                OfflineUserDataJobStatus::Running => "RUNNING",
+                OfflineUserDataJobStatus::Success => "SUCCESS",
+                OfflineUserDataJobStatus::Failed => "FAILED",
+            }
+        }
+    }
+}
+// Proto file describing offline user data job types.
+
+/// Container for enum describing types of an offline user data job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJobTypeEnum {
+}
+/// Nested message and enum types in `OfflineUserDataJobTypeEnum`.
+pub mod offline_user_data_job_type_enum {
+    /// The type of an offline user data job.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum OfflineUserDataJobType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Store Sales Direct data for self service.
+        StoreSalesUploadFirstParty = 2,
+        /// Store Sales Direct data for third party.
+        StoreSalesUploadThirdParty = 3,
+        /// Customer Match user list data.
+        CustomerMatchUserList = 4,
+        /// Customer Match with attribute data.
+        CustomerMatchWithAttributes = 5,
+    }
+    impl OfflineUserDataJobType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OfflineUserDataJobType::Unspecified => "UNSPECIFIED",
+                OfflineUserDataJobType::Unknown => "UNKNOWN",
+                OfflineUserDataJobType::StoreSalesUploadFirstParty => "STORE_SALES_UPLOAD_FIRST_PARTY",
+                OfflineUserDataJobType::StoreSalesUploadThirdParty => "STORE_SALES_UPLOAD_THIRD_PARTY",
+                OfflineUserDataJobType::CustomerMatchUserList => "CUSTOMER_MATCH_USER_LIST",
+                OfflineUserDataJobType::CustomerMatchWithAttributes => "CUSTOMER_MATCH_WITH_ATTRIBUTES",
+            }
+        }
+    }
+}
+// Proto file describing customizer attribute type.
+
+/// Container for enum describing possible types of a customizer attribute.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomizerAttributeTypeEnum {
+}
+/// Nested message and enum types in `CustomizerAttributeTypeEnum`.
+pub mod customizer_attribute_type_enum {
+    /// The possible types of a customizer attribute.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CustomizerAttributeType {
+        /// The status has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        Unknown = 1,
+        /// Text customizer.
+        Text = 2,
+        /// Number customizer.
+        Number = 3,
+        /// Price customizer consisting of a number and a currency.
+        Price = 4,
+        /// Percentage customizer consisting of a number and a '%'.
+        Percent = 5,
+    }
+    impl CustomizerAttributeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CustomizerAttributeType::Unspecified => "UNSPECIFIED",
+                CustomizerAttributeType::Unknown => "UNKNOWN",
+                CustomizerAttributeType::Text => "TEXT",
+                CustomizerAttributeType::Number => "NUMBER",
+                CustomizerAttributeType::Price => "PRICE",
+                CustomizerAttributeType::Percent => "PERCENT",
+            }
+        }
+    }
+}
+// Proto file describing customizer value status.
+
+/// Container for enum describing possible statuses of a customizer value.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomizerValueStatusEnum {
+}
+/// Nested message and enum types in `CustomizerValueStatusEnum`.
+pub mod customizer_value_status_enum {
+    /// The possible statuses of a customizer value.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CustomizerValueStatus {
+        /// The status has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        Unknown = 1,
+        /// The customizer value is enabled.
+        Enabled = 2,
+        /// The customizer value is removed.
+        Removed = 3,
+    }
+    impl CustomizerValueStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CustomizerValueStatus::Unspecified => "UNSPECIFIED",
+                CustomizerValueStatus::Unknown => "UNKNOWN",
+                CustomizerValueStatus::Enabled => "ENABLED",
+                CustomizerValueStatus::Removed => "REMOVED",
+            }
+        }
+    }
+}
+// Proto file describing feed item target device type.
+
+/// Container for enum describing possible data types for a feed item target
+/// device.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeedItemTargetDeviceEnum {
+}
+/// Nested message and enum types in `FeedItemTargetDeviceEnum`.
+pub mod feed_item_target_device_enum {
+    /// Possible data types for a feed item target device.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FeedItemTargetDevice {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Mobile.
+        Mobile = 2,
+    }
+    impl FeedItemTargetDevice {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FeedItemTargetDevice::Unspecified => "UNSPECIFIED",
+                FeedItemTargetDevice::Unknown => "UNKNOWN",
+                FeedItemTargetDevice::Mobile => "MOBILE",
+            }
+        }
+    }
+}
+// Proto file describing feed item target status.
+
+/// Container for enum describing possible statuses of a feed item target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeedItemTargetStatusEnum {
+}
+/// Nested message and enum types in `FeedItemTargetStatusEnum`.
+pub mod feed_item_target_status_enum {
+    /// Possible statuses of a feed item target.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FeedItemTargetStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Feed item target is enabled.
+        Enabled = 2,
+        /// Feed item target has been removed.
+        Removed = 3,
+    }
+    impl FeedItemTargetStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FeedItemTargetStatus::Unspecified => "UNSPECIFIED",
+                FeedItemTargetStatus::Unknown => "UNKNOWN",
+                FeedItemTargetStatus::Enabled => "ENABLED",
+                FeedItemTargetStatus::Removed => "REMOVED",
+            }
+        }
+    }
+}
+// Proto file describing feed item target type status.
+
+/// Container for enum describing possible types of a feed item target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeedItemTargetTypeEnum {
+}
+/// Nested message and enum types in `FeedItemTargetTypeEnum`.
+pub mod feed_item_target_type_enum {
+    /// Possible type of a feed item target.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FeedItemTargetType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Feed item targets a campaign.
+        Campaign = 2,
+        /// Feed item targets an ad group.
+        AdGroup = 3,
+        /// Feed item targets a criterion.
+        Criterion = 4,
+    }
+    impl FeedItemTargetType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FeedItemTargetType::Unspecified => "UNSPECIFIED",
+                FeedItemTargetType::Unknown => "UNKNOWN",
+                FeedItemTargetType::Campaign => "CAMPAIGN",
+                FeedItemTargetType::AdGroup => "AD_GROUP",
+                FeedItemTargetType::Criterion => "CRITERION",
+            }
+        }
+    }
+}
+// Proto file describing Keyword Planner forecastable network types.
+
+/// Container for enumeration of keyword plan forecastable network types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordPlanNetworkEnum {
+}
+/// Nested message and enum types in `KeywordPlanNetworkEnum`.
+pub mod keyword_plan_network_enum {
+    /// Enumerates keyword plan forecastable network types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum KeywordPlanNetwork {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Google Search.
+        GoogleSearch = 2,
+        /// Google Search + Search partners.
+        GoogleSearchAndPartners = 3,
+    }
+    impl KeywordPlanNetwork {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeywordPlanNetwork::Unspecified => "UNSPECIFIED",
+                KeywordPlanNetwork::Unknown => "UNKNOWN",
+                KeywordPlanNetwork::GoogleSearch => "GOOGLE_SEARCH",
+                KeywordPlanNetwork::GoogleSearchAndPartners => "GOOGLE_SEARCH_AND_PARTNERS",
             }
         }
     }
@@ -2847,473 +2058,6 @@ pub mod call_conversion_reporting_state_enum {
                 CallConversionReportingState::Disabled => "DISABLED",
                 CallConversionReportingState::UseAccountLevelCallConversionAction => "USE_ACCOUNT_LEVEL_CALL_CONVERSION_ACTION",
                 CallConversionReportingState::UseResourceLevelCallConversionAction => "USE_RESOURCE_LEVEL_CALL_CONVERSION_ACTION",
-            }
-        }
-    }
-}
-// Proto file describing display ad format settings.
-
-/// Container for display ad format settings.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DisplayAdFormatSettingEnum {
-}
-/// Nested message and enum types in `DisplayAdFormatSettingEnum`.
-pub mod display_ad_format_setting_enum {
-    /// Enumerates display ad format settings.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum DisplayAdFormatSetting {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Text, image and native formats.
-        AllFormats = 2,
-        /// Text and image formats.
-        NonNative = 3,
-        /// Native format, i.e. the format rendering is controlled by the publisher
-        /// and not by Google.
-        Native = 4,
-    }
-    impl DisplayAdFormatSetting {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DisplayAdFormatSetting::Unspecified => "UNSPECIFIED",
-                DisplayAdFormatSetting::Unknown => "UNKNOWN",
-                DisplayAdFormatSetting::AllFormats => "ALL_FORMATS",
-                DisplayAdFormatSetting::NonNative => "NON_NATIVE",
-                DisplayAdFormatSetting::Native => "NATIVE",
-            }
-        }
-    }
-}
-// Proto file describing display upload product types.
-
-/// Container for display upload product types. Product types that have the word
-/// "DYNAMIC" in them must be associated with a campaign that has a dynamic
-/// remarketing feed. See <https://support.google.com/google-ads/answer/6053288>
-/// for more info about dynamic remarketing. Other product types are regarded
-/// as "static" and do not have this requirement.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DisplayUploadProductTypeEnum {
-}
-/// Nested message and enum types in `DisplayUploadProductTypeEnum`.
-pub mod display_upload_product_type_enum {
-    /// Enumerates display upload product types.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum DisplayUploadProductType {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// HTML5 upload ad. This product type requires the upload_media_bundle
-        /// field in DisplayUploadAdInfo to be set.
-        Html5UploadAd = 2,
-        /// Dynamic HTML5 education ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in an education campaign.
-        DynamicHtml5EducationAd = 3,
-        /// Dynamic HTML5 flight ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a flight campaign.
-        DynamicHtml5FlightAd = 4,
-        /// Dynamic HTML5 hotel and rental ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a hotel campaign.
-        DynamicHtml5HotelRentalAd = 5,
-        /// Dynamic HTML5 job ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a job campaign.
-        DynamicHtml5JobAd = 6,
-        /// Dynamic HTML5 local ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a local campaign.
-        DynamicHtml5LocalAd = 7,
-        /// Dynamic HTML5 real estate ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a real estate campaign.
-        DynamicHtml5RealEstateAd = 8,
-        /// Dynamic HTML5 custom ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a custom campaign.
-        DynamicHtml5CustomAd = 9,
-        /// Dynamic HTML5 travel ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a travel campaign.
-        DynamicHtml5TravelAd = 10,
-        /// Dynamic HTML5 hotel ad. This product type requires the
-        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
-        /// used in a hotel campaign.
-        DynamicHtml5HotelAd = 11,
-    }
-    impl DisplayUploadProductType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DisplayUploadProductType::Unspecified => "UNSPECIFIED",
-                DisplayUploadProductType::Unknown => "UNKNOWN",
-                DisplayUploadProductType::Html5UploadAd => "HTML5_UPLOAD_AD",
-                DisplayUploadProductType::DynamicHtml5EducationAd => "DYNAMIC_HTML5_EDUCATION_AD",
-                DisplayUploadProductType::DynamicHtml5FlightAd => "DYNAMIC_HTML5_FLIGHT_AD",
-                DisplayUploadProductType::DynamicHtml5HotelRentalAd => "DYNAMIC_HTML5_HOTEL_RENTAL_AD",
-                DisplayUploadProductType::DynamicHtml5JobAd => "DYNAMIC_HTML5_JOB_AD",
-                DisplayUploadProductType::DynamicHtml5LocalAd => "DYNAMIC_HTML5_LOCAL_AD",
-                DisplayUploadProductType::DynamicHtml5RealEstateAd => "DYNAMIC_HTML5_REAL_ESTATE_AD",
-                DisplayUploadProductType::DynamicHtml5CustomAd => "DYNAMIC_HTML5_CUSTOM_AD",
-                DisplayUploadProductType::DynamicHtml5TravelAd => "DYNAMIC_HTML5_TRAVEL_AD",
-                DisplayUploadProductType::DynamicHtml5HotelAd => "DYNAMIC_HTML5_HOTEL_AD",
-            }
-        }
-    }
-}
-// Proto file describing app store types for a legacy app install ad.
-
-/// Container for enum describing app store type in a legacy app install ad.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LegacyAppInstallAdAppStoreEnum {
-}
-/// Nested message and enum types in `LegacyAppInstallAdAppStoreEnum`.
-pub mod legacy_app_install_ad_app_store_enum {
-    /// App store type in a legacy app install ad.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum LegacyAppInstallAdAppStore {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Apple iTunes.
-        AppleAppStore = 2,
-        /// Google Play.
-        GooglePlay = 3,
-        /// Windows Store.
-        WindowsStore = 4,
-        /// Windows Phone Store.
-        WindowsPhoneStore = 5,
-        /// The app is hosted in a Chinese app store.
-        CnAppStore = 6,
-    }
-    impl LegacyAppInstallAdAppStore {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                LegacyAppInstallAdAppStore::Unspecified => "UNSPECIFIED",
-                LegacyAppInstallAdAppStore::Unknown => "UNKNOWN",
-                LegacyAppInstallAdAppStore::AppleAppStore => "APPLE_APP_STORE",
-                LegacyAppInstallAdAppStore::GooglePlay => "GOOGLE_PLAY",
-                LegacyAppInstallAdAppStore::WindowsStore => "WINDOWS_STORE",
-                LegacyAppInstallAdAppStore::WindowsPhoneStore => "WINDOWS_PHONE_STORE",
-                LegacyAppInstallAdAppStore::CnAppStore => "CN_APP_STORE",
-            }
-        }
-    }
-}
-// Proto file describing mime types.
-
-/// Container for enum describing the mime types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MimeTypeEnum {
-}
-/// Nested message and enum types in `MimeTypeEnum`.
-pub mod mime_type_enum {
-    /// The mime type
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum MimeType {
-        /// The mime type has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// MIME type of image/jpeg.
-        ImageJpeg = 2,
-        /// MIME type of image/gif.
-        ImageGif = 3,
-        /// MIME type of image/png.
-        ImagePng = 4,
-        /// MIME type of application/x-shockwave-flash.
-        Flash = 5,
-        /// MIME type of text/html.
-        TextHtml = 6,
-        /// MIME type of application/pdf.
-        Pdf = 7,
-        /// MIME type of application/msword.
-        Msword = 8,
-        /// MIME type of application/vnd.ms-excel.
-        Msexcel = 9,
-        /// MIME type of application/rtf.
-        Rtf = 10,
-        /// MIME type of audio/wav.
-        AudioWav = 11,
-        /// MIME type of audio/mp3.
-        AudioMp3 = 12,
-        /// MIME type of application/x-html5-ad-zip.
-        Html5AdZip = 13,
-    }
-    impl MimeType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MimeType::Unspecified => "UNSPECIFIED",
-                MimeType::Unknown => "UNKNOWN",
-                MimeType::ImageJpeg => "IMAGE_JPEG",
-                MimeType::ImageGif => "IMAGE_GIF",
-                MimeType::ImagePng => "IMAGE_PNG",
-                MimeType::Flash => "FLASH",
-                MimeType::TextHtml => "TEXT_HTML",
-                MimeType::Pdf => "PDF",
-                MimeType::Msword => "MSWORD",
-                MimeType::Msexcel => "MSEXCEL",
-                MimeType::Rtf => "RTF",
-                MimeType::AudioWav => "AUDIO_WAV",
-                MimeType::AudioMp3 => "AUDIO_MP3",
-                MimeType::Html5AdZip => "HTML5_AD_ZIP",
-            }
-        }
-    }
-}
-// Proto file describing video thumbnails.
-
-/// Defines the thumbnail to use for In-Display video ads. Note that
-/// DEFAULT_THUMBNAIL may have been uploaded by the user while thumbnails 1-3 are
-/// auto-generated from the video.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoThumbnailEnum {
-}
-/// Nested message and enum types in `VideoThumbnailEnum`.
-pub mod video_thumbnail_enum {
-    /// Enum listing the possible types of a video thumbnail.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum VideoThumbnail {
-        /// The type has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The default thumbnail. Can be auto-generated or user-uploaded.
-        DefaultThumbnail = 2,
-        /// Thumbnail 1, generated from the video.
-        Thumbnail1 = 3,
-        /// Thumbnail 2, generated from the video.
-        Thumbnail2 = 4,
-        /// Thumbnail 3, generated from the video.
-        Thumbnail3 = 5,
-    }
-    impl VideoThumbnail {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                VideoThumbnail::Unspecified => "UNSPECIFIED",
-                VideoThumbnail::Unknown => "UNKNOWN",
-                VideoThumbnail::DefaultThumbnail => "DEFAULT_THUMBNAIL",
-                VideoThumbnail::Thumbnail1 => "THUMBNAIL_1",
-                VideoThumbnail::Thumbnail2 => "THUMBNAIL_2",
-                VideoThumbnail::Thumbnail3 => "THUMBNAIL_3",
-            }
-        }
-    }
-}
-// Proto file describing operating system for a deeplink app URL.
-
-/// The possible OS types for a deeplink AppUrl.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AppUrlOperatingSystemTypeEnum {
-}
-/// Nested message and enum types in `AppUrlOperatingSystemTypeEnum`.
-pub mod app_url_operating_system_type_enum {
-    /// Operating System
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AppUrlOperatingSystemType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The Apple IOS operating system.
-        Ios = 2,
-        /// The Android operating system.
-        Android = 3,
-    }
-    impl AppUrlOperatingSystemType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AppUrlOperatingSystemType::Unspecified => "UNSPECIFIED",
-                AppUrlOperatingSystemType::Unknown => "UNKNOWN",
-                AppUrlOperatingSystemType::Ios => "IOS",
-                AppUrlOperatingSystemType::Android => "ANDROID",
-            }
-        }
-    }
-}
-// Proto file describing the ad type.
-
-/// Container for enum describing possible types of an ad.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdTypeEnum {
-}
-/// Nested message and enum types in `AdTypeEnum`.
-pub mod ad_type_enum {
-    /// The possible types of an ad.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AdType {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The ad is a text ad.
-        TextAd = 2,
-        /// The ad is an expanded text ad.
-        ExpandedTextAd = 3,
-        /// The ad is an expanded dynamic search ad.
-        ExpandedDynamicSearchAd = 7,
-        /// The ad is a hotel ad.
-        HotelAd = 8,
-        /// The ad is a Smart Shopping ad.
-        ShoppingSmartAd = 9,
-        /// The ad is a standard Shopping ad.
-        ShoppingProductAd = 10,
-        /// The ad is a video ad.
-        VideoAd = 12,
-        /// This ad is a Gmail ad.
-        GmailAd = 13,
-        /// This ad is an Image ad.
-        ImageAd = 14,
-        /// The ad is a responsive search ad.
-        ResponsiveSearchAd = 15,
-        /// The ad is a legacy responsive display ad.
-        LegacyResponsiveDisplayAd = 16,
-        /// The ad is an app ad.
-        AppAd = 17,
-        /// The ad is a legacy app install ad.
-        LegacyAppInstallAd = 18,
-        /// The ad is a responsive display ad.
-        ResponsiveDisplayAd = 19,
-        /// The ad is a local ad.
-        LocalAd = 20,
-        /// The ad is a display upload ad with the HTML5_UPLOAD_AD product type.
-        Html5UploadAd = 21,
-        /// The ad is a display upload ad with one of the DYNAMIC_HTML5_* product
-        /// types.
-        DynamicHtml5Ad = 22,
-        /// The ad is an app engagement ad.
-        AppEngagementAd = 23,
-        /// The ad is a Shopping Comparison Listing ad.
-        ShoppingComparisonListingAd = 24,
-        /// Video bumper ad.
-        VideoBumperAd = 25,
-        /// Video non-skippable in-stream ad.
-        VideoNonSkippableInStreamAd = 26,
-        /// Video outstream ad.
-        VideoOutstreamAd = 27,
-        /// Video TrueView in-display ad.
-        VideoTrueviewDiscoveryAd = 28,
-        /// Video TrueView in-stream ad.
-        VideoTrueviewInStreamAd = 29,
-        /// Video responsive ad.
-        VideoResponsiveAd = 30,
-        /// Smart campaign ad.
-        SmartCampaignAd = 31,
-        /// Call ad.
-        CallAd = 32,
-        /// Universal app pre-registration ad.
-        AppPreRegistrationAd = 33,
-    }
-    impl AdType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdType::Unspecified => "UNSPECIFIED",
-                AdType::Unknown => "UNKNOWN",
-                AdType::TextAd => "TEXT_AD",
-                AdType::ExpandedTextAd => "EXPANDED_TEXT_AD",
-                AdType::ExpandedDynamicSearchAd => "EXPANDED_DYNAMIC_SEARCH_AD",
-                AdType::HotelAd => "HOTEL_AD",
-                AdType::ShoppingSmartAd => "SHOPPING_SMART_AD",
-                AdType::ShoppingProductAd => "SHOPPING_PRODUCT_AD",
-                AdType::VideoAd => "VIDEO_AD",
-                AdType::GmailAd => "GMAIL_AD",
-                AdType::ImageAd => "IMAGE_AD",
-                AdType::ResponsiveSearchAd => "RESPONSIVE_SEARCH_AD",
-                AdType::LegacyResponsiveDisplayAd => "LEGACY_RESPONSIVE_DISPLAY_AD",
-                AdType::AppAd => "APP_AD",
-                AdType::LegacyAppInstallAd => "LEGACY_APP_INSTALL_AD",
-                AdType::ResponsiveDisplayAd => "RESPONSIVE_DISPLAY_AD",
-                AdType::LocalAd => "LOCAL_AD",
-                AdType::Html5UploadAd => "HTML5_UPLOAD_AD",
-                AdType::DynamicHtml5Ad => "DYNAMIC_HTML5_AD",
-                AdType::AppEngagementAd => "APP_ENGAGEMENT_AD",
-                AdType::ShoppingComparisonListingAd => "SHOPPING_COMPARISON_LISTING_AD",
-                AdType::VideoBumperAd => "VIDEO_BUMPER_AD",
-                AdType::VideoNonSkippableInStreamAd => "VIDEO_NON_SKIPPABLE_IN_STREAM_AD",
-                AdType::VideoOutstreamAd => "VIDEO_OUTSTREAM_AD",
-                AdType::VideoTrueviewDiscoveryAd => "VIDEO_TRUEVIEW_DISCOVERY_AD",
-                AdType::VideoTrueviewInStreamAd => "VIDEO_TRUEVIEW_IN_STREAM_AD",
-                AdType::VideoResponsiveAd => "VIDEO_RESPONSIVE_AD",
-                AdType::SmartCampaignAd => "SMART_CAMPAIGN_AD",
-                AdType::CallAd => "CALL_AD",
-                AdType::AppPreRegistrationAd => "APP_PRE_REGISTRATION_AD",
-            }
-        }
-    }
-}
-// Proto file describing system managed entity sources.
-
-/// Container for enum describing possible system managed entity sources.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SystemManagedResourceSourceEnum {
-}
-/// Nested message and enum types in `SystemManagedResourceSourceEnum`.
-pub mod system_managed_resource_source_enum {
-    /// Enum listing the possible system managed entity sources.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum SystemManagedResourceSource {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Generated ad variations experiment ad.
-        AdVariations = 2,
-    }
-    impl SystemManagedResourceSource {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SystemManagedResourceSource::Unspecified => "UNSPECIFIED",
-                SystemManagedResourceSource::Unknown => "UNKNOWN",
-                SystemManagedResourceSource::AdVariations => "AD_VARIATIONS",
             }
         }
     }
@@ -3779,6 +2523,74 @@ pub mod lead_form_post_submit_call_to_action_type_enum {
         }
     }
 }
+// Proto file describing mime types.
+
+/// Container for enum describing the mime types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MimeTypeEnum {
+}
+/// Nested message and enum types in `MimeTypeEnum`.
+pub mod mime_type_enum {
+    /// The mime type
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum MimeType {
+        /// The mime type has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// MIME type of image/jpeg.
+        ImageJpeg = 2,
+        /// MIME type of image/gif.
+        ImageGif = 3,
+        /// MIME type of image/png.
+        ImagePng = 4,
+        /// MIME type of application/x-shockwave-flash.
+        Flash = 5,
+        /// MIME type of text/html.
+        TextHtml = 6,
+        /// MIME type of application/pdf.
+        Pdf = 7,
+        /// MIME type of application/msword.
+        Msword = 8,
+        /// MIME type of application/vnd.ms-excel.
+        Msexcel = 9,
+        /// MIME type of application/rtf.
+        Rtf = 10,
+        /// MIME type of audio/wav.
+        AudioWav = 11,
+        /// MIME type of audio/mp3.
+        AudioMp3 = 12,
+        /// MIME type of application/x-html5-ad-zip.
+        Html5AdZip = 13,
+    }
+    impl MimeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MimeType::Unspecified => "UNSPECIFIED",
+                MimeType::Unknown => "UNKNOWN",
+                MimeType::ImageJpeg => "IMAGE_JPEG",
+                MimeType::ImageGif => "IMAGE_GIF",
+                MimeType::ImagePng => "IMAGE_PNG",
+                MimeType::Flash => "FLASH",
+                MimeType::TextHtml => "TEXT_HTML",
+                MimeType::Pdf => "PDF",
+                MimeType::Msword => "MSWORD",
+                MimeType::Msexcel => "MSEXCEL",
+                MimeType::Rtf => "RTF",
+                MimeType::AudioWav => "AUDIO_WAV",
+                MimeType::AudioMp3 => "AUDIO_MP3",
+                MimeType::Html5AdZip => "HTML5_AD_ZIP",
+            }
+        }
+    }
+}
 // Proto file describing price extension price qualifier type.
 
 /// Container for enum describing a price extension price qualifier.
@@ -4100,6 +2912,191 @@ pub mod promotion_extension_occasion_enum {
         }
     }
 }
+// Proto file describing policy topic entry types.
+
+/// Container for enum describing possible policy topic entry types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PolicyTopicEntryTypeEnum {
+}
+/// Nested message and enum types in `PolicyTopicEntryTypeEnum`.
+pub mod policy_topic_entry_type_enum {
+    /// The possible policy topic entry types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PolicyTopicEntryType {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The resource will not be served.
+        Prohibited = 2,
+        /// The resource will not be served under some circumstances.
+        Limited = 4,
+        /// The resource cannot serve at all because of the current targeting
+        /// criteria.
+        FullyLimited = 8,
+        /// May be of interest, but does not limit how the resource is served.
+        Descriptive = 5,
+        /// Could increase coverage beyond normal.
+        Broadening = 6,
+        /// Constrained for all targeted countries, but may serve in other countries
+        /// through area of interest.
+        AreaOfInterestOnly = 7,
+    }
+    impl PolicyTopicEntryType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyTopicEntryType::Unspecified => "UNSPECIFIED",
+                PolicyTopicEntryType::Unknown => "UNKNOWN",
+                PolicyTopicEntryType::Prohibited => "PROHIBITED",
+                PolicyTopicEntryType::Limited => "LIMITED",
+                PolicyTopicEntryType::FullyLimited => "FULLY_LIMITED",
+                PolicyTopicEntryType::Descriptive => "DESCRIPTIVE",
+                PolicyTopicEntryType::Broadening => "BROADENING",
+                PolicyTopicEntryType::AreaOfInterestOnly => "AREA_OF_INTEREST_ONLY",
+            }
+        }
+    }
+}
+// Proto file describing policy topic evidence destination mismatch url types.
+
+/// Container for enum describing possible policy topic evidence destination
+/// mismatch url types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PolicyTopicEvidenceDestinationMismatchUrlTypeEnum {
+}
+/// Nested message and enum types in `PolicyTopicEvidenceDestinationMismatchUrlTypeEnum`.
+pub mod policy_topic_evidence_destination_mismatch_url_type_enum {
+    /// The possible policy topic evidence destination mismatch url types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PolicyTopicEvidenceDestinationMismatchUrlType {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The display url.
+        DisplayUrl = 2,
+        /// The final url.
+        FinalUrl = 3,
+        /// The final mobile url.
+        FinalMobileUrl = 4,
+        /// The tracking url template, with substituted desktop url.
+        TrackingUrl = 5,
+        /// The tracking url template, with substituted mobile url.
+        MobileTrackingUrl = 6,
+    }
+    impl PolicyTopicEvidenceDestinationMismatchUrlType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyTopicEvidenceDestinationMismatchUrlType::Unspecified => "UNSPECIFIED",
+                PolicyTopicEvidenceDestinationMismatchUrlType::Unknown => "UNKNOWN",
+                PolicyTopicEvidenceDestinationMismatchUrlType::DisplayUrl => "DISPLAY_URL",
+                PolicyTopicEvidenceDestinationMismatchUrlType::FinalUrl => "FINAL_URL",
+                PolicyTopicEvidenceDestinationMismatchUrlType::FinalMobileUrl => "FINAL_MOBILE_URL",
+                PolicyTopicEvidenceDestinationMismatchUrlType::TrackingUrl => "TRACKING_URL",
+                PolicyTopicEvidenceDestinationMismatchUrlType::MobileTrackingUrl => "MOBILE_TRACKING_URL",
+            }
+        }
+    }
+}
+// Proto file describing device of destination not working policy topic
+// evidence.
+
+/// Container for enum describing possible policy topic evidence destination not
+/// working devices.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PolicyTopicEvidenceDestinationNotWorkingDeviceEnum {
+}
+/// Nested message and enum types in `PolicyTopicEvidenceDestinationNotWorkingDeviceEnum`.
+pub mod policy_topic_evidence_destination_not_working_device_enum {
+    /// The possible policy topic evidence destination not working devices.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PolicyTopicEvidenceDestinationNotWorkingDevice {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// Landing page doesn't work on desktop device.
+        Desktop = 2,
+        /// Landing page doesn't work on Android device.
+        Android = 3,
+        /// Landing page doesn't work on iOS device.
+        Ios = 4,
+    }
+    impl PolicyTopicEvidenceDestinationNotWorkingDevice {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyTopicEvidenceDestinationNotWorkingDevice::Unspecified => "UNSPECIFIED",
+                PolicyTopicEvidenceDestinationNotWorkingDevice::Unknown => "UNKNOWN",
+                PolicyTopicEvidenceDestinationNotWorkingDevice::Desktop => "DESKTOP",
+                PolicyTopicEvidenceDestinationNotWorkingDevice::Android => "ANDROID",
+                PolicyTopicEvidenceDestinationNotWorkingDevice::Ios => "IOS",
+            }
+        }
+    }
+}
+// Proto file describing DNS error types of destination not working policy topic
+// evidence.
+
+/// Container for enum describing possible policy topic evidence destination not
+/// working DNS error types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PolicyTopicEvidenceDestinationNotWorkingDnsErrorTypeEnum {
+}
+/// Nested message and enum types in `PolicyTopicEvidenceDestinationNotWorkingDnsErrorTypeEnum`.
+pub mod policy_topic_evidence_destination_not_working_dns_error_type_enum {
+    /// The possible policy topic evidence destination not working DNS error types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PolicyTopicEvidenceDestinationNotWorkingDnsErrorType {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// Host name not found in DNS when fetching landing page.
+        HostnameNotFound = 2,
+        /// Google internal crawler issue when communicating with DNS. This error
+        /// doesn't mean the landing page doesn't work. Google will recrawl the
+        /// landing page.
+        GoogleCrawlerDnsIssue = 3,
+    }
+    impl PolicyTopicEvidenceDestinationNotWorkingDnsErrorType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::Unspecified => "UNSPECIFIED",
+                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::Unknown => "UNKNOWN",
+                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::HostnameNotFound => "HOSTNAME_NOT_FOUND",
+                PolicyTopicEvidenceDestinationNotWorkingDnsErrorType::GoogleCrawlerDnsIssue => "GOOGLE_CRAWLER_DNS_ISSUE",
+            }
+        }
+    }
+}
 // Proto file describing asset type.
 
 /// Container for enum describing the types of asset.
@@ -4181,84 +3178,333 @@ pub mod asset_type_enum {
         }
     }
 }
-// Proto file describing placement types.
+// Proto file describing policy approval statuses.
 
-/// Container for enum describing possible placement types.
+/// Container for enum describing possible policy approval statuses.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlacementTypeEnum {
+pub struct PolicyApprovalStatusEnum {
 }
-/// Nested message and enum types in `PlacementTypeEnum`.
-pub mod placement_type_enum {
-    /// Possible placement types for a feed mapping.
+/// Nested message and enum types in `PolicyApprovalStatusEnum`.
+pub mod policy_approval_status_enum {
+    /// The possible policy approval statuses. When there are several approval
+    /// statuses available the most severe one will be used. The order of severity
+    /// is DISAPPROVED, AREA_OF_INTEREST_ONLY, APPROVED_LIMITED and APPROVED.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum PlacementType {
-        /// Not specified.
+    pub enum PolicyApprovalStatus {
+        /// No value has been specified.
         Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
         Unknown = 1,
-        /// Websites(e.g. 'www.flowers4sale.com').
-        Website = 2,
-        /// Mobile application categories(e.g. 'Games').
-        MobileAppCategory = 3,
-        /// mobile applications(e.g. 'mobileapp::2-com.whatsthewordanswers').
-        MobileApplication = 4,
-        /// YouTube videos(e.g. 'youtube.com/video/wtLJPvx7-ys').
-        YoutubeVideo = 5,
-        /// YouTube channels(e.g. 'youtube.com::L8ZULXASCc1I_oaOT0NaOQ').
-        YoutubeChannel = 6,
+        /// Will not serve.
+        Disapproved = 2,
+        /// Serves with restrictions.
+        ApprovedLimited = 3,
+        /// Serves without restrictions.
+        Approved = 4,
+        /// Will not serve in targeted countries, but may serve for users who are
+        /// searching for information about the targeted countries.
+        AreaOfInterestOnly = 5,
     }
-    impl PlacementType {
+    impl PolicyApprovalStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                PlacementType::Unspecified => "UNSPECIFIED",
-                PlacementType::Unknown => "UNKNOWN",
-                PlacementType::Website => "WEBSITE",
-                PlacementType::MobileAppCategory => "MOBILE_APP_CATEGORY",
-                PlacementType::MobileApplication => "MOBILE_APPLICATION",
-                PlacementType::YoutubeVideo => "YOUTUBE_VIDEO",
-                PlacementType::YoutubeChannel => "YOUTUBE_CHANNEL",
+                PolicyApprovalStatus::Unspecified => "UNSPECIFIED",
+                PolicyApprovalStatus::Unknown => "UNKNOWN",
+                PolicyApprovalStatus::Disapproved => "DISAPPROVED",
+                PolicyApprovalStatus::ApprovedLimited => "APPROVED_LIMITED",
+                PolicyApprovalStatus::Approved => "APPROVED",
+                PolicyApprovalStatus::AreaOfInterestOnly => "AREA_OF_INTEREST_ONLY",
             }
         }
     }
 }
-// Proto file describing combined audience status.
+// Proto file describing policy review statuses.
 
-/// The status of combined audience.
+/// Container for enum describing possible policy review statuses.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CombinedAudienceStatusEnum {
+pub struct PolicyReviewStatusEnum {
 }
-/// Nested message and enum types in `CombinedAudienceStatusEnum`.
-pub mod combined_audience_status_enum {
-    /// Enum containing possible combined audience status types.
+/// Nested message and enum types in `PolicyReviewStatusEnum`.
+pub mod policy_review_status_enum {
+    /// The possible policy review statuses.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum CombinedAudienceStatus {
-        /// Not specified.
+    pub enum PolicyReviewStatus {
+        /// No value has been specified.
         Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
         Unknown = 1,
-        /// Enabled status - combined audience is enabled and can be targeted.
-        Enabled = 2,
-        /// Removed status - combined audience is removed and cannot be used for
-        /// targeting.
-        Removed = 3,
+        /// Currently under review.
+        ReviewInProgress = 2,
+        /// Primary review complete. Other reviews may be continuing.
+        Reviewed = 3,
+        /// The resource has been resubmitted for approval or its policy decision has
+        /// been appealed.
+        UnderAppeal = 4,
+        /// The resource is eligible and may be serving but could still undergo
+        /// further review.
+        EligibleMayServe = 5,
     }
-    impl CombinedAudienceStatus {
+    impl PolicyReviewStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                CombinedAudienceStatus::Unspecified => "UNSPECIFIED",
-                CombinedAudienceStatus::Unknown => "UNKNOWN",
-                CombinedAudienceStatus::Enabled => "ENABLED",
-                CombinedAudienceStatus::Removed => "REMOVED",
+                PolicyReviewStatus::Unspecified => "UNSPECIFIED",
+                PolicyReviewStatus::Unknown => "UNKNOWN",
+                PolicyReviewStatus::ReviewInProgress => "REVIEW_IN_PROGRESS",
+                PolicyReviewStatus::Reviewed => "REVIEWED",
+                PolicyReviewStatus::UnderAppeal => "UNDER_APPEAL",
+                PolicyReviewStatus::EligibleMayServe => "ELIGIBLE_MAY_SERVE",
+            }
+        }
+    }
+}
+// Proto file describing advertising channel subtypes.
+
+/// An immutable specialization of an Advertising Channel.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdvertisingChannelSubTypeEnum {
+}
+/// Nested message and enum types in `AdvertisingChannelSubTypeEnum`.
+pub mod advertising_channel_sub_type_enum {
+    /// Enum describing the different channel subtypes.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AdvertisingChannelSubType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used as a return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Mobile app campaigns for Search.
+        SearchMobileApp = 2,
+        /// Mobile app campaigns for Display.
+        DisplayMobileApp = 3,
+        /// AdWords express campaigns for search.
+        SearchExpress = 4,
+        /// AdWords Express campaigns for display.
+        DisplayExpress = 5,
+        /// Smart Shopping campaigns.
+        ShoppingSmartAds = 6,
+        /// Gmail Ad campaigns.
+        DisplayGmailAd = 7,
+        /// Smart display campaigns.
+        DisplaySmartCampaign = 8,
+        /// Video Outstream campaigns.
+        VideoOutstream = 9,
+        /// Video TrueView for Action campaigns.
+        VideoAction = 10,
+        /// Video campaigns with non-skippable video ads.
+        VideoNonSkippable = 11,
+        /// App Campaign that allows you to easily promote your Android or iOS app
+        /// across Google's top properties including Search, Play, YouTube, and the
+        /// Google Display Network.
+        AppCampaign = 12,
+        /// App Campaign for engagement, focused on driving re-engagement with the
+        /// app across several of Google’s top properties including Search, YouTube,
+        /// and the Google Display Network.
+        AppCampaignForEngagement = 13,
+        /// Campaigns specialized for local advertising.
+        LocalCampaign = 14,
+        /// Shopping Comparison Listing campaigns.
+        ShoppingComparisonListingAds = 15,
+        /// Standard Smart campaigns.
+        SmartCampaign = 16,
+        /// Video campaigns with sequence video ads.
+        VideoSequence = 17,
+        /// App Campaign for pre registration, specialized for advertising mobile
+        /// app pre-registration, that targets multiple advertising channels across
+        /// Google Play, YouTube and Display Network. See
+        /// <https://support.google.com/google-ads/answer/9441344> to learn more.
+        AppCampaignForPreRegistration = 18,
+    }
+    impl AdvertisingChannelSubType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdvertisingChannelSubType::Unspecified => "UNSPECIFIED",
+                AdvertisingChannelSubType::Unknown => "UNKNOWN",
+                AdvertisingChannelSubType::SearchMobileApp => "SEARCH_MOBILE_APP",
+                AdvertisingChannelSubType::DisplayMobileApp => "DISPLAY_MOBILE_APP",
+                AdvertisingChannelSubType::SearchExpress => "SEARCH_EXPRESS",
+                AdvertisingChannelSubType::DisplayExpress => "DISPLAY_EXPRESS",
+                AdvertisingChannelSubType::ShoppingSmartAds => "SHOPPING_SMART_ADS",
+                AdvertisingChannelSubType::DisplayGmailAd => "DISPLAY_GMAIL_AD",
+                AdvertisingChannelSubType::DisplaySmartCampaign => "DISPLAY_SMART_CAMPAIGN",
+                AdvertisingChannelSubType::VideoOutstream => "VIDEO_OUTSTREAM",
+                AdvertisingChannelSubType::VideoAction => "VIDEO_ACTION",
+                AdvertisingChannelSubType::VideoNonSkippable => "VIDEO_NON_SKIPPABLE",
+                AdvertisingChannelSubType::AppCampaign => "APP_CAMPAIGN",
+                AdvertisingChannelSubType::AppCampaignForEngagement => "APP_CAMPAIGN_FOR_ENGAGEMENT",
+                AdvertisingChannelSubType::LocalCampaign => "LOCAL_CAMPAIGN",
+                AdvertisingChannelSubType::ShoppingComparisonListingAds => "SHOPPING_COMPARISON_LISTING_ADS",
+                AdvertisingChannelSubType::SmartCampaign => "SMART_CAMPAIGN",
+                AdvertisingChannelSubType::VideoSequence => "VIDEO_SEQUENCE",
+                AdvertisingChannelSubType::AppCampaignForPreRegistration => "APP_CAMPAIGN_FOR_PRE_REGISTRATION",
+            }
+        }
+    }
+}
+// Proto file describing advertising channel types
+
+/// The channel type a campaign may target to serve on.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdvertisingChannelTypeEnum {
+}
+/// Nested message and enum types in `AdvertisingChannelTypeEnum`.
+pub mod advertising_channel_type_enum {
+    /// Enum describing the various advertising channel types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AdvertisingChannelType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Search Network. Includes display bundled, and Search+ campaigns.
+        Search = 2,
+        /// Google Display Network only.
+        Display = 3,
+        /// Shopping campaigns serve on the shopping property
+        /// and on google.com search results.
+        Shopping = 4,
+        /// Hotel Ads campaigns.
+        Hotel = 5,
+        /// Video campaigns.
+        Video = 6,
+        /// App Campaigns, and App Campaigns for Engagement, that run
+        /// across multiple channels.
+        MultiChannel = 7,
+        /// Local ads campaigns.
+        Local = 8,
+        /// Smart campaigns.
+        Smart = 9,
+        /// Performance Max campaigns.
+        PerformanceMax = 10,
+    }
+    impl AdvertisingChannelType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdvertisingChannelType::Unspecified => "UNSPECIFIED",
+                AdvertisingChannelType::Unknown => "UNKNOWN",
+                AdvertisingChannelType::Search => "SEARCH",
+                AdvertisingChannelType::Display => "DISPLAY",
+                AdvertisingChannelType::Shopping => "SHOPPING",
+                AdvertisingChannelType::Hotel => "HOTEL",
+                AdvertisingChannelType::Video => "VIDEO",
+                AdvertisingChannelType::MultiChannel => "MULTI_CHANNEL",
+                AdvertisingChannelType::Local => "LOCAL",
+                AdvertisingChannelType::Smart => "SMART",
+                AdvertisingChannelType::PerformanceMax => "PERFORMANCE_MAX",
+            }
+        }
+    }
+}
+// Proto file describing the criterion category channel availability mode.
+
+/// Describes channel availability mode for a criterion availability - whether
+/// the availability is meant to include all advertising channels, or a
+/// particular channel with all its channel subtypes, or a channel with a certain
+/// subset of channel subtypes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CriterionCategoryChannelAvailabilityModeEnum {
+}
+/// Nested message and enum types in `CriterionCategoryChannelAvailabilityModeEnum`.
+pub mod criterion_category_channel_availability_mode_enum {
+    /// Enum containing the possible CriterionCategoryChannelAvailabilityMode.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CriterionCategoryChannelAvailabilityMode {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The category is available to campaigns of all channel types and subtypes.
+        AllChannels = 2,
+        /// The category is available to campaigns of a specific channel type,
+        /// including all subtypes under it.
+        ChannelTypeAndAllSubtypes = 3,
+        /// The category is available to campaigns of a specific channel type and
+        /// subtype(s).
+        ChannelTypeAndSubsetSubtypes = 4,
+    }
+    impl CriterionCategoryChannelAvailabilityMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CriterionCategoryChannelAvailabilityMode::Unspecified => "UNSPECIFIED",
+                CriterionCategoryChannelAvailabilityMode::Unknown => "UNKNOWN",
+                CriterionCategoryChannelAvailabilityMode::AllChannels => "ALL_CHANNELS",
+                CriterionCategoryChannelAvailabilityMode::ChannelTypeAndAllSubtypes => "CHANNEL_TYPE_AND_ALL_SUBTYPES",
+                CriterionCategoryChannelAvailabilityMode::ChannelTypeAndSubsetSubtypes => "CHANNEL_TYPE_AND_SUBSET_SUBTYPES",
+            }
+        }
+    }
+}
+// Proto file describing the criterion category locale availability mode.
+
+/// Describes locale availability mode for a criterion availability - whether
+/// it's available globally, or a particular country with all languages, or a
+/// particular language with all countries, or a country-language pair.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CriterionCategoryLocaleAvailabilityModeEnum {
+}
+/// Nested message and enum types in `CriterionCategoryLocaleAvailabilityModeEnum`.
+pub mod criterion_category_locale_availability_mode_enum {
+    /// Enum containing the possible CriterionCategoryLocaleAvailabilityMode.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CriterionCategoryLocaleAvailabilityMode {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The category is available to campaigns of all locales.
+        AllLocales = 2,
+        /// The category is available to campaigns within a list of countries,
+        /// regardless of language.
+        CountryAndAllLanguages = 3,
+        /// The category is available to campaigns within a list of languages,
+        /// regardless of country.
+        LanguageAndAllCountries = 4,
+        /// The category is available to campaigns within a list of country, language
+        /// pairs.
+        CountryAndLanguage = 5,
+    }
+    impl CriterionCategoryLocaleAvailabilityMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CriterionCategoryLocaleAvailabilityMode::Unspecified => "UNSPECIFIED",
+                CriterionCategoryLocaleAvailabilityMode::Unknown => "UNKNOWN",
+                CriterionCategoryLocaleAvailabilityMode::AllLocales => "ALL_LOCALES",
+                CriterionCategoryLocaleAvailabilityMode::CountryAndAllLanguages => "COUNTRY_AND_ALL_LANGUAGES",
+                CriterionCategoryLocaleAvailabilityMode::LanguageAndAllCountries => "LANGUAGE_AND_ALL_COUNTRIES",
+                CriterionCategoryLocaleAvailabilityMode::CountryAndLanguage => "COUNTRY_AND_LANGUAGE",
             }
         }
     }
@@ -4335,596 +3581,526 @@ pub mod shared_set_type_enum {
         }
     }
 }
-// Proto file describing bidding schemes.
+// Proto file describing the UserInterest taxonomy type
 
-/// Container for enum describing possible bidding strategy types.
+/// Message describing a UserInterestTaxonomyType.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BiddingStrategyTypeEnum {
+pub struct UserInterestTaxonomyTypeEnum {
 }
-/// Nested message and enum types in `BiddingStrategyTypeEnum`.
-pub mod bidding_strategy_type_enum {
-    /// Enum describing possible bidding strategy types.
+/// Nested message and enum types in `UserInterestTaxonomyTypeEnum`.
+pub mod user_interest_taxonomy_type_enum {
+    /// Enum containing the possible UserInterestTaxonomyTypes.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum BiddingStrategyType {
+    pub enum UserInterestTaxonomyType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Commission is an automatic bidding strategy in which the advertiser pays
-        /// a certain portion of the conversion value.
-        Commission = 16,
-        /// Enhanced CPC is a bidding strategy that raises bids for clicks
-        /// that seem more likely to lead to a conversion and lowers
-        /// them for clicks where they seem less likely.
-        EnhancedCpc = 2,
-        /// Used for return value only. Indicates that a campaign does not have a
-        /// bidding strategy. This prevents the campaign from serving. For example,
-        /// a campaign may be attached to a manager bidding strategy and the serving
-        /// account is subsequently unlinked from the manager account. In this case
-        /// the campaign will automatically be detached from the now inaccessible
-        /// manager bidding strategy and transition to the INVALID bidding strategy
-        /// type.
-        Invalid = 17,
-        /// Manual click based bidding where user pays per click.
-        ManualCpc = 3,
-        /// Manual impression based bidding
-        /// where user pays per thousand impressions.
-        ManualCpm = 4,
-        /// A bidding strategy that pays a configurable amount per video view.
-        ManualCpv = 13,
-        /// A bidding strategy that automatically maximizes number of conversions
-        /// given a daily budget.
-        MaximizeConversions = 10,
-        /// An automated bidding strategy that automatically sets bids to maximize
-        /// revenue while spending your budget.
-        MaximizeConversionValue = 11,
-        /// Page-One Promoted bidding scheme, which sets max cpc bids to
-        /// target impressions on page one or page one promoted slots on google.com.
-        /// This enum value is deprecated.
-        PageOnePromoted = 5,
-        /// Percent Cpc is bidding strategy where bids are a fraction of the
-        /// advertised price for some good or service.
-        PercentCpc = 12,
-        /// Target CPA is an automated bid strategy that sets bids
-        /// to help get as many conversions as possible
-        /// at the target cost-per-acquisition (CPA) you set.
-        TargetCpa = 6,
-        /// Target CPM is an automated bid strategy that sets bids to help get
-        /// as many impressions as possible at the target cost per one thousand
-        /// impressions (CPM) you set.
-        TargetCpm = 14,
-        /// An automated bidding strategy that sets bids so that a certain percentage
-        /// of search ads are shown at the top of the first page (or other targeted
-        /// location).
-        TargetImpressionShare = 15,
-        /// Target Outrank Share is an automated bidding strategy that sets bids
-        /// based on the target fraction of auctions where the advertiser
-        /// should outrank a specific competitor.
-        /// This enum value is deprecated.
-        TargetOutrankShare = 7,
-        /// Target ROAS is an automated bidding strategy
-        /// that helps you maximize revenue while averaging
-        /// a specific target Return On Average Spend (ROAS).
-        TargetRoas = 8,
-        /// Target Spend is an automated bid strategy that sets your bids
-        /// to help get as many clicks as possible within your budget.
-        TargetSpend = 9,
+        /// The affinity for this user interest.
+        Affinity = 2,
+        /// The market for this user interest.
+        InMarket = 3,
+        /// Users known to have installed applications in the specified categories.
+        MobileAppInstallUser = 4,
+        /// The geographical location of the interest-based vertical.
+        VerticalGeo = 5,
+        /// User interest criteria for new smart phone users.
+        NewSmartPhoneUser = 6,
     }
-    impl BiddingStrategyType {
+    impl UserInterestTaxonomyType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                BiddingStrategyType::Unspecified => "UNSPECIFIED",
-                BiddingStrategyType::Unknown => "UNKNOWN",
-                BiddingStrategyType::Commission => "COMMISSION",
-                BiddingStrategyType::EnhancedCpc => "ENHANCED_CPC",
-                BiddingStrategyType::Invalid => "INVALID",
-                BiddingStrategyType::ManualCpc => "MANUAL_CPC",
-                BiddingStrategyType::ManualCpm => "MANUAL_CPM",
-                BiddingStrategyType::ManualCpv => "MANUAL_CPV",
-                BiddingStrategyType::MaximizeConversions => "MAXIMIZE_CONVERSIONS",
-                BiddingStrategyType::MaximizeConversionValue => "MAXIMIZE_CONVERSION_VALUE",
-                BiddingStrategyType::PageOnePromoted => "PAGE_ONE_PROMOTED",
-                BiddingStrategyType::PercentCpc => "PERCENT_CPC",
-                BiddingStrategyType::TargetCpa => "TARGET_CPA",
-                BiddingStrategyType::TargetCpm => "TARGET_CPM",
-                BiddingStrategyType::TargetImpressionShare => "TARGET_IMPRESSION_SHARE",
-                BiddingStrategyType::TargetOutrankShare => "TARGET_OUTRANK_SHARE",
-                BiddingStrategyType::TargetRoas => "TARGET_ROAS",
-                BiddingStrategyType::TargetSpend => "TARGET_SPEND",
+                UserInterestTaxonomyType::Unspecified => "UNSPECIFIED",
+                UserInterestTaxonomyType::Unknown => "UNKNOWN",
+                UserInterestTaxonomyType::Affinity => "AFFINITY",
+                UserInterestTaxonomyType::InMarket => "IN_MARKET",
+                UserInterestTaxonomyType::MobileAppInstallUser => "MOBILE_APP_INSTALL_USER",
+                UserInterestTaxonomyType::VerticalGeo => "VERTICAL_GEO",
+                UserInterestTaxonomyType::NewSmartPhoneUser => "NEW_SMART_PHONE_USER",
             }
         }
     }
 }
-// Proto file describing target impression share goal.
+// Proto file describing matching function context types.
 
-/// Container for enum describing where on the first search results page the
-/// automated bidding system should target impressions for the
-/// TargetImpressionShare bidding strategy.
+/// Container for context types for an operand in a matching function.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TargetImpressionShareLocationEnum {
+pub struct MatchingFunctionContextTypeEnum {
 }
-/// Nested message and enum types in `TargetImpressionShareLocationEnum`.
-pub mod target_impression_share_location_enum {
-    /// Enum describing possible goals.
+/// Nested message and enum types in `MatchingFunctionContextTypeEnum`.
+pub mod matching_function_context_type_enum {
+    /// Possible context types for an operand in a matching function.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum TargetImpressionShareLocation {
+    pub enum MatchingFunctionContextType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Any location on the web page.
-        AnywhereOnPage = 2,
-        /// Top box of ads.
-        TopOfPage = 3,
-        /// Top slot in the top box of ads.
-        AbsoluteTopOfPage = 4,
+        /// Feed item id in the request context.
+        FeedItemId = 2,
+        /// The device being used (possible values are 'Desktop' or 'Mobile').
+        DeviceName = 3,
+        /// Feed item set id in the request context.
+        FeedItemSetId = 4,
     }
-    impl TargetImpressionShareLocation {
+    impl MatchingFunctionContextType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                TargetImpressionShareLocation::Unspecified => "UNSPECIFIED",
-                TargetImpressionShareLocation::Unknown => "UNKNOWN",
-                TargetImpressionShareLocation::AnywhereOnPage => "ANYWHERE_ON_PAGE",
-                TargetImpressionShareLocation::TopOfPage => "TOP_OF_PAGE",
-                TargetImpressionShareLocation::AbsoluteTopOfPage => "ABSOLUTE_TOP_OF_PAGE",
+                MatchingFunctionContextType::Unspecified => "UNSPECIFIED",
+                MatchingFunctionContextType::Unknown => "UNKNOWN",
+                MatchingFunctionContextType::FeedItemId => "FEED_ITEM_ID",
+                MatchingFunctionContextType::DeviceName => "DEVICE_NAME",
+                MatchingFunctionContextType::FeedItemSetId => "FEED_ITEM_SET_ID",
             }
         }
     }
 }
-// Proto file describing days of week.
+// Proto file describing matching function operators.
 
-/// Container for enumeration of months of the year, e.g., "January".
+/// Container for enum describing matching function operator.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MonthOfYearEnum {
+pub struct MatchingFunctionOperatorEnum {
 }
-/// Nested message and enum types in `MonthOfYearEnum`.
-pub mod month_of_year_enum {
-    /// Enumerates months of the year, e.g., "January".
+/// Nested message and enum types in `MatchingFunctionOperatorEnum`.
+pub mod matching_function_operator_enum {
+    /// Possible operators in a matching function.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum MonthOfYear {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// January.
-        January = 2,
-        /// February.
-        February = 3,
-        /// March.
-        March = 4,
-        /// April.
-        April = 5,
-        /// May.
-        May = 6,
-        /// June.
-        June = 7,
-        /// July.
-        July = 8,
-        /// August.
-        August = 9,
-        /// September.
-        September = 10,
-        /// October.
-        October = 11,
-        /// November.
-        November = 12,
-        /// December.
-        December = 13,
-    }
-    impl MonthOfYear {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MonthOfYear::Unspecified => "UNSPECIFIED",
-                MonthOfYear::Unknown => "UNKNOWN",
-                MonthOfYear::January => "JANUARY",
-                MonthOfYear::February => "FEBRUARY",
-                MonthOfYear::March => "MARCH",
-                MonthOfYear::April => "APRIL",
-                MonthOfYear::May => "MAY",
-                MonthOfYear::June => "JUNE",
-                MonthOfYear::July => "JULY",
-                MonthOfYear::August => "AUGUST",
-                MonthOfYear::September => "SEPTEMBER",
-                MonthOfYear::October => "OCTOBER",
-                MonthOfYear::November => "NOVEMBER",
-                MonthOfYear::December => "DECEMBER",
-            }
-        }
-    }
-}
-// Proto file describing frequency caps.
-
-/// Container for enum describing the unit of time the cap is defined at.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FrequencyCapTimeUnitEnum {
-}
-/// Nested message and enum types in `FrequencyCapTimeUnitEnum`.
-pub mod frequency_cap_time_unit_enum {
-    /// Unit of time the cap is defined at (e.g. day, week).
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FrequencyCapTimeUnit {
+    pub enum MatchingFunctionOperator {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The cap would define limit per one day.
-        Day = 2,
-        /// The cap would define limit per one week.
-        Week = 3,
-        /// The cap would define limit per one month.
-        Month = 4,
+        /// The IN operator.
+        In = 2,
+        /// The IDENTITY operator.
+        Identity = 3,
+        /// The EQUALS operator
+        Equals = 4,
+        /// Operator that takes two or more operands that are of type
+        /// FunctionOperand and checks that all the operands evaluate to true.
+        /// For functions related to ad formats, all the operands must be in
+        /// left_operands.
+        And = 5,
+        /// Operator that returns true if the elements in left_operands contain any
+        /// of the elements in right_operands. Otherwise, return false. The
+        /// right_operands must contain at least 1 and no more than 3
+        /// ConstantOperands.
+        ContainsAny = 6,
     }
-    impl FrequencyCapTimeUnit {
+    impl MatchingFunctionOperator {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                FrequencyCapTimeUnit::Unspecified => "UNSPECIFIED",
-                FrequencyCapTimeUnit::Unknown => "UNKNOWN",
-                FrequencyCapTimeUnit::Day => "DAY",
-                FrequencyCapTimeUnit::Week => "WEEK",
-                FrequencyCapTimeUnit::Month => "MONTH",
+                MatchingFunctionOperator::Unspecified => "UNSPECIFIED",
+                MatchingFunctionOperator::Unknown => "UNKNOWN",
+                MatchingFunctionOperator::In => "IN",
+                MatchingFunctionOperator::Identity => "IDENTITY",
+                MatchingFunctionOperator::Equals => "EQUALS",
+                MatchingFunctionOperator::And => "AND",
+                MatchingFunctionOperator::ContainsAny => "CONTAINS_ANY",
             }
         }
     }
 }
-// Proto file describing ad lengths of a plannable video ad.
+// Proto file describing status of a feed link.
 
-/// Message describing length of a plannable video ad.
+/// Container for an enum describing possible statuses of a feed link.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReachPlanAdLengthEnum {
+pub struct FeedLinkStatusEnum {
 }
-/// Nested message and enum types in `ReachPlanAdLengthEnum`.
-pub mod reach_plan_ad_length_enum {
-    /// Possible ad length values.
+/// Nested message and enum types in `FeedLinkStatusEnum`.
+pub mod feed_link_status_enum {
+    /// Possible statuses of a feed link.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum ReachPlanAdLength {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// 6 seconds long ad.
-        SixSeconds = 2,
-        /// 15 or 20 seconds long ad.
-        FifteenOrTwentySeconds = 3,
-        /// More than 20 seconds long ad.
-        TwentySecondsOrMore = 4,
-    }
-    impl ReachPlanAdLength {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ReachPlanAdLength::Unspecified => "UNSPECIFIED",
-                ReachPlanAdLength::Unknown => "UNKNOWN",
-                ReachPlanAdLength::SixSeconds => "SIX_SECONDS",
-                ReachPlanAdLength::FifteenOrTwentySeconds => "FIFTEEN_OR_TWENTY_SECONDS",
-                ReachPlanAdLength::TwentySecondsOrMore => "TWENTY_SECONDS_OR_MORE",
-            }
-        }
-    }
-}
-// Proto file describing a plannable age range.
-
-/// Message describing plannable age ranges.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReachPlanAgeRangeEnum {
-}
-/// Nested message and enum types in `ReachPlanAgeRangeEnum`.
-pub mod reach_plan_age_range_enum {
-    /// Possible plannable age range values.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ReachPlanAgeRange {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Between 18 and 24 years old.
-        AgeRange1824 = 503001,
-        /// Between 18 and 34 years old.
-        AgeRange1834 = 2,
-        /// Between 18 and 44 years old.
-        AgeRange1844 = 3,
-        /// Between 18 and 49 years old.
-        AgeRange1849 = 4,
-        /// Between 18 and 54 years old.
-        AgeRange1854 = 5,
-        /// Between 18 and 64 years old.
-        AgeRange1864 = 6,
-        /// Between 18 and 65+ years old.
-        AgeRange1865Up = 7,
-        /// Between 21 and 34 years old.
-        AgeRange2134 = 8,
-        /// Between 25 and 34 years old.
-        AgeRange2534 = 503002,
-        /// Between 25 and 44 years old.
-        AgeRange2544 = 9,
-        /// Between 25 and 49 years old.
-        AgeRange2549 = 10,
-        /// Between 25 and 54 years old.
-        AgeRange2554 = 11,
-        /// Between 25 and 64 years old.
-        AgeRange2564 = 12,
-        /// Between 25 and 65+ years old.
-        AgeRange2565Up = 13,
-        /// Between 35 and 44 years old.
-        AgeRange3544 = 503003,
-        /// Between 35 and 49 years old.
-        AgeRange3549 = 14,
-        /// Between 35 and 54 years old.
-        AgeRange3554 = 15,
-        /// Between 35 and 64 years old.
-        AgeRange3564 = 16,
-        /// Between 35 and 65+ years old.
-        AgeRange3565Up = 17,
-        /// Between 45 and 54 years old.
-        AgeRange4554 = 503004,
-        /// Between 45 and 64 years old.
-        AgeRange4564 = 18,
-        /// Between 45 and 65+ years old.
-        AgeRange4565Up = 19,
-        /// Between 50 and 65+ years old.
-        AgeRange5065Up = 20,
-        /// Between 55 and 64 years old.
-        AgeRange5564 = 503005,
-        /// Between 55 and 65+ years old.
-        AgeRange5565Up = 21,
-        /// 65 years old and beyond.
-        AgeRange65Up = 503006,
-    }
-    impl ReachPlanAgeRange {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ReachPlanAgeRange::Unspecified => "UNSPECIFIED",
-                ReachPlanAgeRange::Unknown => "UNKNOWN",
-                ReachPlanAgeRange::AgeRange1824 => "AGE_RANGE_18_24",
-                ReachPlanAgeRange::AgeRange1834 => "AGE_RANGE_18_34",
-                ReachPlanAgeRange::AgeRange1844 => "AGE_RANGE_18_44",
-                ReachPlanAgeRange::AgeRange1849 => "AGE_RANGE_18_49",
-                ReachPlanAgeRange::AgeRange1854 => "AGE_RANGE_18_54",
-                ReachPlanAgeRange::AgeRange1864 => "AGE_RANGE_18_64",
-                ReachPlanAgeRange::AgeRange1865Up => "AGE_RANGE_18_65_UP",
-                ReachPlanAgeRange::AgeRange2134 => "AGE_RANGE_21_34",
-                ReachPlanAgeRange::AgeRange2534 => "AGE_RANGE_25_34",
-                ReachPlanAgeRange::AgeRange2544 => "AGE_RANGE_25_44",
-                ReachPlanAgeRange::AgeRange2549 => "AGE_RANGE_25_49",
-                ReachPlanAgeRange::AgeRange2554 => "AGE_RANGE_25_54",
-                ReachPlanAgeRange::AgeRange2564 => "AGE_RANGE_25_64",
-                ReachPlanAgeRange::AgeRange2565Up => "AGE_RANGE_25_65_UP",
-                ReachPlanAgeRange::AgeRange3544 => "AGE_RANGE_35_44",
-                ReachPlanAgeRange::AgeRange3549 => "AGE_RANGE_35_49",
-                ReachPlanAgeRange::AgeRange3554 => "AGE_RANGE_35_54",
-                ReachPlanAgeRange::AgeRange3564 => "AGE_RANGE_35_64",
-                ReachPlanAgeRange::AgeRange3565Up => "AGE_RANGE_35_65_UP",
-                ReachPlanAgeRange::AgeRange4554 => "AGE_RANGE_45_54",
-                ReachPlanAgeRange::AgeRange4564 => "AGE_RANGE_45_64",
-                ReachPlanAgeRange::AgeRange4565Up => "AGE_RANGE_45_65_UP",
-                ReachPlanAgeRange::AgeRange5065Up => "AGE_RANGE_50_65_UP",
-                ReachPlanAgeRange::AgeRange5564 => "AGE_RANGE_55_64",
-                ReachPlanAgeRange::AgeRange5565Up => "AGE_RANGE_55_65_UP",
-                ReachPlanAgeRange::AgeRange65Up => "AGE_RANGE_65_UP",
-            }
-        }
-    }
-}
-// Proto file describing a plannable network.
-
-/// Container for enum describing plannable networks.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReachPlanNetworkEnum {
-}
-/// Nested message and enum types in `ReachPlanNetworkEnum`.
-pub mod reach_plan_network_enum {
-    /// Possible plannable network values.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ReachPlanNetwork {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used as a return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// YouTube network.
-        Youtube = 2,
-        /// Google Video Partners (GVP) network.
-        GoogleVideoPartners = 3,
-        /// A combination of the YouTube network and the Google Video Partners
-        /// network.
-        YoutubeAndGoogleVideoPartners = 4,
-    }
-    impl ReachPlanNetwork {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ReachPlanNetwork::Unspecified => "UNSPECIFIED",
-                ReachPlanNetwork::Unknown => "UNKNOWN",
-                ReachPlanNetwork::Youtube => "YOUTUBE",
-                ReachPlanNetwork::GoogleVideoPartners => "GOOGLE_VIDEO_PARTNERS",
-                ReachPlanNetwork::YoutubeAndGoogleVideoPartners => "YOUTUBE_AND_GOOGLE_VIDEO_PARTNERS",
-            }
-        }
-    }
-}
-// Proto file describing conversion value rule status.
-
-/// Container for enum describing possible statuses of a conversion value rule.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionValueRuleStatusEnum {
-}
-/// Nested message and enum types in `ConversionValueRuleStatusEnum`.
-pub mod conversion_value_rule_status_enum {
-    /// Possible statuses of a conversion value rule.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ConversionValueRuleStatus {
+    pub enum FeedLinkStatus {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Conversion Value Rule is enabled and can be applied.
+        /// Feed link is enabled.
         Enabled = 2,
-        /// Conversion Value Rule is permanently deleted and can't be applied.
+        /// Feed link has been removed.
         Removed = 3,
-        /// Conversion Value Rule is paused, but can be re-enabled.
-        Paused = 4,
     }
-    impl ConversionValueRuleStatus {
+    impl FeedLinkStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ConversionValueRuleStatus::Unspecified => "UNSPECIFIED",
-                ConversionValueRuleStatus::Unknown => "UNKNOWN",
-                ConversionValueRuleStatus::Enabled => "ENABLED",
-                ConversionValueRuleStatus::Removed => "REMOVED",
-                ConversionValueRuleStatus::Paused => "PAUSED",
+                FeedLinkStatus::Unspecified => "UNSPECIFIED",
+                FeedLinkStatus::Unknown => "UNKNOWN",
+                FeedLinkStatus::Enabled => "ENABLED",
+                FeedLinkStatus::Removed => "REMOVED",
             }
         }
     }
 }
-// Proto file describing conversion value rule device type.
+// Proto file describing feed placeholder types.
 
-/// Container for enum describing possible device types used in a conversion
-/// value rule.
+/// Container for enum describing possible placeholder types for a feed mapping.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValueRuleDeviceTypeEnum {
+pub struct PlaceholderTypeEnum {
 }
-/// Nested message and enum types in `ValueRuleDeviceTypeEnum`.
-pub mod value_rule_device_type_enum {
-    /// Possible device types used in conversion value rule.
+/// Nested message and enum types in `PlaceholderTypeEnum`.
+pub mod placeholder_type_enum {
+    /// Possible placeholder types for a feed mapping.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum ValueRuleDeviceType {
+    pub enum PlaceholderType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Mobile device.
+        /// Lets you show links in your ad to pages from your website, including the
+        /// main landing page.
+        Sitelink = 2,
+        /// Lets you attach a phone number to an ad, allowing customers to call
+        /// directly from the ad.
+        Call = 3,
+        /// Lets you provide users with a link that points to a mobile app in
+        /// addition to a website.
+        App = 4,
+        /// Lets you show locations of businesses from your Business Profile
+        /// in your ad. This helps people find your locations by showing your
+        /// ads with your address, a map to your location, or the distance to your
+        /// business. This extension type is useful to draw customers to your
+        /// brick-and-mortar location.
+        Location = 5,
+        /// If you sell your product through retail chains, affiliate location
+        /// extensions let you show nearby stores that carry your products.
+        AffiliateLocation = 6,
+        /// Lets you include additional text with your search ads that provide
+        /// detailed information about your business, including products and services
+        /// you offer. Callouts appear in ads at the top and bottom of Google search
+        /// results.
+        Callout = 7,
+        /// Lets you add more info to your ad, specific to some predefined categories
+        /// such as types, brands, styles, etc. A minimum of 3 text (SNIPPETS) values
+        /// are required.
+        StructuredSnippet = 8,
+        /// Allows users to see your ad, click an icon, and contact you directly by
+        /// text message. With one tap on your ad, people can contact you to book an
+        /// appointment, get a quote, ask for information, or request a service.
+        Message = 9,
+        /// Lets you display prices for a list of items along with your ads. A price
+        /// feed is composed of three to eight price table rows.
+        Price = 10,
+        /// Allows you to highlight sales and other promotions that let users see how
+        /// they can save by buying now.
+        Promotion = 11,
+        /// Lets you dynamically inject custom data into the title and description
+        /// of your ads.
+        AdCustomizer = 12,
+        /// Indicates that this feed is for education dynamic remarketing.
+        DynamicEducation = 13,
+        /// Indicates that this feed is for flight dynamic remarketing.
+        DynamicFlight = 14,
+        /// Indicates that this feed is for a custom dynamic remarketing type. Use
+        /// this only if the other business types don't apply to your products or
+        /// services.
+        DynamicCustom = 15,
+        /// Indicates that this feed is for hotels and rentals dynamic remarketing.
+        DynamicHotel = 16,
+        /// Indicates that this feed is for real estate dynamic remarketing.
+        DynamicRealEstate = 17,
+        /// Indicates that this feed is for travel dynamic remarketing.
+        DynamicTravel = 18,
+        /// Indicates that this feed is for local deals dynamic remarketing.
+        DynamicLocal = 19,
+        /// Indicates that this feed is for job dynamic remarketing.
+        DynamicJob = 20,
+        /// Lets you attach an image to an ad.
+        Image = 21,
+    }
+    impl PlaceholderType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PlaceholderType::Unspecified => "UNSPECIFIED",
+                PlaceholderType::Unknown => "UNKNOWN",
+                PlaceholderType::Sitelink => "SITELINK",
+                PlaceholderType::Call => "CALL",
+                PlaceholderType::App => "APP",
+                PlaceholderType::Location => "LOCATION",
+                PlaceholderType::AffiliateLocation => "AFFILIATE_LOCATION",
+                PlaceholderType::Callout => "CALLOUT",
+                PlaceholderType::StructuredSnippet => "STRUCTURED_SNIPPET",
+                PlaceholderType::Message => "MESSAGE",
+                PlaceholderType::Price => "PRICE",
+                PlaceholderType::Promotion => "PROMOTION",
+                PlaceholderType::AdCustomizer => "AD_CUSTOMIZER",
+                PlaceholderType::DynamicEducation => "DYNAMIC_EDUCATION",
+                PlaceholderType::DynamicFlight => "DYNAMIC_FLIGHT",
+                PlaceholderType::DynamicCustom => "DYNAMIC_CUSTOM",
+                PlaceholderType::DynamicHotel => "DYNAMIC_HOTEL",
+                PlaceholderType::DynamicRealEstate => "DYNAMIC_REAL_ESTATE",
+                PlaceholderType::DynamicTravel => "DYNAMIC_TRAVEL",
+                PlaceholderType::DynamicLocal => "DYNAMIC_LOCAL",
+                PlaceholderType::DynamicJob => "DYNAMIC_JOB",
+                PlaceholderType::Image => "IMAGE",
+            }
+        }
+    }
+}
+// Proto file describing GoogleAdsField categories.
+
+/// Container for enum that determines if the described artifact is a resource
+/// or a field, and if it is a field, when it segments search queries.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleAdsFieldCategoryEnum {
+}
+/// Nested message and enum types in `GoogleAdsFieldCategoryEnum`.
+pub mod google_ads_field_category_enum {
+    /// The category of the artifact.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum GoogleAdsFieldCategory {
+        /// Unspecified
+        Unspecified = 0,
+        /// Unknown
+        Unknown = 1,
+        /// The described artifact is a resource.
+        Resource = 2,
+        /// The described artifact is a field and is an attribute of a resource.
+        /// Including a resource attribute field in a query may segment the query if
+        /// the resource to which it is attributed segments the resource found in
+        /// the FROM clause.
+        Attribute = 3,
+        /// The described artifact is a field and always segments search queries.
+        Segment = 5,
+        /// The described artifact is a field and is a metric. It never segments
+        /// search queries.
+        Metric = 6,
+    }
+    impl GoogleAdsFieldCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GoogleAdsFieldCategory::Unspecified => "UNSPECIFIED",
+                GoogleAdsFieldCategory::Unknown => "UNKNOWN",
+                GoogleAdsFieldCategory::Resource => "RESOURCE",
+                GoogleAdsFieldCategory::Attribute => "ATTRIBUTE",
+                GoogleAdsFieldCategory::Segment => "SEGMENT",
+                GoogleAdsFieldCategory::Metric => "METRIC",
+            }
+        }
+    }
+}
+// Proto file describing GoogleAdsField data types.
+
+/// Container holding the various data types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleAdsFieldDataTypeEnum {
+}
+/// Nested message and enum types in `GoogleAdsFieldDataTypeEnum`.
+pub mod google_ads_field_data_type_enum {
+    /// These are the various types a GoogleAdsService artifact may take on.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum GoogleAdsFieldDataType {
+        /// Unspecified
+        Unspecified = 0,
+        /// Unknown
+        Unknown = 1,
+        /// Maps to google.protobuf.BoolValue
+        ///
+        /// Applicable operators:  =, !=
+        Boolean = 2,
+        /// Maps to google.protobuf.StringValue. It can be compared using the set of
+        /// operators specific to dates however.
+        ///
+        /// Applicable operators:  =, <, >, <=, >=, BETWEEN, DURING, and IN
+        Date = 3,
+        /// Maps to google.protobuf.DoubleValue
+        ///
+        /// Applicable operators:  =, !=, <, >, IN, NOT IN
+        Double = 4,
+        /// Maps to an enum. It's specific definition can be found at type_url.
+        ///
+        /// Applicable operators:  =, !=, IN, NOT IN
+        Enum = 5,
+        /// Maps to google.protobuf.FloatValue
+        ///
+        /// Applicable operators:  =, !=, <, >, IN, NOT IN
+        Float = 6,
+        /// Maps to google.protobuf.Int32Value
+        ///
+        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
+        Int32 = 7,
+        /// Maps to google.protobuf.Int64Value
+        ///
+        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
+        Int64 = 8,
+        /// Maps to a protocol buffer message type. The data type's details can be
+        /// found in type_url.
+        ///
+        /// No operators work with MESSAGE fields.
+        Message = 9,
+        /// Maps to google.protobuf.StringValue. Represents the resource name
+        /// (unique id) of a resource or one of its foreign keys.
+        ///
+        /// No operators work with RESOURCE_NAME fields.
+        ResourceName = 10,
+        /// Maps to google.protobuf.StringValue.
+        ///
+        /// Applicable operators:  =, !=, LIKE, NOT LIKE, IN, NOT IN
+        String = 11,
+        /// Maps to google.protobuf.UInt64Value
+        ///
+        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
+        Uint64 = 12,
+    }
+    impl GoogleAdsFieldDataType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                GoogleAdsFieldDataType::Unspecified => "UNSPECIFIED",
+                GoogleAdsFieldDataType::Unknown => "UNKNOWN",
+                GoogleAdsFieldDataType::Boolean => "BOOLEAN",
+                GoogleAdsFieldDataType::Date => "DATE",
+                GoogleAdsFieldDataType::Double => "DOUBLE",
+                GoogleAdsFieldDataType::Enum => "ENUM",
+                GoogleAdsFieldDataType::Float => "FLOAT",
+                GoogleAdsFieldDataType::Int32 => "INT32",
+                GoogleAdsFieldDataType::Int64 => "INT64",
+                GoogleAdsFieldDataType::Message => "MESSAGE",
+                GoogleAdsFieldDataType::ResourceName => "RESOURCE_NAME",
+                GoogleAdsFieldDataType::String => "STRING",
+                GoogleAdsFieldDataType::Uint64 => "UINT64",
+            }
+        }
+    }
+}
+// Proto file describing extension setting device type.
+
+/// Container for enum describing extension setting device types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtensionSettingDeviceEnum {
+}
+/// Nested message and enum types in `ExtensionSettingDeviceEnum`.
+pub mod extension_setting_device_enum {
+    /// Possible device types for an extension setting.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ExtensionSettingDevice {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Mobile. The extensions in the extension setting will only serve on
+        /// mobile devices.
         Mobile = 2,
-        /// Desktop device.
+        /// Desktop. The extensions in the extension setting will only serve on
+        /// desktop devices.
         Desktop = 3,
-        /// Tablet device.
-        Tablet = 4,
     }
-    impl ValueRuleDeviceType {
+    impl ExtensionSettingDevice {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ValueRuleDeviceType::Unspecified => "UNSPECIFIED",
-                ValueRuleDeviceType::Unknown => "UNKNOWN",
-                ValueRuleDeviceType::Mobile => "MOBILE",
-                ValueRuleDeviceType::Desktop => "DESKTOP",
-                ValueRuleDeviceType::Tablet => "TABLET",
+                ExtensionSettingDevice::Unspecified => "UNSPECIFIED",
+                ExtensionSettingDevice::Unknown => "UNKNOWN",
+                ExtensionSettingDevice::Mobile => "MOBILE",
+                ExtensionSettingDevice::Desktop => "DESKTOP",
             }
         }
     }
 }
-// Proto file describing conversion value rule geo location match type.
+// Proto file describing extension type.
 
-/// Container for enum describing possible geographic location matching types
-/// used in a conversion value rule.
+/// Container for enum describing possible data types for an extension in an
+/// extension setting.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValueRuleGeoLocationMatchTypeEnum {
+pub struct ExtensionTypeEnum {
 }
-/// Nested message and enum types in `ValueRuleGeoLocationMatchTypeEnum`.
-pub mod value_rule_geo_location_match_type_enum {
-    /// Possible geographic location matching types.
+/// Nested message and enum types in `ExtensionTypeEnum`.
+pub mod extension_type_enum {
+    /// Possible data types for an extension in an extension setting.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum ValueRuleGeoLocationMatchType {
+    pub enum ExtensionType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Either Area of Interest or Location of Presence can be used to match.
-        Any = 2,
-        /// Only Location of Presence can be used to match.
-        LocationOfPresence = 3,
+        /// None.
+        None = 2,
+        /// App.
+        App = 3,
+        /// Call.
+        Call = 4,
+        /// Callout.
+        Callout = 5,
+        /// Message.
+        Message = 6,
+        /// Price.
+        Price = 7,
+        /// Promotion.
+        Promotion = 8,
+        /// Sitelink.
+        Sitelink = 10,
+        /// Structured snippet.
+        StructuredSnippet = 11,
+        /// Location.
+        Location = 12,
+        /// Affiliate location.
+        AffiliateLocation = 13,
+        /// Hotel callout
+        HotelCallout = 15,
+        /// Image.
+        Image = 16,
     }
-    impl ValueRuleGeoLocationMatchType {
+    impl ExtensionType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ValueRuleGeoLocationMatchType::Unspecified => "UNSPECIFIED",
-                ValueRuleGeoLocationMatchType::Unknown => "UNKNOWN",
-                ValueRuleGeoLocationMatchType::Any => "ANY",
-                ValueRuleGeoLocationMatchType::LocationOfPresence => "LOCATION_OF_PRESENCE",
-            }
-        }
-    }
-}
-// Proto file describing conversion value rule operation.
-
-/// Container for enum describing possible operations for value rules which are
-/// executed when rules are triggered.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValueRuleOperationEnum {
-}
-/// Nested message and enum types in `ValueRuleOperationEnum`.
-pub mod value_rule_operation_enum {
-    /// Possible operations of the action of a conversion value rule.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ValueRuleOperation {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Add provided value to conversion value.
-        Add = 2,
-        /// Multiply conversion value by provided value.
-        Multiply = 3,
-        /// Set conversion value to provided value.
-        Set = 4,
-    }
-    impl ValueRuleOperation {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ValueRuleOperation::Unspecified => "UNSPECIFIED",
-                ValueRuleOperation::Unknown => "UNKNOWN",
-                ValueRuleOperation::Add => "ADD",
-                ValueRuleOperation::Multiply => "MULTIPLY",
-                ValueRuleOperation::Set => "SET",
+                ExtensionType::Unspecified => "UNSPECIFIED",
+                ExtensionType::Unknown => "UNKNOWN",
+                ExtensionType::None => "NONE",
+                ExtensionType::App => "APP",
+                ExtensionType::Call => "CALL",
+                ExtensionType::Callout => "CALLOUT",
+                ExtensionType::Message => "MESSAGE",
+                ExtensionType::Price => "PRICE",
+                ExtensionType::Promotion => "PROMOTION",
+                ExtensionType::Sitelink => "SITELINK",
+                ExtensionType::StructuredSnippet => "STRUCTURED_SNIPPET",
+                ExtensionType::Location => "LOCATION",
+                ExtensionType::AffiliateLocation => "AFFILIATE_LOCATION",
+                ExtensionType::HotelCallout => "HOTEL_CALLOUT",
+                ExtensionType::Image => "IMAGE",
             }
         }
     }
@@ -6057,6 +5233,72 @@ pub mod hotel_rate_type_enum {
         }
     }
 }
+// Proto file describing days of week.
+
+/// Container for enumeration of months of the year, e.g., "January".
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MonthOfYearEnum {
+}
+/// Nested message and enum types in `MonthOfYearEnum`.
+pub mod month_of_year_enum {
+    /// Enumerates months of the year, e.g., "January".
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum MonthOfYear {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// January.
+        January = 2,
+        /// February.
+        February = 3,
+        /// March.
+        March = 4,
+        /// April.
+        April = 5,
+        /// May.
+        May = 6,
+        /// June.
+        June = 7,
+        /// July.
+        July = 8,
+        /// August.
+        August = 9,
+        /// September.
+        September = 10,
+        /// October.
+        October = 11,
+        /// November.
+        November = 12,
+        /// December.
+        December = 13,
+    }
+    impl MonthOfYear {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MonthOfYear::Unspecified => "UNSPECIFIED",
+                MonthOfYear::Unknown => "UNKNOWN",
+                MonthOfYear::January => "JANUARY",
+                MonthOfYear::February => "FEBRUARY",
+                MonthOfYear::March => "MARCH",
+                MonthOfYear::April => "APRIL",
+                MonthOfYear::May => "MAY",
+                MonthOfYear::June => "JUNE",
+                MonthOfYear::July => "JULY",
+                MonthOfYear::August => "AUGUST",
+                MonthOfYear::September => "SEPTEMBER",
+                MonthOfYear::October => "OCTOBER",
+                MonthOfYear::November => "NOVEMBER",
+                MonthOfYear::December => "DECEMBER",
+            }
+        }
+    }
+}
 // Proto file describing Recommendation types.
 
 /// Container for enum describing types of recommendations.
@@ -6327,6 +5569,304 @@ pub mod summary_row_setting_enum {
                 SummaryRowSetting::NoSummaryRow => "NO_SUMMARY_ROW",
                 SummaryRowSetting::SummaryRowWithResults => "SUMMARY_ROW_WITH_RESULTS",
                 SummaryRowSetting::SummaryRowOnly => "SUMMARY_ROW_ONLY",
+            }
+        }
+    }
+}
+// Proto file describing bidding schemes.
+
+/// Container for enum describing possible bidding strategy types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BiddingStrategyTypeEnum {
+}
+/// Nested message and enum types in `BiddingStrategyTypeEnum`.
+pub mod bidding_strategy_type_enum {
+    /// Enum describing possible bidding strategy types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum BiddingStrategyType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Commission is an automatic bidding strategy in which the advertiser pays
+        /// a certain portion of the conversion value.
+        Commission = 16,
+        /// Enhanced CPC is a bidding strategy that raises bids for clicks
+        /// that seem more likely to lead to a conversion and lowers
+        /// them for clicks where they seem less likely.
+        EnhancedCpc = 2,
+        /// Used for return value only. Indicates that a campaign does not have a
+        /// bidding strategy. This prevents the campaign from serving. For example,
+        /// a campaign may be attached to a manager bidding strategy and the serving
+        /// account is subsequently unlinked from the manager account. In this case
+        /// the campaign will automatically be detached from the now inaccessible
+        /// manager bidding strategy and transition to the INVALID bidding strategy
+        /// type.
+        Invalid = 17,
+        /// Manual click based bidding where user pays per click.
+        ManualCpc = 3,
+        /// Manual impression based bidding
+        /// where user pays per thousand impressions.
+        ManualCpm = 4,
+        /// A bidding strategy that pays a configurable amount per video view.
+        ManualCpv = 13,
+        /// A bidding strategy that automatically maximizes number of conversions
+        /// given a daily budget.
+        MaximizeConversions = 10,
+        /// An automated bidding strategy that automatically sets bids to maximize
+        /// revenue while spending your budget.
+        MaximizeConversionValue = 11,
+        /// Page-One Promoted bidding scheme, which sets max cpc bids to
+        /// target impressions on page one or page one promoted slots on google.com.
+        /// This enum value is deprecated.
+        PageOnePromoted = 5,
+        /// Percent Cpc is bidding strategy where bids are a fraction of the
+        /// advertised price for some good or service.
+        PercentCpc = 12,
+        /// Target CPA is an automated bid strategy that sets bids
+        /// to help get as many conversions as possible
+        /// at the target cost-per-acquisition (CPA) you set.
+        TargetCpa = 6,
+        /// Target CPM is an automated bid strategy that sets bids to help get
+        /// as many impressions as possible at the target cost per one thousand
+        /// impressions (CPM) you set.
+        TargetCpm = 14,
+        /// An automated bidding strategy that sets bids so that a certain percentage
+        /// of search ads are shown at the top of the first page (or other targeted
+        /// location).
+        TargetImpressionShare = 15,
+        /// Target Outrank Share is an automated bidding strategy that sets bids
+        /// based on the target fraction of auctions where the advertiser
+        /// should outrank a specific competitor.
+        /// This enum value is deprecated.
+        TargetOutrankShare = 7,
+        /// Target ROAS is an automated bidding strategy
+        /// that helps you maximize revenue while averaging
+        /// a specific target Return On Average Spend (ROAS).
+        TargetRoas = 8,
+        /// Target Spend is an automated bid strategy that sets your bids
+        /// to help get as many clicks as possible within your budget.
+        TargetSpend = 9,
+    }
+    impl BiddingStrategyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BiddingStrategyType::Unspecified => "UNSPECIFIED",
+                BiddingStrategyType::Unknown => "UNKNOWN",
+                BiddingStrategyType::Commission => "COMMISSION",
+                BiddingStrategyType::EnhancedCpc => "ENHANCED_CPC",
+                BiddingStrategyType::Invalid => "INVALID",
+                BiddingStrategyType::ManualCpc => "MANUAL_CPC",
+                BiddingStrategyType::ManualCpm => "MANUAL_CPM",
+                BiddingStrategyType::ManualCpv => "MANUAL_CPV",
+                BiddingStrategyType::MaximizeConversions => "MAXIMIZE_CONVERSIONS",
+                BiddingStrategyType::MaximizeConversionValue => "MAXIMIZE_CONVERSION_VALUE",
+                BiddingStrategyType::PageOnePromoted => "PAGE_ONE_PROMOTED",
+                BiddingStrategyType::PercentCpc => "PERCENT_CPC",
+                BiddingStrategyType::TargetCpa => "TARGET_CPA",
+                BiddingStrategyType::TargetCpm => "TARGET_CPM",
+                BiddingStrategyType::TargetImpressionShare => "TARGET_IMPRESSION_SHARE",
+                BiddingStrategyType::TargetOutrankShare => "TARGET_OUTRANK_SHARE",
+                BiddingStrategyType::TargetRoas => "TARGET_ROAS",
+                BiddingStrategyType::TargetSpend => "TARGET_SPEND",
+            }
+        }
+    }
+}
+// Proto file describing target impression share goal.
+
+/// Container for enum describing where on the first search results page the
+/// automated bidding system should target impressions for the
+/// TargetImpressionShare bidding strategy.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TargetImpressionShareLocationEnum {
+}
+/// Nested message and enum types in `TargetImpressionShareLocationEnum`.
+pub mod target_impression_share_location_enum {
+    /// Enum describing possible goals.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum TargetImpressionShareLocation {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Any location on the web page.
+        AnywhereOnPage = 2,
+        /// Top box of ads.
+        TopOfPage = 3,
+        /// Top slot in the top box of ads.
+        AbsoluteTopOfPage = 4,
+    }
+    impl TargetImpressionShareLocation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetImpressionShareLocation::Unspecified => "UNSPECIFIED",
+                TargetImpressionShareLocation::Unknown => "UNKNOWN",
+                TargetImpressionShareLocation::AnywhereOnPage => "ANYWHERE_ON_PAGE",
+                TargetImpressionShareLocation::TopOfPage => "TOP_OF_PAGE",
+                TargetImpressionShareLocation::AbsoluteTopOfPage => "ABSOLUTE_TOP_OF_PAGE",
+            }
+        }
+    }
+}
+// Proto file describing AccountBudgetProposal types.
+
+/// Message describing AccountBudgetProposal types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountBudgetProposalTypeEnum {
+}
+/// Nested message and enum types in `AccountBudgetProposalTypeEnum`.
+pub mod account_budget_proposal_type_enum {
+    /// The possible types of an AccountBudgetProposal.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AccountBudgetProposalType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Identifies a request to create a new budget.
+        Create = 2,
+        /// Identifies a request to edit an existing budget.
+        Update = 3,
+        /// Identifies a request to end a budget that has already started.
+        End = 4,
+        /// Identifies a request to remove a budget that hasn't started yet.
+        Remove = 5,
+    }
+    impl AccountBudgetProposalType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AccountBudgetProposalType::Unspecified => "UNSPECIFIED",
+                AccountBudgetProposalType::Unknown => "UNKNOWN",
+                AccountBudgetProposalType::Create => "CREATE",
+                AccountBudgetProposalType::Update => "UPDATE",
+                AccountBudgetProposalType::End => "END",
+                AccountBudgetProposalType::Remove => "REMOVE",
+            }
+        }
+    }
+}
+// Proto file describing AccountBudget statuses.
+
+/// Message describing AccountBudget statuses.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountBudgetStatusEnum {
+}
+/// Nested message and enum types in `AccountBudgetStatusEnum`.
+pub mod account_budget_status_enum {
+    /// The possible statuses of an AccountBudget.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AccountBudgetStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The account budget is pending approval.
+        Pending = 2,
+        /// The account budget has been approved.
+        Approved = 3,
+        /// The account budget has been cancelled by the user.
+        Cancelled = 4,
+    }
+    impl AccountBudgetStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AccountBudgetStatus::Unspecified => "UNSPECIFIED",
+                AccountBudgetStatus::Unknown => "UNKNOWN",
+                AccountBudgetStatus::Pending => "PENDING",
+                AccountBudgetStatus::Approved => "APPROVED",
+                AccountBudgetStatus::Cancelled => "CANCELLED",
+            }
+        }
+    }
+}
+// Proto file describing SpendingLimit types.
+
+/// Message describing spending limit types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpendingLimitTypeEnum {
+}
+/// Nested message and enum types in `SpendingLimitTypeEnum`.
+pub mod spending_limit_type_enum {
+    /// The possible spending limit types used by certain resources as an
+    /// alternative to absolute money values in micros.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SpendingLimitType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Infinite, indicates unlimited spending power.
+        Infinite = 2,
+    }
+    impl SpendingLimitType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SpendingLimitType::Unspecified => "UNSPECIFIED",
+                SpendingLimitType::Unknown => "UNKNOWN",
+                SpendingLimitType::Infinite => "INFINITE",
+            }
+        }
+    }
+}
+// Proto file describing TimeType types.
+
+/// Message describing time types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeTypeEnum {
+}
+/// Nested message and enum types in `TimeTypeEnum`.
+pub mod time_type_enum {
+    /// The possible time types used by certain resources as an alternative to
+    /// absolute timestamps.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum TimeType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// As soon as possible.
+        Now = 2,
+        /// An infinite point in the future.
+        Forever = 3,
+    }
+    impl TimeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TimeType::Unspecified => "UNSPECIFIED",
+                TimeType::Unknown => "UNKNOWN",
+                TimeType::Now => "NOW",
+                TimeType::Forever => "FOREVER",
             }
         }
     }
@@ -6602,6 +6142,109 @@ pub mod ad_group_type_enum {
         }
     }
 }
+// Proto file describing asset type.
+
+/// Container for enum describing the possible placements of an asset.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetFieldTypeEnum {
+}
+/// Nested message and enum types in `AssetFieldTypeEnum`.
+pub mod asset_field_type_enum {
+    /// Enum describing the possible placements of an asset.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AssetFieldType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The asset is linked for use as a headline.
+        Headline = 2,
+        /// The asset is linked for use as a description.
+        Description = 3,
+        /// The asset is linked for use as mandatory ad text.
+        MandatoryAdText = 4,
+        /// The asset is linked for use as a marketing image.
+        MarketingImage = 5,
+        /// The asset is linked for use as a media bundle.
+        MediaBundle = 6,
+        /// The asset is linked for use as a YouTube video.
+        YoutubeVideo = 7,
+        /// The asset is linked to indicate that a hotels campaign is "Book on
+        /// Google" enabled.
+        BookOnGoogle = 8,
+        /// The asset is linked for use as a Lead Form extension.
+        LeadForm = 9,
+        /// The asset is linked for use as a Promotion extension.
+        Promotion = 10,
+        /// The asset is linked for use as a Callout extension.
+        Callout = 11,
+        /// The asset is linked for use as a Structured Snippet extension.
+        StructuredSnippet = 12,
+        /// The asset is linked for use as a Sitelink extension.
+        Sitelink = 13,
+        /// The asset is linked for use as a Mobile App extension.
+        MobileApp = 14,
+        /// The asset is linked for use as a Hotel Callout extension.
+        HotelCallout = 15,
+        /// The asset is linked for use as a Call extension.
+        Call = 16,
+        /// The asset is linked for use as a Price extension.
+        Price = 24,
+        /// The asset is linked for use as a long headline.
+        LongHeadline = 17,
+        /// The asset is linked for use as a business name.
+        BusinessName = 18,
+        /// The asset is linked for use as a square marketing image.
+        SquareMarketingImage = 19,
+        /// The asset is linked for use as a portrait marketing image.
+        PortraitMarketingImage = 20,
+        /// The asset is linked for use as a logo.
+        Logo = 21,
+        /// The asset is linked for use as a landscape logo.
+        LandscapeLogo = 22,
+        /// The asset is linked for use as a non YouTube logo.
+        Video = 23,
+        /// The asset is linked for use to select a call-to-action.
+        CallToActionSelection = 25,
+    }
+    impl AssetFieldType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AssetFieldType::Unspecified => "UNSPECIFIED",
+                AssetFieldType::Unknown => "UNKNOWN",
+                AssetFieldType::Headline => "HEADLINE",
+                AssetFieldType::Description => "DESCRIPTION",
+                AssetFieldType::MandatoryAdText => "MANDATORY_AD_TEXT",
+                AssetFieldType::MarketingImage => "MARKETING_IMAGE",
+                AssetFieldType::MediaBundle => "MEDIA_BUNDLE",
+                AssetFieldType::YoutubeVideo => "YOUTUBE_VIDEO",
+                AssetFieldType::BookOnGoogle => "BOOK_ON_GOOGLE",
+                AssetFieldType::LeadForm => "LEAD_FORM",
+                AssetFieldType::Promotion => "PROMOTION",
+                AssetFieldType::Callout => "CALLOUT",
+                AssetFieldType::StructuredSnippet => "STRUCTURED_SNIPPET",
+                AssetFieldType::Sitelink => "SITELINK",
+                AssetFieldType::MobileApp => "MOBILE_APP",
+                AssetFieldType::HotelCallout => "HOTEL_CALLOUT",
+                AssetFieldType::Call => "CALL",
+                AssetFieldType::Price => "PRICE",
+                AssetFieldType::LongHeadline => "LONG_HEADLINE",
+                AssetFieldType::BusinessName => "BUSINESS_NAME",
+                AssetFieldType::SquareMarketingImage => "SQUARE_MARKETING_IMAGE",
+                AssetFieldType::PortraitMarketingImage => "PORTRAIT_MARKETING_IMAGE",
+                AssetFieldType::Logo => "LOGO",
+                AssetFieldType::LandscapeLogo => "LANDSCAPE_LOGO",
+                AssetFieldType::Video => "VIDEO",
+                AssetFieldType::CallToActionSelection => "CALL_TO_ACTION_SELECTION",
+            }
+        }
+    }
+}
 // Proto file describing bidding sources.
 
 /// Container for enum describing possible bidding sources.
@@ -6639,6 +6282,628 @@ pub mod bidding_source_enum {
                 BiddingSource::CampaignBiddingStrategy => "CAMPAIGN_BIDDING_STRATEGY",
                 BiddingSource::AdGroup => "AD_GROUP",
                 BiddingSource::AdGroupCriterion => "AD_GROUP_CRITERION",
+            }
+        }
+    }
+}
+// Proto file describing ad group status.
+
+/// Container for enum describing possible statuses of an AdGroupAd.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupAdStatusEnum {
+}
+/// Nested message and enum types in `AdGroupAdStatusEnum`.
+pub mod ad_group_ad_status_enum {
+    /// The possible statuses of an AdGroupAd.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AdGroupAdStatus {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The ad group ad is enabled.
+        Enabled = 2,
+        /// The ad group ad is paused.
+        Paused = 3,
+        /// The ad group ad is removed.
+        Removed = 4,
+    }
+    impl AdGroupAdStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdGroupAdStatus::Unspecified => "UNSPECIFIED",
+                AdGroupAdStatus::Unknown => "UNKNOWN",
+                AdGroupAdStatus::Enabled => "ENABLED",
+                AdGroupAdStatus::Paused => "PAUSED",
+                AdGroupAdStatus::Removed => "REMOVED",
+            }
+        }
+    }
+}
+// Proto file describing ad strengths.
+
+/// Container for enum describing possible ad strengths.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdStrengthEnum {
+}
+/// Nested message and enum types in `AdStrengthEnum`.
+pub mod ad_strength_enum {
+    /// Enum listing the possible ad strengths.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AdStrength {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The ad strength is currently pending.
+        Pending = 2,
+        /// No ads could be generated.
+        NoAds = 3,
+        /// Poor strength.
+        Poor = 4,
+        /// Average strength.
+        Average = 5,
+        /// Good strength.
+        Good = 6,
+        /// Excellent strength.
+        Excellent = 7,
+    }
+    impl AdStrength {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdStrength::Unspecified => "UNSPECIFIED",
+                AdStrength::Unknown => "UNKNOWN",
+                AdStrength::Pending => "PENDING",
+                AdStrength::NoAds => "NO_ADS",
+                AdStrength::Poor => "POOR",
+                AdStrength::Average => "AVERAGE",
+                AdStrength::Good => "GOOD",
+                AdStrength::Excellent => "EXCELLENT",
+            }
+        }
+    }
+}
+// Proto file describing the performance label of an asset.
+
+/// Container for enum describing the performance label of an asset.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetPerformanceLabelEnum {
+}
+/// Nested message and enum types in `AssetPerformanceLabelEnum`.
+pub mod asset_performance_label_enum {
+    /// Enum describing the possible performance labels of an asset, usually
+    /// computed in the context of a linkage.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AssetPerformanceLabel {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// This asset does not yet have any performance informantion. This may be
+        /// because it is still under review.
+        Pending = 2,
+        /// The asset has started getting impressions but the stats are not
+        /// statistically significant enough to get an asset performance label.
+        Learning = 3,
+        /// Worst performing assets.
+        Low = 4,
+        /// Good performing assets.
+        Good = 5,
+        /// Best performing assets.
+        Best = 6,
+    }
+    impl AssetPerformanceLabel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AssetPerformanceLabel::Unspecified => "UNSPECIFIED",
+                AssetPerformanceLabel::Unknown => "UNKNOWN",
+                AssetPerformanceLabel::Pending => "PENDING",
+                AssetPerformanceLabel::Learning => "LEARNING",
+                AssetPerformanceLabel::Low => "LOW",
+                AssetPerformanceLabel::Good => "GOOD",
+                AssetPerformanceLabel::Best => "BEST",
+            }
+        }
+    }
+}
+// Proto file describing policy review statuses.
+
+/// Container for enum describing possible asset field types.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServedAssetFieldTypeEnum {
+}
+/// Nested message and enum types in `ServedAssetFieldTypeEnum`.
+pub mod served_asset_field_type_enum {
+    /// The possible asset field types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ServedAssetFieldType {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The asset is used in headline 1.
+        Headline1 = 2,
+        /// The asset is used in headline 2.
+        Headline2 = 3,
+        /// The asset is used in headline 3.
+        Headline3 = 4,
+        /// The asset is used in description 1.
+        Description1 = 5,
+        /// The asset is used in description 2.
+        Description2 = 6,
+    }
+    impl ServedAssetFieldType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ServedAssetFieldType::Unspecified => "UNSPECIFIED",
+                ServedAssetFieldType::Unknown => "UNKNOWN",
+                ServedAssetFieldType::Headline1 => "HEADLINE_1",
+                ServedAssetFieldType::Headline2 => "HEADLINE_2",
+                ServedAssetFieldType::Headline3 => "HEADLINE_3",
+                ServedAssetFieldType::Description1 => "DESCRIPTION_1",
+                ServedAssetFieldType::Description2 => "DESCRIPTION_2",
+            }
+        }
+    }
+}
+// Proto file describing display ad format settings.
+
+/// Container for display ad format settings.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DisplayAdFormatSettingEnum {
+}
+/// Nested message and enum types in `DisplayAdFormatSettingEnum`.
+pub mod display_ad_format_setting_enum {
+    /// Enumerates display ad format settings.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum DisplayAdFormatSetting {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Text, image and native formats.
+        AllFormats = 2,
+        /// Text and image formats.
+        NonNative = 3,
+        /// Native format, i.e. the format rendering is controlled by the publisher
+        /// and not by Google.
+        Native = 4,
+    }
+    impl DisplayAdFormatSetting {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DisplayAdFormatSetting::Unspecified => "UNSPECIFIED",
+                DisplayAdFormatSetting::Unknown => "UNKNOWN",
+                DisplayAdFormatSetting::AllFormats => "ALL_FORMATS",
+                DisplayAdFormatSetting::NonNative => "NON_NATIVE",
+                DisplayAdFormatSetting::Native => "NATIVE",
+            }
+        }
+    }
+}
+// Proto file describing display upload product types.
+
+/// Container for display upload product types. Product types that have the word
+/// "DYNAMIC" in them must be associated with a campaign that has a dynamic
+/// remarketing feed. See <https://support.google.com/google-ads/answer/6053288>
+/// for more info about dynamic remarketing. Other product types are regarded
+/// as "static" and do not have this requirement.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DisplayUploadProductTypeEnum {
+}
+/// Nested message and enum types in `DisplayUploadProductTypeEnum`.
+pub mod display_upload_product_type_enum {
+    /// Enumerates display upload product types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum DisplayUploadProductType {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// HTML5 upload ad. This product type requires the upload_media_bundle
+        /// field in DisplayUploadAdInfo to be set.
+        Html5UploadAd = 2,
+        /// Dynamic HTML5 education ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in an education campaign.
+        DynamicHtml5EducationAd = 3,
+        /// Dynamic HTML5 flight ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a flight campaign.
+        DynamicHtml5FlightAd = 4,
+        /// Dynamic HTML5 hotel and rental ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a hotel campaign.
+        DynamicHtml5HotelRentalAd = 5,
+        /// Dynamic HTML5 job ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a job campaign.
+        DynamicHtml5JobAd = 6,
+        /// Dynamic HTML5 local ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a local campaign.
+        DynamicHtml5LocalAd = 7,
+        /// Dynamic HTML5 real estate ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a real estate campaign.
+        DynamicHtml5RealEstateAd = 8,
+        /// Dynamic HTML5 custom ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a custom campaign.
+        DynamicHtml5CustomAd = 9,
+        /// Dynamic HTML5 travel ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a travel campaign.
+        DynamicHtml5TravelAd = 10,
+        /// Dynamic HTML5 hotel ad. This product type requires the
+        /// upload_media_bundle field in DisplayUploadAdInfo to be set. Can only be
+        /// used in a hotel campaign.
+        DynamicHtml5HotelAd = 11,
+    }
+    impl DisplayUploadProductType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DisplayUploadProductType::Unspecified => "UNSPECIFIED",
+                DisplayUploadProductType::Unknown => "UNKNOWN",
+                DisplayUploadProductType::Html5UploadAd => "HTML5_UPLOAD_AD",
+                DisplayUploadProductType::DynamicHtml5EducationAd => "DYNAMIC_HTML5_EDUCATION_AD",
+                DisplayUploadProductType::DynamicHtml5FlightAd => "DYNAMIC_HTML5_FLIGHT_AD",
+                DisplayUploadProductType::DynamicHtml5HotelRentalAd => "DYNAMIC_HTML5_HOTEL_RENTAL_AD",
+                DisplayUploadProductType::DynamicHtml5JobAd => "DYNAMIC_HTML5_JOB_AD",
+                DisplayUploadProductType::DynamicHtml5LocalAd => "DYNAMIC_HTML5_LOCAL_AD",
+                DisplayUploadProductType::DynamicHtml5RealEstateAd => "DYNAMIC_HTML5_REAL_ESTATE_AD",
+                DisplayUploadProductType::DynamicHtml5CustomAd => "DYNAMIC_HTML5_CUSTOM_AD",
+                DisplayUploadProductType::DynamicHtml5TravelAd => "DYNAMIC_HTML5_TRAVEL_AD",
+                DisplayUploadProductType::DynamicHtml5HotelAd => "DYNAMIC_HTML5_HOTEL_AD",
+            }
+        }
+    }
+}
+// Proto file describing app store types for a legacy app install ad.
+
+/// Container for enum describing app store type in a legacy app install ad.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LegacyAppInstallAdAppStoreEnum {
+}
+/// Nested message and enum types in `LegacyAppInstallAdAppStoreEnum`.
+pub mod legacy_app_install_ad_app_store_enum {
+    /// App store type in a legacy app install ad.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum LegacyAppInstallAdAppStore {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Apple iTunes.
+        AppleAppStore = 2,
+        /// Google Play.
+        GooglePlay = 3,
+        /// Windows Store.
+        WindowsStore = 4,
+        /// Windows Phone Store.
+        WindowsPhoneStore = 5,
+        /// The app is hosted in a Chinese app store.
+        CnAppStore = 6,
+    }
+    impl LegacyAppInstallAdAppStore {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LegacyAppInstallAdAppStore::Unspecified => "UNSPECIFIED",
+                LegacyAppInstallAdAppStore::Unknown => "UNKNOWN",
+                LegacyAppInstallAdAppStore::AppleAppStore => "APPLE_APP_STORE",
+                LegacyAppInstallAdAppStore::GooglePlay => "GOOGLE_PLAY",
+                LegacyAppInstallAdAppStore::WindowsStore => "WINDOWS_STORE",
+                LegacyAppInstallAdAppStore::WindowsPhoneStore => "WINDOWS_PHONE_STORE",
+                LegacyAppInstallAdAppStore::CnAppStore => "CN_APP_STORE",
+            }
+        }
+    }
+}
+// Proto file describing video thumbnails.
+
+/// Defines the thumbnail to use for In-Display video ads. Note that
+/// DEFAULT_THUMBNAIL may have been uploaded by the user while thumbnails 1-3 are
+/// auto-generated from the video.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoThumbnailEnum {
+}
+/// Nested message and enum types in `VideoThumbnailEnum`.
+pub mod video_thumbnail_enum {
+    /// Enum listing the possible types of a video thumbnail.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum VideoThumbnail {
+        /// The type has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The default thumbnail. Can be auto-generated or user-uploaded.
+        DefaultThumbnail = 2,
+        /// Thumbnail 1, generated from the video.
+        Thumbnail1 = 3,
+        /// Thumbnail 2, generated from the video.
+        Thumbnail2 = 4,
+        /// Thumbnail 3, generated from the video.
+        Thumbnail3 = 5,
+    }
+    impl VideoThumbnail {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VideoThumbnail::Unspecified => "UNSPECIFIED",
+                VideoThumbnail::Unknown => "UNKNOWN",
+                VideoThumbnail::DefaultThumbnail => "DEFAULT_THUMBNAIL",
+                VideoThumbnail::Thumbnail1 => "THUMBNAIL_1",
+                VideoThumbnail::Thumbnail2 => "THUMBNAIL_2",
+                VideoThumbnail::Thumbnail3 => "THUMBNAIL_3",
+            }
+        }
+    }
+}
+// Proto file describing operating system for a deeplink app URL.
+
+/// The possible OS types for a deeplink AppUrl.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AppUrlOperatingSystemTypeEnum {
+}
+/// Nested message and enum types in `AppUrlOperatingSystemTypeEnum`.
+pub mod app_url_operating_system_type_enum {
+    /// Operating System
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AppUrlOperatingSystemType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The Apple IOS operating system.
+        Ios = 2,
+        /// The Android operating system.
+        Android = 3,
+    }
+    impl AppUrlOperatingSystemType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AppUrlOperatingSystemType::Unspecified => "UNSPECIFIED",
+                AppUrlOperatingSystemType::Unknown => "UNKNOWN",
+                AppUrlOperatingSystemType::Ios => "IOS",
+                AppUrlOperatingSystemType::Android => "ANDROID",
+            }
+        }
+    }
+}
+// Proto file describing the ad type.
+
+/// Container for enum describing possible types of an ad.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdTypeEnum {
+}
+/// Nested message and enum types in `AdTypeEnum`.
+pub mod ad_type_enum {
+    /// The possible types of an ad.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AdType {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The ad is a text ad.
+        TextAd = 2,
+        /// The ad is an expanded text ad.
+        ExpandedTextAd = 3,
+        /// The ad is an expanded dynamic search ad.
+        ExpandedDynamicSearchAd = 7,
+        /// The ad is a hotel ad.
+        HotelAd = 8,
+        /// The ad is a Smart Shopping ad.
+        ShoppingSmartAd = 9,
+        /// The ad is a standard Shopping ad.
+        ShoppingProductAd = 10,
+        /// The ad is a video ad.
+        VideoAd = 12,
+        /// This ad is a Gmail ad.
+        GmailAd = 13,
+        /// This ad is an Image ad.
+        ImageAd = 14,
+        /// The ad is a responsive search ad.
+        ResponsiveSearchAd = 15,
+        /// The ad is a legacy responsive display ad.
+        LegacyResponsiveDisplayAd = 16,
+        /// The ad is an app ad.
+        AppAd = 17,
+        /// The ad is a legacy app install ad.
+        LegacyAppInstallAd = 18,
+        /// The ad is a responsive display ad.
+        ResponsiveDisplayAd = 19,
+        /// The ad is a local ad.
+        LocalAd = 20,
+        /// The ad is a display upload ad with the HTML5_UPLOAD_AD product type.
+        Html5UploadAd = 21,
+        /// The ad is a display upload ad with one of the DYNAMIC_HTML5_* product
+        /// types.
+        DynamicHtml5Ad = 22,
+        /// The ad is an app engagement ad.
+        AppEngagementAd = 23,
+        /// The ad is a Shopping Comparison Listing ad.
+        ShoppingComparisonListingAd = 24,
+        /// Video bumper ad.
+        VideoBumperAd = 25,
+        /// Video non-skippable in-stream ad.
+        VideoNonSkippableInStreamAd = 26,
+        /// Video outstream ad.
+        VideoOutstreamAd = 27,
+        /// Video TrueView in-display ad.
+        VideoTrueviewDiscoveryAd = 28,
+        /// Video TrueView in-stream ad.
+        VideoTrueviewInStreamAd = 29,
+        /// Video responsive ad.
+        VideoResponsiveAd = 30,
+        /// Smart campaign ad.
+        SmartCampaignAd = 31,
+        /// Call ad.
+        CallAd = 32,
+        /// Universal app pre-registration ad.
+        AppPreRegistrationAd = 33,
+    }
+    impl AdType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdType::Unspecified => "UNSPECIFIED",
+                AdType::Unknown => "UNKNOWN",
+                AdType::TextAd => "TEXT_AD",
+                AdType::ExpandedTextAd => "EXPANDED_TEXT_AD",
+                AdType::ExpandedDynamicSearchAd => "EXPANDED_DYNAMIC_SEARCH_AD",
+                AdType::HotelAd => "HOTEL_AD",
+                AdType::ShoppingSmartAd => "SHOPPING_SMART_AD",
+                AdType::ShoppingProductAd => "SHOPPING_PRODUCT_AD",
+                AdType::VideoAd => "VIDEO_AD",
+                AdType::GmailAd => "GMAIL_AD",
+                AdType::ImageAd => "IMAGE_AD",
+                AdType::ResponsiveSearchAd => "RESPONSIVE_SEARCH_AD",
+                AdType::LegacyResponsiveDisplayAd => "LEGACY_RESPONSIVE_DISPLAY_AD",
+                AdType::AppAd => "APP_AD",
+                AdType::LegacyAppInstallAd => "LEGACY_APP_INSTALL_AD",
+                AdType::ResponsiveDisplayAd => "RESPONSIVE_DISPLAY_AD",
+                AdType::LocalAd => "LOCAL_AD",
+                AdType::Html5UploadAd => "HTML5_UPLOAD_AD",
+                AdType::DynamicHtml5Ad => "DYNAMIC_HTML5_AD",
+                AdType::AppEngagementAd => "APP_ENGAGEMENT_AD",
+                AdType::ShoppingComparisonListingAd => "SHOPPING_COMPARISON_LISTING_AD",
+                AdType::VideoBumperAd => "VIDEO_BUMPER_AD",
+                AdType::VideoNonSkippableInStreamAd => "VIDEO_NON_SKIPPABLE_IN_STREAM_AD",
+                AdType::VideoOutstreamAd => "VIDEO_OUTSTREAM_AD",
+                AdType::VideoTrueviewDiscoveryAd => "VIDEO_TRUEVIEW_DISCOVERY_AD",
+                AdType::VideoTrueviewInStreamAd => "VIDEO_TRUEVIEW_IN_STREAM_AD",
+                AdType::VideoResponsiveAd => "VIDEO_RESPONSIVE_AD",
+                AdType::SmartCampaignAd => "SMART_CAMPAIGN_AD",
+                AdType::CallAd => "CALL_AD",
+                AdType::AppPreRegistrationAd => "APP_PRE_REGISTRATION_AD",
+            }
+        }
+    }
+}
+// Proto file describing system managed entity sources.
+
+/// Container for enum describing possible system managed entity sources.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SystemManagedResourceSourceEnum {
+}
+/// Nested message and enum types in `SystemManagedResourceSourceEnum`.
+pub mod system_managed_resource_source_enum {
+    /// Enum listing the possible system managed entity sources.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum SystemManagedResourceSource {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Generated ad variations experiment ad.
+        AdVariations = 2,
+    }
+    impl SystemManagedResourceSource {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SystemManagedResourceSource::Unspecified => "UNSPECIFIED",
+                SystemManagedResourceSource::Unknown => "UNKNOWN",
+                SystemManagedResourceSource::AdVariations => "AD_VARIATIONS",
+            }
+        }
+    }
+}
+// Proto file describing status of an asset link.
+
+/// Container for enum describing possible statuses of an asset link.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetLinkStatusEnum {
+}
+/// Nested message and enum types in `AssetLinkStatusEnum`.
+pub mod asset_link_status_enum {
+    /// Enum describing statuses of an asset link.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum AssetLinkStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Asset link is enabled.
+        Enabled = 2,
+        /// Asset link has been removed.
+        Removed = 3,
+        /// Asset link is paused.
+        Paused = 4,
+    }
+    impl AssetLinkStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AssetLinkStatus::Unspecified => "UNSPECIFIED",
+                AssetLinkStatus::Unknown => "UNKNOWN",
+                AssetLinkStatus::Enabled => "ENABLED",
+                AssetLinkStatus::Removed => "REMOVED",
+                AssetLinkStatus::Paused => "PAUSED",
             }
         }
     }
@@ -6795,114 +7060,6 @@ pub mod criterion_system_serving_status_enum {
                 CriterionSystemServingStatus::Unknown => "UNKNOWN",
                 CriterionSystemServingStatus::Eligible => "ELIGIBLE",
                 CriterionSystemServingStatus::RarelyServed => "RARELY_SERVED",
-            }
-        }
-    }
-}
-// Proto file describing extension setting device type.
-
-/// Container for enum describing extension setting device types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtensionSettingDeviceEnum {
-}
-/// Nested message and enum types in `ExtensionSettingDeviceEnum`.
-pub mod extension_setting_device_enum {
-    /// Possible device types for an extension setting.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ExtensionSettingDevice {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Mobile. The extensions in the extension setting will only serve on
-        /// mobile devices.
-        Mobile = 2,
-        /// Desktop. The extensions in the extension setting will only serve on
-        /// desktop devices.
-        Desktop = 3,
-    }
-    impl ExtensionSettingDevice {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ExtensionSettingDevice::Unspecified => "UNSPECIFIED",
-                ExtensionSettingDevice::Unknown => "UNKNOWN",
-                ExtensionSettingDevice::Mobile => "MOBILE",
-                ExtensionSettingDevice::Desktop => "DESKTOP",
-            }
-        }
-    }
-}
-// Proto file describing extension type.
-
-/// Container for enum describing possible data types for an extension in an
-/// extension setting.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtensionTypeEnum {
-}
-/// Nested message and enum types in `ExtensionTypeEnum`.
-pub mod extension_type_enum {
-    /// Possible data types for an extension in an extension setting.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum ExtensionType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// None.
-        None = 2,
-        /// App.
-        App = 3,
-        /// Call.
-        Call = 4,
-        /// Callout.
-        Callout = 5,
-        /// Message.
-        Message = 6,
-        /// Price.
-        Price = 7,
-        /// Promotion.
-        Promotion = 8,
-        /// Sitelink.
-        Sitelink = 10,
-        /// Structured snippet.
-        StructuredSnippet = 11,
-        /// Location.
-        Location = 12,
-        /// Affiliate location.
-        AffiliateLocation = 13,
-        /// Hotel callout
-        HotelCallout = 15,
-        /// Image.
-        Image = 16,
-    }
-    impl ExtensionType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ExtensionType::Unspecified => "UNSPECIFIED",
-                ExtensionType::Unknown => "UNKNOWN",
-                ExtensionType::None => "NONE",
-                ExtensionType::App => "APP",
-                ExtensionType::Call => "CALL",
-                ExtensionType::Callout => "CALLOUT",
-                ExtensionType::Message => "MESSAGE",
-                ExtensionType::Price => "PRICE",
-                ExtensionType::Promotion => "PROMOTION",
-                ExtensionType::Sitelink => "SITELINK",
-                ExtensionType::StructuredSnippet => "STRUCTURED_SNIPPET",
-                ExtensionType::Location => "LOCATION",
-                ExtensionType::AffiliateLocation => "AFFILIATE_LOCATION",
-                ExtensionType::HotelCallout => "HOTEL_CALLOUT",
-                ExtensionType::Image => "IMAGE",
             }
         }
     }
@@ -7233,82 +7390,6 @@ pub mod listing_group_filter_vertical_enum {
 }
 // Proto file describing asset set status.
 
-/// Container for enum describing possible statuses of an asset set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetSetStatusEnum {
-}
-/// Nested message and enum types in `AssetSetStatusEnum`.
-pub mod asset_set_status_enum {
-    /// The possible statuses of an asset set.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AssetSetStatus {
-        /// The status has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The asset set is enabled.
-        Enabled = 2,
-        /// The asset set is removed.
-        Removed = 3,
-    }
-    impl AssetSetStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AssetSetStatus::Unspecified => "UNSPECIFIED",
-                AssetSetStatus::Unknown => "UNKNOWN",
-                AssetSetStatus::Enabled => "ENABLED",
-                AssetSetStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
-// Proto file describing asset set type.
-
-/// Container for enum describing possible types of an asset set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetSetTypeEnum {
-}
-/// Nested message and enum types in `AssetSetTypeEnum`.
-pub mod asset_set_type_enum {
-    /// Possible types of an asset set.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AssetSetType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Page feed.
-        PageFeed = 2,
-        /// Dynamic education feed.
-        DynamicEducation = 3,
-        /// Google Merchant Center asset set.
-        MerchantCenterFeed = 4,
-    }
-    impl AssetSetType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AssetSetType::Unspecified => "UNSPECIFIED",
-                AssetSetType::Unknown => "UNKNOWN",
-                AssetSetType::PageFeed => "PAGE_FEED",
-                AssetSetType::DynamicEducation => "DYNAMIC_EDUCATION",
-                AssetSetType::MerchantCenterFeed => "MERCHANT_CENTER_FEED",
-            }
-        }
-    }
-}
-// Proto file describing asset set status.
-
 /// Container for enum describing possible statuses of an asset set asset.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetAssetStatusEnum {
@@ -7379,65 +7460,6 @@ pub mod batch_job_status_enum {
                 BatchJobStatus::Pending => "PENDING",
                 BatchJobStatus::Running => "RUNNING",
                 BatchJobStatus::Done => "DONE",
-            }
-        }
-    }
-}
-// Proto file describing advertising channel types
-
-/// The channel type a campaign may target to serve on.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdvertisingChannelTypeEnum {
-}
-/// Nested message and enum types in `AdvertisingChannelTypeEnum`.
-pub mod advertising_channel_type_enum {
-    /// Enum describing the various advertising channel types.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AdvertisingChannelType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Search Network. Includes display bundled, and Search+ campaigns.
-        Search = 2,
-        /// Google Display Network only.
-        Display = 3,
-        /// Shopping campaigns serve on the shopping property
-        /// and on google.com search results.
-        Shopping = 4,
-        /// Hotel Ads campaigns.
-        Hotel = 5,
-        /// Video campaigns.
-        Video = 6,
-        /// App Campaigns, and App Campaigns for Engagement, that run
-        /// across multiple channels.
-        MultiChannel = 7,
-        /// Local ads campaigns.
-        Local = 8,
-        /// Smart campaigns.
-        Smart = 9,
-        /// Performance Max campaigns.
-        PerformanceMax = 10,
-    }
-    impl AdvertisingChannelType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdvertisingChannelType::Unspecified => "UNSPECIFIED",
-                AdvertisingChannelType::Unknown => "UNKNOWN",
-                AdvertisingChannelType::Search => "SEARCH",
-                AdvertisingChannelType::Display => "DISPLAY",
-                AdvertisingChannelType::Shopping => "SHOPPING",
-                AdvertisingChannelType::Hotel => "HOTEL",
-                AdvertisingChannelType::Video => "VIDEO",
-                AdvertisingChannelType::MultiChannel => "MULTI_CHANNEL",
-                AdvertisingChannelType::Local => "LOCAL",
-                AdvertisingChannelType::Smart => "SMART",
-                AdvertisingChannelType::PerformanceMax => "PERFORMANCE_MAX",
             }
         }
     }
@@ -7793,6 +7815,45 @@ pub mod frequency_cap_level_enum {
         }
     }
 }
+// Proto file describing frequency caps.
+
+/// Container for enum describing the unit of time the cap is defined at.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FrequencyCapTimeUnitEnum {
+}
+/// Nested message and enum types in `FrequencyCapTimeUnitEnum`.
+pub mod frequency_cap_time_unit_enum {
+    /// Unit of time the cap is defined at (e.g. day, week).
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FrequencyCapTimeUnit {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The cap would define limit per one day.
+        Day = 2,
+        /// The cap would define limit per one week.
+        Week = 3,
+        /// The cap would define limit per one month.
+        Month = 4,
+    }
+    impl FrequencyCapTimeUnit {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FrequencyCapTimeUnit::Unspecified => "UNSPECIFIED",
+                FrequencyCapTimeUnit::Unknown => "UNKNOWN",
+                FrequencyCapTimeUnit::Day => "DAY",
+                FrequencyCapTimeUnit::Week => "WEEK",
+                FrequencyCapTimeUnit::Month => "MONTH",
+            }
+        }
+    }
+}
 // Proto file describing ad serving statuses.
 
 /// Possible ad serving statuses of a campaign.
@@ -7839,94 +7900,6 @@ pub mod ad_serving_optimization_status_enum {
                 AdServingOptimizationStatus::Rotate => "ROTATE",
                 AdServingOptimizationStatus::RotateIndefinitely => "ROTATE_INDEFINITELY",
                 AdServingOptimizationStatus::Unavailable => "UNAVAILABLE",
-            }
-        }
-    }
-}
-// Proto file describing advertising channel subtypes.
-
-/// An immutable specialization of an Advertising Channel.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdvertisingChannelSubTypeEnum {
-}
-/// Nested message and enum types in `AdvertisingChannelSubTypeEnum`.
-pub mod advertising_channel_sub_type_enum {
-    /// Enum describing the different channel subtypes.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum AdvertisingChannelSubType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used as a return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Mobile app campaigns for Search.
-        SearchMobileApp = 2,
-        /// Mobile app campaigns for Display.
-        DisplayMobileApp = 3,
-        /// AdWords express campaigns for search.
-        SearchExpress = 4,
-        /// AdWords Express campaigns for display.
-        DisplayExpress = 5,
-        /// Smart Shopping campaigns.
-        ShoppingSmartAds = 6,
-        /// Gmail Ad campaigns.
-        DisplayGmailAd = 7,
-        /// Smart display campaigns.
-        DisplaySmartCampaign = 8,
-        /// Video Outstream campaigns.
-        VideoOutstream = 9,
-        /// Video TrueView for Action campaigns.
-        VideoAction = 10,
-        /// Video campaigns with non-skippable video ads.
-        VideoNonSkippable = 11,
-        /// App Campaign that allows you to easily promote your Android or iOS app
-        /// across Google's top properties including Search, Play, YouTube, and the
-        /// Google Display Network.
-        AppCampaign = 12,
-        /// App Campaign for engagement, focused on driving re-engagement with the
-        /// app across several of Google’s top properties including Search, YouTube,
-        /// and the Google Display Network.
-        AppCampaignForEngagement = 13,
-        /// Campaigns specialized for local advertising.
-        LocalCampaign = 14,
-        /// Shopping Comparison Listing campaigns.
-        ShoppingComparisonListingAds = 15,
-        /// Standard Smart campaigns.
-        SmartCampaign = 16,
-        /// Video campaigns with sequence video ads.
-        VideoSequence = 17,
-        /// App Campaign for pre registration, specialized for advertising mobile
-        /// app pre-registration, that targets multiple advertising channels across
-        /// Google Play, YouTube and Display Network. See
-        /// <https://support.google.com/google-ads/answer/9441344> to learn more.
-        AppCampaignForPreRegistration = 18,
-    }
-    impl AdvertisingChannelSubType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdvertisingChannelSubType::Unspecified => "UNSPECIFIED",
-                AdvertisingChannelSubType::Unknown => "UNKNOWN",
-                AdvertisingChannelSubType::SearchMobileApp => "SEARCH_MOBILE_APP",
-                AdvertisingChannelSubType::DisplayMobileApp => "DISPLAY_MOBILE_APP",
-                AdvertisingChannelSubType::SearchExpress => "SEARCH_EXPRESS",
-                AdvertisingChannelSubType::DisplayExpress => "DISPLAY_EXPRESS",
-                AdvertisingChannelSubType::ShoppingSmartAds => "SHOPPING_SMART_ADS",
-                AdvertisingChannelSubType::DisplayGmailAd => "DISPLAY_GMAIL_AD",
-                AdvertisingChannelSubType::DisplaySmartCampaign => "DISPLAY_SMART_CAMPAIGN",
-                AdvertisingChannelSubType::VideoOutstream => "VIDEO_OUTSTREAM",
-                AdvertisingChannelSubType::VideoAction => "VIDEO_ACTION",
-                AdvertisingChannelSubType::VideoNonSkippable => "VIDEO_NON_SKIPPABLE",
-                AdvertisingChannelSubType::AppCampaign => "APP_CAMPAIGN",
-                AdvertisingChannelSubType::AppCampaignForEngagement => "APP_CAMPAIGN_FOR_ENGAGEMENT",
-                AdvertisingChannelSubType::LocalCampaign => "LOCAL_CAMPAIGN",
-                AdvertisingChannelSubType::ShoppingComparisonListingAds => "SHOPPING_COMPARISON_LISTING_ADS",
-                AdvertisingChannelSubType::SmartCampaign => "SMART_CAMPAIGN",
-                AdvertisingChannelSubType::VideoSequence => "VIDEO_SEQUENCE",
-                AdvertisingChannelSubType::AppCampaignForPreRegistration => "APP_CAMPAIGN_FOR_PRE_REGISTRATION",
             }
         }
     }
@@ -8832,6 +8805,57 @@ pub mod campaign_criterion_status_enum {
         }
     }
 }
+// Proto file describing campaign draft status.
+
+/// Container for enum describing possible statuses of a campaign draft.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignDraftStatusEnum {
+}
+/// Nested message and enum types in `CampaignDraftStatusEnum`.
+pub mod campaign_draft_status_enum {
+    /// Possible statuses of a campaign draft.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CampaignDraftStatus {
+        /// The status has not been specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Initial state of the draft, the advertiser can start adding changes with
+        /// no effect on serving.
+        Proposed = 2,
+        /// The campaign draft is removed.
+        Removed = 3,
+        /// Advertiser requested to promote draft's changes back into the original
+        /// campaign. Advertiser can poll the long running operation returned by
+        /// the promote action to see the status of the promotion.
+        Promoting = 5,
+        /// The process to merge changes in the draft back to the original campaign
+        /// has completed successfully.
+        Promoted = 4,
+        /// The promotion failed after it was partially applied. Promote cannot be
+        /// attempted again safely, so the issue must be corrected in the original
+        /// campaign.
+        PromoteFailed = 6,
+    }
+    impl CampaignDraftStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CampaignDraftStatus::Unspecified => "UNSPECIFIED",
+                CampaignDraftStatus::Unknown => "UNKNOWN",
+                CampaignDraftStatus::Proposed => "PROPOSED",
+                CampaignDraftStatus::Removed => "REMOVED",
+                CampaignDraftStatus::Promoting => "PROMOTING",
+                CampaignDraftStatus::Promoted => "PROMOTED",
+                CampaignDraftStatus::PromoteFailed => "PROMOTE_FAILED",
+            }
+        }
+    }
+}
 // Proto file describing campaign experiment status.
 
 /// Container for enum describing possible statuses of a campaign experiment.
@@ -8930,42 +8954,6 @@ pub mod campaign_experiment_traffic_split_type_enum {
                 CampaignExperimentTrafficSplitType::Unknown => "UNKNOWN",
                 CampaignExperimentTrafficSplitType::RandomQuery => "RANDOM_QUERY",
                 CampaignExperimentTrafficSplitType::Cookie => "COOKIE",
-            }
-        }
-    }
-}
-// Proto file describing campaign shared set statuses.
-
-/// Container for enum describing types of campaign shared set statuses.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignSharedSetStatusEnum {
-}
-/// Nested message and enum types in `CampaignSharedSetStatusEnum`.
-pub mod campaign_shared_set_status_enum {
-    /// Enum listing the possible campaign shared set statuses.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CampaignSharedSetStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The campaign shared set is enabled.
-        Enabled = 2,
-        /// The campaign shared set is removed and can no longer be used.
-        Removed = 3,
-    }
-    impl CampaignSharedSetStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CampaignSharedSetStatus::Unspecified => "UNSPECIFIED",
-                CampaignSharedSetStatus::Unknown => "UNKNOWN",
-                CampaignSharedSetStatus::Enabled => "ENABLED",
-                CampaignSharedSetStatus::Removed => "REMOVED",
             }
         }
     }
@@ -9695,6 +9683,43 @@ pub mod change_status_resource_type_enum {
         }
     }
 }
+// Proto file describing combined audience status.
+
+/// The status of combined audience.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CombinedAudienceStatusEnum {
+}
+/// Nested message and enum types in `CombinedAudienceStatusEnum`.
+pub mod combined_audience_status_enum {
+    /// Enum containing possible combined audience status types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum CombinedAudienceStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Enabled status - combined audience is enabled and can be targeted.
+        Enabled = 2,
+        /// Removed status - combined audience is removed and cannot be used for
+        /// targeting.
+        Removed = 3,
+    }
+    impl CombinedAudienceStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CombinedAudienceStatus::Unspecified => "UNSPECIFIED",
+                CombinedAudienceStatus::Unknown => "UNKNOWN",
+                CombinedAudienceStatus::Enabled => "ENABLED",
+                CombinedAudienceStatus::Removed => "REMOVED",
+            }
+        }
+    }
+}
 /// Container for enum describing the format of the web page where the tracking
 /// tag and snippet will be installed.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -10202,6 +10227,162 @@ pub mod goal_config_level_enum {
         }
     }
 }
+// Proto file describing conversion value rule status.
+
+/// Container for enum describing possible statuses of a conversion value rule.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionValueRuleStatusEnum {
+}
+/// Nested message and enum types in `ConversionValueRuleStatusEnum`.
+pub mod conversion_value_rule_status_enum {
+    /// Possible statuses of a conversion value rule.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ConversionValueRuleStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Conversion Value Rule is enabled and can be applied.
+        Enabled = 2,
+        /// Conversion Value Rule is permanently deleted and can't be applied.
+        Removed = 3,
+        /// Conversion Value Rule is paused, but can be re-enabled.
+        Paused = 4,
+    }
+    impl ConversionValueRuleStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionValueRuleStatus::Unspecified => "UNSPECIFIED",
+                ConversionValueRuleStatus::Unknown => "UNKNOWN",
+                ConversionValueRuleStatus::Enabled => "ENABLED",
+                ConversionValueRuleStatus::Removed => "REMOVED",
+                ConversionValueRuleStatus::Paused => "PAUSED",
+            }
+        }
+    }
+}
+// Proto file describing conversion value rule device type.
+
+/// Container for enum describing possible device types used in a conversion
+/// value rule.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValueRuleDeviceTypeEnum {
+}
+/// Nested message and enum types in `ValueRuleDeviceTypeEnum`.
+pub mod value_rule_device_type_enum {
+    /// Possible device types used in conversion value rule.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ValueRuleDeviceType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Mobile device.
+        Mobile = 2,
+        /// Desktop device.
+        Desktop = 3,
+        /// Tablet device.
+        Tablet = 4,
+    }
+    impl ValueRuleDeviceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ValueRuleDeviceType::Unspecified => "UNSPECIFIED",
+                ValueRuleDeviceType::Unknown => "UNKNOWN",
+                ValueRuleDeviceType::Mobile => "MOBILE",
+                ValueRuleDeviceType::Desktop => "DESKTOP",
+                ValueRuleDeviceType::Tablet => "TABLET",
+            }
+        }
+    }
+}
+// Proto file describing conversion value rule geo location match type.
+
+/// Container for enum describing possible geographic location matching types
+/// used in a conversion value rule.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValueRuleGeoLocationMatchTypeEnum {
+}
+/// Nested message and enum types in `ValueRuleGeoLocationMatchTypeEnum`.
+pub mod value_rule_geo_location_match_type_enum {
+    /// Possible geographic location matching types.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ValueRuleGeoLocationMatchType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Either Area of Interest or Location of Presence can be used to match.
+        Any = 2,
+        /// Only Location of Presence can be used to match.
+        LocationOfPresence = 3,
+    }
+    impl ValueRuleGeoLocationMatchType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ValueRuleGeoLocationMatchType::Unspecified => "UNSPECIFIED",
+                ValueRuleGeoLocationMatchType::Unknown => "UNKNOWN",
+                ValueRuleGeoLocationMatchType::Any => "ANY",
+                ValueRuleGeoLocationMatchType::LocationOfPresence => "LOCATION_OF_PRESENCE",
+            }
+        }
+    }
+}
+// Proto file describing conversion value rule operation.
+
+/// Container for enum describing possible operations for value rules which are
+/// executed when rules are triggered.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValueRuleOperationEnum {
+}
+/// Nested message and enum types in `ValueRuleOperationEnum`.
+pub mod value_rule_operation_enum {
+    /// Possible operations of the action of a conversion value rule.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ValueRuleOperation {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Add provided value to conversion value.
+        Add = 2,
+        /// Multiply conversion value by provided value.
+        Multiply = 3,
+        /// Set conversion value to provided value.
+        Set = 4,
+    }
+    impl ValueRuleOperation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ValueRuleOperation::Unspecified => "UNSPECIFIED",
+                ValueRuleOperation::Unknown => "UNKNOWN",
+                ValueRuleOperation::Add => "ADD",
+                ValueRuleOperation::Multiply => "MULTIPLY",
+                ValueRuleOperation::Set => "SET",
+            }
+        }
+    }
+}
 // Proto file describing conversion value rule set status.
 
 /// Container for enum describing possible statuses of a conversion value rule
@@ -10641,6 +10822,51 @@ pub mod customer_pay_per_conversion_eligibility_failure_reason_enum {
         }
     }
 }
+/// Container for enum describing possible status of a manager and client link.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ManagerLinkStatusEnum {
+}
+/// Nested message and enum types in `ManagerLinkStatusEnum`.
+pub mod manager_link_status_enum {
+    /// Possible statuses of a link.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ManagerLinkStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Indicates current in-effect relationship
+        Active = 2,
+        /// Indicates terminated relationship
+        Inactive = 3,
+        /// Indicates relationship has been requested by manager, but the client
+        /// hasn't accepted yet.
+        Pending = 4,
+        /// Relationship was requested by the manager, but the client has refused.
+        Refused = 5,
+        /// Indicates relationship has been requested by manager, but manager
+        /// canceled it.
+        Canceled = 6,
+    }
+    impl ManagerLinkStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ManagerLinkStatus::Unspecified => "UNSPECIFIED",
+                ManagerLinkStatus::Unknown => "UNKNOWN",
+                ManagerLinkStatus::Active => "ACTIVE",
+                ManagerLinkStatus::Inactive => "INACTIVE",
+                ManagerLinkStatus::Pending => "PENDING",
+                ManagerLinkStatus::Refused => "REFUSED",
+                ManagerLinkStatus::Canceled => "CANCELED",
+            }
+        }
+    }
+}
 /// Container for enum describing possible access role for user.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccessRoleEnum {
@@ -10759,93 +10985,47 @@ pub mod customizer_attribute_status_enum {
         }
     }
 }
-// Proto file describing the criterion category channel availability mode.
+// Proto file describing placement types.
 
-/// Describes channel availability mode for a criterion availability - whether
-/// the availability is meant to include all advertising channels, or a
-/// particular channel with all its channel subtypes, or a channel with a certain
-/// subset of channel subtypes.
+/// Container for enum describing possible placement types.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CriterionCategoryChannelAvailabilityModeEnum {
+pub struct PlacementTypeEnum {
 }
-/// Nested message and enum types in `CriterionCategoryChannelAvailabilityModeEnum`.
-pub mod criterion_category_channel_availability_mode_enum {
-    /// Enum containing the possible CriterionCategoryChannelAvailabilityMode.
+/// Nested message and enum types in `PlacementTypeEnum`.
+pub mod placement_type_enum {
+    /// Possible placement types for a feed mapping.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum CriterionCategoryChannelAvailabilityMode {
+    pub enum PlacementType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// The category is available to campaigns of all channel types and subtypes.
-        AllChannels = 2,
-        /// The category is available to campaigns of a specific channel type,
-        /// including all subtypes under it.
-        ChannelTypeAndAllSubtypes = 3,
-        /// The category is available to campaigns of a specific channel type and
-        /// subtype(s).
-        ChannelTypeAndSubsetSubtypes = 4,
+        /// Websites(e.g. 'www.flowers4sale.com').
+        Website = 2,
+        /// Mobile application categories(e.g. 'Games').
+        MobileAppCategory = 3,
+        /// mobile applications(e.g. 'mobileapp::2-com.whatsthewordanswers').
+        MobileApplication = 4,
+        /// YouTube videos(e.g. 'youtube.com/video/wtLJPvx7-ys').
+        YoutubeVideo = 5,
+        /// YouTube channels(e.g. 'youtube.com::L8ZULXASCc1I_oaOT0NaOQ').
+        YoutubeChannel = 6,
     }
-    impl CriterionCategoryChannelAvailabilityMode {
+    impl PlacementType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                CriterionCategoryChannelAvailabilityMode::Unspecified => "UNSPECIFIED",
-                CriterionCategoryChannelAvailabilityMode::Unknown => "UNKNOWN",
-                CriterionCategoryChannelAvailabilityMode::AllChannels => "ALL_CHANNELS",
-                CriterionCategoryChannelAvailabilityMode::ChannelTypeAndAllSubtypes => "CHANNEL_TYPE_AND_ALL_SUBTYPES",
-                CriterionCategoryChannelAvailabilityMode::ChannelTypeAndSubsetSubtypes => "CHANNEL_TYPE_AND_SUBSET_SUBTYPES",
-            }
-        }
-    }
-}
-// Proto file describing the criterion category locale availability mode.
-
-/// Describes locale availability mode for a criterion availability - whether
-/// it's available globally, or a particular country with all languages, or a
-/// particular language with all countries, or a country-language pair.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CriterionCategoryLocaleAvailabilityModeEnum {
-}
-/// Nested message and enum types in `CriterionCategoryLocaleAvailabilityModeEnum`.
-pub mod criterion_category_locale_availability_mode_enum {
-    /// Enum containing the possible CriterionCategoryLocaleAvailabilityMode.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum CriterionCategoryLocaleAvailabilityMode {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The category is available to campaigns of all locales.
-        AllLocales = 2,
-        /// The category is available to campaigns within a list of countries,
-        /// regardless of language.
-        CountryAndAllLanguages = 3,
-        /// The category is available to campaigns within a list of languages,
-        /// regardless of country.
-        LanguageAndAllCountries = 4,
-        /// The category is available to campaigns within a list of country, language
-        /// pairs.
-        CountryAndLanguage = 5,
-    }
-    impl CriterionCategoryLocaleAvailabilityMode {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CriterionCategoryLocaleAvailabilityMode::Unspecified => "UNSPECIFIED",
-                CriterionCategoryLocaleAvailabilityMode::Unknown => "UNKNOWN",
-                CriterionCategoryLocaleAvailabilityMode::AllLocales => "ALL_LOCALES",
-                CriterionCategoryLocaleAvailabilityMode::CountryAndAllLanguages => "COUNTRY_AND_ALL_LANGUAGES",
-                CriterionCategoryLocaleAvailabilityMode::LanguageAndAllCountries => "LANGUAGE_AND_ALL_COUNTRIES",
-                CriterionCategoryLocaleAvailabilityMode::CountryAndLanguage => "COUNTRY_AND_LANGUAGE",
+                PlacementType::Unspecified => "UNSPECIFIED",
+                PlacementType::Unknown => "UNKNOWN",
+                PlacementType::Website => "WEBSITE",
+                PlacementType::MobileAppCategory => "MOBILE_APP_CATEGORY",
+                PlacementType::MobileApplication => "MOBILE_APPLICATION",
+                PlacementType::YoutubeVideo => "YOUTUBE_VIDEO",
+                PlacementType::YoutubeChannel => "YOUTUBE_CHANNEL",
             }
         }
     }
@@ -10999,40 +11179,6 @@ pub mod app_store_enum {
         }
     }
 }
-// Proto file describing feed item target device type.
-
-/// Container for enum describing possible data types for a feed item target
-/// device.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedItemTargetDeviceEnum {
-}
-/// Nested message and enum types in `FeedItemTargetDeviceEnum`.
-pub mod feed_item_target_device_enum {
-    /// Possible data types for a feed item target device.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FeedItemTargetDevice {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Mobile.
-        Mobile = 2,
-    }
-    impl FeedItemTargetDevice {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FeedItemTargetDevice::Unspecified => "UNSPECIFIED",
-                FeedItemTargetDevice::Unknown => "UNKNOWN",
-                FeedItemTargetDevice::Mobile => "MOBILE",
-            }
-        }
-    }
-}
 /// The type of string matching to be used for a dynamic FeedItemSet filter.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemSetStringFilterTypeEnum {
@@ -11096,81 +11242,6 @@ pub mod feed_item_set_status_enum {
                 FeedItemSetStatus::Unknown => "UNKNOWN",
                 FeedItemSetStatus::Enabled => "ENABLED",
                 FeedItemSetStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
-// Proto file describing feed item target status.
-
-/// Container for enum describing possible statuses of a feed item target.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedItemTargetStatusEnum {
-}
-/// Nested message and enum types in `FeedItemTargetStatusEnum`.
-pub mod feed_item_target_status_enum {
-    /// Possible statuses of a feed item target.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FeedItemTargetStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Feed item target is enabled.
-        Enabled = 2,
-        /// Feed item target has been removed.
-        Removed = 3,
-    }
-    impl FeedItemTargetStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FeedItemTargetStatus::Unspecified => "UNSPECIFIED",
-                FeedItemTargetStatus::Unknown => "UNKNOWN",
-                FeedItemTargetStatus::Enabled => "ENABLED",
-                FeedItemTargetStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
-// Proto file describing feed item target type status.
-
-/// Container for enum describing possible types of a feed item target.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedItemTargetTypeEnum {
-}
-/// Nested message and enum types in `FeedItemTargetTypeEnum`.
-pub mod feed_item_target_type_enum {
-    /// Possible type of a feed item target.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FeedItemTargetType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Feed item targets a campaign.
-        Campaign = 2,
-        /// Feed item targets an ad group.
-        AdGroup = 3,
-        /// Feed item targets a criterion.
-        Criterion = 4,
-    }
-    impl FeedItemTargetType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FeedItemTargetType::Unspecified => "UNSPECIFIED",
-                FeedItemTargetType::Unknown => "UNKNOWN",
-                FeedItemTargetType::Campaign => "CAMPAIGN",
-                FeedItemTargetType::AdGroup => "AD_GROUP",
-                FeedItemTargetType::Criterion => "CRITERION",
             }
         }
     }
@@ -13131,42 +13202,6 @@ pub mod keyword_plan_forecast_interval_enum {
         }
     }
 }
-// Proto file describing Keyword Planner forecastable network types.
-
-/// Container for enumeration of keyword plan forecastable network types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanNetworkEnum {
-}
-/// Nested message and enum types in `KeywordPlanNetworkEnum`.
-pub mod keyword_plan_network_enum {
-    /// Enumerates keyword plan forecastable network types.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum KeywordPlanNetwork {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Google Search.
-        GoogleSearch = 2,
-        /// Google Search + Search partners.
-        GoogleSearchAndPartners = 3,
-    }
-    impl KeywordPlanNetwork {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                KeywordPlanNetwork::Unspecified => "UNSPECIFIED",
-                KeywordPlanNetwork::Unknown => "UNKNOWN",
-                KeywordPlanNetwork::GoogleSearch => "GOOGLE_SEARCH",
-                KeywordPlanNetwork::GoogleSearchAndPartners => "GOOGLE_SEARCH_AND_PARTNERS",
-            }
-        }
-    }
-}
 /// Container for enum describing possible status of a label.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LabelStatusEnum {
@@ -13251,38 +13286,38 @@ pub mod media_type_enum {
         }
     }
 }
-// Proto file describing operating system version operator types.
+// Proto file describing mobile device types.
 
-/// Container for enum describing the type of OS operators.
+/// Container for enum describing the types of mobile device.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperatingSystemVersionOperatorTypeEnum {
+pub struct MobileDeviceTypeEnum {
 }
-/// Nested message and enum types in `OperatingSystemVersionOperatorTypeEnum`.
-pub mod operating_system_version_operator_type_enum {
-    /// The type of operating system version.
+/// Nested message and enum types in `MobileDeviceTypeEnum`.
+pub mod mobile_device_type_enum {
+    /// The type of mobile device.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum OperatingSystemVersionOperatorType {
+    pub enum MobileDeviceType {
         /// Not specified.
         Unspecified = 0,
         /// Used for return value only. Represents value unknown in this version.
         Unknown = 1,
-        /// Equals to the specified version.
-        EqualsTo = 2,
-        /// Greater than or equals to the specified version.
-        GreaterThanEqualsTo = 4,
+        /// Mobile phones.
+        Mobile = 2,
+        /// Tablets.
+        Tablet = 3,
     }
-    impl OperatingSystemVersionOperatorType {
+    impl MobileDeviceType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                OperatingSystemVersionOperatorType::Unspecified => "UNSPECIFIED",
-                OperatingSystemVersionOperatorType::Unknown => "UNKNOWN",
-                OperatingSystemVersionOperatorType::EqualsTo => "EQUALS_TO",
-                OperatingSystemVersionOperatorType::GreaterThanEqualsTo => "GREATER_THAN_EQUALS_TO",
+                MobileDeviceType::Unspecified => "UNSPECIFIED",
+                MobileDeviceType::Unknown => "UNKNOWN",
+                MobileDeviceType::Mobile => "MOBILE",
+                MobileDeviceType::Tablet => "TABLET",
             }
         }
     }
@@ -13406,51 +13441,6 @@ pub mod search_term_targeting_status_enum {
                 SearchTermTargetingStatus::Excluded => "EXCLUDED",
                 SearchTermTargetingStatus::AddedExcluded => "ADDED_EXCLUDED",
                 SearchTermTargetingStatus::None => "NONE",
-            }
-        }
-    }
-}
-// Proto file describing the UserInterest taxonomy type
-
-/// Message describing a UserInterestTaxonomyType.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserInterestTaxonomyTypeEnum {
-}
-/// Nested message and enum types in `UserInterestTaxonomyTypeEnum`.
-pub mod user_interest_taxonomy_type_enum {
-    /// Enum containing the possible UserInterestTaxonomyTypes.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum UserInterestTaxonomyType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The affinity for this user interest.
-        Affinity = 2,
-        /// The market for this user interest.
-        InMarket = 3,
-        /// Users known to have installed applications in the specified categories.
-        MobileAppInstallUser = 4,
-        /// The geographical location of the interest-based vertical.
-        VerticalGeo = 5,
-        /// User interest criteria for new smart phone users.
-        NewSmartPhoneUser = 6,
-    }
-    impl UserInterestTaxonomyType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                UserInterestTaxonomyType::Unspecified => "UNSPECIFIED",
-                UserInterestTaxonomyType::Unknown => "UNKNOWN",
-                UserInterestTaxonomyType::Affinity => "AFFINITY",
-                UserInterestTaxonomyType::InMarket => "IN_MARKET",
-                UserInterestTaxonomyType::MobileAppInstallUser => "MOBILE_APP_INSTALL_USER",
-                UserInterestTaxonomyType::VerticalGeo => "VERTICAL_GEO",
-                UserInterestTaxonomyType::NewSmartPhoneUser => "NEW_SMART_PHONE_USER",
             }
         }
     }
@@ -14209,44 +14199,258 @@ pub mod keyword_plan_concept_group_type_enum {
         }
     }
 }
-// Proto file describing conversion adjustment type.
+// Proto file describing ad lengths of a plannable video ad.
 
-/// Container for enum describing conversion adjustment types.
+/// Message describing length of a plannable video ad.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionAdjustmentTypeEnum {
+pub struct ReachPlanAdLengthEnum {
 }
-/// Nested message and enum types in `ConversionAdjustmentTypeEnum`.
-pub mod conversion_adjustment_type_enum {
-    /// The different actions advertisers can take to adjust the conversions that
-    /// they already reported. Retractions negate a conversion. Restatements change
-    /// the value of a conversion.
+/// Nested message and enum types in `ReachPlanAdLengthEnum`.
+pub mod reach_plan_ad_length_enum {
+    /// Possible ad length values.
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
-    pub enum ConversionAdjustmentType {
+    pub enum ReachPlanAdLength {
         /// Not specified.
         Unspecified = 0,
-        /// Represents value unknown in this version.
+        /// The value is unknown in this version.
         Unknown = 1,
-        /// Negates a conversion so that its total value and count are both zero.
-        Retraction = 2,
-        /// Changes the value of a conversion.
-        Restatement = 3,
-        /// Supplements an existing conversion with provided user identifiers and
-        /// user agent, which can be used by Google to enhance the conversion count.
-        Enhancement = 4,
+        /// 6 seconds long ad.
+        SixSeconds = 2,
+        /// 15 or 20 seconds long ad.
+        FifteenOrTwentySeconds = 3,
+        /// More than 20 seconds long ad.
+        TwentySecondsOrMore = 4,
     }
-    impl ConversionAdjustmentType {
+    impl ReachPlanAdLength {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ConversionAdjustmentType::Unspecified => "UNSPECIFIED",
-                ConversionAdjustmentType::Unknown => "UNKNOWN",
-                ConversionAdjustmentType::Retraction => "RETRACTION",
-                ConversionAdjustmentType::Restatement => "RESTATEMENT",
-                ConversionAdjustmentType::Enhancement => "ENHANCEMENT",
+                ReachPlanAdLength::Unspecified => "UNSPECIFIED",
+                ReachPlanAdLength::Unknown => "UNKNOWN",
+                ReachPlanAdLength::SixSeconds => "SIX_SECONDS",
+                ReachPlanAdLength::FifteenOrTwentySeconds => "FIFTEEN_OR_TWENTY_SECONDS",
+                ReachPlanAdLength::TwentySecondsOrMore => "TWENTY_SECONDS_OR_MORE",
+            }
+        }
+    }
+}
+// Proto file describing a plannable age range.
+
+/// Message describing plannable age ranges.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReachPlanAgeRangeEnum {
+}
+/// Nested message and enum types in `ReachPlanAgeRangeEnum`.
+pub mod reach_plan_age_range_enum {
+    /// Possible plannable age range values.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ReachPlanAgeRange {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Between 18 and 24 years old.
+        AgeRange1824 = 503001,
+        /// Between 18 and 34 years old.
+        AgeRange1834 = 2,
+        /// Between 18 and 44 years old.
+        AgeRange1844 = 3,
+        /// Between 18 and 49 years old.
+        AgeRange1849 = 4,
+        /// Between 18 and 54 years old.
+        AgeRange1854 = 5,
+        /// Between 18 and 64 years old.
+        AgeRange1864 = 6,
+        /// Between 18 and 65+ years old.
+        AgeRange1865Up = 7,
+        /// Between 21 and 34 years old.
+        AgeRange2134 = 8,
+        /// Between 25 and 34 years old.
+        AgeRange2534 = 503002,
+        /// Between 25 and 44 years old.
+        AgeRange2544 = 9,
+        /// Between 25 and 49 years old.
+        AgeRange2549 = 10,
+        /// Between 25 and 54 years old.
+        AgeRange2554 = 11,
+        /// Between 25 and 64 years old.
+        AgeRange2564 = 12,
+        /// Between 25 and 65+ years old.
+        AgeRange2565Up = 13,
+        /// Between 35 and 44 years old.
+        AgeRange3544 = 503003,
+        /// Between 35 and 49 years old.
+        AgeRange3549 = 14,
+        /// Between 35 and 54 years old.
+        AgeRange3554 = 15,
+        /// Between 35 and 64 years old.
+        AgeRange3564 = 16,
+        /// Between 35 and 65+ years old.
+        AgeRange3565Up = 17,
+        /// Between 45 and 54 years old.
+        AgeRange4554 = 503004,
+        /// Between 45 and 64 years old.
+        AgeRange4564 = 18,
+        /// Between 45 and 65+ years old.
+        AgeRange4565Up = 19,
+        /// Between 50 and 65+ years old.
+        AgeRange5065Up = 20,
+        /// Between 55 and 64 years old.
+        AgeRange5564 = 503005,
+        /// Between 55 and 65+ years old.
+        AgeRange5565Up = 21,
+        /// 65 years old and beyond.
+        AgeRange65Up = 503006,
+    }
+    impl ReachPlanAgeRange {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReachPlanAgeRange::Unspecified => "UNSPECIFIED",
+                ReachPlanAgeRange::Unknown => "UNKNOWN",
+                ReachPlanAgeRange::AgeRange1824 => "AGE_RANGE_18_24",
+                ReachPlanAgeRange::AgeRange1834 => "AGE_RANGE_18_34",
+                ReachPlanAgeRange::AgeRange1844 => "AGE_RANGE_18_44",
+                ReachPlanAgeRange::AgeRange1849 => "AGE_RANGE_18_49",
+                ReachPlanAgeRange::AgeRange1854 => "AGE_RANGE_18_54",
+                ReachPlanAgeRange::AgeRange1864 => "AGE_RANGE_18_64",
+                ReachPlanAgeRange::AgeRange1865Up => "AGE_RANGE_18_65_UP",
+                ReachPlanAgeRange::AgeRange2134 => "AGE_RANGE_21_34",
+                ReachPlanAgeRange::AgeRange2534 => "AGE_RANGE_25_34",
+                ReachPlanAgeRange::AgeRange2544 => "AGE_RANGE_25_44",
+                ReachPlanAgeRange::AgeRange2549 => "AGE_RANGE_25_49",
+                ReachPlanAgeRange::AgeRange2554 => "AGE_RANGE_25_54",
+                ReachPlanAgeRange::AgeRange2564 => "AGE_RANGE_25_64",
+                ReachPlanAgeRange::AgeRange2565Up => "AGE_RANGE_25_65_UP",
+                ReachPlanAgeRange::AgeRange3544 => "AGE_RANGE_35_44",
+                ReachPlanAgeRange::AgeRange3549 => "AGE_RANGE_35_49",
+                ReachPlanAgeRange::AgeRange3554 => "AGE_RANGE_35_54",
+                ReachPlanAgeRange::AgeRange3564 => "AGE_RANGE_35_64",
+                ReachPlanAgeRange::AgeRange3565Up => "AGE_RANGE_35_65_UP",
+                ReachPlanAgeRange::AgeRange4554 => "AGE_RANGE_45_54",
+                ReachPlanAgeRange::AgeRange4564 => "AGE_RANGE_45_64",
+                ReachPlanAgeRange::AgeRange4565Up => "AGE_RANGE_45_65_UP",
+                ReachPlanAgeRange::AgeRange5065Up => "AGE_RANGE_50_65_UP",
+                ReachPlanAgeRange::AgeRange5564 => "AGE_RANGE_55_64",
+                ReachPlanAgeRange::AgeRange5565Up => "AGE_RANGE_55_65_UP",
+                ReachPlanAgeRange::AgeRange65Up => "AGE_RANGE_65_UP",
+            }
+        }
+    }
+}
+// Proto file describing a plannable network.
+
+/// Container for enum describing plannable networks.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReachPlanNetworkEnum {
+}
+/// Nested message and enum types in `ReachPlanNetworkEnum`.
+pub mod reach_plan_network_enum {
+    /// Possible plannable network values.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum ReachPlanNetwork {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used as a return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// YouTube network.
+        Youtube = 2,
+        /// Google Video Partners (GVP) network.
+        GoogleVideoPartners = 3,
+        /// A combination of the YouTube network and the Google Video Partners
+        /// network.
+        YoutubeAndGoogleVideoPartners = 4,
+    }
+    impl ReachPlanNetwork {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ReachPlanNetwork::Unspecified => "UNSPECIFIED",
+                ReachPlanNetwork::Unknown => "UNKNOWN",
+                ReachPlanNetwork::Youtube => "YOUTUBE",
+                ReachPlanNetwork::GoogleVideoPartners => "GOOGLE_VIDEO_PARTNERS",
+                ReachPlanNetwork::YoutubeAndGoogleVideoPartners => "YOUTUBE_AND_GOOGLE_VIDEO_PARTNERS",
+            }
+        }
+    }
+}
+// Proto file describing Keyword Planner Keyword annotation types.
+
+/// Container for enumeration of keyword plan keyword annotations.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordPlanKeywordAnnotationEnum {
+}
+/// Nested message and enum types in `KeywordPlanKeywordAnnotationEnum`.
+pub mod keyword_plan_keyword_annotation_enum {
+    /// Enumerates keyword plan annotations that can be requested.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum KeywordPlanKeywordAnnotation {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Return the keyword concept and concept group data.
+        KeywordConcept = 2,
+    }
+    impl KeywordPlanKeywordAnnotation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                KeywordPlanKeywordAnnotation::Unspecified => "UNSPECIFIED",
+                KeywordPlanKeywordAnnotation::Unknown => "UNKNOWN",
+                KeywordPlanKeywordAnnotation::KeywordConcept => "KEYWORD_CONCEPT",
+            }
+        }
+    }
+}
+// Proto file describing invoice types.
+
+/// Container for enum describing the type of invoices.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InvoiceTypeEnum {
+}
+/// Nested message and enum types in `InvoiceTypeEnum`.
+pub mod invoice_type_enum {
+    /// The possible type of invoices.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum InvoiceType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// An invoice with a negative amount. The account receives a credit.
+        CreditMemo = 2,
+        /// An invoice with a positive amount. The account owes a balance.
+        Invoice = 3,
+    }
+    impl InvoiceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InvoiceType::Unspecified => "UNSPECIFIED",
+                InvoiceType::Unknown => "UNKNOWN",
+                InvoiceType::CreditMemo => "CREDIT_MEMO",
+                InvoiceType::Invoice => "INVOICE",
             }
         }
     }
@@ -14286,210 +14490,6 @@ pub mod merchant_center_link_status_enum {
                 MerchantCenterLinkStatus::Unknown => "UNKNOWN",
                 MerchantCenterLinkStatus::Enabled => "ENABLED",
                 MerchantCenterLinkStatus::Pending => "PENDING",
-            }
-        }
-    }
-}
-// Proto file describing Keyword Planner Keyword annotation types.
-
-/// Container for enumeration of keyword plan keyword annotations.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanKeywordAnnotationEnum {
-}
-/// Nested message and enum types in `KeywordPlanKeywordAnnotationEnum`.
-pub mod keyword_plan_keyword_annotation_enum {
-    /// Enumerates keyword plan annotations that can be requested.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum KeywordPlanKeywordAnnotation {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Return the keyword concept and concept group data.
-        KeywordConcept = 2,
-    }
-    impl KeywordPlanKeywordAnnotation {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                KeywordPlanKeywordAnnotation::Unspecified => "UNSPECIFIED",
-                KeywordPlanKeywordAnnotation::Unknown => "UNKNOWN",
-                KeywordPlanKeywordAnnotation::KeywordConcept => "KEYWORD_CONCEPT",
-            }
-        }
-    }
-}
-// Proto file describing GoogleAdsField categories.
-
-/// Container for enum that determines if the described artifact is a resource
-/// or a field, and if it is a field, when it segments search queries.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleAdsFieldCategoryEnum {
-}
-/// Nested message and enum types in `GoogleAdsFieldCategoryEnum`.
-pub mod google_ads_field_category_enum {
-    /// The category of the artifact.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum GoogleAdsFieldCategory {
-        /// Unspecified
-        Unspecified = 0,
-        /// Unknown
-        Unknown = 1,
-        /// The described artifact is a resource.
-        Resource = 2,
-        /// The described artifact is a field and is an attribute of a resource.
-        /// Including a resource attribute field in a query may segment the query if
-        /// the resource to which it is attributed segments the resource found in
-        /// the FROM clause.
-        Attribute = 3,
-        /// The described artifact is a field and always segments search queries.
-        Segment = 5,
-        /// The described artifact is a field and is a metric. It never segments
-        /// search queries.
-        Metric = 6,
-    }
-    impl GoogleAdsFieldCategory {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                GoogleAdsFieldCategory::Unspecified => "UNSPECIFIED",
-                GoogleAdsFieldCategory::Unknown => "UNKNOWN",
-                GoogleAdsFieldCategory::Resource => "RESOURCE",
-                GoogleAdsFieldCategory::Attribute => "ATTRIBUTE",
-                GoogleAdsFieldCategory::Segment => "SEGMENT",
-                GoogleAdsFieldCategory::Metric => "METRIC",
-            }
-        }
-    }
-}
-// Proto file describing GoogleAdsField data types.
-
-/// Container holding the various data types.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleAdsFieldDataTypeEnum {
-}
-/// Nested message and enum types in `GoogleAdsFieldDataTypeEnum`.
-pub mod google_ads_field_data_type_enum {
-    /// These are the various types a GoogleAdsService artifact may take on.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum GoogleAdsFieldDataType {
-        /// Unspecified
-        Unspecified = 0,
-        /// Unknown
-        Unknown = 1,
-        /// Maps to google.protobuf.BoolValue
-        ///
-        /// Applicable operators:  =, !=
-        Boolean = 2,
-        /// Maps to google.protobuf.StringValue. It can be compared using the set of
-        /// operators specific to dates however.
-        ///
-        /// Applicable operators:  =, <, >, <=, >=, BETWEEN, DURING, and IN
-        Date = 3,
-        /// Maps to google.protobuf.DoubleValue
-        ///
-        /// Applicable operators:  =, !=, <, >, IN, NOT IN
-        Double = 4,
-        /// Maps to an enum. It's specific definition can be found at type_url.
-        ///
-        /// Applicable operators:  =, !=, IN, NOT IN
-        Enum = 5,
-        /// Maps to google.protobuf.FloatValue
-        ///
-        /// Applicable operators:  =, !=, <, >, IN, NOT IN
-        Float = 6,
-        /// Maps to google.protobuf.Int32Value
-        ///
-        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
-        Int32 = 7,
-        /// Maps to google.protobuf.Int64Value
-        ///
-        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
-        Int64 = 8,
-        /// Maps to a protocol buffer message type. The data type's details can be
-        /// found in type_url.
-        ///
-        /// No operators work with MESSAGE fields.
-        Message = 9,
-        /// Maps to google.protobuf.StringValue. Represents the resource name
-        /// (unique id) of a resource or one of its foreign keys.
-        ///
-        /// No operators work with RESOURCE_NAME fields.
-        ResourceName = 10,
-        /// Maps to google.protobuf.StringValue.
-        ///
-        /// Applicable operators:  =, !=, LIKE, NOT LIKE, IN, NOT IN
-        String = 11,
-        /// Maps to google.protobuf.UInt64Value
-        ///
-        /// Applicable operators:  =, !=, <, >, <=, >=, BETWEEN, IN, NOT IN
-        Uint64 = 12,
-    }
-    impl GoogleAdsFieldDataType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                GoogleAdsFieldDataType::Unspecified => "UNSPECIFIED",
-                GoogleAdsFieldDataType::Unknown => "UNKNOWN",
-                GoogleAdsFieldDataType::Boolean => "BOOLEAN",
-                GoogleAdsFieldDataType::Date => "DATE",
-                GoogleAdsFieldDataType::Double => "DOUBLE",
-                GoogleAdsFieldDataType::Enum => "ENUM",
-                GoogleAdsFieldDataType::Float => "FLOAT",
-                GoogleAdsFieldDataType::Int32 => "INT32",
-                GoogleAdsFieldDataType::Int64 => "INT64",
-                GoogleAdsFieldDataType::Message => "MESSAGE",
-                GoogleAdsFieldDataType::ResourceName => "RESOURCE_NAME",
-                GoogleAdsFieldDataType::String => "STRING",
-                GoogleAdsFieldDataType::Uint64 => "UINT64",
-            }
-        }
-    }
-}
-// Proto file describing invoice types.
-
-/// Container for enum describing the type of invoices.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InvoiceTypeEnum {
-}
-/// Nested message and enum types in `InvoiceTypeEnum`.
-pub mod invoice_type_enum {
-    /// The possible type of invoices.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum InvoiceType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// An invoice with a negative amount. The account receives a credit.
-        CreditMemo = 2,
-        /// An invoice with a positive amount. The account owes a balance.
-        Invoice = 3,
-    }
-    impl InvoiceType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                InvoiceType::Unspecified => "UNSPECIFIED",
-                InvoiceType::Unknown => "UNKNOWN",
-                InvoiceType::CreditMemo => "CREDIT_MEMO",
-                InvoiceType::Invoice => "INVOICE",
             }
         }
     }
