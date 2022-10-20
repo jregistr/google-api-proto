@@ -1,3 +1,64 @@
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag="1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag="3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration="dashboard_filter::FilterType", tag="5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof="dashboard_filter::DefaultValue", tags="4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag="4")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// A chart that displays alert policy data.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AlertChart {
@@ -1184,67 +1245,6 @@ pub mod widget {
         /// A widget that shows a stream of logs.
         #[prost(message, tag="10")]
         LogsPanel(super::LogsPanel),
-    }
-}
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag="1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag="3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration="dashboard_filter::FilterType", tag="5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof="dashboard_filter::DefaultValue", tags="4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    impl FilterType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
-                FilterType::ResourceLabel => "RESOURCE_LABEL",
-                FilterType::MetricLabel => "METRIC_LABEL",
-                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
-                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
-                FilterType::Group => "GROUP",
-            }
-        }
-    }
-    /// The default value used in the filter comparison
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag="4")]
-        StringValue(::prost::alloc::string::String),
     }
 }
 /// A basic layout divides the available space into vertical columns of equal

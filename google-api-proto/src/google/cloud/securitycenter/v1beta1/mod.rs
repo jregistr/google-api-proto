@@ -1,114 +1,3 @@
-/// Response of asset discovery run
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag="2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Completed => "COMPLETED",
-                State::Superseded => "SUPERSEDED",
-                State::Terminated => "TERMINATED",
-            }
-        }
-    }
-}
-/// User specified settings that are attached to the Security Command
-/// Center organization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OrganizationSettings {
-    /// The relative resource name of the settings. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/organizationSettings".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
-    /// set to `true`, then discovery of assets will occur. If it is set to `false,
-    /// all historical assets will remain, but discovery of future assets will not
-    /// occur.
-    #[prost(bool, tag="2")]
-    pub enable_asset_discovery: bool,
-    /// The configuration used for Asset Discovery runs.
-    #[prost(message, optional, tag="3")]
-    pub asset_discovery_config: ::core::option::Option<organization_settings::AssetDiscoveryConfig>,
-}
-/// Nested message and enum types in `OrganizationSettings`.
-pub mod organization_settings {
-    /// The configuration used for Asset Discovery runs.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AssetDiscoveryConfig {
-        /// The project ids to use for filtering asset discovery.
-        #[prost(string, repeated, tag="1")]
-        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The mode to use for filtering asset discovery.
-        #[prost(enumeration="asset_discovery_config::InclusionMode", tag="2")]
-        pub inclusion_mode: i32,
-    }
-    /// Nested message and enum types in `AssetDiscoveryConfig`.
-    pub mod asset_discovery_config {
-        /// The mode of inclusion when running Asset Discovery.
-        /// Asset discovery can be limited by explicitly identifying projects to be
-        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
-        /// within the organization and their children are discovered during asset
-        /// discovery. If EXCLUDE is set, then projects that don't match those
-        /// projects are discovered during asset discovery. If neither are set, then
-        /// all projects within the organization are discovered during asset
-        /// discovery.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-        #[repr(i32)]
-        pub enum InclusionMode {
-            /// Unspecified. Setting the mode with this value will disable
-            /// inclusion/exclusion filtering for Asset Discovery.
-            Unspecified = 0,
-            /// Asset Discovery will capture only the resources within the projects
-            /// specified. All other resources will be ignored.
-            IncludeOnly = 1,
-            /// Asset Discovery will ignore all resources under the projects specified.
-            /// All other resources will be retrieved.
-            Exclude = 2,
-        }
-        impl InclusionMode {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
-                    InclusionMode::IncludeOnly => "INCLUDE_ONLY",
-                    InclusionMode::Exclude => "EXCLUDE",
-                }
-            }
-        }
-    }
-}
 /// User specified security marks that are attached to the parent Security
 /// Command Center resource. Security marks are scoped within a Security Command
 /// Center organization -- they can be modified and viewed by all users who have
@@ -196,6 +85,76 @@ pub mod asset {
         /// Owners of the Google Cloud resource.
         #[prost(string, repeated, tag="5")]
         pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
+/// User specified settings that are attached to the Security Command
+/// Center organization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OrganizationSettings {
+    /// The relative resource name of the settings. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/organizationSettings".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
+    /// set to `true`, then discovery of assets will occur. If it is set to `false,
+    /// all historical assets will remain, but discovery of future assets will not
+    /// occur.
+    #[prost(bool, tag="2")]
+    pub enable_asset_discovery: bool,
+    /// The configuration used for Asset Discovery runs.
+    #[prost(message, optional, tag="3")]
+    pub asset_discovery_config: ::core::option::Option<organization_settings::AssetDiscoveryConfig>,
+}
+/// Nested message and enum types in `OrganizationSettings`.
+pub mod organization_settings {
+    /// The configuration used for Asset Discovery runs.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AssetDiscoveryConfig {
+        /// The project ids to use for filtering asset discovery.
+        #[prost(string, repeated, tag="1")]
+        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The mode to use for filtering asset discovery.
+        #[prost(enumeration="asset_discovery_config::InclusionMode", tag="2")]
+        pub inclusion_mode: i32,
+    }
+    /// Nested message and enum types in `AssetDiscoveryConfig`.
+    pub mod asset_discovery_config {
+        /// The mode of inclusion when running Asset Discovery.
+        /// Asset discovery can be limited by explicitly identifying projects to be
+        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
+        /// within the organization and their children are discovered during asset
+        /// discovery. If EXCLUDE is set, then projects that don't match those
+        /// projects are discovered during asset discovery. If neither are set, then
+        /// all projects within the organization are discovered during asset
+        /// discovery.
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[repr(i32)]
+        pub enum InclusionMode {
+            /// Unspecified. Setting the mode with this value will disable
+            /// inclusion/exclusion filtering for Asset Discovery.
+            Unspecified = 0,
+            /// Asset Discovery will capture only the resources within the projects
+            /// specified. All other resources will be ignored.
+            IncludeOnly = 1,
+            /// Asset Discovery will ignore all resources under the projects specified.
+            /// All other resources will be retrieved.
+            Exclude = 2,
+        }
+        impl InclusionMode {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
+                    InclusionMode::IncludeOnly => "INCLUDE_ONLY",
+                    InclusionMode::Exclude => "EXCLUDE",
+                }
+            }
+        }
     }
 }
 /// Security Command Center finding source. A finding source
@@ -1359,6 +1318,47 @@ pub mod security_center_client {
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/UpdateSecurityMarks",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Response of asset discovery run
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration="run_asset_discovery_response::State", tag="1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
+    #[prost(message, optional, tag="2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
+            }
         }
     }
 }
