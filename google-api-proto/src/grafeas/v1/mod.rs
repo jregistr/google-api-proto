@@ -1,66 +1,3 @@
-/// An artifact that can be deployed in some runtime.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeploymentNote {
-    /// Required. Resource URI for the artifact being deployed.
-    #[prost(string, repeated, tag="1")]
-    pub resource_uri: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// The period during which some deployable was active in a runtime.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeploymentOccurrence {
-    /// Identity of the user that triggered this deployment.
-    #[prost(string, tag="1")]
-    pub user_email: ::prost::alloc::string::String,
-    /// Required. Beginning of the lifetime of this deployment.
-    #[prost(message, optional, tag="2")]
-    pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// End of the lifetime of this deployment.
-    #[prost(message, optional, tag="3")]
-    pub undeploy_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Configuration used to create this deployment.
-    #[prost(string, tag="4")]
-    pub config: ::prost::alloc::string::String,
-    /// Address of the runtime element hosting this deployment.
-    #[prost(string, tag="5")]
-    pub address: ::prost::alloc::string::String,
-    /// Output only. Resource URI for the artifact being deployed taken from
-    /// the deployable field with the same name.
-    #[prost(string, repeated, tag="6")]
-    pub resource_uri: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Platform hosting this deployment.
-    #[prost(enumeration="deployment_occurrence::Platform", tag="7")]
-    pub platform: i32,
-}
-/// Nested message and enum types in `DeploymentOccurrence`.
-pub mod deployment_occurrence {
-    /// Types of platforms.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum Platform {
-        /// Unknown.
-        Unspecified = 0,
-        /// Google Container Engine.
-        Gke = 1,
-        /// Google App Engine: Flexible Environment.
-        Flex = 2,
-        /// Custom user-defined platform.
-        Custom = 3,
-    }
-    impl Platform {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
-                Platform::Gke => "GKE",
-                Platform::Flex => "FLEX",
-                Platform::Custom => "CUSTOM",
-            }
-        }
-    }
-}
 /// Metadata for any related URL information.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RelatedUrl {
@@ -221,81 +158,6 @@ impl NoteKind {
             NoteKind::DsseAttestation => "DSSE_ATTESTATION",
         }
     }
-}
-// An attestation wrapper with a PGP-compatible signature. This message only
-// supports `ATTACHED` signatures, where the payload that is signed is included
-// alongside the signature itself in the same file.
-
-/// Note kind that represents a logical attestation "role" or "authority". For
-/// example, an organization might have one `Authority` for "QA" and one for
-/// "build". This note is intended to act strictly as a grouping mechanism for
-/// the attached occurrences (Attestations). This grouping mechanism also
-/// provides a security boundary, since IAM ACLs gate the ability for a principle
-/// to attach an occurrence to a given note. It also provides a single point of
-/// lookup to find all attached attestation occurrences, even if they don't all
-/// live in the same project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttestationNote {
-    /// Hint hints at the purpose of the attestation authority.
-    #[prost(message, optional, tag="1")]
-    pub hint: ::core::option::Option<attestation_note::Hint>,
-}
-/// Nested message and enum types in `AttestationNote`.
-pub mod attestation_note {
-    /// This submessage provides human-readable hints about the purpose of the
-    /// authority. Because the name of a note acts as its resource reference, it is
-    /// important to disambiguate the canonical name of the Note (which might be a
-    /// UUID for security purposes) from "readable" names more suitable for debug
-    /// output. Note that these hints should not be used to look up authorities in
-    /// security sensitive contexts, such as when looking up attestations to
-    /// verify.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Hint {
-        /// Required. The human readable name of this attestation authority, for
-        /// example "qa".
-        #[prost(string, tag="1")]
-        pub human_readable_name: ::prost::alloc::string::String,
-    }
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Jwt {
-    /// The compact encoding of a JWS, which is always three base64 encoded strings
-    /// joined by periods. For details, see:
-    /// <https://tools.ietf.org/html/rfc7515.html#section-3.1>
-    #[prost(string, tag="1")]
-    pub compact_jwt: ::prost::alloc::string::String,
-}
-/// Occurrence that represents a single "attestation". The authenticity of an
-/// attestation can be verified using the attached signature. If the verifier
-/// trusts the public key of the signer, then verifying the signature is
-/// sufficient to establish trust. In this circumstance, the authority to which
-/// this attestation is attached is primarily useful for lookup (how to find
-/// this attestation if you already know the authority and artifact to be
-/// verified) and intent (for which authority this attestation was intended to
-/// sign.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttestationOccurrence {
-    /// Required. The serialized payload that is verified by one or more
-    /// `signatures`.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_payload: ::prost::bytes::Bytes,
-    /// One or more signatures over `serialized_payload`.  Verifier implementations
-    /// should consider this attestation message verified if at least one
-    /// `signature` verifies `serialized_payload`.  See `Signature` in common.proto
-    /// for more details on signature structure and verification.
-    #[prost(message, repeated, tag="2")]
-    pub signatures: ::prost::alloc::vec::Vec<Signature>,
-    /// One or more JWTs encoding a self-contained attestation.
-    /// Each JWT encodes the payload that it verifies within the JWT itself.
-    /// Verifier implementation SHOULD ignore the `serialized_payload` field
-    /// when verifying these JWTs.
-    /// If only JWTs are present on this AttestationOccurrence, then the
-    /// `serialized_payload` SHOULD be left empty.
-    /// Each JWT SHOULD encode a claim specific to the `resource_uri` of this
-    /// Occurrence, but this is not validated by Grafeas metadata API
-    /// implementations.  The JWT itself is opaque to Grafeas.
-    #[prost(message, repeated, tag="3")]
-    pub jwts: ::prost::alloc::vec::Vec<Jwt>,
 }
 // Spec defined at
 // <https://github.com/in-toto/attestation/blob/main/spec/predicates/provenance.md>
@@ -641,6 +503,354 @@ pub struct Subject {
     #[prost(btree_map="string, string", tag="2")]
     pub digest: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DsseAttestationNote {
+    /// DSSEHint hints at the purpose of the attestation authority.
+    #[prost(message, optional, tag="1")]
+    pub hint: ::core::option::Option<dsse_attestation_note::DsseHint>,
+}
+/// Nested message and enum types in `DSSEAttestationNote`.
+pub mod dsse_attestation_note {
+    /// This submessage provides human-readable hints about the purpose of the
+    /// authority. Because the name of a note acts as its resource reference, it is
+    /// important to disambiguate the canonical name of the Note (which might be a
+    /// UUID for security purposes) from "readable" names more suitable for debug
+    /// output. Note that these hints should not be used to look up authorities in
+    /// security sensitive contexts, such as when looking up attestations to
+    /// verify.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DsseHint {
+        /// Required. The human readable name of this attestation authority, for
+        /// example "cloudbuild-prod".
+        #[prost(string, tag="1")]
+        pub human_readable_name: ::prost::alloc::string::String,
+    }
+}
+/// Deprecated. Prefer to use a regular Occurrence, and populate the
+/// Envelope at the top level of the Occurrence.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DsseAttestationOccurrence {
+    /// If doing something security critical, make sure to verify the signatures in
+    /// this metadata.
+    #[prost(message, optional, tag="1")]
+    pub envelope: ::core::option::Option<Envelope>,
+    #[prost(oneof="dsse_attestation_occurrence::DecodedPayload", tags="2")]
+    pub decoded_payload: ::core::option::Option<dsse_attestation_occurrence::DecodedPayload>,
+}
+/// Nested message and enum types in `DSSEAttestationOccurrence`.
+pub mod dsse_attestation_occurrence {
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DecodedPayload {
+        #[prost(message, tag="2")]
+        Statement(super::InTotoStatement),
+    }
+}
+/// This represents a particular channel of distribution for a given package.
+/// E.g., Debian's jessie-backports dpkg mirror.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Distribution {
+    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
+    /// denoting the package manager version distributing a package.
+    #[prost(string, tag="1")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// The CPU architecture for which packages in this distribution channel were
+    /// built.
+    #[prost(enumeration="Architecture", tag="2")]
+    pub architecture: i32,
+    /// The latest available version of this package in this distribution channel.
+    #[prost(message, optional, tag="3")]
+    pub latest_version: ::core::option::Option<Version>,
+    /// A freeform string denoting the maintainer of this package.
+    #[prost(string, tag="4")]
+    pub maintainer: ::prost::alloc::string::String,
+    /// The distribution channel-specific homepage for this package.
+    #[prost(string, tag="5")]
+    pub url: ::prost::alloc::string::String,
+    /// The distribution channel-specific description of this package.
+    #[prost(string, tag="6")]
+    pub description: ::prost::alloc::string::String,
+}
+/// An occurrence of a particular package installation found within a system's
+/// filesystem. E.g., glibc was found in `/var/lib/dpkg/status`.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Location {
+    /// Deprecated.
+    /// The CPE URI in [CPE format](<https://cpe.mitre.org/specification/>)
+    #[prost(string, tag="1")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// Deprecated.
+    /// The version installed at this location.
+    #[prost(message, optional, tag="2")]
+    pub version: ::core::option::Option<Version>,
+    /// The path from which we gathered that this package/version is installed.
+    #[prost(string, tag="3")]
+    pub path: ::prost::alloc::string::String,
+}
+/// PackageNote represents a particular package version.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PackageNote {
+    /// The name of the package.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Deprecated.
+    /// The various channels by which a package is distributed.
+    #[prost(message, repeated, tag="10")]
+    pub distribution: ::prost::alloc::vec::Vec<Distribution>,
+    /// The type of package; whether native or non native (e.g., ruby gems,
+    /// node.js packages, etc.).
+    #[prost(string, tag="11")]
+    pub package_type: ::prost::alloc::string::String,
+    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
+    /// denoting the package manager version distributing a package.
+    /// The cpe_uri will be blank for language packages.
+    #[prost(string, tag="12")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// The CPU architecture for which packages in this distribution channel were
+    /// built. Architecture will be blank for language packages.
+    #[prost(enumeration="Architecture", tag="13")]
+    pub architecture: i32,
+    /// The version of the package.
+    #[prost(message, optional, tag="14")]
+    pub version: ::core::option::Option<Version>,
+    /// A freeform text denoting the maintainer of this package.
+    #[prost(string, tag="15")]
+    pub maintainer: ::prost::alloc::string::String,
+    /// The homepage for this package.
+    #[prost(string, tag="16")]
+    pub url: ::prost::alloc::string::String,
+    /// The description of this package.
+    #[prost(string, tag="17")]
+    pub description: ::prost::alloc::string::String,
+    /// Licenses that have been declared by the authors of the package.
+    #[prost(message, optional, tag="18")]
+    pub license: ::core::option::Option<License>,
+    /// Hash value, typically a file digest, that allows unique
+    /// identification a specific package.
+    #[prost(message, repeated, tag="19")]
+    pub digest: ::prost::alloc::vec::Vec<Digest>,
+}
+/// Details on how a particular software package was installed on a system.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PackageOccurrence {
+    /// The name of the installed package.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// All of the places within the filesystem versions of this package
+    /// have been found.
+    #[prost(message, repeated, tag="2")]
+    pub location: ::prost::alloc::vec::Vec<Location>,
+    /// The type of package; whether native or non native (e.g., ruby gems,
+    /// node.js packages, etc.).
+    #[prost(string, tag="3")]
+    pub package_type: ::prost::alloc::string::String,
+    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
+    /// denoting the package manager version distributing a package.
+    /// The cpe_uri will be blank for language packages.
+    #[prost(string, tag="4")]
+    pub cpe_uri: ::prost::alloc::string::String,
+    /// The CPU architecture for which packages in this distribution channel were
+    /// built. Architecture will be blank for language packages.
+    #[prost(enumeration="Architecture", tag="5")]
+    pub architecture: i32,
+    /// Licenses that have been declared by the authors of the package.
+    #[prost(message, optional, tag="6")]
+    pub license: ::core::option::Option<License>,
+    /// The version of the package.
+    #[prost(message, optional, tag="7")]
+    pub version: ::core::option::Option<Version>,
+}
+/// Version contains structured information about the version of a package.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Version {
+    /// Used to correct mistakes in the version numbering scheme.
+    #[prost(int32, tag="1")]
+    pub epoch: i32,
+    /// Required only when version kind is NORMAL. The main part of the version
+    /// name.
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+    /// The iteration of the package build from the above version.
+    #[prost(string, tag="3")]
+    pub revision: ::prost::alloc::string::String,
+    /// Whether this version is specifying part of an inclusive range. Grafeas
+    /// does not have the capability to specify version ranges; instead we have
+    /// fields that specify start version and end versions. At times this is
+    /// insufficient - we also need to specify whether the version is included in
+    /// the range or is excluded from the range. This boolean is expected to be set
+    /// to true when the version is included in a range.
+    #[prost(bool, tag="6")]
+    pub inclusive: bool,
+    /// Required. Distinguishes between sentinel MIN/MAX versions and normal
+    /// versions.
+    #[prost(enumeration="version::VersionKind", tag="4")]
+    pub kind: i32,
+    /// Human readable version string. This string is of the form
+    /// <epoch>:<name>-<revision> and is only set when kind is NORMAL.
+    #[prost(string, tag="5")]
+    pub full_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Version`.
+pub mod version {
+    /// Whether this is an ordinary package version or a sentinel MIN/MAX version.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum VersionKind {
+        /// Unknown.
+        Unspecified = 0,
+        /// A standard package version.
+        Normal = 1,
+        /// A special version representing negative infinity.
+        Minimum = 2,
+        /// A special version representing positive infinity.
+        Maximum = 3,
+    }
+    impl VersionKind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VersionKind::Unspecified => "VERSION_KIND_UNSPECIFIED",
+                VersionKind::Normal => "NORMAL",
+                VersionKind::Minimum => "MINIMUM",
+                VersionKind::Maximum => "MAXIMUM",
+            }
+        }
+    }
+}
+/// Instruction set architectures supported by various package managers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Architecture {
+    /// Unknown architecture.
+    Unspecified = 0,
+    /// X86 architecture.
+    X86 = 1,
+    /// X64 architecture.
+    X64 = 2,
+}
+impl Architecture {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Architecture::Unspecified => "ARCHITECTURE_UNSPECIFIED",
+            Architecture::X86 => "X86",
+            Architecture::X64 => "X64",
+        }
+    }
+}
+/// Note provider assigned severity/impact ranking.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Severity {
+    /// Unknown.
+    Unspecified = 0,
+    /// Minimal severity.
+    Minimal = 1,
+    /// Low severity.
+    Low = 2,
+    /// Medium severity.
+    Medium = 3,
+    /// High severity.
+    High = 4,
+    /// Critical severity.
+    Critical = 5,
+}
+impl Severity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+            Severity::Minimal => "MINIMAL",
+            Severity::Low => "LOW",
+            Severity::Medium => "MEDIUM",
+            Severity::High => "HIGH",
+            Severity::Critical => "CRITICAL",
+        }
+    }
+}
+// An attestation wrapper with a PGP-compatible signature. This message only
+// supports `ATTACHED` signatures, where the payload that is signed is included
+// alongside the signature itself in the same file.
+
+/// Note kind that represents a logical attestation "role" or "authority". For
+/// example, an organization might have one `Authority` for "QA" and one for
+/// "build". This note is intended to act strictly as a grouping mechanism for
+/// the attached occurrences (Attestations). This grouping mechanism also
+/// provides a security boundary, since IAM ACLs gate the ability for a principle
+/// to attach an occurrence to a given note. It also provides a single point of
+/// lookup to find all attached attestation occurrences, even if they don't all
+/// live in the same project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AttestationNote {
+    /// Hint hints at the purpose of the attestation authority.
+    #[prost(message, optional, tag="1")]
+    pub hint: ::core::option::Option<attestation_note::Hint>,
+}
+/// Nested message and enum types in `AttestationNote`.
+pub mod attestation_note {
+    /// This submessage provides human-readable hints about the purpose of the
+    /// authority. Because the name of a note acts as its resource reference, it is
+    /// important to disambiguate the canonical name of the Note (which might be a
+    /// UUID for security purposes) from "readable" names more suitable for debug
+    /// output. Note that these hints should not be used to look up authorities in
+    /// security sensitive contexts, such as when looking up attestations to
+    /// verify.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Hint {
+        /// Required. The human readable name of this attestation authority, for
+        /// example "qa".
+        #[prost(string, tag="1")]
+        pub human_readable_name: ::prost::alloc::string::String,
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Jwt {
+    /// The compact encoding of a JWS, which is always three base64 encoded strings
+    /// joined by periods. For details, see:
+    /// <https://tools.ietf.org/html/rfc7515.html#section-3.1>
+    #[prost(string, tag="1")]
+    pub compact_jwt: ::prost::alloc::string::String,
+}
+/// Occurrence that represents a single "attestation". The authenticity of an
+/// attestation can be verified using the attached signature. If the verifier
+/// trusts the public key of the signer, then verifying the signature is
+/// sufficient to establish trust. In this circumstance, the authority to which
+/// this attestation is attached is primarily useful for lookup (how to find
+/// this attestation if you already know the authority and artifact to be
+/// verified) and intent (for which authority this attestation was intended to
+/// sign.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AttestationOccurrence {
+    /// Required. The serialized payload that is verified by one or more
+    /// `signatures`.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_payload: ::prost::bytes::Bytes,
+    /// One or more signatures over `serialized_payload`.  Verifier implementations
+    /// should consider this attestation message verified if at least one
+    /// `signature` verifies `serialized_payload`.  See `Signature` in common.proto
+    /// for more details on signature structure and verification.
+    #[prost(message, repeated, tag="2")]
+    pub signatures: ::prost::alloc::vec::Vec<Signature>,
+    /// One or more JWTs encoding a self-contained attestation.
+    /// Each JWT encodes the payload that it verifies within the JWT itself.
+    /// Verifier implementation SHOULD ignore the `serialized_payload` field
+    /// when verifying these JWTs.
+    /// If only JWTs are present on this AttestationOccurrence, then the
+    /// `serialized_payload` SHOULD be left empty.
+    /// Each JWT SHOULD encode a claim specific to the `resource_uri` of this
+    /// Occurrence, but this is not validated by Grafeas metadata API
+    /// implementations.  The JWT itself is opaque to Grafeas.
+    #[prost(message, repeated, tag="3")]
+    pub jwts: ::prost::alloc::vec::Vec<Jwt>,
+}
 /// Provenance of a build. Contains all information needed to verify the full
 /// details about the build from source to completion.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -983,39 +1193,6 @@ pub struct BuildOccurrence {
     #[prost(message, optional, tag="4")]
     pub intoto_statement: ::core::option::Option<InTotoStatement>,
 }
-/// Note provider assigned severity/impact ranking.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Severity {
-    /// Unknown.
-    Unspecified = 0,
-    /// Minimal severity.
-    Minimal = 1,
-    /// Low severity.
-    Low = 2,
-    /// Medium severity.
-    Medium = 3,
-    /// High severity.
-    High = 4,
-    /// Critical severity.
-    Critical = 5,
-}
-impl Severity {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Severity::Unspecified => "SEVERITY_UNSPECIFIED",
-            Severity::Minimal => "MINIMAL",
-            Severity::Low => "LOW",
-            Severity::Medium => "MEDIUM",
-            Severity::High => "HIGH",
-            Severity::Critical => "CRITICAL",
-        }
-    }
-}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComplianceNote {
     /// The title that identifies this compliance check.
@@ -1097,6 +1274,69 @@ pub struct NonCompliantFile {
     /// Explains why a file is non compliant for a CIS check.
     #[prost(string, tag="3")]
     pub reason: ::prost::alloc::string::String,
+}
+/// An artifact that can be deployed in some runtime.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeploymentNote {
+    /// Required. Resource URI for the artifact being deployed.
+    #[prost(string, repeated, tag="1")]
+    pub resource_uri: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// The period during which some deployable was active in a runtime.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeploymentOccurrence {
+    /// Identity of the user that triggered this deployment.
+    #[prost(string, tag="1")]
+    pub user_email: ::prost::alloc::string::String,
+    /// Required. Beginning of the lifetime of this deployment.
+    #[prost(message, optional, tag="2")]
+    pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// End of the lifetime of this deployment.
+    #[prost(message, optional, tag="3")]
+    pub undeploy_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Configuration used to create this deployment.
+    #[prost(string, tag="4")]
+    pub config: ::prost::alloc::string::String,
+    /// Address of the runtime element hosting this deployment.
+    #[prost(string, tag="5")]
+    pub address: ::prost::alloc::string::String,
+    /// Output only. Resource URI for the artifact being deployed taken from
+    /// the deployable field with the same name.
+    #[prost(string, repeated, tag="6")]
+    pub resource_uri: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Platform hosting this deployment.
+    #[prost(enumeration="deployment_occurrence::Platform", tag="7")]
+    pub platform: i32,
+}
+/// Nested message and enum types in `DeploymentOccurrence`.
+pub mod deployment_occurrence {
+    /// Types of platforms.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum Platform {
+        /// Unknown.
+        Unspecified = 0,
+        /// Google Container Engine.
+        Gke = 1,
+        /// Google App Engine: Flexible Environment.
+        Flex = 2,
+        /// Custom user-defined platform.
+        Custom = 3,
+    }
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Gke => "GKE",
+                Platform::Flex => "FLEX",
+                Platform::Custom => "CUSTOM",
+            }
+        }
+    }
 }
 /// A note that indicates a type of analysis a provider would perform. This note
 /// exists in a provider's project. A `Discovery` occurrence is created in a
@@ -1207,48 +1447,6 @@ pub mod discovery_occurrence {
         }
     }
 }
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DsseAttestationNote {
-    /// DSSEHint hints at the purpose of the attestation authority.
-    #[prost(message, optional, tag="1")]
-    pub hint: ::core::option::Option<dsse_attestation_note::DsseHint>,
-}
-/// Nested message and enum types in `DSSEAttestationNote`.
-pub mod dsse_attestation_note {
-    /// This submessage provides human-readable hints about the purpose of the
-    /// authority. Because the name of a note acts as its resource reference, it is
-    /// important to disambiguate the canonical name of the Note (which might be a
-    /// UUID for security purposes) from "readable" names more suitable for debug
-    /// output. Note that these hints should not be used to look up authorities in
-    /// security sensitive contexts, such as when looking up attestations to
-    /// verify.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DsseHint {
-        /// Required. The human readable name of this attestation authority, for
-        /// example "cloudbuild-prod".
-        #[prost(string, tag="1")]
-        pub human_readable_name: ::prost::alloc::string::String,
-    }
-}
-/// Deprecated. Prefer to use a regular Occurrence, and populate the
-/// Envelope at the top level of the Occurrence.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DsseAttestationOccurrence {
-    /// If doing something security critical, make sure to verify the signatures in
-    /// this metadata.
-    #[prost(message, optional, tag="1")]
-    pub envelope: ::core::option::Option<Envelope>,
-    #[prost(oneof="dsse_attestation_occurrence::DecodedPayload", tags="2")]
-    pub decoded_payload: ::core::option::Option<dsse_attestation_occurrence::DecodedPayload>,
-}
-/// Nested message and enum types in `DSSEAttestationOccurrence`.
-pub mod dsse_attestation_occurrence {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DecodedPayload {
-        #[prost(message, tag="2")]
-        Statement(super::InTotoStatement),
-    }
-}
 /// Layer holds metadata specific to a layer of a Docker image.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Layer {
@@ -1313,204 +1511,6 @@ pub struct ImageOccurrence {
     /// occurrence.
     #[prost(string, tag="4")]
     pub base_resource_url: ::prost::alloc::string::String,
-}
-/// This represents a particular channel of distribution for a given package.
-/// E.g., Debian's jessie-backports dpkg mirror.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Distribution {
-    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
-    /// denoting the package manager version distributing a package.
-    #[prost(string, tag="1")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// The CPU architecture for which packages in this distribution channel were
-    /// built.
-    #[prost(enumeration="Architecture", tag="2")]
-    pub architecture: i32,
-    /// The latest available version of this package in this distribution channel.
-    #[prost(message, optional, tag="3")]
-    pub latest_version: ::core::option::Option<Version>,
-    /// A freeform string denoting the maintainer of this package.
-    #[prost(string, tag="4")]
-    pub maintainer: ::prost::alloc::string::String,
-    /// The distribution channel-specific homepage for this package.
-    #[prost(string, tag="5")]
-    pub url: ::prost::alloc::string::String,
-    /// The distribution channel-specific description of this package.
-    #[prost(string, tag="6")]
-    pub description: ::prost::alloc::string::String,
-}
-/// An occurrence of a particular package installation found within a system's
-/// filesystem. E.g., glibc was found in `/var/lib/dpkg/status`.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Location {
-    /// Deprecated.
-    /// The CPE URI in [CPE format](<https://cpe.mitre.org/specification/>)
-    #[prost(string, tag="1")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// Deprecated.
-    /// The version installed at this location.
-    #[prost(message, optional, tag="2")]
-    pub version: ::core::option::Option<Version>,
-    /// The path from which we gathered that this package/version is installed.
-    #[prost(string, tag="3")]
-    pub path: ::prost::alloc::string::String,
-}
-/// PackageNote represents a particular package version.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PackageNote {
-    /// The name of the package.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Deprecated.
-    /// The various channels by which a package is distributed.
-    #[prost(message, repeated, tag="10")]
-    pub distribution: ::prost::alloc::vec::Vec<Distribution>,
-    /// The type of package; whether native or non native (e.g., ruby gems,
-    /// node.js packages, etc.).
-    #[prost(string, tag="11")]
-    pub package_type: ::prost::alloc::string::String,
-    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
-    /// denoting the package manager version distributing a package.
-    /// The cpe_uri will be blank for language packages.
-    #[prost(string, tag="12")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// The CPU architecture for which packages in this distribution channel were
-    /// built. Architecture will be blank for language packages.
-    #[prost(enumeration="Architecture", tag="13")]
-    pub architecture: i32,
-    /// The version of the package.
-    #[prost(message, optional, tag="14")]
-    pub version: ::core::option::Option<Version>,
-    /// A freeform text denoting the maintainer of this package.
-    #[prost(string, tag="15")]
-    pub maintainer: ::prost::alloc::string::String,
-    /// The homepage for this package.
-    #[prost(string, tag="16")]
-    pub url: ::prost::alloc::string::String,
-    /// The description of this package.
-    #[prost(string, tag="17")]
-    pub description: ::prost::alloc::string::String,
-    /// Licenses that have been declared by the authors of the package.
-    #[prost(message, optional, tag="18")]
-    pub license: ::core::option::Option<License>,
-    /// Hash value, typically a file digest, that allows unique
-    /// identification a specific package.
-    #[prost(message, repeated, tag="19")]
-    pub digest: ::prost::alloc::vec::Vec<Digest>,
-}
-/// Details on how a particular software package was installed on a system.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PackageOccurrence {
-    /// The name of the installed package.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// All of the places within the filesystem versions of this package
-    /// have been found.
-    #[prost(message, repeated, tag="2")]
-    pub location: ::prost::alloc::vec::Vec<Location>,
-    /// The type of package; whether native or non native (e.g., ruby gems,
-    /// node.js packages, etc.).
-    #[prost(string, tag="3")]
-    pub package_type: ::prost::alloc::string::String,
-    /// The cpe_uri in [CPE format](<https://cpe.mitre.org/specification/>)
-    /// denoting the package manager version distributing a package.
-    /// The cpe_uri will be blank for language packages.
-    #[prost(string, tag="4")]
-    pub cpe_uri: ::prost::alloc::string::String,
-    /// The CPU architecture for which packages in this distribution channel were
-    /// built. Architecture will be blank for language packages.
-    #[prost(enumeration="Architecture", tag="5")]
-    pub architecture: i32,
-    /// Licenses that have been declared by the authors of the package.
-    #[prost(message, optional, tag="6")]
-    pub license: ::core::option::Option<License>,
-    /// The version of the package.
-    #[prost(message, optional, tag="7")]
-    pub version: ::core::option::Option<Version>,
-}
-/// Version contains structured information about the version of a package.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Version {
-    /// Used to correct mistakes in the version numbering scheme.
-    #[prost(int32, tag="1")]
-    pub epoch: i32,
-    /// Required only when version kind is NORMAL. The main part of the version
-    /// name.
-    #[prost(string, tag="2")]
-    pub name: ::prost::alloc::string::String,
-    /// The iteration of the package build from the above version.
-    #[prost(string, tag="3")]
-    pub revision: ::prost::alloc::string::String,
-    /// Whether this version is specifying part of an inclusive range. Grafeas
-    /// does not have the capability to specify version ranges; instead we have
-    /// fields that specify start version and end versions. At times this is
-    /// insufficient - we also need to specify whether the version is included in
-    /// the range or is excluded from the range. This boolean is expected to be set
-    /// to true when the version is included in a range.
-    #[prost(bool, tag="6")]
-    pub inclusive: bool,
-    /// Required. Distinguishes between sentinel MIN/MAX versions and normal
-    /// versions.
-    #[prost(enumeration="version::VersionKind", tag="4")]
-    pub kind: i32,
-    /// Human readable version string. This string is of the form
-    /// <epoch>:<name>-<revision> and is only set when kind is NORMAL.
-    #[prost(string, tag="5")]
-    pub full_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Version`.
-pub mod version {
-    /// Whether this is an ordinary package version or a sentinel MIN/MAX version.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum VersionKind {
-        /// Unknown.
-        Unspecified = 0,
-        /// A standard package version.
-        Normal = 1,
-        /// A special version representing negative infinity.
-        Minimum = 2,
-        /// A special version representing positive infinity.
-        Maximum = 3,
-    }
-    impl VersionKind {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                VersionKind::Unspecified => "VERSION_KIND_UNSPECIFIED",
-                VersionKind::Normal => "NORMAL",
-                VersionKind::Minimum => "MINIMUM",
-                VersionKind::Maximum => "MAXIMUM",
-            }
-        }
-    }
-}
-/// Instruction set architectures supported by various package managers.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Architecture {
-    /// Unknown architecture.
-    Unspecified = 0,
-    /// X86 architecture.
-    X86 = 1,
-    /// X64 architecture.
-    X64 = 2,
-}
-impl Architecture {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Architecture::Unspecified => "ARCHITECTURE_UNSPECIFIED",
-            Architecture::X86 => "X86",
-            Architecture::X64 => "X64",
-        }
-    }
 }
 /// An Upgrade Note represents a potential upgrade of a package to a given
 /// version. For each package version combination (i.e. bash 4.0, bash 4.1,

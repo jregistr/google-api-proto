@@ -1,3 +1,96 @@
+/// The histogram request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistogramQuery {
+    /// An expression specifies a histogram request against matching documents for
+    /// searches.
+    ///
+    /// See \[SearchDocumentsRequest.histogram_queries][google.cloud.contentwarehouse.v1.SearchDocumentsRequest.histogram_queries\] for details about syntax.
+    #[prost(string, tag="1")]
+    pub histogram_query: ::prost::alloc::string::String,
+    /// Controls if the histogram query requires the return of a precise count.
+    /// Enable this flag may adversely impact performance.
+    ///
+    /// Defaults to true.
+    #[prost(bool, tag="2")]
+    pub require_precise_result_size: bool,
+    /// Optional. Filter the result of histogram query by the property names. It only works
+    /// with histogram query count('FilterableProperties').
+    /// It is an optional. It will perform histogram on all the property names for
+    /// all the document schemas. Setting this field will have a better
+    /// performance.
+    #[prost(message, optional, tag="3")]
+    pub filters: ::core::option::Option<HistogramQueryPropertyNameFilter>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistogramQueryPropertyNameFilter {
+    /// This filter specifies the exact document schema(s)
+    /// \[Document.document_schema_name][google.cloud.contentwarehouse.v1.Document.document_schema_name\] to run histogram query against.
+    /// It is optional. It will perform histogram for property names for all the
+    /// document schemas if it is not set.
+    ///
+    /// At most 10 document schema names are allowed.
+    /// Format:
+    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
+    #[prost(string, repeated, tag="1")]
+    pub document_schemas: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// It is optional. It will perform histogram for all the property names if it
+    /// is not set.
+    /// The properties need to be defined with the is_filterable flag set to
+    /// true and the name of the property should be in the format:
+    /// "schemaId.propertyName". The property needs to be defined in the schema.
+    /// Example: the schema id is abc. Then the name of property for property
+    /// MORTGAGE_TYPE will be "abc.MORTGAGE_TYPE".
+    #[prost(string, repeated, tag="2")]
+    pub property_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// By default, the y_axis is HISTOGRAM_YAXIS_DOCUMENT if this field is not
+    /// set.
+    #[prost(enumeration="histogram_query_property_name_filter::HistogramYAxis", tag="3")]
+    pub y_axis: i32,
+}
+/// Nested message and enum types in `HistogramQueryPropertyNameFilter`.
+pub mod histogram_query_property_name_filter {
+    /// The result of the histogram query count('FilterableProperties') using
+    /// HISTOGRAM_YAXIS_DOCUMENT will be:
+    /// invoice_id: 2
+    /// address: 1
+    /// payment_method: 2
+    /// line_item_description: 1
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum HistogramYAxis {
+        /// Count the documents per property name.
+        HistogramYaxisDocument = 0,
+        /// Count the properties per property name.
+        HistogramYaxisProperty = 1,
+    }
+    impl HistogramYAxis {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HistogramYAxis::HistogramYaxisDocument => "HISTOGRAM_YAXIS_DOCUMENT",
+                HistogramYAxis::HistogramYaxisProperty => "HISTOGRAM_YAXIS_PROPERTY",
+            }
+        }
+    }
+}
+/// Histogram result that matches \[HistogramQuery][google.cloud.contentwarehouse.v1.HistogramQuery\] specified in searches.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HistogramQueryResult {
+    /// Requested histogram expression.
+    #[prost(string, tag="1")]
+    pub histogram_query: ::prost::alloc::string::String,
+    /// A map from the values of the facet associated with distinct values to the
+    /// number of matching entries with corresponding value.
+    ///
+    /// The key format is:
+    ///
+    /// * (for string histogram) string values stored in the field.
+    #[prost(btree_map="string, int64", tag="2")]
+    pub histogram: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, i64>,
+}
 /// Represents a set of rules from a single customer.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleSet {
@@ -306,380 +399,6 @@ pub mod action_output {
         }
     }
 }
-/// A document schema used to define document structure.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentSchema {
-    /// The resource name of the document schema.
-    /// Format:
-    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
-    ///
-    /// The name is ignored when creating a document schema.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Name of the schema given by the user. Must be unique per customer.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Document details.
-    #[prost(message, repeated, tag="3")]
-    pub property_definitions: ::prost::alloc::vec::Vec<PropertyDefinition>,
-    /// Document Type, true refers the document is a folder, otherwise it is
-    /// a typical document.
-    #[prost(bool, tag="4")]
-    pub document_is_folder: bool,
-    /// Output only. The time when the document schema is last updated.
-    #[prost(message, optional, tag="5")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time when the document schema is created.
-    #[prost(message, optional, tag="6")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Schema description.
-    #[prost(string, tag="7")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Defines the metadata for a schema property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PropertyDefinition {
-    /// Required. The name of the metadata property.
-    /// Must be unique within a document schema and is case insensitive.
-    /// Names must be non-blank, start with a letter, and can contain alphanumeric
-    /// characters and: /, :, -, _, and .
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The display-name for the property, used for front-end.
-    #[prost(string, tag="12")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Whether the property can have multiple values.
-    #[prost(bool, tag="2")]
-    pub is_repeatable: bool,
-    /// Whether the property can be filtered. If this is a sub-property, all the
-    /// parent properties must be marked filterable.
-    #[prost(bool, tag="3")]
-    pub is_filterable: bool,
-    /// Indicates that the property should be included in a global search.
-    #[prost(bool, tag="4")]
-    pub is_searchable: bool,
-    /// Whether the property is user supplied metadata.
-    #[prost(bool, tag="5")]
-    pub is_metadata: bool,
-    /// Whether the property is mandatory.
-    /// Default is 'false', i.e. populating property value can be skipped.
-    /// If 'true' then user must populate the value for this property.
-    #[prost(bool, tag="14")]
-    pub is_required: bool,
-    /// Type of the property.
-    #[prost(oneof="property_definition::ValueTypeOptions", tags="7, 8, 9, 10, 11, 13, 15, 16")]
-    pub value_type_options: ::core::option::Option<property_definition::ValueTypeOptions>,
-}
-/// Nested message and enum types in `PropertyDefinition`.
-pub mod property_definition {
-    /// Type of the property.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ValueTypeOptions {
-        /// Integer property.
-        #[prost(message, tag="7")]
-        IntegerTypeOptions(super::IntegerTypeOptions),
-        /// Float property.
-        #[prost(message, tag="8")]
-        FloatTypeOptions(super::FloatTypeOptions),
-        /// Text/string property.
-        #[prost(message, tag="9")]
-        TextTypeOptions(super::TextTypeOptions),
-        /// Nested structured data property.
-        #[prost(message, tag="10")]
-        PropertyTypeOptions(super::PropertyTypeOptions),
-        /// Enum/categorical property.
-        #[prost(message, tag="11")]
-        EnumTypeOptions(super::EnumTypeOptions),
-        /// Date time property.
-        /// It is not supported by CMEK compliant deployment.
-        #[prost(message, tag="13")]
-        DateTimeTypeOptions(super::DateTimeTypeOptions),
-        /// Map property.
-        #[prost(message, tag="15")]
-        MapTypeOptions(super::MapTypeOptions),
-        /// Timestamp property.
-        /// It is not supported by CMEK compliant deployment.
-        #[prost(message, tag="16")]
-        TimestampTypeOptions(super::TimestampTypeOptions),
-    }
-}
-/// Configurations for an integer property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IntegerTypeOptions {
-}
-/// Configurations for a float property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FloatTypeOptions {
-}
-/// Configurations for a text property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextTypeOptions {
-}
-/// Configurations for a date time property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DateTimeTypeOptions {
-}
-/// Configurations for a Map property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MapTypeOptions {
-}
-/// Configurations for a timestamp property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimestampTypeOptions {
-}
-/// Configurations for a nested structured data property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PropertyTypeOptions {
-    /// Required. List of property definitions.
-    #[prost(message, repeated, tag="1")]
-    pub property_definitions: ::prost::alloc::vec::Vec<PropertyDefinition>,
-}
-/// Configurations for an enum/categorical property.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EnumTypeOptions {
-    /// Required. List of possible enum values.
-    #[prost(string, repeated, tag="1")]
-    pub possible_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Make sure the Enum property value provided in the document is in the
-    /// possile value list during document creation. The validation check runs by
-    /// default.
-    #[prost(bool, tag="2")]
-    pub validation_check_disabled: bool,
-}
-/// Request message for DocumentSchemaService.CreateDocumentSchema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateDocumentSchemaRequest {
-    /// Required. The parent name.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The document schema to create.
-    #[prost(message, optional, tag="2")]
-    pub document_schema: ::core::option::Option<DocumentSchema>,
-}
-/// Request message for DocumentSchemaService.GetDocumentSchema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetDocumentSchemaRequest {
-    /// Required. The name of the document schema to retrieve.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for DocumentSchemaService.UpdateDocumentSchema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateDocumentSchemaRequest {
-    /// Required. The name of the document schema to update.
-    /// Format:
-    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The document schema to update with.
-    #[prost(message, optional, tag="2")]
-    pub document_schema: ::core::option::Option<DocumentSchema>,
-}
-/// Request message for DocumentSchemaService.DeleteDocumentSchema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteDocumentSchemaRequest {
-    /// Required. The name of the document schema to delete.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for DocumentSchemaService.ListDocumentSchemas.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDocumentSchemasRequest {
-    /// Required. The parent, which owns this collection of document schemas.
-    /// Format: projects/{project_number}/locations/{location}.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of document schemas to return. The service may return
-    /// fewer than this value.
-    /// If unspecified, at most 50 document schemas will be returned.
-    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListDocumentSchemas` call.
-    /// Provide this to retrieve the subsequent page.
-    ///
-    /// When paginating, all other parameters provided to `ListDocumentSchemas`
-    /// must match the call that provided the page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for DocumentSchemaService.ListDocumentSchemas.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDocumentSchemasResponse {
-    /// The document schemas from the specified parent.
-    #[prost(message, repeated, tag="1")]
-    pub document_schemas: ::prost::alloc::vec::Vec<DocumentSchema>,
-    /// A token, which can be sent as `page_token` to retrieve the next page.
-    /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod document_schema_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service lets you manage document schema.
-    #[derive(Debug, Clone)]
-    pub struct DocumentSchemaServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> DocumentSchemaServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> DocumentSchemaServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            DocumentSchemaServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a document schema.
-        pub async fn create_document_schema(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateDocumentSchemaRequest>,
-        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/CreateDocumentSchema",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a Document Schema. Returns INVALID_ARGUMENT if the name of the
-        /// Document Schema is non-empty and does not equal the existing name.
-        /// Supports only appending new properties and updating existing properties
-        /// will result into INVALID_ARGUMENT.
-        pub async fn update_document_schema(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateDocumentSchemaRequest>,
-        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/UpdateDocumentSchema",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a document schema. Returns NOT_FOUND if the document schema does not
-        /// exist.
-        pub async fn get_document_schema(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetDocumentSchemaRequest>,
-        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/GetDocumentSchema",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a document schema. Returns NOT_FOUND if the document schema does
-        /// not exist.
-        pub async fn delete_document_schema(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteDocumentSchemaRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/DeleteDocumentSchema",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists document schemas.
-        pub async fn list_document_schemas(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListDocumentSchemasRequest>,
-        ) -> Result<tonic::Response<super::ListDocumentSchemasResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/ListDocumentSchemas",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Request message for RuleSetService.CreateRuleSet.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRuleSetRequest {
@@ -915,6 +634,117 @@ pub mod rule_set_service_client {
         }
     }
 }
+/// Represents a list of synonyms for a given context.
+/// For example a context "sales" could contain:
+/// Synonym 1: sale, invoice, bill, order
+/// Synonym 2: money, credit, finance, payment
+/// Synonym 3: shipping, freight, transport
+/// Each SynonymSets should be disjoint
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SynonymSet {
+    /// The resource name of the SynonymSet
+    /// This is mandatory for google.api.resource.
+    /// Format:
+    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// This is a freeform field. Example contexts can be "sales," "engineering,"
+    /// "real estate," "accounting," etc.
+    /// The context can be supplied during search requests.
+    #[prost(string, tag="2")]
+    pub context: ::prost::alloc::string::String,
+    /// List of Synonyms for the context.
+    #[prost(message, repeated, tag="3")]
+    pub synonyms: ::prost::alloc::vec::Vec<synonym_set::Synonym>,
+}
+/// Nested message and enum types in `SynonymSet`.
+pub mod synonym_set {
+    /// Represents a list of words given by the customer
+    /// All these words are synonyms of each other.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Synonym {
+        /// For example: sale, invoice, bill, order
+        #[prost(string, repeated, tag="1")]
+        pub words: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
+/// Request message for SynonymSetService.CreateSynonymSet.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateSynonymSetRequest {
+    /// Required. The parent name.
+    /// Format: projects/{project_number}/locations/{location}.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The synonymSet to be created for a context
+    #[prost(message, optional, tag="2")]
+    pub synonym_set: ::core::option::Option<SynonymSet>,
+}
+/// Request message for SynonymSetService.GetSynonymSet.
+/// Will return synonymSet for a certain context.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetSynonymSetRequest {
+    /// Required. The name of the synonymSet to retrieve
+    /// Format:
+    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for SynonymSetService.ListSynonymSets.
+/// Will return all synonymSets belonging to the customer project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSynonymSetsRequest {
+    /// Required. The parent name.
+    /// Format: projects/{project_number}/locations/{location}.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of synonymSets to return. The service may return
+    /// fewer than this value.
+    /// If unspecified, at most 50 rule sets will be returned.
+    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListSynonymSets` call.
+    /// Provide this to retrieve the subsequent page.
+    ///
+    /// When paginating, all other parameters provided to `ListSynonymSets`
+    /// must match the call that provided the page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for SynonymSetService.ListSynonymSets.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSynonymSetsResponse {
+    /// The synonymSets from the specified parent.
+    #[prost(message, repeated, tag="1")]
+    pub synonym_sets: ::prost::alloc::vec::Vec<SynonymSet>,
+    /// A page token, received from a previous `ListSynonymSets` call.
+    /// Provide this to retrieve the subsequent page.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for SynonymSetService.UpdateSynonymSet.
+/// Removes the SynonymSet for the specified context and replaces
+/// it with the SynonymSet in this request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateSynonymSetRequest {
+    /// Required. The name of the synonymSet to update
+    /// Format:
+    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The synonymSet to be updated for the customer
+    #[prost(message, optional, tag="2")]
+    pub synonym_set: ::core::option::Option<SynonymSet>,
+}
+/// Request message for SynonymSetService.DeleteSynonymSet.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteSynonymSetRequest {
+    /// Required. The name of the synonymSet to delete
+    /// Format:
+    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentQuery {
     /// The query string that matches against the full text of the document and
@@ -1128,107 +958,6 @@ pub mod file_type_filter {
             }
         }
     }
-}
-/// The histogram request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistogramQuery {
-    /// An expression specifies a histogram request against matching documents for
-    /// searches.
-    ///
-    /// See \[SearchDocumentsRequest.histogram_queries][google.cloud.contentwarehouse.v1.SearchDocumentsRequest.histogram_queries\] for details about syntax.
-    #[prost(string, tag="1")]
-    pub histogram_query: ::prost::alloc::string::String,
-    /// Controls if the histogram query requires the return of a precise count.
-    /// Enable this flag may adversely impact performance.
-    ///
-    /// Defaults to true.
-    #[prost(bool, tag="2")]
-    pub require_precise_result_size: bool,
-    /// Optional. Filter the result of histogram query by the property names. It only works
-    /// with histogram query count('FilterableProperties').
-    /// It is an optional. It will perform histogram on all the property names for
-    /// all the document schemas. Setting this field will have a better
-    /// performance.
-    #[prost(message, optional, tag="3")]
-    pub filters: ::core::option::Option<HistogramQueryPropertyNameFilter>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistogramQueryPropertyNameFilter {
-    /// This filter specifies the exact document schema(s)
-    /// \[Document.document_schema_name][google.cloud.contentwarehouse.v1.Document.document_schema_name\] to run histogram query against.
-    /// It is optional. It will perform histogram for property names for all the
-    /// document schemas if it is not set.
-    ///
-    /// At most 10 document schema names are allowed.
-    /// Format:
-    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
-    #[prost(string, repeated, tag="1")]
-    pub document_schemas: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// It is optional. It will perform histogram for all the property names if it
-    /// is not set.
-    /// The properties need to be defined with the is_filterable flag set to
-    /// true and the name of the property should be in the format:
-    /// "schemaId.propertyName". The property needs to be defined in the schema.
-    /// Example: the schema id is abc. Then the name of property for property
-    /// MORTGAGE_TYPE will be "abc.MORTGAGE_TYPE".
-    #[prost(string, repeated, tag="2")]
-    pub property_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// By default, the y_axis is HISTOGRAM_YAXIS_DOCUMENT if this field is not
-    /// set.
-    #[prost(enumeration="histogram_query_property_name_filter::HistogramYAxis", tag="3")]
-    pub y_axis: i32,
-}
-/// Nested message and enum types in `HistogramQueryPropertyNameFilter`.
-pub mod histogram_query_property_name_filter {
-    /// The result of the histogram query count('FilterableProperties') using
-    /// HISTOGRAM_YAXIS_DOCUMENT will be:
-    /// invoice_id: 2
-    /// address: 1
-    /// payment_method: 2
-    /// line_item_description: 1
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum HistogramYAxis {
-        /// Count the documents per property name.
-        HistogramYaxisDocument = 0,
-        /// Count the properties per property name.
-        HistogramYaxisProperty = 1,
-    }
-    impl HistogramYAxis {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                HistogramYAxis::HistogramYaxisDocument => "HISTOGRAM_YAXIS_DOCUMENT",
-                HistogramYAxis::HistogramYaxisProperty => "HISTOGRAM_YAXIS_PROPERTY",
-            }
-        }
-    }
-}
-/// Histogram result that matches \[HistogramQuery][google.cloud.contentwarehouse.v1.HistogramQuery\] specified in searches.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HistogramQueryResult {
-    /// Requested histogram expression.
-    #[prost(string, tag="1")]
-    pub histogram_query: ::prost::alloc::string::String,
-    /// A map from the values of the facet associated with distinct values to the
-    /// number of matching entries with corresponding value.
-    ///
-    /// The key format is:
-    ///
-    /// * (for string histogram) string values stored in the field.
-    #[prost(btree_map="string, int64", tag="2")]
-    pub histogram: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, i64>,
-}
-/// Metadata object for CreateDocument request (currently empty).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateDocumentMetadata {
-}
-/// Metadata object for UpdateDocument request (currently empty).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateDocumentMetadata {
 }
 /// Meta information is used to improve the performance of the service.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1940,40 +1669,6 @@ pub struct SetAclRequest {
     #[prost(bool, tag="4")]
     pub project_owner: bool,
 }
-/// Represents a list of synonyms for a given context.
-/// For example a context "sales" could contain:
-/// Synonym 1: sale, invoice, bill, order
-/// Synonym 2: money, credit, finance, payment
-/// Synonym 3: shipping, freight, transport
-/// Each SynonymSets should be disjoint
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SynonymSet {
-    /// The resource name of the SynonymSet
-    /// This is mandatory for google.api.resource.
-    /// Format:
-    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// This is a freeform field. Example contexts can be "sales," "engineering,"
-    /// "real estate," "accounting," etc.
-    /// The context can be supplied during search requests.
-    #[prost(string, tag="2")]
-    pub context: ::prost::alloc::string::String,
-    /// List of Synonyms for the context.
-    #[prost(message, repeated, tag="3")]
-    pub synonyms: ::prost::alloc::vec::Vec<synonym_set::Synonym>,
-}
-/// Nested message and enum types in `SynonymSet`.
-pub mod synonym_set {
-    /// Represents a list of words given by the customer
-    /// All these words are synonyms of each other.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Synonym {
-        /// For example: sale, invoice, bill, order
-        #[prost(string, repeated, tag="1")]
-        pub words: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-}
 /// Response message for DocumentService.CreateDocument.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentResponse {
@@ -2313,6 +2008,556 @@ pub mod document_service_client {
         }
     }
 }
+/// A document schema used to define document structure.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentSchema {
+    /// The resource name of the document schema.
+    /// Format:
+    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
+    ///
+    /// The name is ignored when creating a document schema.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Name of the schema given by the user. Must be unique per customer.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Document details.
+    #[prost(message, repeated, tag="3")]
+    pub property_definitions: ::prost::alloc::vec::Vec<PropertyDefinition>,
+    /// Document Type, true refers the document is a folder, otherwise it is
+    /// a typical document.
+    #[prost(bool, tag="4")]
+    pub document_is_folder: bool,
+    /// Output only. The time when the document schema is last updated.
+    #[prost(message, optional, tag="5")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time when the document schema is created.
+    #[prost(message, optional, tag="6")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Schema description.
+    #[prost(string, tag="7")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Defines the metadata for a schema property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PropertyDefinition {
+    /// Required. The name of the metadata property.
+    /// Must be unique within a document schema and is case insensitive.
+    /// Names must be non-blank, start with a letter, and can contain alphanumeric
+    /// characters and: /, :, -, _, and .
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The display-name for the property, used for front-end.
+    #[prost(string, tag="12")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Whether the property can have multiple values.
+    #[prost(bool, tag="2")]
+    pub is_repeatable: bool,
+    /// Whether the property can be filtered. If this is a sub-property, all the
+    /// parent properties must be marked filterable.
+    #[prost(bool, tag="3")]
+    pub is_filterable: bool,
+    /// Indicates that the property should be included in a global search.
+    #[prost(bool, tag="4")]
+    pub is_searchable: bool,
+    /// Whether the property is user supplied metadata.
+    #[prost(bool, tag="5")]
+    pub is_metadata: bool,
+    /// Whether the property is mandatory.
+    /// Default is 'false', i.e. populating property value can be skipped.
+    /// If 'true' then user must populate the value for this property.
+    #[prost(bool, tag="14")]
+    pub is_required: bool,
+    /// Type of the property.
+    #[prost(oneof="property_definition::ValueTypeOptions", tags="7, 8, 9, 10, 11, 13, 15, 16")]
+    pub value_type_options: ::core::option::Option<property_definition::ValueTypeOptions>,
+}
+/// Nested message and enum types in `PropertyDefinition`.
+pub mod property_definition {
+    /// Type of the property.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ValueTypeOptions {
+        /// Integer property.
+        #[prost(message, tag="7")]
+        IntegerTypeOptions(super::IntegerTypeOptions),
+        /// Float property.
+        #[prost(message, tag="8")]
+        FloatTypeOptions(super::FloatTypeOptions),
+        /// Text/string property.
+        #[prost(message, tag="9")]
+        TextTypeOptions(super::TextTypeOptions),
+        /// Nested structured data property.
+        #[prost(message, tag="10")]
+        PropertyTypeOptions(super::PropertyTypeOptions),
+        /// Enum/categorical property.
+        #[prost(message, tag="11")]
+        EnumTypeOptions(super::EnumTypeOptions),
+        /// Date time property.
+        /// It is not supported by CMEK compliant deployment.
+        #[prost(message, tag="13")]
+        DateTimeTypeOptions(super::DateTimeTypeOptions),
+        /// Map property.
+        #[prost(message, tag="15")]
+        MapTypeOptions(super::MapTypeOptions),
+        /// Timestamp property.
+        /// It is not supported by CMEK compliant deployment.
+        #[prost(message, tag="16")]
+        TimestampTypeOptions(super::TimestampTypeOptions),
+    }
+}
+/// Configurations for an integer property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IntegerTypeOptions {
+}
+/// Configurations for a float property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FloatTypeOptions {
+}
+/// Configurations for a text property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextTypeOptions {
+}
+/// Configurations for a date time property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DateTimeTypeOptions {
+}
+/// Configurations for a Map property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MapTypeOptions {
+}
+/// Configurations for a timestamp property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimestampTypeOptions {
+}
+/// Configurations for a nested structured data property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PropertyTypeOptions {
+    /// Required. List of property definitions.
+    #[prost(message, repeated, tag="1")]
+    pub property_definitions: ::prost::alloc::vec::Vec<PropertyDefinition>,
+}
+/// Configurations for an enum/categorical property.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EnumTypeOptions {
+    /// Required. List of possible enum values.
+    #[prost(string, repeated, tag="1")]
+    pub possible_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Make sure the Enum property value provided in the document is in the
+    /// possile value list during document creation. The validation check runs by
+    /// default.
+    #[prost(bool, tag="2")]
+    pub validation_check_disabled: bool,
+}
+/// Request message for DocumentSchemaService.CreateDocumentSchema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateDocumentSchemaRequest {
+    /// Required. The parent name.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The document schema to create.
+    #[prost(message, optional, tag="2")]
+    pub document_schema: ::core::option::Option<DocumentSchema>,
+}
+/// Request message for DocumentSchemaService.GetDocumentSchema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetDocumentSchemaRequest {
+    /// Required. The name of the document schema to retrieve.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for DocumentSchemaService.UpdateDocumentSchema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDocumentSchemaRequest {
+    /// Required. The name of the document schema to update.
+    /// Format:
+    /// projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The document schema to update with.
+    #[prost(message, optional, tag="2")]
+    pub document_schema: ::core::option::Option<DocumentSchema>,
+}
+/// Request message for DocumentSchemaService.DeleteDocumentSchema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteDocumentSchemaRequest {
+    /// Required. The name of the document schema to delete.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for DocumentSchemaService.ListDocumentSchemas.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDocumentSchemasRequest {
+    /// Required. The parent, which owns this collection of document schemas.
+    /// Format: projects/{project_number}/locations/{location}.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of document schemas to return. The service may return
+    /// fewer than this value.
+    /// If unspecified, at most 50 document schemas will be returned.
+    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListDocumentSchemas` call.
+    /// Provide this to retrieve the subsequent page.
+    ///
+    /// When paginating, all other parameters provided to `ListDocumentSchemas`
+    /// must match the call that provided the page token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for DocumentSchemaService.ListDocumentSchemas.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDocumentSchemasResponse {
+    /// The document schemas from the specified parent.
+    #[prost(message, repeated, tag="1")]
+    pub document_schemas: ::prost::alloc::vec::Vec<DocumentSchema>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod document_schema_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service lets you manage document schema.
+    #[derive(Debug, Clone)]
+    pub struct DocumentSchemaServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> DocumentSchemaServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> DocumentSchemaServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            DocumentSchemaServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a document schema.
+        pub async fn create_document_schema(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateDocumentSchemaRequest>,
+        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/CreateDocumentSchema",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a Document Schema. Returns INVALID_ARGUMENT if the name of the
+        /// Document Schema is non-empty and does not equal the existing name.
+        /// Supports only appending new properties and updating existing properties
+        /// will result into INVALID_ARGUMENT.
+        pub async fn update_document_schema(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateDocumentSchemaRequest>,
+        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/UpdateDocumentSchema",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a document schema. Returns NOT_FOUND if the document schema does not
+        /// exist.
+        pub async fn get_document_schema(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetDocumentSchemaRequest>,
+        ) -> Result<tonic::Response<super::DocumentSchema>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/GetDocumentSchema",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a document schema. Returns NOT_FOUND if the document schema does
+        /// not exist.
+        pub async fn delete_document_schema(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteDocumentSchemaRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/DeleteDocumentSchema",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists document schemas.
+        pub async fn list_document_schemas(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListDocumentSchemasRequest>,
+        ) -> Result<tonic::Response<super::ListDocumentSchemasResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.DocumentSchemaService/ListDocumentSchemas",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod synonym_set_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A Service that manage/custom customer specified SynonymSets.
+    #[derive(Debug, Clone)]
+    pub struct SynonymSetServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SynonymSetServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SynonymSetServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SynonymSetServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a SynonymSet for a single context.
+        /// Throws an ALREADY_EXISTS exception if a synonymset already exists
+        /// for the context.
+        pub async fn create_synonym_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateSynonymSetRequest>,
+        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.SynonymSetService/CreateSynonymSet",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a SynonymSet for a particular context.
+        /// Throws a NOT_FOUND exception if the Synonymset
+        /// does not exist
+        pub async fn get_synonym_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSynonymSetRequest>,
+        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.SynonymSetService/GetSynonymSet",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Remove the existing SynonymSet for the context and replaces it
+        /// with a new one.
+        /// Throws a NOT_FOUND exception if the SynonymSet is not found.
+        pub async fn update_synonym_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateSynonymSetRequest>,
+        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.SynonymSetService/UpdateSynonymSet",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a SynonymSet for a given context.
+        /// Throws a NOT_FOUND exception if the SynonymSet is not found.
+        pub async fn delete_synonym_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteSynonymSetRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.SynonymSetService/DeleteSynonymSet",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns all SynonymSets (for all contexts) for the specified location.
+        pub async fn list_synonym_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSynonymSetsRequest>,
+        ) -> Result<tonic::Response<super::ListSynonymSetsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contentwarehouse.v1.SynonymSetService/ListSynonymSets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Metadata object for CreateDocument request (currently empty).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateDocumentMetadata {
+}
+/// Metadata object for UpdateDocument request (currently empty).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDocumentMetadata {
+}
 /// Response message for DocumentLinkService.ListLinkedTargets.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLinkedTargetsResponse {
@@ -2600,251 +2845,6 @@ pub mod document_link_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contentwarehouse.v1.DocumentLinkService/DeleteDocumentLink",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for SynonymSetService.CreateSynonymSet.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateSynonymSetRequest {
-    /// Required. The parent name.
-    /// Format: projects/{project_number}/locations/{location}.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The synonymSet to be created for a context
-    #[prost(message, optional, tag="2")]
-    pub synonym_set: ::core::option::Option<SynonymSet>,
-}
-/// Request message for SynonymSetService.GetSynonymSet.
-/// Will return synonymSet for a certain context.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetSynonymSetRequest {
-    /// Required. The name of the synonymSet to retrieve
-    /// Format:
-    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for SynonymSetService.ListSynonymSets.
-/// Will return all synonymSets belonging to the customer project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSynonymSetsRequest {
-    /// Required. The parent name.
-    /// Format: projects/{project_number}/locations/{location}.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of synonymSets to return. The service may return
-    /// fewer than this value.
-    /// If unspecified, at most 50 rule sets will be returned.
-    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListSynonymSets` call.
-    /// Provide this to retrieve the subsequent page.
-    ///
-    /// When paginating, all other parameters provided to `ListSynonymSets`
-    /// must match the call that provided the page token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for SynonymSetService.ListSynonymSets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSynonymSetsResponse {
-    /// The synonymSets from the specified parent.
-    #[prost(message, repeated, tag="1")]
-    pub synonym_sets: ::prost::alloc::vec::Vec<SynonymSet>,
-    /// A page token, received from a previous `ListSynonymSets` call.
-    /// Provide this to retrieve the subsequent page.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for SynonymSetService.UpdateSynonymSet.
-/// Removes the SynonymSet for the specified context and replaces
-/// it with the SynonymSet in this request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateSynonymSetRequest {
-    /// Required. The name of the synonymSet to update
-    /// Format:
-    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The synonymSet to be updated for the customer
-    #[prost(message, optional, tag="2")]
-    pub synonym_set: ::core::option::Option<SynonymSet>,
-}
-/// Request message for SynonymSetService.DeleteSynonymSet.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteSynonymSetRequest {
-    /// Required. The name of the synonymSet to delete
-    /// Format:
-    /// projects/{project_number}/locations/{location}/synonymSets/{context}.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod synonym_set_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A Service that manage/custom customer specified SynonymSets.
-    #[derive(Debug, Clone)]
-    pub struct SynonymSetServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SynonymSetServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SynonymSetServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SynonymSetServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a SynonymSet for a single context.
-        /// Throws an ALREADY_EXISTS exception if a synonymset already exists
-        /// for the context.
-        pub async fn create_synonym_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateSynonymSetRequest>,
-        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.SynonymSetService/CreateSynonymSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a SynonymSet for a particular context.
-        /// Throws a NOT_FOUND exception if the Synonymset
-        /// does not exist
-        pub async fn get_synonym_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSynonymSetRequest>,
-        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.SynonymSetService/GetSynonymSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Remove the existing SynonymSet for the context and replaces it
-        /// with a new one.
-        /// Throws a NOT_FOUND exception if the SynonymSet is not found.
-        pub async fn update_synonym_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateSynonymSetRequest>,
-        ) -> Result<tonic::Response<super::SynonymSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.SynonymSetService/UpdateSynonymSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a SynonymSet for a given context.
-        /// Throws a NOT_FOUND exception if the SynonymSet is not found.
-        pub async fn delete_synonym_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteSynonymSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.SynonymSetService/DeleteSynonymSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns all SynonymSets (for all contexts) for the specified location.
-        pub async fn list_synonym_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListSynonymSetsRequest>,
-        ) -> Result<tonic::Response<super::ListSynonymSetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.contentwarehouse.v1.SynonymSetService/ListSynonymSets",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

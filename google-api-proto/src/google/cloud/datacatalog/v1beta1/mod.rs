@@ -12,6 +12,810 @@ pub struct SystemTimestamps {
     #[prost(message, optional, tag="3")]
     pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
 }
+/// Tags are used to attach custom metadata to Data Catalog resources. Tags
+/// conform to the specifications within their tag template.
+///
+/// See [Data Catalog
+/// IAM](<https://cloud.google.com/data-catalog/docs/concepts/iam>) for information
+/// on the permissions needed to create or view tags.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Tag {
+    /// The resource name of the tag in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}/tags/{tag_id}
+    ///
+    /// where `tag_id` is a system-generated identifier.
+    /// Note that this Tag may not actually be stored in the location in this name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The resource name of the tag template that this tag uses. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
+    ///
+    /// This field cannot be modified after creation.
+    #[prost(string, tag="2")]
+    pub template: ::prost::alloc::string::String,
+    /// Output only. The display name of the tag template.
+    #[prost(string, tag="5")]
+    pub template_display_name: ::prost::alloc::string::String,
+    /// Required. This maps the ID of a tag field to the value of and additional information
+    /// about that field. Valid field IDs are defined by the tag's template. A tag
+    /// must have at least 1 field and at most 500 fields.
+    #[prost(btree_map="string, message", tag="3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagField>,
+    /// The scope within the parent resource that this tag is attached to. If not
+    /// provided, the tag is attached to the parent resource itself.
+    /// Deleting the scope from the parent resource will delete all tags attached
+    /// to that scope. These fields cannot be updated after creation.
+    #[prost(oneof="tag::Scope", tags="4")]
+    pub scope: ::core::option::Option<tag::Scope>,
+}
+/// Nested message and enum types in `Tag`.
+pub mod tag {
+    /// The scope within the parent resource that this tag is attached to. If not
+    /// provided, the tag is attached to the parent resource itself.
+    /// Deleting the scope from the parent resource will delete all tags attached
+    /// to that scope. These fields cannot be updated after creation.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Scope {
+        /// Resources like Entry can have schemas associated with them. This scope
+        /// allows users to attach tags to an individual column based on that schema.
+        ///
+        /// For attaching a tag to a nested column, use `.` to separate the column
+        /// names. Example:
+        ///
+        /// * `outer_column.inner_column`
+        #[prost(string, tag="4")]
+        Column(::prost::alloc::string::String),
+    }
+}
+/// Contains the value and supporting information for a field within
+/// a \[Tag][google.cloud.datacatalog.v1beta1.Tag\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagField {
+    /// Output only. The display name of this field.
+    #[prost(string, tag="1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The order of this field with respect to other fields in this tag. It can be
+    /// set in \[Tag][google.cloud.datacatalog.v1beta1.TagTemplateField.order\]. For
+    /// example, a higher value can indicate a more important field. The value can
+    /// be negative. Multiple fields can have the same order, and field orders
+    /// within a tag do not have to be sequential.
+    #[prost(int32, tag="7")]
+    pub order: i32,
+    /// Required. The value of this field.
+    #[prost(oneof="tag_field::Kind", tags="2, 3, 4, 5, 6")]
+    pub kind: ::core::option::Option<tag_field::Kind>,
+}
+/// Nested message and enum types in `TagField`.
+pub mod tag_field {
+    /// Holds an enum value.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EnumValue {
+        /// The display name of the enum value.
+        #[prost(string, tag="1")]
+        pub display_name: ::prost::alloc::string::String,
+    }
+    /// Required. The value of this field.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// Holds the value for a tag field with double type.
+        #[prost(double, tag="2")]
+        DoubleValue(f64),
+        /// Holds the value for a tag field with string type.
+        #[prost(string, tag="3")]
+        StringValue(::prost::alloc::string::String),
+        /// Holds the value for a tag field with boolean type.
+        #[prost(bool, tag="4")]
+        BoolValue(bool),
+        /// Holds the value for a tag field with timestamp type.
+        #[prost(message, tag="5")]
+        TimestampValue(::prost_types::Timestamp),
+        /// Holds the value for a tag field with enum type. This value must be
+        /// one of the allowed values in the definition of this enum.
+        #[prost(message, tag="6")]
+        EnumValue(EnumValue),
+    }
+}
+/// A tag template defines a tag, which can have one or more typed fields.
+/// The template is used to create and attach the tag to GCP resources.
+/// [Tag template
+/// roles](<https://cloud.google.com/iam/docs/understanding-roles#data-catalog-roles>)
+/// provide permissions to create, edit, and use the template. See, for example,
+/// the [TagTemplate
+/// User](<https://cloud.google.com/data-catalog/docs/how-to/template-user>) role,
+/// which includes permission to use the tag template to tag resources.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagTemplate {
+    /// The resource name of the tag template in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
+    ///
+    /// Note that this TagTemplate and its child resources may not actually be
+    /// stored in the location in this name.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The display name for this template. Defaults to an empty string.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. Map of tag template field IDs to the settings for the field.
+    /// This map is an exhaustive list of the allowed fields. This map must contain
+    /// at least one field and at most 500 fields.
+    ///
+    /// The keys to this map are tag template field IDs. Field IDs can contain
+    /// letters (both uppercase and lowercase), numbers (0-9) and underscores (_).
+    /// Field IDs must be at least 1 character long and at most
+    /// 64 characters long. Field IDs must start with a letter or underscore.
+    #[prost(btree_map="string, message", tag="3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagTemplateField>,
+}
+/// The template for an individual field within a tag template.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagTemplateField {
+    /// Output only. The resource name of the tag template field in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template}/fields/{field}
+    ///
+    /// Note that this TagTemplateField may not actually be stored in the location
+    /// in this name.
+    #[prost(string, tag="6")]
+    pub name: ::prost::alloc::string::String,
+    /// The display name for this field. Defaults to an empty string.
+    #[prost(string, tag="1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The type of value this tag field can contain.
+    #[prost(message, optional, tag="2")]
+    pub r#type: ::core::option::Option<FieldType>,
+    /// Whether this is a required field. Defaults to false.
+    #[prost(bool, tag="3")]
+    pub is_required: bool,
+    /// The order of this field with respect to other fields in this tag
+    /// template.  A higher value indicates a more important field. The value can
+    /// be negative. Multiple fields can have the same order, and field orders
+    /// within a tag do not have to be sequential.
+    #[prost(int32, tag="5")]
+    pub order: i32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldType {
+    /// Required.
+    #[prost(oneof="field_type::TypeDecl", tags="1, 2")]
+    pub type_decl: ::core::option::Option<field_type::TypeDecl>,
+}
+/// Nested message and enum types in `FieldType`.
+pub mod field_type {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EnumType {
+        /// Required on create; optional on update. The set of allowed values for
+        /// this enum. This set must not be empty, the display names of the values in
+        /// this set must not be empty and the display names of the values must be
+        /// case-insensitively unique within this set. Currently, enum values can
+        /// only be added to the list of allowed values. Deletion and renaming of
+        /// enum values are not supported. Can have up to 500 allowed values.
+        #[prost(message, repeated, tag="1")]
+        pub allowed_values: ::prost::alloc::vec::Vec<enum_type::EnumValue>,
+    }
+    /// Nested message and enum types in `EnumType`.
+    pub mod enum_type {
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EnumValue {
+            /// Required. The display name of the enum value. Must not be an empty string.
+            #[prost(string, tag="1")]
+            pub display_name: ::prost::alloc::string::String,
+        }
+    }
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PrimitiveType {
+        /// This is the default invalid value for a type.
+        Unspecified = 0,
+        /// A double precision number.
+        Double = 1,
+        /// An UTF-8 string.
+        String = 2,
+        /// A boolean value.
+        Bool = 3,
+        /// A timestamp.
+        Timestamp = 4,
+    }
+    impl PrimitiveType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
+                PrimitiveType::Double => "DOUBLE",
+                PrimitiveType::String => "STRING",
+                PrimitiveType::Bool => "BOOL",
+                PrimitiveType::Timestamp => "TIMESTAMP",
+            }
+        }
+    }
+    /// Required.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TypeDecl {
+        /// Represents primitive types - string, bool etc.
+        #[prost(enumeration="PrimitiveType", tag="1")]
+        PrimitiveType(i32),
+        /// Represents an enum type.
+        #[prost(message, tag="2")]
+        EnumType(EnumType),
+    }
+}
+/// A taxonomy is a collection of policy tags that classify data along a common
+/// axis. For instance a data *sensitivity* taxonomy could contain policy tags
+/// denoting PII such as age, zipcode, and SSN. A data *origin* taxonomy could
+/// contain policy tags to distinguish user data, employee data, partner data,
+/// public data.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Taxonomy {
+    /// Output only. Resource name of this taxonomy, whose format is:
+    /// "projects/{project_number}/locations/{location_id}/taxonomies/{id}".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. User defined name of this taxonomy. It must: contain only unicode letters,
+    /// numbers, underscores, dashes and spaces; not start or end with spaces; and
+    /// be at most 200 bytes long when encoded in UTF-8.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Optional. Description of this taxonomy. It must: contain only unicode characters,
+    /// tabs, newlines, carriage returns and page breaks; and be at most 2000 bytes
+    /// long when encoded in UTF-8. If not set, defaults to an empty description.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. A list of policy types that are activated for this taxonomy. If not set,
+    /// defaults to an empty list.
+    #[prost(enumeration="taxonomy::PolicyType", repeated, packed="false", tag="6")]
+    pub activated_policy_types: ::prost::alloc::vec::Vec<i32>,
+}
+/// Nested message and enum types in `Taxonomy`.
+pub mod taxonomy {
+    /// Defines policy types where policy tag can be used for.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[repr(i32)]
+    pub enum PolicyType {
+        /// Unspecified policy type.
+        Unspecified = 0,
+        /// Fine grained access control policy, which enables access control on
+        /// tagged resources.
+        FineGrainedAccessControl = 1,
+    }
+    impl PolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PolicyType::Unspecified => "POLICY_TYPE_UNSPECIFIED",
+                PolicyType::FineGrainedAccessControl => "FINE_GRAINED_ACCESS_CONTROL",
+            }
+        }
+    }
+}
+/// Denotes one policy tag in a taxonomy (e.g. ssn). Policy Tags can be defined
+/// in a hierarchy. For example, consider the following hierarchy:
+/// Geolocation -&gt; (LatLong, City, ZipCode). PolicyTag "Geolocation"
+/// contains three child policy tags: "LatLong", "City", and "ZipCode".
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PolicyTag {
+    /// Output only. Resource name of this policy tag, whose format is:
+    /// "projects/{project_number}/locations/{location_id}/taxonomies/{taxonomy_id}/policyTags/{id}".
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. User defined name of this policy tag. It must: be unique within the parent
+    /// taxonomy; contain only unicode letters, numbers, underscores, dashes and
+    /// spaces; not start or end with spaces; and be at most 200 bytes long when
+    /// encoded in UTF-8.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of this policy tag. It must: contain only unicode characters,
+    /// tabs, newlines, carriage returns and page breaks; and be at most 2000 bytes
+    /// long when encoded in UTF-8. If not set, defaults to an empty description.
+    /// If not set, defaults to an empty description.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+    /// Resource name of this policy tag's parent policy tag (e.g. for the
+    /// "LatLong" policy tag in the example above, this field contains the
+    /// resource name of the "Geolocation" policy tag). If empty, it means this
+    /// policy tag is a top level policy tag (e.g. this field is empty for the
+    /// "Geolocation" policy tag in the example above). If not set, defaults to an
+    /// empty string.
+    #[prost(string, tag="4")]
+    pub parent_policy_tag: ::prost::alloc::string::String,
+    /// Output only. Resource names of child policy tags of this policy tag.
+    #[prost(string, repeated, tag="5")]
+    pub child_policy_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request message for
+/// \[CreateTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.CreateTaxonomy\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTaxonomyRequest {
+    /// Required. Resource name of the project that the taxonomy will belong to.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The taxonomy to be created.
+    #[prost(message, optional, tag="2")]
+    pub taxonomy: ::core::option::Option<Taxonomy>,
+}
+/// Request message for
+/// \[DeleteTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.DeleteTaxonomy\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTaxonomyRequest {
+    /// Required. Resource name of the taxonomy to be deleted. All policy tags in
+    /// this taxonomy will also be deleted.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[UpdateTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.UpdateTaxonomy\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateTaxonomyRequest {
+    /// The taxonomy to update. Only description, display_name, and activated
+    /// policy types can be updated.
+    #[prost(message, optional, tag="1")]
+    pub taxonomy: ::core::option::Option<Taxonomy>,
+    /// The update mask applies to the resource. For the `FieldMask` definition,
+    /// see
+    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+    /// If not set, defaults to all of the fields that are allowed to update.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request message for
+/// \[ListTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListTaxonomies\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTaxonomiesRequest {
+    /// Required. Resource name of the project to list the taxonomies of.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of items to return. Must be a value between 1 and 1000.
+    /// If not set, defaults to 50.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The next_page_token value returned from a previous list request, if any. If
+    /// not set, defaults to an empty string.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[ListTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListTaxonomies\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTaxonomiesResponse {
+    /// Taxonomies that the project contains.
+    #[prost(message, repeated, tag="1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
+    /// Token used to retrieve the next page of results, or empty if there are no
+    /// more results in the list.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[GetTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.GetTaxonomy\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTaxonomyRequest {
+    /// Required. Resource name of the requested taxonomy.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[CreatePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.CreatePolicyTag\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreatePolicyTagRequest {
+    /// Required. Resource name of the taxonomy that the policy tag will belong to.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The policy tag to be created.
+    #[prost(message, optional, tag="2")]
+    pub policy_tag: ::core::option::Option<PolicyTag>,
+}
+/// Request message for
+/// \[DeletePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.DeletePolicyTag\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeletePolicyTagRequest {
+    /// Required. Resource name of the policy tag to be deleted. All of its descendant
+    /// policy tags will also be deleted.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[UpdatePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.UpdatePolicyTag\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdatePolicyTagRequest {
+    /// The policy tag to update. Only the description, display_name, and
+    /// parent_policy_tag fields can be updated.
+    #[prost(message, optional, tag="1")]
+    pub policy_tag: ::core::option::Option<PolicyTag>,
+    /// The update mask applies to the resource. Only display_name, description and
+    /// parent_policy_tag can be updated and thus can be listed in the mask. If
+    /// update_mask is not provided, all allowed fields (i.e. display_name,
+    /// description and parent) will be updated. For more information including the
+    /// `FieldMask` definition, see
+    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+    /// If not set, defaults to all of the fields that are allowed to update.
+    #[prost(message, optional, tag="2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request message for
+/// \[ListPolicyTags][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListPolicyTags\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPolicyTagsRequest {
+    /// Required. Resource name of the taxonomy to list the policy tags of.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of items to return. Must be a value between 1 and 1000.
+    /// If not set, defaults to 50.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// The next_page_token value returned from a previous List request, if any. If
+    /// not set, defaults to an empty string.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[ListPolicyTags][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListPolicyTags\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPolicyTagsResponse {
+    /// The policy tags that are in the requested taxonomy.
+    #[prost(message, repeated, tag="1")]
+    pub policy_tags: ::prost::alloc::vec::Vec<PolicyTag>,
+    /// Token used to retrieve the next page of results, or empty if there are no
+    /// more results in the list.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[GetPolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.GetPolicyTag\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetPolicyTagRequest {
+    /// Required. Resource name of the requested policy tag.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod policy_tag_manager_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The policy tag manager API service allows clients to manage their taxonomies
+    /// and policy tags.
+    #[derive(Debug, Clone)]
+    pub struct PolicyTagManagerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> PolicyTagManagerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PolicyTagManagerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            PolicyTagManagerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a taxonomy in the specified project.
+        pub async fn create_taxonomy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTaxonomyRequest>,
+        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreateTaxonomy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a taxonomy. This operation will also delete all
+        /// policy tags in this taxonomy along with their associated policies.
+        pub async fn delete_taxonomy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTaxonomyRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeleteTaxonomy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a taxonomy.
+        pub async fn update_taxonomy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateTaxonomyRequest>,
+        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdateTaxonomy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all taxonomies in a project in a particular location that the caller
+        /// has permission to view.
+        pub async fn list_taxonomies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTaxonomiesRequest>,
+        ) -> Result<tonic::Response<super::ListTaxonomiesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListTaxonomies",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a taxonomy.
+        pub async fn get_taxonomy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTaxonomyRequest>,
+        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetTaxonomy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a policy tag in the specified taxonomy.
+        pub async fn create_policy_tag(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreatePolicyTagRequest>,
+        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreatePolicyTag",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a policy tag. Also deletes all of its descendant policy tags.
+        pub async fn delete_policy_tag(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeletePolicyTagRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeletePolicyTag",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a policy tag.
+        pub async fn update_policy_tag(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdatePolicyTagRequest>,
+        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdatePolicyTag",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all policy tags in a taxonomy.
+        pub async fn list_policy_tags(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPolicyTagsRequest>,
+        ) -> Result<tonic::Response<super::ListPolicyTagsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListPolicyTags",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a policy tag.
+        pub async fn get_policy_tag(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPolicyTagRequest>,
+        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetPolicyTag",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the IAM policy for a taxonomy or a policy tag.
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the IAM policy for a taxonomy or a policy tag.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the permissions that a caller has on the specified taxonomy or
+        /// policy tag.
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::super::super::super::iam::v1::TestIamPermissionsResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// This enum describes all the possible systems that Data Catalog integrates
 /// with.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -258,238 +1062,6 @@ impl TableSourceType {
             TableSourceType::BigqueryView => "BIGQUERY_VIEW",
             TableSourceType::BigqueryTable => "BIGQUERY_TABLE",
         }
-    }
-}
-/// Tags are used to attach custom metadata to Data Catalog resources. Tags
-/// conform to the specifications within their tag template.
-///
-/// See [Data Catalog
-/// IAM](<https://cloud.google.com/data-catalog/docs/concepts/iam>) for information
-/// on the permissions needed to create or view tags.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Tag {
-    /// The resource name of the tag in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}/tags/{tag_id}
-    ///
-    /// where `tag_id` is a system-generated identifier.
-    /// Note that this Tag may not actually be stored in the location in this name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The resource name of the tag template that this tag uses. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
-    ///
-    /// This field cannot be modified after creation.
-    #[prost(string, tag="2")]
-    pub template: ::prost::alloc::string::String,
-    /// Output only. The display name of the tag template.
-    #[prost(string, tag="5")]
-    pub template_display_name: ::prost::alloc::string::String,
-    /// Required. This maps the ID of a tag field to the value of and additional information
-    /// about that field. Valid field IDs are defined by the tag's template. A tag
-    /// must have at least 1 field and at most 500 fields.
-    #[prost(btree_map="string, message", tag="3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagField>,
-    /// The scope within the parent resource that this tag is attached to. If not
-    /// provided, the tag is attached to the parent resource itself.
-    /// Deleting the scope from the parent resource will delete all tags attached
-    /// to that scope. These fields cannot be updated after creation.
-    #[prost(oneof="tag::Scope", tags="4")]
-    pub scope: ::core::option::Option<tag::Scope>,
-}
-/// Nested message and enum types in `Tag`.
-pub mod tag {
-    /// The scope within the parent resource that this tag is attached to. If not
-    /// provided, the tag is attached to the parent resource itself.
-    /// Deleting the scope from the parent resource will delete all tags attached
-    /// to that scope. These fields cannot be updated after creation.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Scope {
-        /// Resources like Entry can have schemas associated with them. This scope
-        /// allows users to attach tags to an individual column based on that schema.
-        ///
-        /// For attaching a tag to a nested column, use `.` to separate the column
-        /// names. Example:
-        ///
-        /// * `outer_column.inner_column`
-        #[prost(string, tag="4")]
-        Column(::prost::alloc::string::String),
-    }
-}
-/// Contains the value and supporting information for a field within
-/// a \[Tag][google.cloud.datacatalog.v1beta1.Tag\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagField {
-    /// Output only. The display name of this field.
-    #[prost(string, tag="1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The order of this field with respect to other fields in this tag. It can be
-    /// set in \[Tag][google.cloud.datacatalog.v1beta1.TagTemplateField.order\]. For
-    /// example, a higher value can indicate a more important field. The value can
-    /// be negative. Multiple fields can have the same order, and field orders
-    /// within a tag do not have to be sequential.
-    #[prost(int32, tag="7")]
-    pub order: i32,
-    /// Required. The value of this field.
-    #[prost(oneof="tag_field::Kind", tags="2, 3, 4, 5, 6")]
-    pub kind: ::core::option::Option<tag_field::Kind>,
-}
-/// Nested message and enum types in `TagField`.
-pub mod tag_field {
-    /// Holds an enum value.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EnumValue {
-        /// The display name of the enum value.
-        #[prost(string, tag="1")]
-        pub display_name: ::prost::alloc::string::String,
-    }
-    /// Required. The value of this field.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// Holds the value for a tag field with double type.
-        #[prost(double, tag="2")]
-        DoubleValue(f64),
-        /// Holds the value for a tag field with string type.
-        #[prost(string, tag="3")]
-        StringValue(::prost::alloc::string::String),
-        /// Holds the value for a tag field with boolean type.
-        #[prost(bool, tag="4")]
-        BoolValue(bool),
-        /// Holds the value for a tag field with timestamp type.
-        #[prost(message, tag="5")]
-        TimestampValue(::prost_types::Timestamp),
-        /// Holds the value for a tag field with enum type. This value must be
-        /// one of the allowed values in the definition of this enum.
-        #[prost(message, tag="6")]
-        EnumValue(EnumValue),
-    }
-}
-/// A tag template defines a tag, which can have one or more typed fields.
-/// The template is used to create and attach the tag to GCP resources.
-/// [Tag template
-/// roles](<https://cloud.google.com/iam/docs/understanding-roles#data-catalog-roles>)
-/// provide permissions to create, edit, and use the template. See, for example,
-/// the [TagTemplate
-/// User](<https://cloud.google.com/data-catalog/docs/how-to/template-user>) role,
-/// which includes permission to use the tag template to tag resources.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagTemplate {
-    /// The resource name of the tag template in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
-    ///
-    /// Note that this TagTemplate and its child resources may not actually be
-    /// stored in the location in this name.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The display name for this template. Defaults to an empty string.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. Map of tag template field IDs to the settings for the field.
-    /// This map is an exhaustive list of the allowed fields. This map must contain
-    /// at least one field and at most 500 fields.
-    ///
-    /// The keys to this map are tag template field IDs. Field IDs can contain
-    /// letters (both uppercase and lowercase), numbers (0-9) and underscores (_).
-    /// Field IDs must be at least 1 character long and at most
-    /// 64 characters long. Field IDs must start with a letter or underscore.
-    #[prost(btree_map="string, message", tag="3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagTemplateField>,
-}
-/// The template for an individual field within a tag template.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagTemplateField {
-    /// Output only. The resource name of the tag template field in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template}/fields/{field}
-    ///
-    /// Note that this TagTemplateField may not actually be stored in the location
-    /// in this name.
-    #[prost(string, tag="6")]
-    pub name: ::prost::alloc::string::String,
-    /// The display name for this field. Defaults to an empty string.
-    #[prost(string, tag="1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The type of value this tag field can contain.
-    #[prost(message, optional, tag="2")]
-    pub r#type: ::core::option::Option<FieldType>,
-    /// Whether this is a required field. Defaults to false.
-    #[prost(bool, tag="3")]
-    pub is_required: bool,
-    /// The order of this field with respect to other fields in this tag
-    /// template.  A higher value indicates a more important field. The value can
-    /// be negative. Multiple fields can have the same order, and field orders
-    /// within a tag do not have to be sequential.
-    #[prost(int32, tag="5")]
-    pub order: i32,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldType {
-    /// Required.
-    #[prost(oneof="field_type::TypeDecl", tags="1, 2")]
-    pub type_decl: ::core::option::Option<field_type::TypeDecl>,
-}
-/// Nested message and enum types in `FieldType`.
-pub mod field_type {
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EnumType {
-        /// Required on create; optional on update. The set of allowed values for
-        /// this enum. This set must not be empty, the display names of the values in
-        /// this set must not be empty and the display names of the values must be
-        /// case-insensitively unique within this set. Currently, enum values can
-        /// only be added to the list of allowed values. Deletion and renaming of
-        /// enum values are not supported. Can have up to 500 allowed values.
-        #[prost(message, repeated, tag="1")]
-        pub allowed_values: ::prost::alloc::vec::Vec<enum_type::EnumValue>,
-    }
-    /// Nested message and enum types in `EnumType`.
-    pub mod enum_type {
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EnumValue {
-            /// Required. The display name of the enum value. Must not be an empty string.
-            #[prost(string, tag="1")]
-            pub display_name: ::prost::alloc::string::String,
-        }
-    }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PrimitiveType {
-        /// This is the default invalid value for a type.
-        Unspecified = 0,
-        /// A double precision number.
-        Double = 1,
-        /// An UTF-8 string.
-        String = 2,
-        /// A boolean value.
-        Bool = 3,
-        /// A timestamp.
-        Timestamp = 4,
-    }
-    impl PrimitiveType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
-                PrimitiveType::Double => "DOUBLE",
-                PrimitiveType::String => "STRING",
-                PrimitiveType::Bool => "BOOL",
-                PrimitiveType::Timestamp => "TIMESTAMP",
-            }
-        }
-    }
-    /// Required.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TypeDecl {
-        /// Represents primitive types - string, bool etc.
-        #[prost(enumeration="PrimitiveType", tag="1")]
-        PrimitiveType(i32),
-        /// Represents an enum type.
-        #[prost(message, tag="2")]
-        EnumType(EnumType),
     }
 }
 /// Request message for
@@ -1941,578 +2513,6 @@ pub mod data_catalog_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A taxonomy is a collection of policy tags that classify data along a common
-/// axis. For instance a data *sensitivity* taxonomy could contain policy tags
-/// denoting PII such as age, zipcode, and SSN. A data *origin* taxonomy could
-/// contain policy tags to distinguish user data, employee data, partner data,
-/// public data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Taxonomy {
-    /// Output only. Resource name of this taxonomy, whose format is:
-    /// "projects/{project_number}/locations/{location_id}/taxonomies/{id}".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. User defined name of this taxonomy. It must: contain only unicode letters,
-    /// numbers, underscores, dashes and spaces; not start or end with spaces; and
-    /// be at most 200 bytes long when encoded in UTF-8.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Optional. Description of this taxonomy. It must: contain only unicode characters,
-    /// tabs, newlines, carriage returns and page breaks; and be at most 2000 bytes
-    /// long when encoded in UTF-8. If not set, defaults to an empty description.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. A list of policy types that are activated for this taxonomy. If not set,
-    /// defaults to an empty list.
-    #[prost(enumeration="taxonomy::PolicyType", repeated, packed="false", tag="6")]
-    pub activated_policy_types: ::prost::alloc::vec::Vec<i32>,
-}
-/// Nested message and enum types in `Taxonomy`.
-pub mod taxonomy {
-    /// Defines policy types where policy tag can be used for.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-    #[repr(i32)]
-    pub enum PolicyType {
-        /// Unspecified policy type.
-        Unspecified = 0,
-        /// Fine grained access control policy, which enables access control on
-        /// tagged resources.
-        FineGrainedAccessControl = 1,
-    }
-    impl PolicyType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PolicyType::Unspecified => "POLICY_TYPE_UNSPECIFIED",
-                PolicyType::FineGrainedAccessControl => "FINE_GRAINED_ACCESS_CONTROL",
-            }
-        }
-    }
-}
-/// Denotes one policy tag in a taxonomy (e.g. ssn). Policy Tags can be defined
-/// in a hierarchy. For example, consider the following hierarchy:
-/// Geolocation -&gt; (LatLong, City, ZipCode). PolicyTag "Geolocation"
-/// contains three child policy tags: "LatLong", "City", and "ZipCode".
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PolicyTag {
-    /// Output only. Resource name of this policy tag, whose format is:
-    /// "projects/{project_number}/locations/{location_id}/taxonomies/{taxonomy_id}/policyTags/{id}".
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. User defined name of this policy tag. It must: be unique within the parent
-    /// taxonomy; contain only unicode letters, numbers, underscores, dashes and
-    /// spaces; not start or end with spaces; and be at most 200 bytes long when
-    /// encoded in UTF-8.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of this policy tag. It must: contain only unicode characters,
-    /// tabs, newlines, carriage returns and page breaks; and be at most 2000 bytes
-    /// long when encoded in UTF-8. If not set, defaults to an empty description.
-    /// If not set, defaults to an empty description.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-    /// Resource name of this policy tag's parent policy tag (e.g. for the
-    /// "LatLong" policy tag in the example above, this field contains the
-    /// resource name of the "Geolocation" policy tag). If empty, it means this
-    /// policy tag is a top level policy tag (e.g. this field is empty for the
-    /// "Geolocation" policy tag in the example above). If not set, defaults to an
-    /// empty string.
-    #[prost(string, tag="4")]
-    pub parent_policy_tag: ::prost::alloc::string::String,
-    /// Output only. Resource names of child policy tags of this policy tag.
-    #[prost(string, repeated, tag="5")]
-    pub child_policy_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Request message for
-/// \[CreateTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.CreateTaxonomy\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTaxonomyRequest {
-    /// Required. Resource name of the project that the taxonomy will belong to.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The taxonomy to be created.
-    #[prost(message, optional, tag="2")]
-    pub taxonomy: ::core::option::Option<Taxonomy>,
-}
-/// Request message for
-/// \[DeleteTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.DeleteTaxonomy\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTaxonomyRequest {
-    /// Required. Resource name of the taxonomy to be deleted. All policy tags in
-    /// this taxonomy will also be deleted.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[UpdateTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.UpdateTaxonomy\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTaxonomyRequest {
-    /// The taxonomy to update. Only description, display_name, and activated
-    /// policy types can be updated.
-    #[prost(message, optional, tag="1")]
-    pub taxonomy: ::core::option::Option<Taxonomy>,
-    /// The update mask applies to the resource. For the `FieldMask` definition,
-    /// see
-    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-    /// If not set, defaults to all of the fields that are allowed to update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Request message for
-/// \[ListTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListTaxonomies\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTaxonomiesRequest {
-    /// Required. Resource name of the project to list the taxonomies of.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of items to return. Must be a value between 1 and 1000.
-    /// If not set, defaults to 50.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The next_page_token value returned from a previous list request, if any. If
-    /// not set, defaults to an empty string.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[ListTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListTaxonomies\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTaxonomiesResponse {
-    /// Taxonomies that the project contains.
-    #[prost(message, repeated, tag="1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
-    /// Token used to retrieve the next page of results, or empty if there are no
-    /// more results in the list.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[GetTaxonomy][google.cloud.datacatalog.v1beta1.PolicyTagManager.GetTaxonomy\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTaxonomyRequest {
-    /// Required. Resource name of the requested taxonomy.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[CreatePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.CreatePolicyTag\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreatePolicyTagRequest {
-    /// Required. Resource name of the taxonomy that the policy tag will belong to.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The policy tag to be created.
-    #[prost(message, optional, tag="2")]
-    pub policy_tag: ::core::option::Option<PolicyTag>,
-}
-/// Request message for
-/// \[DeletePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.DeletePolicyTag\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeletePolicyTagRequest {
-    /// Required. Resource name of the policy tag to be deleted. All of its descendant
-    /// policy tags will also be deleted.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[UpdatePolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.UpdatePolicyTag\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdatePolicyTagRequest {
-    /// The policy tag to update. Only the description, display_name, and
-    /// parent_policy_tag fields can be updated.
-    #[prost(message, optional, tag="1")]
-    pub policy_tag: ::core::option::Option<PolicyTag>,
-    /// The update mask applies to the resource. Only display_name, description and
-    /// parent_policy_tag can be updated and thus can be listed in the mask. If
-    /// update_mask is not provided, all allowed fields (i.e. display_name,
-    /// description and parent) will be updated. For more information including the
-    /// `FieldMask` definition, see
-    /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-    /// If not set, defaults to all of the fields that are allowed to update.
-    #[prost(message, optional, tag="2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Request message for
-/// \[ListPolicyTags][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListPolicyTags\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPolicyTagsRequest {
-    /// Required. Resource name of the taxonomy to list the policy tags of.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of items to return. Must be a value between 1 and 1000.
-    /// If not set, defaults to 50.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// The next_page_token value returned from a previous List request, if any. If
-    /// not set, defaults to an empty string.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[ListPolicyTags][google.cloud.datacatalog.v1beta1.PolicyTagManager.ListPolicyTags\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPolicyTagsResponse {
-    /// The policy tags that are in the requested taxonomy.
-    #[prost(message, repeated, tag="1")]
-    pub policy_tags: ::prost::alloc::vec::Vec<PolicyTag>,
-    /// Token used to retrieve the next page of results, or empty if there are no
-    /// more results in the list.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[GetPolicyTag][google.cloud.datacatalog.v1beta1.PolicyTagManager.GetPolicyTag\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetPolicyTagRequest {
-    /// Required. Resource name of the requested policy tag.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod policy_tag_manager_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The policy tag manager API service allows clients to manage their taxonomies
-    /// and policy tags.
-    #[derive(Debug, Clone)]
-    pub struct PolicyTagManagerClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> PolicyTagManagerClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PolicyTagManagerClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            PolicyTagManagerClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a taxonomy in the specified project.
-        pub async fn create_taxonomy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreateTaxonomy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a taxonomy. This operation will also delete all
-        /// policy tags in this taxonomy along with their associated policies.
-        pub async fn delete_taxonomy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteTaxonomyRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeleteTaxonomy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a taxonomy.
-        pub async fn update_taxonomy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdateTaxonomy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all taxonomies in a project in a particular location that the caller
-        /// has permission to view.
-        pub async fn list_taxonomies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ListTaxonomiesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListTaxonomies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a taxonomy.
-        pub async fn get_taxonomy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetTaxonomy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a policy tag in the specified taxonomy.
-        pub async fn create_policy_tag(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreatePolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreatePolicyTag",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a policy tag. Also deletes all of its descendant policy tags.
-        pub async fn delete_policy_tag(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeletePolicyTagRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeletePolicyTag",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a policy tag.
-        pub async fn update_policy_tag(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdatePolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdatePolicyTag",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all policy tags in a taxonomy.
-        pub async fn list_policy_tags(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPolicyTagsRequest>,
-        ) -> Result<tonic::Response<super::ListPolicyTagsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListPolicyTags",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a policy tag.
-        pub async fn get_policy_tag(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetPolicyTag",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the IAM policy for a taxonomy or a policy tag.
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the IAM policy for a taxonomy or a policy tag.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the permissions that a caller has on the specified taxonomy or
-        /// policy tag.
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<
-                super::super::super::super::iam::v1::TestIamPermissionsResponse,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManager/TestIamPermissions",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

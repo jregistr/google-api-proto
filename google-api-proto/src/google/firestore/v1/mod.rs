@@ -474,6 +474,21 @@ pub struct ExistenceFilter {
     #[prost(int32, tag="2")]
     pub count: i32,
 }
+/// The result of a single bucket from a Firestore aggregation query.
+///
+/// The keys of `aggregate_fields` are the same for all results in an aggregation
+/// query, unlike document queries which can have different fields present for
+/// each result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AggregationResult {
+    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
+    ///
+    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
+    /// assigned to the aggregation function on input and the size of this map
+    /// equals the number of aggregation functions in the query.
+    #[prost(btree_map="string, message", tag="2")]
+    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
+}
 /// A Firestore query.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StructuredQuery {
@@ -981,21 +996,6 @@ pub struct Cursor {
     /// to the sort order defined by the query.
     #[prost(bool, tag="2")]
     pub before: bool,
-}
-/// The result of a single bucket from a Firestore aggregation query.
-///
-/// The keys of `aggregate_fields` are the same for all results in an aggregation
-/// query, unlike document queries which can have different fields present for
-/// each result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AggregationResult {
-    /// The result of the aggregation functions, ex: `COUNT(*) AS total_docs`.
-    ///
-    /// The key is the \[alias][google.firestore.v1.StructuredAggregationQuery.Aggregation.alias\]
-    /// assigned to the aggregation function on input and the size of this map
-    /// equals the number of aggregation functions in the query.
-    #[prost(btree_map="string, message", tag="2")]
-    pub aggregate_fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, Value>,
 }
 /// The request for \[Firestore.GetDocument][google.firestore.v1.Firestore.GetDocument\].
 #[derive(Clone, PartialEq, ::prost::Message)]
