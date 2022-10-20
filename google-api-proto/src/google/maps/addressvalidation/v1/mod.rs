@@ -1,3 +1,35 @@
+/// The metadata for the address.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AddressMetadata {
+    /// Indicates that this address is a high-rise building.
+    /// If unset, indicates that the value is unknown.
+    ///
+    /// DEPRECATED: Please use
+    /// \[`address_record_type`\](google.maps.addressvalidation.v1.ValidationResult.usps_data.address_record_type)
+    /// instead. This field will be removed with the GA release.
+    #[deprecated]
+    #[prost(bool, optional, tag="1")]
+    pub highrise: ::core::option::Option<bool>,
+    /// Indicates that this is the address of a business.
+    /// If unset, indicates that the value is unknown.
+    #[prost(bool, optional, tag="2")]
+    pub business: ::core::option::Option<bool>,
+    /// Indicates that the address of a PO box.
+    /// If unset, indicates that the value is unknown.
+    #[prost(bool, optional, tag="3")]
+    pub po_box: ::core::option::Option<bool>,
+    /// Indicates that the address is of a multi-family building.
+    /// If unset, indicates that the value is unknown.
+    ///
+    /// DEPRECATED: this field will be removed with the GA release.
+    #[deprecated]
+    #[prost(bool, optional, tag="4")]
+    pub multi_family: ::core::option::Option<bool>,
+    /// Indicates that this is the address of a residence.
+    /// If unset, indicates that the value is unknown.
+    #[prost(bool, optional, tag="6")]
+    pub residential: ::core::option::Option<bool>,
+}
 /// Details of the address parsed from the input.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Address {
@@ -182,38 +214,6 @@ pub struct PlusCode {
     /// name of a reference entity.
     #[prost(string, tag="2")]
     pub compound_code: ::prost::alloc::string::String,
-}
-/// The metadata for the address.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AddressMetadata {
-    /// Indicates that this address is a high-rise building.
-    /// If unset, indicates that the value is unknown.
-    ///
-    /// DEPRECATED: Please use
-    /// \[`address_record_type`\](google.maps.addressvalidation.v1.ValidationResult.usps_data.address_record_type)
-    /// instead. This field will be removed with the GA release.
-    #[deprecated]
-    #[prost(bool, optional, tag="1")]
-    pub highrise: ::core::option::Option<bool>,
-    /// Indicates that this is the address of a business.
-    /// If unset, indicates that the value is unknown.
-    #[prost(bool, optional, tag="2")]
-    pub business: ::core::option::Option<bool>,
-    /// Indicates that the address of a PO box.
-    /// If unset, indicates that the value is unknown.
-    #[prost(bool, optional, tag="3")]
-    pub po_box: ::core::option::Option<bool>,
-    /// Indicates that the address is of a multi-family building.
-    /// If unset, indicates that the value is unknown.
-    ///
-    /// DEPRECATED: this field will be removed with the GA release.
-    #[deprecated]
-    #[prost(bool, optional, tag="4")]
-    pub multi_family: ::core::option::Option<bool>,
-    /// Indicates that this is the address of a residence.
-    /// If unset, indicates that the value is unknown.
-    #[prost(bool, optional, tag="6")]
-    pub residential: ::core::option::Option<bool>,
 }
 /// USPS representation of a US address.
 #[derive(Clone, PartialEq, ::prost::Message)]

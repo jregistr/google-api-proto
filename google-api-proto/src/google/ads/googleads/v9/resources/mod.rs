@@ -1,938 +1,70 @@
-// Proto file describing the Mobile App Category Constant resource.
+// Proto file describing the SmartCampaignSearchTermView resource.
 
-/// A mobile application category constant.
+/// A Smart campaign search term view.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MobileAppCategoryConstant {
-    /// Output only. The resource name of the mobile app category constant.
-    /// Mobile app category constant resource names have the form:
+pub struct SmartCampaignSearchTermView {
+    /// Output only. The resource name of the Smart campaign search term view.
+    /// Smart campaign search term view resource names have the form:
     ///
-    /// `mobileAppCategoryConstants/{mobile_app_category_id}`
+    /// `customers/{customer_id}/smartCampaignSearchTermViews/{campaign_id}~{URL-base64_search_term}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the mobile app category constant.
-    #[prost(int32, optional, tag="4")]
-    pub id: ::core::option::Option<i32>,
-    /// Output only. Mobile app category name.
-    #[prost(string, optional, tag="5")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-}
-// Proto file describing the user location view resource.
-
-/// A user location view.
-///
-/// User Location View includes all metrics aggregated at the country level,
-/// one row per country. It reports metrics at the actual physical location of
-/// the user by targeted or not targeted location. If other segment fields are
-/// used, you may get more than one row per country.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserLocationView {
-    /// Output only. The resource name of the user location view.
-    /// UserLocation view resource names have the form:
-    ///
-    /// `customers/{customer_id}/userLocationViews/{country_criterion_id}~{targeting_location}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. Criterion Id for the country.
-    #[prost(int64, optional, tag="4")]
-    pub country_criterion_id: ::core::option::Option<i64>,
-    /// Output only. Indicates whether location was targeted or not.
-    #[prost(bool, optional, tag="5")]
-    pub targeting_location: ::core::option::Option<bool>,
-}
-/// An asset set representing a collection of assets.
-/// Use AssetSetAsset to link an asset to the asset set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetSet {
-    /// Immutable. The resource name of the asset set.
-    /// Asset set resource names have the form:
-    ///
-    /// `customers/{customer_id}/assetSets/{asset_set_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Required. Name of the asset set. Required. It must have a minimum length of 1 and
-    /// maximum length of 128.
+    /// Output only. The search term.
     #[prost(string, tag="2")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Immutable. The type of the asset set. Required.
-    #[prost(enumeration="super::enums::asset_set_type_enum::AssetSetType", tag="3")]
-    pub r#type: i32,
-    /// Output only. The status of the asset set. Read-only.
-    #[prost(enumeration="super::enums::asset_set_status_enum::AssetSetStatus", tag="4")]
-    pub status: i32,
-    /// Merchant ID and Feed Label from Google Merchant Center.
-    #[prost(message, optional, tag="5")]
-    pub merchant_center_feed: ::core::option::Option<asset_set::MerchantCenterFeed>,
-}
-/// Nested message and enum types in `AssetSet`.
-pub mod asset_set {
-    /// Merchant ID and Feed Label from Google Merchant Center.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MerchantCenterFeed {
-        /// Required. Merchant ID from Google Merchant Center
-        #[prost(int64, tag="1")]
-        pub merchant_id: i64,
-        /// Optional. Feed Label from Google Merchant Center.
-        #[prost(string, optional, tag="2")]
-        pub feed_label: ::core::option::Option<::prost::alloc::string::String>,
-    }
-}
-// Proto file describing the topic view resource.
-
-/// A topic view.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TopicView {
-    /// Output only. The resource name of the topic view.
-    /// Topic view resource names have the form:
-    ///
-    /// `customers/{customer_id}/topicViews/{ad_group_id}~{criterion_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Represents the data sharing connection between a Google Ads account and
-/// another account
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLink {
-    /// Immutable. Resource name of the account link.
-    /// AccountLink resource names have the form:
-    /// `customers/{customer_id}/accountLinks/{account_link_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the link.
-    /// This field is read only.
-    #[prost(int64, optional, tag="8")]
-    pub account_link_id: ::core::option::Option<i64>,
-    /// The status of the link.
-    #[prost(enumeration="super::enums::account_link_status_enum::AccountLinkStatus", tag="3")]
-    pub status: i32,
-    /// Output only. The type of the linked account.
-    #[prost(enumeration="super::enums::linked_account_type_enum::LinkedAccountType", tag="4")]
-    pub r#type: i32,
-    /// An account linked to this Google Ads account.
-    #[prost(oneof="account_link::LinkedAccount", tags="5, 6, 7")]
-    pub linked_account: ::core::option::Option<account_link::LinkedAccount>,
-}
-/// Nested message and enum types in `AccountLink`.
-pub mod account_link {
-    /// An account linked to this Google Ads account.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum LinkedAccount {
-        /// Immutable. A third party app analytics link.
-        #[prost(message, tag="5")]
-        ThirdPartyAppAnalytics(super::ThirdPartyAppAnalyticsLinkIdentifier),
-        /// Output only. Data partner link.
-        #[prost(message, tag="6")]
-        DataPartner(super::DataPartnerLinkIdentifier),
-        /// Output only. Google Ads link.
-        #[prost(message, tag="7")]
-        GoogleAds(super::GoogleAdsLinkIdentifier),
-    }
-}
-/// The identifiers of a Third Party App Analytics Link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ThirdPartyAppAnalyticsLinkIdentifier {
-    /// Immutable. The ID of the app analytics provider.
-    /// This field should not be empty when creating a new third
-    /// party app analytics link. It is unable to be modified after the creation of
-    /// the link.
-    #[prost(int64, optional, tag="4")]
-    pub app_analytics_provider_id: ::core::option::Option<i64>,
-    /// Immutable. A string that uniquely identifies a mobile application from which the data
-    /// was collected to the Google Ads API. For iOS, the ID string is the 9 digit
-    /// string that appears at the end of an App Store URL (e.g., "422689480" for
-    /// "Gmail" whose App Store link is
-    /// <https://apps.apple.com/us/app/gmail-email-by-google/id422689480>). For
-    /// Android, the ID string is the application's package name (e.g.,
-    /// "com.google.android.gm" for "Gmail" given Google Play link
-    /// <https://play.google.com/store/apps/details?id=com.google.android.gm>)
-    /// This field should not be empty when creating a new third
-    /// party app analytics link. It is unable to be modified after the creation of
-    /// the link.
-    #[prost(string, optional, tag="5")]
-    pub app_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Immutable. The vendor of the app.
-    /// This field should not be empty when creating a new third
-    /// party app analytics link. It is unable to be modified after the creation of
-    /// the link.
-    #[prost(enumeration="super::enums::mobile_app_vendor_enum::MobileAppVendor", tag="3")]
-    pub app_vendor: i32,
-}
-/// The identifier for Data Partner account.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataPartnerLinkIdentifier {
-    /// Immutable. The customer ID of the Data partner account.
-    /// This field is required and should not be empty when creating a new
-    /// data partner link. It is unable to be modified after the creation of
-    /// the link.
-    #[prost(int64, optional, tag="1")]
-    pub data_partner_id: ::core::option::Option<i64>,
-}
-/// The identifier for Google Ads account.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleAdsLinkIdentifier {
-    /// Immutable. The resource name of the Google Ads account.
-    /// This field is required and should not be empty when creating a new
-    /// Google Ads link. It is unable to be modified after the creation of
-    /// the link.
-    #[prost(string, optional, tag="3")]
-    pub customer: ::core::option::Option<::prost::alloc::string::String>,
-}
-// Proto file describing the SharedCriterion resource.
-
-/// A criterion belonging to a shared set.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SharedCriterion {
-    /// Immutable. The resource name of the shared criterion.
-    /// Shared set resource names have the form:
-    ///
-    /// `customers/{customer_id}/sharedCriteria/{shared_set_id}~{criterion_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The shared set to which the shared criterion belongs.
-    #[prost(string, optional, tag="10")]
-    pub shared_set: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The ID of the criterion.
-    ///
-    /// This field is ignored for mutates.
-    #[prost(int64, optional, tag="11")]
-    pub criterion_id: ::core::option::Option<i64>,
-    /// Output only. The type of the criterion.
-    #[prost(enumeration="super::enums::criterion_type_enum::CriterionType", tag="4")]
-    pub r#type: i32,
-    /// The criterion.
-    ///
-    /// Exactly one must be set.
-    #[prost(oneof="shared_criterion::Criterion", tags="3, 5, 6, 7, 8, 9")]
-    pub criterion: ::core::option::Option<shared_criterion::Criterion>,
-}
-/// Nested message and enum types in `SharedCriterion`.
-pub mod shared_criterion {
-    /// The criterion.
-    ///
-    /// Exactly one must be set.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Criterion {
-        /// Immutable. Keyword.
-        #[prost(message, tag="3")]
-        Keyword(super::super::common::KeywordInfo),
-        /// Immutable. YouTube Video.
-        #[prost(message, tag="5")]
-        YoutubeVideo(super::super::common::YouTubeVideoInfo),
-        /// Immutable. YouTube Channel.
-        #[prost(message, tag="6")]
-        YoutubeChannel(super::super::common::YouTubeChannelInfo),
-        /// Immutable. Placement.
-        #[prost(message, tag="7")]
-        Placement(super::super::common::PlacementInfo),
-        /// Immutable. Mobile App Category.
-        #[prost(message, tag="8")]
-        MobileAppCategory(super::super::common::MobileAppCategoryInfo),
-        /// Immutable. Mobile application.
-        #[prost(message, tag="9")]
-        MobileApplication(super::super::common::MobileApplicationInfo),
-    }
-}
-// Proto file describing the operating system version constant resource.
-
-/// A mobile operating system version or a range of versions, depending on
-/// `operator_type`. List of available mobile platforms at
-/// <https://developers.google.com/google-ads/api/reference/data/codes-formats#mobile-platforms>
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperatingSystemVersionConstant {
-    /// Output only. The resource name of the operating system version constant.
-    /// Operating system version constant resource names have the form:
-    ///
-    /// `operatingSystemVersionConstants/{criterion_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the operating system version.
-    #[prost(int64, optional, tag="7")]
-    pub id: ::core::option::Option<i64>,
-    /// Output only. Name of the operating system.
-    #[prost(string, optional, tag="8")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The OS Major Version number.
-    #[prost(int32, optional, tag="9")]
-    pub os_major_version: ::core::option::Option<i32>,
-    /// Output only. The OS Minor Version number.
-    #[prost(int32, optional, tag="10")]
-    pub os_minor_version: ::core::option::Option<i32>,
-    /// Output only. Determines whether this constant represents a single version or a range of
-    /// versions.
-    #[prost(enumeration="super::enums::operating_system_version_operator_type_enum::OperatingSystemVersionOperatorType", tag="6")]
-    pub operator_type: i32,
-}
-// Proto file describing the CampaignSharedSet resource.
-
-/// CampaignSharedSets are used for managing the shared sets associated with a
-/// campaign.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignSharedSet {
-    /// Immutable. The resource name of the campaign shared set.
-    /// Campaign shared set resource names have the form:
-    ///
-    /// `customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The campaign to which the campaign shared set belongs.
-    #[prost(string, optional, tag="5")]
-    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Immutable. The shared set associated with the campaign. This may be a negative keyword
-    /// shared set of another customer. This customer should be a manager of the
-    /// other customer, otherwise the campaign shared set will exist but have no
-    /// serving effect. Only negative keyword shared sets can be associated with
-    /// Shopping campaigns. Only negative placement shared sets can be associated
-    /// with Display mobile app campaigns.
-    #[prost(string, optional, tag="6")]
-    pub shared_set: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The status of this campaign shared set. Read only.
-    #[prost(enumeration="super::enums::campaign_shared_set_status_enum::CampaignSharedSetStatus", tag="2")]
-    pub status: i32,
-}
-// Proto file describing the ad group simulation resource.
-
-/// An ad group simulation. Supported combinations of advertising
-/// channel type, simulation type and simulation modification method is
-/// detailed below respectively.
-///
-/// 1. SEARCH - CPC_BID - DEFAULT
-/// 2. SEARCH - CPC_BID - UNIFORM
-/// 3. SEARCH - TARGET_CPA - UNIFORM
-/// 4. SEARCH - TARGET_ROAS - UNIFORM
-/// 5. DISPLAY - CPC_BID - DEFAULT
-/// 6. DISPLAY - CPC_BID - UNIFORM
-/// 7. DISPLAY - TARGET_CPA - UNIFORM
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupSimulation {
-    /// Output only. The resource name of the ad group simulation.
-    /// Ad group simulation resource names have the form:
-    ///
-    /// `customers/{customer_id}/adGroupSimulations/{ad_group_id}~{type}~{modification_method}~{start_date}~{end_date}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. Ad group id of the simulation.
-    #[prost(int64, optional, tag="12")]
-    pub ad_group_id: ::core::option::Option<i64>,
-    /// Output only. The field that the simulation modifies.
-    #[prost(enumeration="super::enums::simulation_type_enum::SimulationType", tag="3")]
-    pub r#type: i32,
-    /// Output only. How the simulation modifies the field.
-    #[prost(enumeration="super::enums::simulation_modification_method_enum::SimulationModificationMethod", tag="4")]
-    pub modification_method: i32,
-    /// Output only. First day on which the simulation is based, in YYYY-MM-DD format.
-    #[prost(string, optional, tag="13")]
-    pub start_date: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Last day on which the simulation is based, in YYYY-MM-DD format
-    #[prost(string, optional, tag="14")]
-    pub end_date: ::core::option::Option<::prost::alloc::string::String>,
-    /// List of simulation points.
-    #[prost(oneof="ad_group_simulation::PointList", tags="8, 10, 9, 11")]
-    pub point_list: ::core::option::Option<ad_group_simulation::PointList>,
-}
-/// Nested message and enum types in `AdGroupSimulation`.
-pub mod ad_group_simulation {
-    /// List of simulation points.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum PointList {
-        /// Output only. Simulation points if the simulation type is CPC_BID.
-        #[prost(message, tag="8")]
-        CpcBidPointList(super::super::common::CpcBidSimulationPointList),
-        /// Output only. Simulation points if the simulation type is CPV_BID.
-        #[prost(message, tag="10")]
-        CpvBidPointList(super::super::common::CpvBidSimulationPointList),
-        /// Output only. Simulation points if the simulation type is TARGET_CPA.
-        #[prost(message, tag="9")]
-        TargetCpaPointList(super::super::common::TargetCpaSimulationPointList),
-        /// Output only. Simulation points if the simulation type is TARGET_ROAS.
-        #[prost(message, tag="11")]
-        TargetRoasPointList(super::super::common::TargetRoasSimulationPointList),
-    }
-}
-// Proto file describing the offline user data job resource.
-
-/// A job containing offline user data of store visitors, or user list members
-/// that will be processed asynchronously. The uploaded data isn't readable and
-/// the processing results of the job can only be read using
-/// OfflineUserDataJobService.GetOfflineUserDataJob.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJob {
-    /// Immutable. The resource name of the offline user data job.
-    /// Offline user data job resource names have the form:
-    ///
-    /// `customers/{customer_id}/offlineUserDataJobs/{offline_user_data_job_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. ID of this offline user data job.
-    #[prost(int64, optional, tag="9")]
-    pub id: ::core::option::Option<i64>,
-    /// Immutable. User specified job ID.
-    #[prost(int64, optional, tag="10")]
-    pub external_id: ::core::option::Option<i64>,
-    /// Immutable. Type of the job.
-    #[prost(enumeration="super::enums::offline_user_data_job_type_enum::OfflineUserDataJobType", tag="4")]
-    pub r#type: i32,
-    /// Output only. Status of the job.
-    #[prost(enumeration="super::enums::offline_user_data_job_status_enum::OfflineUserDataJobStatus", tag="5")]
-    pub status: i32,
-    /// Output only. Reason for the processing failure, if status is FAILED.
-    #[prost(enumeration="super::enums::offline_user_data_job_failure_reason_enum::OfflineUserDataJobFailureReason", tag="6")]
-    pub failure_reason: i32,
-    /// Output only. Metadata of offline user data job depicting match rate range.
-    #[prost(message, optional, tag="11")]
-    pub operation_metadata: ::core::option::Option<OfflineUserDataJobMetadata>,
-    /// Metadata of the job.
-    #[prost(oneof="offline_user_data_job::Metadata", tags="7, 8")]
-    pub metadata: ::core::option::Option<offline_user_data_job::Metadata>,
-}
-/// Nested message and enum types in `OfflineUserDataJob`.
-pub mod offline_user_data_job {
-    /// Metadata of the job.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Metadata {
-        /// Immutable. Metadata for data updates to a CRM-based user list.
-        #[prost(message, tag="7")]
-        CustomerMatchUserListMetadata(super::super::common::CustomerMatchUserListMetadata),
-        /// Immutable. Metadata for store sales data update.
-        #[prost(message, tag="8")]
-        StoreSalesMetadata(super::super::common::StoreSalesMetadata),
-    }
-}
-/// Metadata of offline user data job.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OfflineUserDataJobMetadata {
-    /// Output only. Match rate of the Customer Match user list upload. Describes the estimated
-    /// match rate when the status of the job is “RUNNING” and final match rate
-    /// when the final match rate is available after the status of the job is
-    /// “SUCCESS/FAILED”.
-    #[prost(enumeration="super::enums::offline_user_data_job_match_rate_range_enum::OfflineUserDataJobMatchRateRange", tag="1")]
-    pub match_rate_range: i32,
-}
-/// A customizer value for the associated CustomizerAttribute at the Campaign
-/// level.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignCustomizer {
-    /// Immutable. The resource name of the campaign customizer.
-    /// Campaign customizer resource names have the form:
-    ///
-    /// `customers/{customer_id}/campaignCustomizers/{campaign_id}~{customizer_attribute_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The campaign to which the customizer attribute is linked.
-    #[prost(string, tag="2")]
+    pub search_term: ::prost::alloc::string::String,
+    /// Output only. The Smart campaign the search term served in.
+    #[prost(string, tag="3")]
     pub campaign: ::prost::alloc::string::String,
-    /// Required. Immutable. The customizer attribute which is linked to the campaign.
-    #[prost(string, tag="3")]
-    pub customizer_attribute: ::prost::alloc::string::String,
-    /// Output only. The status of the campaign customizer.
-    #[prost(enumeration="super::enums::customizer_value_status_enum::CustomizerValueStatus", tag="4")]
-    pub status: i32,
-    /// Required. The value to associate with the customizer attribute at this level. The
-    /// value must be of the type specified for the CustomizerAttribute.
-    #[prost(message, optional, tag="5")]
-    pub value: ::core::option::Option<super::common::CustomizerValue>,
 }
-// Proto file describing the FeedItemTarget resource.
+// Proto file describing the CustomerClientLink resource.
 
-/// A feed item target.
+/// Represents customer client link relationship.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeedItemTarget {
-    /// Immutable. The resource name of the feed item target.
-    /// Feed item target resource names have the form:
-    /// `customers/{customer_id}/feedItemTargets/{feed_id}~{feed_item_id}~{feed_item_target_type}~{feed_item_target_id}`
+pub struct CustomerClientLink {
+    /// Immutable. Name of the resource.
+    /// CustomerClientLink resource names have the form:
+    /// `customers/{customer_id}/customerClientLinks/{client_customer_id}~{manager_link_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The feed item to which this feed item target belongs.
-    #[prost(string, optional, tag="12")]
-    pub feed_item: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The target type of this feed item target. This field is read-only.
-    #[prost(enumeration="super::enums::feed_item_target_type_enum::FeedItemTargetType", tag="3")]
-    pub feed_item_target_type: i32,
-    /// Output only. The ID of the targeted resource. This field is read-only.
-    #[prost(int64, optional, tag="13")]
-    pub feed_item_target_id: ::core::option::Option<i64>,
-    /// Output only. Status of the feed item target.
-    /// This field is read-only.
-    #[prost(enumeration="super::enums::feed_item_target_status_enum::FeedItemTargetStatus", tag="11")]
-    pub status: i32,
-    /// The targeted resource.
-    #[prost(oneof="feed_item_target::Target", tags="14, 15, 7, 16, 9, 10")]
-    pub target: ::core::option::Option<feed_item_target::Target>,
-}
-/// Nested message and enum types in `FeedItemTarget`.
-pub mod feed_item_target {
-    /// The targeted resource.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Target {
-        /// Immutable. The targeted campaign.
-        #[prost(string, tag="14")]
-        Campaign(::prost::alloc::string::String),
-        /// Immutable. The targeted ad group.
-        #[prost(string, tag="15")]
-        AdGroup(::prost::alloc::string::String),
-        /// Immutable. The targeted keyword.
-        #[prost(message, tag="7")]
-        Keyword(super::super::common::KeywordInfo),
-        /// Immutable. The targeted geo target constant resource name.
-        #[prost(string, tag="16")]
-        GeoTargetConstant(::prost::alloc::string::String),
-        /// Immutable. The targeted device.
-        #[prost(enumeration="super::super::enums::feed_item_target_device_enum::FeedItemTargetDevice", tag="9")]
-        Device(i32),
-        /// Immutable. The targeted schedule.
-        #[prost(message, tag="10")]
-        AdSchedule(super::super::common::AdScheduleInfo),
-    }
-}
-// Proto file describing the keyword plan campaign resource.
-
-/// A Keyword Plan campaign.
-/// Max number of keyword plan campaigns per plan allowed: 1.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanCampaign {
-    /// Immutable. The resource name of the Keyword Plan campaign.
-    /// KeywordPlanCampaign resource names have the form:
-    ///
-    /// `customers/{customer_id}/keywordPlanCampaigns/{kp_campaign_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The keyword plan this campaign belongs to.
-    #[prost(string, optional, tag="9")]
-    pub keyword_plan: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The ID of the Keyword Plan campaign.
-    #[prost(int64, optional, tag="10")]
-    pub id: ::core::option::Option<i64>,
-    /// The name of the Keyword Plan campaign.
-    ///
-    /// This field is required and should not be empty when creating Keyword Plan
-    /// campaigns.
-    #[prost(string, optional, tag="11")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// The languages targeted for the Keyword Plan campaign.
-    /// Max allowed: 1.
-    #[prost(string, repeated, tag="12")]
-    pub language_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Targeting network.
-    ///
-    /// This field is required and should not be empty when creating Keyword Plan
-    /// campaigns.
-    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="6")]
-    pub keyword_plan_network: i32,
-    /// A default max cpc bid in micros, and in the account currency, for all ad
-    /// groups under the campaign.
-    ///
-    /// This field is required and should not be empty when creating Keyword Plan
-    /// campaigns.
-    #[prost(int64, optional, tag="13")]
-    pub cpc_bid_micros: ::core::option::Option<i64>,
-    /// The geo targets.
-    /// Max number allowed: 20.
-    #[prost(message, repeated, tag="8")]
-    pub geo_targets: ::prost::alloc::vec::Vec<KeywordPlanGeoTarget>,
-}
-/// A geo target.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanGeoTarget {
-    /// Required. The resource name of the geo target.
-    #[prost(string, optional, tag="2")]
-    pub geo_target_constant: ::core::option::Option<::prost::alloc::string::String>,
-}
-// Proto file describing the asset resource.
-
-/// Asset is a part of an ad which can be shared across multiple ads.
-/// It can be an image (ImageAsset), a video (YoutubeVideoAsset), etc.
-/// Assets are immutable and cannot be removed. To stop an asset from serving,
-/// remove the asset from the entity that is using it.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// Immutable. The resource name of the asset.
-    /// Asset resource names have the form:
-    ///
-    /// `customers/{customer_id}/assets/{asset_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the asset.
-    #[prost(int64, optional, tag="11")]
-    pub id: ::core::option::Option<i64>,
-    /// Optional name of the asset.
-    #[prost(string, optional, tag="12")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Type of the asset.
-    #[prost(enumeration="super::enums::asset_type_enum::AssetType", tag="4")]
-    pub r#type: i32,
-    /// A list of possible final URLs after all cross domain redirects.
-    #[prost(string, repeated, tag="14")]
-    pub final_urls: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// A list of possible final mobile URLs after all cross domain redirects.
-    #[prost(string, repeated, tag="16")]
-    pub final_mobile_urls: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// URL template for constructing a tracking URL.
-    #[prost(string, optional, tag="17")]
-    pub tracking_url_template: ::core::option::Option<::prost::alloc::string::String>,
-    /// A list of mappings to be used for substituting URL custom parameter tags in
-    /// the tracking_url_template, final_urls, and/or final_mobile_urls.
-    #[prost(message, repeated, tag="18")]
-    pub url_custom_parameters: ::prost::alloc::vec::Vec<super::common::CustomParameter>,
-    /// URL template for appending params to landing page URLs served with parallel
-    /// tracking.
-    #[prost(string, optional, tag="19")]
-    pub final_url_suffix: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Policy information for the asset.
-    #[prost(message, optional, tag="13")]
-    pub policy_summary: ::core::option::Option<AssetPolicySummary>,
-    /// The specific type of the asset.
-    #[prost(oneof="asset::AssetData", tags="5, 6, 7, 8, 9, 10, 15, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29")]
-    pub asset_data: ::core::option::Option<asset::AssetData>,
-}
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// The specific type of the asset.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum AssetData {
-        /// Immutable. A YouTube video asset.
-        #[prost(message, tag="5")]
-        YoutubeVideoAsset(super::super::common::YoutubeVideoAsset),
-        /// Immutable. A media bundle asset.
-        #[prost(message, tag="6")]
-        MediaBundleAsset(super::super::common::MediaBundleAsset),
-        /// Output only. An image asset.
-        #[prost(message, tag="7")]
-        ImageAsset(super::super::common::ImageAsset),
-        /// Immutable. A text asset.
-        #[prost(message, tag="8")]
-        TextAsset(super::super::common::TextAsset),
-        /// A lead form asset.
-        #[prost(message, tag="9")]
-        LeadFormAsset(super::super::common::LeadFormAsset),
-        /// A book on google asset.
-        #[prost(message, tag="10")]
-        BookOnGoogleAsset(super::super::common::BookOnGoogleAsset),
-        /// A promotion asset.
-        #[prost(message, tag="15")]
-        PromotionAsset(super::super::common::PromotionAsset),
-        /// A callout asset.
-        #[prost(message, tag="20")]
-        CalloutAsset(super::super::common::CalloutAsset),
-        /// A structured snippet asset.
-        #[prost(message, tag="21")]
-        StructuredSnippetAsset(super::super::common::StructuredSnippetAsset),
-        /// A sitelink asset.
-        #[prost(message, tag="22")]
-        SitelinkAsset(super::super::common::SitelinkAsset),
-        /// A page feed asset.
-        #[prost(message, tag="23")]
-        PageFeedAsset(super::super::common::PageFeedAsset),
-        /// A dynamic education asset.
-        #[prost(message, tag="24")]
-        DynamicEducationAsset(super::super::common::DynamicEducationAsset),
-        /// A mobile app asset.
-        #[prost(message, tag="25")]
-        MobileAppAsset(super::super::common::MobileAppAsset),
-        /// A hotel callout asset.
-        #[prost(message, tag="26")]
-        HotelCalloutAsset(super::super::common::HotelCalloutAsset),
-        /// A call asset.
-        #[prost(message, tag="27")]
-        CallAsset(super::super::common::CallAsset),
-        /// A price asset.
-        #[prost(message, tag="28")]
-        PriceAsset(super::super::common::PriceAsset),
-        /// Immutable. A call to action asset.
-        #[prost(message, tag="29")]
-        CallToActionAsset(super::super::common::CallToActionAsset),
-    }
-}
-/// Contains policy information for an asset.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetPolicySummary {
-    /// Output only. The list of policy findings for this asset.
-    #[prost(message, repeated, tag="1")]
-    pub policy_topic_entries: ::prost::alloc::vec::Vec<super::common::PolicyTopicEntry>,
-    /// Output only. Where in the review process this asset is.
-    #[prost(enumeration="super::enums::policy_review_status_enum::PolicyReviewStatus", tag="2")]
-    pub review_status: i32,
-    /// Output only. The overall approval status of this asset, calculated based on the status
-    /// of its individual policy topic entries.
-    #[prost(enumeration="super::enums::policy_approval_status_enum::PolicyApprovalStatus", tag="3")]
-    pub approval_status: i32,
-}
-// Proto file describing the Detailed Demographic resource.
-
-/// A detailed demographic: a particular interest-based vertical to be targeted
-/// to reach users based on long-term life facts.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DetailedDemographic {
-    /// Output only. The resource name of the detailed demographic.
-    /// Detailed demographic resource names have the form:
-    ///
-    /// `customers/{customer_id}/detailedDemographics/{detailed_demographic_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the detailed demographic.
-    #[prost(int64, tag="2")]
-    pub id: i64,
-    /// Output only. The name of the detailed demographic. E.g."Highest Level of Educational
-    /// Attainment"
-    #[prost(string, tag="3")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The parent of the detailed_demographic.
-    #[prost(string, tag="4")]
-    pub parent: ::prost::alloc::string::String,
-    /// Output only. True if the detailed demographic is launched to all channels and locales.
-    #[prost(bool, tag="5")]
-    pub launched_to_all: bool,
-    /// Output only. Availability information of the detailed demographic.
-    #[prost(message, repeated, tag="6")]
-    pub availabilities: ::prost::alloc::vec::Vec<super::common::CriterionCategoryAvailability>,
-}
-// Proto file describing the SharedSet resource.
-
-/// SharedSets are used for sharing criterion exclusions across multiple
-/// campaigns.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SharedSet {
-    /// Immutable. The resource name of the shared set.
-    /// Shared set resource names have the form:
-    ///
-    /// `customers/{customer_id}/sharedSets/{shared_set_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of this shared set. Read only.
+    /// Immutable. The client customer linked to this customer.
+    #[prost(string, optional, tag="7")]
+    pub client_customer: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. This is uniquely identifies a customer client link. Read only.
     #[prost(int64, optional, tag="8")]
-    pub id: ::core::option::Option<i64>,
-    /// Immutable. The type of this shared set: each shared set holds only a single kind
-    /// of resource. Required. Immutable.
-    #[prost(enumeration="super::enums::shared_set_type_enum::SharedSetType", tag="3")]
-    pub r#type: i32,
-    /// The name of this shared set. Required.
-    /// Shared Sets must have names that are unique among active shared sets of
-    /// the same type.
-    /// The length of this string should be between 1 and 255 UTF-8 bytes,
-    /// inclusive.
-    #[prost(string, optional, tag="9")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The status of this shared set. Read only.
-    #[prost(enumeration="super::enums::shared_set_status_enum::SharedSetStatus", tag="5")]
+    pub manager_link_id: ::core::option::Option<i64>,
+    /// This is the status of the link between client and manager.
+    #[prost(enumeration="super::enums::manager_link_status_enum::ManagerLinkStatus", tag="5")]
     pub status: i32,
-    /// Output only. The number of shared criteria within this shared set. Read only.
-    #[prost(int64, optional, tag="10")]
-    pub member_count: ::core::option::Option<i64>,
-    /// Output only. The number of campaigns associated with this shared set. Read only.
-    #[prost(int64, optional, tag="11")]
-    pub reference_count: ::core::option::Option<i64>,
+    /// The visibility of the link. Users can choose whether or not to see hidden
+    /// links in the Google Ads UI.
+    /// Default value is false
+    #[prost(bool, optional, tag="9")]
+    pub hidden: ::core::option::Option<bool>,
 }
-// Proto file describing the campaign criterion simulation resource.
+// Proto file describing the CampaignAsset resource.
 
-/// A campaign criterion simulation. Supported combinations of advertising
-/// channel type, criterion ids, simulation type and simulation modification
-/// method is detailed below respectively.
-///
-/// 1. SEARCH - 30000,30001,30002 - BID_MODIFIER - UNIFORM
-/// 2. DISPLAY - 30001 - BID_MODIFIER - UNIFORM
+/// A link between a Campaign and an Asset.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignCriterionSimulation {
-    /// Output only. The resource name of the campaign criterion simulation.
-    /// Campaign criterion simulation resource names have the form:
+pub struct CampaignAsset {
+    /// Immutable. The resource name of the campaign asset.
+    /// CampaignAsset resource names have the form:
     ///
-    /// `customers/{customer_id}/campaignCriterionSimulations/{campaign_id}~{criterion_id}~{type}~{modification_method}~{start_date}~{end_date}`
+    /// `customers/{customer_id}/campaignAssets/{campaign_id}~{asset_id}~{field_type}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. Campaign ID of the simulation.
-    #[prost(int64, optional, tag="9")]
-    pub campaign_id: ::core::option::Option<i64>,
-    /// Output only. Criterion ID of the simulation.
-    #[prost(int64, optional, tag="10")]
-    pub criterion_id: ::core::option::Option<i64>,
-    /// Output only. The field that the simulation modifies.
-    #[prost(enumeration="super::enums::simulation_type_enum::SimulationType", tag="4")]
-    pub r#type: i32,
-    /// Output only. How the simulation modifies the field.
-    #[prost(enumeration="super::enums::simulation_modification_method_enum::SimulationModificationMethod", tag="5")]
-    pub modification_method: i32,
-    /// Output only. First day on which the simulation is based, in YYYY-MM-DD format.
-    #[prost(string, optional, tag="11")]
-    pub start_date: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Last day on which the simulation is based, in YYYY-MM-DD format.
-    #[prost(string, optional, tag="12")]
-    pub end_date: ::core::option::Option<::prost::alloc::string::String>,
-    /// List of simulation points.
-    #[prost(oneof="campaign_criterion_simulation::PointList", tags="8")]
-    pub point_list: ::core::option::Option<campaign_criterion_simulation::PointList>,
-}
-/// Nested message and enum types in `CampaignCriterionSimulation`.
-pub mod campaign_criterion_simulation {
-    /// List of simulation points.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum PointList {
-        /// Output only. Simulation points if the simulation type is BID_MODIFIER.
-        #[prost(message, tag="8")]
-        BidModifierPointList(super::super::common::BidModifierSimulationPointList),
-    }
-}
-// Proto file describing the User Interest resource.
-
-/// A user interest: a particular interest-based vertical to be targeted.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserInterest {
-    /// Output only. The resource name of the user interest.
-    /// User interest resource names have the form:
-    ///
-    /// `customers/{customer_id}/userInterests/{user_interest_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. Taxonomy type of the user interest.
-    #[prost(enumeration="super::enums::user_interest_taxonomy_type_enum::UserInterestTaxonomyType", tag="2")]
-    pub taxonomy_type: i32,
-    /// Output only. The ID of the user interest.
-    #[prost(int64, optional, tag="8")]
-    pub user_interest_id: ::core::option::Option<i64>,
-    /// Output only. The name of the user interest.
-    #[prost(string, optional, tag="9")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The parent of the user interest.
-    #[prost(string, optional, tag="10")]
-    pub user_interest_parent: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. True if the user interest is launched to all channels and locales.
-    #[prost(bool, optional, tag="11")]
-    pub launched_to_all: ::core::option::Option<bool>,
-    /// Output only. Availability information of the user interest.
-    #[prost(message, repeated, tag="7")]
-    pub availabilities: ::prost::alloc::vec::Vec<super::common::CriterionCategoryAvailability>,
-}
-// Proto file describing the CustomerFeed resource.
-
-/// A customer feed.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerFeed {
-    /// Immutable. The resource name of the customer feed.
-    /// Customer feed resource names have the form:
-    ///
-    /// `customers/{customer_id}/customerFeeds/{feed_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The feed being linked to the customer.
+    /// Immutable. The campaign to which the asset is linked.
     #[prost(string, optional, tag="6")]
-    pub feed: ::core::option::Option<::prost::alloc::string::String>,
-    /// Indicates which placeholder types the feed may populate under the connected
-    /// customer. Required.
-    #[prost(enumeration="super::enums::placeholder_type_enum::PlaceholderType", repeated, tag="3")]
-    pub placeholder_types: ::prost::alloc::vec::Vec<i32>,
-    /// Matching function associated with the CustomerFeed.
-    /// The matching function is used to filter the set of feed items selected.
+    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// Immutable. The asset which is linked to the campaign.
+    #[prost(string, optional, tag="7")]
+    pub asset: ::core::option::Option<::prost::alloc::string::String>,
+    /// Immutable. Role that the asset takes under the linked campaign.
     /// Required.
-    #[prost(message, optional, tag="4")]
-    pub matching_function: ::core::option::Option<super::common::MatchingFunction>,
-    /// Output only. Status of the customer feed.
-    /// This field is read-only.
-    #[prost(enumeration="super::enums::feed_link_status_enum::FeedLinkStatus", tag="5")]
+    #[prost(enumeration="super::enums::asset_field_type_enum::AssetFieldType", tag="4")]
+    pub field_type: i32,
+    /// Status of the campaign asset.
+    #[prost(enumeration="super::enums::asset_link_status_enum::AssetLinkStatus", tag="5")]
     pub status: i32,
-}
-// Proto file describing the webpage view resource.
-
-/// A webpage view.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WebpageView {
-    /// Output only. The resource name of the webpage view.
-    /// Webpage view resource names have the form:
-    ///
-    /// `customers/{customer_id}/webpageViews/{ad_group_id}~{criterion_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-// Proto file describing the Google Ads Field resource.
-
-/// A field or resource (artifact) used by GoogleAdsService.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleAdsField {
-    /// Output only. The resource name of the artifact.
-    /// Artifact resource names have the form:
-    ///
-    /// `googleAdsFields/{name}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The name of the artifact.
-    #[prost(string, optional, tag="21")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The category of the artifact.
-    #[prost(enumeration="super::enums::google_ads_field_category_enum::GoogleAdsFieldCategory", tag="3")]
-    pub category: i32,
-    /// Output only. Whether the artifact can be used in a SELECT clause in search
-    /// queries.
-    #[prost(bool, optional, tag="22")]
-    pub selectable: ::core::option::Option<bool>,
-    /// Output only. Whether the artifact can be used in a WHERE clause in search
-    /// queries.
-    #[prost(bool, optional, tag="23")]
-    pub filterable: ::core::option::Option<bool>,
-    /// Output only. Whether the artifact can be used in a ORDER BY clause in search
-    /// queries.
-    #[prost(bool, optional, tag="24")]
-    pub sortable: ::core::option::Option<bool>,
-    /// Output only. The names of all resources, segments, and metrics that are selectable with
-    /// the described artifact.
-    #[prost(string, repeated, tag="25")]
-    pub selectable_with: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. The names of all resources that are selectable with the described
-    /// artifact. Fields from these resources do not segment metrics when included
-    /// in search queries.
-    ///
-    /// This field is only set for artifacts whose category is RESOURCE.
-    #[prost(string, repeated, tag="26")]
-    pub attribute_resources: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. This field lists the names of all metrics that are selectable with the
-    /// described artifact when it is used in the FROM clause.
-    /// It is only set for artifacts whose category is RESOURCE.
-    #[prost(string, repeated, tag="27")]
-    pub metrics: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. This field lists the names of all artifacts, whether a segment or another
-    /// resource, that segment metrics when included in search queries and when the
-    /// described artifact is used in the FROM clause. It is only set for artifacts
-    /// whose category is RESOURCE.
-    #[prost(string, repeated, tag="28")]
-    pub segments: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. Values the artifact can assume if it is a field of type ENUM.
-    ///
-    /// This field is only set for artifacts of category SEGMENT or ATTRIBUTE.
-    #[prost(string, repeated, tag="29")]
-    pub enum_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. This field determines the operators that can be used with the artifact
-    /// in WHERE clauses.
-    #[prost(enumeration="super::enums::google_ads_field_data_type_enum::GoogleAdsFieldDataType", tag="12")]
-    pub data_type: i32,
-    /// Output only. The URL of proto describing the artifact's data type.
-    #[prost(string, optional, tag="30")]
-    pub type_url: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Whether the field artifact is repeated.
-    #[prost(bool, optional, tag="31")]
-    pub is_repeated: ::core::option::Option<bool>,
-}
-// Proto file describing the keyword plan ad group resource.
-
-/// A Keyword Planner ad group.
-/// Max number of keyword plan ad groups per plan: 200.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanAdGroup {
-    /// Immutable. The resource name of the Keyword Planner ad group.
-    /// KeywordPlanAdGroup resource names have the form:
-    ///
-    /// `customers/{customer_id}/keywordPlanAdGroups/{kp_ad_group_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// The keyword plan campaign to which this ad group belongs.
-    #[prost(string, optional, tag="6")]
-    pub keyword_plan_campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The ID of the keyword plan ad group.
-    #[prost(int64, optional, tag="7")]
-    pub id: ::core::option::Option<i64>,
-    /// The name of the keyword plan ad group.
-    ///
-    /// This field is required and should not be empty when creating keyword plan
-    /// ad group.
-    #[prost(string, optional, tag="8")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// A default ad group max cpc bid in micros in account currency for all
-    /// biddable keywords under the keyword plan ad group.
-    /// If not set, will inherit from parent campaign.
-    #[prost(int64, optional, tag="9")]
-    pub cpc_bid_micros: ::core::option::Option<i64>,
 }
 // Proto file describing the CustomerExtensionSetting resource.
 
@@ -958,161 +90,103 @@ pub struct CustomerExtensionSetting {
     #[prost(enumeration="super::enums::extension_setting_device_enum::ExtensionSettingDevice", tag="4")]
     pub device: i32,
 }
-// Proto file describing the parental status view resource.
-
-/// A parental status view.
+/// AssetGroupAsset is the link between an asset and an asset group.
+/// Adding an AssetGroupAsset links an asset with an asset group.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ParentalStatusView {
-    /// Output only. The resource name of the parental status view.
-    /// Parental Status view resource names have the form:
+pub struct AssetGroupAsset {
+    /// Immutable. The resource name of the asset group asset.
+    /// Asset group asset resource name have the form:
     ///
-    /// `customers/{customer_id}/parentalStatusViews/{ad_group_id}~{criterion_id}`
+    /// `customers/{customer_id}/assetGroupAssets/{asset_group_id}~{asset_id}~{field_type}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-}
-/// Represents a view of BiddingStrategies owned by and shared with the customer.
-///
-/// In contrast to BiddingStrategy, this resource includes strategies owned by
-/// managers of the customer and shared with this customer - in addition to
-/// strategies owned by this customer. This resource does not provide metrics and
-/// only exposes a limited subset of the BiddingStrategy attributes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccessibleBiddingStrategy {
-    /// Output only. The resource name of the accessible bidding strategy.
-    /// AccessibleBiddingStrategy resource names have the form:
-    ///
-    /// `customers/{customer_id}/accessibleBiddingStrategies/{bidding_strategy_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the bidding strategy.
-    #[prost(int64, tag="2")]
-    pub id: i64,
-    /// Output only. The name of the bidding strategy.
+    /// Immutable. The asset group which this asset group asset is linking.
+    #[prost(string, tag="2")]
+    pub asset_group: ::prost::alloc::string::String,
+    /// Immutable. The asset which this asset group asset is linking.
     #[prost(string, tag="3")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The type of the bidding strategy.
-    #[prost(enumeration="super::enums::bidding_strategy_type_enum::BiddingStrategyType", tag="4")]
-    pub r#type: i32,
-    /// Output only. The ID of the Customer which owns the bidding strategy.
-    #[prost(int64, tag="5")]
-    pub owner_customer_id: i64,
-    /// Output only. descriptive_name of the Customer which owns the bidding strategy.
-    #[prost(string, tag="6")]
-    pub owner_descriptive_name: ::prost::alloc::string::String,
-    /// The bidding scheme.
-    ///
-    /// Only one can be set.
-    #[prost(oneof="accessible_bidding_strategy::Scheme", tags="7, 8, 9, 10, 11, 12")]
-    pub scheme: ::core::option::Option<accessible_bidding_strategy::Scheme>,
+    pub asset: ::prost::alloc::string::String,
+    /// The description of the placement of the asset within the asset group. E.g.:
+    /// HEADLINE, YOUTUBE_VIDEO etc
+    #[prost(enumeration="super::enums::asset_field_type_enum::AssetFieldType", tag="4")]
+    pub field_type: i32,
+    /// The status of the link between an asset and asset group.
+    #[prost(enumeration="super::enums::asset_link_status_enum::AssetLinkStatus", tag="5")]
+    pub status: i32,
+    /// Output only. The performance of this asset group asset.
+    #[prost(enumeration="super::enums::asset_performance_label_enum::AssetPerformanceLabel", tag="6")]
+    pub performance_label: i32,
+    /// Output only. The policy information for this asset group asset.
+    #[prost(message, optional, tag="7")]
+    pub policy_summary: ::core::option::Option<super::common::PolicySummary>,
 }
-/// Nested message and enum types in `AccessibleBiddingStrategy`.
-pub mod accessible_bidding_strategy {
-    /// An automated bidding strategy to help get the most conversion value for
-    /// your campaigns while spending your budget.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MaximizeConversionValue {
-        /// Output only. The target return on ad spend (ROAS) option. If set, the bid strategy
-        /// will maximize revenue while averaging the target return on ad spend. If
-        /// the target ROAS is high, the bid strategy may not be able to spend the
-        /// full budget. If the target ROAS is not set, the bid strategy will aim to
-        /// achieve the highest possible ROAS for the budget.
-        #[prost(double, tag="1")]
-        pub target_roas: f64,
-    }
-    /// An automated bidding strategy to help get the most conversions for your
-    /// campaigns while spending your budget.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MaximizeConversions {
-        /// Output only. The target cost per acquisition (CPA) option. This is the average amount
-        /// that you would like to spend per acquisition.
-        #[prost(int64, tag="1")]
-        pub target_cpa: i64,
-    }
-    /// An automated bidding strategy that helps you maximize revenue while
-    /// averaging a specific target return on ad spend (ROAS).
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TargetRoas {
-        /// Output only. The desired revenue (based on conversion data) per unit of spend.
-        #[prost(double, optional, tag="1")]
-        pub target_roas: ::core::option::Option<f64>,
-    }
-    /// An automated bid strategy that sets bids to help get as many conversions as
-    /// possible at the target cost-per-acquisition (CPA) you set.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TargetCpa {
-        /// Output only. Average CPA target.
-        /// This target should be greater than or equal to minimum billable unit
-        /// based on the currency for the account.
-        #[prost(int64, optional, tag="1")]
-        pub target_cpa_micros: ::core::option::Option<i64>,
-    }
-    /// An automated bidding strategy that sets bids so that a certain percentage
-    /// of search ads are shown at the top of the first page (or other targeted
-    /// location).
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TargetImpressionShare {
-        /// Output only. The targeted location on the search results page.
-        #[prost(enumeration="super::super::enums::target_impression_share_location_enum::TargetImpressionShareLocation", tag="1")]
-        pub location: i32,
-        /// The desired fraction of ads to be shown in the targeted location in
-        /// micros. E.g. 1% equals 10,000.
-        #[prost(int64, optional, tag="2")]
-        pub location_fraction_micros: ::core::option::Option<i64>,
-        /// Output only. The highest CPC bid the automated bidding system is permitted to specify.
-        /// This is a required field entered by the advertiser that sets the ceiling
-        /// and specified in local micros.
-        #[prost(int64, optional, tag="3")]
-        pub cpc_bid_ceiling_micros: ::core::option::Option<i64>,
-    }
-    /// An automated bid strategy that sets your bids to help get as many clicks
-    /// as possible within your budget.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TargetSpend {
-        /// Output only. The spend target under which to maximize clicks.
-        /// A TargetSpend bidder will attempt to spend the smaller of this value
-        /// or the natural throttling spend amount.
-        /// If not specified, the budget is used as the spend target.
-        /// This field is deprecated and should no longer be used. See
-        /// <https://ads-developers.googleblog.com/2020/05/reminder-about-sunset-creation-of.html>
-        /// for details.
-        #[deprecated]
-        #[prost(int64, optional, tag="1")]
-        pub target_spend_micros: ::core::option::Option<i64>,
-        /// Output only. Maximum bid limit that can be set by the bid strategy.
-        /// The limit applies to all keywords managed by the strategy.
-        #[prost(int64, optional, tag="2")]
-        pub cpc_bid_ceiling_micros: ::core::option::Option<i64>,
-    }
-    /// The bidding scheme.
+// Proto file describing the SearchTermView resource.
+
+/// A search term view with metrics aggregated by search term at the ad group
+/// level.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchTermView {
+    /// Output only. The resource name of the search term view.
+    /// Search term view resource names have the form:
     ///
-    /// Only one can be set.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Scheme {
-        /// Output only. An automated bidding strategy to help get the most conversion value for
-        /// your campaigns while spending your budget.
-        #[prost(message, tag="7")]
-        MaximizeConversionValue(MaximizeConversionValue),
-        /// Output only. An automated bidding strategy to help get the most conversions for your
-        /// campaigns while spending your budget.
-        #[prost(message, tag="8")]
-        MaximizeConversions(MaximizeConversions),
-        /// Output only. A bidding strategy that sets bids to help get as many conversions as
-        /// possible at the target cost-per-acquisition (CPA) you set.
-        #[prost(message, tag="9")]
-        TargetCpa(TargetCpa),
-        /// Output only. A bidding strategy that automatically optimizes towards a desired
-        /// percentage of impressions.
-        #[prost(message, tag="10")]
-        TargetImpressionShare(TargetImpressionShare),
-        /// Output only. A bidding strategy that helps you maximize revenue while averaging a
-        /// specific target Return On Ad Spend (ROAS).
-        #[prost(message, tag="11")]
-        TargetRoas(TargetRoas),
-        /// Output only. A bid strategy that sets your bids to help get as many clicks as
-        /// possible within your budget.
-        #[prost(message, tag="12")]
-        TargetSpend(TargetSpend),
-    }
+    /// `customers/{customer_id}/searchTermViews/{campaign_id}~{ad_group_id}~{URL-base64_search_term}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The search term.
+    #[prost(string, optional, tag="5")]
+    pub search_term: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The ad group the search term served in.
+    #[prost(string, optional, tag="6")]
+    pub ad_group: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Indicates whether the search term is currently one of your
+    /// targeted or excluded keywords.
+    #[prost(enumeration="super::enums::search_term_targeting_status_enum::SearchTermTargetingStatus", tag="4")]
+    pub status: i32,
+}
+// Proto file describing the ShoppingPerformanceView resource.
+
+/// Shopping performance view.
+/// Provides Shopping campaign statistics aggregated at several product dimension
+/// levels. Product dimension values from Merchant Center such as brand,
+/// category, custom attributes, product condition and product type will reflect
+/// the state of each dimension as of the date and time when the corresponding
+/// event was recorded.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ShoppingPerformanceView {
+    /// Output only. The resource name of the Shopping performance view.
+    /// Shopping performance view resource names have the form:
+    /// `customers/{customer_id}/shoppingPerformanceView`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+// Proto file describing the keyword plan negative keyword resource.
+
+/// A Keyword Plan Campaign keyword.
+/// Only negative keywords are supported for Campaign Keyword.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordPlanCampaignKeyword {
+    /// Immutable. The resource name of the Keyword Plan Campaign keyword.
+    /// KeywordPlanCampaignKeyword resource names have the form:
+    ///
+    /// `customers/{customer_id}/keywordPlanCampaignKeywords/{kp_campaign_keyword_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The Keyword Plan campaign to which this negative keyword belongs.
+    #[prost(string, optional, tag="8")]
+    pub keyword_plan_campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The ID of the Keyword Plan negative keyword.
+    #[prost(int64, optional, tag="9")]
+    pub id: ::core::option::Option<i64>,
+    /// The keyword text.
+    #[prost(string, optional, tag="10")]
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
+    /// The keyword match type.
+    #[prost(enumeration="super::enums::keyword_match_type_enum::KeywordMatchType", tag="5")]
+    pub match_type: i32,
+    /// Immutable. If true, the keyword is negative.
+    /// Must be set to true. Only negative campaign keywords are supported.
+    #[prost(bool, optional, tag="11")]
+    pub negative: ::core::option::Option<bool>,
 }
 // Proto file describing the AccountBudget resource.
 
@@ -1358,6 +432,384 @@ pub mod account_budget {
         AdjustedSpendingLimitType(i32),
     }
 }
+// Proto file describing the CampaignExtensionSetting resource.
+
+/// A campaign extension setting.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignExtensionSetting {
+    /// Immutable. The resource name of the campaign extension setting.
+    /// CampaignExtensionSetting resource names have the form:
+    ///
+    /// `customers/{customer_id}/campaignExtensionSettings/{campaign_id}~{extension_type}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Immutable. The extension type of the customer extension setting.
+    #[prost(enumeration="super::enums::extension_type_enum::ExtensionType", tag="2")]
+    pub extension_type: i32,
+    /// Immutable. The resource name of the campaign. The linked extension feed items will
+    /// serve under this campaign.
+    /// Campaign resource names have the form:
+    ///
+    /// `customers/{customer_id}/campaigns/{campaign_id}`
+    #[prost(string, optional, tag="6")]
+    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// The resource names of the extension feed items to serve under the campaign.
+    /// ExtensionFeedItem resource names have the form:
+    ///
+    /// `customers/{customer_id}/extensionFeedItems/{feed_item_id}`
+    #[prost(string, repeated, tag="7")]
+    pub extension_feed_items: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The device for which the extensions will serve. Optional.
+    #[prost(enumeration="super::enums::extension_setting_device_enum::ExtensionSettingDevice", tag="5")]
+    pub device: i32,
+}
+// Proto file describing the Conversion Value Rule resource.
+
+/// A conversion value rule
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionValueRule {
+    /// Immutable. The resource name of the conversion value rule.
+    /// Conversion value rule resource names have the form:
+    ///
+    /// `customers/{customer_id}/conversionValueRules/{conversion_value_rule_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the conversion value rule.
+    #[prost(int64, tag="2")]
+    pub id: i64,
+    /// Action applied when the rule is triggered.
+    #[prost(message, optional, tag="3")]
+    pub action: ::core::option::Option<conversion_value_rule::ValueRuleAction>,
+    /// Condition for Geo location that must be satisfied for the value rule to
+    /// apply.
+    #[prost(message, optional, tag="4")]
+    pub geo_location_condition: ::core::option::Option<conversion_value_rule::ValueRuleGeoLocationCondition>,
+    /// Condition for device type that must be satisfied for the value rule to
+    /// apply.
+    #[prost(message, optional, tag="5")]
+    pub device_condition: ::core::option::Option<conversion_value_rule::ValueRuleDeviceCondition>,
+    /// Condition for audience that must be satisfied for the value rule to apply.
+    #[prost(message, optional, tag="6")]
+    pub audience_condition: ::core::option::Option<conversion_value_rule::ValueRuleAudienceCondition>,
+    /// Output only. The resource name of the conversion value rule's owner customer.
+    /// When the value rule is inherited from a manager
+    /// customer, owner_customer will be the resource name of the manager whereas
+    /// the customer in the resource_name will be of the requesting serving
+    /// customer.
+    /// ** Read-only **
+    #[prost(string, tag="7")]
+    pub owner_customer: ::prost::alloc::string::String,
+    /// The status of the conversion value rule.
+    #[prost(enumeration="super::enums::conversion_value_rule_status_enum::ConversionValueRuleStatus", tag="8")]
+    pub status: i32,
+}
+/// Nested message and enum types in `ConversionValueRule`.
+pub mod conversion_value_rule {
+    /// Action applied when rule is applied.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValueRuleAction {
+        /// Specifies applied operation.
+        #[prost(enumeration="super::super::enums::value_rule_operation_enum::ValueRuleOperation", tag="1")]
+        pub operation: i32,
+        /// Specifies applied value.
+        #[prost(double, tag="2")]
+        pub value: f64,
+    }
+    /// Condition on Geo dimension.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValueRuleGeoLocationCondition {
+        /// Geo locations that advertisers want to exclude.
+        #[prost(string, repeated, tag="1")]
+        pub excluded_geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Excluded Geo location match type.
+        #[prost(enumeration="super::super::enums::value_rule_geo_location_match_type_enum::ValueRuleGeoLocationMatchType", tag="2")]
+        pub excluded_geo_match_type: i32,
+        /// Geo locations that advertisers want to include.
+        #[prost(string, repeated, tag="3")]
+        pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Included Geo location match type.
+        #[prost(enumeration="super::super::enums::value_rule_geo_location_match_type_enum::ValueRuleGeoLocationMatchType", tag="4")]
+        pub geo_match_type: i32,
+    }
+    /// Condition on Device dimension.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValueRuleDeviceCondition {
+        /// Value for device type condition.
+        #[prost(enumeration="super::super::enums::value_rule_device_type_enum::ValueRuleDeviceType", repeated, tag="1")]
+        pub device_types: ::prost::alloc::vec::Vec<i32>,
+    }
+    /// Condition on Audience dimension.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValueRuleAudienceCondition {
+        /// User Lists.
+        #[prost(string, repeated, tag="1")]
+        pub user_lists: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// User Interests.
+        #[prost(string, repeated, tag="2")]
+        pub user_interests: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
+// Proto file describing the gender view resource.
+
+/// A gender view.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenderView {
+    /// Output only. The resource name of the gender view.
+    /// Gender view resource names have the form:
+    ///
+    /// `customers/{customer_id}/genderViews/{ad_group_id}~{criterion_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+// Proto file describing the Topic Constant resource.
+
+/// Use topics to target or exclude placements in the Google Display Network
+/// based on the category into which the placement falls (for example,
+/// "Pets & Animals/Pets/Dogs").
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TopicConstant {
+    /// Output only. The resource name of the topic constant.
+    /// topic constant resource names have the form:
+    ///
+    /// `topicConstants/{topic_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the topic.
+    #[prost(int64, optional, tag="5")]
+    pub id: ::core::option::Option<i64>,
+    /// Output only. Resource name of parent of the topic constant.
+    #[prost(string, optional, tag="6")]
+    pub topic_constant_parent: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The category to target or exclude. Each subsequent element in the array
+    /// describes a more specific sub-category. For example,
+    /// {"Pets & Animals", "Pets", "Dogs"} represents the
+    /// "Pets & Animals/Pets/Dogs" category. List of available topic categories at
+    /// <https://developers.google.com/adwords/api/docs/appendix/verticals>
+    #[prost(string, repeated, tag="7")]
+    pub path: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+// Proto file describing the User Interest resource.
+
+/// A user interest: a particular interest-based vertical to be targeted.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserInterest {
+    /// Output only. The resource name of the user interest.
+    /// User interest resource names have the form:
+    ///
+    /// `customers/{customer_id}/userInterests/{user_interest_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. Taxonomy type of the user interest.
+    #[prost(enumeration="super::enums::user_interest_taxonomy_type_enum::UserInterestTaxonomyType", tag="2")]
+    pub taxonomy_type: i32,
+    /// Output only. The ID of the user interest.
+    #[prost(int64, optional, tag="8")]
+    pub user_interest_id: ::core::option::Option<i64>,
+    /// Output only. The name of the user interest.
+    #[prost(string, optional, tag="9")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The parent of the user interest.
+    #[prost(string, optional, tag="10")]
+    pub user_interest_parent: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. True if the user interest is launched to all channels and locales.
+    #[prost(bool, optional, tag="11")]
+    pub launched_to_all: ::core::option::Option<bool>,
+    /// Output only. Availability information of the user interest.
+    #[prost(message, repeated, tag="7")]
+    pub availabilities: ::prost::alloc::vec::Vec<super::common::CriterionCategoryAvailability>,
+}
+// Proto file describing the Campaign Draft resource.
+
+/// A campaign draft.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignDraft {
+    /// Immutable. The resource name of the campaign draft.
+    /// Campaign draft resource names have the form:
+    ///
+    /// `customers/{customer_id}/campaignDrafts/{base_campaign_id}~{draft_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the draft.
+    ///
+    /// This field is read-only.
+    #[prost(int64, optional, tag="9")]
+    pub draft_id: ::core::option::Option<i64>,
+    /// Immutable. The base campaign to which the draft belongs.
+    #[prost(string, optional, tag="10")]
+    pub base_campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// The name of the campaign draft.
+    ///
+    /// This field is required and should not be empty when creating new
+    /// campaign drafts.
+    ///
+    /// It must not contain any null (code point 0x0), NL line feed
+    /// (code point 0xA) or carriage return (code point 0xD) characters.
+    #[prost(string, optional, tag="11")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Resource name of the Campaign that results from overlaying the draft
+    /// changes onto the base campaign.
+    ///
+    /// This field is read-only.
+    #[prost(string, optional, tag="12")]
+    pub draft_campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The status of the campaign draft. This field is read-only.
+    ///
+    /// When a new campaign draft is added, the status defaults to PROPOSED.
+    #[prost(enumeration="super::enums::campaign_draft_status_enum::CampaignDraftStatus", tag="6")]
+    pub status: i32,
+    /// Output only. Whether there is an experiment based on this draft currently serving.
+    #[prost(bool, optional, tag="13")]
+    pub has_experiment_running: ::core::option::Option<bool>,
+    /// Output only. The resource name of the long-running operation that can be used to poll
+    /// for completion of draft promotion. This is only set if the draft promotion
+    /// is in progress or finished.
+    #[prost(string, optional, tag="14")]
+    pub long_running_operation: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Represents a view of BiddingStrategies owned by and shared with the customer.
+///
+/// In contrast to BiddingStrategy, this resource includes strategies owned by
+/// managers of the customer and shared with this customer - in addition to
+/// strategies owned by this customer. This resource does not provide metrics and
+/// only exposes a limited subset of the BiddingStrategy attributes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccessibleBiddingStrategy {
+    /// Output only. The resource name of the accessible bidding strategy.
+    /// AccessibleBiddingStrategy resource names have the form:
+    ///
+    /// `customers/{customer_id}/accessibleBiddingStrategies/{bidding_strategy_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the bidding strategy.
+    #[prost(int64, tag="2")]
+    pub id: i64,
+    /// Output only. The name of the bidding strategy.
+    #[prost(string, tag="3")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The type of the bidding strategy.
+    #[prost(enumeration="super::enums::bidding_strategy_type_enum::BiddingStrategyType", tag="4")]
+    pub r#type: i32,
+    /// Output only. The ID of the Customer which owns the bidding strategy.
+    #[prost(int64, tag="5")]
+    pub owner_customer_id: i64,
+    /// Output only. descriptive_name of the Customer which owns the bidding strategy.
+    #[prost(string, tag="6")]
+    pub owner_descriptive_name: ::prost::alloc::string::String,
+    /// The bidding scheme.
+    ///
+    /// Only one can be set.
+    #[prost(oneof="accessible_bidding_strategy::Scheme", tags="7, 8, 9, 10, 11, 12")]
+    pub scheme: ::core::option::Option<accessible_bidding_strategy::Scheme>,
+}
+/// Nested message and enum types in `AccessibleBiddingStrategy`.
+pub mod accessible_bidding_strategy {
+    /// An automated bidding strategy to help get the most conversion value for
+    /// your campaigns while spending your budget.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MaximizeConversionValue {
+        /// Output only. The target return on ad spend (ROAS) option. If set, the bid strategy
+        /// will maximize revenue while averaging the target return on ad spend. If
+        /// the target ROAS is high, the bid strategy may not be able to spend the
+        /// full budget. If the target ROAS is not set, the bid strategy will aim to
+        /// achieve the highest possible ROAS for the budget.
+        #[prost(double, tag="1")]
+        pub target_roas: f64,
+    }
+    /// An automated bidding strategy to help get the most conversions for your
+    /// campaigns while spending your budget.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MaximizeConversions {
+        /// Output only. The target cost per acquisition (CPA) option. This is the average amount
+        /// that you would like to spend per acquisition.
+        #[prost(int64, tag="1")]
+        pub target_cpa: i64,
+    }
+    /// An automated bidding strategy that helps you maximize revenue while
+    /// averaging a specific target return on ad spend (ROAS).
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TargetRoas {
+        /// Output only. The desired revenue (based on conversion data) per unit of spend.
+        #[prost(double, optional, tag="1")]
+        pub target_roas: ::core::option::Option<f64>,
+    }
+    /// An automated bid strategy that sets bids to help get as many conversions as
+    /// possible at the target cost-per-acquisition (CPA) you set.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TargetCpa {
+        /// Output only. Average CPA target.
+        /// This target should be greater than or equal to minimum billable unit
+        /// based on the currency for the account.
+        #[prost(int64, optional, tag="1")]
+        pub target_cpa_micros: ::core::option::Option<i64>,
+    }
+    /// An automated bidding strategy that sets bids so that a certain percentage
+    /// of search ads are shown at the top of the first page (or other targeted
+    /// location).
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TargetImpressionShare {
+        /// Output only. The targeted location on the search results page.
+        #[prost(enumeration="super::super::enums::target_impression_share_location_enum::TargetImpressionShareLocation", tag="1")]
+        pub location: i32,
+        /// The desired fraction of ads to be shown in the targeted location in
+        /// micros. E.g. 1% equals 10,000.
+        #[prost(int64, optional, tag="2")]
+        pub location_fraction_micros: ::core::option::Option<i64>,
+        /// Output only. The highest CPC bid the automated bidding system is permitted to specify.
+        /// This is a required field entered by the advertiser that sets the ceiling
+        /// and specified in local micros.
+        #[prost(int64, optional, tag="3")]
+        pub cpc_bid_ceiling_micros: ::core::option::Option<i64>,
+    }
+    /// An automated bid strategy that sets your bids to help get as many clicks
+    /// as possible within your budget.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TargetSpend {
+        /// Output only. The spend target under which to maximize clicks.
+        /// A TargetSpend bidder will attempt to spend the smaller of this value
+        /// or the natural throttling spend amount.
+        /// If not specified, the budget is used as the spend target.
+        /// This field is deprecated and should no longer be used. See
+        /// <https://ads-developers.googleblog.com/2020/05/reminder-about-sunset-creation-of.html>
+        /// for details.
+        #[deprecated]
+        #[prost(int64, optional, tag="1")]
+        pub target_spend_micros: ::core::option::Option<i64>,
+        /// Output only. Maximum bid limit that can be set by the bid strategy.
+        /// The limit applies to all keywords managed by the strategy.
+        #[prost(int64, optional, tag="2")]
+        pub cpc_bid_ceiling_micros: ::core::option::Option<i64>,
+    }
+    /// The bidding scheme.
+    ///
+    /// Only one can be set.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Scheme {
+        /// Output only. An automated bidding strategy to help get the most conversion value for
+        /// your campaigns while spending your budget.
+        #[prost(message, tag="7")]
+        MaximizeConversionValue(MaximizeConversionValue),
+        /// Output only. An automated bidding strategy to help get the most conversions for your
+        /// campaigns while spending your budget.
+        #[prost(message, tag="8")]
+        MaximizeConversions(MaximizeConversions),
+        /// Output only. A bidding strategy that sets bids to help get as many conversions as
+        /// possible at the target cost-per-acquisition (CPA) you set.
+        #[prost(message, tag="9")]
+        TargetCpa(TargetCpa),
+        /// Output only. A bidding strategy that automatically optimizes towards a desired
+        /// percentage of impressions.
+        #[prost(message, tag="10")]
+        TargetImpressionShare(TargetImpressionShare),
+        /// Output only. A bidding strategy that helps you maximize revenue while averaging a
+        /// specific target Return On Ad Spend (ROAS).
+        #[prost(message, tag="11")]
+        TargetRoas(TargetRoas),
+        /// Output only. A bid strategy that sets your bids to help get as many clicks as
+        /// possible within your budget.
+        #[prost(message, tag="12")]
+        TargetSpend(TargetSpend),
+    }
+}
 // Proto file describing the AccountBudgetProposal resource.
 
 /// An account-level budget proposal.
@@ -1489,6 +941,94 @@ pub mod account_budget_proposal {
         #[prost(enumeration="super::super::enums::spending_limit_type_enum::SpendingLimitType", tag="24")]
         ApprovedSpendingLimitType(i32),
     }
+}
+/// Represents the data sharing connection between a Google Ads account and
+/// another account
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountLink {
+    /// Immutable. Resource name of the account link.
+    /// AccountLink resource names have the form:
+    /// `customers/{customer_id}/accountLinks/{account_link_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the link.
+    /// This field is read only.
+    #[prost(int64, optional, tag="8")]
+    pub account_link_id: ::core::option::Option<i64>,
+    /// The status of the link.
+    #[prost(enumeration="super::enums::account_link_status_enum::AccountLinkStatus", tag="3")]
+    pub status: i32,
+    /// Output only. The type of the linked account.
+    #[prost(enumeration="super::enums::linked_account_type_enum::LinkedAccountType", tag="4")]
+    pub r#type: i32,
+    /// An account linked to this Google Ads account.
+    #[prost(oneof="account_link::LinkedAccount", tags="5, 6, 7")]
+    pub linked_account: ::core::option::Option<account_link::LinkedAccount>,
+}
+/// Nested message and enum types in `AccountLink`.
+pub mod account_link {
+    /// An account linked to this Google Ads account.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum LinkedAccount {
+        /// Immutable. A third party app analytics link.
+        #[prost(message, tag="5")]
+        ThirdPartyAppAnalytics(super::ThirdPartyAppAnalyticsLinkIdentifier),
+        /// Output only. Data partner link.
+        #[prost(message, tag="6")]
+        DataPartner(super::DataPartnerLinkIdentifier),
+        /// Output only. Google Ads link.
+        #[prost(message, tag="7")]
+        GoogleAds(super::GoogleAdsLinkIdentifier),
+    }
+}
+/// The identifiers of a Third Party App Analytics Link.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ThirdPartyAppAnalyticsLinkIdentifier {
+    /// Immutable. The ID of the app analytics provider.
+    /// This field should not be empty when creating a new third
+    /// party app analytics link. It is unable to be modified after the creation of
+    /// the link.
+    #[prost(int64, optional, tag="4")]
+    pub app_analytics_provider_id: ::core::option::Option<i64>,
+    /// Immutable. A string that uniquely identifies a mobile application from which the data
+    /// was collected to the Google Ads API. For iOS, the ID string is the 9 digit
+    /// string that appears at the end of an App Store URL (e.g., "422689480" for
+    /// "Gmail" whose App Store link is
+    /// <https://apps.apple.com/us/app/gmail-email-by-google/id422689480>). For
+    /// Android, the ID string is the application's package name (e.g.,
+    /// "com.google.android.gm" for "Gmail" given Google Play link
+    /// <https://play.google.com/store/apps/details?id=com.google.android.gm>)
+    /// This field should not be empty when creating a new third
+    /// party app analytics link. It is unable to be modified after the creation of
+    /// the link.
+    #[prost(string, optional, tag="5")]
+    pub app_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Immutable. The vendor of the app.
+    /// This field should not be empty when creating a new third
+    /// party app analytics link. It is unable to be modified after the creation of
+    /// the link.
+    #[prost(enumeration="super::enums::mobile_app_vendor_enum::MobileAppVendor", tag="3")]
+    pub app_vendor: i32,
+}
+/// The identifier for Data Partner account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataPartnerLinkIdentifier {
+    /// Immutable. The customer ID of the Data partner account.
+    /// This field is required and should not be empty when creating a new
+    /// data partner link. It is unable to be modified after the creation of
+    /// the link.
+    #[prost(int64, optional, tag="1")]
+    pub data_partner_id: ::core::option::Option<i64>,
+}
+/// The identifier for Google Ads account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleAdsLinkIdentifier {
+    /// Immutable. The resource name of the Google Ads account.
+    /// This field is required and should not be empty when creating a new
+    /// Google Ads link. It is unable to be modified after the creation of
+    /// the link.
+    #[prost(string, optional, tag="3")]
+    pub customer: ::core::option::Option<::prost::alloc::string::String>,
 }
 // Proto file describing the ad group resource.
 
@@ -2438,6 +1978,65 @@ pub struct AdGroupLabel {
     #[prost(string, optional, tag="5")]
     pub label: ::core::option::Option<::prost::alloc::string::String>,
 }
+// Proto file describing the ad group simulation resource.
+
+/// An ad group simulation. Supported combinations of advertising
+/// channel type, simulation type and simulation modification method is
+/// detailed below respectively.
+///
+/// 1. SEARCH - CPC_BID - DEFAULT
+/// 2. SEARCH - CPC_BID - UNIFORM
+/// 3. SEARCH - TARGET_CPA - UNIFORM
+/// 4. SEARCH - TARGET_ROAS - UNIFORM
+/// 5. DISPLAY - CPC_BID - DEFAULT
+/// 6. DISPLAY - CPC_BID - UNIFORM
+/// 7. DISPLAY - TARGET_CPA - UNIFORM
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupSimulation {
+    /// Output only. The resource name of the ad group simulation.
+    /// Ad group simulation resource names have the form:
+    ///
+    /// `customers/{customer_id}/adGroupSimulations/{ad_group_id}~{type}~{modification_method}~{start_date}~{end_date}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. Ad group id of the simulation.
+    #[prost(int64, optional, tag="12")]
+    pub ad_group_id: ::core::option::Option<i64>,
+    /// Output only. The field that the simulation modifies.
+    #[prost(enumeration="super::enums::simulation_type_enum::SimulationType", tag="3")]
+    pub r#type: i32,
+    /// Output only. How the simulation modifies the field.
+    #[prost(enumeration="super::enums::simulation_modification_method_enum::SimulationModificationMethod", tag="4")]
+    pub modification_method: i32,
+    /// Output only. First day on which the simulation is based, in YYYY-MM-DD format.
+    #[prost(string, optional, tag="13")]
+    pub start_date: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Last day on which the simulation is based, in YYYY-MM-DD format
+    #[prost(string, optional, tag="14")]
+    pub end_date: ::core::option::Option<::prost::alloc::string::String>,
+    /// List of simulation points.
+    #[prost(oneof="ad_group_simulation::PointList", tags="8, 10, 9, 11")]
+    pub point_list: ::core::option::Option<ad_group_simulation::PointList>,
+}
+/// Nested message and enum types in `AdGroupSimulation`.
+pub mod ad_group_simulation {
+    /// List of simulation points.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum PointList {
+        /// Output only. Simulation points if the simulation type is CPC_BID.
+        #[prost(message, tag="8")]
+        CpcBidPointList(super::super::common::CpcBidSimulationPointList),
+        /// Output only. Simulation points if the simulation type is CPV_BID.
+        #[prost(message, tag="10")]
+        CpvBidPointList(super::super::common::CpvBidSimulationPointList),
+        /// Output only. Simulation points if the simulation type is TARGET_CPA.
+        #[prost(message, tag="9")]
+        TargetCpaPointList(super::super::common::TargetCpaSimulationPointList),
+        /// Output only. Simulation points if the simulation type is TARGET_ROAS.
+        #[prost(message, tag="11")]
+        TargetRoasPointList(super::super::common::TargetRoasSimulationPointList),
+    }
+}
 // Proto file describing the ad parameter resource.
 
 /// An ad parameter that is used to update numeric values (such as prices or
@@ -2501,6 +2100,125 @@ pub struct AgeRangeView {
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
 }
+// Proto file describing the asset resource.
+
+/// Asset is a part of an ad which can be shared across multiple ads.
+/// It can be an image (ImageAsset), a video (YoutubeVideoAsset), etc.
+/// Assets are immutable and cannot be removed. To stop an asset from serving,
+/// remove the asset from the entity that is using it.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Asset {
+    /// Immutable. The resource name of the asset.
+    /// Asset resource names have the form:
+    ///
+    /// `customers/{customer_id}/assets/{asset_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the asset.
+    #[prost(int64, optional, tag="11")]
+    pub id: ::core::option::Option<i64>,
+    /// Optional name of the asset.
+    #[prost(string, optional, tag="12")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Type of the asset.
+    #[prost(enumeration="super::enums::asset_type_enum::AssetType", tag="4")]
+    pub r#type: i32,
+    /// A list of possible final URLs after all cross domain redirects.
+    #[prost(string, repeated, tag="14")]
+    pub final_urls: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// A list of possible final mobile URLs after all cross domain redirects.
+    #[prost(string, repeated, tag="16")]
+    pub final_mobile_urls: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// URL template for constructing a tracking URL.
+    #[prost(string, optional, tag="17")]
+    pub tracking_url_template: ::core::option::Option<::prost::alloc::string::String>,
+    /// A list of mappings to be used for substituting URL custom parameter tags in
+    /// the tracking_url_template, final_urls, and/or final_mobile_urls.
+    #[prost(message, repeated, tag="18")]
+    pub url_custom_parameters: ::prost::alloc::vec::Vec<super::common::CustomParameter>,
+    /// URL template for appending params to landing page URLs served with parallel
+    /// tracking.
+    #[prost(string, optional, tag="19")]
+    pub final_url_suffix: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Policy information for the asset.
+    #[prost(message, optional, tag="13")]
+    pub policy_summary: ::core::option::Option<AssetPolicySummary>,
+    /// The specific type of the asset.
+    #[prost(oneof="asset::AssetData", tags="5, 6, 7, 8, 9, 10, 15, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29")]
+    pub asset_data: ::core::option::Option<asset::AssetData>,
+}
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// The specific type of the asset.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum AssetData {
+        /// Immutable. A YouTube video asset.
+        #[prost(message, tag="5")]
+        YoutubeVideoAsset(super::super::common::YoutubeVideoAsset),
+        /// Immutable. A media bundle asset.
+        #[prost(message, tag="6")]
+        MediaBundleAsset(super::super::common::MediaBundleAsset),
+        /// Output only. An image asset.
+        #[prost(message, tag="7")]
+        ImageAsset(super::super::common::ImageAsset),
+        /// Immutable. A text asset.
+        #[prost(message, tag="8")]
+        TextAsset(super::super::common::TextAsset),
+        /// A lead form asset.
+        #[prost(message, tag="9")]
+        LeadFormAsset(super::super::common::LeadFormAsset),
+        /// A book on google asset.
+        #[prost(message, tag="10")]
+        BookOnGoogleAsset(super::super::common::BookOnGoogleAsset),
+        /// A promotion asset.
+        #[prost(message, tag="15")]
+        PromotionAsset(super::super::common::PromotionAsset),
+        /// A callout asset.
+        #[prost(message, tag="20")]
+        CalloutAsset(super::super::common::CalloutAsset),
+        /// A structured snippet asset.
+        #[prost(message, tag="21")]
+        StructuredSnippetAsset(super::super::common::StructuredSnippetAsset),
+        /// A sitelink asset.
+        #[prost(message, tag="22")]
+        SitelinkAsset(super::super::common::SitelinkAsset),
+        /// A page feed asset.
+        #[prost(message, tag="23")]
+        PageFeedAsset(super::super::common::PageFeedAsset),
+        /// A dynamic education asset.
+        #[prost(message, tag="24")]
+        DynamicEducationAsset(super::super::common::DynamicEducationAsset),
+        /// A mobile app asset.
+        #[prost(message, tag="25")]
+        MobileAppAsset(super::super::common::MobileAppAsset),
+        /// A hotel callout asset.
+        #[prost(message, tag="26")]
+        HotelCalloutAsset(super::super::common::HotelCalloutAsset),
+        /// A call asset.
+        #[prost(message, tag="27")]
+        CallAsset(super::super::common::CallAsset),
+        /// A price asset.
+        #[prost(message, tag="28")]
+        PriceAsset(super::super::common::PriceAsset),
+        /// Immutable. A call to action asset.
+        #[prost(message, tag="29")]
+        CallToActionAsset(super::super::common::CallToActionAsset),
+    }
+}
+/// Contains policy information for an asset.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetPolicySummary {
+    /// Output only. The list of policy findings for this asset.
+    #[prost(message, repeated, tag="1")]
+    pub policy_topic_entries: ::prost::alloc::vec::Vec<super::common::PolicyTopicEntry>,
+    /// Output only. Where in the review process this asset is.
+    #[prost(enumeration="super::enums::policy_review_status_enum::PolicyReviewStatus", tag="2")]
+    pub review_status: i32,
+    /// Output only. The overall approval status of this asset, calculated based on the status
+    /// of its individual policy topic entries.
+    #[prost(enumeration="super::enums::policy_approval_status_enum::PolicyApprovalStatus", tag="3")]
+    pub approval_status: i32,
+}
 // Proto file describing the AssetFieldTypeView resource.
 
 /// An asset field type view.
@@ -2560,36 +2278,6 @@ pub struct AssetGroup {
     /// the ad. This field can only be set when path1 is set.
     #[prost(string, tag="8")]
     pub path2: ::prost::alloc::string::String,
-}
-/// AssetGroupAsset is the link between an asset and an asset group.
-/// Adding an AssetGroupAsset links an asset with an asset group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssetGroupAsset {
-    /// Immutable. The resource name of the asset group asset.
-    /// Asset group asset resource name have the form:
-    ///
-    /// `customers/{customer_id}/assetGroupAssets/{asset_group_id}~{asset_id}~{field_type}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The asset group which this asset group asset is linking.
-    #[prost(string, tag="2")]
-    pub asset_group: ::prost::alloc::string::String,
-    /// Immutable. The asset which this asset group asset is linking.
-    #[prost(string, tag="3")]
-    pub asset: ::prost::alloc::string::String,
-    /// The description of the placement of the asset within the asset group. E.g.:
-    /// HEADLINE, YOUTUBE_VIDEO etc
-    #[prost(enumeration="super::enums::asset_field_type_enum::AssetFieldType", tag="4")]
-    pub field_type: i32,
-    /// The status of the link between an asset and asset group.
-    #[prost(enumeration="super::enums::asset_link_status_enum::AssetLinkStatus", tag="5")]
-    pub status: i32,
-    /// Output only. The performance of this asset group asset.
-    #[prost(enumeration="super::enums::asset_performance_label_enum::AssetPerformanceLabel", tag="6")]
-    pub performance_label: i32,
-    /// Output only. The policy information for this asset group asset.
-    #[prost(message, optional, tag="7")]
-    pub policy_summary: ::core::option::Option<super::common::PolicySummary>,
 }
 /// AssetGroupListingGroupFilter represents a listing group filter tree node in
 /// an asset group.
@@ -2734,6 +2422,43 @@ pub struct AssetGroupProductGroupView {
     /// `customers/{customer_id}/assetGroupProductGroupViews/{asset_group_id}~{listing_group_filter_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
+}
+/// An asset set representing a collection of assets.
+/// Use AssetSetAsset to link an asset to the asset set.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssetSet {
+    /// Immutable. The resource name of the asset set.
+    /// Asset set resource names have the form:
+    ///
+    /// `customers/{customer_id}/assetSets/{asset_set_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Required. Name of the asset set. Required. It must have a minimum length of 1 and
+    /// maximum length of 128.
+    #[prost(string, tag="2")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Immutable. The type of the asset set. Required.
+    #[prost(enumeration="super::enums::asset_set_type_enum::AssetSetType", tag="3")]
+    pub r#type: i32,
+    /// Output only. The status of the asset set. Read-only.
+    #[prost(enumeration="super::enums::asset_set_status_enum::AssetSetStatus", tag="4")]
+    pub status: i32,
+    /// Merchant ID and Feed Label from Google Merchant Center.
+    #[prost(message, optional, tag="5")]
+    pub merchant_center_feed: ::core::option::Option<asset_set::MerchantCenterFeed>,
+}
+/// Nested message and enum types in `AssetSet`.
+pub mod asset_set {
+    /// Merchant ID and Feed Label from Google Merchant Center.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MerchantCenterFeed {
+        /// Required. Merchant ID from Google Merchant Center
+        #[prost(int64, tag="1")]
+        pub merchant_id: i64,
+        /// Optional. Feed Label from Google Merchant Center.
+        #[prost(string, optional, tag="2")]
+        pub feed_label: ::core::option::Option<::prost::alloc::string::String>,
+    }
 }
 /// AssetSetAsset is the link between an asset and an asset set.
 /// Adding an AssetSetAsset links an asset with an asset set.
@@ -3638,31 +3363,6 @@ pub mod campaign {
 }
 // Proto file describing the CampaignAsset resource.
 
-/// A link between a Campaign and an Asset.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignAsset {
-    /// Immutable. The resource name of the campaign asset.
-    /// CampaignAsset resource names have the form:
-    ///
-    /// `customers/{customer_id}/campaignAssets/{campaign_id}~{asset_id}~{field_type}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The campaign to which the asset is linked.
-    #[prost(string, optional, tag="6")]
-    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Immutable. The asset which is linked to the campaign.
-    #[prost(string, optional, tag="7")]
-    pub asset: ::core::option::Option<::prost::alloc::string::String>,
-    /// Immutable. Role that the asset takes under the linked campaign.
-    /// Required.
-    #[prost(enumeration="super::enums::asset_field_type_enum::AssetFieldType", tag="4")]
-    pub field_type: i32,
-    /// Status of the campaign asset.
-    #[prost(enumeration="super::enums::asset_link_status_enum::AssetLinkStatus", tag="5")]
-    pub status: i32,
-}
-// Proto file describing the CampaignAsset resource.
-
 /// CampaignAssetSet is the linkage between a campaign and an asset set.
 /// Adding a CampaignAssetSet links an asset set with a campaign.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4018,53 +3718,77 @@ pub mod campaign_criterion {
         KeywordTheme(super::super::common::KeywordThemeInfo),
     }
 }
-// Proto file describing the Campaign Draft resource.
+// Proto file describing the campaign criterion simulation resource.
 
-/// A campaign draft.
+/// A campaign criterion simulation. Supported combinations of advertising
+/// channel type, criterion ids, simulation type and simulation modification
+/// method is detailed below respectively.
+///
+/// 1. SEARCH - 30000,30001,30002 - BID_MODIFIER - UNIFORM
+/// 2. DISPLAY - 30001 - BID_MODIFIER - UNIFORM
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignDraft {
-    /// Immutable. The resource name of the campaign draft.
-    /// Campaign draft resource names have the form:
+pub struct CampaignCriterionSimulation {
+    /// Output only. The resource name of the campaign criterion simulation.
+    /// Campaign criterion simulation resource names have the form:
     ///
-    /// `customers/{customer_id}/campaignDrafts/{base_campaign_id}~{draft_id}`
+    /// `customers/{customer_id}/campaignCriterionSimulations/{campaign_id}~{criterion_id}~{type}~{modification_method}~{start_date}~{end_date}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the draft.
-    ///
-    /// This field is read-only.
+    /// Output only. Campaign ID of the simulation.
     #[prost(int64, optional, tag="9")]
-    pub draft_id: ::core::option::Option<i64>,
-    /// Immutable. The base campaign to which the draft belongs.
-    #[prost(string, optional, tag="10")]
-    pub base_campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// The name of the campaign draft.
-    ///
-    /// This field is required and should not be empty when creating new
-    /// campaign drafts.
-    ///
-    /// It must not contain any null (code point 0x0), NL line feed
-    /// (code point 0xA) or carriage return (code point 0xD) characters.
+    pub campaign_id: ::core::option::Option<i64>,
+    /// Output only. Criterion ID of the simulation.
+    #[prost(int64, optional, tag="10")]
+    pub criterion_id: ::core::option::Option<i64>,
+    /// Output only. The field that the simulation modifies.
+    #[prost(enumeration="super::enums::simulation_type_enum::SimulationType", tag="4")]
+    pub r#type: i32,
+    /// Output only. How the simulation modifies the field.
+    #[prost(enumeration="super::enums::simulation_modification_method_enum::SimulationModificationMethod", tag="5")]
+    pub modification_method: i32,
+    /// Output only. First day on which the simulation is based, in YYYY-MM-DD format.
     #[prost(string, optional, tag="11")]
-    pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Resource name of the Campaign that results from overlaying the draft
-    /// changes onto the base campaign.
-    ///
-    /// This field is read-only.
+    pub start_date: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Last day on which the simulation is based, in YYYY-MM-DD format.
     #[prost(string, optional, tag="12")]
-    pub draft_campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The status of the campaign draft. This field is read-only.
+    pub end_date: ::core::option::Option<::prost::alloc::string::String>,
+    /// List of simulation points.
+    #[prost(oneof="campaign_criterion_simulation::PointList", tags="8")]
+    pub point_list: ::core::option::Option<campaign_criterion_simulation::PointList>,
+}
+/// Nested message and enum types in `CampaignCriterionSimulation`.
+pub mod campaign_criterion_simulation {
+    /// List of simulation points.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum PointList {
+        /// Output only. Simulation points if the simulation type is BID_MODIFIER.
+        #[prost(message, tag="8")]
+        BidModifierPointList(super::super::common::BidModifierSimulationPointList),
+    }
+}
+/// A customizer value for the associated CustomizerAttribute at the Campaign
+/// level.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignCustomizer {
+    /// Immutable. The resource name of the campaign customizer.
+    /// Campaign customizer resource names have the form:
     ///
-    /// When a new campaign draft is added, the status defaults to PROPOSED.
-    #[prost(enumeration="super::enums::campaign_draft_status_enum::CampaignDraftStatus", tag="6")]
+    /// `customers/{customer_id}/campaignCustomizers/{campaign_id}~{customizer_attribute_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Immutable. The campaign to which the customizer attribute is linked.
+    #[prost(string, tag="2")]
+    pub campaign: ::prost::alloc::string::String,
+    /// Required. Immutable. The customizer attribute which is linked to the campaign.
+    #[prost(string, tag="3")]
+    pub customizer_attribute: ::prost::alloc::string::String,
+    /// Output only. The status of the campaign customizer.
+    #[prost(enumeration="super::enums::customizer_value_status_enum::CustomizerValueStatus", tag="4")]
     pub status: i32,
-    /// Output only. Whether there is an experiment based on this draft currently serving.
-    #[prost(bool, optional, tag="13")]
-    pub has_experiment_running: ::core::option::Option<bool>,
-    /// Output only. The resource name of the long-running operation that can be used to poll
-    /// for completion of draft promotion. This is only set if the draft promotion
-    /// is in progress or finished.
-    #[prost(string, optional, tag="14")]
-    pub long_running_operation: ::core::option::Option<::prost::alloc::string::String>,
+    /// Required. The value to associate with the customizer attribute at this level. The
+    /// value must be of the type specified for the CustomizerAttribute.
+    #[prost(message, optional, tag="5")]
+    pub value: ::core::option::Option<super::common::CustomizerValue>,
 }
 // Proto file describing the Campaign Experiment resource.
 
@@ -4136,37 +3860,6 @@ pub struct CampaignExperiment {
     #[prost(string, optional, tag="21")]
     pub end_date: ::core::option::Option<::prost::alloc::string::String>,
 }
-// Proto file describing the CampaignExtensionSetting resource.
-
-/// A campaign extension setting.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CampaignExtensionSetting {
-    /// Immutable. The resource name of the campaign extension setting.
-    /// CampaignExtensionSetting resource names have the form:
-    ///
-    /// `customers/{customer_id}/campaignExtensionSettings/{campaign_id}~{extension_type}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The extension type of the customer extension setting.
-    #[prost(enumeration="super::enums::extension_type_enum::ExtensionType", tag="2")]
-    pub extension_type: i32,
-    /// Immutable. The resource name of the campaign. The linked extension feed items will
-    /// serve under this campaign.
-    /// Campaign resource names have the form:
-    ///
-    /// `customers/{customer_id}/campaigns/{campaign_id}`
-    #[prost(string, optional, tag="6")]
-    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// The resource names of the extension feed items to serve under the campaign.
-    /// ExtensionFeedItem resource names have the form:
-    ///
-    /// `customers/{customer_id}/extensionFeedItems/{feed_item_id}`
-    #[prost(string, repeated, tag="7")]
-    pub extension_feed_items: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The device for which the extensions will serve. Optional.
-    #[prost(enumeration="super::enums::extension_setting_device_enum::ExtensionSettingDevice", tag="5")]
-    pub device: i32,
-}
 // Proto file describing the CampaignFeed resource.
 
 /// A campaign feed.
@@ -4214,6 +3907,33 @@ pub struct CampaignLabel {
     /// Immutable. The label assigned to the campaign.
     #[prost(string, optional, tag="5")]
     pub label: ::core::option::Option<::prost::alloc::string::String>,
+}
+// Proto file describing the CampaignSharedSet resource.
+
+/// CampaignSharedSets are used for managing the shared sets associated with a
+/// campaign.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CampaignSharedSet {
+    /// Immutable. The resource name of the campaign shared set.
+    /// Campaign shared set resource names have the form:
+    ///
+    /// `customers/{customer_id}/campaignSharedSets/{campaign_id}~{shared_set_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Immutable. The campaign to which the campaign shared set belongs.
+    #[prost(string, optional, tag="5")]
+    pub campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// Immutable. The shared set associated with the campaign. This may be a negative keyword
+    /// shared set of another customer. This customer should be a manager of the
+    /// other customer, otherwise the campaign shared set will exist but have no
+    /// serving effect. Only negative keyword shared sets can be associated with
+    /// Shopping campaigns. Only negative placement shared sets can be associated
+    /// with Display mobile app campaigns.
+    #[prost(string, optional, tag="6")]
+    pub shared_set: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The status of this campaign shared set. Read only.
+    #[prost(enumeration="super::enums::campaign_shared_set_status_enum::CampaignSharedSetStatus", tag="2")]
+    pub status: i32,
 }
 // Proto file describing the campaign simulation resource.
 
@@ -5127,92 +4847,6 @@ pub struct ConversionGoalCampaignConfig {
     #[prost(string, tag="4")]
     pub custom_conversion_goal: ::prost::alloc::string::String,
 }
-// Proto file describing the Conversion Value Rule resource.
-
-/// A conversion value rule
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionValueRule {
-    /// Immutable. The resource name of the conversion value rule.
-    /// Conversion value rule resource names have the form:
-    ///
-    /// `customers/{customer_id}/conversionValueRules/{conversion_value_rule_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the conversion value rule.
-    #[prost(int64, tag="2")]
-    pub id: i64,
-    /// Action applied when the rule is triggered.
-    #[prost(message, optional, tag="3")]
-    pub action: ::core::option::Option<conversion_value_rule::ValueRuleAction>,
-    /// Condition for Geo location that must be satisfied for the value rule to
-    /// apply.
-    #[prost(message, optional, tag="4")]
-    pub geo_location_condition: ::core::option::Option<conversion_value_rule::ValueRuleGeoLocationCondition>,
-    /// Condition for device type that must be satisfied for the value rule to
-    /// apply.
-    #[prost(message, optional, tag="5")]
-    pub device_condition: ::core::option::Option<conversion_value_rule::ValueRuleDeviceCondition>,
-    /// Condition for audience that must be satisfied for the value rule to apply.
-    #[prost(message, optional, tag="6")]
-    pub audience_condition: ::core::option::Option<conversion_value_rule::ValueRuleAudienceCondition>,
-    /// Output only. The resource name of the conversion value rule's owner customer.
-    /// When the value rule is inherited from a manager
-    /// customer, owner_customer will be the resource name of the manager whereas
-    /// the customer in the resource_name will be of the requesting serving
-    /// customer.
-    /// ** Read-only **
-    #[prost(string, tag="7")]
-    pub owner_customer: ::prost::alloc::string::String,
-    /// The status of the conversion value rule.
-    #[prost(enumeration="super::enums::conversion_value_rule_status_enum::ConversionValueRuleStatus", tag="8")]
-    pub status: i32,
-}
-/// Nested message and enum types in `ConversionValueRule`.
-pub mod conversion_value_rule {
-    /// Action applied when rule is applied.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValueRuleAction {
-        /// Specifies applied operation.
-        #[prost(enumeration="super::super::enums::value_rule_operation_enum::ValueRuleOperation", tag="1")]
-        pub operation: i32,
-        /// Specifies applied value.
-        #[prost(double, tag="2")]
-        pub value: f64,
-    }
-    /// Condition on Geo dimension.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValueRuleGeoLocationCondition {
-        /// Geo locations that advertisers want to exclude.
-        #[prost(string, repeated, tag="1")]
-        pub excluded_geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Excluded Geo location match type.
-        #[prost(enumeration="super::super::enums::value_rule_geo_location_match_type_enum::ValueRuleGeoLocationMatchType", tag="2")]
-        pub excluded_geo_match_type: i32,
-        /// Geo locations that advertisers want to include.
-        #[prost(string, repeated, tag="3")]
-        pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Included Geo location match type.
-        #[prost(enumeration="super::super::enums::value_rule_geo_location_match_type_enum::ValueRuleGeoLocationMatchType", tag="4")]
-        pub geo_match_type: i32,
-    }
-    /// Condition on Device dimension.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValueRuleDeviceCondition {
-        /// Value for device type condition.
-        #[prost(enumeration="super::super::enums::value_rule_device_type_enum::ValueRuleDeviceType", repeated, tag="1")]
-        pub device_types: ::prost::alloc::vec::Vec<i32>,
-    }
-    /// Condition on Audience dimension.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValueRuleAudienceCondition {
-        /// User Lists.
-        #[prost(string, repeated, tag="1")]
-        pub user_lists: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// User Interests.
-        #[prost(string, repeated, tag="2")]
-        pub user_interests: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-}
 // Proto file describing the Conversion Value Rule Set resource.
 
 /// A conversion value rule set
@@ -5601,31 +5235,6 @@ pub struct CustomerClient {
     #[prost(string, repeated, tag="21")]
     pub applied_labels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-// Proto file describing the CustomerClientLink resource.
-
-/// Represents customer client link relationship.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerClientLink {
-    /// Immutable. Name of the resource.
-    /// CustomerClientLink resource names have the form:
-    /// `customers/{customer_id}/customerClientLinks/{client_customer_id}~{manager_link_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Immutable. The client customer linked to this customer.
-    #[prost(string, optional, tag="7")]
-    pub client_customer: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. This is uniquely identifies a customer client link. Read only.
-    #[prost(int64, optional, tag="8")]
-    pub manager_link_id: ::core::option::Option<i64>,
-    /// This is the status of the link between client and manager.
-    #[prost(enumeration="super::enums::manager_link_status_enum::ManagerLinkStatus", tag="5")]
-    pub status: i32,
-    /// The visibility of the link. Users can choose whether or not to see hidden
-    /// links in the Google Ads UI.
-    /// Default value is false
-    #[prost(bool, optional, tag="9")]
-    pub hidden: ::core::option::Option<bool>,
-}
 /// Biddability control for conversion actions with a matching category and
 /// origin.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5669,6 +5278,34 @@ pub struct CustomerCustomizer {
     /// value must be of the type specified for the CustomizerAttribute.
     #[prost(message, optional, tag="4")]
     pub value: ::core::option::Option<super::common::CustomizerValue>,
+}
+// Proto file describing the CustomerFeed resource.
+
+/// A customer feed.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerFeed {
+    /// Immutable. The resource name of the customer feed.
+    /// Customer feed resource names have the form:
+    ///
+    /// `customers/{customer_id}/customerFeeds/{feed_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Immutable. The feed being linked to the customer.
+    #[prost(string, optional, tag="6")]
+    pub feed: ::core::option::Option<::prost::alloc::string::String>,
+    /// Indicates which placeholder types the feed may populate under the connected
+    /// customer. Required.
+    #[prost(enumeration="super::enums::placeholder_type_enum::PlaceholderType", repeated, tag="3")]
+    pub placeholder_types: ::prost::alloc::vec::Vec<i32>,
+    /// Matching function associated with the CustomerFeed.
+    /// The matching function is used to filter the set of feed items selected.
+    /// Required.
+    #[prost(message, optional, tag="4")]
+    pub matching_function: ::core::option::Option<super::common::MatchingFunction>,
+    /// Output only. Status of the customer feed.
+    /// This field is read-only.
+    #[prost(enumeration="super::enums::feed_link_status_enum::FeedLinkStatus", tag="5")]
+    pub status: i32,
 }
 // Proto file describing the customer label resource.
 
@@ -5885,6 +5522,35 @@ pub struct DetailPlacementView {
     /// Output only. Type of the placement, e.g. Website, YouTube Video, and Mobile Application.
     #[prost(enumeration="super::enums::placement_type_enum::PlacementType", tag="6")]
     pub placement_type: i32,
+}
+// Proto file describing the Detailed Demographic resource.
+
+/// A detailed demographic: a particular interest-based vertical to be targeted
+/// to reach users based on long-term life facts.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DetailedDemographic {
+    /// Output only. The resource name of the detailed demographic.
+    /// Detailed demographic resource names have the form:
+    ///
+    /// `customers/{customer_id}/detailedDemographics/{detailed_demographic_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the detailed demographic.
+    #[prost(int64, tag="2")]
+    pub id: i64,
+    /// Output only. The name of the detailed demographic. E.g."Highest Level of Educational
+    /// Attainment"
+    #[prost(string, tag="3")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The parent of the detailed_demographic.
+    #[prost(string, tag="4")]
+    pub parent: ::prost::alloc::string::String,
+    /// Output only. True if the detailed demographic is launched to all channels and locales.
+    #[prost(bool, tag="5")]
+    pub launched_to_all: bool,
+    /// Output only. Availability information of the detailed demographic.
+    #[prost(message, repeated, tag="6")]
+    pub availabilities: ::prost::alloc::vec::Vec<super::common::CriterionCategoryAvailability>,
 }
 // Proto file describing the display keyword view resource.
 
@@ -6205,6 +5871,58 @@ pub struct FeedItemSetLink {
     #[prost(string, tag="3")]
     pub feed_item_set: ::prost::alloc::string::String,
 }
+// Proto file describing the FeedItemTarget resource.
+
+/// A feed item target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeedItemTarget {
+    /// Immutable. The resource name of the feed item target.
+    /// Feed item target resource names have the form:
+    /// `customers/{customer_id}/feedItemTargets/{feed_id}~{feed_item_id}~{feed_item_target_type}~{feed_item_target_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Immutable. The feed item to which this feed item target belongs.
+    #[prost(string, optional, tag="12")]
+    pub feed_item: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The target type of this feed item target. This field is read-only.
+    #[prost(enumeration="super::enums::feed_item_target_type_enum::FeedItemTargetType", tag="3")]
+    pub feed_item_target_type: i32,
+    /// Output only. The ID of the targeted resource. This field is read-only.
+    #[prost(int64, optional, tag="13")]
+    pub feed_item_target_id: ::core::option::Option<i64>,
+    /// Output only. Status of the feed item target.
+    /// This field is read-only.
+    #[prost(enumeration="super::enums::feed_item_target_status_enum::FeedItemTargetStatus", tag="11")]
+    pub status: i32,
+    /// The targeted resource.
+    #[prost(oneof="feed_item_target::Target", tags="14, 15, 7, 16, 9, 10")]
+    pub target: ::core::option::Option<feed_item_target::Target>,
+}
+/// Nested message and enum types in `FeedItemTarget`.
+pub mod feed_item_target {
+    /// The targeted resource.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Target {
+        /// Immutable. The targeted campaign.
+        #[prost(string, tag="14")]
+        Campaign(::prost::alloc::string::String),
+        /// Immutable. The targeted ad group.
+        #[prost(string, tag="15")]
+        AdGroup(::prost::alloc::string::String),
+        /// Immutable. The targeted keyword.
+        #[prost(message, tag="7")]
+        Keyword(super::super::common::KeywordInfo),
+        /// Immutable. The targeted geo target constant resource name.
+        #[prost(string, tag="16")]
+        GeoTargetConstant(::prost::alloc::string::String),
+        /// Immutable. The targeted device.
+        #[prost(enumeration="super::super::enums::feed_item_target_device_enum::FeedItemTargetDevice", tag="9")]
+        Device(i32),
+        /// Immutable. The targeted schedule.
+        #[prost(message, tag="10")]
+        AdSchedule(super::super::common::AdScheduleInfo),
+    }
+}
 // Proto file describing the FeedMapping resource.
 
 /// A feed mapping.
@@ -6356,18 +6074,6 @@ pub struct FeedPlaceholderView {
     /// Output only. The placeholder type of the feed placeholder view.
     #[prost(enumeration="super::enums::placeholder_type_enum::PlaceholderType", tag="2")]
     pub placeholder_type: i32,
-}
-// Proto file describing the gender view resource.
-
-/// A gender view.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenderView {
-    /// Output only. The resource name of the gender view.
-    /// Gender view resource names have the form:
-    ///
-    /// `customers/{customer_id}/genderViews/{ad_group_id}~{criterion_id}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
 }
 // Proto file describing the geo target constant resource.
 
@@ -6600,6 +6306,36 @@ pub mod keyword_plan_forecast_period {
         DateRange(super::super::common::DateRange),
     }
 }
+// Proto file describing the keyword plan ad group resource.
+
+/// A Keyword Planner ad group.
+/// Max number of keyword plan ad groups per plan: 200.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordPlanAdGroup {
+    /// Immutable. The resource name of the Keyword Planner ad group.
+    /// KeywordPlanAdGroup resource names have the form:
+    ///
+    /// `customers/{customer_id}/keywordPlanAdGroups/{kp_ad_group_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// The keyword plan campaign to which this ad group belongs.
+    #[prost(string, optional, tag="6")]
+    pub keyword_plan_campaign: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The ID of the keyword plan ad group.
+    #[prost(int64, optional, tag="7")]
+    pub id: ::core::option::Option<i64>,
+    /// The name of the keyword plan ad group.
+    ///
+    /// This field is required and should not be empty when creating keyword plan
+    /// ad group.
+    #[prost(string, optional, tag="8")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// A default ad group max cpc bid in micros in account currency for all
+    /// biddable keywords under the keyword plan ad group.
+    /// If not set, will inherit from parent campaign.
+    #[prost(int64, optional, tag="9")]
+    pub cpc_bid_micros: ::core::option::Option<i64>,
+}
 // Proto file describing the keyword plan ad group keyword resource.
 
 /// A Keyword Plan ad group keyword.
@@ -6635,34 +6371,58 @@ pub struct KeywordPlanAdGroupKeyword {
     #[prost(bool, optional, tag="12")]
     pub negative: ::core::option::Option<bool>,
 }
-// Proto file describing the keyword plan negative keyword resource.
+// Proto file describing the keyword plan campaign resource.
 
-/// A Keyword Plan Campaign keyword.
-/// Only negative keywords are supported for Campaign Keyword.
+/// A Keyword Plan campaign.
+/// Max number of keyword plan campaigns per plan allowed: 1.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordPlanCampaignKeyword {
-    /// Immutable. The resource name of the Keyword Plan Campaign keyword.
-    /// KeywordPlanCampaignKeyword resource names have the form:
+pub struct KeywordPlanCampaign {
+    /// Immutable. The resource name of the Keyword Plan campaign.
+    /// KeywordPlanCampaign resource names have the form:
     ///
-    /// `customers/{customer_id}/keywordPlanCampaignKeywords/{kp_campaign_keyword_id}`
+    /// `customers/{customer_id}/keywordPlanCampaigns/{kp_campaign_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// The Keyword Plan campaign to which this negative keyword belongs.
-    #[prost(string, optional, tag="8")]
-    pub keyword_plan_campaign: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The ID of the Keyword Plan negative keyword.
-    #[prost(int64, optional, tag="9")]
+    /// The keyword plan this campaign belongs to.
+    #[prost(string, optional, tag="9")]
+    pub keyword_plan: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The ID of the Keyword Plan campaign.
+    #[prost(int64, optional, tag="10")]
     pub id: ::core::option::Option<i64>,
-    /// The keyword text.
-    #[prost(string, optional, tag="10")]
-    pub text: ::core::option::Option<::prost::alloc::string::String>,
-    /// The keyword match type.
-    #[prost(enumeration="super::enums::keyword_match_type_enum::KeywordMatchType", tag="5")]
-    pub match_type: i32,
-    /// Immutable. If true, the keyword is negative.
-    /// Must be set to true. Only negative campaign keywords are supported.
-    #[prost(bool, optional, tag="11")]
-    pub negative: ::core::option::Option<bool>,
+    /// The name of the Keyword Plan campaign.
+    ///
+    /// This field is required and should not be empty when creating Keyword Plan
+    /// campaigns.
+    #[prost(string, optional, tag="11")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// The languages targeted for the Keyword Plan campaign.
+    /// Max allowed: 1.
+    #[prost(string, repeated, tag="12")]
+    pub language_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Targeting network.
+    ///
+    /// This field is required and should not be empty when creating Keyword Plan
+    /// campaigns.
+    #[prost(enumeration="super::enums::keyword_plan_network_enum::KeywordPlanNetwork", tag="6")]
+    pub keyword_plan_network: i32,
+    /// A default max cpc bid in micros, and in the account currency, for all ad
+    /// groups under the campaign.
+    ///
+    /// This field is required and should not be empty when creating Keyword Plan
+    /// campaigns.
+    #[prost(int64, optional, tag="13")]
+    pub cpc_bid_micros: ::core::option::Option<i64>,
+    /// The geo targets.
+    /// Max number allowed: 20.
+    #[prost(message, repeated, tag="8")]
+    pub geo_targets: ::prost::alloc::vec::Vec<KeywordPlanGeoTarget>,
+}
+/// A geo target.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeywordPlanGeoTarget {
+    /// Required. The resource name of the geo target.
+    #[prost(string, optional, tag="2")]
+    pub geo_target_constant: ::core::option::Option<::prost::alloc::string::String>,
 }
 // Proto file describing the Smart Campaign keyword theme constant resource.
 
@@ -6927,6 +6687,24 @@ pub struct MediaVideo {
     #[prost(string, optional, tag="8")]
     pub isci_code: ::core::option::Option<::prost::alloc::string::String>,
 }
+// Proto file describing the Mobile App Category Constant resource.
+
+/// A mobile application category constant.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MobileAppCategoryConstant {
+    /// Output only. The resource name of the mobile app category constant.
+    /// Mobile app category constant resource names have the form:
+    ///
+    /// `mobileAppCategoryConstants/{mobile_app_category_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the mobile app category constant.
+    #[prost(int32, optional, tag="4")]
+    pub id: ::core::option::Option<i32>,
+    /// Output only. Mobile app category name.
+    #[prost(string, optional, tag="5")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+}
 // Proto file describing the mobile device constant resource.
 
 /// A mobile device constant.
@@ -6954,6 +6732,95 @@ pub struct MobileDeviceConstant {
     #[prost(enumeration="super::enums::mobile_device_type_enum::MobileDeviceType", tag="6")]
     pub r#type: i32,
 }
+// Proto file describing the offline user data job resource.
+
+/// A job containing offline user data of store visitors, or user list members
+/// that will be processed asynchronously. The uploaded data isn't readable and
+/// the processing results of the job can only be read using
+/// OfflineUserDataJobService.GetOfflineUserDataJob.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJob {
+    /// Immutable. The resource name of the offline user data job.
+    /// Offline user data job resource names have the form:
+    ///
+    /// `customers/{customer_id}/offlineUserDataJobs/{offline_user_data_job_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. ID of this offline user data job.
+    #[prost(int64, optional, tag="9")]
+    pub id: ::core::option::Option<i64>,
+    /// Immutable. User specified job ID.
+    #[prost(int64, optional, tag="10")]
+    pub external_id: ::core::option::Option<i64>,
+    /// Immutable. Type of the job.
+    #[prost(enumeration="super::enums::offline_user_data_job_type_enum::OfflineUserDataJobType", tag="4")]
+    pub r#type: i32,
+    /// Output only. Status of the job.
+    #[prost(enumeration="super::enums::offline_user_data_job_status_enum::OfflineUserDataJobStatus", tag="5")]
+    pub status: i32,
+    /// Output only. Reason for the processing failure, if status is FAILED.
+    #[prost(enumeration="super::enums::offline_user_data_job_failure_reason_enum::OfflineUserDataJobFailureReason", tag="6")]
+    pub failure_reason: i32,
+    /// Output only. Metadata of offline user data job depicting match rate range.
+    #[prost(message, optional, tag="11")]
+    pub operation_metadata: ::core::option::Option<OfflineUserDataJobMetadata>,
+    /// Metadata of the job.
+    #[prost(oneof="offline_user_data_job::Metadata", tags="7, 8")]
+    pub metadata: ::core::option::Option<offline_user_data_job::Metadata>,
+}
+/// Nested message and enum types in `OfflineUserDataJob`.
+pub mod offline_user_data_job {
+    /// Metadata of the job.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Metadata {
+        /// Immutable. Metadata for data updates to a CRM-based user list.
+        #[prost(message, tag="7")]
+        CustomerMatchUserListMetadata(super::super::common::CustomerMatchUserListMetadata),
+        /// Immutable. Metadata for store sales data update.
+        #[prost(message, tag="8")]
+        StoreSalesMetadata(super::super::common::StoreSalesMetadata),
+    }
+}
+/// Metadata of offline user data job.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OfflineUserDataJobMetadata {
+    /// Output only. Match rate of the Customer Match user list upload. Describes the estimated
+    /// match rate when the status of the job is “RUNNING” and final match rate
+    /// when the final match rate is available after the status of the job is
+    /// “SUCCESS/FAILED”.
+    #[prost(enumeration="super::enums::offline_user_data_job_match_rate_range_enum::OfflineUserDataJobMatchRateRange", tag="1")]
+    pub match_rate_range: i32,
+}
+// Proto file describing the operating system version constant resource.
+
+/// A mobile operating system version or a range of versions, depending on
+/// `operator_type`. List of available mobile platforms at
+/// <https://developers.google.com/google-ads/api/reference/data/codes-formats#mobile-platforms>
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperatingSystemVersionConstant {
+    /// Output only. The resource name of the operating system version constant.
+    /// Operating system version constant resource names have the form:
+    ///
+    /// `operatingSystemVersionConstants/{criterion_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the operating system version.
+    #[prost(int64, optional, tag="7")]
+    pub id: ::core::option::Option<i64>,
+    /// Output only. Name of the operating system.
+    #[prost(string, optional, tag="8")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The OS Major Version number.
+    #[prost(int32, optional, tag="9")]
+    pub os_major_version: ::core::option::Option<i32>,
+    /// Output only. The OS Minor Version number.
+    #[prost(int32, optional, tag="10")]
+    pub os_minor_version: ::core::option::Option<i32>,
+    /// Output only. Determines whether this constant represents a single version or a range of
+    /// versions.
+    #[prost(enumeration="super::enums::operating_system_version_operator_type_enum::OperatingSystemVersionOperatorType", tag="6")]
+    pub operator_type: i32,
+}
 // Proto file describing the PaidOrganicSearchTermView resource.
 
 /// A paid organic search term view providing a view of search stats across
@@ -6970,6 +6837,18 @@ pub struct PaidOrganicSearchTermView {
     /// Output only. The search term.
     #[prost(string, optional, tag="3")]
     pub search_term: ::core::option::Option<::prost::alloc::string::String>,
+}
+// Proto file describing the parental status view resource.
+
+/// A parental status view.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ParentalStatusView {
+    /// Output only. The resource name of the parental status view.
+    /// Parental Status view resource names have the form:
+    ///
+    /// `customers/{customer_id}/parentalStatusViews/{ad_group_id}~{criterion_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
 }
 // Proto file describing the ProductBiddingCategoryConstant resource.
 
@@ -7363,62 +7242,96 @@ pub struct RemarketingAction {
     #[prost(message, repeated, tag="4")]
     pub tag_snippets: ::prost::alloc::vec::Vec<super::common::TagSnippet>,
 }
-// Proto file describing the SearchTermView resource.
+// Proto file describing the SharedCriterion resource.
 
-/// A search term view with metrics aggregated by search term at the ad group
-/// level.
+/// A criterion belonging to a shared set.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchTermView {
-    /// Output only. The resource name of the search term view.
-    /// Search term view resource names have the form:
+pub struct SharedCriterion {
+    /// Immutable. The resource name of the shared criterion.
+    /// Shared set resource names have the form:
     ///
-    /// `customers/{customer_id}/searchTermViews/{campaign_id}~{ad_group_id}~{URL-base64_search_term}`
+    /// `customers/{customer_id}/sharedCriteria/{shared_set_id}~{criterion_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The search term.
-    #[prost(string, optional, tag="5")]
-    pub search_term: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The ad group the search term served in.
-    #[prost(string, optional, tag="6")]
-    pub ad_group: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Indicates whether the search term is currently one of your
-    /// targeted or excluded keywords.
-    #[prost(enumeration="super::enums::search_term_targeting_status_enum::SearchTermTargetingStatus", tag="4")]
+    /// Immutable. The shared set to which the shared criterion belongs.
+    #[prost(string, optional, tag="10")]
+    pub shared_set: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The ID of the criterion.
+    ///
+    /// This field is ignored for mutates.
+    #[prost(int64, optional, tag="11")]
+    pub criterion_id: ::core::option::Option<i64>,
+    /// Output only. The type of the criterion.
+    #[prost(enumeration="super::enums::criterion_type_enum::CriterionType", tag="4")]
+    pub r#type: i32,
+    /// The criterion.
+    ///
+    /// Exactly one must be set.
+    #[prost(oneof="shared_criterion::Criterion", tags="3, 5, 6, 7, 8, 9")]
+    pub criterion: ::core::option::Option<shared_criterion::Criterion>,
+}
+/// Nested message and enum types in `SharedCriterion`.
+pub mod shared_criterion {
+    /// The criterion.
+    ///
+    /// Exactly one must be set.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Criterion {
+        /// Immutable. Keyword.
+        #[prost(message, tag="3")]
+        Keyword(super::super::common::KeywordInfo),
+        /// Immutable. YouTube Video.
+        #[prost(message, tag="5")]
+        YoutubeVideo(super::super::common::YouTubeVideoInfo),
+        /// Immutable. YouTube Channel.
+        #[prost(message, tag="6")]
+        YoutubeChannel(super::super::common::YouTubeChannelInfo),
+        /// Immutable. Placement.
+        #[prost(message, tag="7")]
+        Placement(super::super::common::PlacementInfo),
+        /// Immutable. Mobile App Category.
+        #[prost(message, tag="8")]
+        MobileAppCategory(super::super::common::MobileAppCategoryInfo),
+        /// Immutable. Mobile application.
+        #[prost(message, tag="9")]
+        MobileApplication(super::super::common::MobileApplicationInfo),
+    }
+}
+// Proto file describing the SharedSet resource.
+
+/// SharedSets are used for sharing criterion exclusions across multiple
+/// campaigns.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SharedSet {
+    /// Immutable. The resource name of the shared set.
+    /// Shared set resource names have the form:
+    ///
+    /// `customers/{customer_id}/sharedSets/{shared_set_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of this shared set. Read only.
+    #[prost(int64, optional, tag="8")]
+    pub id: ::core::option::Option<i64>,
+    /// Immutable. The type of this shared set: each shared set holds only a single kind
+    /// of resource. Required. Immutable.
+    #[prost(enumeration="super::enums::shared_set_type_enum::SharedSetType", tag="3")]
+    pub r#type: i32,
+    /// The name of this shared set. Required.
+    /// Shared Sets must have names that are unique among active shared sets of
+    /// the same type.
+    /// The length of this string should be between 1 and 255 UTF-8 bytes,
+    /// inclusive.
+    #[prost(string, optional, tag="9")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The status of this shared set. Read only.
+    #[prost(enumeration="super::enums::shared_set_status_enum::SharedSetStatus", tag="5")]
     pub status: i32,
-}
-// Proto file describing the ShoppingPerformanceView resource.
-
-/// Shopping performance view.
-/// Provides Shopping campaign statistics aggregated at several product dimension
-/// levels. Product dimension values from Merchant Center such as brand,
-/// category, custom attributes, product condition and product type will reflect
-/// the state of each dimension as of the date and time when the corresponding
-/// event was recorded.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ShoppingPerformanceView {
-    /// Output only. The resource name of the Shopping performance view.
-    /// Shopping performance view resource names have the form:
-    /// `customers/{customer_id}/shoppingPerformanceView`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-// Proto file describing the SmartCampaignSearchTermView resource.
-
-/// A Smart campaign search term view.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SmartCampaignSearchTermView {
-    /// Output only. The resource name of the Smart campaign search term view.
-    /// Smart campaign search term view resource names have the form:
-    ///
-    /// `customers/{customer_id}/smartCampaignSearchTermViews/{campaign_id}~{URL-base64_search_term}`
-    #[prost(string, tag="1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The search term.
-    #[prost(string, tag="2")]
-    pub search_term: ::prost::alloc::string::String,
-    /// Output only. The Smart campaign the search term served in.
-    #[prost(string, tag="3")]
-    pub campaign: ::prost::alloc::string::String,
+    /// Output only. The number of shared criteria within this shared set. Read only.
+    #[prost(int64, optional, tag="10")]
+    pub member_count: ::core::option::Option<i64>,
+    /// Output only. The number of campaigns associated with this shared set. Read only.
+    #[prost(int64, optional, tag="11")]
+    pub reference_count: ::core::option::Option<i64>,
 }
 // Proto file describing the Smart campaign setting resource.
 
@@ -7491,32 +7404,17 @@ pub struct ThirdPartyAppAnalyticsLink {
     #[prost(string, optional, tag="3")]
     pub shareable_link_id: ::core::option::Option<::prost::alloc::string::String>,
 }
-// Proto file describing the Topic Constant resource.
+// Proto file describing the topic view resource.
 
-/// Use topics to target or exclude placements in the Google Display Network
-/// based on the category into which the placement falls (for example,
-/// "Pets & Animals/Pets/Dogs").
+/// A topic view.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TopicConstant {
-    /// Output only. The resource name of the topic constant.
-    /// topic constant resource names have the form:
+pub struct TopicView {
+    /// Output only. The resource name of the topic view.
+    /// Topic view resource names have the form:
     ///
-    /// `topicConstants/{topic_id}`
+    /// `customers/{customer_id}/topicViews/{ad_group_id}~{criterion_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the topic.
-    #[prost(int64, optional, tag="5")]
-    pub id: ::core::option::Option<i64>,
-    /// Output only. Resource name of parent of the topic constant.
-    #[prost(string, optional, tag="6")]
-    pub topic_constant_parent: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The category to target or exclude. Each subsequent element in the array
-    /// describes a more specific sub-category. For example,
-    /// {"Pets & Animals", "Pets", "Dogs"} represents the
-    /// "Pets & Animals/Pets/Dogs" category. List of available topic categories at
-    /// <https://developers.google.com/adwords/api/docs/appendix/verticals>
-    #[prost(string, repeated, tag="7")]
-    pub path: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 // Proto file describing the User List resource.
 
@@ -7655,6 +7553,29 @@ pub mod user_list {
         BasicUserList(super::super::common::BasicUserListInfo),
     }
 }
+// Proto file describing the user location view resource.
+
+/// A user location view.
+///
+/// User Location View includes all metrics aggregated at the country level,
+/// one row per country. It reports metrics at the actual physical location of
+/// the user by targeted or not targeted location. If other segment fields are
+/// used, you may get more than one row per country.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserLocationView {
+    /// Output only. The resource name of the user location view.
+    /// UserLocation view resource names have the form:
+    ///
+    /// `customers/{customer_id}/userLocationViews/{country_criterion_id}~{targeting_location}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. Criterion Id for the country.
+    #[prost(int64, optional, tag="4")]
+    pub country_criterion_id: ::core::option::Option<i64>,
+    /// Output only. Indicates whether location was targeted or not.
+    #[prost(bool, optional, tag="5")]
+    pub targeting_location: ::core::option::Option<bool>,
+}
 // Proto file describing the video resource.
 
 /// A video.
@@ -7679,39 +7600,108 @@ pub struct Video {
     #[prost(string, optional, tag="9")]
     pub title: ::core::option::Option<::prost::alloc::string::String>,
 }
-// Proto file describing the PaymentsAccount resource.
+// Proto file describing the webpage view resource.
 
-/// A payments account, which can be used to set up billing for an Ads customer.
+/// A webpage view.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PaymentsAccount {
-    /// Output only. The resource name of the payments account.
-    /// PaymentsAccount resource names have the form:
+pub struct WebpageView {
+    /// Output only. The resource name of the webpage view.
+    /// Webpage view resource names have the form:
     ///
-    /// `customers/{customer_id}/paymentsAccounts/{payments_account_id}`
+    /// `customers/{customer_id}/webpageViews/{ad_group_id}~{criterion_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. A 16 digit ID used to identify a payments account.
-    #[prost(string, optional, tag="8")]
-    pub payments_account_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The name of the payments account.
-    #[prost(string, optional, tag="9")]
+}
+// Proto file describing the Google Ads Field resource.
+
+/// A field or resource (artifact) used by GoogleAdsService.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleAdsField {
+    /// Output only. The resource name of the artifact.
+    /// Artifact resource names have the form:
+    ///
+    /// `googleAdsFields/{name}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The name of the artifact.
+    #[prost(string, optional, tag="21")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. The currency code of the payments account.
-    /// A subset of the currency codes derived from the ISO 4217 standard is
-    /// supported.
-    #[prost(string, optional, tag="10")]
-    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. A 12 digit ID used to identify the payments profile associated with the
-    /// payments account.
-    #[prost(string, optional, tag="11")]
-    pub payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. A secondary payments profile ID present in uncommon situations, e.g.
-    /// when a sequential liability agreement has been arranged.
-    #[prost(string, optional, tag="12")]
-    pub secondary_payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Output only. Paying manager of this payment account.
-    #[prost(string, optional, tag="13")]
-    pub paying_manager_customer: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The category of the artifact.
+    #[prost(enumeration="super::enums::google_ads_field_category_enum::GoogleAdsFieldCategory", tag="3")]
+    pub category: i32,
+    /// Output only. Whether the artifact can be used in a SELECT clause in search
+    /// queries.
+    #[prost(bool, optional, tag="22")]
+    pub selectable: ::core::option::Option<bool>,
+    /// Output only. Whether the artifact can be used in a WHERE clause in search
+    /// queries.
+    #[prost(bool, optional, tag="23")]
+    pub filterable: ::core::option::Option<bool>,
+    /// Output only. Whether the artifact can be used in a ORDER BY clause in search
+    /// queries.
+    #[prost(bool, optional, tag="24")]
+    pub sortable: ::core::option::Option<bool>,
+    /// Output only. The names of all resources, segments, and metrics that are selectable with
+    /// the described artifact.
+    #[prost(string, repeated, tag="25")]
+    pub selectable_with: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. The names of all resources that are selectable with the described
+    /// artifact. Fields from these resources do not segment metrics when included
+    /// in search queries.
+    ///
+    /// This field is only set for artifacts whose category is RESOURCE.
+    #[prost(string, repeated, tag="26")]
+    pub attribute_resources: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. This field lists the names of all metrics that are selectable with the
+    /// described artifact when it is used in the FROM clause.
+    /// It is only set for artifacts whose category is RESOURCE.
+    #[prost(string, repeated, tag="27")]
+    pub metrics: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. This field lists the names of all artifacts, whether a segment or another
+    /// resource, that segment metrics when included in search queries and when the
+    /// described artifact is used in the FROM clause. It is only set for artifacts
+    /// whose category is RESOURCE.
+    #[prost(string, repeated, tag="28")]
+    pub segments: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. Values the artifact can assume if it is a field of type ENUM.
+    ///
+    /// This field is only set for artifacts of category SEGMENT or ATTRIBUTE.
+    #[prost(string, repeated, tag="29")]
+    pub enum_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. This field determines the operators that can be used with the artifact
+    /// in WHERE clauses.
+    #[prost(enumeration="super::enums::google_ads_field_data_type_enum::GoogleAdsFieldDataType", tag="12")]
+    pub data_type: i32,
+    /// Output only. The URL of proto describing the artifact's data type.
+    #[prost(string, optional, tag="30")]
+    pub type_url: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Whether the field artifact is repeated.
+    #[prost(bool, optional, tag="31")]
+    pub is_repeated: ::core::option::Option<bool>,
+}
+// Proto file describing the Merchant Center link resource.
+
+/// A data sharing connection, proposed or in use,
+/// between a Google Ads Customer and a Merchant Center account.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MerchantCenterLink {
+    /// Immutable. The resource name of the merchant center link.
+    /// Merchant center link resource names have the form:
+    ///
+    /// `customers/{customer_id}/merchantCenterLinks/{merchant_center_id}`
+    #[prost(string, tag="1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. The ID of the Merchant Center account.
+    /// This field is readonly.
+    #[prost(int64, optional, tag="6")]
+    pub id: ::core::option::Option<i64>,
+    /// Output only. The name of the Merchant Center account.
+    /// This field is readonly.
+    #[prost(string, optional, tag="7")]
+    pub merchant_center_account_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// The status of the link.
+    #[prost(enumeration="super::enums::merchant_center_link_status_enum::MerchantCenterLinkStatus", tag="5")]
+    pub status: i32,
 }
 // Proto file describing the Invoice resource.
 
@@ -7879,27 +7869,37 @@ pub mod invoice {
         pub billable_activity_date_range: ::core::option::Option<super::super::common::DateRange>,
     }
 }
-// Proto file describing the Merchant Center link resource.
+// Proto file describing the PaymentsAccount resource.
 
-/// A data sharing connection, proposed or in use,
-/// between a Google Ads Customer and a Merchant Center account.
+/// A payments account, which can be used to set up billing for an Ads customer.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MerchantCenterLink {
-    /// Immutable. The resource name of the merchant center link.
-    /// Merchant center link resource names have the form:
+pub struct PaymentsAccount {
+    /// Output only. The resource name of the payments account.
+    /// PaymentsAccount resource names have the form:
     ///
-    /// `customers/{customer_id}/merchantCenterLinks/{merchant_center_id}`
+    /// `customers/{customer_id}/paymentsAccounts/{payments_account_id}`
     #[prost(string, tag="1")]
     pub resource_name: ::prost::alloc::string::String,
-    /// Output only. The ID of the Merchant Center account.
-    /// This field is readonly.
-    #[prost(int64, optional, tag="6")]
-    pub id: ::core::option::Option<i64>,
-    /// Output only. The name of the Merchant Center account.
-    /// This field is readonly.
-    #[prost(string, optional, tag="7")]
-    pub merchant_center_account_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// The status of the link.
-    #[prost(enumeration="super::enums::merchant_center_link_status_enum::MerchantCenterLinkStatus", tag="5")]
-    pub status: i32,
+    /// Output only. A 16 digit ID used to identify a payments account.
+    #[prost(string, optional, tag="8")]
+    pub payments_account_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The name of the payments account.
+    #[prost(string, optional, tag="9")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. The currency code of the payments account.
+    /// A subset of the currency codes derived from the ISO 4217 standard is
+    /// supported.
+    #[prost(string, optional, tag="10")]
+    pub currency_code: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. A 12 digit ID used to identify the payments profile associated with the
+    /// payments account.
+    #[prost(string, optional, tag="11")]
+    pub payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. A secondary payments profile ID present in uncommon situations, e.g.
+    /// when a sequential liability agreement has been arranged.
+    #[prost(string, optional, tag="12")]
+    pub secondary_payments_profile_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Output only. Paying manager of this payment account.
+    #[prost(string, optional, tag="13")]
+    pub paying_manager_customer: ::core::option::Option<::prost::alloc::string::String>,
 }

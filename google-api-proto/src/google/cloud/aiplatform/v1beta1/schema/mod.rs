@@ -8,22 +8,6 @@
 pub mod predict;
 #[cfg(any(feature = "google-cloud-aiplatform-v1beta1-schema-trainingjob-definition"))]
 pub mod trainingjob;
-/// An entry of mapping between color and AnnotationSpec. The mapping is used in
-/// segmentation mask.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnnotationSpecColor {
-    /// The color of the AnnotationSpec in a segmentation mask.
-    #[prost(message, optional, tag="1")]
-    pub color: ::core::option::Option<super::super::super::super::r#type::Color>,
-    /// The display name of the AnnotationSpec represented by the color in the
-    /// segmentation mask.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The ID of the AnnotationSpec represented by the color in the segmentation
-    /// mask.
-    #[prost(string, tag="3")]
-    pub id: ::prost::alloc::string::String,
-}
 /// The metadata of Datasets that contain Image DataItems.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageDatasetMetadata {
@@ -152,6 +136,22 @@ pub mod time_series_dataset_metadata {
         #[prost(string, tag="1")]
         pub uri: ::prost::alloc::string::String,
     }
+}
+/// An entry of mapping between color and AnnotationSpec. The mapping is used in
+/// segmentation mask.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnnotationSpecColor {
+    /// The color of the AnnotationSpec in a segmentation mask.
+    #[prost(message, optional, tag="1")]
+    pub color: ::core::option::Option<super::super::super::super::r#type::Color>,
+    /// The display name of the AnnotationSpec represented by the color in the
+    /// segmentation mask.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The ID of the AnnotationSpec represented by the color in the segmentation
+    /// mask.
+    #[prost(string, tag="3")]
+    pub id: ::prost::alloc::string::String,
 }
 /// A vertex represents a 2D point in the image.
 /// NOTE: the normalized vertex coordinates are relative to the original image

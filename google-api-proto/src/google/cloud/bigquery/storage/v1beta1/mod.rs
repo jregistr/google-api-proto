@@ -1,20 +1,3 @@
-/// Arrow schema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSchema {
-    /// IPC serialized Arrow schema.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_schema: ::prost::bytes::Bytes,
-}
-/// Arrow RecordBatch.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowRecordBatch {
-    /// IPC serialized Arrow RecordBatch.
-    #[prost(bytes="bytes", tag="1")]
-    pub serialized_record_batch: ::prost::bytes::Bytes,
-    /// The count of rows in the returning block.
-    #[prost(int64, tag="2")]
-    pub row_count: i64,
-}
 /// Options dictating how we read a table.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TableReadOptions {
@@ -34,6 +17,23 @@ pub struct TableReadOptions {
     ///            "numeric_field BETWEEN 1.0 AND 5.0"
     #[prost(string, tag="2")]
     pub row_restriction: ::prost::alloc::string::String,
+}
+/// Arrow schema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSchema {
+    /// IPC serialized Arrow schema.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_schema: ::prost::bytes::Bytes,
+}
+/// Arrow RecordBatch.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowRecordBatch {
+    /// IPC serialized Arrow RecordBatch.
+    #[prost(bytes="bytes", tag="1")]
+    pub serialized_record_batch: ::prost::bytes::Bytes,
+    /// The count of rows in the returning block.
+    #[prost(int64, tag="2")]
+    pub row_count: i64,
 }
 /// Avro schema.
 #[derive(Clone, PartialEq, ::prost::Message)]

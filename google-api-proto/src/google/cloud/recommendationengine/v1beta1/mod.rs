@@ -740,6 +740,340 @@ pub struct UserEventImportSummary {
     #[prost(int64, tag="2")]
     pub unjoined_events_count: i64,
 }
+/// Request message for PurgeUserEvents method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeUserEventsRequest {
+    /// Required. The resource name of the event_store under which the events are
+    /// created. The format is
+    /// `projects/${projectId}/locations/global/catalogs/${catalogId}/eventStores/${eventStoreId}`
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The filter string to specify the events to be deleted. Empty
+    /// string filter is not allowed. This filter can also be used with
+    /// ListUserEvents API to list events that will be deleted. The eligible fields
+    /// for filtering are:
+    /// * eventType - UserEvent.eventType field of type string.
+    /// * eventTime - in ISO 8601 "zulu" format.
+    /// * visitorId - field of type string. Specifying this will delete all events
+    /// associated with a visitor.
+    /// * userId - field of type string. Specifying this will delete all events
+    /// associated with a user.
+    /// Example 1: Deleting all events in a time range.
+    /// `eventTime > "2012-04-23T18:25:43.511Z" eventTime <
+    /// "2012-04-23T18:30:43.511Z"`
+    /// Example 2: Deleting specific eventType in time range.
+    /// `eventTime > "2012-04-23T18:25:43.511Z" eventType = "detail-page-view"`
+    /// Example 3: Deleting all events for a specific visitor
+    /// `visitorId = visitor1024`
+    /// The filtering fields are assumed to have an implicit AND.
+    #[prost(string, tag="2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. The default value is false. Override this flag to true to
+    /// actually perform the purge. If the field is not set to true, a sampling of
+    /// events to be deleted will be returned.
+    #[prost(bool, tag="3")]
+    pub force: bool,
+}
+/// Metadata related to the progress of the PurgeUserEvents operation.
+/// This will be returned by the google.longrunning.Operation.metadata field.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeUserEventsMetadata {
+    /// The ID of the request / operation.
+    #[prost(string, tag="1")]
+    pub operation_name: ::prost::alloc::string::String,
+    /// Operation create time.
+    #[prost(message, optional, tag="2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Response of the PurgeUserEventsRequest. If the long running operation is
+/// successfully done, then this message is returned by the
+/// google.longrunning.Operations.response field.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeUserEventsResponse {
+    /// The total count of events purged as a result of the operation.
+    #[prost(int64, tag="1")]
+    pub purged_events_count: i64,
+    /// A sampling of events deleted (or will be deleted) depending on the `force`
+    /// property in the request. Max of 500 items will be returned.
+    #[prost(message, repeated, tag="2")]
+    pub user_events_sample: ::prost::alloc::vec::Vec<UserEvent>,
+}
+/// Request message for WriteUserEvent method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteUserEventRequest {
+    /// Required. The parent eventStore resource name, such as
+    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. User event to write.
+    #[prost(message, optional, tag="2")]
+    pub user_event: ::core::option::Option<UserEvent>,
+}
+/// Request message for CollectUserEvent method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CollectUserEventRequest {
+    /// Required. The parent eventStore name, such as
+    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. URL encoded UserEvent proto.
+    #[prost(string, tag="2")]
+    pub user_event: ::prost::alloc::string::String,
+    /// Optional. The url including cgi-parameters but excluding the hash fragment.
+    /// The URL must be truncated to 1.5K bytes to conservatively be under the 2K
+    /// bytes. This is often more useful than the referer url, because many
+    /// browsers only send the domain for 3rd party requests.
+    #[prost(string, tag="3")]
+    pub uri: ::prost::alloc::string::String,
+    /// Optional. The event timestamp in milliseconds. This prevents browser
+    /// caching of otherwise identical get requests. The name is abbreviated to
+    /// reduce the payload bytes.
+    #[prost(int64, tag="4")]
+    pub ets: i64,
+}
+/// Request message for ListUserEvents method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListUserEventsRequest {
+    /// Required. The parent eventStore resource name, such as
+    /// `projects/*/locations/*/catalogs/default_catalog/eventStores/default_event_store`.
+    #[prost(string, tag="1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. Maximum number of results to return per page. If zero, the
+    /// service will choose a reasonable default.
+    #[prost(int32, tag="2")]
+    pub page_size: i32,
+    /// Optional. The previous ListUserEventsResponse.next_page_token.
+    #[prost(string, tag="3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. Filtering expression to specify restrictions over
+    /// returned events. This is a sequence of terms, where each term applies some
+    /// kind of a restriction to the returned user events. Use this expression to
+    /// restrict results to a specific time range, or filter events by eventType.
+    ///     eg: eventTime > "2012-04-23T18:25:43.511Z" eventsMissingCatalogItems
+    ///     eventTime<"2012-04-23T18:25:43.511Z" eventType=search
+    ///
+    ///    We expect only 3 types of fields:
+    ///
+    ///     * eventTime: this can be specified a maximum of 2 times, once with a
+    ///       less than operator and once with a greater than operator. The
+    ///       eventTime restrict should result in one contiguous valid eventTime
+    ///       range.
+    ///
+    ///     * eventType: only 1 eventType restriction can be specified.
+    ///
+    ///     * eventsMissingCatalogItems: specififying this will restrict results
+    ///       to events for which catalog items were not found in the catalog. The
+    ///       default behavior is to return only those events for which catalog
+    ///       items were found.
+    ///
+    ///    Some examples of valid filters expressions:
+    ///
+    ///    * Example 1: eventTime > "2012-04-23T18:25:43.511Z"
+    ///              eventTime < "2012-04-23T18:30:43.511Z"
+    ///    * Example 2: eventTime > "2012-04-23T18:25:43.511Z"
+    ///              eventType = detail-page-view
+    ///    * Example 3: eventsMissingCatalogItems
+    ///              eventType = search eventTime < "2018-04-23T18:30:43.511Z"
+    ///    * Example 4: eventTime > "2012-04-23T18:25:43.511Z"
+    ///    * Example 5: eventType = search
+    ///    * Example 6: eventsMissingCatalogItems
+    #[prost(string, tag="4")]
+    pub filter: ::prost::alloc::string::String,
+}
+/// Response message for ListUserEvents method.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListUserEventsResponse {
+    /// The user events.
+    #[prost(message, repeated, tag="1")]
+    pub user_events: ::prost::alloc::vec::Vec<UserEvent>,
+    /// If empty, the list is complete. If nonempty, the token to pass to the next
+    /// request's ListUserEvents.page_token.
+    #[prost(string, tag="2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod user_event_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for ingesting end user actions on the customer website.
+    #[derive(Debug, Clone)]
+    pub struct UserEventServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> UserEventServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UserEventServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            UserEventServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Writes a single user event.
+        pub async fn write_user_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WriteUserEventRequest>,
+        ) -> Result<tonic::Response<super::UserEvent>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.UserEventService/WriteUserEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Writes a single user event from the browser. This uses a GET request to
+        /// due to browser restriction of POST-ing to a 3rd party domain.
+        ///
+        /// This method is used only by the Recommendations AI JavaScript pixel.
+        /// Users should not call this method directly.
+        pub async fn collect_user_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CollectUserEventRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::api::HttpBody>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.UserEventService/CollectUserEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a list of user events within a time range, with potential filtering.
+        pub async fn list_user_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListUserEventsRequest>,
+        ) -> Result<tonic::Response<super::ListUserEventsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.UserEventService/ListUserEvents",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes permanently all user events specified by the filter provided.
+        /// Depending on the number of events specified by the filter, this operation
+        /// could take hours or days to complete. To test a filter, use the list
+        /// command first.
+        pub async fn purge_user_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PurgeUserEventsRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.UserEventService/PurgeUserEvents",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Bulk import of User events. Request processing might be
+        /// synchronous. Events that already exist are skipped.
+        /// Use this method for backfilling historical user events.
+        ///
+        /// Operation.response is of type ImportResponse. Note that it is
+        /// possible for a subset of the items to be successfully inserted.
+        /// Operation.metadata is of type ImportMetadata.
+        pub async fn import_user_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ImportUserEventsRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.UserEventService/ImportUserEvents",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for CreateCatalogItem method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCatalogItemRequest {
@@ -1419,340 +1753,6 @@ pub mod prediction_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommendationengine.v1beta1.PredictionService/Predict",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for PurgeUserEvents method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PurgeUserEventsRequest {
-    /// Required. The resource name of the event_store under which the events are
-    /// created. The format is
-    /// `projects/${projectId}/locations/global/catalogs/${catalogId}/eventStores/${eventStoreId}`
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The filter string to specify the events to be deleted. Empty
-    /// string filter is not allowed. This filter can also be used with
-    /// ListUserEvents API to list events that will be deleted. The eligible fields
-    /// for filtering are:
-    /// * eventType - UserEvent.eventType field of type string.
-    /// * eventTime - in ISO 8601 "zulu" format.
-    /// * visitorId - field of type string. Specifying this will delete all events
-    /// associated with a visitor.
-    /// * userId - field of type string. Specifying this will delete all events
-    /// associated with a user.
-    /// Example 1: Deleting all events in a time range.
-    /// `eventTime > "2012-04-23T18:25:43.511Z" eventTime <
-    /// "2012-04-23T18:30:43.511Z"`
-    /// Example 2: Deleting specific eventType in time range.
-    /// `eventTime > "2012-04-23T18:25:43.511Z" eventType = "detail-page-view"`
-    /// Example 3: Deleting all events for a specific visitor
-    /// `visitorId = visitor1024`
-    /// The filtering fields are assumed to have an implicit AND.
-    #[prost(string, tag="2")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. The default value is false. Override this flag to true to
-    /// actually perform the purge. If the field is not set to true, a sampling of
-    /// events to be deleted will be returned.
-    #[prost(bool, tag="3")]
-    pub force: bool,
-}
-/// Metadata related to the progress of the PurgeUserEvents operation.
-/// This will be returned by the google.longrunning.Operation.metadata field.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PurgeUserEventsMetadata {
-    /// The ID of the request / operation.
-    #[prost(string, tag="1")]
-    pub operation_name: ::prost::alloc::string::String,
-    /// Operation create time.
-    #[prost(message, optional, tag="2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Response of the PurgeUserEventsRequest. If the long running operation is
-/// successfully done, then this message is returned by the
-/// google.longrunning.Operations.response field.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PurgeUserEventsResponse {
-    /// The total count of events purged as a result of the operation.
-    #[prost(int64, tag="1")]
-    pub purged_events_count: i64,
-    /// A sampling of events deleted (or will be deleted) depending on the `force`
-    /// property in the request. Max of 500 items will be returned.
-    #[prost(message, repeated, tag="2")]
-    pub user_events_sample: ::prost::alloc::vec::Vec<UserEvent>,
-}
-/// Request message for WriteUserEvent method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteUserEventRequest {
-    /// Required. The parent eventStore resource name, such as
-    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. User event to write.
-    #[prost(message, optional, tag="2")]
-    pub user_event: ::core::option::Option<UserEvent>,
-}
-/// Request message for CollectUserEvent method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollectUserEventRequest {
-    /// Required. The parent eventStore name, such as
-    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. URL encoded UserEvent proto.
-    #[prost(string, tag="2")]
-    pub user_event: ::prost::alloc::string::String,
-    /// Optional. The url including cgi-parameters but excluding the hash fragment.
-    /// The URL must be truncated to 1.5K bytes to conservatively be under the 2K
-    /// bytes. This is often more useful than the referer url, because many
-    /// browsers only send the domain for 3rd party requests.
-    #[prost(string, tag="3")]
-    pub uri: ::prost::alloc::string::String,
-    /// Optional. The event timestamp in milliseconds. This prevents browser
-    /// caching of otherwise identical get requests. The name is abbreviated to
-    /// reduce the payload bytes.
-    #[prost(int64, tag="4")]
-    pub ets: i64,
-}
-/// Request message for ListUserEvents method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListUserEventsRequest {
-    /// Required. The parent eventStore resource name, such as
-    /// `projects/*/locations/*/catalogs/default_catalog/eventStores/default_event_store`.
-    #[prost(string, tag="1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. Maximum number of results to return per page. If zero, the
-    /// service will choose a reasonable default.
-    #[prost(int32, tag="2")]
-    pub page_size: i32,
-    /// Optional. The previous ListUserEventsResponse.next_page_token.
-    #[prost(string, tag="3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. Filtering expression to specify restrictions over
-    /// returned events. This is a sequence of terms, where each term applies some
-    /// kind of a restriction to the returned user events. Use this expression to
-    /// restrict results to a specific time range, or filter events by eventType.
-    ///     eg: eventTime > "2012-04-23T18:25:43.511Z" eventsMissingCatalogItems
-    ///     eventTime<"2012-04-23T18:25:43.511Z" eventType=search
-    ///
-    ///    We expect only 3 types of fields:
-    ///
-    ///     * eventTime: this can be specified a maximum of 2 times, once with a
-    ///       less than operator and once with a greater than operator. The
-    ///       eventTime restrict should result in one contiguous valid eventTime
-    ///       range.
-    ///
-    ///     * eventType: only 1 eventType restriction can be specified.
-    ///
-    ///     * eventsMissingCatalogItems: specififying this will restrict results
-    ///       to events for which catalog items were not found in the catalog. The
-    ///       default behavior is to return only those events for which catalog
-    ///       items were found.
-    ///
-    ///    Some examples of valid filters expressions:
-    ///
-    ///    * Example 1: eventTime > "2012-04-23T18:25:43.511Z"
-    ///              eventTime < "2012-04-23T18:30:43.511Z"
-    ///    * Example 2: eventTime > "2012-04-23T18:25:43.511Z"
-    ///              eventType = detail-page-view
-    ///    * Example 3: eventsMissingCatalogItems
-    ///              eventType = search eventTime < "2018-04-23T18:30:43.511Z"
-    ///    * Example 4: eventTime > "2012-04-23T18:25:43.511Z"
-    ///    * Example 5: eventType = search
-    ///    * Example 6: eventsMissingCatalogItems
-    #[prost(string, tag="4")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// Response message for ListUserEvents method.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListUserEventsResponse {
-    /// The user events.
-    #[prost(message, repeated, tag="1")]
-    pub user_events: ::prost::alloc::vec::Vec<UserEvent>,
-    /// If empty, the list is complete. If nonempty, the token to pass to the next
-    /// request's ListUserEvents.page_token.
-    #[prost(string, tag="2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod user_event_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for ingesting end user actions on the customer website.
-    #[derive(Debug, Clone)]
-    pub struct UserEventServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> UserEventServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> UserEventServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            UserEventServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Writes a single user event.
-        pub async fn write_user_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::WriteUserEventRequest>,
-        ) -> Result<tonic::Response<super::UserEvent>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.UserEventService/WriteUserEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Writes a single user event from the browser. This uses a GET request to
-        /// due to browser restriction of POST-ing to a 3rd party domain.
-        ///
-        /// This method is used only by the Recommendations AI JavaScript pixel.
-        /// Users should not call this method directly.
-        pub async fn collect_user_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CollectUserEventRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::api::HttpBody>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.UserEventService/CollectUserEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a list of user events within a time range, with potential filtering.
-        pub async fn list_user_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListUserEventsRequest>,
-        ) -> Result<tonic::Response<super::ListUserEventsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.UserEventService/ListUserEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes permanently all user events specified by the filter provided.
-        /// Depending on the number of events specified by the filter, this operation
-        /// could take hours or days to complete. To test a filter, use the list
-        /// command first.
-        pub async fn purge_user_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PurgeUserEventsRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.UserEventService/PurgeUserEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Bulk import of User events. Request processing might be
-        /// synchronous. Events that already exist are skipped.
-        /// Use this method for backfilling historical user events.
-        ///
-        /// Operation.response is of type ImportResponse. Note that it is
-        /// possible for a subset of the items to be successfully inserted.
-        /// Operation.metadata is of type ImportMetadata.
-        pub async fn import_user_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImportUserEventsRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.UserEventService/ImportUserEvents",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

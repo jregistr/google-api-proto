@@ -1,87 +1,3 @@
-/// A vertex represents a 2D point in the image.
-/// NOTE: the vertex coordinates are in the same scale as the original image.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vertex {
-    /// X coordinate.
-    #[prost(int32, tag="1")]
-    pub x: i32,
-    /// Y coordinate.
-    #[prost(int32, tag="2")]
-    pub y: i32,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the normalized vertex coordinates are relative to the original image
-/// and range from 0 to 1.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// X coordinate.
-    #[prost(float, tag="1")]
-    pub x: f32,
-    /// Y coordinate.
-    #[prost(float, tag="2")]
-    pub y: f32,
-}
-/// A bounding polygon for the detected image annotation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// The bounding polygon vertices.
-    #[prost(message, repeated, tag="1")]
-    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
-    /// The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag="2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
-}
-/// A 3D position in the image, used primarily for Face detection landmarks.
-/// A valid Position must have both x and y coordinates.
-/// The position coordinates are in the same scale as the original image.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Position {
-    /// X coordinate.
-    #[prost(float, tag="1")]
-    pub x: f32,
-    /// Y coordinate.
-    #[prost(float, tag="2")]
-    pub y: f32,
-    /// Z coordinate (or depth).
-    #[prost(float, tag="3")]
-    pub z: f32,
-}
-/// Parameters for a celebrity recognition request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FaceRecognitionParams {
-    /// The resource names for one or more
-    /// \[CelebritySet][google.cloud.vision.v1p4beta1.CelebritySet\]s. A celebrity
-    /// set is preloaded and can be specified as "builtin/default". If this is
-    /// specified, the algorithm will try to match the faces detected in the input
-    /// image to the Celebrities in the CelebritySets.
-    #[prost(string, repeated, tag="1")]
-    pub celebrity_set: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A Celebrity is a group of Faces with an identity.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Celebrity {
-    /// The resource name of the preloaded Celebrity. Has the format
-    /// `builtin/{mid}`.
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The Celebrity's display name.
-    #[prost(string, tag="2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The Celebrity's description.
-    #[prost(string, tag="3")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Information about a face's identity.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FaceRecognitionResult {
-    /// The \[Celebrity][google.cloud.vision.v1p4beta1.Celebrity\] that this face was
-    /// matched to.
-    #[prost(message, optional, tag="1")]
-    pub celebrity: ::core::option::Option<Celebrity>,
-    /// Recognition confidence. Range [0, 1].
-    #[prost(float, tag="2")]
-    pub confidence: f32,
-}
 /// Relevant information for the image from the Internet.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WebDetection {
@@ -169,6 +85,54 @@ pub mod web_detection {
         #[prost(string, tag="2")]
         pub language_code: ::prost::alloc::string::String,
     }
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the vertex coordinates are in the same scale as the original image.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Vertex {
+    /// X coordinate.
+    #[prost(int32, tag="1")]
+    pub x: i32,
+    /// Y coordinate.
+    #[prost(int32, tag="2")]
+    pub y: i32,
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the normalized vertex coordinates are relative to the original image
+/// and range from 0 to 1.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// X coordinate.
+    #[prost(float, tag="1")]
+    pub x: f32,
+    /// Y coordinate.
+    #[prost(float, tag="2")]
+    pub y: f32,
+}
+/// A bounding polygon for the detected image annotation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// The bounding polygon vertices.
+    #[prost(message, repeated, tag="1")]
+    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
+    /// The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag="2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
+}
+/// A 3D position in the image, used primarily for Face detection landmarks.
+/// A valid Position must have both x and y coordinates.
+/// The position coordinates are in the same scale as the original image.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Position {
+    /// X coordinate.
+    #[prost(float, tag="1")]
+    pub x: f32,
+    /// Y coordinate.
+    #[prost(float, tag="2")]
+    pub y: f32,
+    /// Z coordinate (or depth).
+    #[prost(float, tag="3")]
+    pub z: f32,
 }
 /// A Product contains ReferenceImages.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1500,6 +1464,42 @@ pub mod product_search_results {
         #[prost(message, repeated, tag="3")]
         pub object_annotations: ::prost::alloc::vec::Vec<ObjectAnnotation>,
     }
+}
+/// Parameters for a celebrity recognition request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FaceRecognitionParams {
+    /// The resource names for one or more
+    /// \[CelebritySet][google.cloud.vision.v1p4beta1.CelebritySet\]s. A celebrity
+    /// set is preloaded and can be specified as "builtin/default". If this is
+    /// specified, the algorithm will try to match the faces detected in the input
+    /// image to the Celebrities in the CelebritySets.
+    #[prost(string, repeated, tag="1")]
+    pub celebrity_set: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A Celebrity is a group of Faces with an identity.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Celebrity {
+    /// The resource name of the preloaded Celebrity. Has the format
+    /// `builtin/{mid}`.
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The Celebrity's display name.
+    #[prost(string, tag="2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The Celebrity's description.
+    #[prost(string, tag="3")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Information about a face's identity.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FaceRecognitionResult {
+    /// The \[Celebrity][google.cloud.vision.v1p4beta1.Celebrity\] that this face was
+    /// matched to.
+    #[prost(message, optional, tag="1")]
+    pub celebrity: ::core::option::Option<Celebrity>,
+    /// Recognition confidence. Range [0, 1].
+    #[prost(float, tag="2")]
+    pub confidence: f32,
 }
 /// TextAnnotation contains a structured representation of OCR extracted text.
 /// The hierarchy of an OCR extracted text structure is like this:

@@ -1040,6 +1040,41 @@ pub mod document_output_config {
         GcsOutputConfig(GcsOutputConfig),
     }
 }
+/// A processor type is responsible for performing a certain document
+/// understanding task on a certain type of document.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProcessorType {
+    /// The resource name of the processor type.
+    /// Format: projects/{project}/processorTypes/{processor_type}
+    #[prost(string, tag="1")]
+    pub name: ::prost::alloc::string::String,
+    /// The type of the processor, e.g., "invoice_parsing".
+    #[prost(string, tag="2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The processor category, used by UI to group processor types.
+    #[prost(string, tag="3")]
+    pub category: ::prost::alloc::string::String,
+    /// The locations in which this processor is available.
+    #[prost(message, repeated, tag="4")]
+    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
+    /// Whether the processor type allows creation. If true, users can create a
+    /// processor of this processor type. Otherwise, users need to request access.
+    #[prost(bool, tag="6")]
+    pub allow_creation: bool,
+    /// Launch stage of the processor type
+    #[prost(enumeration="super::super::super::api::LaunchStage", tag="8")]
+    pub launch_stage: i32,
+}
+/// Nested message and enum types in `ProcessorType`.
+pub mod processor_type {
+    /// The location information about where the processor is available.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LocationInfo {
+        /// The location id, currently must be one of [us, eu].
+        #[prost(string, tag="1")]
+        pub location_id: ::prost::alloc::string::String,
+    }
+}
 /// The schema defines the output of the processed document by a processor.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentSchema {
@@ -1406,41 +1441,6 @@ pub mod processor {
                 State::Deleting => "DELETING",
             }
         }
-    }
-}
-/// A processor type is responsible for performing a certain document
-/// understanding task on a certain type of document.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessorType {
-    /// The resource name of the processor type.
-    /// Format: projects/{project}/processorTypes/{processor_type}
-    #[prost(string, tag="1")]
-    pub name: ::prost::alloc::string::String,
-    /// The type of the processor, e.g., "invoice_parsing".
-    #[prost(string, tag="2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The processor category, used by UI to group processor types.
-    #[prost(string, tag="3")]
-    pub category: ::prost::alloc::string::String,
-    /// The locations in which this processor is available.
-    #[prost(message, repeated, tag="4")]
-    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
-    /// Whether the processor type allows creation. If true, users can create a
-    /// processor of this processor type. Otherwise, users need to request access.
-    #[prost(bool, tag="6")]
-    pub allow_creation: bool,
-    /// Launch stage of the processor type
-    #[prost(enumeration="super::super::super::api::LaunchStage", tag="8")]
-    pub launch_stage: i32,
-}
-/// Nested message and enum types in `ProcessorType`.
-pub mod processor_type {
-    /// The location information about where the processor is available.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LocationInfo {
-        /// The location id, currently must be one of [us, eu].
-        #[prost(string, tag="1")]
-        pub location_id: ::prost::alloc::string::String,
     }
 }
 /// Request message for the process document method.

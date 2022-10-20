@@ -104,10 +104,6 @@ pub mod index {
         }
     }
 }
-/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationMetadata {
-}
 /// Metadata for index operations. This metadata populates
 /// the metadata field of \[google.longrunning.Operation][google.longrunning.Operation\].
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -621,4 +617,8 @@ pub mod firestore_admin_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+}
+/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationMetadata {
 }
