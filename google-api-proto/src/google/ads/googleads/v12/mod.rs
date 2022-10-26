@@ -1,0 +1,10 @@
+#[cfg(any(feature = "google-ads-googleads-v12-common"))]
+pub mod common;
+#[cfg(any(feature = "google-ads-googleads-v12-enums"))]
+pub mod enums;
+#[cfg(any(feature = "google-ads-googleads-v12-errors"))]
+pub mod errors;
+#[cfg(any(feature = "google-ads-googleads-v12-resources"))]
+pub mod resources;
+#[cfg(any(feature = "google-ads-googleads-v12-services"))]
+pub mod services;

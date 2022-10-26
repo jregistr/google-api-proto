@@ -12,7 +12,7 @@ pub struct CdnKey {
     #[prost(string, tag="4")]
     pub hostname: ::prost::alloc::string::String,
     /// Configuration associated with the CDN key.
-    #[prost(oneof="cdn_key::CdnKeyConfig", tags="5, 6")]
+    #[prost(oneof="cdn_key::CdnKeyConfig", tags="5, 6, 8")]
     pub cdn_key_config: ::core::option::Option<cdn_key::CdnKeyConfig>,
 }
 /// Nested message and enum types in `CdnKey`.
@@ -26,6 +26,9 @@ pub mod cdn_key {
         /// The configuration for an Akamai CDN key.
         #[prost(message, tag="6")]
         AkamaiCdnKey(super::AkamaiCdnKey),
+        /// The configuration for a Media CDN key.
+        #[prost(message, tag="8")]
+        MediaCdnKey(super::MediaCdnKey),
     }
 }
 /// Configuration for a Google Cloud CDN key.
@@ -44,6 +47,16 @@ pub struct AkamaiCdnKey {
     /// Input only. Token key for the Akamai CDN edge configuration.
     #[prost(bytes="bytes", tag="1")]
     pub token_key: ::prost::bytes::Bytes,
+}
+/// Configuration for a Media CDN key.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MediaCdnKey {
+    /// Input only. 64-byte ed25519 private key for this Media CDN key.
+    #[prost(bytes="bytes", tag="1")]
+    pub private_key: ::prost::bytes::Bytes,
+    /// The keyset name of the Media CDN key.
+    #[prost(string, tag="2")]
+    pub key_name: ::prost::alloc::string::String,
 }
 /// Describes an event and a trigger URI.
 #[derive(Clone, PartialEq, ::prost::Message)]
