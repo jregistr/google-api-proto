@@ -32,6 +32,10 @@ pub mod actions;
         feature = "google-ads-googleads-v9-errors",
         feature = "google-ads-googleads-v9-resources",
         feature = "google-ads-googleads-v9-services",
+        feature = "google-ads-searchads360-v0-common",
+        feature = "google-ads-searchads360-v0-enums",
+        feature = "google-ads-searchads360-v0-resources",
+        feature = "google-ads-searchads360-v0-services",
     )
 )]
 pub mod ads;
