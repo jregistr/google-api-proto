@@ -17,11 +17,6 @@ pub mod admob;
         feature = "google-ads-googleads-v12-errors",
         feature = "google-ads-googleads-v12-resources",
         feature = "google-ads-googleads-v12-services",
-        feature = "google-ads-googleads-v9-common",
-        feature = "google-ads-googleads-v9-enums",
-        feature = "google-ads-googleads-v9-errors",
-        feature = "google-ads-googleads-v9-resources",
-        feature = "google-ads-googleads-v9-services",
     )
 )]
 pub mod googleads;

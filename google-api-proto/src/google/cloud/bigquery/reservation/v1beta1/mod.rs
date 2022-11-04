@@ -3,7 +3,7 @@
 pub struct Reservation {
     /// The resource name of the reservation, e.g.,
     /// `projects/*/locations/*/reservations/team1-prod`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Minimum slots available to this reservation. A slot is a unit of
     /// computational power in BigQuery, and serves as the unit of parallelism.
@@ -15,12 +15,12 @@ pub struct Reservation {
     /// if total slot capacity of the new reservation and its siblings exceeds the
     /// parent's slot capacity, the request will fail with
     /// `google.rpc.Code.RESOURCE_EXHAUSTED`.
-    #[prost(int64, tag="2")]
+    #[prost(int64, tag = "2")]
     pub slot_capacity: i64,
     /// If false, any query using this reservation will use idle slots from other
     /// reservations within the same admin project. If true, a query using this
     /// reservation will execute with the slot capacity specified above at most.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub ignore_idle_slots: bool,
 }
 /// Capacity commitment is a way to purchase compute capacity for BigQuery jobs
@@ -37,35 +37,45 @@ pub struct Reservation {
 pub struct CapacityCommitment {
     /// Output only. The resource name of the capacity commitment, e.g.,
     /// `projects/myproject/locations/US/capacityCommitments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Number of slots in this commitment.
-    #[prost(int64, tag="2")]
+    #[prost(int64, tag = "2")]
     pub slot_count: i64,
     /// Capacity commitment commitment plan.
-    #[prost(enumeration="capacity_commitment::CommitmentPlan", tag="3")]
+    #[prost(enumeration = "capacity_commitment::CommitmentPlan", tag = "3")]
     pub plan: i32,
     /// Output only. State of the commitment.
-    #[prost(enumeration="capacity_commitment::State", tag="4")]
+    #[prost(enumeration = "capacity_commitment::State", tag = "4")]
     pub state: i32,
     /// Output only. The end of the current commitment period. It is applicable
     /// only for ACTIVE capacity commitments.
-    #[prost(message, optional, tag="5")]
+    #[prost(message, optional, tag = "5")]
     pub commitment_end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. For FAILED commitment plan, provides the reason of failure.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub failure_status: ::core::option::Option<super::super::super::super::rpc::Status>,
     /// The plan this capacity commitment is converted to after commitment_end_time
     /// passes. Once the plan is changed, committed period is extended according to
     /// commitment plan. Only applicable for ANNUAL commitments.
-    #[prost(enumeration="capacity_commitment::CommitmentPlan", tag="8")]
+    #[prost(enumeration = "capacity_commitment::CommitmentPlan", tag = "8")]
     pub renewal_plan: i32,
 }
 /// Nested message and enum types in `CapacityCommitment`.
 pub mod capacity_commitment {
     /// Commitment plan defines the current committed period. Capacity commitment
     /// cannot be deleted during it's committed period.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum CommitmentPlan {
         /// Invalid plan value. Requests with this value will be rejected with
@@ -106,7 +116,17 @@ pub mod capacity_commitment {
     }
     /// Capacity commitment can either become ACTIVE right away or transition
     /// from PENDING to ACTIVE or FAILED.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// Invalid state value.
@@ -141,14 +161,14 @@ pub mod capacity_commitment {
 pub struct CreateReservationRequest {
     /// Required. Project, location. E.g.,
     /// `projects/myproject/locations/US`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The reservation ID. This field must only contain lower case alphanumeric
     /// characters or dash. Max length is 64 characters.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub reservation_id: ::prost::alloc::string::String,
     /// Content of the new reservation to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub reservation: ::core::option::Option<Reservation>,
 }
 /// The request for
@@ -157,20 +177,20 @@ pub struct CreateReservationRequest {
 pub struct ListReservationsRequest {
     /// Required. The parent resource name containing project and location, e.g.:
     ///    `projects/myproject/locations/US`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Can be used to filter out reservations based on names, capacity, etc, e.g.:
     /// filter="reservation.slot_capacity > 200"
     /// filter="reservation.name = \"*dev/*\""
     /// Advanced filtering syntax can be
     /// \[here\](<https://cloud.google.com/logging/docs/view/advanced-filters>).
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
 }
 /// The response for
@@ -178,11 +198,11 @@ pub struct ListReservationsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReservationsResponse {
     /// List of reservations visible to the user.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub reservations: ::prost::alloc::vec::Vec<Reservation>,
     /// Token to retrieve the next page of results, or empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request for
@@ -191,7 +211,7 @@ pub struct ListReservationsResponse {
 pub struct GetReservationRequest {
     /// Required. Resource name of the reservation to retrieve. E.g.,
     ///     `projects/myproject/locations/US/reservations/team1-prod`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request for
@@ -200,7 +220,7 @@ pub struct GetReservationRequest {
 pub struct DeleteReservationRequest {
     /// Required. Resource name of the reservation to retrieve. E.g.,
     ///     `projects/myproject/locations/US/reservations/team1-prod`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request for
@@ -208,10 +228,10 @@ pub struct DeleteReservationRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateReservationRequest {
     /// Content of the reservation to update.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub reservation: ::core::option::Option<Reservation>,
     /// Standard field mask for the set of fields to be updated.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The request for
@@ -220,14 +240,14 @@ pub struct UpdateReservationRequest {
 pub struct CreateCapacityCommitmentRequest {
     /// Required. Resource name of the parent reservation. E.g.,
     ///     `projects/myproject/locations/US`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Content of the capacity commitment to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub capacity_commitment: ::core::option::Option<CapacityCommitment>,
     /// If true, fail the request if another project in the organization has a
     /// capacity commitment.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub enforce_single_admin_project_per_org: bool,
 }
 /// The request for
@@ -236,13 +256,13 @@ pub struct CreateCapacityCommitmentRequest {
 pub struct ListCapacityCommitmentsRequest {
     /// Required. Resource name of the parent reservation. E.g.,
     ///     `projects/myproject/locations/US`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response for
@@ -250,11 +270,11 @@ pub struct ListCapacityCommitmentsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCapacityCommitmentsResponse {
     /// List of capacity commitments visible to the user.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub capacity_commitments: ::prost::alloc::vec::Vec<CapacityCommitment>,
     /// Token to retrieve the next page of results, or empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request for
@@ -263,7 +283,7 @@ pub struct ListCapacityCommitmentsResponse {
 pub struct GetCapacityCommitmentRequest {
     /// Required. Resource name of the capacity commitment to retrieve. E.g.,
     ///     `projects/myproject/locations/US/capacityCommitments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request for
@@ -272,7 +292,7 @@ pub struct GetCapacityCommitmentRequest {
 pub struct DeleteCapacityCommitmentRequest {
     /// Required. Resource name of the capacity commitment to delete. E.g.,
     ///     `projects/myproject/locations/US/capacityCommitments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request for
@@ -280,10 +300,10 @@ pub struct DeleteCapacityCommitmentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCapacityCommitmentRequest {
     /// Content of the capacity commitment to update.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub capacity_commitment: ::core::option::Option<CapacityCommitment>,
     /// Standard field mask for the set of fields to be updated.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The request for
@@ -292,10 +312,10 @@ pub struct UpdateCapacityCommitmentRequest {
 pub struct SplitCapacityCommitmentRequest {
     /// Required. The resource name e.g.,:
     ///   `projects/myproject/locations/US/capacityCommitments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Number of slots in the capacity commitment after the split.
-    #[prost(int64, tag="2")]
+    #[prost(int64, tag = "2")]
     pub slot_count: i64,
 }
 /// The response for
@@ -303,10 +323,10 @@ pub struct SplitCapacityCommitmentRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SplitCapacityCommitmentResponse {
     /// First capacity commitment, result of a split.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub first: ::core::option::Option<CapacityCommitment>,
     /// Second capacity commitment, result of a split.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub second: ::core::option::Option<CapacityCommitment>,
 }
 /// The request for
@@ -315,13 +335,15 @@ pub struct SplitCapacityCommitmentResponse {
 pub struct MergeCapacityCommitmentsRequest {
     /// Parent resource that identifies admin project and location e.g.,
     ///   `projects/myproject/locations/us`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Ids of capacity commitments to merge.
     /// These capacity commitments must exist under admin project and location
     /// specified in the parent.
-    #[prost(string, repeated, tag="2")]
-    pub capacity_commitment_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, repeated, tag = "2")]
+    pub capacity_commitment_ids: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
 }
 /// A Assignment allows a project to submit jobs
 /// of a certain type using slots from the specified reservation.
@@ -329,23 +351,33 @@ pub struct MergeCapacityCommitmentsRequest {
 pub struct Assignment {
     /// Output only. Name of the resource. E.g.:
     /// `projects/myproject/locations/US/reservations/team1-prod/assignments/123`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// The resource which will use the reservation. E.g.
     /// `projects/myproject`, `folders/123`, or `organizations/456`.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub assignee: ::prost::alloc::string::String,
     /// Which type of jobs will use the reservation.
-    #[prost(enumeration="assignment::JobType", tag="3")]
+    #[prost(enumeration = "assignment::JobType", tag = "3")]
     pub job_type: i32,
     /// Output only. State of the assignment.
-    #[prost(enumeration="assignment::State", tag="6")]
+    #[prost(enumeration = "assignment::State", tag = "6")]
     pub state: i32,
 }
 /// Nested message and enum types in `Assignment`.
 pub mod assignment {
     /// Types of job, which could be specified when using the reservation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum JobType {
         /// Invalid type. Requests with this value will be rejected with
@@ -372,7 +404,17 @@ pub mod assignment {
     /// Assignment will remain in PENDING state if no active capacity commitment is
     /// present. It will become ACTIVE when some capacity commitment becomes
     /// active.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// Invalid state value.
@@ -405,10 +447,10 @@ pub mod assignment {
 pub struct CreateAssignmentRequest {
     /// Required. The parent resource name of the assignment
     /// E.g. `projects/myproject/locations/US/reservations/team1-prod`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Assignment resource to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub assignment: ::core::option::Option<Assignment>,
 }
 /// The request for
@@ -422,13 +464,13 @@ pub struct ListAssignmentsRequest {
     /// Or:
     ///
     /// `projects/myproject/locations/US/reservations/-`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response for
@@ -436,11 +478,11 @@ pub struct ListAssignmentsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAssignmentsResponse {
     /// List of assignments visible to the user.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub assignments: ::prost::alloc::vec::Vec<Assignment>,
     /// Token to retrieve the next page of results, or empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request for
@@ -451,7 +493,7 @@ pub struct ListAssignmentsResponse {
 pub struct DeleteAssignmentRequest {
     /// Required. Name of the resource, e.g.
     ///    `projects/myproject/locations/US/reservations/team1-prod/assignments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request for
@@ -463,7 +505,7 @@ pub struct SearchAssignmentsRequest {
     /// Required. The resource name of the admin project(containing project and
     /// location), e.g.:
     ///    `projects/myproject/locations/US`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Please specify resource name as assignee in the query.
     ///
@@ -472,13 +514,13 @@ pub struct SearchAssignmentsRequest {
     /// * `assignee=projects/myproject`
     /// * `assignee=folders/123`
     /// * `assignee=organizations/456`
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub query: ::prost::alloc::string::String,
     /// The maximum number of items to return.
-    #[prost(int32, tag="3")]
+    #[prost(int32, tag = "3")]
     pub page_size: i32,
     /// The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response for
@@ -486,11 +528,11 @@ pub struct SearchAssignmentsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchAssignmentsResponse {
     /// List of assignments visible to the user.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub assignments: ::prost::alloc::vec::Vec<Assignment>,
     /// Token to retrieve the next page of results, or empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request for
@@ -507,11 +549,11 @@ pub struct MoveAssignmentRequest {
     /// Required. The resource name of the assignment,
     /// e.g.
     /// `projects/myproject/locations/US/reservations/team1-prod/assignments/123`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// The new reservation ID, e.g.:
     ///    `projects/myotherproject/locations/US/reservations/team2-prod`
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub destination_id: ::prost::alloc::string::String,
 }
 /// Represents a BI Reservation.
@@ -520,13 +562,13 @@ pub struct BiReservation {
     /// The resource name of the singleton BI reservation.
     /// Reservation names have the form
     /// `projects/{project_id}/locations/{location_id}/bireservation`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. The last update timestamp of a reservation.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Size of a reservation, in bytes.
-    #[prost(int64, tag="4")]
+    #[prost(int64, tag = "4")]
     pub size: i64,
 }
 /// A request to get a singleton BI reservation.
@@ -534,17 +576,17 @@ pub struct BiReservation {
 pub struct GetBiReservationRequest {
     /// Required. Name of the requested reservation, for example:
     /// `projects/{project_id}/locations/{location_id}/bireservation`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// A request to update a BI reservation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateBiReservationRequest {
     /// A reservation to update.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub reservation: ::core::option::Option<BiReservation>,
     /// A list of fields to be updated in this request.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Generated client implementations.

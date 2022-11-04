@@ -3,31 +3,29 @@
 pub struct PublishChannelConnectionEventsRequest {
     /// The channel_connection that the events are published from. For example:
     /// `projects/{partner_project_id}/locations/{location}/channelConnections/{channel_connection_id}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub channel_connection: ::prost::alloc::string::String,
     /// The CloudEvents v1.0 events to publish. No other types are allowed.
-    #[prost(message, repeated, tag="2")]
+    #[prost(message, repeated, tag = "2")]
     pub events: ::prost::alloc::vec::Vec<::prost_types::Any>,
 }
 /// The response message for the PublishChannelConnectionEvents method.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PublishChannelConnectionEventsResponse {
-}
+pub struct PublishChannelConnectionEventsResponse {}
 /// The request message for the PublishEvents method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublishEventsRequest {
     /// The full name of the channel to publish to. For example:
     /// `projects/{project}/locations/{location}/channels/{channel-id}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub channel: ::prost::alloc::string::String,
     /// The CloudEvents v1.0 events to publish. No other types are allowed.
-    #[prost(message, repeated, tag="2")]
+    #[prost(message, repeated, tag = "2")]
     pub events: ::prost::alloc::vec::Vec<::prost_types::Any>,
 }
 /// The response message for the PublishEvents method.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PublishEventsResponse {
-}
+pub struct PublishEventsResponse {}
 /// Generated client implementations.
 pub mod publisher_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]

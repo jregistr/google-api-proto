@@ -32,11 +32,11 @@
 pub struct DateTimeRange {
     /// DateTime at which the date range begins. If unset, the range has no
     /// beginning bound.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub start: ::core::option::Option<super::super::r#type::DateTime>,
     /// DateTime at which the date range ends. If unset, the range has no ending
     /// bound.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub end: ::core::option::Option<super::super::r#type::DateTime>,
 }
 /// Represents a range based on whole or partial calendar dates, e.g. the
@@ -88,10 +88,10 @@ pub struct DateTimeRange {
 pub struct DateRange {
     /// Date at which the date range begins. If unset, the date range has no
     /// beginning bound.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub start: ::core::option::Option<super::super::r#type::Date>,
     /// Date at which the date range ends. If unset, the date range has no ending
     /// bound.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub end: ::core::option::Option<super::super::r#type::Date>,
 }

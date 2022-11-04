@@ -2,10 +2,10 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQueryTableSpec {
     /// Output only. The table source type.
-    #[prost(enumeration="TableSourceType", tag="1")]
+    #[prost(enumeration = "TableSourceType", tag = "1")]
     pub table_source_type: i32,
     /// Output only.
-    #[prost(oneof="big_query_table_spec::TypeSpec", tags="2, 3")]
+    #[prost(oneof = "big_query_table_spec::TypeSpec", tags = "2, 3")]
     pub type_spec: ::core::option::Option<big_query_table_spec::TypeSpec>,
 }
 /// Nested message and enum types in `BigQueryTableSpec`.
@@ -15,11 +15,11 @@ pub mod big_query_table_spec {
     pub enum TypeSpec {
         /// Table view specification. Populated only if
         /// the `table_source_type` is `BIGQUERY_VIEW`.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         ViewSpec(super::ViewSpec),
         /// Specification of a BigQuery table. Populated only if
         /// the `table_source_type` is `BIGQUERY_TABLE`.
-        #[prost(message, tag="3")]
+        #[prost(message, tag = "3")]
         TableSpec(super::TableSpec),
     }
 }
@@ -27,7 +27,7 @@ pub mod big_query_table_spec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ViewSpec {
     /// Output only. The query that defines the table view.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub view_query: ::prost::alloc::string::String,
 }
 /// Normal BigQuery table specification.
@@ -40,7 +40,7 @@ pub struct TableSpec {
     /// `projects/{PROJECT_ID}/locations/{LOCATION}/entrygroups/{ENTRY_GROUP_ID}/entries/{ENTRY_ID}`.
     ///
     /// Otherwise, `grouped_entry` is empty.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub grouped_entry: ::prost::alloc::string::String,
 }
 /// Specification for a group of BigQuery tables with the `\[prefix\]YYYYMMDD` name
@@ -54,20 +54,20 @@ pub struct BigQueryDateShardedSpec {
     /// belongs to. For example:
     ///
     /// `projects/{PROJECT_ID}/locations/{LOCATION}/entrygroups/{ENTRY_GROUP_ID}/entries/{ENTRY_ID}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub dataset: ::prost::alloc::string::String,
     /// Output only. The table name prefix of the shards.
     ///
     /// The name of any given shard is `\[table_prefix\]YYYYMMDD`.
     /// For example, for the `MyTable20180101` shard, the
     /// `table_prefix` is `MyTable`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub table_prefix: ::prost::alloc::string::String,
     /// Output only. Total number of shards.
-    #[prost(int64, tag="3")]
+    #[prost(int64, tag = "3")]
     pub shard_count: i64,
     /// Output only. BigQuery resource name of the latest shard.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub latest_shard_resource: ::prost::alloc::string::String,
 }
 /// Table source type.
@@ -101,7 +101,7 @@ impl TableSourceType {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SystemTimestamps {
     /// Creation timestamp of the resource within the given system.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Timestamp of the last modification of the resource or its metadata within
     /// a given system.
@@ -110,12 +110,12 @@ pub struct SystemTimestamps {
     /// timestamp.
     /// For example, BigQuery timestamps every metadata modification but not data
     /// or permission changes.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Expiration timestamp of the resource within the given system.
     ///
     /// Currently only applicable to BigQuery resources.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// A taxonomy is a collection of hierarchical policy tags that classify data
@@ -147,7 +147,7 @@ pub struct Taxonomy {
     /// Output only. Resource name of this taxonomy in URL format.
     ///
     /// Note: Policy tag manager generates unique taxonomy IDs.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. User-defined name of this taxonomy.
     ///
@@ -156,30 +156,40 @@ pub struct Taxonomy {
     /// when encoded in UTF-8.
     ///
     /// The taxonomy display name must be unique within an organization.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
     /// Optional. Description of this taxonomy. If not set, defaults to empty.
     ///
     /// The description must contain only Unicode characters, tabs, newlines,
     /// carriage returns, and page breaks, and be at most 2000 bytes long when
     /// encoded in UTF-8.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// Output only. Number of policy tags in this taxonomy.
-    #[prost(int32, tag="4")]
+    #[prost(int32, tag = "4")]
     pub policy_tag_count: i32,
     /// Output only. Creation and modification timestamps of this taxonomy.
-    #[prost(message, optional, tag="5")]
+    #[prost(message, optional, tag = "5")]
     pub taxonomy_timestamps: ::core::option::Option<SystemTimestamps>,
     /// Optional. A list of policy types that are activated for this taxonomy. If not set,
     /// defaults to an empty list.
-    #[prost(enumeration="taxonomy::PolicyType", repeated, packed="false", tag="6")]
+    #[prost(enumeration = "taxonomy::PolicyType", repeated, packed = "false", tag = "6")]
     pub activated_policy_types: ::prost::alloc::vec::Vec<i32>,
 }
 /// Nested message and enum types in `Taxonomy`.
 pub mod taxonomy {
     /// Defines policy types where the policy tags can be used for.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum PolicyType {
         /// Unspecified policy type.
@@ -218,21 +228,21 @@ pub struct PolicyTag {
     /// Output only. Resource name of this policy tag in the URL format.
     ///
     /// The policy tag manager generates unique taxonomy IDs and policy tag IDs.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. User-defined name of this policy tag.
     ///
     /// The name can't start or end with spaces and must be unique within the
     /// parent taxonomy, contain only Unicode letters, numbers, underscores, dashes
     /// and spaces, and be at most 200 bytes long when encoded in UTF-8.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
     /// Description of this policy tag. If not set, defaults to empty.
     ///
     /// The description must contain only Unicode characters,
     /// tabs, newlines, carriage returns and page breaks, and be at most 2000 bytes
     /// long when encoded in UTF-8.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// Resource name of this policy tag's parent policy tag. If empty, this is a
     /// top level tag. If not set, defaults to an empty string.
@@ -240,10 +250,10 @@ pub struct PolicyTag {
     /// For example, for the "LatLong" policy tag in the example above, this field
     /// contains the resource name of the "Geolocation" policy tag, and, for
     /// "Geolocation", this field is empty.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub parent_policy_tag: ::prost::alloc::string::String,
     /// Output only. Resource names of child policy tags of this policy tag.
-    #[prost(string, repeated, tag="5")]
+    #[prost(string, repeated, tag = "5")]
     pub child_policy_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for
@@ -251,10 +261,10 @@ pub struct PolicyTag {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateTaxonomyRequest {
     /// Required. Resource name of the project that the taxonomy will belong to.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The taxonomy to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub taxonomy: ::core::option::Option<Taxonomy>,
 }
 /// Request message for
@@ -264,7 +274,7 @@ pub struct DeleteTaxonomyRequest {
     /// Required. Resource name of the taxonomy to delete.
     ///
     /// Note: All policy tags in this taxonomy are also deleted.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -273,14 +283,14 @@ pub struct DeleteTaxonomyRequest {
 pub struct UpdateTaxonomyRequest {
     /// The taxonomy to update. You can update only its description, display name,
     /// and activated policy types.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub taxonomy: ::core::option::Option<Taxonomy>,
     /// Specifies fields to update. If not set, defaults to all fields you can
     /// update.
     ///
     /// For more information, see \[FieldMask\]
     /// (<https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>).
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -288,17 +298,17 @@ pub struct UpdateTaxonomyRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTaxonomiesRequest {
     /// Required. Resource name of the project to list the taxonomies of.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return. Must be a value between 1 and 1000
     /// inclusively. If not set, defaults to 50.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// The pagination token of the next results page. If not set,
     /// the first page is returned.
     ///
     /// The token is returned in the response to a previous list request.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for
@@ -306,11 +316,11 @@ pub struct ListTaxonomiesRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTaxonomiesResponse {
     /// Taxonomies that the project contains.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
     /// Pagination token of the next results page. Empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -318,7 +328,7 @@ pub struct ListTaxonomiesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTaxonomyRequest {
     /// Required. Resource name of the taxonomy to get.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -326,10 +336,10 @@ pub struct GetTaxonomyRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePolicyTagRequest {
     /// Required. Resource name of the taxonomy that the policy tag will belong to.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The policy tag to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub policy_tag: ::core::option::Option<PolicyTag>,
 }
 /// Request message for
@@ -339,7 +349,7 @@ pub struct DeletePolicyTagRequest {
     /// Required. Resource name of the policy tag to delete.
     ///
     /// Note: All of its descendant policy tags are also deleted.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -348,7 +358,7 @@ pub struct DeletePolicyTagRequest {
 pub struct UpdatePolicyTagRequest {
     /// The policy tag to update. You can update only its description, display
     /// name, and parent policy tag fields.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub policy_tag: ::core::option::Option<PolicyTag>,
     /// Specifies the fields to update.
     ///
@@ -356,7 +366,7 @@ pub struct UpdatePolicyTagRequest {
     /// If not set, defaults to all updatable fields.
     /// For more information, see \[FieldMask\]
     /// (<https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>).
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -364,18 +374,18 @@ pub struct UpdatePolicyTagRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPolicyTagsRequest {
     /// Required. Resource name of the taxonomy to list the policy tags of.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return. Must be a value between 1 and 1000
     /// inclusively.
     /// If not set, defaults to 50.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// The pagination token of the next results page. If not set, returns the
     /// first page.
     ///
     /// The token is returned in the response to a previous list request.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for
@@ -383,11 +393,11 @@ pub struct ListPolicyTagsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPolicyTagsResponse {
     /// The policy tags that belong to the taxonomy.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub policy_tags: ::prost::alloc::vec::Vec<PolicyTag>,
     /// Pagination token of the next results page. Empty if there are no
     /// more results in the list.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -395,7 +405,7 @@ pub struct ListPolicyTagsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPolicyTagRequest {
     /// Required. Resource name of the policy tag.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
@@ -760,17 +770,17 @@ pub mod policy_tag_manager_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SerializedTaxonomy {
     /// Required. Display name of the taxonomy. At most 200 bytes when encoded in UTF-8.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub display_name: ::prost::alloc::string::String,
     /// Description of the serialized taxonomy. At most 2000 bytes when
     /// encoded in UTF-8. If not set, defaults to an empty description.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub description: ::prost::alloc::string::String,
     /// Top level policy tags associated with the taxonomy, if any.
-    #[prost(message, repeated, tag="3")]
+    #[prost(message, repeated, tag = "3")]
     pub policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
     /// A list of policy types that are activated per taxonomy.
-    #[prost(enumeration="taxonomy::PolicyType", repeated, tag="4")]
+    #[prost(enumeration = "taxonomy::PolicyType", repeated, tag = "4")]
     pub activated_policy_types: ::prost::alloc::vec::Vec<i32>,
 }
 /// A nested protocol buffer that represents a policy tag and all its
@@ -780,19 +790,19 @@ pub struct SerializedPolicyTag {
     /// Resource name of the policy tag.
     ///
     /// This field is ignored when calling `ImportTaxonomies`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub policy_tag: ::prost::alloc::string::String,
     /// Required. Display name of the policy tag. At most 200 bytes when encoded
     /// in UTF-8.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
     /// Description of the serialized policy tag. At most
     /// 2000 bytes when encoded in UTF-8. If not set, defaults to an
     /// empty description.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// Children of the policy tag, if any.
-    #[prost(message, repeated, tag="4")]
+    #[prost(message, repeated, tag = "4")]
     pub child_policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
 }
 /// Request message for
@@ -800,10 +810,10 @@ pub struct SerializedPolicyTag {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReplaceTaxonomyRequest {
     /// Required. Resource name of the taxonomy to update.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. Taxonomy to update along with its child policy tags.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub serialized_taxonomy: ::core::option::Option<SerializedTaxonomy>,
 }
 /// Request message for
@@ -811,10 +821,10 @@ pub struct ReplaceTaxonomyRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportTaxonomiesRequest {
     /// Required. Resource name of project that the imported taxonomies will belong to.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Source taxonomies to import.
-    #[prost(oneof="import_taxonomies_request::Source", tags="2, 3")]
+    #[prost(oneof = "import_taxonomies_request::Source", tags = "2, 3")]
     pub source: ::core::option::Option<import_taxonomies_request::Source>,
 }
 /// Nested message and enum types in `ImportTaxonomiesRequest`.
@@ -823,10 +833,10 @@ pub mod import_taxonomies_request {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Inline source taxonomy to import.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         InlineSource(super::InlineSource),
         /// Cross-regional source taxonomy to import.
-        #[prost(message, tag="3")]
+        #[prost(message, tag = "3")]
         CrossRegionalSource(super::CrossRegionalSource),
     }
 }
@@ -834,7 +844,7 @@ pub mod import_taxonomies_request {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InlineSource {
     /// Required. Taxonomies to import.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
 }
 /// Cross-regional source used to import an existing taxonomy into a different
@@ -842,7 +852,7 @@ pub struct InlineSource {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CrossRegionalSource {
     /// Required. The resource name of the source taxonomy to import.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub taxonomy: ::prost::alloc::string::String,
 }
 /// Response message for
@@ -850,7 +860,7 @@ pub struct CrossRegionalSource {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportTaxonomiesResponse {
     /// Imported taxonomies.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
 }
 /// Request message for
@@ -858,13 +868,13 @@ pub struct ImportTaxonomiesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportTaxonomiesRequest {
     /// Required. Resource name of the project that the exported taxonomies belong to.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. Resource names of the taxonomies to export.
-    #[prost(string, repeated, tag="2")]
+    #[prost(string, repeated, tag = "2")]
     pub taxonomies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Required. Export destination for taxonomies.
-    #[prost(oneof="export_taxonomies_request::Destination", tags="3")]
+    #[prost(oneof = "export_taxonomies_request::Destination", tags = "3")]
     pub destination: ::core::option::Option<export_taxonomies_request::Destination>,
 }
 /// Nested message and enum types in `ExportTaxonomiesRequest`.
@@ -874,7 +884,7 @@ pub mod export_taxonomies_request {
     pub enum Destination {
         /// Serialized export taxonomies that contain all the policy
         /// tags as nested protocol buffers.
-        #[prost(bool, tag="3")]
+        #[prost(bool, tag = "3")]
         SerializedTaxonomies(bool),
     }
 }
@@ -883,7 +893,7 @@ pub mod export_taxonomies_request {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportTaxonomiesResponse {
     /// List of taxonomies and policy tags as nested protocol buffers.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
 }
 /// Generated client implementations.
@@ -1049,25 +1059,28 @@ pub struct Tag {
     ///
     /// Note: The tag itself might not be stored in the location specified in its
     /// name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The resource name of the tag template this tag uses. Example:
     ///
     /// `projects/{PROJECT_ID}/locations/{LOCATION}/tagTemplates/{TAG_TEMPLATE_ID}`
     ///
     /// This field cannot be modified after creation.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub template: ::prost::alloc::string::String,
     /// Output only. The display name of the tag template.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub template_display_name: ::prost::alloc::string::String,
     /// Required. Maps the ID of a tag field to its value and additional information
     /// about that field.
     ///
     /// Tag template defines valid field IDs. A tag
     /// must have at least 1 field and at most 500 fields.
-    #[prost(btree_map="string, message", tag="3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagField>,
+    #[prost(btree_map = "string, message", tag = "3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        TagField,
+    >,
     /// The scope within the parent resource that this tag is attached to. If not
     /// provided, the tag is attached to the parent resource itself.
     ///
@@ -1075,7 +1088,7 @@ pub struct Tag {
     /// to that scope.
     ///
     /// These fields cannot be updated after creation.
-    #[prost(oneof="tag::Scope", tags="4")]
+    #[prost(oneof = "tag::Scope", tags = "4")]
     pub scope: ::core::option::Option<tag::Scope>,
 }
 /// Nested message and enum types in `Tag`.
@@ -1094,7 +1107,7 @@ pub mod tag {
         ///
         /// To attach a tag to a nested column, separate column names with a dot
         /// (`.`). Example: `column.nested_column`.
-        #[prost(string, tag="4")]
+        #[prost(string, tag = "4")]
         Column(::prost::alloc::string::String),
     }
 }
@@ -1103,7 +1116,7 @@ pub mod tag {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TagField {
     /// Output only. The display name of this field.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub display_name: ::prost::alloc::string::String,
     /// Output only. The order of this field with respect to other fields in this tag. Can be
     /// set by \[Tag][google.cloud.datacatalog.v1.TagTemplateField.order\].
@@ -1111,10 +1124,10 @@ pub struct TagField {
     /// For example, a higher value can indicate a more important field.
     /// The value can be negative. Multiple fields can have the same order, and
     /// field orders within a tag don't have to be sequential.
-    #[prost(int32, tag="7")]
+    #[prost(int32, tag = "7")]
     pub order: i32,
     /// Required. The value of this field.
-    #[prost(oneof="tag_field::Kind", tags="2, 3, 4, 5, 6, 8")]
+    #[prost(oneof = "tag_field::Kind", tags = "2, 3, 4, 5, 6, 8")]
     pub kind: ::core::option::Option<tag_field::Kind>,
 }
 /// Nested message and enum types in `TagField`.
@@ -1123,37 +1136,37 @@ pub mod tag_field {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EnumValue {
         /// The display name of the enum value.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub display_name: ::prost::alloc::string::String,
     }
     /// Required. The value of this field.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         /// The value of a tag field with a double type.
-        #[prost(double, tag="2")]
+        #[prost(double, tag = "2")]
         DoubleValue(f64),
         /// The value of a tag field with a string type.
         ///
         /// The maximum length is 2000 UTF-8 characters.
-        #[prost(string, tag="3")]
+        #[prost(string, tag = "3")]
         StringValue(::prost::alloc::string::String),
         /// The value of a tag field with a boolean type.
-        #[prost(bool, tag="4")]
+        #[prost(bool, tag = "4")]
         BoolValue(bool),
         /// The value of a tag field with a timestamp type.
-        #[prost(message, tag="5")]
+        #[prost(message, tag = "5")]
         TimestampValue(::prost_types::Timestamp),
         /// The value of a tag field with an enum type.
         ///
         /// This value must be one of the allowed values listed in this enum.
-        #[prost(message, tag="6")]
+        #[prost(message, tag = "6")]
         EnumValue(EnumValue),
         /// The value of a tag field with a rich text type.
         ///
         /// The maximum length is 10 MiB as this value holds HTML descriptions
         /// including encoded images. The maximum length of the text without images
         /// is 100 KiB.
-        #[prost(string, tag="8")]
+        #[prost(string, tag = "8")]
         RichtextValue(::prost::alloc::string::String),
     }
 }
@@ -1172,14 +1185,14 @@ pub struct TagTemplate {
     ///
     /// Note: The tag template itself and its child resources might not be
     /// stored in the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Display name for this template. Defaults to an empty string.
     ///
     /// The name must contain only Unicode letters, numbers (0-9), underscores (_),
     /// dashes (-), spaces ( ), and can't start or end with spaces.
     /// The maximum length is 200 characters.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
     /// Indicates whether tags created with this template are public. Public tags
     /// do not require tag template access to appear in
@@ -1187,7 +1200,7 @@ pub struct TagTemplate {
     ///
     /// Additionally, you can search for a public tag by value with a
     /// simple search query in addition to using a ``tag:`` predicate.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub is_publicly_readable: bool,
     /// Required. Map of tag template field IDs to the settings for the field.
     /// This map is an exhaustive list of the allowed fields. The map must contain
@@ -1200,8 +1213,11 @@ pub struct TagTemplate {
     ///    underscores (_).
     /// * Must be at least 1 character and at most 64 characters long.
     /// * Must start with a letter or underscore.
-    #[prost(btree_map="string, message", tag="3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TagTemplateField>,
+    #[prost(btree_map = "string, message", tag = "3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        TagTemplateField,
+    >,
 }
 /// The template for an individual field within a tag template.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1216,23 +1232,23 @@ pub struct TagTemplateField {
     /// The name must contain only letters (a-z, A-Z), numbers (0-9),
     /// or underscores (_), and must start with a letter or underscore.
     /// The maximum length is 64 characters.
-    #[prost(string, tag="6")]
+    #[prost(string, tag = "6")]
     pub name: ::prost::alloc::string::String,
     /// The display name for this field. Defaults to an empty string.
     ///
     /// The name must contain only Unicode letters, numbers (0-9), underscores (_),
     /// dashes (-), spaces ( ), and can't start or end with spaces.
     /// The maximum length is 200 characters.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub display_name: ::prost::alloc::string::String,
     /// Required. The type of value this tag field can contain.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub r#type: ::core::option::Option<FieldType>,
     /// If true, this field is required. Defaults to false.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub is_required: bool,
     /// The description for this field. Defaults to an empty string.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub description: ::prost::alloc::string::String,
     /// The order of this field with respect to other fields in this tag
     /// template.
@@ -1240,13 +1256,13 @@ pub struct TagTemplateField {
     /// For example, a higher value can indicate a more important field.
     /// The value can be negative. Multiple fields can have the same order and
     /// field orders within a tag don't have to be sequential.
-    #[prost(int32, tag="5")]
+    #[prost(int32, tag = "5")]
     pub order: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FieldType {
     /// Required.
-    #[prost(oneof="field_type::TypeDecl", tags="1, 2")]
+    #[prost(oneof = "field_type::TypeDecl", tags = "1, 2")]
     pub type_decl: ::core::option::Option<field_type::TypeDecl>,
 }
 /// Nested message and enum types in `FieldType`.
@@ -1262,7 +1278,7 @@ pub mod field_type {
         /// The order of items in this set is preserved. This field can be used to
         /// create, remove, and reorder enum values. To rename enum values, use the
         /// `RenameTagTemplateFieldEnumValue` method.
-        #[prost(message, repeated, tag="1")]
+        #[prost(message, repeated, tag = "1")]
         pub allowed_values: ::prost::alloc::vec::Vec<enum_type::EnumValue>,
     }
     /// Nested message and enum types in `EnumType`.
@@ -1274,11 +1290,21 @@ pub mod field_type {
             /// The name must contain only Unicode letters, numbers (0-9), underscores
             /// (_), dashes (-), spaces ( ), and can't start or end with spaces. The
             /// maximum length is 200 characters.
-            #[prost(string, tag="1")]
+            #[prost(string, tag = "1")]
             pub display_name: ::prost::alloc::string::String,
         }
     }
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum PrimitiveType {
         /// The default invalid value for a type.
@@ -1314,10 +1340,10 @@ pub mod field_type {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TypeDecl {
         /// Primitive types, such as string, boolean, etc.
-        #[prost(enumeration="PrimitiveType", tag="1")]
+        #[prost(enumeration = "PrimitiveType", tag = "1")]
         PrimitiveType(i32),
         /// An enum type.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         EnumType(EnumType),
     }
 }
@@ -1325,23 +1351,33 @@ pub mod field_type {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSource {
     /// Service that physically stores the data.
-    #[prost(enumeration="data_source::Service", tag="1")]
+    #[prost(enumeration = "data_source::Service", tag = "1")]
     pub service: i32,
     /// Full name of a resource as defined by the service. For example:
     ///
     /// `//bigquery.googleapis.com/projects/{PROJECT_ID}/locations/{LOCATION}/datasets/{DATASET_ID}/tables/{TABLE_ID}`
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub resource: ::prost::alloc::string::String,
     /// Output only. Data Catalog entry name, if applicable.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub source_entry: ::prost::alloc::string::String,
-    #[prost(oneof="data_source::Properties", tags="4")]
+    #[prost(oneof = "data_source::Properties", tags = "4")]
     pub properties: ::core::option::Option<data_source::Properties>,
 }
 /// Nested message and enum types in `DataSource`.
 pub mod data_source {
     /// Name of a service that stores the data.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum Service {
         /// Default unknown service.
@@ -1367,7 +1403,7 @@ pub mod data_source {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Properties {
         /// Detailed properties of the underlying storage.
-        #[prost(message, tag="4")]
+        #[prost(message, tag = "4")]
         StorageProperties(super::StorageProperties),
     }
 }
@@ -1394,17 +1430,17 @@ pub struct StorageProperties {
     ///   * `gs://bucket_name/a/*/b`: matches all files in `bucket_name` that match
     ///                               the `a/*/b` pattern, such as `a/c/b`, `a/d/b`
     ///   * `gs://another_bucket/a.txt`: matches `gs://another_bucket/a.txt`
-    #[prost(string, repeated, tag="1")]
+    #[prost(string, repeated, tag = "1")]
     pub file_pattern: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// File type in MIME format, for example, `text/plain`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub file_type: ::prost::alloc::string::String,
 }
 /// Native schema used by a resource represented as an entry. Used by query
 /// engines for deserializing and parsing source data.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PhysicalSchema {
-    #[prost(oneof="physical_schema::Schema", tags="1, 2, 3, 4, 5, 6")]
+    #[prost(oneof = "physical_schema::Schema", tags = "1, 2, 3, 4, 5, 6")]
     pub schema: ::core::option::Option<physical_schema::Schema>,
 }
 /// Nested message and enum types in `PhysicalSchema`.
@@ -1413,54 +1449,51 @@ pub mod physical_schema {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AvroSchema {
         /// JSON source of the Avro schema.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub text: ::prost::alloc::string::String,
     }
     /// Schema in Thrift format.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ThriftSchema {
         /// Thrift IDL source of the schema.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub text: ::prost::alloc::string::String,
     }
     /// Schema in protocol buffer format.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ProtobufSchema {
         /// Protocol buffer source of the schema.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub text: ::prost::alloc::string::String,
     }
     /// Marks a Parquet-encoded data source.
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ParquetSchema {
-    }
+    pub struct ParquetSchema {}
     /// Marks an ORC-encoded data source.
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct OrcSchema {
-    }
+    pub struct OrcSchema {}
     /// Marks a CSV-encoded data source.
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CsvSchema {
-    }
+    pub struct CsvSchema {}
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Schema {
         /// Schema in Avro JSON format.
-        #[prost(message, tag="1")]
+        #[prost(message, tag = "1")]
         Avro(AvroSchema),
         /// Schema in Thrift format.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         Thrift(ThriftSchema),
         /// Schema in protocol buffer format.
-        #[prost(message, tag="3")]
+        #[prost(message, tag = "3")]
         Protobuf(ProtobufSchema),
         /// Marks a Parquet-encoded data source.
-        #[prost(message, tag="4")]
+        #[prost(message, tag = "4")]
         Parquet(ParquetSchema),
         /// Marks an ORC-encoded data source.
-        #[prost(message, tag="5")]
+        #[prost(message, tag = "5")]
         Orc(OrcSchema),
         /// Marks a CSV-encoded data source.
-        #[prost(message, tag="6")]
+        #[prost(message, tag = "6")]
         Csv(CsvSchema),
     }
 }
@@ -1496,24 +1529,24 @@ pub struct GcsFilesetSpec {
     /// You can combine wildcards to match complex sets of files, for example:
     ///
     /// `gs://bucket_name/\[a-m\]??.j*g`
-    #[prost(string, repeated, tag="1")]
+    #[prost(string, repeated, tag = "1")]
     pub file_patterns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Output only. Sample files contained in this fileset, not all files
     /// contained in this fileset are represented here.
-    #[prost(message, repeated, tag="2")]
+    #[prost(message, repeated, tag = "2")]
     pub sample_gcs_file_specs: ::prost::alloc::vec::Vec<GcsFileSpec>,
 }
 /// Specification of a single file in Cloud Storage.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsFileSpec {
     /// Required. Full file path. Example: `gs://bucket_name/a/b.txt`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub file_path: ::prost::alloc::string::String,
     /// Output only. Creation, modification, and expiration timestamps of a Cloud Storage file.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub gcs_timestamps: ::core::option::Option<SystemTimestamps>,
     /// Output only. File size in bytes.
-    #[prost(int64, tag="4")]
+    #[prost(int64, tag = "4")]
     pub size_bytes: i64,
 }
 /// Represents a schema, for example, a BigQuery, GoogleSQL, or Avro schema.
@@ -1523,7 +1556,7 @@ pub struct Schema {
     ///
     /// The overall maximum number of columns and nested columns is 10,000.
     /// The maximum nested depth is 15 levels.
-    #[prost(message, repeated, tag="2")]
+    #[prost(message, repeated, tag = "2")]
     pub columns: ::prost::alloc::vec::Vec<ColumnSchema>,
 }
 /// A column within a schema. Columns can be nested inside
@@ -1534,28 +1567,28 @@ pub struct ColumnSchema {
     ///
     /// Must be a UTF-8 string without dots (.).
     /// The maximum size is 64 bytes.
-    #[prost(string, tag="6")]
+    #[prost(string, tag = "6")]
     pub column: ::prost::alloc::string::String,
     /// Required. Type of the column.
     ///
     /// Must be a UTF-8 string with the maximum size of 128 bytes.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub r#type: ::prost::alloc::string::String,
     /// Optional. Description of the column. Default value is an empty string.
     ///
     /// The description must be a UTF-8 string with the maximum size of 2000
     /// bytes.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub description: ::prost::alloc::string::String,
     /// Optional. A column's mode indicates whether values in this column are required,
     /// nullable, or repeated.
     ///
     /// Only `NULLABLE`, `REQUIRED`, and `REPEATED` values are supported.
     /// Default mode is `NULLABLE`.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub mode: ::prost::alloc::string::String,
     /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
-    #[prost(message, repeated, tag="7")]
+    #[prost(message, repeated, tag = "7")]
     pub subcolumns: ::prost::alloc::vec::Vec<ColumnSchema>,
 }
 /// Detailed statistics on the entry's usage.
@@ -1571,16 +1604,16 @@ pub struct ColumnSchema {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UsageStats {
     /// The number of successful uses of the underlying entry.
-    #[prost(float, tag="1")]
+    #[prost(float, tag = "1")]
     pub total_completions: f32,
     /// The number of failed attempts to use the underlying entry.
-    #[prost(float, tag="2")]
+    #[prost(float, tag = "2")]
     pub total_failures: f32,
     /// The number of cancelled attempts to use the underlying entry.
-    #[prost(float, tag="3")]
+    #[prost(float, tag = "3")]
     pub total_cancellations: f32,
     /// Total time spent only on successful uses, in milliseconds.
-    #[prost(float, tag="4")]
+    #[prost(float, tag = "4")]
     pub total_execution_time_for_completions_millis: f32,
 }
 /// The set of all usage signals that Data Catalog stores.
@@ -1590,22 +1623,25 @@ pub struct UsageStats {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UsageSignal {
     /// The end timestamp of the duration of usage statistics.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Usage statistics over each of the predefined time ranges.
     ///
     /// Supported time ranges are `{"24H", "7D", "30D"}`.
-    #[prost(btree_map="string, message", tag="2")]
-    pub usage_within_time_range: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, UsageStats>,
+    #[prost(btree_map = "string, message", tag = "2")]
+    pub usage_within_time_range: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        UsageStats,
+    >,
 }
 /// Entry metadata relevant only to the user and private to them.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PersonalDetails {
     /// True if the entry is starred by the user; false otherwise.
-    #[prost(bool, tag="1")]
+    #[prost(bool, tag = "1")]
     pub starred: bool,
     /// Set if the entry is starred; unset otherwise.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub star_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// This enum lists all the systems that Data Catalog integrates with.
@@ -1642,19 +1678,31 @@ impl IntegratedSystem {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQueryConnectionSpec {
     /// The type of the BigQuery connection.
-    #[prost(enumeration="big_query_connection_spec::ConnectionType", tag="1")]
+    #[prost(enumeration = "big_query_connection_spec::ConnectionType", tag = "1")]
     pub connection_type: i32,
     /// True if there are credentials attached to the BigQuery connection; false
     /// otherwise.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub has_credential: bool,
-    #[prost(oneof="big_query_connection_spec::ConnectionSpec", tags="2")]
-    pub connection_spec: ::core::option::Option<big_query_connection_spec::ConnectionSpec>,
+    #[prost(oneof = "big_query_connection_spec::ConnectionSpec", tags = "2")]
+    pub connection_spec: ::core::option::Option<
+        big_query_connection_spec::ConnectionSpec,
+    >,
 }
 /// Nested message and enum types in `BigQueryConnectionSpec`.
 pub mod big_query_connection_spec {
     /// The type of the BigQuery connection.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum ConnectionType {
         /// Unspecified type.
@@ -1677,7 +1725,7 @@ pub mod big_query_connection_spec {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ConnectionSpec {
         /// Specification for the BigQuery connection to a Cloud SQL instance.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         CloudSql(super::CloudSqlBigQueryConnectionSpec),
     }
 }
@@ -1685,19 +1733,32 @@ pub mod big_query_connection_spec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudSqlBigQueryConnectionSpec {
     /// Cloud SQL instance ID in the format of `project:location:instance`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub instance_id: ::prost::alloc::string::String,
     /// Database name.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub database: ::prost::alloc::string::String,
     /// Type of the Cloud SQL database.
-    #[prost(enumeration="cloud_sql_big_query_connection_spec::DatabaseType", tag="3")]
+    #[prost(
+        enumeration = "cloud_sql_big_query_connection_spec::DatabaseType",
+        tag = "3"
+    )]
     pub r#type: i32,
 }
 /// Nested message and enum types in `CloudSqlBigQueryConnectionSpec`.
 pub mod cloud_sql_big_query_connection_spec {
     /// Supported Cloud SQL database types.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum DatabaseType {
         /// Unspecified database type.
@@ -1725,7 +1786,7 @@ pub mod cloud_sql_big_query_connection_spec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQueryRoutineSpec {
     /// Paths of the imported libraries.
-    #[prost(string, repeated, tag="1")]
+    #[prost(string, repeated, tag = "1")]
     pub imported_libraries: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Common Dataplex fields.
@@ -1734,25 +1795,25 @@ pub struct DataplexSpec {
     /// Fully qualified resource name of an asset in Dataplex, to which the
     /// underlying data source (Cloud Storage bucket or BigQuery dataset) of the
     /// entity is attached.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub asset: ::prost::alloc::string::String,
     /// Format of the data.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub data_format: ::core::option::Option<PhysicalSchema>,
     /// Compression format of the data, e.g., zip, gzip etc.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub compression_format: ::prost::alloc::string::String,
     /// Project ID of the underlying Cloud Storage or BigQuery data. Note that
     /// this may not be the same project as the correspondingly Dataplex lake /
     /// zone / asset.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub project_id: ::prost::alloc::string::String,
 }
 /// Entry specyfication for a Dataplex fileset.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataplexFilesetSpec {
     /// Common Dataplex fields.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub dataplex_spec: ::core::option::Option<DataplexSpec>,
 }
 /// Entry specification for a Dataplex table.
@@ -1762,13 +1823,13 @@ pub struct DataplexTableSpec {
     /// the same underlying data.
     ///
     /// External tables allow to query this data in those systems.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub external_tables: ::prost::alloc::vec::Vec<DataplexExternalTable>,
     /// Common Dataplex fields.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub dataplex_spec: ::core::option::Option<DataplexSpec>,
     /// Indicates if the table schema is managed by the user or not.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub user_managed: bool,
 }
 /// External table registered by Dataplex.
@@ -1781,16 +1842,16 @@ pub struct DataplexTableSpec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataplexExternalTable {
     /// Service in which the external table is registered.
-    #[prost(enumeration="IntegratedSystem", tag="1")]
+    #[prost(enumeration = "IntegratedSystem", tag = "1")]
     pub system: i32,
     /// Fully qualified name (FQN) of the external table.
-    #[prost(string, tag="28")]
+    #[prost(string, tag = "28")]
     pub fully_qualified_name: ::prost::alloc::string::String,
     /// Google Cloud resource name of the external table.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub google_cloud_resource: ::prost::alloc::string::String,
     /// Name of the Data Catalog entry representing the external table.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub data_catalog_entry: ::prost::alloc::string::String,
 }
 /// Result in the response to a search request.
@@ -1802,7 +1863,7 @@ pub struct SearchCatalogResult {
     ///
     /// You can use this field to determine which get method to call to fetch the
     /// full resource.
-    #[prost(enumeration="SearchResultType", tag="1")]
+    #[prost(enumeration = "SearchResultType", tag = "1")]
     pub search_result_type: i32,
     /// Sub-type of the search result.
     ///
@@ -1810,7 +1871,7 @@ pub struct SearchCatalogResult {
     /// specify in the `type` search predicate.
     ///
     /// Examples: `entry.table`, `entry.dataStream`, `tagTemplate`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub search_result_subtype: ::prost::alloc::string::String,
     /// The relative name of the resource in URL format.
     ///
@@ -1818,7 +1879,7 @@ pub struct SearchCatalogResult {
     ///
     ///   * `projects/{PROJECT_ID}/locations/{LOCATION_ID}/entryGroups/{ENTRY_GROUP_ID}/entries/{ENTRY_ID}`
     ///   * `projects/{PROJECT_ID}/tagTemplates/{TAG_TEMPLATE_ID}`
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub relative_resource_name: ::prost::alloc::string::String,
     /// The full name of the Google Cloud resource the entry belongs to.
     ///
@@ -1828,10 +1889,10 @@ pub struct SearchCatalogResult {
     /// Example:
     ///
     /// `//bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID`
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub linked_resource: ::prost::alloc::string::String,
     /// The last modification timestamp of the entry in the source system.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub modify_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Fully qualified name (FQN) of the resource.
     ///
@@ -1848,18 +1909,18 @@ pub struct SearchCatalogResult {
     /// Example for a DPMS table:
     ///
     /// `dataproc_metastore:PROJECT_ID.LOCATION_ID.INSTANCE_ID.DATABASE_ID.TABLE_ID`
-    #[prost(string, tag="10")]
+    #[prost(string, tag = "10")]
     pub fully_qualified_name: ::prost::alloc::string::String,
     /// The display name of the result.
-    #[prost(string, tag="12")]
+    #[prost(string, tag = "12")]
     pub display_name: ::prost::alloc::string::String,
     /// Entry description that can consist of several sentences or paragraphs that
     /// describe entry contents.
-    #[prost(string, tag="13")]
+    #[prost(string, tag = "13")]
     pub description: ::prost::alloc::string::String,
     /// The source system of the entry. Applicable only when the
     /// `search_result_type` is `ENTRY`.
-    #[prost(oneof="search_catalog_result::System", tags="8, 9")]
+    #[prost(oneof = "search_catalog_result::System", tags = "8, 9")]
     pub system: ::core::option::Option<search_catalog_result::System>,
 }
 /// Nested message and enum types in `SearchCatalogResult`.
@@ -1870,10 +1931,10 @@ pub mod search_catalog_result {
     pub enum System {
         /// Output only. The source system that Data Catalog automatically integrates  with, such
         /// as BigQuery, Cloud Pub/Sub, or Dataproc Metastore.
-        #[prost(enumeration="super::IntegratedSystem", tag="8")]
+        #[prost(enumeration = "super::IntegratedSystem", tag = "8")]
         IntegratedSystem(i32),
         /// Custom source system that you can manually integrate Data Catalog with.
-        #[prost(string, tag="9")]
+        #[prost(string, tag = "9")]
         UserSpecifiedSystem(::prost::alloc::string::String),
     }
 }
@@ -1913,7 +1974,7 @@ pub struct SearchCatalogRequest {
     /// The `scope` is invalid if `include_org_ids`, `include_project_ids` are
     /// empty AND `include_gcp_public_datasets` is set to `false`. In this case,
     /// the request returns an error.
-    #[prost(message, optional, tag="6")]
+    #[prost(message, optional, tag = "6")]
     pub scope: ::core::option::Option<search_catalog_request::Scope>,
     /// Optional. The query string with a minimum of 3 characters and specific syntax.
     /// For more information, see
@@ -1928,14 +1989,14 @@ pub struct SearchCatalogRequest {
     /// * `name:x`
     /// * `column:y`
     /// * `description:z`
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub query: ::prost::alloc::string::String,
     /// Number of results to return in a single search page.
     ///
     /// Can't be negative or 0, defaults to 10 in this case.
     /// The maximum number is 1000. If exceeded, throws an "invalid argument"
     /// exception.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. Pagination token that, if specified, returns the next page of search
     /// results. If empty, returns the first page.
@@ -1944,7 +2005,7 @@ pub struct SearchCatalogRequest {
     /// field of the response to a previous
     /// \[SearchCatalogRequest][google.cloud.datacatalog.v1.DataCatalog.SearchCatalog\]
     /// call.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Specifies the order of results.
     ///
@@ -1955,7 +2016,7 @@ pub struct SearchCatalogRequest {
     /// * `default` that can only be descending
     ///
     /// If this parameter is omitted, it defaults to the descending `relevance`.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `SearchCatalogRequest`.
@@ -1968,20 +2029,22 @@ pub mod search_catalog_request {
         /// To find your organization ID, follow the steps from
         /// [Creating and managing organizations]
         /// (/resource-manager/docs/creating-managing-organization).
-        #[prost(string, repeated, tag="2")]
+        #[prost(string, repeated, tag = "2")]
         pub include_org_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
         /// The list of project IDs to search within.
         ///
         /// For more information on the distinction between project names, IDs, and
         /// numbers, see \[Projects\](/docs/overview/#projects).
-        #[prost(string, repeated, tag="3")]
-        pub include_project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        #[prost(string, repeated, tag = "3")]
+        pub include_project_ids: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
         /// If `true`, include Google Cloud Platform (GCP) public datasets in
         /// search results. By default, they are excluded.
         ///
         /// See [Google Cloud Public Datasets](/public-datasets) for more
         /// information.
-        #[prost(bool, tag="7")]
+        #[prost(bool, tag = "7")]
         pub include_gcp_public_datasets: bool,
         /// Optional. The list of locations to search within. If empty, all locations are
         /// searched.
@@ -1993,17 +2056,19 @@ pub mod search_catalog_request {
         /// `SearchCatalogResponse.unreachable` field. To get additional information
         /// on the error, repeat the search request and set the location name as the
         /// value of this parameter.
-        #[prost(string, repeated, tag="16")]
-        pub restricted_locations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        #[prost(string, repeated, tag = "16")]
+        pub restricted_locations: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
         /// Optional. If `true`, search only among starred entries.
         ///
         /// By default, all results are returned, starred or not.
-        #[prost(bool, tag="18")]
+        #[prost(bool, tag = "18")]
         pub starred_only: bool,
         /// Optional. This field is deprecated. The search mechanism for public and private tag
         /// templates is the same.
         #[deprecated]
-        #[prost(bool, tag="19")]
+        #[prost(bool, tag = "19")]
         pub include_public_tag_templates: bool,
     }
 }
@@ -2012,11 +2077,11 @@ pub mod search_catalog_request {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchCatalogResponse {
     /// Search results.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub results: ::prost::alloc::vec::Vec<SearchCatalogResult>,
     /// Pagination token that can be used in subsequent calls to retrieve the next
     /// page of results.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Unreachable locations. Search results don't include data from those
     /// locations.
@@ -2024,7 +2089,7 @@ pub struct SearchCatalogResponse {
     /// To get additional information on an error, repeat the search request and
     /// restrict it to specific locations by setting the
     /// `SearchCatalogRequest.scope.restricted_locations` parameter.
-    #[prost(string, repeated, tag="6")]
+    #[prost(string, repeated, tag = "6")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for
@@ -2035,17 +2100,17 @@ pub struct CreateEntryGroupRequest {
     ///
     /// Note: The entry group itself and its child resources might not be
     /// stored in the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The ID of the entry group to create.
     ///
     /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
     /// underscores (_), and must start with a letter or underscore.
     /// The maximum size is 64 bytes when encoded in UTF-8.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub entry_group_id: ::prost::alloc::string::String,
     /// The entry group to create. Defaults to empty.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub entry_group: ::core::option::Option<EntryGroup>,
 }
 /// Request message for
@@ -2053,14 +2118,14 @@ pub struct CreateEntryGroupRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateEntryGroupRequest {
     /// Required. Updates for the entry group. The `name` field must be set.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub entry_group: ::core::option::Option<EntryGroup>,
     /// Names of fields whose values to overwrite on an entry group.
     ///
     /// If this parameter is absent or empty, all modifiable fields
     /// are overwritten. If such fields are non-required and omitted in the
     /// request body, their values are emptied.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2068,10 +2133,10 @@ pub struct UpdateEntryGroupRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEntryGroupRequest {
     /// Required. The name of the entry group to get.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// The fields to return. If empty or omitted, all fields are returned.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2079,10 +2144,10 @@ pub struct GetEntryGroupRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteEntryGroupRequest {
     /// Required. The name of the entry group to delete.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Optional. If true, deletes all entries in the entry group.
-    #[prost(bool, tag="2")]
+    #[prost(bool, tag = "2")]
     pub force: bool,
 }
 /// Request message for
@@ -2092,17 +2157,17 @@ pub struct ListEntryGroupsRequest {
     /// Required. The name of the location that contains the entry groups to list.
     ///
     /// Can be provided as a URL.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. The maximum number of items to return.
     ///
     /// Default is 10. Maximum limit is 1000.
     /// Throws an invalid argument if `page_size` is greater than 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. Pagination token that specifies the next page to return.
     /// If empty, returns the first page.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for
@@ -2110,11 +2175,11 @@ pub struct ListEntryGroupsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntryGroupsResponse {
     /// Entry group details.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub entry_groups: ::prost::alloc::vec::Vec<EntryGroup>,
     /// Pagination token to specify in the next call to retrieve the next page of
     /// results. Empty if there are no more items.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2125,17 +2190,17 @@ pub struct CreateEntryRequest {
     ///
     /// Note: The entry itself and its child resources might not be stored in
     /// the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The ID of the entry to create.
     ///
     /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
     /// and underscores (_).
     /// The maximum size is 64 bytes when encoded in UTF-8.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub entry_id: ::prost::alloc::string::String,
     /// Required. The entry to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub entry: ::core::option::Option<Entry>,
 }
 /// Request message for
@@ -2143,7 +2208,7 @@ pub struct CreateEntryRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateEntryRequest {
     /// Required. Updates for the entry. The `name` field must be set.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub entry: ::core::option::Option<Entry>,
     /// Names of fields whose values to overwrite on an entry.
     ///
@@ -2174,7 +2239,7 @@ pub struct UpdateEntryRequest {
     /// * `user_specified_system`
     /// * `linked_resource`
     /// * `source_system_timestamps`
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2182,7 +2247,7 @@ pub struct UpdateEntryRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteEntryRequest {
     /// Required. The name of the entry to delete.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2190,7 +2255,7 @@ pub struct DeleteEntryRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEntryRequest {
     /// Required. The name of the entry to get.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2199,7 +2264,7 @@ pub struct GetEntryRequest {
 pub struct LookupEntryRequest {
     /// Required. A full name, SQL name, or a fully qualified name of a
     /// Google Cloud Platform resource.
-    #[prost(oneof="lookup_entry_request::TargetName", tags="1, 3, 5")]
+    #[prost(oneof = "lookup_entry_request::TargetName", tags = "1, 3, 5")]
     pub target_name: ::core::option::Option<lookup_entry_request::TargetName>,
 }
 /// Nested message and enum types in `LookupEntryRequest`.
@@ -2216,7 +2281,7 @@ pub mod lookup_entry_request {
         ///
         ///   * `//bigquery.googleapis.com/projects/{PROJECT_ID}/datasets/{DATASET_ID}/tables/{TABLE_ID}`
         ///   * `//pubsub.googleapis.com/projects/{PROJECT_ID}/topics/{TOPIC_ID}`
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         LinkedResource(::prost::alloc::string::String),
         /// The SQL name of the entry. SQL names are case-sensitive.
         ///
@@ -2231,7 +2296,7 @@ pub mod lookup_entry_request {
         /// Identifiers (`*_ID`) should comply with the
         /// [Lexical structure in Standard SQL]
         /// (<https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical>).
-        #[prost(string, tag="3")]
+        #[prost(string, tag = "3")]
         SqlResource(::prost::alloc::string::String),
         /// Fully qualified name (FQN) of the resource.
         ///
@@ -2248,7 +2313,7 @@ pub mod lookup_entry_request {
         /// Example for a DPMS table:
         ///
         /// `dataproc_metastore:{PROJECT_ID}.{LOCATION_ID}.{INSTANCE_ID}.{DATABASE_ID}.{TABLE_ID}`
-        #[prost(string, tag="5")]
+        #[prost(string, tag = "5")]
         FullyQualifiedName(::prost::alloc::string::String),
     }
 }
@@ -2268,7 +2333,7 @@ pub struct Entry {
     ///
     /// Note: The entry itself and its child resources might not be
     /// stored in the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// The resource this metadata entry refers to.
     ///
@@ -2288,7 +2353,7 @@ pub struct Entry {
     /// underscores (_), periods (.), colons (:), slashes (/), dashes (-),
     /// and hashes (#).
     /// The maximum size is 200 bytes when encoded in UTF-8.
-    #[prost(string, tag="9")]
+    #[prost(string, tag = "9")]
     pub linked_resource: ::prost::alloc::string::String,
     /// Fully qualified name (FQN) of the resource. Set automatically for entries
     /// representing resources from synced systems. Settable only during creation
@@ -2309,7 +2374,7 @@ pub struct Entry {
     /// Example for a DPMS table:
     ///
     /// `dataproc_metastore:{PROJECT_ID}.{LOCATION_ID}.{INSTANCE_ID}.{DATABASE_ID}.{TABLE_ID}`
-    #[prost(string, tag="29")]
+    #[prost(string, tag = "29")]
     pub fully_qualified_name: ::prost::alloc::string::String,
     /// Display name of an entry.
     ///
@@ -2317,7 +2382,7 @@ pub struct Entry {
     /// dashes (-), spaces ( ), and can't start or end with spaces.
     /// The maximum size is 200 bytes when encoded in UTF-8.
     /// Default value is an empty string.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub display_name: ::prost::alloc::string::String,
     /// Entry description that can consist of several sentences or paragraphs
     /// that describe entry contents.
@@ -2327,13 +2392,13 @@ pub struct Entry {
     /// (CR), and page breaks (FF).
     /// The maximum size is 2000 bytes when encoded in UTF-8.
     /// Default value is an empty string.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub description: ::prost::alloc::string::String,
     /// Business Context of the entry. Not supported for BigQuery datasets
-    #[prost(message, optional, tag="37")]
+    #[prost(message, optional, tag = "37")]
     pub business_context: ::core::option::Option<BusinessContext>,
     /// Schema of the entry. An entry might not have any schema attached to it.
-    #[prost(message, optional, tag="5")]
+    #[prost(message, optional, tag = "5")]
     pub schema: ::core::option::Option<Schema>,
     /// Timestamps from the underlying resource, not from the Data Catalog
     /// entry.
@@ -2341,32 +2406,35 @@ pub struct Entry {
     /// Output only when the entry has a type listed in the `EntryType` enum.
     /// For entries with `user_specified_type`, this field is optional and defaults
     /// to an empty timestamp.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub source_system_timestamps: ::core::option::Option<SystemTimestamps>,
     /// Output only. Resource usage statistics.
-    #[prost(message, optional, tag="13")]
+    #[prost(message, optional, tag = "13")]
     pub usage_signal: ::core::option::Option<UsageSignal>,
     /// Cloud labels attached to the entry.
     ///
     /// In Data Catalog, you can create and modify labels attached only to custom
     /// entries. Synced entries have unmodifiable labels that come from the source
     /// system.
-    #[prost(btree_map="string, string", tag="14")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "14")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Output only. Physical location of the entry.
-    #[prost(message, optional, tag="20")]
+    #[prost(message, optional, tag = "20")]
     pub data_source: ::core::option::Option<DataSource>,
     /// Output only. Additional information related to the entry. Private to the current user.
-    #[prost(message, optional, tag="26")]
+    #[prost(message, optional, tag = "26")]
     pub personal_details: ::core::option::Option<PersonalDetails>,
     /// Required. Entry type.
-    #[prost(oneof="entry::EntryType", tags="2, 16")]
+    #[prost(oneof = "entry::EntryType", tags = "2, 16")]
     pub entry_type: ::core::option::Option<entry::EntryType>,
     /// The source system of the entry.
-    #[prost(oneof="entry::System", tags="17, 18")]
+    #[prost(oneof = "entry::System", tags = "17, 18")]
     pub system: ::core::option::Option<entry::System>,
     /// Type specification.
-    #[prost(oneof="entry::TypeSpec", tags="6, 12, 15")]
+    #[prost(oneof = "entry::TypeSpec", tags = "6, 12, 15")]
     pub type_spec: ::core::option::Option<entry::TypeSpec>,
     /// Type- and system-specific information. Specifications for types contain
     /// fields common to all entries of a given type, and sub-specifications with
@@ -2374,7 +2442,7 @@ pub struct Entry {
     ///
     /// When extending the API with new types and systems, use this field instead
     /// of the legacy `type_spec`.
-    #[prost(oneof="entry::Spec", tags="24, 27, 28, 33")]
+    #[prost(oneof = "entry::Spec", tags = "24, 27, 28, 33")]
     pub spec: ::core::option::Option<entry::Spec>,
 }
 /// Nested message and enum types in `Entry`.
@@ -2387,7 +2455,7 @@ pub mod entry {
         ///
         /// Currently, only `FILESET` enum value is allowed. All other entries
         /// created in Data Catalog must use the `user_specified_type`.
-        #[prost(enumeration="super::EntryType", tag="2")]
+        #[prost(enumeration = "super::EntryType", tag = "2")]
         Type(i32),
         /// Custom entry type that doesn't match any of the values allowed for input
         /// and listed in the `EntryType` enum.
@@ -2402,7 +2470,7 @@ pub mod entry {
         /// * Must begin with a letter or underscore.
         /// * Can only contain letters, numbers, and underscores.
         /// * Must be at least 1 character and at most 64 characters long.
-        #[prost(string, tag="16")]
+        #[prost(string, tag = "16")]
         UserSpecifiedType(::prost::alloc::string::String),
     }
     /// The source system of the entry.
@@ -2410,7 +2478,7 @@ pub mod entry {
     pub enum System {
         /// Output only. Indicates the entry's source system that Data Catalog
         /// integrates with, such as BigQuery, Pub/Sub, or Dataproc Metastore.
-        #[prost(enumeration="super::IntegratedSystem", tag="17")]
+        #[prost(enumeration = "super::IntegratedSystem", tag = "17")]
         IntegratedSystem(i32),
         /// Indicates the entry's source system that Data Catalog doesn't
         /// automatically integrate with.
@@ -2421,7 +2489,7 @@ pub mod entry {
         /// * Must begin with a letter or underscore.
         /// * Can only contain letters, numbers, and underscores.
         /// * Must be at least 1 character and at most 64 characters long.
-        #[prost(string, tag="18")]
+        #[prost(string, tag = "18")]
         UserSpecifiedSystem(::prost::alloc::string::String),
     }
     /// Type specification.
@@ -2429,18 +2497,18 @@ pub mod entry {
     pub enum TypeSpec {
         /// Specification that applies to a Cloud Storage fileset. Valid only
         /// for entries with the `FILESET` type.
-        #[prost(message, tag="6")]
+        #[prost(message, tag = "6")]
         GcsFilesetSpec(super::GcsFilesetSpec),
         /// Specification that applies to a BigQuery table. Valid only for
         /// entries with the `TABLE` type.
-        #[prost(message, tag="12")]
+        #[prost(message, tag = "12")]
         BigqueryTableSpec(super::BigQueryTableSpec),
         /// Specification for a group of BigQuery tables with the `\[prefix\]YYYYMMDD`
         /// name pattern.
         ///
         /// For more information, see [Introduction to partitioned tables]
         /// (<https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>).
-        #[prost(message, tag="15")]
+        #[prost(message, tag = "15")]
         BigqueryDateShardedSpec(super::BigQueryDateShardedSpec),
     }
     /// Type- and system-specific information. Specifications for types contain
@@ -2453,19 +2521,19 @@ pub mod entry {
     pub enum Spec {
         /// Specification that applies to a table resource. Valid only
         /// for entries with the `TABLE` type.
-        #[prost(message, tag="24")]
+        #[prost(message, tag = "24")]
         DatabaseTableSpec(super::DatabaseTableSpec),
         /// Specification that applies to a data source connection. Valid only
         /// for entries with the `DATA_SOURCE_CONNECTION` type.
-        #[prost(message, tag="27")]
+        #[prost(message, tag = "27")]
         DataSourceConnectionSpec(super::DataSourceConnectionSpec),
         /// Specification that applies to a user-defined function or procedure. Valid
         /// only for entries with the `ROUTINE` type.
-        #[prost(message, tag="28")]
+        #[prost(message, tag = "28")]
         RoutineSpec(super::RoutineSpec),
         /// Specification that applies to a fileset resource. Valid only
         /// for entries with the `FILESET` type.
-        #[prost(message, tag="33")]
+        #[prost(message, tag = "33")]
         FilesetSpec(super::FilesetSpec),
     }
 }
@@ -2474,17 +2542,27 @@ pub mod entry {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DatabaseTableSpec {
     /// Type of this table.
-    #[prost(enumeration="database_table_spec::TableType", tag="1")]
+    #[prost(enumeration = "database_table_spec::TableType", tag = "1")]
     pub r#type: i32,
     /// Fields specific to a Dataplex table and present only in the Dataplex table
     /// entries.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub dataplex_table: ::core::option::Option<DataplexTableSpec>,
 }
 /// Nested message and enum types in `DatabaseTableSpec`.
 pub mod database_table_spec {
     /// Type of the table.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum TableType {
         /// Default unknown table type.
@@ -2514,7 +2592,7 @@ pub mod database_table_spec {
 pub struct FilesetSpec {
     /// Fields specific to a Dataplex fileset and present only in the Dataplex
     /// fileset entries.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub dataplex_fileset: ::core::option::Option<DataplexFilesetSpec>,
 }
 /// Specification that applies to a data source connection. Valid only for
@@ -2522,7 +2600,7 @@ pub struct FilesetSpec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSourceConnectionSpec {
     /// Fields specific to BigQuery connections.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub bigquery_connection_spec: ::core::option::Option<BigQueryConnectionSpec>,
 }
 /// Specification that applies to a routine. Valid only for
@@ -2530,27 +2608,27 @@ pub struct DataSourceConnectionSpec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RoutineSpec {
     /// The type of the routine.
-    #[prost(enumeration="routine_spec::RoutineType", tag="1")]
+    #[prost(enumeration = "routine_spec::RoutineType", tag = "1")]
     pub routine_type: i32,
     /// The language the routine is written in. The exact value depends on the
     /// source system. For BigQuery routines, possible values are:
     ///
     /// * `SQL`
     /// * `JAVASCRIPT`
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub language: ::prost::alloc::string::String,
     /// Arguments of the routine.
-    #[prost(message, repeated, tag="3")]
+    #[prost(message, repeated, tag = "3")]
     pub routine_arguments: ::prost::alloc::vec::Vec<routine_spec::Argument>,
     /// Return type of the argument. The exact value depends on the source system
     /// and the language.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub return_type: ::prost::alloc::string::String,
     /// The body of the routine.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub definition_body: ::prost::alloc::string::String,
     /// Contains fields specific to the source system.
-    #[prost(oneof="routine_spec::SystemSpec", tags="6")]
+    #[prost(oneof = "routine_spec::SystemSpec", tags = "6")]
     pub system_spec: ::core::option::Option<routine_spec::SystemSpec>,
 }
 /// Nested message and enum types in `RoutineSpec`.
@@ -2560,20 +2638,30 @@ pub mod routine_spec {
     pub struct Argument {
         /// The name of the argument. A return argument of a function might not have
         /// a name.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub name: ::prost::alloc::string::String,
         /// Specifies whether the argument is input or output.
-        #[prost(enumeration="argument::Mode", tag="2")]
+        #[prost(enumeration = "argument::Mode", tag = "2")]
         pub mode: i32,
         /// Type of the argument. The exact value depends on the source system and
         /// the language.
-        #[prost(string, tag="3")]
+        #[prost(string, tag = "3")]
         pub r#type: ::prost::alloc::string::String,
     }
     /// Nested message and enum types in `Argument`.
     pub mod argument {
         /// The input or output mode of the argument.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
         #[repr(i32)]
         pub enum Mode {
             /// Unspecified mode.
@@ -2601,7 +2689,17 @@ pub mod routine_spec {
         }
     }
     /// The fine-grained type of the routine.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum RoutineType {
         /// Unspecified type.
@@ -2628,7 +2726,7 @@ pub mod routine_spec {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SystemSpec {
         /// Fields specific for BigQuery routines.
-        #[prost(message, tag="6")]
+        #[prost(message, tag = "6")]
         BigqueryRoutineSpec(super::BigQueryRoutineSpec),
     }
 }
@@ -2636,10 +2734,10 @@ pub mod routine_spec {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BusinessContext {
     /// Entry overview fields for rich text descriptions of entries.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub entry_overview: ::core::option::Option<EntryOverview>,
     /// Contact people for the entry.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub contacts: ::core::option::Option<Contacts>,
 }
 /// Entry overview fields for rich text descriptions of entries.
@@ -2652,14 +2750,14 @@ pub struct EntryOverview {
     /// The maximum length is 10 MiB as this value holds HTML descriptions
     /// including encoded images. The maximum length of the text without images
     /// is 100 KiB.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub overview: ::prost::alloc::string::String,
 }
 /// Contact people for the entry.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Contacts {
     /// The list of contact people for the entry.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub people: ::prost::alloc::vec::Vec<contacts::Person>,
 }
 /// Nested message and enum types in `Contacts`.
@@ -2668,11 +2766,11 @@ pub mod contacts {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Person {
         /// Designation of the person, for example, Data Steward.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub designation: ::prost::alloc::string::String,
         /// Email of the person in the format of `john.doe@xyz`,
         /// `<john.doe@xyz>`, or `John Doe<john.doe@xyz>`.
-        #[prost(string, tag="2")]
+        #[prost(string, tag = "2")]
         pub email: ::prost::alloc::string::String,
     }
 }
@@ -2686,19 +2784,19 @@ pub struct EntryGroup {
     ///
     /// Note: The entry group itself and its child resources might not be
     /// stored in the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// A short name to identify the entry group, for example,
     /// "analytics data - jan 2011". Default value is an empty string.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
     /// Entry group description. Can consist of several sentences or
     /// paragraphs that describe the entry group contents.
     /// Default value is an empty string.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// Output only. Timestamps of the entry group. Default value is empty.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag = "4")]
     pub data_catalog_timestamps: ::core::option::Option<SystemTimestamps>,
 }
 /// Request message for
@@ -2707,17 +2805,17 @@ pub struct EntryGroup {
 pub struct CreateTagTemplateRequest {
     /// Required. The name of the project and the template location
     /// \[region\](<https://cloud.google.com/data-catalog/docs/concepts/regions>).
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The ID of the tag template to create.
     ///
     /// The ID must contain only lowercase letters (a-z), numbers (0-9),
     /// or underscores (_), and must start with a letter or underscore.
     /// The maximum size is 64 bytes when encoded in UTF-8.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub tag_template_id: ::prost::alloc::string::String,
     /// Required. The tag template to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub tag_template: ::core::option::Option<TagTemplate>,
 }
 /// Request message for
@@ -2725,7 +2823,7 @@ pub struct CreateTagTemplateRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTagTemplateRequest {
     /// Required. The name of the tag template to get.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2733,7 +2831,7 @@ pub struct GetTagTemplateRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateTagTemplateRequest {
     /// Required. The template to update. The `name` field must be set.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub tag_template: ::core::option::Option<TagTemplate>,
     /// Names of fields whose values to overwrite on a tag template. Currently,
     /// only `display_name` and `is_publicly_readable` can be overwritten.
@@ -2744,7 +2842,7 @@ pub struct UpdateTagTemplateRequest {
     ///
     /// Note: Updating the `is_publicly_readable` field may require up to 12
     /// hours to take effect in search results.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2752,12 +2850,12 @@ pub struct UpdateTagTemplateRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteTagTemplateRequest {
     /// Required. The name of the tag template to delete.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. If true, deletes all tags that use this template.
     ///
     /// Currently, `true` is the only supported value.
-    #[prost(bool, tag="2")]
+    #[prost(bool, tag = "2")]
     pub force: bool,
 }
 /// Request message for
@@ -2771,10 +2869,10 @@ pub struct CreateTagRequest {
     ///
     /// Note: The tag and its child resources might not be stored in
     /// the location specified in its name.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The tag to create.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub tag: ::core::option::Option<Tag>,
 }
 /// Request message for
@@ -2782,7 +2880,7 @@ pub struct CreateTagRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateTagRequest {
     /// Required. The updated tag. The "name" field must be set.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub tag: ::core::option::Option<Tag>,
     /// Names of fields whose values to overwrite on a tag. Currently, a tag has
     /// the only modifiable field with the name `fields`.
@@ -2790,7 +2888,7 @@ pub struct UpdateTagRequest {
     /// In general, if this parameter is absent or empty, all modifiable fields
     /// are overwritten. If such fields are non-required and omitted in the
     /// request body, their values are emptied.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2798,7 +2896,7 @@ pub struct UpdateTagRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteTagRequest {
     /// Required. The name of the tag to delete.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2807,7 +2905,7 @@ pub struct DeleteTagRequest {
 pub struct CreateTagTemplateFieldRequest {
     /// Required. The name of the project and the template location
     /// \[region\](<https://cloud.google.com/data-catalog/docs/concepts/regions>).
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The ID of the tag template field to create.
     ///
@@ -2817,10 +2915,10 @@ pub struct CreateTagTemplateFieldRequest {
     /// (0-9), underscores (_) and dashes (-). Field IDs must be at least 1
     /// character long and at most 128 characters long. Field IDs must also be
     /// unique within their template.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub tag_template_field_id: ::prost::alloc::string::String,
     /// Required. The tag template field to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub tag_template_field: ::core::option::Option<TagTemplateField>,
 }
 /// Request message for
@@ -2828,10 +2926,10 @@ pub struct CreateTagTemplateFieldRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateTagTemplateFieldRequest {
     /// Required. The name of the tag template field.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The template to update.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub tag_template_field: ::core::option::Option<TagTemplateField>,
     /// Optional. Names of fields whose values to overwrite on an individual field of a tag
     /// template. The following fields are modifiable:
@@ -2849,7 +2947,7 @@ pub struct UpdateTagTemplateFieldRequest {
     ///
     /// Additionally, updating a template field from optional to required is
     /// *not* allowed.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for
@@ -2857,10 +2955,10 @@ pub struct UpdateTagTemplateFieldRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RenameTagTemplateFieldRequest {
     /// Required. The name of the tag template field.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The new ID of this tag template field. For example, `my_new_field`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub new_tag_template_field_id: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2868,10 +2966,10 @@ pub struct RenameTagTemplateFieldRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RenameTagTemplateFieldEnumValueRequest {
     /// Required. The name of the enum field value.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The new display name of the enum value. For example, `my_new_enum_value`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub new_enum_value_display_name: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2879,12 +2977,12 @@ pub struct RenameTagTemplateFieldEnumValueRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteTagTemplateFieldRequest {
     /// Required. The name of the tag template field to delete.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. If true, deletes this field from any tags that use it.
     ///
     /// Currently, `true` is the only supported value.
-    #[prost(bool, tag="2")]
+    #[prost(bool, tag = "2")]
     pub force: bool,
 }
 /// Request message for
@@ -2896,14 +2994,14 @@ pub struct ListTagsRequest {
     /// The resource can be an \[Entry][google.cloud.datacatalog.v1.Entry\]
     /// or an \[EntryGroup][google.cloud.datacatalog.v1.EntryGroup\]
     /// (without `/entries/{entries}` at the end).
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of tags to return. Default is 10. Maximum limit is 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Pagination token that specifies the next page to return. If empty, the
     /// first page is returned.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for
@@ -2911,11 +3009,11 @@ pub struct ListTagsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTagsResponse {
     /// \[Tag][google.cloud.datacatalog.v1.Tag\] details.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub tags: ::prost::alloc::vec::Vec<Tag>,
     /// Pagination token of the next results page. Empty if there are
     /// no more items in results.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2925,22 +3023,22 @@ pub struct ListEntriesRequest {
     /// Required. The name of the entry group that contains the entries to list.
     ///
     /// Can be provided in URL format.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of items to return. Default is 10. Maximum limit is
     /// 1000. Throws an invalid argument if `page_size` is more than 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Pagination token that specifies the next page to return. If empty, the
     /// first page is returned.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// The fields to return for each entry. If empty or omitted, all
     /// fields are returned.
     ///
     /// For example, to return a list of entries with only the `name` field,
     /// set `read_mask` to only one path with the `name` value.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag = "4")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Response message for
@@ -2948,11 +3046,11 @@ pub struct ListEntriesRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntriesResponse {
     /// Entry details.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub entries: ::prost::alloc::vec::Vec<Entry>,
     /// Pagination token of the next results page. Empty if there are no more items
     /// in results.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for
@@ -2960,38 +3058,36 @@ pub struct ListEntriesResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StarEntryRequest {
     /// Required. The name of the entry to mark as starred.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Response message for
 /// \[StarEntry][google.cloud.datacatalog.v1.DataCatalog.StarEntry\].
 /// Empty for now
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StarEntryResponse {
-}
+pub struct StarEntryResponse {}
 /// Request message for
 /// \[UnstarEntry][google.cloud.datacatalog.v1.DataCatalog.UnstarEntry\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UnstarEntryRequest {
     /// Required. The name of the entry to mark as **not** starred.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Response message for
 /// \[UnstarEntry][google.cloud.datacatalog.v1.DataCatalog.UnstarEntry\].
 /// Empty for now
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UnstarEntryResponse {
-}
+pub struct UnstarEntryResponse {}
 /// Request message for
 /// \[ModifyEntryOverview][google.cloud.datacatalog.v1.DataCatalog.ModifyEntryOverview\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ModifyEntryOverviewRequest {
     /// Required. The full resource name of the entry.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The new value for the Entry Overview.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub entry_overview: ::core::option::Option<EntryOverview>,
 }
 /// Request message for
@@ -2999,10 +3095,10 @@ pub struct ModifyEntryOverviewRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ModifyEntryContactsRequest {
     /// Required. The full resource name of the entry.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The new value for the Contacts.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub contacts: ::core::option::Option<Contacts>,
 }
 /// The enum field that lists all the types of entry resources in Data

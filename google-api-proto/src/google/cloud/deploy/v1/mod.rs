@@ -28,25 +28,25 @@ impl Type {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobRunNotificationEvent {
     /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// The name of the `JobRun`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub job_run: ::prost::alloc::string::String,
     /// Unique identifier of the `DeliveryPipeline`.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub pipeline_uid: ::prost::alloc::string::String,
     /// Unique identifier of the `Release`.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub release_uid: ::prost::alloc::string::String,
     /// Unique identifier of the `Rollout`.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub rollout_uid: ::prost::alloc::string::String,
     /// ID of the `Target`.
-    #[prost(string, tag="6")]
+    #[prost(string, tag = "6")]
     pub target_id: ::prost::alloc::string::String,
     /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="7")]
+    #[prost(enumeration = "Type", tag = "7")]
     pub r#type: i32,
 }
 /// Payload proto for "clouddeploy.googleapis.com/target_notification"
@@ -55,13 +55,13 @@ pub struct JobRunNotificationEvent {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetNotificationEvent {
     /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// The name of the `Target`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub target: ::prost::alloc::string::String,
     /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="3")]
+    #[prost(enumeration = "Type", tag = "3")]
     pub r#type: i32,
 }
 /// Payload proto for "clouddeploy.googleapis.com/rollout_notification"
@@ -70,22 +70,22 @@ pub struct TargetNotificationEvent {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RolloutNotificationEvent {
     /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// Unique identifier of the `DeliveryPipeline`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub pipeline_uid: ::prost::alloc::string::String,
     /// Unique identifier of the `Release`.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub release_uid: ::prost::alloc::string::String,
     /// The name of the `Rollout`.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub rollout: ::prost::alloc::string::String,
     /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="5")]
+    #[prost(enumeration = "Type", tag = "5")]
     pub r#type: i32,
     /// ID of the `Target` that the rollout is deployed to.
-    #[prost(string, tag="6")]
+    #[prost(string, tag = "6")]
     pub target_id: ::prost::alloc::string::String,
 }
 /// Payload proto for "clouddeploy.googleapis.com/release_render"
@@ -94,10 +94,10 @@ pub struct RolloutNotificationEvent {
 pub struct ReleaseRenderEvent {
     /// Debug message for when a render transition occurs. Provides further
     /// details as rendering progresses through render states.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// The name of the `Release`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub release: ::prost::alloc::string::String,
 }
 /// Payload proto for "clouddeploy.googleapis.com/release_notification"
@@ -106,13 +106,13 @@ pub struct ReleaseRenderEvent {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseNotificationEvent {
     /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// The name of the `Release`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub release: ::prost::alloc::string::String,
     /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="3")]
+    #[prost(enumeration = "Type", tag = "3")]
     pub r#type: i32,
 }
 /// A `DeliveryPipeline` resource in the Google Cloud Deploy API.
@@ -123,18 +123,21 @@ pub struct ReleaseNotificationEvent {
 pub struct DeliveryPipeline {
     /// Optional. Name of the `DeliveryPipeline`. Format is projects/{project}/
     /// locations/{location}/deliveryPipelines/\[a-z][a-z0-9\-\]{0,62}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Unique identifier of the `DeliveryPipeline`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub uid: ::prost::alloc::string::String,
     /// Description of the `DeliveryPipeline`. Max length is 255 characters.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// User annotations. These attributes can only be set and used by the
     /// user, and not by Google Cloud Deploy.
-    #[prost(btree_map="string, string", tag="4")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Labels are attributes that can be set and used by both the
     /// user and by Google Cloud Deploy. Labels must meet the following
     /// constraints:
@@ -147,28 +150,31 @@ pub struct DeliveryPipeline {
     /// * Each resource is limited to a maximum of 64 labels.
     ///
     /// Both keys and values are additionally constrained to be <= 128 bytes.
-    #[prost(btree_map="string, string", tag="5")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Output only. Time at which the pipeline was created.
-    #[prost(message, optional, tag="6")]
+    #[prost(message, optional, tag = "6")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Most recent time at which the pipeline was updated.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Information around the state of the Delivery Pipeline.
-    #[prost(message, optional, tag="11")]
+    #[prost(message, optional, tag = "11")]
     pub condition: ::core::option::Option<PipelineCondition>,
     /// This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="10")]
+    #[prost(string, tag = "10")]
     pub etag: ::prost::alloc::string::String,
     /// When suspended, no new releases or rollouts can be created,
     /// but in-progress ones will complete.
-    #[prost(bool, tag="12")]
+    #[prost(bool, tag = "12")]
     pub suspended: bool,
     /// The ordering configuration of the `DeliveryPipeline`.
-    #[prost(oneof="delivery_pipeline::Pipeline", tags="8")]
+    #[prost(oneof = "delivery_pipeline::Pipeline", tags = "8")]
     pub pipeline: ::core::option::Option<delivery_pipeline::Pipeline>,
 }
 /// Nested message and enum types in `DeliveryPipeline`.
@@ -178,7 +184,7 @@ pub mod delivery_pipeline {
     pub enum Pipeline {
         /// SerialPipeline defines a sequential set of stages for a
         /// `DeliveryPipeline`.
-        #[prost(message, tag="8")]
+        #[prost(message, tag = "8")]
         SerialPipeline(super::SerialPipeline),
     }
 }
@@ -187,7 +193,7 @@ pub mod delivery_pipeline {
 pub struct SerialPipeline {
     /// Each stage specifies configuration for a `Target`. The ordering
     /// of this list defines the promotion flow.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub stages: ::prost::alloc::vec::Vec<Stage>,
 }
 /// Stage specifies a location to which to deploy.
@@ -199,21 +205,21 @@ pub struct Stage {
     /// `projects/project/locations/location/targets/my-target`). The location of
     /// the `Target` is inferred to be the same as the location of the
     /// `DeliveryPipeline` that contains this `Stage`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub target_id: ::prost::alloc::string::String,
     /// Skaffold profiles to use when rendering the manifest for this stage's
     /// `Target`.
-    #[prost(string, repeated, tag="2")]
+    #[prost(string, repeated, tag = "2")]
     pub profiles: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Optional. The strategy to use for a `Rollout` to this stage.
-    #[prost(message, optional, tag="5")]
+    #[prost(message, optional, tag = "5")]
     pub strategy: ::core::option::Option<Strategy>,
 }
 /// Strategy contains deployment strategy information.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Strategy {
     /// Deployment strategy details.
-    #[prost(oneof="strategy::DeploymentStrategy", tags="1")]
+    #[prost(oneof = "strategy::DeploymentStrategy", tags = "1")]
     pub deployment_strategy: ::core::option::Option<strategy::DeploymentStrategy>,
 }
 /// Nested message and enum types in `Strategy`.
@@ -223,7 +229,7 @@ pub mod strategy {
     pub enum DeploymentStrategy {
         /// Standard deployment strategy executes a single deploy and allows
         /// verifying the deployment.
-        #[prost(message, tag="1")]
+        #[prost(message, tag = "1")]
         Standard(super::Standard),
     }
 }
@@ -231,7 +237,7 @@ pub mod strategy {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Standard {
     /// Whether to verify a deployment.
-    #[prost(bool, tag="1")]
+    #[prost(bool, tag = "1")]
     pub verify: bool,
 }
 /// PipelineReadyCondition contains information around the status of the
@@ -242,10 +248,10 @@ pub struct PipelineReadyCondition {
     /// in `PipelineCondition` is in an invalid state. Iterate over those
     /// conditions and see which condition(s) has status = false to find out what
     /// is wrong with the Pipeline.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub status: bool,
     /// Last time the condition was updated.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag = "4")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// TargetsPresentCondition contains information on any Targets defined in
@@ -253,24 +259,24 @@ pub struct PipelineReadyCondition {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetsPresentCondition {
     /// True if there aren't any missing Targets.
-    #[prost(bool, tag="1")]
+    #[prost(bool, tag = "1")]
     pub status: bool,
     /// The list of Target names that are missing. For example,
     /// projects/{project_id}/locations/{location_name}/targets/{target_name}.
-    #[prost(string, repeated, tag="2")]
+    #[prost(string, repeated, tag = "2")]
     pub missing_targets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Last time the condition was updated.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag = "4")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// PipelineCondition contains all conditions relevant to a Delivery Pipeline.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PipelineCondition {
     /// Details around the Pipeline's overall status.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub pipeline_ready_condition: ::core::option::Option<PipelineReadyCondition>,
     /// Detalis around targets enumerated in the pipeline.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub targets_present_condition: ::core::option::Option<TargetsPresentCondition>,
 }
 /// The request object for `ListDeliveryPipelines`.
@@ -278,41 +284,41 @@ pub struct PipelineCondition {
 pub struct ListDeliveryPipelinesRequest {
     /// Required. The parent, which owns this collection of pipelines. Format must be
     /// projects/{project_id}/locations/{location_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of pipelines to return. The service may return
     /// fewer than this value. If unspecified, at most 50 pipelines will
     /// be returned. The maximum value is 1000; values above 1000 will be set
     /// to 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// A page token, received from a previous `ListDeliveryPipelines` call.
     /// Provide this to retrieve the subsequent page.
     ///
     /// When paginating, all other provided parameters match
     /// the call that provided the page token.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Filter pipelines to be returned. See <https://google.aip.dev/160> for more
     /// details.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
     /// Field to sort by. See <https://google.aip.dev/132#ordering> for more details.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListDeliveryPipelines`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDeliveryPipelinesResponse {
     /// The `DeliveryPipeline` objects.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub delivery_pipelines: ::prost::alloc::vec::Vec<DeliveryPipeline>,
     /// A token, which can be sent as `page_token` to retrieve the next page.
     /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
+    #[prost(string, repeated, tag = "3")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetDeliveryPipeline`
@@ -320,7 +326,7 @@ pub struct ListDeliveryPipelinesResponse {
 pub struct GetDeliveryPipelineRequest {
     /// Required. Name of the `DeliveryPipeline`. Format must be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateDeliveryPipeline`.
@@ -328,13 +334,13 @@ pub struct GetDeliveryPipelineRequest {
 pub struct CreateDeliveryPipelineRequest {
     /// Required. The parent collection in which the `DeliveryPipeline` should be created.
     /// Format should be projects/{project_id}/locations/{location_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. ID of the `DeliveryPipeline`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub delivery_pipeline_id: ::prost::alloc::string::String,
     /// Required. The `DeliveryPipeline` to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub delivery_pipeline: ::core::option::Option<DeliveryPipeline>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -349,11 +355,11 @@ pub struct CreateDeliveryPipelineRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// The request object for `UpdateDeliveryPipeline`.
@@ -364,10 +370,10 @@ pub struct UpdateDeliveryPipelineRequest {
     /// The fields specified in the update_mask are relative to the resource, not
     /// the full request. A field will be overwritten if it is in the mask. If the
     /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Required. The `DeliveryPipeline` to update.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub delivery_pipeline: ::core::option::Option<DeliveryPipeline>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -382,15 +388,15 @@ pub struct UpdateDeliveryPipelineRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, updating a `DeliveryPipeline` that does not exist will
     /// result in the creation of a new `DeliveryPipeline`.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub allow_missing: bool,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// The request object for `DeleteDeliveryPipeline`.
@@ -398,7 +404,7 @@ pub struct UpdateDeliveryPipelineRequest {
 pub struct DeleteDeliveryPipelineRequest {
     /// Required. The name of the `DeliveryPipeline` to delete. Format should be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -413,25 +419,25 @@ pub struct DeleteDeliveryPipelineRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, then deleting an already deleted or non-existing
     /// `DeliveryPipeline` will succeed.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub allow_missing: bool,
     /// Optional. If set, validate the request and preview the review, but do not actually
     /// post it.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub validate_only: bool,
     /// Optional. If set to true, all child resources under this pipeline will also be
     /// deleted. Otherwise, the request will only work if the pipeline has
     /// no child resources.
-    #[prost(bool, tag="6")]
+    #[prost(bool, tag = "6")]
     pub force: bool,
     /// Optional. This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub etag: ::prost::alloc::string::String,
 }
 /// A `Target` resource in the Google Cloud Deploy API.
@@ -442,23 +448,26 @@ pub struct DeleteDeliveryPipelineRequest {
 pub struct Target {
     /// Optional. Name of the `Target`. Format is
     /// projects/{project}/locations/{location}/targets/\[a-z][a-z0-9\-\]{0,62}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Resource id of the `Target`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub target_id: ::prost::alloc::string::String,
     /// Output only. Unique identifier of the `Target`.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub uid: ::prost::alloc::string::String,
     /// Optional. Description of the `Target`. Max length is 255 characters.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub description: ::prost::alloc::string::String,
     /// Optional. User annotations. These attributes can only be set and used by the
     /// user, and not by Google Cloud Deploy. See
     /// <https://google.aip.dev/128#annotations> for more details such as format and
     /// size limitations.
-    #[prost(btree_map="string, string", tag="5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Optional. Labels are attributes that can be set and used by both the
     /// user and by Google Cloud Deploy. Labels must meet the following
     /// constraints:
@@ -471,21 +480,24 @@ pub struct Target {
     /// * Each resource is limited to a maximum of 64 labels.
     ///
     /// Both keys and values are additionally constrained to be <= 128 bytes.
-    #[prost(btree_map="string, string", tag="6")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "6")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Optional. Whether or not the `Target` requires approval.
-    #[prost(bool, tag="13")]
+    #[prost(bool, tag = "13")]
     pub require_approval: bool,
     /// Output only. Time at which the `Target` was created.
-    #[prost(message, optional, tag="8")]
+    #[prost(message, optional, tag = "8")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Most recent time at which the `Target` was updated.
-    #[prost(message, optional, tag="9")]
+    #[prost(message, optional, tag = "9")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Optional. This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="12")]
+    #[prost(string, tag = "12")]
     pub etag: ::prost::alloc::string::String,
     /// Configurations for all execution that relates to this `Target`.
     /// Each `ExecutionEnvironmentUsage` value may only be used in a single
@@ -494,11 +506,11 @@ pub struct Target {
     /// `RENDER` and `DEPLOY` `ExecutionEnvironmentUsage` values.
     /// When no configurations are specified, execution will use the default
     /// specified in `DefaultPool`.
-    #[prost(message, repeated, tag="16")]
+    #[prost(message, repeated, tag = "16")]
     pub execution_configs: ::prost::alloc::vec::Vec<ExecutionConfig>,
     /// Destination to which the Skaffold configuration is applied during a
     /// rollout.
-    #[prost(oneof="target::DeploymentTarget", tags="15, 17, 18")]
+    #[prost(oneof = "target::DeploymentTarget", tags = "15, 17, 18")]
     pub deployment_target: ::core::option::Option<target::DeploymentTarget>,
 }
 /// Nested message and enum types in `Target`.
@@ -508,13 +520,13 @@ pub mod target {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum DeploymentTarget {
         /// Information specifying a GKE Cluster.
-        #[prost(message, tag="15")]
+        #[prost(message, tag = "15")]
         Gke(super::GkeCluster),
         /// Information specifying an Anthos Cluster.
-        #[prost(message, tag="17")]
+        #[prost(message, tag = "17")]
         AnthosCluster(super::AnthosCluster),
         /// Information specifying a Cloud Run deployment target.
-        #[prost(message, tag="18")]
+        #[prost(message, tag = "18")]
         Run(super::CloudRunLocation),
     }
 }
@@ -522,38 +534,55 @@ pub mod target {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecutionConfig {
     /// Required. Usages when this configuration should be applied.
-    #[prost(enumeration="execution_config::ExecutionEnvironmentUsage", repeated, packed="false", tag="1")]
+    #[prost(
+        enumeration = "execution_config::ExecutionEnvironmentUsage",
+        repeated,
+        packed = "false",
+        tag = "1"
+    )]
     pub usages: ::prost::alloc::vec::Vec<i32>,
     /// Optional. The resource name of the `WorkerPool`, with the format
     /// `projects/{project}/locations/{location}/workerPools/{worker_pool}`.
     /// If this optional field is unspecified, the default Cloud Build pool will be
     /// used.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub worker_pool: ::prost::alloc::string::String,
     /// Optional. Google service account to use for execution. If unspecified,
     /// the project execution service account
     /// (<PROJECT_NUMBER>-compute@developer.gserviceaccount.com) is used.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub service_account: ::prost::alloc::string::String,
     /// Optional. Cloud Storage location in which to store execution outputs. This can
     /// either be a bucket ("gs://my-bucket") or a path within a bucket
     /// ("gs://my-bucket/my-dir").
     /// If unspecified, a default bucket located in the same region will be used.
-    #[prost(string, tag="6")]
+    #[prost(string, tag = "6")]
     pub artifact_storage: ::prost::alloc::string::String,
     /// Optional. Execution timeout for a Cloud Build Execution. This must be between 10m and
     /// 24h in seconds format.
     /// If unspecified, a default timeout of 1h is used.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub execution_timeout: ::core::option::Option<::prost_types::Duration>,
     /// Details of the environment.
-    #[prost(oneof="execution_config::ExecutionEnvironment", tags="2, 3")]
-    pub execution_environment: ::core::option::Option<execution_config::ExecutionEnvironment>,
+    #[prost(oneof = "execution_config::ExecutionEnvironment", tags = "2, 3")]
+    pub execution_environment: ::core::option::Option<
+        execution_config::ExecutionEnvironment,
+    >,
 }
 /// Nested message and enum types in `ExecutionConfig`.
 pub mod execution_config {
     /// Possible usages of this configuration.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum ExecutionEnvironmentUsage {
         /// Default value. This value is unused.
@@ -572,7 +601,9 @@ pub mod execution_config {
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ExecutionEnvironmentUsage::Unspecified => "EXECUTION_ENVIRONMENT_USAGE_UNSPECIFIED",
+                ExecutionEnvironmentUsage::Unspecified => {
+                    "EXECUTION_ENVIRONMENT_USAGE_UNSPECIFIED"
+                }
                 ExecutionEnvironmentUsage::Render => "RENDER",
                 ExecutionEnvironmentUsage::Deploy => "DEPLOY",
                 ExecutionEnvironmentUsage::Verify => "VERIFY",
@@ -583,10 +614,10 @@ pub mod execution_config {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ExecutionEnvironment {
         /// Optional. Use default Cloud Build pool.
-        #[prost(message, tag="2")]
+        #[prost(message, tag = "2")]
         DefaultPool(super::DefaultPool),
         /// Optional. Use private Cloud Build pool.
-        #[prost(message, tag="3")]
+        #[prost(message, tag = "3")]
         PrivatePool(super::PrivatePool),
     }
 }
@@ -596,13 +627,13 @@ pub struct DefaultPool {
     /// Optional. Google service account to use for execution. If unspecified,
     /// the project execution service account
     /// (<PROJECT_NUMBER>-compute@developer.gserviceaccount.com) will be used.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub service_account: ::prost::alloc::string::String,
     /// Optional. Cloud Storage location where execution outputs should be stored. This can
     /// either be a bucket ("gs://my-bucket") or a path within a bucket
     /// ("gs://my-bucket/my-dir").
     /// If unspecified, a default bucket located in the same region will be used.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub artifact_storage: ::prost::alloc::string::String,
 }
 /// Execution using a private Cloud Build pool.
@@ -610,18 +641,18 @@ pub struct DefaultPool {
 pub struct PrivatePool {
     /// Required. Resource name of the Cloud Build worker pool to use. The format is
     /// `projects/{project}/locations/{location}/workerPools/{pool}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub worker_pool: ::prost::alloc::string::String,
     /// Optional. Google service account to use for execution. If unspecified,
     /// the project execution service account
     /// (<PROJECT_NUMBER>-compute@developer.gserviceaccount.com) will be used.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub service_account: ::prost::alloc::string::String,
     /// Optional. Cloud Storage location where execution outputs should be stored. This can
     /// either be a bucket ("gs://my-bucket") or a path within a bucket
     /// ("gs://my-bucket/my-dir").
     /// If unspecified, a default bucket located in the same region will be used.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub artifact_storage: ::prost::alloc::string::String,
 }
 /// Information specifying a GKE Cluster.
@@ -629,7 +660,7 @@ pub struct PrivatePool {
 pub struct GkeCluster {
     /// Information specifying a GKE Cluster. Format is
     /// `projects/{project_id}/locations/{location_id}/clusters/{cluster_id}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub cluster: ::prost::alloc::string::String,
     /// Optional. If true, `cluster` is accessed using the private IP address of the control
     /// plane endpoint. Otherwise, the default IP address of the control plane
@@ -639,7 +670,7 @@ pub struct GkeCluster {
     ///
     /// Only specify this option when `cluster` is a [private GKE
     /// cluster](<https://cloud.google.com/kubernetes-engine/docs/concepts/private-cluster-concept>).
-    #[prost(bool, tag="2")]
+    #[prost(bool, tag = "2")]
     pub internal_ip: bool,
 }
 /// Information specifying an Anthos Cluster.
@@ -648,7 +679,7 @@ pub struct AnthosCluster {
     /// Membership of the GKE Hub-registered cluster to which to apply the Skaffold
     /// configuration. Format is
     /// `projects/{project}/locations/{location}/memberships/{membership_name}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub membership: ::prost::alloc::string::String,
 }
 /// Information specifying where to deploy a Cloud Run Service.
@@ -656,7 +687,7 @@ pub struct AnthosCluster {
 pub struct CloudRunLocation {
     /// Required. The location for the Cloud Run Service. Format must be
     /// `projects/{project}/locations/{location}`.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub location: ::prost::alloc::string::String,
 }
 /// The request object for `ListTargets`.
@@ -664,40 +695,40 @@ pub struct CloudRunLocation {
 pub struct ListTargetsRequest {
     /// Required. The parent, which owns this collection of targets. Format must be
     /// projects/{project_id}/locations/{location_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. The maximum number of `Target` objects to return. The service may return
     /// fewer than this value. If unspecified, at most 50 `Target` objects will be
     /// returned. The maximum value is 1000; values above 1000 will be set to 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A page token, received from a previous `ListTargets` call.
     /// Provide this to retrieve the subsequent page.
     ///
     /// When paginating, all other provided parameters match
     /// the call that provided the page token.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. Filter targets to be returned. See <https://google.aip.dev/160> for more
     /// details.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. Field to sort by. See <https://google.aip.dev/132#ordering> for more details.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListTargets`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTargetsResponse {
     /// The `Target` objects.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub targets: ::prost::alloc::vec::Vec<Target>,
     /// A token, which can be sent as `page_token` to retrieve the next page.
     /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
+    #[prost(string, repeated, tag = "3")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetTarget`.
@@ -705,7 +736,7 @@ pub struct ListTargetsResponse {
 pub struct GetTargetRequest {
     /// Required. Name of the `Target`. Format must be
     /// projects/{project_id}/locations/{location_name}/targets/{target_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateTarget`.
@@ -714,13 +745,13 @@ pub struct CreateTargetRequest {
     /// Required. The parent collection in which the `Target` should be created.
     /// Format should be
     /// projects/{project_id}/locations/{location_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. ID of the `Target`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub target_id: ::prost::alloc::string::String,
     /// Required. The `Target` to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub target: ::core::option::Option<Target>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -735,11 +766,11 @@ pub struct CreateTargetRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// The request object for `UpdateTarget`.
@@ -750,10 +781,10 @@ pub struct UpdateTargetRequest {
     /// The fields specified in the update_mask are relative to the resource, not
     /// the full request. A field will be overwritten if it is in the mask. If the
     /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Required. The `Target` to update.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub target: ::core::option::Option<Target>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -768,15 +799,15 @@ pub struct UpdateTargetRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, updating a `Target` that does not exist will
     /// result in the creation of a new `Target`.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub allow_missing: bool,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// The request object for `DeleteTarget`.
@@ -784,7 +815,7 @@ pub struct UpdateTargetRequest {
 pub struct DeleteTargetRequest {
     /// Required. The name of the `Target` to delete. Format should be
     /// projects/{project_id}/locations/{location_name}/targets/{target_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -799,20 +830,20 @@ pub struct DeleteTargetRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, then deleting an already deleted or non-existing
     /// DeliveryPipeline will succeed.
-    #[prost(bool, tag="3")]
+    #[prost(bool, tag = "3")]
     pub allow_missing: bool,
     /// Optional. If set, validate the request and preview the review, but do not actually
     /// post it.
-    #[prost(bool, tag="4")]
+    #[prost(bool, tag = "4")]
     pub validate_only: bool,
     /// Optional. This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub etag: ::prost::alloc::string::String,
 }
 /// A `Release` resource in the Google Cloud Deploy API.
@@ -824,20 +855,23 @@ pub struct Release {
     /// Optional. Name of the `Release`. Format is projects/{project}/
     /// locations/{location}/deliveryPipelines/{deliveryPipeline}/
     /// releases/\[a-z][a-z0-9\-\]{0,62}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Unique identifier of the `Release`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub uid: ::prost::alloc::string::String,
     /// Description of the `Release`. Max length is 255 characters.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// User annotations. These attributes can only be set and used by the
     /// user, and not by Google Cloud Deploy. See
     /// <https://google.aip.dev/128#annotations> for more details such as format and
     /// size limitations.
-    #[prost(btree_map="string, string", tag="4")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Labels are attributes that can be set and used by both the
     /// user and by Google Cloud Deploy. Labels must meet the following
     /// constraints:
@@ -850,57 +884,66 @@ pub struct Release {
     /// * Each resource is limited to a maximum of 64 labels.
     ///
     /// Both keys and values are additionally constrained to be <= 128 bytes.
-    #[prost(btree_map="string, string", tag="5")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Output only. Indicates whether this is an abandoned release.
-    #[prost(bool, tag="23")]
+    #[prost(bool, tag = "23")]
     pub abandoned: bool,
     /// Output only. Time at which the `Release` was created.
-    #[prost(message, optional, tag="6")]
+    #[prost(message, optional, tag = "6")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the render began.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub render_start_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the render completed.
-    #[prost(message, optional, tag="8")]
+    #[prost(message, optional, tag = "8")]
     pub render_end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Cloud Storage URI of tar.gz archive containing Skaffold configuration.
-    #[prost(string, tag="17")]
+    #[prost(string, tag = "17")]
     pub skaffold_config_uri: ::prost::alloc::string::String,
     /// Filepath of the Skaffold config inside of the config URI.
-    #[prost(string, tag="9")]
+    #[prost(string, tag = "9")]
     pub skaffold_config_path: ::prost::alloc::string::String,
     /// List of artifacts to pass through to Skaffold command.
-    #[prost(message, repeated, tag="10")]
+    #[prost(message, repeated, tag = "10")]
     pub build_artifacts: ::prost::alloc::vec::Vec<BuildArtifact>,
     /// Output only. Snapshot of the parent pipeline taken at release creation time.
-    #[prost(message, optional, tag="11")]
+    #[prost(message, optional, tag = "11")]
     pub delivery_pipeline_snapshot: ::core::option::Option<DeliveryPipeline>,
     /// Output only. Snapshot of the targets taken at release creation time.
-    #[prost(message, repeated, tag="12")]
+    #[prost(message, repeated, tag = "12")]
     pub target_snapshots: ::prost::alloc::vec::Vec<Target>,
     /// Output only. Current state of the render operation.
-    #[prost(enumeration="release::RenderState", tag="13")]
+    #[prost(enumeration = "release::RenderState", tag = "13")]
     pub render_state: i32,
     /// This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="16")]
+    #[prost(string, tag = "16")]
     pub etag: ::prost::alloc::string::String,
     /// The Skaffold version to use when operating on this release, such as
     /// "1.20.0". Not all versions are valid; Google Cloud Deploy supports a
     /// specific set of versions.
     ///
     /// If unset, the most recent supported Skaffold version will be used.
-    #[prost(string, tag="19")]
+    #[prost(string, tag = "19")]
     pub skaffold_version: ::prost::alloc::string::String,
     /// Output only. Map from target ID to the target artifacts created
     /// during the render operation.
-    #[prost(btree_map="string, message", tag="20")]
-    pub target_artifacts: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, TargetArtifact>,
+    #[prost(btree_map = "string, message", tag = "20")]
+    pub target_artifacts: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        TargetArtifact,
+    >,
     /// Output only. Map from target ID to details of the render operation for that target.
-    #[prost(btree_map="string, message", tag="22")]
-    pub target_renders: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, release::TargetRender>,
+    #[prost(btree_map = "string, message", tag = "22")]
+    pub target_renders: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        release::TargetRender,
+    >,
 }
 /// Nested message and enum types in `Release`.
 pub mod release {
@@ -910,23 +953,33 @@ pub mod release {
         /// Output only. The resource name of the Cloud Build `Build` object that is used to
         /// render the manifest for this target. Format is
         /// `projects/{project}/locations/{location}/builds/{build}`.
-        #[prost(string, tag="1")]
+        #[prost(string, tag = "1")]
         pub rendering_build: ::prost::alloc::string::String,
         /// Output only. Current state of the render operation for this Target.
-        #[prost(enumeration="target_render::TargetRenderState", tag="2")]
+        #[prost(enumeration = "target_render::TargetRenderState", tag = "2")]
         pub rendering_state: i32,
         /// Output only. Reason this render failed. This will always be unspecified while the
         /// render in progress.
-        #[prost(enumeration="target_render::FailureCause", tag="4")]
+        #[prost(enumeration = "target_render::FailureCause", tag = "4")]
         pub failure_cause: i32,
         /// Output only. Additional information about the render failure, if available.
-        #[prost(string, tag="5")]
+        #[prost(string, tag = "5")]
         pub failure_message: ::prost::alloc::string::String,
     }
     /// Nested message and enum types in `TargetRender`.
     pub mod target_render {
         /// Valid states of the render operation.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
         #[repr(i32)]
         pub enum TargetRenderState {
             /// The render operation state is unspecified.
@@ -953,7 +1006,17 @@ pub mod release {
             }
         }
         /// Well-known rendering failures.
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
         #[repr(i32)]
         pub enum FailureCause {
             /// No reason for failure is specified.
@@ -981,7 +1044,17 @@ pub mod release {
         }
     }
     /// Valid states of the render operation.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum RenderState {
         /// The render state is unspecified.
@@ -1012,24 +1085,24 @@ pub mod release {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildArtifact {
     /// Image name in Skaffold configuration.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub image: ::prost::alloc::string::String,
     /// Image tag to use. This will generally be the full path to an image, such
     /// as "gcr.io/my-project/busybox:1.2.3" or
     /// "gcr.io/my-project/busybox@sha256:abc123".
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub tag: ::prost::alloc::string::String,
 }
 /// The artifacts produced by a target render operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetArtifact {
     /// Output only. File path of the resolved Skaffold configuration relative to the URI.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub skaffold_config_path: ::prost::alloc::string::String,
     /// Output only. File path of the rendered manifest relative to the URI.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub manifest_path: ::prost::alloc::string::String,
-    #[prost(oneof="target_artifact::Uri", tags="4")]
+    #[prost(oneof = "target_artifact::Uri", tags = "4")]
     pub uri: ::core::option::Option<target_artifact::Uri>,
 }
 /// Nested message and enum types in `TargetArtifact`.
@@ -1039,7 +1112,7 @@ pub mod target_artifact {
         /// Output only. URI of a directory containing the artifacts. This contains
         /// deployment configuration used by Skaffold during a rollout, and all
         /// paths are relative to this location.
-        #[prost(string, tag="4")]
+        #[prost(string, tag = "4")]
         ArtifactUri(::prost::alloc::string::String),
     }
 }
@@ -1047,40 +1120,40 @@ pub mod target_artifact {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReleasesRequest {
     /// Required. The `DeliveryPipeline` which owns this collection of `Release` objects.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. The maximum number of `Release` objects to return. The service may return
     /// fewer than this value. If unspecified, at most 50 `Release` objects will be
     /// returned. The maximum value is 1000; values above 1000 will be set to 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A page token, received from a previous `ListReleases` call.
     /// Provide this to retrieve the subsequent page.
     ///
     /// When paginating, all other provided parameters match
     /// the call that provided the page token.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. Filter releases to be returned. See <https://google.aip.dev/160> for more
     /// details.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. Field to sort by. See <https://google.aip.dev/132#ordering> for more details.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListReleases`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReleasesResponse {
     /// The `Release` objects.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub releases: ::prost::alloc::vec::Vec<Release>,
     /// A token, which can be sent as `page_token` to retrieve the next page.
     /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
+    #[prost(string, repeated, tag = "3")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetRelease`.
@@ -1088,7 +1161,7 @@ pub struct ListReleasesResponse {
 pub struct GetReleaseRequest {
     /// Required. Name of the `Release`. Format must be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}/releases/{release_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateRelease`,
@@ -1097,13 +1170,13 @@ pub struct CreateReleaseRequest {
     /// Required. The parent collection in which the `Release` should be created.
     /// Format should be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. ID of the `Release`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub release_id: ::prost::alloc::string::String,
     /// Required. The `Release` to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub release: ::core::option::Option<Release>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -1118,11 +1191,11 @@ pub struct CreateReleaseRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// A `Rollout` resource in the Google Cloud Deploy API.
@@ -1133,21 +1206,24 @@ pub struct Rollout {
     /// Optional. Name of the `Rollout`. Format is projects/{project}/
     /// locations/{location}/deliveryPipelines/{deliveryPipeline}/
     /// releases/{release}/rollouts/\[a-z][a-z0-9\-\]{0,62}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Unique identifier of the `Rollout`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub uid: ::prost::alloc::string::String,
     /// Description of the `Rollout` for user purposes. Max length is 255
     /// characters.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
     /// User annotations. These attributes can only be set and used by the
     /// user, and not by Google Cloud Deploy. See
     /// <https://google.aip.dev/128#annotations> for more details such as format and
     /// size limitations.
-    #[prost(btree_map="string, string", tag="4")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Labels are attributes that can be set and used by both the
     /// user and by Google Cloud Deploy. Labels must meet the following
     /// constraints:
@@ -1160,60 +1236,73 @@ pub struct Rollout {
     /// * Each resource is limited to a maximum of 64 labels.
     ///
     /// Both keys and values are additionally constrained to be <= 128 bytes.
-    #[prost(btree_map="string, string", tag="5")]
-    pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
     /// Output only. Time at which the `Rollout` was created.
-    #[prost(message, optional, tag="6")]
+    #[prost(message, optional, tag = "6")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `Rollout` was approved.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub approve_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `Rollout` was enqueued.
-    #[prost(message, optional, tag="8")]
+    #[prost(message, optional, tag = "8")]
     pub enqueue_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `Rollout` started deploying.
-    #[prost(message, optional, tag="9")]
+    #[prost(message, optional, tag = "9")]
     pub deploy_start_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `Rollout` finished deploying.
-    #[prost(message, optional, tag="10")]
+    #[prost(message, optional, tag = "10")]
     pub deploy_end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Required. The ID of Target to which this `Rollout` is deploying.
-    #[prost(string, tag="18")]
+    #[prost(string, tag = "18")]
     pub target_id: ::prost::alloc::string::String,
     /// Output only. Approval state of the `Rollout`.
-    #[prost(enumeration="rollout::ApprovalState", tag="12")]
+    #[prost(enumeration = "rollout::ApprovalState", tag = "12")]
     pub approval_state: i32,
     /// Output only. Current state of the `Rollout`.
-    #[prost(enumeration="rollout::State", tag="13")]
+    #[prost(enumeration = "rollout::State", tag = "13")]
     pub state: i32,
     /// Output only. Additional information about the rollout failure, if available.
-    #[prost(string, tag="14")]
+    #[prost(string, tag = "14")]
     pub failure_reason: ::prost::alloc::string::String,
     /// Output only. The resource name of the Cloud Build `Build` object that is used to deploy
     /// the Rollout. Format is
     /// `projects/{project}/locations/{location}/builds/{build}`.
-    #[prost(string, tag="17")]
+    #[prost(string, tag = "17")]
     pub deploying_build: ::prost::alloc::string::String,
     /// This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="16")]
+    #[prost(string, tag = "16")]
     pub etag: ::prost::alloc::string::String,
     /// Output only. The reason this rollout failed. This will always be unspecified while the
     /// rollout is in progress.
-    #[prost(enumeration="rollout::FailureCause", tag="19")]
+    #[prost(enumeration = "rollout::FailureCause", tag = "19")]
     pub deploy_failure_cause: i32,
     /// Output only. The phases that represent the workflows of this `Rollout`.
-    #[prost(message, repeated, tag="23")]
+    #[prost(message, repeated, tag = "23")]
     pub phases: ::prost::alloc::vec::Vec<Phase>,
     /// Output only. Metadata contains information about the rollout.
-    #[prost(message, optional, tag="24")]
+    #[prost(message, optional, tag = "24")]
     pub metadata: ::core::option::Option<Metadata>,
 }
 /// Nested message and enum types in `Rollout`.
 pub mod rollout {
     /// Valid approval states of a `Rollout`.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum ApprovalState {
         /// The `Rollout` has an unspecified approval state.
@@ -1243,7 +1332,17 @@ pub mod rollout {
         }
     }
     /// Valid states of a `Rollout`.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// The `Rollout` has an unspecified state.
@@ -1283,7 +1382,17 @@ pub mod rollout {
         }
     }
     /// Well-known rollout failures.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum FailureCause {
         /// No reason for failure is specified.
@@ -1317,7 +1426,9 @@ pub mod rollout {
                 FailureCause::DeadlineExceeded => "DEADLINE_EXCEEDED",
                 FailureCause::ReleaseFailed => "RELEASE_FAILED",
                 FailureCause::ReleaseAbandoned => "RELEASE_ABANDONED",
-                FailureCause::VerificationConfigNotFound => "VERIFICATION_CONFIG_NOT_FOUND",
+                FailureCause::VerificationConfigNotFound => {
+                    "VERIFICATION_CONFIG_NOT_FOUND"
+                }
             }
         }
     }
@@ -1326,7 +1437,7 @@ pub mod rollout {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Metadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `Rollout`.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub cloud_run: ::core::option::Option<CloudRunMetadata>,
 }
 /// DeployJobRunMetadata surfaces information associated with a `DeployJobRun` to
@@ -1334,7 +1445,7 @@ pub struct Metadata {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployJobRunMetadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `DeployJobRun`.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub cloud_run: ::core::option::Option<CloudRunMetadata>,
 }
 /// CloudRunMetadata contains information from a Cloud Run deployment.
@@ -1342,13 +1453,13 @@ pub struct DeployJobRunMetadata {
 pub struct CloudRunMetadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `Rollout`.
     /// Format is projects/{project}/locations/{location}/services/{service}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub service: ::prost::alloc::string::String,
     /// Output only. The Cloud Run Service urls that are associated with a `Rollout`.
-    #[prost(string, repeated, tag="2")]
+    #[prost(string, repeated, tag = "2")]
     pub service_urls: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Output only. The Cloud Run Revision id associated with a `Rollout`.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub revision: ::prost::alloc::string::String,
 }
 /// Phase represents a collection of jobs that are logically grouped together
@@ -1356,19 +1467,29 @@ pub struct CloudRunMetadata {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Phase {
     /// Output only. The ID of the Phase.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
     /// Output only. Current state of the Phase.
-    #[prost(enumeration="phase::State", tag="3")]
+    #[prost(enumeration = "phase::State", tag = "3")]
     pub state: i32,
     /// The job composition of this Phase.
-    #[prost(oneof="phase::Jobs", tags="4")]
+    #[prost(oneof = "phase::Jobs", tags = "4")]
     pub jobs: ::core::option::Option<phase::Jobs>,
 }
 /// Nested message and enum types in `Phase`.
 pub mod phase {
     /// Valid states of a Phase.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// The Phase has an unspecified state.
@@ -1404,7 +1525,7 @@ pub mod phase {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Jobs {
         /// Output only. Deployment job composition.
-        #[prost(message, tag="4")]
+        #[prost(message, tag = "4")]
         DeploymentJobs(super::DeploymentJobs),
     }
 }
@@ -1412,33 +1533,43 @@ pub mod phase {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeploymentJobs {
     /// Output only. The deploy Job. This is the first job run in the phase.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub deploy_job: ::core::option::Option<Job>,
     /// Output only. The verify Job. Runs after a deploy if the deploy succeeds.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub verify_job: ::core::option::Option<Job>,
 }
 /// Job represents an operation for a `Rollout`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Job {
     /// Output only. The ID of the Job.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub id: ::prost::alloc::string::String,
     /// Output only. The current state of the Job.
-    #[prost(enumeration="job::State", tag="2")]
+    #[prost(enumeration = "job::State", tag = "2")]
     pub state: i32,
     /// Output only. The name of the `JobRun` responsible for the most recent invocation of this
     /// Job.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub job_run: ::prost::alloc::string::String,
     /// The type of Job.
-    #[prost(oneof="job::JobType", tags="4, 5")]
+    #[prost(oneof = "job::JobType", tags = "4, 5")]
     pub job_type: ::core::option::Option<job::JobType>,
 }
 /// Nested message and enum types in `Job`.
 pub mod job {
     /// Valid states of a Job.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// The Job has an unspecified state.
@@ -1477,59 +1608,57 @@ pub mod job {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobType {
         /// Output only. A deploy Job.
-        #[prost(message, tag="4")]
+        #[prost(message, tag = "4")]
         DeployJob(super::DeployJob),
         /// Output only. A verify Job.
-        #[prost(message, tag="5")]
+        #[prost(message, tag = "5")]
         VerifyJob(super::VerifyJob),
     }
 }
 /// A deploy Job.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeployJob {
-}
+pub struct DeployJob {}
 /// A verify Job.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VerifyJob {
-}
+pub struct VerifyJob {}
 /// ListRolloutsRequest is the request object used by `ListRollouts`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolloutsRequest {
     /// Required. The `Release` which owns this collection of `Rollout` objects.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. The maximum number of `Rollout` objects to return. The service may return
     /// fewer than this value. If unspecified, at most 50 `Rollout` objects will be
     /// returned. The maximum value is 1000; values above 1000 will be set to 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A page token, received from a previous `ListRollouts` call.
     /// Provide this to retrieve the subsequent page.
     ///
     /// When paginating, all other provided parameters match
     /// the call that provided the page token.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. Filter rollouts to be returned. See <https://google.aip.dev/160> for more
     /// details.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. Field to sort by. See <https://google.aip.dev/132#ordering> for more details.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// ListRolloutsResponse is the response object reutrned by `ListRollouts`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolloutsResponse {
     /// The `Rollout` objects.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub rollouts: ::prost::alloc::vec::Vec<Rollout>,
     /// A token, which can be sent as `page_token` to retrieve the next page.
     /// If this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Locations that could not be reached.
-    #[prost(string, repeated, tag="3")]
+    #[prost(string, repeated, tag = "3")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// GetRolloutRequest is the request object used by `GetRollout`.
@@ -1537,7 +1666,7 @@ pub struct ListRolloutsResponse {
 pub struct GetRolloutRequest {
     /// Required. Name of the `Rollout`. Format must be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}/releases/{release_name}/rollouts/{rollout_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// CreateRolloutRequest is the request object used by `CreateRollout`.
@@ -1546,13 +1675,13 @@ pub struct CreateRolloutRequest {
     /// Required. The parent collection in which the `Rollout` should be created.
     /// Format should be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}/releases/{release_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. ID of the `Rollout`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub rollout_id: ::prost::alloc::string::String,
     /// Required. The `Rollout` to create.
-    #[prost(message, optional, tag="3")]
+    #[prost(message, optional, tag = "3")]
     pub rollout: ::core::option::Option<Rollout>,
     /// Optional. A request ID to identify requests. Specify a unique request ID
     /// so that if you must retry your request, the server will know to ignore
@@ -1567,39 +1696,39 @@ pub struct CreateRolloutRequest {
     ///
     /// The request ID must be a valid UUID with the exception that zero UUID is
     /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub request_id: ::prost::alloc::string::String,
     /// Optional. If set to true, the request is validated and the user is provided with
     /// an expected result, but no actual change is made.
-    #[prost(bool, tag="5")]
+    #[prost(bool, tag = "5")]
     pub validate_only: bool,
 }
 /// Represents the metadata of the long-running operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.
-    #[prost(message, optional, tag="1")]
+    #[prost(message, optional, tag = "1")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. The time the operation finished running.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Server-defined resource path for the target of the operation.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub target: ::prost::alloc::string::String,
     /// Output only. Name of the verb executed by the operation.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub verb: ::prost::alloc::string::String,
     /// Output only. Human-readable status of the operation, if any.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub status_message: ::prost::alloc::string::String,
     /// Output only. Identifies whether the user has requested cancellation
     /// of the operation. Operations that have successfully been cancelled
     /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
     /// corresponding to `Code.CANCELLED`.
-    #[prost(bool, tag="6")]
+    #[prost(bool, tag = "6")]
     pub requested_cancellation: bool,
     /// Output only. API version used to start the operation.
-    #[prost(string, tag="7")]
+    #[prost(string, tag = "7")]
     pub api_version: ::prost::alloc::string::String,
 }
 /// The request object used by `ApproveRollout`.
@@ -1608,48 +1737,45 @@ pub struct ApproveRolloutRequest {
     /// Required. Name of the Rollout. Format is
     /// projects/{project}/locations/{location}/deliveryPipelines/{deliveryPipeline}/
     /// releases/{release}/rollouts/{rollout}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. True = approve; false = reject
-    #[prost(bool, tag="2")]
+    #[prost(bool, tag = "2")]
     pub approved: bool,
 }
 /// The response object from `ApproveRollout`.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ApproveRolloutResponse {
-}
+pub struct ApproveRolloutResponse {}
 /// RetryJobRequest is the request object used by `RetryJob`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetryJobRequest {
     /// Required. Name of the Rollout. Format is
     /// projects/{project}/locations/{location}/deliveryPipelines/{deliveryPipeline}/
     /// releases/{release}/rollouts/{rollout}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub rollout: ::prost::alloc::string::String,
     /// Required. The phase ID the Job to retry belongs to.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub phase_id: ::prost::alloc::string::String,
     /// Required. The job ID for the Job to retry.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub job_id: ::prost::alloc::string::String,
 }
 /// The response object from 'RetryJob'.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RetryJobResponse {
-}
+pub struct RetryJobResponse {}
 /// The request object used by `AbandonRelease`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AbandonReleaseRequest {
     /// Required. Name of the Release. Format is
     /// projects/{project}/locations/{location}/deliveryPipelines/{deliveryPipeline}/
     /// releases/{release}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// The response object for `AbandonRelease`.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AbandonReleaseResponse {
-}
+pub struct AbandonReleaseResponse {}
 /// A `JobRun` resource in the Google Cloud Deploy API.
 ///
 /// A `JobRun` contains information of a single `Rollout` job evaluation.
@@ -1658,42 +1784,52 @@ pub struct JobRun {
     /// Optional. Name of the `JobRun`. Format is projects/{project}/locations/{location}/
     /// deliveryPipelines/{deliveryPipeline}/releases/{releases}/rollouts/
     /// {rollouts}/jobRuns/{uuid}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Unique identifier of the `JobRun`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub uid: ::prost::alloc::string::String,
     /// Output only. ID of the `Rollout` phase this `JobRun` belongs in.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub phase_id: ::prost::alloc::string::String,
     /// Output only. ID of the `Rollout` job this `JobRun` corresponds to.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub job_id: ::prost::alloc::string::String,
     /// Output only. Time at which the `JobRun` was created.
-    #[prost(message, optional, tag="5")]
+    #[prost(message, optional, tag = "5")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `JobRun` was started.
-    #[prost(message, optional, tag="6")]
+    #[prost(message, optional, tag = "6")]
     pub start_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. Time at which the `JobRun` ended.
-    #[prost(message, optional, tag="7")]
+    #[prost(message, optional, tag = "7")]
     pub end_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. The current state of the `JobRun`.
-    #[prost(enumeration="job_run::State", tag="8")]
+    #[prost(enumeration = "job_run::State", tag = "8")]
     pub state: i32,
     /// Output only. This checksum is computed by the server based on the value of other
     /// fields, and may be sent on update and delete requests to ensure the
     /// client has an up-to-date value before proceeding.
-    #[prost(string, tag="11")]
+    #[prost(string, tag = "11")]
     pub etag: ::prost::alloc::string::String,
     /// The `JobRun` type and the information for that type.
-    #[prost(oneof="job_run::JobRun", tags="9, 10")]
+    #[prost(oneof = "job_run::JobRun", tags = "9, 10")]
     pub job_run: ::core::option::Option<job_run::JobRun>,
 }
 /// Nested message and enum types in `JobRun`.
 pub mod job_run {
     /// Valid states of a `JobRun`.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum State {
         /// The `JobRun` has an unspecified state.
@@ -1723,10 +1859,10 @@ pub mod job_run {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobRun {
         /// Output only. Information specific to a deploy `JobRun`.
-        #[prost(message, tag="9")]
+        #[prost(message, tag = "9")]
         DeployJobRun(super::DeployJobRun),
         /// Output only. Information specific to a verify `JobRun`.
-        #[prost(message, tag="10")]
+        #[prost(message, tag = "10")]
         VerifyJobRun(super::VerifyJobRun),
     }
 }
@@ -1735,23 +1871,33 @@ pub mod job_run {
 pub struct DeployJobRun {
     /// Output only. The resource name of the Cloud Build `Build` object that is used to deploy.
     /// Format is projects/{project}/locations/{location}/builds/{build}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub build: ::prost::alloc::string::String,
     /// Output only. The reason the deploy failed. This will always be unspecified while the
     /// deploy is in progress or if it succeeded.
-    #[prost(enumeration="deploy_job_run::FailureCause", tag="2")]
+    #[prost(enumeration = "deploy_job_run::FailureCause", tag = "2")]
     pub failure_cause: i32,
     /// Output only. Additional information about the deploy failure, if available.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub failure_message: ::prost::alloc::string::String,
     /// Output only. Metadata containing information about the deploy job run.
-    #[prost(message, optional, tag="4")]
+    #[prost(message, optional, tag = "4")]
     pub metadata: ::core::option::Option<DeployJobRunMetadata>,
 }
 /// Nested message and enum types in `DeployJobRun`.
 pub mod deploy_job_run {
     /// Well-known deploy failures.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum FailureCause {
         /// No reason for failure is specified.
@@ -1786,27 +1932,37 @@ pub mod deploy_job_run {
 pub struct VerifyJobRun {
     /// Output only. The resource name of the Cloud Build `Build` object that is used to verify.
     /// Format is projects/{project}/locations/{location}/builds/{build}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub build: ::prost::alloc::string::String,
     /// Output only. URI of a directory containing the verify artifacts. This contains the
     /// Skaffold event log.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub artifact_uri: ::prost::alloc::string::String,
     /// Output only. File path of the Skaffold event log relative to the artifact URI.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub event_log_path: ::prost::alloc::string::String,
     /// Output only. The reason the verify failed. This will always be unspecified while the
     /// verify is in progress or if it succeeded.
-    #[prost(enumeration="verify_job_run::FailureCause", tag="4")]
+    #[prost(enumeration = "verify_job_run::FailureCause", tag = "4")]
     pub failure_cause: i32,
     /// Output only. Additional information about the verify failure, if available.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub failure_message: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `VerifyJobRun`.
 pub mod verify_job_run {
     /// Well-known verify failures.
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
     #[repr(i32)]
     pub enum FailureCause {
         /// No reason for failure is specified.
@@ -1834,7 +1990,9 @@ pub mod verify_job_run {
                 FailureCause::CloudBuildUnavailable => "CLOUD_BUILD_UNAVAILABLE",
                 FailureCause::ExecutionFailed => "EXECUTION_FAILED",
                 FailureCause::DeadlineExceeded => "DEADLINE_EXCEEDED",
-                FailureCause::VerificationConfigNotFound => "VERIFICATION_CONFIG_NOT_FOUND",
+                FailureCause::VerificationConfigNotFound => {
+                    "VERIFICATION_CONFIG_NOT_FOUND"
+                }
             }
         }
     }
@@ -1843,40 +2001,40 @@ pub mod verify_job_run {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobRunsRequest {
     /// Required. The `Rollout` which owns this collection of `JobRun` objects.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. The maximum number of `JobRun` objects to return. The service may return
     /// fewer than this value. If unspecified, at most 50 `JobRun` objects will be
     /// returned. The maximum value is 1000; values above 1000 will be set to 1000.
-    #[prost(int32, tag="2")]
+    #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A page token, received from a previous `ListJobRuns` call. Provide this
     /// to retrieve the subsequent page.
     ///
     /// When paginating, all other provided parameters match the call that provided
     /// the page token.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. Filter results to be returned. See <https://google.aip.dev/160> for more
     /// details.
-    #[prost(string, tag="4")]
+    #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
     /// Optional. Field to sort by. See <https://google.aip.dev/132#ordering> for more details.
-    #[prost(string, tag="5")]
+    #[prost(string, tag = "5")]
     pub order_by: ::prost::alloc::string::String,
 }
 /// ListJobRunsResponse is the response object returned by `ListJobRuns`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobRunsResponse {
     /// The `JobRun` objects.
-    #[prost(message, repeated, tag="1")]
+    #[prost(message, repeated, tag = "1")]
     pub job_runs: ::prost::alloc::vec::Vec<JobRun>,
     /// A token, which can be sent as `page_token` to retrieve the next page. If
     /// this field is omitted, there are no subsequent pages.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
     /// Locations that could not be reached
-    #[prost(string, repeated, tag="3")]
+    #[prost(string, repeated, tag = "3")]
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// GetJobRunRequest is the request object used by `GetJobRun`.
@@ -1884,38 +2042,38 @@ pub struct ListJobRunsResponse {
 pub struct GetJobRunRequest {
     /// Required. Name of the `JobRun`. Format must be
     /// projects/{project_id}/locations/{location_name}/deliveryPipelines/{pipeline_name}/releases/{release_name}/rollouts/{rollout_name}/jobRuns/{job_run_name}.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Service-wide configuration.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Config {
     /// Name of the configuration.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. All supported versions of Skaffold.
-    #[prost(message, repeated, tag="2")]
+    #[prost(message, repeated, tag = "2")]
     pub supported_versions: ::prost::alloc::vec::Vec<SkaffoldVersion>,
     /// Output only. Default Skaffold version that is assigned when a Release is created without
     /// specifying a Skaffold version.
-    #[prost(string, tag="3")]
+    #[prost(string, tag = "3")]
     pub default_skaffold_version: ::prost::alloc::string::String,
 }
 /// Details of a supported Skaffold version.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SkaffoldVersion {
     /// Release version number. For example, "1.20.3".
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub version: ::prost::alloc::string::String,
     /// Date when this version is expected to no longer be supported.
-    #[prost(message, optional, tag="2")]
+    #[prost(message, optional, tag = "2")]
     pub support_end_date: ::core::option::Option<super::super::super::r#type::Date>,
 }
 /// Request to get a configuration.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConfigRequest {
     /// Required. Name of requested configuration.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
@@ -2453,12 +2611,12 @@ pub mod cloud_deploy_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeliveryPipelineNotificationEvent {
     /// Debug message for when a notification fails to send.
-    #[prost(string, tag="1")]
+    #[prost(string, tag = "1")]
     pub message: ::prost::alloc::string::String,
     /// The name of the `Delivery Pipeline`.
-    #[prost(string, tag="2")]
+    #[prost(string, tag = "2")]
     pub delivery_pipeline: ::prost::alloc::string::String,
     /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration="Type", tag="3")]
+    #[prost(enumeration = "Type", tag = "3")]
     pub r#type: i32,
 }
