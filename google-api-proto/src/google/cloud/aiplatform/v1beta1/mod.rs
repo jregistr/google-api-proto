@@ -1237,6 +1237,8 @@ pub enum AcceleratorType {
     NvidiaTeslaT4 = 5,
     /// Nvidia Tesla A100 GPU.
     NvidiaTeslaA100 = 8,
+    /// Nvidia A2 Ultra GPU.
+    NvidiaA10080gb = 9,
     /// TPU v2.
     TpuV2 = 6,
     /// TPU v3.
@@ -1256,6 +1258,7 @@ impl AcceleratorType {
             AcceleratorType::NvidiaTeslaP4 => "NVIDIA_TESLA_P4",
             AcceleratorType::NvidiaTeslaT4 => "NVIDIA_TESLA_T4",
             AcceleratorType::NvidiaTeslaA100 => "NVIDIA_TESLA_A100",
+            AcceleratorType::NvidiaA10080gb => "NVIDIA_A100_80GB",
             AcceleratorType::TpuV2 => "TPU_V2",
             AcceleratorType::TpuV3 => "TPU_V3",
         }
@@ -2141,9 +2144,9 @@ pub struct Model {
     pub version_id: ::prost::alloc::string::String,
     /// User provided version aliases so that a model version can be referenced via
     /// alias (i.e.
-    /// projects/{project}/locations/{location}/models/{model_id}@{version_alias}
+    /// `projects/{project}/locations/{location}/models/{model_id}@{version_alias}`
     /// instead of auto-generated version id (i.e.
-    /// projects/{project}/locations/{location}/models/{model_id}@{version_id}).
+    /// `projects/{project}/locations/{location}/models/{model_id}@{version_id})`.
     /// The format is \[a-z][a-zA-Z0-9-]{0,126}[a-z0-9\] to distinguish from
     /// version_id. A default version alias will be created for the first version
     /// of the model, and there must be exactly one default version alias for a
@@ -2351,6 +2354,11 @@ pub struct Model {
     /// training pipeline, BigQuery ML, or existing Vertex AI Model.
     #[prost(message, optional, tag="38")]
     pub model_source_info: ::core::option::Option<ModelSourceInfo>,
+    /// Output only. The resource name of the Artifact that was created in MetadataStore when
+    /// creating the Model. The Artifact resource name pattern is
+    /// `projects/{project}/locations/{location}/metadataStores/{metadata_store}/artifacts/{artifact}`.
+    #[prost(string, tag="44")]
+    pub metadata_artifact: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `Model`.
 pub mod model {
@@ -3893,8 +3901,10 @@ pub struct Featurestore {
     /// and are immutable.
     #[prost(btree_map="string, string", tag="6")]
     pub labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
-    /// Optional. Config for online storage resources. If unset, the featurestore will
-    /// not have an online store and cannot be used for online serving.
+    /// Optional. Config for online storage resources. The field should not co-exist with the
+    /// field of `OnlineStoreReplicationConfig`. If both of it and
+    /// OnlineStoreReplicationConfig are unset, the feature store will not have an
+    /// online store and cannot be used for online serving.
     #[prost(message, optional, tag="7")]
     pub online_serving_config: ::core::option::Option<featurestore::OnlineServingConfig>,
     /// Output only. State of the featurestore.
@@ -4868,6 +4878,7 @@ pub struct Context {
     #[prost(string, tag="14")]
     pub schema_version: ::prost::alloc::string::String,
     /// Properties of the Context.
+    /// Top level metadata keys' heading and trailing spaces will be trimmed.
     /// The size of this field should not exceed 200KB.
     #[prost(message, optional, tag="15")]
     pub metadata: ::core::option::Option<::prost_types::Struct>,
@@ -4929,6 +4940,7 @@ pub struct Artifact {
     #[prost(string, tag="15")]
     pub schema_version: ::prost::alloc::string::String,
     /// Properties of the Artifact.
+    /// Top level metadata keys' heading and trailing spaces will be trimmed.
     /// The size of this field should not exceed 200KB.
     #[prost(message, optional, tag="16")]
     pub metadata: ::core::option::Option<::prost_types::Struct>,
@@ -5015,6 +5027,7 @@ pub struct Execution {
     #[prost(string, tag="14")]
     pub schema_version: ::prost::alloc::string::String,
     /// Properties of the Execution.
+    /// Top level metadata keys' heading and trailing spaces will be trimmed.
     /// The size of this field should not exceed 200KB.
     #[prost(message, optional, tag="15")]
     pub metadata: ::core::option::Option<::prost_types::Struct>,
@@ -5279,8 +5292,8 @@ pub mod pipeline_job {
             #[derive(Clone, PartialEq, ::prost::Oneof)]
             pub enum Kind {
                 /// Artifact resource id from MLMD. Which is the last portion of an
-                /// artifact resource
-                /// name(projects/{project}/locations/{location}/metadataStores/default/artifacts/{artifact_id}).
+                /// artifact resource name:
+                /// `projects/{project}/locations/{location}/metadataStores/default/artifacts/{artifact_id}`.
                 /// The artifact must stay within the same project, location and default
                 /// metadatastore as the pipeline.
                 #[prost(string, tag="1")]
@@ -5459,6 +5472,17 @@ pub mod pipeline_task_executor_detail {
         /// the lifecycle events.
         #[prost(string, tag="2")]
         pub pre_caching_check_job: ::prost::alloc::string::String,
+        /// Output only. The names of the previously failed \[CustomJob][google.cloud.aiplatform.v1beta1.CustomJob\] for the main container
+        /// executions. The list includes the all attempts in chronological order.
+        #[prost(string, repeated, tag="3")]
+        pub failed_main_jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Output only. The names of the previously failed \[CustomJob][google.cloud.aiplatform.v1beta1.CustomJob\] for the
+        /// pre-caching-check container executions. This job will be available if the
+        /// \[PipelineJob.pipeline_spec][google.cloud.aiplatform.v1beta1.PipelineJob.pipeline_spec\] specifies the `pre_caching_check` hook in
+        /// the lifecycle events.
+        /// The list includes the all attempts in chronological order.
+        #[prost(string, repeated, tag="4")]
+        pub failed_pre_caching_check_jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// The detailed info for a custom job executor.
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5645,6 +5669,9 @@ pub struct InputDataConfig {
     /// specified as both of them represent the same thing: problem type.
     #[prost(string, tag="7")]
     pub saved_query_id: ::prost::alloc::string::String,
+    /// Whether to persist the ML use assignment to data item system labels.
+    #[prost(bool, tag="11")]
+    pub persist_ml_use_assignment: bool,
     /// The instructions how the input data should be split between the
     /// training, validation and test sets.
     /// If no split type is provided, the \[fraction_split][google.cloud.aiplatform.v1beta1.InputDataConfig.fraction_split\] is used by default.
@@ -6738,6 +6765,15 @@ pub struct ImportDataConfig {
     /// file referenced by \[import_schema_uri][google.cloud.aiplatform.v1beta1.ImportDataConfig.import_schema_uri\], e.g. jsonl file.
     #[prost(btree_map="string, string", tag="2")]
     pub data_item_labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
+    /// Labels that will be applied to newly imported Annotations. If two
+    /// Annotations are identical, one of them will be deduped. Two Annotations are
+    /// considered identical if their \[payload][google.cloud.aiplatform.v1beta1.Annotation.payload\],
+    /// \[payload_schema_uri][google.cloud.aiplatform.v1beta1.Annotation.payload_schema_uri\] and all of their
+    /// \[labels][google.cloud.aiplatform.v1beta1.Annotation.labels\] are the same.
+    /// These labels will be overridden by Annotation labels specified inside index
+    /// file referenced by \[import_schema_uri][google.cloud.aiplatform.v1beta1.ImportDataConfig.import_schema_uri\], e.g. jsonl file.
+    #[prost(btree_map="string, string", tag="3")]
+    pub annotation_labels: ::prost::alloc::collections::BTreeMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     /// Required. Points to a YAML file stored on Google Cloud Storage describing the import
     /// format. Validation will be done against the schema. The schema is defined
     /// as an [OpenAPI 3.0.2 Schema
@@ -6808,13 +6844,13 @@ pub mod user_action_reference {
         /// For API calls that return a long running operation.
         /// Resource name of the long running operation.
         /// Format:
-        /// 'projects/{project}/locations/{location}/operations/{operation}'
+        /// `projects/{project}/locations/{location}/operations/{operation}`
         #[prost(string, tag="1")]
         Operation(::prost::alloc::string::String),
         /// For API calls that start a LabelingJob.
         /// Resource name of the LabelingJob.
         /// Format:
-        /// 'projects/{project}/locations/{location}/dataLabelingJobs/{data_labeling_job}'
+        /// `projects/{project}/locations/{location}/dataLabelingJobs/{data_labeling_job}`
         #[prost(string, tag="2")]
         DataLabelingJob(::prost::alloc::string::String),
     }
@@ -8191,7 +8227,7 @@ pub struct GetTensorboardExperimentRequest {
 pub struct ListTensorboardExperimentsRequest {
     /// Required. The resource name of the Tensorboard to list TensorboardExperiments.
     /// Format:
-    /// 'projects/{project}/locations/{location}/tensorboards/{tensorboard}'
+    /// `projects/{project}/locations/{location}/tensorboards/{tensorboard}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Lists the TensorboardExperiments that match the filter expression.
@@ -8312,7 +8348,7 @@ pub struct GetTensorboardRunRequest {
 pub struct ReadTensorboardBlobDataRequest {
     /// Required. The resource name of the TensorboardTimeSeries to list Blobs.
     /// Format:
-    /// 'projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}/runs/{run}/timeSeries/{time_series}'
+    /// `projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}/runs/{run}/timeSeries/{time_series}`
     #[prost(string, tag="1")]
     pub time_series: ::prost::alloc::string::String,
     /// IDs of the blobs to read.
@@ -8331,7 +8367,7 @@ pub struct ReadTensorboardBlobDataResponse {
 pub struct ListTensorboardRunsRequest {
     /// Required. The resource name of the TensorboardExperiment to list TensorboardRuns.
     /// Format:
-    /// 'projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}'
+    /// `projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Lists the TensorboardRuns that match the filter expression.
@@ -8454,7 +8490,7 @@ pub struct GetTensorboardTimeSeriesRequest {
 pub struct ListTensorboardTimeSeriesRequest {
     /// Required. The resource name of the TensorboardRun to list TensorboardTimeSeries.
     /// Format:
-    /// 'projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}/runs/{run}'
+    /// `projects/{project}/locations/{location}/tensorboards/{tensorboard}/experiments/{experiment}/runs/{run}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Lists the TensorboardTimeSeries that match the filter expression.
@@ -10003,7 +10039,7 @@ pub struct DataItem {
 pub struct DeploymentResourcePool {
     /// Output only. The resource name of the DeploymentResourcePool.
     /// Format:
-    /// projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}
+    /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The underlying DedicatedResources that the DeploymentResourcePool uses.
@@ -10291,7 +10327,8 @@ pub struct ListArtifactsRequest {
     ///      `in_context("projects/<project_number>/locations/<location>/metadataStores/<metadatastore_name>/contexts/<context-id>")`
     ///
     /// Each of the above supported filter types can be combined together using
-    /// logical operators (`AND` & `OR`).
+    /// logical operators (`AND` & `OR`). Maximum nested expression depth allowed
+    /// is 5.
     ///
     /// For example: `display_name = "test" AND metadata.field1.bool_value = true`.
     #[prost(string, tag="4")]
@@ -10467,7 +10504,8 @@ pub struct ListContextsRequest {
     ///     ```
     ///
     /// Each of the above supported filters can be combined together using
-    /// logical operators (`AND` & `OR`).
+    /// logical operators (`AND` & `OR`). Maximum nested expression depth allowed
+    /// is 5.
     ///
     /// For example: `display_name = "test" AND metadata.field1.bool_value = true`.
     #[prost(string, tag="4")]
@@ -10720,7 +10758,9 @@ pub struct ListExecutionsRequest {
     ///     `in_context("projects/<project_number>/locations/<location>/metadataStores/<metadatastore_name>/contexts/<context-id>")`
     ///
     /// Each of the above supported filters can be combined together using
-    /// logical operators (`AND` & `OR`).
+    /// logical operators (`AND` & `OR`). Maximum nested expression depth allowed
+    /// is 5.
+    ///
     /// For example: `display_name = "test" AND metadata.field1.bool_value = true`.
     #[prost(string, tag="4")]
     pub filter: ::prost::alloc::string::String,
@@ -10952,7 +10992,8 @@ pub struct QueryArtifactLineageSubgraphRequest {
     ///     For example: `metadata.field_1.number_value = 10.0`
     ///
     /// Each of the above supported filter types can be combined together using
-    /// logical operators (`AND` & `OR`).
+    /// logical operators (`AND` & `OR`). Maximum nested expression depth allowed
+    /// is 5.
     ///
     /// For example: `display_name = "test" AND metadata.field1.bool_value = true`.
     #[prost(string, tag="3")]
@@ -13398,7 +13439,7 @@ pub mod deployed_model {
         AutomaticResources(super::AutomaticResources),
         /// The resource name of the shared DeploymentResourcePool to deploy on.
         /// Format:
-        /// projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}
+        /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
         #[prost(string, tag="17")]
         SharedResources(::prost::alloc::string::String),
     }
@@ -13447,7 +13488,7 @@ pub struct PredictRequestResponseLoggingConfig {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDeploymentResourcePoolRequest {
     /// Required. The parent location resource where this DeploymentResourcePool will be
-    /// created. Format: projects/{project}/locations/{location}
+    /// created. Format: `projects/{project}/locations/{location}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The DeploymentResourcePool to create.
@@ -13474,7 +13515,7 @@ pub struct CreateDeploymentResourcePoolOperationMetadata {
 pub struct GetDeploymentResourcePoolRequest {
     /// Required. The name of the DeploymentResourcePool to retrieve.
     /// Format:
-    /// projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}
+    /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -13482,7 +13523,7 @@ pub struct GetDeploymentResourcePoolRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDeploymentResourcePoolsRequest {
     /// Required. The parent Location which owns this collection of DeploymentResourcePools.
-    /// Format: projects/{project}/locations/{location}
+    /// Format: `projects/{project}/locations/{location}`
     #[prost(string, tag="1")]
     pub parent: ::prost::alloc::string::String,
     /// The maximum number of DeploymentResourcePools to return. The service may
@@ -13521,7 +13562,7 @@ pub struct UpdateDeploymentResourcePoolOperationMetadata {
 pub struct DeleteDeploymentResourcePoolRequest {
     /// Required. The name of the DeploymentResourcePool to delete.
     /// Format:
-    /// projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}
+    /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -13530,7 +13571,7 @@ pub struct DeleteDeploymentResourcePoolRequest {
 pub struct QueryDeployedModelsRequest {
     /// Required. The name of the target DeploymentResourcePool to query.
     /// Format:
-    /// projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}
+    /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
     #[prost(string, tag="1")]
     pub deployment_resource_pool: ::prost::alloc::string::String,
     /// The maximum number of DeployedModels to return. The service may return
@@ -13561,6 +13602,13 @@ pub struct QueryDeployedModelsResponse {
     /// deploymentResourcePool.
     #[prost(message, repeated, tag="3")]
     pub deployed_model_refs: ::prost::alloc::vec::Vec<DeployedModelRef>,
+    /// The total number of DeployedModels on this DeploymentResourcePool.
+    #[prost(int32, tag="4")]
+    pub total_deployed_model_count: i32,
+    /// The total number of Endpoints that have DeployedModels on this
+    /// DeploymentResourcePool.
+    #[prost(int32, tag="5")]
+    pub total_endpoint_count: i32,
 }
 /// Generated client implementations.
 pub mod deployment_resource_pool_service_client {
@@ -14273,6 +14321,11 @@ pub struct BatchReadFeatureValuesRequest {
     /// \[BatchReadFeatureValuesRequest.request][\] .
     #[prost(message, repeated, tag="7")]
     pub entity_type_specs: ::prost::alloc::vec::Vec<batch_read_feature_values_request::EntityTypeSpec>,
+    /// Optional. Excludes Feature values with feature generation timestamp before this
+    /// timestamp. If not set, retrieve oldest values kept in Feature Store.
+    /// Timestamp, if present, must not have higher than millisecond precision.
+    #[prost(message, optional, tag="11")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
     #[prost(oneof="batch_read_feature_values_request::ReadOption", tags="3, 5")]
     pub read_option: ::core::option::Option<batch_read_feature_values_request::ReadOption>,
 }
@@ -14610,7 +14663,7 @@ pub struct CreateFeatureRequest {
     /// Required. The ID to use for the Feature, which will become the final component of
     /// the Feature's resource name.
     ///
-    /// This value may be up to 60 characters, and valid characters are
+    /// This value may be up to 128 characters, and valid characters are
     /// `\[a-z0-9_\]`. The first character cannot be a number.
     ///
     /// The value must be unique within an EntityType.
@@ -14970,7 +15023,10 @@ pub mod delete_feature_values_request {
     }
     /// Message to select time range and feature.
     /// Values of the selected feature generated within an inclusive time range
-    /// will be deleted.
+    /// will be deleted. Using this option permanently deletes the feature values
+    /// from the specified feature IDs within the specified time range.
+    /// This might include data from the online storage. If you want to retain
+    /// any deleted historical data in the online storage, you must re-ingest it.
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SelectTimeRangeAndFeature {
         /// Required. Select feature generated within a half-inclusive time range.
@@ -17096,7 +17152,7 @@ pub struct IndexEndpoint {
     /// are mutually exclusive.
     ///
     /// \[Format\](<https://cloud.google.com/compute/docs/reference/rest/v1/networks/insert>):
-    /// projects/{project}/global/networks/{network}.
+    /// `projects/{project}/global/networks/{network}`.
     /// Where {project} is a project number, as in '12345', and {network} is
     /// network name.
     #[prost(string, tag="9")]
