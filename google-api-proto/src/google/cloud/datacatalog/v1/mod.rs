@@ -1625,7 +1625,7 @@ pub struct UsageSignal {
     /// The end timestamp of the duration of usage statistics.
     #[prost(message, optional, tag = "1")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Usage statistics over each of the predefined time ranges.
+    /// Output only. BigQuery usage statistics over each of the predefined time ranges.
     ///
     /// Supported time ranges are `{"24H", "7D", "30D"}`.
     #[prost(btree_map = "string, message", tag = "2")]
@@ -2403,12 +2403,12 @@ pub struct Entry {
     /// Timestamps from the underlying resource, not from the Data Catalog
     /// entry.
     ///
-    /// Output only when the entry has a type listed in the `EntryType` enum.
-    /// For entries with `user_specified_type`, this field is optional and defaults
-    /// to an empty timestamp.
+    /// Output only when the entry has a system listed in the `IntegratedSystem`
+    /// enum. For entries with `user_specified_system`, this field is optional
+    /// and defaults to an empty timestamp.
     #[prost(message, optional, tag = "7")]
     pub source_system_timestamps: ::core::option::Option<SystemTimestamps>,
-    /// Output only. Resource usage statistics.
+    /// Resource usage statistics.
     #[prost(message, optional, tag = "13")]
     pub usage_signal: ::core::option::Option<UsageSignal>,
     /// Cloud labels attached to the entry.
@@ -2499,12 +2499,12 @@ pub mod entry {
         /// for entries with the `FILESET` type.
         #[prost(message, tag = "6")]
         GcsFilesetSpec(super::GcsFilesetSpec),
-        /// Specification that applies to a BigQuery table. Valid only for
-        /// entries with the `TABLE` type.
+        /// Output only. Specification that applies to a BigQuery table. Valid only
+        /// for entries with the `TABLE` type.
         #[prost(message, tag = "12")]
         BigqueryTableSpec(super::BigQueryTableSpec),
-        /// Specification for a group of BigQuery tables with the `\[prefix\]YYYYMMDD`
-        /// name pattern.
+        /// Output only. Specification for a group of BigQuery tables with
+        /// the `\[prefix\]YYYYMMDD` name pattern.
         ///
         /// For more information, see [Introduction to partitioned tables]
         /// (<https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>).
@@ -2544,8 +2544,8 @@ pub struct DatabaseTableSpec {
     /// Type of this table.
     #[prost(enumeration = "database_table_spec::TableType", tag = "1")]
     pub r#type: i32,
-    /// Fields specific to a Dataplex table and present only in the Dataplex table
-    /// entries.
+    /// Output only. Fields specific to a Dataplex table and present only in the
+    /// Dataplex table entries.
     #[prost(message, optional, tag = "2")]
     pub dataplex_table: ::core::option::Option<DataplexTableSpec>,
 }
@@ -2597,9 +2597,11 @@ pub struct FilesetSpec {
 }
 /// Specification that applies to a data source connection. Valid only for
 /// entries with the `DATA_SOURCE_CONNECTION` type.
+/// Only one of internal specs can be set at the time, and cannot
+/// be changed later.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSourceConnectionSpec {
-    /// Fields specific to BigQuery connections.
+    /// Output only. Fields specific to BigQuery connections.
     #[prost(message, optional, tag = "1")]
     pub bigquery_connection_spec: ::core::option::Option<BigQueryConnectionSpec>,
 }
@@ -3108,7 +3110,7 @@ pub struct ModifyEntryContactsRequest {
 pub enum EntryType {
     /// Default unknown type.
     Unspecified = 0,
-    /// Output only. The entry type that has a GoogleSQL schema, including
+    /// The entry type that has a GoogleSQL schema, including
     /// logical views.
     Table = 2,
     /// Output only. The type of models.
