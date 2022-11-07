@@ -22,12 +22,7 @@ pub mod logging;
     )
 )]
 pub mod migration;
-#[cfg(
-    any(
-        feature = "google-cloud-bigquery-reservation-v1",
-        feature = "google-cloud-bigquery-reservation-v1beta1",
-    )
-)]
+#[cfg(any(feature = "google-cloud-bigquery-reservation-v1"))]
 pub mod reservation;
 #[cfg(
     any(

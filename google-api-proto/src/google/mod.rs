@@ -151,7 +151,6 @@ pub mod chromeos;
         feature = "google-cloud-bigquery-migration-v2",
         feature = "google-cloud-bigquery-migration-v2alpha",
         feature = "google-cloud-bigquery-reservation-v1",
-        feature = "google-cloud-bigquery-reservation-v1beta1",
         feature = "google-cloud-bigquery-storage-v1",
         feature = "google-cloud-bigquery-storage-v1beta1",
         feature = "google-cloud-bigquery-storage-v1beta2",
