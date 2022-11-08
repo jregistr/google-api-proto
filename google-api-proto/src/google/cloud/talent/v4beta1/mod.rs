@@ -1169,12 +1169,16 @@ pub struct Company {
     /// A URI that hosts the employer's company logo.
     #[prost(string, tag = "10")]
     pub image_uri: ::prost::alloc::string::String,
+    /// This field is deprecated. Please set the searchability of the custom
+    /// attribute in the \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\] going forward.
+    ///
     /// A list of keys of filterable \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\], whose
     /// corresponding `string_values` are used in keyword searches. Jobs with
     /// `string_values` under these specified field keys are returned if any
     /// of the values match the search keyword. Custom field values with
     /// parenthesis, brackets and special symbols are not searchable as-is,
     /// and those keyword queries must be surrounded by quotes.
+    #[deprecated]
     #[prost(string, repeated, tag = "11")]
     pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<
         ::prost::alloc::string::String,
@@ -3227,8 +3231,8 @@ pub struct SearchJobsRequest {
     /// * company_display_name: histogram by \[Job.company_display_name][google.cloud.talent.v4beta1.Job.company_display_name\].
     /// * employment_type: histogram by \[Job.employment_types][google.cloud.talent.v4beta1.Job.employment_types\], for example,
     ///    "FULL_TIME", "PART_TIME".
-    /// * company_size: histogram by \[CompanySize][google.cloud.talent.v4beta1.CompanySize\], for example, "SMALL",
-    /// "MEDIUM", "BIG".
+    /// * company_size (DEPRECATED): histogram by \[CompanySize][google.cloud.talent.v4beta1.CompanySize\], for example,
+    /// "SMALL", "MEDIUM", "BIG".
     /// * publish_time_in_day: histogram by the \[Job.posting_publish_time][google.cloud.talent.v4beta1.Job.posting_publish_time\]
     ///    in days.
     ///    Must specify list of numeric buckets in spec.
