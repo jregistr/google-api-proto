@@ -351,6 +351,7 @@ google-cloud-vision-v1p3beta1 = ["google-api", "google-cloud", "google-longrunni
 google-cloud-vision-v1p4beta1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-visionai-v1alpha1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc", "google-type"]
 google-cloud-vmmigration-v1 = ["google-api", "google-cloud", "google-longrunning", "google-rpc"]
+google-cloud-vmwareengine-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-vpcaccess-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-webrisk-v1 = ["google-api", "google-cloud"]
 google-cloud-webrisk-v1beta1 = ["google-api", "google-cloud"]

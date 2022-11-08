@@ -3,41 +3,43 @@
 pub struct Barcode {
     /// Format of a barcode.
     /// The supported formats are:
-    ///    CODE_128: Code 128 type.
-    ///    CODE_39: Code 39 type.
-    ///    CODE_93: Code 93 type.
-    ///    CODABAR: Codabar type.
-    ///    DATA_MATRIX: 2D Data Matrix type.
-    ///    ITF: ITF type.
-    ///    EAN_13: EAN-13 type.
-    ///    EAN_8: EAN-8 type.
-    ///    QR_CODE: 2D QR code type.
-    ///    UPC_A: UPC-A type.
-    ///    UPC_E: UPC-E type.
-    ///    PDF417: PDF417 type.
-    ///    AZTEC: 2D Aztec code type.
-    ///    DATABAR: GS1 DataBar code type.
+    ///
+    /// - `CODE_128`: Code 128 type.
+    /// - `CODE_39`: Code 39 type.
+    /// - `CODE_93`: Code 93 type.
+    /// - `CODABAR`: Codabar type.
+    /// - `DATA_MATRIX`: 2D Data Matrix type.
+    /// - `ITF`: ITF type.
+    /// - `EAN_13`: EAN-13 type.
+    /// - `EAN_8`: EAN-8 type.
+    /// - `QR_CODE`: 2D QR code type.
+    /// - `UPC_A`: UPC-A type.
+    /// - `UPC_E`: UPC-E type.
+    /// - `PDF417`: PDF417 type.
+    /// - `AZTEC`: 2D Aztec code type.
+    /// - `DATABAR`: GS1 DataBar code type.
     #[prost(string, tag = "1")]
     pub format: ::prost::alloc::string::String,
     /// Value format describes the format of the value that a barcode
     /// encodes.
     /// The supported formats are:
-    ///    CONTACT_INFO: Contact information.
-    ///    EMAIL: Email address.
-    ///    ISBN: ISBN identifier.
-    ///    PHONE: Phone number.
-    ///    PRODUCT: Product.
-    ///    SMS: SMS message.
-    ///    TEXT: Text string.
-    ///    URL: URL address.
-    ///    WIFI: Wifi information.
-    ///    GEO: Geo-localization.
-    ///    CALENDAR_EVENT: Calendar event.
-    ///    DRIVER_LICENSE: Driver's license.
+    ///
+    /// - `CONTACT_INFO`: Contact information.
+    /// - `EMAIL`: Email address.
+    /// - `ISBN`: ISBN identifier.
+    /// - `PHONE`: Phone number.
+    /// - `PRODUCT`: Product.
+    /// - `SMS`: SMS message.
+    /// - `TEXT`: Text string.
+    /// - `URL`: URL address.
+    /// - `WIFI`: Wifi information.
+    /// - `GEO`: Geo-localization.
+    /// - `CALENDAR_EVENT`: Calendar event.
+    /// - `DRIVER_LICENSE`: Driver's license.
     #[prost(string, tag = "2")]
     pub value_format: ::prost::alloc::string::String,
     /// Raw value encoded in the barcode.
-    /// For example, 'MEBKM:TITLE:Google;URL:<https://www.google.com;;'.>
+    /// For example: `'MEBKM:TITLE:Google;URL:<https://www.google.com;;'`.>
     #[prost(string, tag = "3")]
     pub raw_value: ::prost::alloc::string::String,
 }
@@ -101,9 +103,9 @@ pub struct Document {
     /// Placeholder.  Relationship among \[Document.entities][google.cloud.documentai.v1.Document.entities\].
     #[prost(message, repeated, tag = "8")]
     pub entity_relations: ::prost::alloc::vec::Vec<document::EntityRelation>,
-    /// Placeholder.  A list of text corrections made to \[Document.text\].  This is
-    /// usually used for annotating corrections to OCR mistakes.  Text changes for
-    /// a given revision may not overlap with each other.
+    /// Placeholder.  A list of text corrections made to \[Document.text][google.cloud.documentai.v1.Document.text\].  This
+    /// is usually used for annotating corrections to OCR mistakes.  Text changes
+    /// for a given revision may not overlap with each other.
     #[prost(message, repeated, tag = "14")]
     pub text_changes: ::prost::alloc::vec::Vec<document::TextChange>,
     /// Information about the sharding if this document is sharded part of a larger
@@ -169,6 +171,10 @@ pub mod document {
         /// Font size.
         #[prost(message, optional, tag = "7")]
         pub font_size: ::core::option::Option<style::FontSize>,
+        /// Font family such as `Arial`, `Times New Roman`.
+        /// <https://www.w3schools.com/cssref/pr_font_font-family.asp>
+        #[prost(string, tag = "8")]
+        pub font_family: ::prost::alloc::string::String,
     }
     /// Nested message and enum types in `Style`.
     pub mod style {
@@ -241,7 +247,11 @@ pub mod document {
         /// A list of detected barcodes.
         #[prost(message, repeated, tag = "15")]
         pub detected_barcodes: ::prost::alloc::vec::Vec<page::DetectedBarcode>,
+        /// Image Quality Scores.
+        #[prost(message, optional, tag = "17")]
+        pub image_quality_scores: ::core::option::Option<page::ImageQualityScores>,
         /// The history of this page.
+        #[deprecated]
         #[prost(message, optional, tag = "16")]
         pub provenance: ::core::option::Option<Provenance>,
     }
@@ -304,7 +314,7 @@ pub mod document {
             pub text_anchor: ::core::option::Option<super::TextAnchor>,
             /// Confidence of the current \[Layout][google.cloud.documentai.v1.Document.Page.Layout\] within context of the object this
             /// layout is for. e.g. confidence can be for a single token, a table,
-            /// a visual element, etc. depending on context. Range [0, 1].
+            /// a visual element, etc. depending on context. Range `[0, 1]`.
             #[prost(float, tag = "2")]
             pub confidence: f32,
             /// The bounding polygon for the \[Layout][google.cloud.documentai.v1.Document.Page.Layout\].
@@ -371,6 +381,7 @@ pub mod document {
             #[prost(message, repeated, tag = "2")]
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
             /// The history of this annotation.
+            #[deprecated]
             #[prost(message, optional, tag = "3")]
             pub provenance: ::core::option::Option<super::Provenance>,
         }
@@ -384,6 +395,7 @@ pub mod document {
             #[prost(message, repeated, tag = "2")]
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
             /// The  history of this annotation.
+            #[deprecated]
             #[prost(message, optional, tag = "3")]
             pub provenance: ::core::option::Option<super::Provenance>,
         }
@@ -398,6 +410,7 @@ pub mod document {
             #[prost(message, repeated, tag = "2")]
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
             /// The  history of this annotation.
+            #[deprecated]
             #[prost(message, optional, tag = "3")]
             pub provenance: ::core::option::Option<super::Provenance>,
         }
@@ -413,7 +426,8 @@ pub mod document {
             /// A list of detected languages together with confidence.
             #[prost(message, repeated, tag = "3")]
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
-            /// The  history of this annotation.
+            /// The history of this annotation.
+            #[deprecated]
             #[prost(message, optional, tag = "4")]
             pub provenance: ::core::option::Option<super::Provenance>,
         }
@@ -506,6 +520,9 @@ pub mod document {
             /// A list of detected languages together with confidence.
             #[prost(message, repeated, tag = "4")]
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
+            /// The history of this table.
+            #[prost(message, optional, tag = "5")]
+            pub provenance: ::core::option::Option<super::Provenance>,
         }
         /// Nested message and enum types in `Table`.
         pub mod table {
@@ -585,14 +602,49 @@ pub mod document {
         /// Detected language for a structural component.
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct DetectedLanguage {
-            /// The BCP-47 language code, such as "en-US" or "sr-Latn". For more
+            /// The BCP-47 language code, such as `en-US` or `sr-Latn`. For more
             /// information, see
             /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
             #[prost(string, tag = "1")]
             pub language_code: ::prost::alloc::string::String,
-            /// Confidence of detected language. Range [0, 1].
+            /// Confidence of detected language. Range `[0, 1]`.
             #[prost(float, tag = "2")]
             pub confidence: f32,
+        }
+        /// Image Quality Scores for the page image
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ImageQualityScores {
+            /// The overall quality score. Range `[0, 1]` where 1 is perfect quality.
+            #[prost(float, tag = "1")]
+            pub quality_score: f32,
+            /// A list of detected defects.
+            #[prost(message, repeated, tag = "2")]
+            pub detected_defects: ::prost::alloc::vec::Vec<
+                image_quality_scores::DetectedDefect,
+            >,
+        }
+        /// Nested message and enum types in `ImageQualityScores`.
+        pub mod image_quality_scores {
+            /// Image Quality Defects
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct DetectedDefect {
+                /// Name of the defect type. Supported values are:
+                ///
+                /// - `quality/defect_blurry`
+                /// - `quality/defect_noisy`
+                /// - `quality/defect_dark`
+                /// - `quality/defect_faint`
+                /// - `quality/defect_text_too_small`
+                /// - `quality/defect_document_cutoff`
+                /// - `quality/defect_text_cutoff`
+                /// - `quality/defect_glare`
+                #[prost(string, tag = "1")]
+                pub r#type: ::prost::alloc::string::String,
+                /// Confidence of detected defect. Range `[0, 1]` where 1 indicates
+                /// strong confidence of that the defect exists.
+                #[prost(float, tag = "2")]
+                pub confidence: f32,
+            }
         }
     }
     /// An entity that could be a phrase in the text or a property that belongs to
@@ -607,14 +659,13 @@ pub mod document {
         /// Required. Entity type from a schema e.g. `Address`.
         #[prost(string, tag = "2")]
         pub r#type: ::prost::alloc::string::String,
-        /// Optional. Text value in the document e.g. `1600 Amphitheatre Pkwy`. If the entity
-        /// is not present in the document, this field will be empty.
+        /// Optional. Text value of the entity e.g. `1600 Amphitheatre Pkwy`.
         #[prost(string, tag = "3")]
         pub mention_text: ::prost::alloc::string::String,
         /// Optional. Deprecated.  Use `id` field instead.
         #[prost(string, tag = "4")]
         pub mention_id: ::prost::alloc::string::String,
-        /// Optional. Confidence of detected Schema entity. Range [0, 1].
+        /// Optional. Confidence of detected Schema entity. Range `[0, 1]`.
         #[prost(float, tag = "5")]
         pub confidence: f32,
         /// Optional. Represents the provenance of this entity wrt. the location on the
@@ -654,6 +705,7 @@ pub mod document {
             /// or int normalized text by default.
             ///
             /// Below are sample formats mapped to structured values.
+            ///
             /// - Money/Currency type (`money_value`) is in the ISO 4217 text format.
             /// - Date type (`date_value`) is in the ISO 8601 text format.
             /// - Datetime type (`datetime_value`) is in the ISO 8601 text format.
@@ -783,7 +835,7 @@ pub mod document {
             /// Optional. Identifies the bounding polygon of a layout element on the page.
             #[prost(message, optional, tag = "4")]
             pub bounding_poly: ::core::option::Option<super::super::BoundingPoly>,
-            /// Optional. Confidence of detected page element, if applicable. Range [0, 1].
+            /// Optional. Confidence of detected page element, if applicable. Range `[0, 1]`.
             #[prost(float, tag = "5")]
             pub confidence: f32,
         }
@@ -993,6 +1045,7 @@ pub mod document {
         #[prost(string, tag = "2")]
         pub changed_text: ::prost::alloc::string::String,
         /// The history of this annotation.
+        #[deprecated]
         #[prost(message, repeated, tag = "3")]
         pub provenance: ::prost::alloc::vec::Vec<Provenance>,
     }
@@ -1020,7 +1073,7 @@ pub struct RawDocument {
     #[prost(bytes = "bytes", tag = "1")]
     pub content: ::prost::bytes::Bytes,
     /// An IANA MIME type (RFC6838) indicating the nature and format of the
-    /// \[content\].
+    /// \[content][google.cloud.documentai.v1.RawDocument.content\].
     #[prost(string, tag = "2")]
     pub mime_type: ::prost::alloc::string::String,
 }
@@ -1060,7 +1113,7 @@ pub mod batch_documents_input_config {
     /// The source.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
-        /// The set of documents that match the specified Cloud Storage \[gcs_prefix\].
+        /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
         #[prost(message, tag = "1")]
         GcsPrefix(super::GcsPrefix),
         /// The set of documents individually specified on Cloud Storage.
@@ -1084,6 +1137,11 @@ pub mod document_output_config {
         /// The Cloud Storage uri (a directory) of the output.
         #[prost(string, tag = "1")]
         pub gcs_uri: ::prost::alloc::string::String,
+        /// Specifies which fields to include in the output documents.
+        /// Only supports top level document and pages field so it must be in the
+        /// form of `{document_field_name}` or `pages.{page_field_name}`.
+        #[prost(message, optional, tag = "2")]
+        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
     }
     /// The destination of the results.
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1098,10 +1156,10 @@ pub mod document_output_config {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessorType {
     /// The resource name of the processor type.
-    /// Format: projects/{project}/processorTypes/{processor_type}
+    /// Format: `projects/{project}/processorTypes/{processor_type}`
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// The type of the processor, e.g., "invoice_parsing".
+    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
     #[prost(string, tag = "2")]
     pub r#type: ::prost::alloc::string::String,
     /// The processor category, used by UI to group processor types.
@@ -1157,15 +1215,16 @@ pub mod document_schema {
         /// Name of the type. It must be unique within the schema file and
         /// cannot be a 'Common Type'.  Besides that we use the following naming
         /// conventions:
-        /// - *use snake_casing*
+        ///
+        /// - *use `snake_casing`*
         /// - name matching is case-insensitive
         /// - Maximum 64 characters.
         /// - Must start with a letter.
         /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
         ///    compatibility internal infrastructure and tooling can handle any ascii
         ///    character)
-        /// - The '/' is sometimes used to denote a property of a type.  For example
-        ///    line_item/amount.  This convention is deprecated, but will still be
+        /// - The `/` is sometimes used to denote a property of a type.  For example
+        ///    `line_item/amount`.  This convention is deprecated, but will still be
         ///    honored for backward compatibility.
         #[prost(string, tag = "1")]
         pub name: ::prost::alloc::string::String,
@@ -1362,6 +1421,9 @@ pub struct ProcessorVersion {
     /// The display name of the processor version.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
+    /// The schema of the processor version. Describes the output.
+    #[prost(message, optional, tag = "12")]
+    pub document_schema: ::core::option::Option<DocumentSchema>,
     /// The state of the processor version.
     #[prost(enumeration = "processor_version::State", tag = "6")]
     pub state: i32,
@@ -1451,7 +1513,7 @@ pub struct Processor {
     /// Format: `projects/{project}/locations/{location}/processors/{processor}`
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// The processor type, e.g., OCR_PROCESSOR, INVOICE_PROCESSOR, etc.
+    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
     /// To get a list of processors types, see
     /// \[FetchProcessorTypes][google.cloud.documentai.v1.DocumentProcessorService.FetchProcessorTypes\].
     #[prost(string, tag = "2")]
@@ -1500,12 +1562,12 @@ pub mod processor {
         Enabled = 1,
         /// The processor is disabled.
         Disabled = 2,
-        /// The processor is being enabled, will become ENABLED if successful.
+        /// The processor is being enabled, will become `ENABLED` if successful.
         Enabling = 3,
-        /// The processor is being disabled, will become DISABLED if successful.
+        /// The processor is being disabled, will become `DISABLED` if successful.
         Disabling = 4,
-        /// The processor is being created, will become either ENABLED (for
-        /// successful creation) or FAILED (for failed ones).
+        /// The processor is being created, will become either `ENABLED` (for
+        /// successful creation) or `FAILED` (for failed ones).
         /// Once a processor is in this state, it can then be used for document
         /// processing, but the feature dependencies of the processor might not be
         /// fully created yet.
@@ -1552,6 +1614,8 @@ pub struct ProcessRequest {
     #[prost(bool, tag = "3")]
     pub skip_human_review: bool,
     /// Specifies which fields to include in ProcessResponse's document.
+    /// Only supports top level document and pages field so it must be in the form
+    /// of `{document_field_name}` or `pages.{page_field_name}`.
     #[prost(message, optional, tag = "6")]
     pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// The document payload.

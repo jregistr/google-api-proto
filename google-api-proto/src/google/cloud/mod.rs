@@ -574,6 +574,8 @@ pub mod vision;
 pub mod visionai;
 #[cfg(any(feature = "google-cloud-vmmigration-v1"))]
 pub mod vmmigration;
+#[cfg(any(feature = "google-cloud-vmwareengine-v1"))]
+pub mod vmwareengine;
 #[cfg(any(feature = "google-cloud-vpcaccess-v1"))]
 pub mod vpcaccess;
 #[cfg(
