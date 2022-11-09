@@ -1,15 +1,6 @@
 /// The metadata for the address.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddressMetadata {
-    /// Indicates that this address is a high-rise building.
-    /// If unset, indicates that the value is unknown.
-    ///
-    /// DEPRECATED: Please use
-    /// \[`address_record_type`\](google.maps.addressvalidation.v1.ValidationResult.usps_data.address_record_type)
-    /// instead. This field will be removed with the GA release.
-    #[deprecated]
-    #[prost(bool, optional, tag = "1")]
-    pub highrise: ::core::option::Option<bool>,
     /// Indicates that this is the address of a business.
     /// If unset, indicates that the value is unknown.
     #[prost(bool, optional, tag = "2")]
@@ -18,13 +9,6 @@ pub struct AddressMetadata {
     /// If unset, indicates that the value is unknown.
     #[prost(bool, optional, tag = "3")]
     pub po_box: ::core::option::Option<bool>,
-    /// Indicates that the address is of a multi-family building.
-    /// If unset, indicates that the value is unknown.
-    ///
-    /// DEPRECATED: this field will be removed with the GA release.
-    #[deprecated]
-    #[prost(bool, optional, tag = "4")]
-    pub multi_family: ::core::option::Option<bool>,
     /// Indicates that this is the address of a residence.
     /// If unset, indicates that the value is unknown.
     #[prost(bool, optional, tag = "6")]
@@ -42,11 +26,11 @@ pub struct Address {
     pub postal_address: ::core::option::Option<
         super::super::super::r#type::PostalAddress,
     >,
-    /// The individual address components of the formatted and corrected address,
+    /// Unordered list. The individual address components of the formatted and corrected address,
     /// along with validation information. This provides information on the
     /// validation status of the individual components.
     ///
-    /// Address components are not ordered in a particular way. DO NOT make any
+    /// Address components are not ordered in a particular way. Do not make any
     /// assumptions on the ordering of the address components in the list.
     #[prost(message, repeated, tag = "4")]
     pub address_components: ::prost::alloc::vec::Vec<AddressComponent>,
@@ -55,8 +39,8 @@ pub struct Address {
     /// not be inferred. Components of this type are not present in
     /// `formatted_address`, `postal_address`, or `address_components`. An
     /// example might be `['street_number', 'route']` for an input like
-    /// "Boulder, Colorado, 80301, USA." The list of possible types can be found
-    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/overview#Types>).
+    /// "Boulder, Colorado, 80301, USA". The list of possible types can be found
+    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/requests-geocoding#Types>).
     #[prost(string, repeated, tag = "5")]
     pub missing_component_types: ::prost::alloc::vec::Vec<
         ::prost::alloc::string::String,
@@ -70,8 +54,8 @@ pub struct Address {
     /// \[CONFIRMED][google.maps.addressvalidation.v1.AddressComponent.ConfirmationLevel.CONFIRMED\]
     /// or the
     /// \[inferred][google.maps.addressvalidation.v1.AddressComponent.inferred\]
-    /// flag is not set to `true`.The list of possible types can be found
-    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/overview#Types>).
+    /// flag is not set to `true`. The list of possible types can be found
+    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/requests-geocoding#Types>).
     #[prost(string, repeated, tag = "6")]
     pub unconfirmed_component_types: ::prost::alloc::vec::Vec<
         ::prost::alloc::string::String,
@@ -214,7 +198,7 @@ pub struct Geocode {
     pub place_id: ::prost::alloc::string::String,
     /// The type(s) of place that the input geocoded to. For example,
     /// `['locality', 'political']`. The full list of types can be found
-    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/overview#Types>).
+    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/requests-geocoding#Types>).
     #[prost(string, repeated, tag = "7")]
     pub place_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -334,8 +318,8 @@ pub struct UspsData {
     #[prost(string, tag = "8")]
     pub dpv_no_stat: ::prost::alloc::string::String,
     /// The carrier route code.
-    /// A four character code--a one letter prefix and a three digit route
-    /// designator.
+    /// A four character code consisting of a one letter prefix and a three digit
+    /// route designator.
     ///
     /// Prefixes:
     ///
@@ -419,7 +403,7 @@ pub struct UspsData {
     /// processing is suspended because of the detection of artificially created
     /// addresses.
     ///
-    /// The USPS data fields may not be populated when this error is present.
+    /// The USPS data fields might not be populated when this error is present.
     #[prost(string, tag = "27")]
     pub error_message: ::prost::alloc::string::String,
     /// Indicator that the request has been CASS processed.
@@ -432,7 +416,7 @@ pub struct ValidateAddressRequest {
     /// Required. The address being validated. Unformatted addresses should be
     /// submitted via \[`address_lines`][google.type.PostalAddress.address_lines\].
     ///
-    /// The total length of the fields in this input must not exceed 300
+    /// The total length of the fields in this input must not exceed 280
     /// characters.
     ///
     /// Supported regions can be found in the
