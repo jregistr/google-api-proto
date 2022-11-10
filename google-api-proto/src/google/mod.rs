@@ -71,6 +71,8 @@ pub mod appengine;
     any(
         feature = "google-apps-alertcenter-v1beta1",
         feature = "google-apps-drive-activity-v2",
+        feature = "google-apps-drive-labels-v2",
+        feature = "google-apps-drive-labels-v2beta",
         feature = "google-apps-script-type",
         feature = "google-apps-script-type-calendar",
         feature = "google-apps-script-type-docs",

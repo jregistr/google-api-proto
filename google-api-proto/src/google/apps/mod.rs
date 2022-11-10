@@ -1,6 +1,12 @@
 #[cfg(any(feature = "google-apps-alertcenter-v1beta1"))]
 pub mod alertcenter;
-#[cfg(any(feature = "google-apps-drive-activity-v2"))]
+#[cfg(
+    any(
+        feature = "google-apps-drive-activity-v2",
+        feature = "google-apps-drive-labels-v2",
+        feature = "google-apps-drive-labels-v2beta",
+    )
+)]
 pub mod drive;
 #[cfg(
     any(
