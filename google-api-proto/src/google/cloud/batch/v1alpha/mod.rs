@@ -244,12 +244,12 @@ pub mod runnable {
         #[prost(bool, tag = "9")]
         pub block_external_network: bool,
         /// Optional username for logging in to a docker registry. If username
-        /// matches "projects/*/secrets/*/versions/*" then Batch will read the
+        /// matches `projects/*/secrets/*/versions/*` then Batch will read the
         /// username from the Secret Manager.
         #[prost(string, tag = "10")]
         pub username: ::prost::alloc::string::String,
         /// Optional password for logging in to a docker registry. If password
-        /// matches "projects/*/secrets/*/versions/*" then Batch will read the
+        /// matches `projects/*/secrets/*/versions/*` then Batch will read the
         /// password from the Secret Manager;
         #[prost(string, tag = "11")]
         pub password: ::prost::alloc::string::String,

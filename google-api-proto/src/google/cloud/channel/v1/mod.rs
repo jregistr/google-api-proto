@@ -317,6 +317,9 @@ pub struct Offer {
     /// Parameters required to use current Offer to purchase.
     #[prost(message, repeated, tag = "9")]
     pub parameter_definitions: ::prost::alloc::vec::Vec<ParameterDefinition>,
+    /// The deal code of the offer to get a special promotion or discount.
+    #[prost(string, tag = "12")]
+    pub deal_code: ::prost::alloc::string::String,
 }
 /// Parameter's definition. Specifies what parameter is required to use the
 /// current Offer to purchase.
