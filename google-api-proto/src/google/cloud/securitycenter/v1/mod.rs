@@ -392,6 +392,34 @@ pub struct ExternalSystem {
     #[prost(message, optional, tag = "5")]
     pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
+/// File information about the related binary/library used by an executable, or
+/// the script used by a script interpreter
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct File {
+    /// Absolute path of the file as a JSON encoded string.
+    #[prost(string, tag = "1")]
+    pub path: ::prost::alloc::string::String,
+    /// Size of the file in bytes.
+    #[prost(int64, tag = "2")]
+    pub size: i64,
+    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
+    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
+    /// of the entire file.
+    #[prost(string, tag = "3")]
+    pub sha256: ::prost::alloc::string::String,
+    /// The length in bytes of the file prefix that was hashed.  If
+    /// hashed_size == size, any hashes reported represent the entire
+    /// file.
+    #[prost(int64, tag = "4")]
+    pub hashed_size: i64,
+    /// True when the hash covers only a prefix of the file.
+    #[prost(bool, tag = "5")]
+    pub partially_hashed: bool,
+    /// Prefix of the file contents as a JSON encoded string.
+    /// (Currently only populated for Malicious Script Executed findings.)
+    #[prost(string, tag = "6")]
+    pub contents: ::prost::alloc::string::String,
+}
 /// Represents a particular IAM binding, which captures a member's role addition,
 /// removal, or state.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -917,6 +945,8 @@ pub mod mitre_attack {
         AccessTokenManipulation = 33,
         /// T1548
         AbuseElevationControlMechanism = 34,
+        /// T1078.001
+        DefaultAccounts = 35,
     }
     impl Technique {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -970,37 +1000,10 @@ pub mod mitre_attack {
                 Technique::AbuseElevationControlMechanism => {
                     "ABUSE_ELEVATION_CONTROL_MECHANISM"
                 }
+                Technique::DefaultAccounts => "DEFAULT_ACCOUNTS",
             }
         }
     }
-}
-/// File information about the related binary/library used by an executable, or
-/// the script used by a script interpreter
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct File {
-    /// Absolute path of the file as a JSON encoded string.
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
-    /// Size of the file in bytes.
-    #[prost(int64, tag = "2")]
-    pub size: i64,
-    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
-    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
-    /// of the entire file.
-    #[prost(string, tag = "3")]
-    pub sha256: ::prost::alloc::string::String,
-    /// The length in bytes of the file prefix that was hashed.  If
-    /// hashed_size == size, any hashes reported represent the entire
-    /// file.
-    #[prost(int64, tag = "4")]
-    pub hashed_size: i64,
-    /// True when the hash covers only a prefix of the file.
-    #[prost(bool, tag = "5")]
-    pub partially_hashed: bool,
-    /// Prefix of the file contents as a JSON encoded string.
-    /// (Currently only populated for Malicious Script Executed findings.)
-    #[prost(string, tag = "6")]
-    pub contents: ::prost::alloc::string::String,
 }
 /// Represents an operating system process.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1601,6 +1604,9 @@ pub struct Finding {
     /// Database associated with the finding.
     #[prost(message, optional, tag = "44")]
     pub database: ::core::option::Option<Database>,
+    /// File associated with the finding.
+    #[prost(message, repeated, tag = "46")]
+    pub files: ::prost::alloc::vec::Vec<File>,
 }
 /// Nested message and enum types in `Finding`.
 pub mod finding {
@@ -3315,7 +3321,7 @@ pub struct SetFindingStateRequest {
     /// Required. The relative resource name of the finding. See:
     /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
     /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}/finding/{finding_id}".
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}".
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The desired State of the finding.
@@ -3331,9 +3337,9 @@ pub struct SetMuteRequest {
     /// Required. The relative resource name of the finding. See:
     /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
     /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}/finding/{finding_id}",
-    /// "folders/{folder_id}/sources/{source_id}/finding/{finding_id}",
-    /// "projects/{project_id}/sources/{source_id}/finding/{finding_id}".
+    /// "organizations/{organization_id}/sources/{source_id}/findings/{finding_id}",
+    /// "folders/{folder_id}/sources/{source_id}/findings/{finding_id}",
+    /// "projects/{project_id}/sources/{source_id}/findings/{finding_id}".
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The desired state of the Mute.
@@ -3477,7 +3483,7 @@ pub struct UpdateBigQueryExportRequest {
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
-/// Request message for listing  BigQuery exports at a given scope e.g.
+/// Request message for listing BigQuery exports at a given scope e.g.
 /// organization, folder or project.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBigQueryExportsRequest {
