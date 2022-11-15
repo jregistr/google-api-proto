@@ -5,6 +5,8 @@
     )
 )]
 pub mod agentendpoint;
+#[cfg(any(feature = "google-cloud-osconfig-logging"))]
+pub mod logging;
 #[cfg(any(feature = "google-cloud-osconfig-v1"))]
 pub mod v1;
 #[cfg(any(feature = "google-cloud-osconfig-v1alpha"))]

@@ -1137,6 +1137,11 @@ pub mod document_output_config {
         /// The Cloud Storage uri (a directory) of the output.
         #[prost(string, tag = "1")]
         pub gcs_uri: ::prost::alloc::string::String,
+        /// Specifies which fields to include in the output documents.
+        /// Only supports top level document and pages field so it must be in the
+        /// form of `{document_field_name}` or `pages.{page_field_name}`.
+        #[prost(message, optional, tag = "2")]
+        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
     }
     /// The destination of the results.
     #[derive(Clone, PartialEq, ::prost::Oneof)]

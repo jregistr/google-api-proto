@@ -379,6 +379,7 @@ pub mod orgpolicy;
     any(
         feature = "google-cloud-osconfig-agentendpoint-v1",
         feature = "google-cloud-osconfig-agentendpoint-v1beta",
+        feature = "google-cloud-osconfig-logging",
         feature = "google-cloud-osconfig-v1",
         feature = "google-cloud-osconfig-v1alpha",
         feature = "google-cloud-osconfig-v1beta",
