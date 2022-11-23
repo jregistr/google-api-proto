@@ -1,14 +1,3 @@
-/// A FindingTypeStats resource represents stats regarding a specific FindingType
-/// of Findings under a given ScanRun.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FindingTypeStats {
-    /// The finding type associated with the stats.
-    #[prost(string, tag = "1")]
-    pub finding_type: ::prost::alloc::string::String,
-    /// The count of findings belonging to this finding type.
-    #[prost(int32, tag = "2")]
-    pub finding_count: i32,
-}
 /// ! Information about a vulnerability with an HTML.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Form {
@@ -147,22 +136,6 @@ pub struct Finding {
     /// An addon containing information reported for an XSS, if any.
     #[prost(message, optional, tag = "14")]
     pub xss: ::core::option::Option<Xss>,
-}
-/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
-/// Security Scanner Service crawls the web applications, following all links
-/// within the scope of sites, to find the URLs to test against.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CrawledUrl {
-    /// The http method of the request that was used to visit the URL, in
-    /// uppercase.
-    #[prost(string, tag = "1")]
-    pub http_method: ::prost::alloc::string::String,
-    /// The URL that was crawled.
-    #[prost(string, tag = "2")]
-    pub url: ::prost::alloc::string::String,
-    /// The body of the request that was used to visit the URL.
-    #[prost(string, tag = "3")]
-    pub body: ::prost::alloc::string::String,
 }
 /// Defines a custom error message used by CreateScanConfig and UpdateScanConfig
 /// APIs when scan configuration validation fails. It is also reported as part of
@@ -632,6 +605,33 @@ pub mod scan_run {
             }
         }
     }
+}
+/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
+/// Security Scanner Service crawls the web applications, following all links
+/// within the scope of sites, to find the URLs to test against.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CrawledUrl {
+    /// The http method of the request that was used to visit the URL, in
+    /// uppercase.
+    #[prost(string, tag = "1")]
+    pub http_method: ::prost::alloc::string::String,
+    /// The URL that was crawled.
+    #[prost(string, tag = "2")]
+    pub url: ::prost::alloc::string::String,
+    /// The body of the request that was used to visit the URL.
+    #[prost(string, tag = "3")]
+    pub body: ::prost::alloc::string::String,
+}
+/// A FindingTypeStats resource represents stats regarding a specific FindingType
+/// of Findings under a given ScanRun.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FindingTypeStats {
+    /// The finding type associated with the stats.
+    #[prost(string, tag = "1")]
+    pub finding_type: ::prost::alloc::string::String,
+    /// The count of findings belonging to this finding type.
+    #[prost(int32, tag = "2")]
+    pub finding_count: i32,
 }
 /// A ScanConfig resource contains the configurations to launch a scan.
 #[derive(Clone, PartialEq, ::prost::Message)]

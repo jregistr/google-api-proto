@@ -45,6 +45,8 @@ pub mod assuredworkloads;
 pub mod audit;
 #[cfg(any(feature = "google-cloud-automl-v1", feature = "google-cloud-automl-v1beta1"))]
 pub mod automl;
+#[cfg(any(feature = "google-cloud-backupdr-logging-v1"))]
+pub mod backupdr;
 #[cfg(any(feature = "google-cloud-baremetalsolution-v2"))]
 pub mod baremetalsolution;
 #[cfg(any(feature = "google-cloud-batch-v1", feature = "google-cloud-batch-v1alpha"))]
