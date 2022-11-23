@@ -1,3 +1,230 @@
+/// A read group is all the data that's processed the same way by the sequencer.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadGroup {
+    /// The server-generated read group ID, unique for all read groups.
+    /// Note: This is different than the @RG ID field in the SAM spec. For that
+    /// value, see \[name][google.genomics.v1.ReadGroup.name\].
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The dataset to which this read group belongs.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The read group name. This corresponds to the @RG ID field in the SAM spec.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// A free-form text description of this read group.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// A client-supplied sample identifier for the reads in this read group.
+    #[prost(string, tag = "5")]
+    pub sample_id: ::prost::alloc::string::String,
+    /// The experiment used to generate this read group.
+    #[prost(message, optional, tag = "6")]
+    pub experiment: ::core::option::Option<read_group::Experiment>,
+    /// The predicted insert size of this read group. The insert size is the length
+    /// the sequenced DNA fragment from end-to-end, not including the adapters.
+    #[prost(int32, tag = "7")]
+    pub predicted_insert_size: i32,
+    /// The programs used to generate this read group. Programs are always
+    /// identical for all read groups within a read group set. For this reason,
+    /// only the first read group in a returned set will have this field
+    /// populated.
+    #[prost(message, repeated, tag = "10")]
+    pub programs: ::prost::alloc::vec::Vec<read_group::Program>,
+    /// The reference set the reads in this read group are aligned to.
+    #[prost(string, tag = "11")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// A map of additional read group information. This must be of the form
+    /// map<string, string[]> (string key mapping to a list of string values).
+    #[prost(btree_map = "string, message", tag = "12")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+}
+/// Nested message and enum types in `ReadGroup`.
+pub mod read_group {
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Experiment {
+        /// A client-supplied library identifier; a library is a collection of DNA
+        /// fragments which have been prepared for sequencing from a sample. This
+        /// field is important for quality control as error or bias can be introduced
+        /// during sample preparation.
+        #[prost(string, tag = "1")]
+        pub library_id: ::prost::alloc::string::String,
+        /// The platform unit used as part of this experiment, for example
+        /// flowcell-barcode.lane for Illumina or slide for SOLiD. Corresponds to the
+        /// @RG PU field in the SAM spec.
+        #[prost(string, tag = "2")]
+        pub platform_unit: ::prost::alloc::string::String,
+        /// The sequencing center used as part of this experiment.
+        #[prost(string, tag = "3")]
+        pub sequencing_center: ::prost::alloc::string::String,
+        /// The instrument model used as part of this experiment. This maps to
+        /// sequencing technology in the SAM spec.
+        #[prost(string, tag = "4")]
+        pub instrument_model: ::prost::alloc::string::String,
+    }
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Program {
+        /// The command line used to run this program.
+        #[prost(string, tag = "1")]
+        pub command_line: ::prost::alloc::string::String,
+        /// The user specified locally unique ID of the program. Used along with
+        /// `prevProgramId` to define an ordering between programs.
+        #[prost(string, tag = "2")]
+        pub id: ::prost::alloc::string::String,
+        /// The display name of the program. This is typically the colloquial name of
+        /// the tool used, for example 'bwa' or 'picard'.
+        #[prost(string, tag = "3")]
+        pub name: ::prost::alloc::string::String,
+        /// The ID of the program run before this one.
+        #[prost(string, tag = "4")]
+        pub prev_program_id: ::prost::alloc::string::String,
+        /// The version of the program run.
+        #[prost(string, tag = "5")]
+        pub version: ::prost::alloc::string::String,
+    }
+}
+/// A read group set is a logical collection of read groups, which are
+/// collections of reads produced by a sequencer. A read group set typically
+/// models reads corresponding to one sample, sequenced one way, and aligned one
+/// way.
+///
+/// * A read group set belongs to one dataset.
+/// * A read group belongs to one read group set.
+/// * A read belongs to one read group.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadGroupSet {
+    /// The server-generated read group set ID, unique for all read group sets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The dataset to which this read group set belongs.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The reference set to which the reads in this read group set are aligned.
+    #[prost(string, tag = "3")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// The read group set name. By default this will be initialized to the sample
+    /// name of the sequenced data contained in this set.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The filename of the original source file for this read group set, if any.
+    #[prost(string, tag = "5")]
+    pub filename: ::prost::alloc::string::String,
+    /// The read groups in this set. There are typically 1-10 read groups in a read
+    /// group set.
+    #[prost(message, repeated, tag = "6")]
+    pub read_groups: ::prost::alloc::vec::Vec<ReadGroup>,
+    /// A map of additional read group set information.
+    #[prost(btree_map = "string, message", tag = "7")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+}
+/// A single CIGAR operation.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CigarUnit {
+    #[prost(enumeration = "cigar_unit::Operation", tag = "1")]
+    pub operation: i32,
+    /// The number of genomic bases that the operation runs for. Required.
+    #[prost(int64, tag = "2")]
+    pub operation_length: i64,
+    /// `referenceSequence` is only used at mismatches
+    /// (`SEQUENCE_MISMATCH`) and deletions (`DELETE`).
+    /// Filling this field replaces SAM's MD tag. If the relevant information is
+    /// not available, this field is unset.
+    #[prost(string, tag = "3")]
+    pub reference_sequence: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `CigarUnit`.
+pub mod cigar_unit {
+    /// Describes the different types of CIGAR alignment operations that exist.
+    /// Used wherever CIGAR alignments are used.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Operation {
+        Unspecified = 0,
+        /// An alignment match indicates that a sequence can be aligned to the
+        /// reference without evidence of an INDEL. Unlike the
+        /// `SEQUENCE_MATCH` and `SEQUENCE_MISMATCH` operators,
+        /// the `ALIGNMENT_MATCH` operator does not indicate whether the
+        /// reference and read sequences are an exact match. This operator is
+        /// equivalent to SAM's `M`.
+        AlignmentMatch = 1,
+        /// The insert operator indicates that the read contains evidence of bases
+        /// being inserted into the reference. This operator is equivalent to SAM's
+        /// `I`.
+        Insert = 2,
+        /// The delete operator indicates that the read contains evidence of bases
+        /// being deleted from the reference. This operator is equivalent to SAM's
+        /// `D`.
+        Delete = 3,
+        /// The skip operator indicates that this read skips a long segment of the
+        /// reference, but the bases have not been deleted. This operator is commonly
+        /// used when working with RNA-seq data, where reads may skip long segments
+        /// of the reference between exons. This operator is equivalent to SAM's
+        /// `N`.
+        Skip = 4,
+        /// The soft clip operator indicates that bases at the start/end of a read
+        /// have not been considered during alignment. This may occur if the majority
+        /// of a read maps, except for low quality bases at the start/end of a read.
+        /// This operator is equivalent to SAM's `S`. Bases that are soft
+        /// clipped will still be stored in the read.
+        ClipSoft = 5,
+        /// The hard clip operator indicates that bases at the start/end of a read
+        /// have been omitted from this alignment. This may occur if this linear
+        /// alignment is part of a chimeric alignment, or if the read has been
+        /// trimmed (for example, during error correction or to trim poly-A tails for
+        /// RNA-seq). This operator is equivalent to SAM's `H`.
+        ClipHard = 6,
+        /// The pad operator indicates that there is padding in an alignment. This
+        /// operator is equivalent to SAM's `P`.
+        Pad = 7,
+        /// This operator indicates that this portion of the aligned sequence exactly
+        /// matches the reference. This operator is equivalent to SAM's `=`.
+        SequenceMatch = 8,
+        /// This operator indicates that this portion of the aligned sequence is an
+        /// alignment match to the reference, but a sequence mismatch. This can
+        /// indicate a SNP or a read error. This operator is equivalent to SAM's
+        /// `X`.
+        SequenceMismatch = 9,
+    }
+    impl Operation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Operation::Unspecified => "OPERATION_UNSPECIFIED",
+                Operation::AlignmentMatch => "ALIGNMENT_MATCH",
+                Operation::Insert => "INSERT",
+                Operation::Delete => "DELETE",
+                Operation::Skip => "SKIP",
+                Operation::ClipSoft => "CLIP_SOFT",
+                Operation::ClipHard => "CLIP_HARD",
+                Operation::Pad => "PAD",
+                Operation::SequenceMatch => "SEQUENCE_MATCH",
+                Operation::SequenceMismatch => "SEQUENCE_MISMATCH",
+            }
+        }
+    }
+}
 /// An annotation set is a logical grouping of annotations that share consistent
 /// type information and provenance. Examples of annotation sets include 'all
 /// genes from refseq', and 'all variant annotations from ClinVar'.
@@ -997,232 +1224,36 @@ pub mod annotation_service_v1_client {
         }
     }
 }
-/// A read group is all the data that's processed the same way by the sequencer.
+/// A 0-based half-open genomic coordinate range for search requests.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadGroup {
-    /// The server-generated read group ID, unique for all read groups.
-    /// Note: This is different than the @RG ID field in the SAM spec. For that
-    /// value, see \[name][google.genomics.v1.ReadGroup.name\].
+pub struct Range {
+    /// The reference sequence name, for example `chr1`,
+    /// `1`, or `chrX`.
     #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The dataset to which this read group belongs.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The read group name. This corresponds to the @RG ID field in the SAM spec.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// A free-form text description of this read group.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// A client-supplied sample identifier for the reads in this read group.
-    #[prost(string, tag = "5")]
-    pub sample_id: ::prost::alloc::string::String,
-    /// The experiment used to generate this read group.
-    #[prost(message, optional, tag = "6")]
-    pub experiment: ::core::option::Option<read_group::Experiment>,
-    /// The predicted insert size of this read group. The insert size is the length
-    /// the sequenced DNA fragment from end-to-end, not including the adapters.
-    #[prost(int32, tag = "7")]
-    pub predicted_insert_size: i32,
-    /// The programs used to generate this read group. Programs are always
-    /// identical for all read groups within a read group set. For this reason,
-    /// only the first read group in a returned set will have this field
-    /// populated.
-    #[prost(message, repeated, tag = "10")]
-    pub programs: ::prost::alloc::vec::Vec<read_group::Program>,
-    /// The reference set the reads in this read group are aligned to.
-    #[prost(string, tag = "11")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// A map of additional read group information. This must be of the form
-    /// map<string, string[]> (string key mapping to a list of string values).
-    #[prost(btree_map = "string, message", tag = "12")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-}
-/// Nested message and enum types in `ReadGroup`.
-pub mod read_group {
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Experiment {
-        /// A client-supplied library identifier; a library is a collection of DNA
-        /// fragments which have been prepared for sequencing from a sample. This
-        /// field is important for quality control as error or bias can be introduced
-        /// during sample preparation.
-        #[prost(string, tag = "1")]
-        pub library_id: ::prost::alloc::string::String,
-        /// The platform unit used as part of this experiment, for example
-        /// flowcell-barcode.lane for Illumina or slide for SOLiD. Corresponds to the
-        /// @RG PU field in the SAM spec.
-        #[prost(string, tag = "2")]
-        pub platform_unit: ::prost::alloc::string::String,
-        /// The sequencing center used as part of this experiment.
-        #[prost(string, tag = "3")]
-        pub sequencing_center: ::prost::alloc::string::String,
-        /// The instrument model used as part of this experiment. This maps to
-        /// sequencing technology in the SAM spec.
-        #[prost(string, tag = "4")]
-        pub instrument_model: ::prost::alloc::string::String,
-    }
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Program {
-        /// The command line used to run this program.
-        #[prost(string, tag = "1")]
-        pub command_line: ::prost::alloc::string::String,
-        /// The user specified locally unique ID of the program. Used along with
-        /// `prevProgramId` to define an ordering between programs.
-        #[prost(string, tag = "2")]
-        pub id: ::prost::alloc::string::String,
-        /// The display name of the program. This is typically the colloquial name of
-        /// the tool used, for example 'bwa' or 'picard'.
-        #[prost(string, tag = "3")]
-        pub name: ::prost::alloc::string::String,
-        /// The ID of the program run before this one.
-        #[prost(string, tag = "4")]
-        pub prev_program_id: ::prost::alloc::string::String,
-        /// The version of the program run.
-        #[prost(string, tag = "5")]
-        pub version: ::prost::alloc::string::String,
-    }
-}
-/// A read group set is a logical collection of read groups, which are
-/// collections of reads produced by a sequencer. A read group set typically
-/// models reads corresponding to one sample, sequenced one way, and aligned one
-/// way.
-///
-/// * A read group set belongs to one dataset.
-/// * A read group belongs to one read group set.
-/// * A read belongs to one read group.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadGroupSet {
-    /// The server-generated read group set ID, unique for all read group sets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The dataset to which this read group set belongs.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The reference set to which the reads in this read group set are aligned.
-    #[prost(string, tag = "3")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// The read group set name. By default this will be initialized to the sample
-    /// name of the sequenced data contained in this set.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The filename of the original source file for this read group set, if any.
-    #[prost(string, tag = "5")]
-    pub filename: ::prost::alloc::string::String,
-    /// The read groups in this set. There are typically 1-10 read groups in a read
-    /// group set.
-    #[prost(message, repeated, tag = "6")]
-    pub read_groups: ::prost::alloc::vec::Vec<ReadGroup>,
-    /// A map of additional read group set information.
-    #[prost(btree_map = "string, message", tag = "7")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-}
-/// A single CIGAR operation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CigarUnit {
-    #[prost(enumeration = "cigar_unit::Operation", tag = "1")]
-    pub operation: i32,
-    /// The number of genomic bases that the operation runs for. Required.
+    pub reference_name: ::prost::alloc::string::String,
+    /// The start position of the range on the reference, 0-based inclusive.
     #[prost(int64, tag = "2")]
-    pub operation_length: i64,
-    /// `referenceSequence` is only used at mismatches
-    /// (`SEQUENCE_MISMATCH`) and deletions (`DELETE`).
-    /// Filling this field replaces SAM's MD tag. If the relevant information is
-    /// not available, this field is unset.
-    #[prost(string, tag = "3")]
-    pub reference_sequence: ::prost::alloc::string::String,
+    pub start: i64,
+    /// The end position of the range on the reference, 0-based exclusive.
+    #[prost(int64, tag = "3")]
+    pub end: i64,
 }
-/// Nested message and enum types in `CigarUnit`.
-pub mod cigar_unit {
-    /// Describes the different types of CIGAR alignment operations that exist.
-    /// Used wherever CIGAR alignments are used.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Operation {
-        Unspecified = 0,
-        /// An alignment match indicates that a sequence can be aligned to the
-        /// reference without evidence of an INDEL. Unlike the
-        /// `SEQUENCE_MATCH` and `SEQUENCE_MISMATCH` operators,
-        /// the `ALIGNMENT_MATCH` operator does not indicate whether the
-        /// reference and read sequences are an exact match. This operator is
-        /// equivalent to SAM's `M`.
-        AlignmentMatch = 1,
-        /// The insert operator indicates that the read contains evidence of bases
-        /// being inserted into the reference. This operator is equivalent to SAM's
-        /// `I`.
-        Insert = 2,
-        /// The delete operator indicates that the read contains evidence of bases
-        /// being deleted from the reference. This operator is equivalent to SAM's
-        /// `D`.
-        Delete = 3,
-        /// The skip operator indicates that this read skips a long segment of the
-        /// reference, but the bases have not been deleted. This operator is commonly
-        /// used when working with RNA-seq data, where reads may skip long segments
-        /// of the reference between exons. This operator is equivalent to SAM's
-        /// `N`.
-        Skip = 4,
-        /// The soft clip operator indicates that bases at the start/end of a read
-        /// have not been considered during alignment. This may occur if the majority
-        /// of a read maps, except for low quality bases at the start/end of a read.
-        /// This operator is equivalent to SAM's `S`. Bases that are soft
-        /// clipped will still be stored in the read.
-        ClipSoft = 5,
-        /// The hard clip operator indicates that bases at the start/end of a read
-        /// have been omitted from this alignment. This may occur if this linear
-        /// alignment is part of a chimeric alignment, or if the read has been
-        /// trimmed (for example, during error correction or to trim poly-A tails for
-        /// RNA-seq). This operator is equivalent to SAM's `H`.
-        ClipHard = 6,
-        /// The pad operator indicates that there is padding in an alignment. This
-        /// operator is equivalent to SAM's `P`.
-        Pad = 7,
-        /// This operator indicates that this portion of the aligned sequence exactly
-        /// matches the reference. This operator is equivalent to SAM's `=`.
-        SequenceMatch = 8,
-        /// This operator indicates that this portion of the aligned sequence is an
-        /// alignment match to the reference, but a sequence mismatch. This can
-        /// indicate a SNP or a read error. This operator is equivalent to SAM's
-        /// `X`.
-        SequenceMismatch = 9,
-    }
-    impl Operation {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Operation::Unspecified => "OPERATION_UNSPECIFIED",
-                Operation::AlignmentMatch => "ALIGNMENT_MATCH",
-                Operation::Insert => "INSERT",
-                Operation::Delete => "DELETE",
-                Operation::Skip => "SKIP",
-                Operation::ClipSoft => "CLIP_SOFT",
-                Operation::ClipHard => "CLIP_HARD",
-                Operation::Pad => "PAD",
-                Operation::SequenceMatch => "SEQUENCE_MATCH",
-                Operation::SequenceMismatch => "SEQUENCE_MISMATCH",
-            }
-        }
-    }
+/// An abstraction for referring to a genomic position, in relation to some
+/// already known reference. For now, represents a genomic position as a
+/// reference name, a base number on that reference (0-based), and a
+/// determination of forward or reverse strand.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Position {
+    /// The name of the reference in whatever reference set is being used.
+    #[prost(string, tag = "1")]
+    pub reference_name: ::prost::alloc::string::String,
+    /// The 0-based offset from the start of the forward strand for that reference.
+    #[prost(int64, tag = "2")]
+    pub position: i64,
+    /// Whether this position is on the reverse strand, as opposed to the forward
+    /// strand.
+    #[prost(bool, tag = "3")]
+    pub reverse_strand: bool,
 }
 /// Metadata describes a single piece of variant call metadata.
 /// These data include a top level key and either a single value string (value)
@@ -2644,434 +2675,6 @@ pub mod variant_service_v1_client {
         }
     }
 }
-/// A Dataset is a collection of genomic data.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Dataset {
-    /// The server-generated dataset ID, unique across all datasets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The Google Cloud project ID that this dataset belongs to.
-    #[prost(string, tag = "2")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The dataset name.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// The time this dataset was created, in seconds from the epoch.
-    #[prost(message, optional, tag = "4")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The dataset list request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDatasetsRequest {
-    /// Required. The Google Cloud project ID to list datasets for.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 50. The maximum value is 1024.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The dataset list response.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDatasetsResponse {
-    /// The list of matching Datasets.
-    #[prost(message, repeated, tag = "1")]
-    pub datasets: ::prost::alloc::vec::Vec<Dataset>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateDatasetRequest {
-    /// The dataset to be created. Must contain projectId and name.
-    #[prost(message, optional, tag = "1")]
-    pub dataset: ::core::option::Option<Dataset>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateDatasetRequest {
-    /// The ID of the dataset to be updated.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The new dataset data.
-    #[prost(message, optional, tag = "2")]
-    pub dataset: ::core::option::Option<Dataset>,
-    /// An optional mask specifying which fields to update. At this time, the only
-    /// mutable field is \[name][google.genomics.v1.Dataset.name\]. The only
-    /// acceptable value is "name". If unspecified, all mutable fields will be
-    /// updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteDatasetRequest {
-    /// The ID of the dataset to be deleted.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UndeleteDatasetRequest {
-    /// The ID of the dataset to be undeleted.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetDatasetRequest {
-    /// The ID of the dataset.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod dataset_service_v1_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service manages datasets, which are collections of genomic data.
-    #[derive(Debug, Clone)]
-    pub struct DatasetServiceV1Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> DatasetServiceV1Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> DatasetServiceV1Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            DatasetServiceV1Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists datasets within a project.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn list_datasets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListDatasetsRequest>,
-        ) -> Result<tonic::Response<super::ListDatasetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/ListDatasets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new dataset.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn create_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/CreateDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a dataset by ID.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn get_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/GetDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a dataset.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// This method supports patch semantics.
-        pub async fn update_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/UpdateDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a dataset and all of its contents (all read group sets,
-        /// reference sets, variant sets, call sets, annotation sets, etc.)
-        /// This is reversible (up to one week after the deletion) via
-        /// the
-        /// [datasets.undelete][google.genomics.v1.DatasetServiceV1.UndeleteDataset]
-        /// operation.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn delete_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteDatasetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/DeleteDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Undeletes a dataset by restoring a dataset which was deleted via this API.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// This operation is only possible for a week after the deletion occurred.
-        pub async fn undelete_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UndeleteDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/UndeleteDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on the specified dataset. Replaces any
-        /// existing policy.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// See <a href="/iam/docs/managing-policies#setting_a_policy">Setting a
-        /// Policy</a> for more information.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for the dataset. This is empty if the
-        /// policy or resource does not exist.
-        ///
-        /// See <a href="/iam/docs/managing-policies#getting_a_policy">Getting a
-        /// Policy</a> for more information.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns permissions that a caller has on the specified resource.
-        /// See <a href="/iam/docs/managing-policies#testing_permissions">Testing
-        /// Permissions</a> for more information.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::TestIamPermissionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A 0-based half-open genomic coordinate range for search requests.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Range {
-    /// The reference sequence name, for example `chr1`,
-    /// `1`, or `chrX`.
-    #[prost(string, tag = "1")]
-    pub reference_name: ::prost::alloc::string::String,
-    /// The start position of the range on the reference, 0-based inclusive.
-    #[prost(int64, tag = "2")]
-    pub start: i64,
-    /// The end position of the range on the reference, 0-based exclusive.
-    #[prost(int64, tag = "3")]
-    pub end: i64,
-}
-/// An abstraction for referring to a genomic position, in relation to some
-/// already known reference. For now, represents a genomic position as a
-/// reference name, a base number on that reference (0-based), and a
-/// determination of forward or reverse strand.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Position {
-    /// The name of the reference in whatever reference set is being used.
-    #[prost(string, tag = "1")]
-    pub reference_name: ::prost::alloc::string::String,
-    /// The 0-based offset from the start of the forward strand for that reference.
-    #[prost(int64, tag = "2")]
-    pub position: i64,
-    /// Whether this position is on the reverse strand, as opposed to the forward
-    /// strand.
-    #[prost(bool, tag = "3")]
-    pub reverse_strand: bool,
-}
 /// A linear alignment can be represented by one CIGAR string. Describes the
 /// mapped position and local alignment of the read to the reference.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4460,4 +4063,401 @@ pub struct OperationEvent {
     /// Required description of event.
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
+}
+/// A Dataset is a collection of genomic data.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Dataset {
+    /// The server-generated dataset ID, unique across all datasets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The Google Cloud project ID that this dataset belongs to.
+    #[prost(string, tag = "2")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The dataset name.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// The time this dataset was created, in seconds from the epoch.
+    #[prost(message, optional, tag = "4")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The dataset list request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDatasetsRequest {
+    /// Required. The Google Cloud project ID to list datasets for.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 50. The maximum value is 1024.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The dataset list response.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDatasetsResponse {
+    /// The list of matching Datasets.
+    #[prost(message, repeated, tag = "1")]
+    pub datasets: ::prost::alloc::vec::Vec<Dataset>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateDatasetRequest {
+    /// The dataset to be created. Must contain projectId and name.
+    #[prost(message, optional, tag = "1")]
+    pub dataset: ::core::option::Option<Dataset>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDatasetRequest {
+    /// The ID of the dataset to be updated.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The new dataset data.
+    #[prost(message, optional, tag = "2")]
+    pub dataset: ::core::option::Option<Dataset>,
+    /// An optional mask specifying which fields to update. At this time, the only
+    /// mutable field is \[name][google.genomics.v1.Dataset.name\]. The only
+    /// acceptable value is "name". If unspecified, all mutable fields will be
+    /// updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteDatasetRequest {
+    /// The ID of the dataset to be deleted.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UndeleteDatasetRequest {
+    /// The ID of the dataset to be undeleted.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetDatasetRequest {
+    /// The ID of the dataset.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod dataset_service_v1_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service manages datasets, which are collections of genomic data.
+    #[derive(Debug, Clone)]
+    pub struct DatasetServiceV1Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> DatasetServiceV1Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> DatasetServiceV1Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            DatasetServiceV1Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Lists datasets within a project.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn list_datasets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListDatasetsRequest>,
+        ) -> Result<tonic::Response<super::ListDatasetsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/ListDatasets",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new dataset.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn create_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateDatasetRequest>,
+        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/CreateDataset",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a dataset by ID.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn get_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetDatasetRequest>,
+        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/GetDataset",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a dataset.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// This method supports patch semantics.
+        pub async fn update_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateDatasetRequest>,
+        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/UpdateDataset",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a dataset and all of its contents (all read group sets,
+        /// reference sets, variant sets, call sets, annotation sets, etc.)
+        /// This is reversible (up to one week after the deletion) via
+        /// the
+        /// [datasets.undelete][google.genomics.v1.DatasetServiceV1.UndeleteDataset]
+        /// operation.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn delete_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteDatasetRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/DeleteDataset",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Undeletes a dataset by restoring a dataset which was deleted via this API.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// This operation is only possible for a week after the deletion occurred.
+        pub async fn undelete_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UndeleteDatasetRequest>,
+        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/UndeleteDataset",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the access control policy on the specified dataset. Replaces any
+        /// existing policy.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// See <a href="/iam/docs/managing-policies#setting_a_policy">Setting a
+        /// Policy</a> for more information.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the access control policy for the dataset. This is empty if the
+        /// policy or resource does not exist.
+        ///
+        /// See <a href="/iam/docs/managing-policies#getting_a_policy">Getting a
+        /// Policy</a> for more information.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns permissions that a caller has on the specified resource.
+        /// See <a href="/iam/docs/managing-policies#testing_permissions">Testing
+        /// Permissions</a> for more information.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::iam::v1::TestIamPermissionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
 }

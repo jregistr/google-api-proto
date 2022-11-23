@@ -1,22 +1,22 @@
-/// Table reference that includes just the 3 strings needed to identify a table.
+/// Options dictating how we read a table.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableReference {
-    /// The assigned project ID of the project.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The ID of the dataset in the above project.
+pub struct TableReadOptions {
+    /// Optional. Names of the fields in the table that should be read. If empty,
+    /// all fields will be read. If the specified field is a nested field, all the
+    /// sub-fields in the field will be selected. The output field order is
+    /// unrelated to the order of fields in selected_fields.
+    #[prost(string, repeated, tag = "1")]
+    pub selected_fields: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. SQL text filtering statement, similar to a WHERE clause in
+    /// a query. Aggregates are not supported.
+    ///
+    /// Examples: "int_field > 5"
+    ///            "date_field = CAST('2014-9-27' as DATE)"
+    ///            "nullable_field is not NULL"
+    ///            "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
+    ///            "numeric_field BETWEEN 1.0 AND 5.0"
     #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The ID of the table in the above dataset.
-    #[prost(string, tag = "3")]
-    pub table_id: ::prost::alloc::string::String,
-}
-/// All fields in this message optional.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableModifiers {
-    /// The snapshot time of the table. If not set, interpreted as now.
-    #[prost(message, optional, tag = "1")]
-    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub row_restriction: ::prost::alloc::string::String,
 }
 /// Arrow schema.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -53,25 +53,25 @@ pub struct AvroRows {
     #[prost(int64, tag = "2")]
     pub row_count: i64,
 }
-/// Options dictating how we read a table.
+/// Table reference that includes just the 3 strings needed to identify a table.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableReadOptions {
-    /// Optional. Names of the fields in the table that should be read. If empty,
-    /// all fields will be read. If the specified field is a nested field, all the
-    /// sub-fields in the field will be selected. The output field order is
-    /// unrelated to the order of fields in selected_fields.
-    #[prost(string, repeated, tag = "1")]
-    pub selected_fields: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. SQL text filtering statement, similar to a WHERE clause in
-    /// a query. Aggregates are not supported.
-    ///
-    /// Examples: "int_field > 5"
-    ///            "date_field = CAST('2014-9-27' as DATE)"
-    ///            "nullable_field is not NULL"
-    ///            "st_equals(geo_field, st_geofromtext("POINT(2, 2)"))"
-    ///            "numeric_field BETWEEN 1.0 AND 5.0"
+pub struct TableReference {
+    /// The assigned project ID of the project.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The ID of the dataset in the above project.
     #[prost(string, tag = "2")]
-    pub row_restriction: ::prost::alloc::string::String,
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The ID of the table in the above dataset.
+    #[prost(string, tag = "3")]
+    pub table_id: ::prost::alloc::string::String,
+}
+/// All fields in this message optional.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableModifiers {
+    /// The snapshot time of the table. If not set, interpreted as now.
+    #[prost(message, optional, tag = "1")]
+    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Information about a single data stream within a read session.
 #[derive(Clone, PartialEq, ::prost::Message)]

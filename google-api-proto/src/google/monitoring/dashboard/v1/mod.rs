@@ -1,3 +1,50 @@
+/// A widget that displays textual content.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Text {
+    /// The text content to be displayed.
+    #[prost(string, tag = "1")]
+    pub content: ::prost::alloc::string::String,
+    /// How the text content is formatted.
+    #[prost(enumeration = "text::Format", tag = "2")]
+    pub format: i32,
+}
+/// Nested message and enum types in `Text`.
+pub mod text {
+    /// The format type of the text content.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Format {
+        /// Format is unspecified. Defaults to MARKDOWN.
+        Unspecified = 0,
+        /// The text contains Markdown formatting.
+        Markdown = 1,
+        /// The text contains no special formatting.
+        Raw = 2,
+    }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Markdown => "MARKDOWN",
+                Format::Raw => "RAW",
+            }
+        }
+    }
+}
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
 /// series in the set is _aligned_ to the same time interval boundaries, then the
@@ -820,6 +867,86 @@ impl SparkChartType {
         }
     }
 }
+/// Table display options that can be reused.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableDisplayOptions {
+    /// Optional. This field is unused and has been replaced by
+    /// TimeSeriesTable.column_settings
+    #[deprecated]
+    #[prost(string, repeated, tag = "1")]
+    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag = "1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag = "3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag = "4")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// A chart that displays data on a 2D (X and Y axes) plane.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct XyChart {
@@ -1061,77 +1188,6 @@ pub mod chart_options {
         }
     }
 }
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag = "1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag = "3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    impl FilterType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
-                FilterType::ResourceLabel => "RESOURCE_LABEL",
-                FilterType::MetricLabel => "METRIC_LABEL",
-                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
-                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
-                FilterType::Group => "GROUP",
-            }
-        }
-    }
-    /// The default value used in the filter comparison
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag = "4")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
 /// A chart that displays alert policy data.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AlertChart {
@@ -1258,15 +1314,6 @@ pub mod scorecard {
         SparkChartView(SparkChartView),
     }
 }
-/// Table display options that can be reused.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableDisplayOptions {
-    /// Optional. This field is unused and has been replaced by
-    /// TimeSeriesTable.column_settings
-    #[deprecated]
-    #[prost(string, repeated, tag = "1")]
-    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// A table that displays time series data.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeSeriesTable {
@@ -1299,53 +1346,6 @@ pub mod time_series_table {
         /// Optional. Table display options for configuring how the table is rendered.
         #[prost(message, optional, tag = "4")]
         pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
-    }
-}
-/// A widget that displays textual content.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Text {
-    /// The text content to be displayed.
-    #[prost(string, tag = "1")]
-    pub content: ::prost::alloc::string::String,
-    /// How the text content is formatted.
-    #[prost(enumeration = "text::Format", tag = "2")]
-    pub format: i32,
-}
-/// Nested message and enum types in `Text`.
-pub mod text {
-    /// The format type of the text content.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Format {
-        /// Format is unspecified. Defaults to MARKDOWN.
-        Unspecified = 0,
-        /// The text contains Markdown formatting.
-        Markdown = 1,
-        /// The text contains no special formatting.
-        Raw = 2,
-    }
-    impl Format {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Format::Unspecified => "FORMAT_UNSPECIFIED",
-                Format::Markdown => "MARKDOWN",
-                Format::Raw => "RAW",
-            }
-        }
     }
 }
 /// Widget contains a single dashboard component and configuration of how to

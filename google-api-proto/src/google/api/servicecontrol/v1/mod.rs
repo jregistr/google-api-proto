@@ -1,194 +1,3 @@
-/// Defines the errors to be returned in
-/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckError {
-    /// The error code.
-    #[prost(enumeration = "check_error::Code", tag = "1")]
-    pub code: i32,
-    /// Subject to whom this error applies. See the specific code enum for more
-    /// details on this field. For example:
-    ///
-    /// - "project:<project-id or project-number>"
-    /// - "folder:<folder-id>"
-    /// - "organization:<organization-id>"
-    #[prost(string, tag = "4")]
-    pub subject: ::prost::alloc::string::String,
-    /// Free-form text providing details on the error cause of the error.
-    #[prost(string, tag = "2")]
-    pub detail: ::prost::alloc::string::String,
-    /// Contains public information about the check error. If available,
-    /// `status.code` will be non zero and client can propagate it out as public
-    /// error.
-    #[prost(message, optional, tag = "3")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-}
-/// Nested message and enum types in `CheckError`.
-pub mod check_error {
-    /// Error codes for Check responses.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Code {
-        /// This is never used in `CheckResponse`.
-        ErrorCodeUnspecified = 0,
-        /// The consumer's project id, network container, or resource container was
-        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
-        NotFound = 5,
-        /// The consumer doesn't have access to the specified resource.
-        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
-        PermissionDenied = 7,
-        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
-        ResourceExhausted = 8,
-        /// The consumer hasn't activated the service.
-        ServiceNotActivated = 104,
-        /// The consumer cannot access the service because billing is disabled.
-        BillingDisabled = 107,
-        /// The consumer's project has been marked as deleted (soft deletion).
-        ProjectDeleted = 108,
-        /// The consumer's project number or id does not represent a valid project.
-        ProjectInvalid = 114,
-        /// The input consumer info does not represent a valid consumer folder or
-        /// organization.
-        ConsumerInvalid = 125,
-        /// The IP address of the consumer is invalid for the specific consumer
-        /// project.
-        IpAddressBlocked = 109,
-        /// The referer address of the consumer request is invalid for the specific
-        /// consumer project.
-        RefererBlocked = 110,
-        /// The client application of the consumer request is invalid for the
-        /// specific consumer project.
-        ClientAppBlocked = 111,
-        /// The API targeted by this request is invalid for the specified consumer
-        /// project.
-        ApiTargetBlocked = 122,
-        /// The consumer's API key is invalid.
-        ApiKeyInvalid = 105,
-        /// The consumer's API Key has expired.
-        ApiKeyExpired = 112,
-        /// The consumer's API Key was not found in config record.
-        ApiKeyNotFound = 113,
-        /// The credential in the request can not be verified.
-        InvalidCredential = 123,
-        /// The backend server for looking up project id/number is unavailable.
-        NamespaceLookupUnavailable = 300,
-        /// The backend server for checking service status is unavailable.
-        ServiceStatusUnavailable = 301,
-        /// The backend server for checking billing status is unavailable.
-        BillingStatusUnavailable = 302,
-        /// Cloud Resource Manager backend server is unavailable.
-        CloudResourceManagerBackendUnavailable = 305,
-    }
-    impl Code {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Code::ErrorCodeUnspecified => "ERROR_CODE_UNSPECIFIED",
-                Code::NotFound => "NOT_FOUND",
-                Code::PermissionDenied => "PERMISSION_DENIED",
-                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
-                Code::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
-                Code::BillingDisabled => "BILLING_DISABLED",
-                Code::ProjectDeleted => "PROJECT_DELETED",
-                Code::ProjectInvalid => "PROJECT_INVALID",
-                Code::ConsumerInvalid => "CONSUMER_INVALID",
-                Code::IpAddressBlocked => "IP_ADDRESS_BLOCKED",
-                Code::RefererBlocked => "REFERER_BLOCKED",
-                Code::ClientAppBlocked => "CLIENT_APP_BLOCKED",
-                Code::ApiTargetBlocked => "API_TARGET_BLOCKED",
-                Code::ApiKeyInvalid => "API_KEY_INVALID",
-                Code::ApiKeyExpired => "API_KEY_EXPIRED",
-                Code::ApiKeyNotFound => "API_KEY_NOT_FOUND",
-                Code::InvalidCredential => "INVALID_CREDENTIAL",
-                Code::NamespaceLookupUnavailable => "NAMESPACE_LOOKUP_UNAVAILABLE",
-                Code::ServiceStatusUnavailable => "SERVICE_STATUS_UNAVAILABLE",
-                Code::BillingStatusUnavailable => "BILLING_STATUS_UNAVAILABLE",
-                Code::CloudResourceManagerBackendUnavailable => {
-                    "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE"
-                }
-            }
-        }
-    }
-}
-/// A common proto for logging HTTP requests. Only contains semantics
-/// defined by the HTTP specification. Product-specific logging
-/// information MUST be defined in a separate message.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HttpRequest {
-    /// The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
-    #[prost(string, tag = "1")]
-    pub request_method: ::prost::alloc::string::String,
-    /// The scheme (http, https), the host name, the path, and the query
-    /// portion of the URL that was requested.
-    /// Example: `"<http://example.com/some/info?color=red"`.>
-    #[prost(string, tag = "2")]
-    pub request_url: ::prost::alloc::string::String,
-    /// The size of the HTTP request message in bytes, including the request
-    /// headers and the request body.
-    #[prost(int64, tag = "3")]
-    pub request_size: i64,
-    /// The response code indicating the status of the response.
-    /// Examples: 200, 404.
-    #[prost(int32, tag = "4")]
-    pub status: i32,
-    /// The size of the HTTP response message sent back to the client, in bytes,
-    /// including the response headers and the response body.
-    #[prost(int64, tag = "5")]
-    pub response_size: i64,
-    /// The user agent sent by the client. Example:
-    /// `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET
-    /// CLR 1.0.3705)"`.
-    #[prost(string, tag = "6")]
-    pub user_agent: ::prost::alloc::string::String,
-    /// The IP address (IPv4 or IPv6) of the client that issued the HTTP
-    /// request. Examples: `"192.168.1.1"`, `"FE80::0202:B3FF:FE1E:8329"`.
-    #[prost(string, tag = "7")]
-    pub remote_ip: ::prost::alloc::string::String,
-    /// The IP address (IPv4 or IPv6) of the origin server that the request was
-    /// sent to.
-    #[prost(string, tag = "13")]
-    pub server_ip: ::prost::alloc::string::String,
-    /// The referer URL of the request, as defined in
-    /// [HTTP/1.1 Header Field
-    /// Definitions](<http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html>).
-    #[prost(string, tag = "8")]
-    pub referer: ::prost::alloc::string::String,
-    /// The request processing latency on the server, from the time the request was
-    /// received until the response was sent.
-    #[prost(message, optional, tag = "14")]
-    pub latency: ::core::option::Option<::prost_types::Duration>,
-    /// Whether or not a cache lookup was attempted.
-    #[prost(bool, tag = "11")]
-    pub cache_lookup: bool,
-    /// Whether or not an entity was served from cache
-    /// (with or without validation).
-    #[prost(bool, tag = "9")]
-    pub cache_hit: bool,
-    /// Whether or not the response was validated with the origin server before
-    /// being served from cache. This field is only meaningful if `cache_hit` is
-    /// True.
-    #[prost(bool, tag = "10")]
-    pub cache_validated_with_origin_server: bool,
-    /// The number of HTTP response bytes inserted into cache. Set only when a
-    /// cache fill was attempted.
-    #[prost(int64, tag = "12")]
-    pub cache_fill_bytes: i64,
-    /// Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
-    #[prost(string, tag = "15")]
-    pub protocol: ::prost::alloc::string::String,
-}
 /// Distribution represents a frequency distribution of double-valued sample
 /// points. It contains the size of the population of sample points plus
 /// additional optional information:
@@ -762,6 +571,73 @@ pub mod quota_controller_client {
         }
     }
 }
+/// A common proto for logging HTTP requests. Only contains semantics
+/// defined by the HTTP specification. Product-specific logging
+/// information MUST be defined in a separate message.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HttpRequest {
+    /// The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
+    #[prost(string, tag = "1")]
+    pub request_method: ::prost::alloc::string::String,
+    /// The scheme (http, https), the host name, the path, and the query
+    /// portion of the URL that was requested.
+    /// Example: `"<http://example.com/some/info?color=red"`.>
+    #[prost(string, tag = "2")]
+    pub request_url: ::prost::alloc::string::String,
+    /// The size of the HTTP request message in bytes, including the request
+    /// headers and the request body.
+    #[prost(int64, tag = "3")]
+    pub request_size: i64,
+    /// The response code indicating the status of the response.
+    /// Examples: 200, 404.
+    #[prost(int32, tag = "4")]
+    pub status: i32,
+    /// The size of the HTTP response message sent back to the client, in bytes,
+    /// including the response headers and the response body.
+    #[prost(int64, tag = "5")]
+    pub response_size: i64,
+    /// The user agent sent by the client. Example:
+    /// `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET
+    /// CLR 1.0.3705)"`.
+    #[prost(string, tag = "6")]
+    pub user_agent: ::prost::alloc::string::String,
+    /// The IP address (IPv4 or IPv6) of the client that issued the HTTP
+    /// request. Examples: `"192.168.1.1"`, `"FE80::0202:B3FF:FE1E:8329"`.
+    #[prost(string, tag = "7")]
+    pub remote_ip: ::prost::alloc::string::String,
+    /// The IP address (IPv4 or IPv6) of the origin server that the request was
+    /// sent to.
+    #[prost(string, tag = "13")]
+    pub server_ip: ::prost::alloc::string::String,
+    /// The referer URL of the request, as defined in
+    /// [HTTP/1.1 Header Field
+    /// Definitions](<http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html>).
+    #[prost(string, tag = "8")]
+    pub referer: ::prost::alloc::string::String,
+    /// The request processing latency on the server, from the time the request was
+    /// received until the response was sent.
+    #[prost(message, optional, tag = "14")]
+    pub latency: ::core::option::Option<::prost_types::Duration>,
+    /// Whether or not a cache lookup was attempted.
+    #[prost(bool, tag = "11")]
+    pub cache_lookup: bool,
+    /// Whether or not an entity was served from cache
+    /// (with or without validation).
+    #[prost(bool, tag = "9")]
+    pub cache_hit: bool,
+    /// Whether or not the response was validated with the origin server before
+    /// being served from cache. This field is only meaningful if `cache_hit` is
+    /// True.
+    #[prost(bool, tag = "10")]
+    pub cache_validated_with_origin_server: bool,
+    /// The number of HTTP response bytes inserted into cache. Set only when a
+    /// cache fill was attempted.
+    #[prost(int64, tag = "12")]
+    pub cache_fill_bytes: i64,
+    /// Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
+    #[prost(string, tag = "15")]
+    pub protocol: ::prost::alloc::string::String,
+}
 /// An individual log entry.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntry {
@@ -872,6 +748,130 @@ pub struct LogEntrySourceLocation {
     /// (Python).
     #[prost(string, tag = "3")]
     pub function: ::prost::alloc::string::String,
+}
+/// Defines the errors to be returned in
+/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckError {
+    /// The error code.
+    #[prost(enumeration = "check_error::Code", tag = "1")]
+    pub code: i32,
+    /// Subject to whom this error applies. See the specific code enum for more
+    /// details on this field. For example:
+    ///
+    /// - "project:<project-id or project-number>"
+    /// - "folder:<folder-id>"
+    /// - "organization:<organization-id>"
+    #[prost(string, tag = "4")]
+    pub subject: ::prost::alloc::string::String,
+    /// Free-form text providing details on the error cause of the error.
+    #[prost(string, tag = "2")]
+    pub detail: ::prost::alloc::string::String,
+    /// Contains public information about the check error. If available,
+    /// `status.code` will be non zero and client can propagate it out as public
+    /// error.
+    #[prost(message, optional, tag = "3")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+}
+/// Nested message and enum types in `CheckError`.
+pub mod check_error {
+    /// Error codes for Check responses.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Code {
+        /// This is never used in `CheckResponse`.
+        ErrorCodeUnspecified = 0,
+        /// The consumer's project id, network container, or resource container was
+        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
+        NotFound = 5,
+        /// The consumer doesn't have access to the specified resource.
+        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
+        PermissionDenied = 7,
+        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
+        ResourceExhausted = 8,
+        /// The consumer hasn't activated the service.
+        ServiceNotActivated = 104,
+        /// The consumer cannot access the service because billing is disabled.
+        BillingDisabled = 107,
+        /// The consumer's project has been marked as deleted (soft deletion).
+        ProjectDeleted = 108,
+        /// The consumer's project number or id does not represent a valid project.
+        ProjectInvalid = 114,
+        /// The input consumer info does not represent a valid consumer folder or
+        /// organization.
+        ConsumerInvalid = 125,
+        /// The IP address of the consumer is invalid for the specific consumer
+        /// project.
+        IpAddressBlocked = 109,
+        /// The referer address of the consumer request is invalid for the specific
+        /// consumer project.
+        RefererBlocked = 110,
+        /// The client application of the consumer request is invalid for the
+        /// specific consumer project.
+        ClientAppBlocked = 111,
+        /// The API targeted by this request is invalid for the specified consumer
+        /// project.
+        ApiTargetBlocked = 122,
+        /// The consumer's API key is invalid.
+        ApiKeyInvalid = 105,
+        /// The consumer's API Key has expired.
+        ApiKeyExpired = 112,
+        /// The consumer's API Key was not found in config record.
+        ApiKeyNotFound = 113,
+        /// The credential in the request can not be verified.
+        InvalidCredential = 123,
+        /// The backend server for looking up project id/number is unavailable.
+        NamespaceLookupUnavailable = 300,
+        /// The backend server for checking service status is unavailable.
+        ServiceStatusUnavailable = 301,
+        /// The backend server for checking billing status is unavailable.
+        BillingStatusUnavailable = 302,
+        /// Cloud Resource Manager backend server is unavailable.
+        CloudResourceManagerBackendUnavailable = 305,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::ErrorCodeUnspecified => "ERROR_CODE_UNSPECIFIED",
+                Code::NotFound => "NOT_FOUND",
+                Code::PermissionDenied => "PERMISSION_DENIED",
+                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
+                Code::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
+                Code::BillingDisabled => "BILLING_DISABLED",
+                Code::ProjectDeleted => "PROJECT_DELETED",
+                Code::ProjectInvalid => "PROJECT_INVALID",
+                Code::ConsumerInvalid => "CONSUMER_INVALID",
+                Code::IpAddressBlocked => "IP_ADDRESS_BLOCKED",
+                Code::RefererBlocked => "REFERER_BLOCKED",
+                Code::ClientAppBlocked => "CLIENT_APP_BLOCKED",
+                Code::ApiTargetBlocked => "API_TARGET_BLOCKED",
+                Code::ApiKeyInvalid => "API_KEY_INVALID",
+                Code::ApiKeyExpired => "API_KEY_EXPIRED",
+                Code::ApiKeyNotFound => "API_KEY_NOT_FOUND",
+                Code::InvalidCredential => "INVALID_CREDENTIAL",
+                Code::NamespaceLookupUnavailable => "NAMESPACE_LOOKUP_UNAVAILABLE",
+                Code::ServiceStatusUnavailable => "SERVICE_STATUS_UNAVAILABLE",
+                Code::BillingStatusUnavailable => "BILLING_STATUS_UNAVAILABLE",
+                Code::CloudResourceManagerBackendUnavailable => {
+                    "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE"
+                }
+            }
+        }
+    }
 }
 /// Represents information regarding an operation.
 #[derive(Clone, PartialEq, ::prost::Message)]

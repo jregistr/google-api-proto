@@ -1,67 +1,3 @@
-/// Container for a live session's ad tag detail.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LiveAdTagDetail {
-    /// The resource name in the form of
-    /// `projects/{project}/locations/{location}/liveSessions/{live_session}/liveAdTagDetails/{id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A list of ad requests.
-    #[prost(message, repeated, tag = "2")]
-    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
-}
-/// Information related to the details for one ad tag.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VodAdTagDetail {
-    /// The name of the ad tag detail for the specified VOD session, in the form of
-    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodAdTagDetails/{id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A list of ad requests for one ad tag.
-    #[prost(message, repeated, tag = "2")]
-    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
-}
-/// Details of an ad request to an ad server.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdRequest {
-    /// The ad tag URI processed with integrated macros.
-    #[prost(string, tag = "1")]
-    pub uri: ::prost::alloc::string::String,
-    /// The request metadata used to make the ad request.
-    #[prost(message, optional, tag = "2")]
-    pub request_metadata: ::core::option::Option<RequestMetadata>,
-    /// The response metadata received from the ad request.
-    #[prost(message, optional, tag = "3")]
-    pub response_metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Metadata for an ad request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestMetadata {
-    /// The HTTP headers of the ad request.
-    #[prost(message, optional, tag = "1")]
-    pub headers: ::core::option::Option<::prost_types::Struct>,
-}
-/// Metadata for the response of an ad request.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResponseMetadata {
-    /// Error message received when making the ad request.
-    #[prost(string, tag = "1")]
-    pub error: ::prost::alloc::string::String,
-    /// Headers from the response.
-    #[prost(message, optional, tag = "2")]
-    pub headers: ::core::option::Option<::prost_types::Struct>,
-    /// Status code for the response.
-    #[prost(string, tag = "3")]
-    pub status_code: ::prost::alloc::string::String,
-    /// Size in bytes of the response.
-    #[prost(int32, tag = "4")]
-    pub size_bytes: i32,
-    /// Total time elapsed for the response.
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-    /// The body of the response.
-    #[prost(string, tag = "6")]
-    pub body: ::prost::alloc::string::String,
-}
 /// Configuration for a CDN key. Used by the Video Stitcher
 /// to sign URIs for fetching video manifests and signing
 /// media segments for playback.
@@ -669,6 +605,70 @@ pub struct Slate {
     /// MP4 video with at least one audio track.
     #[prost(string, tag = "2")]
     pub uri: ::prost::alloc::string::String,
+}
+/// Container for a live session's ad tag detail.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LiveAdTagDetail {
+    /// The resource name in the form of
+    /// `projects/{project}/locations/{location}/liveSessions/{live_session}/liveAdTagDetails/{id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A list of ad requests.
+    #[prost(message, repeated, tag = "2")]
+    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
+}
+/// Information related to the details for one ad tag.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VodAdTagDetail {
+    /// The name of the ad tag detail for the specified VOD session, in the form of
+    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodAdTagDetails/{id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A list of ad requests for one ad tag.
+    #[prost(message, repeated, tag = "2")]
+    pub ad_requests: ::prost::alloc::vec::Vec<AdRequest>,
+}
+/// Details of an ad request to an ad server.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdRequest {
+    /// The ad tag URI processed with integrated macros.
+    #[prost(string, tag = "1")]
+    pub uri: ::prost::alloc::string::String,
+    /// The request metadata used to make the ad request.
+    #[prost(message, optional, tag = "2")]
+    pub request_metadata: ::core::option::Option<RequestMetadata>,
+    /// The response metadata received from the ad request.
+    #[prost(message, optional, tag = "3")]
+    pub response_metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Metadata for an ad request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestMetadata {
+    /// The HTTP headers of the ad request.
+    #[prost(message, optional, tag = "1")]
+    pub headers: ::core::option::Option<::prost_types::Struct>,
+}
+/// Metadata for the response of an ad request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResponseMetadata {
+    /// Error message received when making the ad request.
+    #[prost(string, tag = "1")]
+    pub error: ::prost::alloc::string::String,
+    /// Headers from the response.
+    #[prost(message, optional, tag = "2")]
+    pub headers: ::core::option::Option<::prost_types::Struct>,
+    /// Status code for the response.
+    #[prost(string, tag = "3")]
+    pub status_code: ::prost::alloc::string::String,
+    /// Size in bytes of the response.
+    #[prost(int32, tag = "4")]
+    pub size_bytes: i32,
+    /// Total time elapsed for the response.
+    #[prost(message, optional, tag = "5")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+    /// The body of the response.
+    #[prost(string, tag = "6")]
+    pub body: ::prost::alloc::string::String,
 }
 /// Detailed information related to the interstitial of a VOD session.
 #[derive(Clone, PartialEq, ::prost::Message)]
