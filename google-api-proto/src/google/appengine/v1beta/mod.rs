@@ -156,17 +156,128 @@ pub mod instance {
         }
     }
 }
-/// A NetworkSettings resource is a container for ingress settings for a version
-/// or service.
+/// An Application resource contains the top-level configuration of an App
+/// Engine application.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkSettings {
-    /// The ingress settings for version or service.
-    #[prost(enumeration = "network_settings::IngressTrafficAllowed", tag = "1")]
-    pub ingress_traffic_allowed: i32,
+pub struct Application {
+    /// Full path to the Application resource in the API.
+    /// Example: `apps/myapp`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Identifier of the Application resource. This identifier is equivalent
+    /// to the project ID of the Google Cloud Platform project where you want to
+    /// deploy your application.
+    /// Example: `myapp`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+    /// HTTP path dispatch rules for requests to the application that do not
+    /// explicitly target a service or version. Rules are order-dependent.
+    /// Up to 20 dispatch rules can be supported.
+    #[prost(message, repeated, tag = "3")]
+    pub dispatch_rules: ::prost::alloc::vec::Vec<UrlDispatchRule>,
+    /// Google Apps authentication domain that controls which users can access
+    /// this application.
+    ///
+    /// Defaults to open access for any Google Account.
+    #[prost(string, tag = "6")]
+    pub auth_domain: ::prost::alloc::string::String,
+    /// Location from which this application runs. Application instances
+    /// run out of the data centers in the specified location, which is also where
+    /// all of the application's end user content is stored.
+    ///
+    /// Defaults to `us-central`.
+    ///
+    /// View the list of
+    /// [supported locations](<https://cloud.google.com/appengine/docs/locations>).
+    #[prost(string, tag = "7")]
+    pub location_id: ::prost::alloc::string::String,
+    /// Google Cloud Storage bucket that can be used for storing files
+    /// associated with this application. This bucket is associated with the
+    /// application and can be used by the gcloud deployment commands.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "8")]
+    pub code_bucket: ::prost::alloc::string::String,
+    /// Cookie expiration policy for this application.
+    #[prost(message, optional, tag = "9")]
+    pub default_cookie_expiration: ::core::option::Option<::prost_types::Duration>,
+    /// Serving status of this application.
+    #[prost(enumeration = "application::ServingStatus", tag = "10")]
+    pub serving_status: i32,
+    /// Hostname used to reach this application, as resolved by App Engine.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "11")]
+    pub default_hostname: ::prost::alloc::string::String,
+    /// Google Cloud Storage bucket that can be used by this application to store
+    /// content.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "12")]
+    pub default_bucket: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "14")]
+    pub iap: ::core::option::Option<application::IdentityAwareProxy>,
+    /// The Google Container Registry domain used for storing managed build docker
+    /// images for this application.
+    #[prost(string, tag = "16")]
+    pub gcr_domain: ::prost::alloc::string::String,
+    /// The type of the Cloud Firestore or Cloud Datastore database associated with
+    /// this application.
+    #[prost(enumeration = "application::DatabaseType", tag = "17")]
+    pub database_type: i32,
+    /// The feature specific settings to be used in the application.
+    #[prost(message, optional, tag = "18")]
+    pub feature_settings: ::core::option::Option<application::FeatureSettings>,
 }
-/// Nested message and enum types in `NetworkSettings`.
-pub mod network_settings {
-    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
+/// Nested message and enum types in `Application`.
+pub mod application {
+    /// Identity-Aware Proxy
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IdentityAwareProxy {
+        /// Whether the serving infrastructure will authenticate and
+        /// authorize all incoming requests.
+        ///
+        /// If true, the `oauth2_client_id` and `oauth2_client_secret`
+        /// fields must be non-empty.
+        #[prost(bool, tag = "1")]
+        pub enabled: bool,
+        /// OAuth2 client ID to use for the authentication flow.
+        #[prost(string, tag = "2")]
+        pub oauth2_client_id: ::prost::alloc::string::String,
+        /// OAuth2 client secret to use for the authentication flow.
+        ///
+        /// For security reasons, this value cannot be retrieved via the API.
+        /// Instead, the SHA-256 hash of the value is returned in the
+        /// `oauth2_client_secret_sha256` field.
+        ///
+        /// @InputOnly
+        #[prost(string, tag = "3")]
+        pub oauth2_client_secret: ::prost::alloc::string::String,
+        /// Hex-encoded SHA-256 hash of the client secret.
+        ///
+        /// @OutputOnly
+        #[prost(string, tag = "4")]
+        pub oauth2_client_secret_sha256: ::prost::alloc::string::String,
+    }
+    /// The feature specific settings to be used in the application. These define
+    /// behaviors that are user configurable.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FeatureSettings {
+        /// Boolean value indicating if split health checks should be used instead
+        /// of the legacy health checks. At an app.yaml level, this means defaulting
+        /// to 'readiness_check' and 'liveness_check' values instead of
+        /// 'health_check' ones. Once the legacy 'health_check' behavior is
+        /// deprecated, and this value is always true, this setting can
+        /// be removed.
+        #[prost(bool, tag = "1")]
+        pub split_health_checks: bool,
+        /// If true, use [Container-Optimized OS](<https://cloud.google.com/container-optimized-os/>)
+        /// base image for VMs, rather than a base Debian image.
+        #[prost(bool, tag = "2")]
+        pub use_container_optimized_os: bool,
+    }
     #[derive(
         Clone,
         Copy,
@@ -179,36 +290,90 @@ pub mod network_settings {
         ::prost::Enumeration
     )]
     #[repr(i32)]
-    pub enum IngressTrafficAllowed {
-        /// Unspecified
+    pub enum ServingStatus {
+        /// Serving status is unspecified.
         Unspecified = 0,
-        /// Allow HTTP traffic from public and private sources.
-        All = 1,
-        /// Allow HTTP traffic from only private VPC sources.
-        InternalOnly = 2,
-        /// Allow HTTP traffic from private VPC sources and through load balancers.
-        InternalAndLb = 3,
+        /// Application is serving.
+        Serving = 1,
+        /// Application has been disabled by the user.
+        UserDisabled = 2,
+        /// Application has been disabled by the system.
+        SystemDisabled = 3,
     }
-    impl IngressTrafficAllowed {
+    impl ServingStatus {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                IngressTrafficAllowed::Unspecified => {
-                    "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED"
-                }
-                IngressTrafficAllowed::All => "INGRESS_TRAFFIC_ALLOWED_ALL",
-                IngressTrafficAllowed::InternalOnly => {
-                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY"
-                }
-                IngressTrafficAllowed::InternalAndLb => {
-                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB"
+                ServingStatus::Unspecified => "UNSPECIFIED",
+                ServingStatus::Serving => "SERVING",
+                ServingStatus::UserDisabled => "USER_DISABLED",
+                ServingStatus::SystemDisabled => "SYSTEM_DISABLED",
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DatabaseType {
+        /// Database type is unspecified.
+        Unspecified = 0,
+        /// Cloud Datastore
+        CloudDatastore = 1,
+        /// Cloud Firestore Native
+        CloudFirestore = 2,
+        /// Cloud Firestore in Datastore Mode
+        CloudDatastoreCompatibility = 3,
+    }
+    impl DatabaseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
+                DatabaseType::CloudDatastore => "CLOUD_DATASTORE",
+                DatabaseType::CloudFirestore => "CLOUD_FIRESTORE",
+                DatabaseType::CloudDatastoreCompatibility => {
+                    "CLOUD_DATASTORE_COMPATIBILITY"
                 }
             }
         }
     }
+}
+/// Rules to match an HTTP request and dispatch that request to a service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UrlDispatchRule {
+    /// Domain name to match against. The wildcard "`*`" is supported if
+    /// specified before a period: "`*.`".
+    ///
+    /// Defaults to matching all domains: "`*`".
+    #[prost(string, tag = "1")]
+    pub domain: ::prost::alloc::string::String,
+    /// Pathname within the host. Must start with a "`/`". A
+    /// single "`*`" can be included at the end of the path.
+    ///
+    /// The sum of the lengths of the domain and path may not
+    /// exceed 100 characters.
+    #[prost(string, tag = "2")]
+    pub path: ::prost::alloc::string::String,
+    /// Resource ID of a service in this application that should
+    /// serve the matched request. The service must already
+    /// exist. Example: `default`.
+    #[prost(string, tag = "3")]
+    pub service: ::prost::alloc::string::String,
 }
 /// A single firewall rule that is evaluated against incoming traffic
 /// and provides an action to take on matched requests.
@@ -279,61 +444,245 @@ pub mod firewall_rule {
         }
     }
 }
-/// A Service resource is a logical component of an application that can share
-/// state and communicate in a secure fashion with other services.
-/// For example, an application that handles customer requests might
-/// include separate services to handle tasks such as backend data
-/// analysis or API requests from mobile devices. Each service has a
-/// collection of versions that define a specific set of code used to
-/// implement the functionality of that service.
+/// An SSL certificate that a user has been authorized to administer. A user
+/// is authorized to administer any certificate that applies to one of their
+/// authorized domains.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Service {
-    /// Full path to the Service resource in the API.
-    /// Example: `apps/myapp/services/default`.
+pub struct AuthorizedCertificate {
+    /// Full path to the `AuthorizedCertificate` resource in the API. Example:
+    /// `apps/myapp/authorizedCertificates/12345`.
     ///
     /// @OutputOnly
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Relative name of the service within the application.
-    /// Example: `default`.
+    /// Relative name of the certificate. This is a unique value autogenerated
+    /// on `AuthorizedCertificate` resource creation. Example: `12345`.
     ///
     /// @OutputOnly
     #[prost(string, tag = "2")]
     pub id: ::prost::alloc::string::String,
-    /// Mapping that defines fractional HTTP traffic diversion to
-    /// different versions within the service.
-    #[prost(message, optional, tag = "3")]
-    pub split: ::core::option::Option<TrafficSplit>,
-    /// Ingress settings for this service. Will apply to all versions.
+    /// The user-specified display name of the certificate. This is not
+    /// guaranteed to be unique. Example: `My Certificate`.
+    #[prost(string, tag = "3")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Topmost applicable domains of this certificate. This certificate
+    /// applies to these domains and their subdomains. Example: `example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, repeated, tag = "4")]
+    pub domain_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The time when this certificate expires. To update the renewal time on this
+    /// certificate, upload an SSL certificate with a different expiration time
+    /// using \[`AuthorizedCertificates.UpdateAuthorizedCertificate`\]().
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "5")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The SSL certificate serving the `AuthorizedCertificate` resource. This
+    /// must be obtained independently from a certificate authority.
     #[prost(message, optional, tag = "6")]
-    pub network_settings: ::core::option::Option<NetworkSettings>,
-}
-/// Traffic routing configuration for versions within a single service. Traffic
-/// splits define how traffic directed to the service is assigned to versions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficSplit {
-    /// Mechanism used to determine which version a request is sent to.
-    /// The traffic selection algorithm will
-    /// be stable for either type until allocations are changed.
-    #[prost(enumeration = "traffic_split::ShardBy", tag = "1")]
-    pub shard_by: i32,
-    /// Mapping from version IDs within the service to fractional
-    /// (0.000, 1] allocations of traffic for that version. Each version can
-    /// be specified only once, but some versions in the service may not
-    /// have any traffic allocation. Services that have traffic allocated
-    /// cannot be deleted until either the service is deleted or
-    /// their traffic allocation is removed. Allocations must sum to 1.
-    /// Up to two decimal place precision is supported for IP-based splits and
-    /// up to three decimal places is supported for cookie-based splits.
-    #[prost(btree_map = "string, double", tag = "2")]
-    pub allocations: ::prost::alloc::collections::BTreeMap<
+    pub certificate_raw_data: ::core::option::Option<CertificateRawData>,
+    /// Only applicable if this certificate is managed by App Engine. Managed
+    /// certificates are tied to the lifecycle of a `DomainMapping` and cannot be
+    /// updated or deleted via the `AuthorizedCertificates` API. If this
+    /// certificate is manually administered by the user, this field will be empty.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "7")]
+    pub managed_certificate: ::core::option::Option<ManagedCertificate>,
+    /// The full paths to user visible Domain Mapping resources that have this
+    /// certificate mapped. Example: `apps/myapp/domainMappings/example.com`.
+    ///
+    /// This may not represent the full list of mapped domain mappings if the user
+    /// does not have `VIEWER` permissions on all of the applications that have
+    /// this certificate mapped. See `domain_mappings_count` for a complete count.
+    ///
+    /// Only returned by `GET` or `LIST` requests when specifically requested by
+    /// the `view=FULL_CERTIFICATE` option.
+    ///
+    /// @OutputOnly
+    #[prost(string, repeated, tag = "8")]
+    pub visible_domain_mappings: ::prost::alloc::vec::Vec<
         ::prost::alloc::string::String,
-        f64,
     >,
+    /// Aggregate count of the domain mappings with this certificate mapped. This
+    /// count includes domain mappings on applications for which the user does not
+    /// have `VIEWER` permissions.
+    ///
+    /// Only returned by `GET` or `LIST` requests when specifically requested by
+    /// the `view=FULL_CERTIFICATE` option.
+    ///
+    /// @OutputOnly
+    #[prost(int32, tag = "9")]
+    pub domain_mappings_count: i32,
 }
-/// Nested message and enum types in `TrafficSplit`.
-pub mod traffic_split {
-    /// Available sharding mechanisms.
+/// An SSL certificate obtained from a certificate authority.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CertificateRawData {
+    /// PEM encoded x.509 public key certificate. This field is set once on
+    /// certificate creation. Must include the header and footer. Example:
+    /// <pre>
+    /// -----BEGIN CERTIFICATE-----
+    /// <certificate_value>
+    /// -----END CERTIFICATE-----
+    /// </pre>
+    #[prost(string, tag = "1")]
+    pub public_certificate: ::prost::alloc::string::String,
+    /// Unencrypted PEM encoded RSA private key. This field is set once on
+    /// certificate creation and then encrypted. The key size must be 2048
+    /// bits or fewer. Must include the header and footer. Example:
+    /// <pre>
+    /// -----BEGIN RSA PRIVATE KEY-----
+    /// <unencrypted_key_value>
+    /// -----END RSA PRIVATE KEY-----
+    /// </pre>
+    /// @InputOnly
+    #[prost(string, tag = "2")]
+    pub private_key: ::prost::alloc::string::String,
+}
+/// A certificate managed by App Engine.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ManagedCertificate {
+    /// Time at which the certificate was last renewed. The renewal process is
+    /// fully managed. Certificate renewal will automatically occur before the
+    /// certificate expires. Renewal errors can be tracked via `ManagementStatus`.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "1")]
+    pub last_renewal_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Status of certificate management. Refers to the most recent certificate
+    /// acquisition or renewal attempt.
+    ///
+    /// @OutputOnly
+    #[prost(enumeration = "ManagementStatus", tag = "2")]
+    pub status: i32,
+}
+/// State of certificate management. Refers to the most recent certificate
+/// acquisition or renewal attempt.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ManagementStatus {
+    Unspecified = 0,
+    /// Certificate was successfully obtained and inserted into the serving
+    /// system.
+    Ok = 1,
+    /// Certificate is under active attempts to acquire or renew.
+    Pending = 2,
+    /// Most recent renewal failed due to an invalid DNS setup and will be
+    /// retried. Renewal attempts will continue to fail until the certificate
+    /// domain's DNS configuration is fixed. The last successfully provisioned
+    /// certificate may still be serving.
+    FailedRetryingNotVisible = 4,
+    /// All renewal attempts have been exhausted, likely due to an invalid DNS
+    /// setup.
+    FailedPermanent = 6,
+    /// Most recent renewal failed due to an explicit CAA record that does not
+    /// include one of the in-use CAs (Google CA and Let's Encrypt). Renewals will
+    /// continue to fail until the CAA is reconfigured. The last successfully
+    /// provisioned certificate may still be serving.
+    FailedRetryingCaaForbidden = 7,
+    /// Most recent renewal failed due to a CAA retrieval failure. This means that
+    /// the domain's DNS provider does not properly handle CAA records, failing
+    /// requests for CAA records when no CAA records are defined. Renewals will
+    /// continue to fail until the DNS provider is changed or a CAA record is
+    /// added for the given domain. The last successfully provisioned certificate
+    /// may still be serving.
+    FailedRetryingCaaChecking = 8,
+}
+impl ManagementStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ManagementStatus::Unspecified => "MANAGEMENT_STATUS_UNSPECIFIED",
+            ManagementStatus::Ok => "OK",
+            ManagementStatus::Pending => "PENDING",
+            ManagementStatus::FailedRetryingNotVisible => "FAILED_RETRYING_NOT_VISIBLE",
+            ManagementStatus::FailedPermanent => "FAILED_PERMANENT",
+            ManagementStatus::FailedRetryingCaaForbidden => {
+                "FAILED_RETRYING_CAA_FORBIDDEN"
+            }
+            ManagementStatus::FailedRetryingCaaChecking => "FAILED_RETRYING_CAA_CHECKING",
+        }
+    }
+}
+/// A domain that a user has been authorized to administer. To authorize use
+/// of a domain, verify ownership via
+/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuthorizedDomain {
+    /// Full path to the `AuthorizedDomain` resource in the API. Example:
+    /// `apps/myapp/authorizedDomains/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Fully qualified domain name of the domain authorized for use. Example:
+    /// `example.com`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+}
+/// A domain serving an App Engine application.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DomainMapping {
+    /// Full path to the `DomainMapping` resource in the API. Example:
+    /// `apps/myapp/domainMapping/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Relative name of the domain serving the application. Example:
+    /// `example.com`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+    /// SSL configuration for this domain. If unconfigured, this domain will not
+    /// serve with SSL.
+    #[prost(message, optional, tag = "3")]
+    pub ssl_settings: ::core::option::Option<SslSettings>,
+    /// The resource records required to configure this domain mapping. These
+    /// records must be added to the domain's DNS configuration in order to
+    /// serve the application via this domain mapping.
+    ///
+    /// @OutputOnly
+    #[prost(message, repeated, tag = "4")]
+    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
+}
+/// SSL configuration for a `DomainMapping` resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SslSettings {
+    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
+    /// application. Clearing this field will remove SSL support.
+    ///
+    /// By default, a managed certificate is automatically created for every
+    /// domain mapping. To omit SSL support or to configure SSL manually, specify
+    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
+    /// be authorized to administer the `AuthorizedCertificate` resource to
+    /// manually map it to a `DomainMapping` resource.
+    /// Example: `12345`.
+    #[prost(string, tag = "1")]
+    pub certificate_id: ::prost::alloc::string::String,
+    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
+    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
+    /// manually specified in order to configure SSL for this domain.
+    #[prost(enumeration = "ssl_settings::SslManagementType", tag = "3")]
+    pub ssl_management_type: i32,
+    /// ID of the managed `AuthorizedCertificate` resource currently being
+    /// provisioned, if applicable. Until the new managed certificate has been
+    /// successfully provisioned, the previous SSL state will be preserved. Once
+    /// the provisioning process completes, the `certificate_id` field will reflect
+    /// the new managed certificate and this field will be left empty. To remove
+    /// SSL support while there is still a pending managed certificate, clear the
+    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "4")]
+    pub pending_managed_certificate_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `SslSettings`.
+pub mod ssl_settings {
+    /// The SSL management type for this domain.
     #[derive(
         Clone,
         Copy,
@@ -346,31 +695,76 @@ pub mod traffic_split {
         ::prost::Enumeration
     )]
     #[repr(i32)]
-    pub enum ShardBy {
-        /// Diversion method unspecified.
-        Unspecified = 0,
-        /// Diversion based on a specially named cookie, "GOOGAPPUID." The cookie
-        /// must be set by the application itself or no diversion will occur.
-        Cookie = 1,
-        /// Diversion based on applying the modulus operation to a fingerprint
-        /// of the IP address.
-        Ip = 2,
-        /// Diversion based on weighted random assignment. An incoming request is
-        /// randomly routed to a version in the traffic split, with probability
-        /// proportional to the version's traffic share.
-        Random = 3,
+    pub enum SslManagementType {
+        /// SSL support for this domain is configured automatically. The mapped SSL
+        /// certificate will be automatically renewed.
+        Automatic = 0,
+        /// SSL support for this domain is configured manually by the user. Either
+        /// the domain has no SSL support or a user-obtained SSL certificate has been
+        /// explictly mapped to this domain.
+        Manual = 1,
     }
-    impl ShardBy {
+    impl SslManagementType {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ShardBy::Unspecified => "UNSPECIFIED",
-                ShardBy::Cookie => "COOKIE",
-                ShardBy::Ip => "IP",
-                ShardBy::Random => "RANDOM",
+                SslManagementType::Automatic => "AUTOMATIC",
+                SslManagementType::Manual => "MANUAL",
+            }
+        }
+    }
+}
+/// A DNS resource record.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResourceRecord {
+    /// Relative name of the object affected by this record. Only applicable for
+    /// `CNAME` records. Example: 'www'.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Data for this record. Values vary by record type, as defined in RFC 1035
+    /// (section 5) and RFC 1034 (section 3.6.1).
+    #[prost(string, tag = "2")]
+    pub rrdata: ::prost::alloc::string::String,
+    /// Resource record type. Example: `AAAA`.
+    #[prost(enumeration = "resource_record::RecordType", tag = "3")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `ResourceRecord`.
+pub mod resource_record {
+    /// A resource record type.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum RecordType {
+        /// An A resource record. Data is an IPv4 address.
+        A = 0,
+        /// An AAAA resource record. Data is an IPv6 address.
+        Aaaa = 1,
+        /// A CNAME resource record. Data is a domain name to be aliased.
+        Cname = 2,
+    }
+    impl RecordType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RecordType::A => "A",
+                RecordType::Aaaa => "AAAA",
+                RecordType::Cname => "CNAME",
             }
         }
     }
@@ -896,6 +1290,60 @@ pub struct ZipInfo {
     /// Used for optimizing performance; if not provided, deployment may be slow.
     #[prost(int32, tag = "4")]
     pub files_count: i32,
+}
+/// A NetworkSettings resource is a container for ingress settings for a version
+/// or service.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkSettings {
+    /// The ingress settings for version or service.
+    #[prost(enumeration = "network_settings::IngressTrafficAllowed", tag = "1")]
+    pub ingress_traffic_allowed: i32,
+}
+/// Nested message and enum types in `NetworkSettings`.
+pub mod network_settings {
+    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum IngressTrafficAllowed {
+        /// Unspecified
+        Unspecified = 0,
+        /// Allow HTTP traffic from public and private sources.
+        All = 1,
+        /// Allow HTTP traffic from only private VPC sources.
+        InternalOnly = 2,
+        /// Allow HTTP traffic from private VPC sources and through load balancers.
+        InternalAndLb = 3,
+    }
+    impl IngressTrafficAllowed {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IngressTrafficAllowed::Unspecified => {
+                    "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED"
+                }
+                IngressTrafficAllowed::All => "INGRESS_TRAFFIC_ALLOWED_ALL",
+                IngressTrafficAllowed::InternalOnly => {
+                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY"
+                }
+                IngressTrafficAllowed::InternalAndLb => {
+                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB"
+                }
+            }
+        }
+    }
 }
 /// A Version resource is a specific set of source code and configuration files
 /// that are deployed into a service.
@@ -1582,464 +2030,61 @@ impl ServingStatus {
         }
     }
 }
-/// An SSL certificate that a user has been authorized to administer. A user
-/// is authorized to administer any certificate that applies to one of their
-/// authorized domains.
+/// A Service resource is a logical component of an application that can share
+/// state and communicate in a secure fashion with other services.
+/// For example, an application that handles customer requests might
+/// include separate services to handle tasks such as backend data
+/// analysis or API requests from mobile devices. Each service has a
+/// collection of versions that define a specific set of code used to
+/// implement the functionality of that service.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthorizedCertificate {
-    /// Full path to the `AuthorizedCertificate` resource in the API. Example:
-    /// `apps/myapp/authorizedCertificates/12345`.
+pub struct Service {
+    /// Full path to the Service resource in the API.
+    /// Example: `apps/myapp/services/default`.
     ///
     /// @OutputOnly
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Relative name of the certificate. This is a unique value autogenerated
-    /// on `AuthorizedCertificate` resource creation. Example: `12345`.
+    /// Relative name of the service within the application.
+    /// Example: `default`.
     ///
     /// @OutputOnly
     #[prost(string, tag = "2")]
     pub id: ::prost::alloc::string::String,
-    /// The user-specified display name of the certificate. This is not
-    /// guaranteed to be unique. Example: `My Certificate`.
-    #[prost(string, tag = "3")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Topmost applicable domains of this certificate. This certificate
-    /// applies to these domains and their subdomains. Example: `example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, repeated, tag = "4")]
-    pub domain_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The time when this certificate expires. To update the renewal time on this
-    /// certificate, upload an SSL certificate with a different expiration time
-    /// using \[`AuthorizedCertificates.UpdateAuthorizedCertificate`\]().
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "5")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The SSL certificate serving the `AuthorizedCertificate` resource. This
-    /// must be obtained independently from a certificate authority.
-    #[prost(message, optional, tag = "6")]
-    pub certificate_raw_data: ::core::option::Option<CertificateRawData>,
-    /// Only applicable if this certificate is managed by App Engine. Managed
-    /// certificates are tied to the lifecycle of a `DomainMapping` and cannot be
-    /// updated or deleted via the `AuthorizedCertificates` API. If this
-    /// certificate is manually administered by the user, this field will be empty.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "7")]
-    pub managed_certificate: ::core::option::Option<ManagedCertificate>,
-    /// The full paths to user visible Domain Mapping resources that have this
-    /// certificate mapped. Example: `apps/myapp/domainMappings/example.com`.
-    ///
-    /// This may not represent the full list of mapped domain mappings if the user
-    /// does not have `VIEWER` permissions on all of the applications that have
-    /// this certificate mapped. See `domain_mappings_count` for a complete count.
-    ///
-    /// Only returned by `GET` or `LIST` requests when specifically requested by
-    /// the `view=FULL_CERTIFICATE` option.
-    ///
-    /// @OutputOnly
-    #[prost(string, repeated, tag = "8")]
-    pub visible_domain_mappings: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
-    /// Aggregate count of the domain mappings with this certificate mapped. This
-    /// count includes domain mappings on applications for which the user does not
-    /// have `VIEWER` permissions.
-    ///
-    /// Only returned by `GET` or `LIST` requests when specifically requested by
-    /// the `view=FULL_CERTIFICATE` option.
-    ///
-    /// @OutputOnly
-    #[prost(int32, tag = "9")]
-    pub domain_mappings_count: i32,
-}
-/// An SSL certificate obtained from a certificate authority.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CertificateRawData {
-    /// PEM encoded x.509 public key certificate. This field is set once on
-    /// certificate creation. Must include the header and footer. Example:
-    /// <pre>
-    /// -----BEGIN CERTIFICATE-----
-    /// <certificate_value>
-    /// -----END CERTIFICATE-----
-    /// </pre>
-    #[prost(string, tag = "1")]
-    pub public_certificate: ::prost::alloc::string::String,
-    /// Unencrypted PEM encoded RSA private key. This field is set once on
-    /// certificate creation and then encrypted. The key size must be 2048
-    /// bits or fewer. Must include the header and footer. Example:
-    /// <pre>
-    /// -----BEGIN RSA PRIVATE KEY-----
-    /// <unencrypted_key_value>
-    /// -----END RSA PRIVATE KEY-----
-    /// </pre>
-    /// @InputOnly
-    #[prost(string, tag = "2")]
-    pub private_key: ::prost::alloc::string::String,
-}
-/// A certificate managed by App Engine.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ManagedCertificate {
-    /// Time at which the certificate was last renewed. The renewal process is
-    /// fully managed. Certificate renewal will automatically occur before the
-    /// certificate expires. Renewal errors can be tracked via `ManagementStatus`.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "1")]
-    pub last_renewal_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Status of certificate management. Refers to the most recent certificate
-    /// acquisition or renewal attempt.
-    ///
-    /// @OutputOnly
-    #[prost(enumeration = "ManagementStatus", tag = "2")]
-    pub status: i32,
-}
-/// State of certificate management. Refers to the most recent certificate
-/// acquisition or renewal attempt.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ManagementStatus {
-    Unspecified = 0,
-    /// Certificate was successfully obtained and inserted into the serving
-    /// system.
-    Ok = 1,
-    /// Certificate is under active attempts to acquire or renew.
-    Pending = 2,
-    /// Most recent renewal failed due to an invalid DNS setup and will be
-    /// retried. Renewal attempts will continue to fail until the certificate
-    /// domain's DNS configuration is fixed. The last successfully provisioned
-    /// certificate may still be serving.
-    FailedRetryingNotVisible = 4,
-    /// All renewal attempts have been exhausted, likely due to an invalid DNS
-    /// setup.
-    FailedPermanent = 6,
-    /// Most recent renewal failed due to an explicit CAA record that does not
-    /// include one of the in-use CAs (Google CA and Let's Encrypt). Renewals will
-    /// continue to fail until the CAA is reconfigured. The last successfully
-    /// provisioned certificate may still be serving.
-    FailedRetryingCaaForbidden = 7,
-    /// Most recent renewal failed due to a CAA retrieval failure. This means that
-    /// the domain's DNS provider does not properly handle CAA records, failing
-    /// requests for CAA records when no CAA records are defined. Renewals will
-    /// continue to fail until the DNS provider is changed or a CAA record is
-    /// added for the given domain. The last successfully provisioned certificate
-    /// may still be serving.
-    FailedRetryingCaaChecking = 8,
-}
-impl ManagementStatus {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ManagementStatus::Unspecified => "MANAGEMENT_STATUS_UNSPECIFIED",
-            ManagementStatus::Ok => "OK",
-            ManagementStatus::Pending => "PENDING",
-            ManagementStatus::FailedRetryingNotVisible => "FAILED_RETRYING_NOT_VISIBLE",
-            ManagementStatus::FailedPermanent => "FAILED_PERMANENT",
-            ManagementStatus::FailedRetryingCaaForbidden => {
-                "FAILED_RETRYING_CAA_FORBIDDEN"
-            }
-            ManagementStatus::FailedRetryingCaaChecking => "FAILED_RETRYING_CAA_CHECKING",
-        }
-    }
-}
-/// An Application resource contains the top-level configuration of an App
-/// Engine application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Application {
-    /// Full path to the Application resource in the API.
-    /// Example: `apps/myapp`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Identifier of the Application resource. This identifier is equivalent
-    /// to the project ID of the Google Cloud Platform project where you want to
-    /// deploy your application.
-    /// Example: `myapp`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-    /// HTTP path dispatch rules for requests to the application that do not
-    /// explicitly target a service or version. Rules are order-dependent.
-    /// Up to 20 dispatch rules can be supported.
-    #[prost(message, repeated, tag = "3")]
-    pub dispatch_rules: ::prost::alloc::vec::Vec<UrlDispatchRule>,
-    /// Google Apps authentication domain that controls which users can access
-    /// this application.
-    ///
-    /// Defaults to open access for any Google Account.
-    #[prost(string, tag = "6")]
-    pub auth_domain: ::prost::alloc::string::String,
-    /// Location from which this application runs. Application instances
-    /// run out of the data centers in the specified location, which is also where
-    /// all of the application's end user content is stored.
-    ///
-    /// Defaults to `us-central`.
-    ///
-    /// View the list of
-    /// [supported locations](<https://cloud.google.com/appengine/docs/locations>).
-    #[prost(string, tag = "7")]
-    pub location_id: ::prost::alloc::string::String,
-    /// Google Cloud Storage bucket that can be used for storing files
-    /// associated with this application. This bucket is associated with the
-    /// application and can be used by the gcloud deployment commands.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "8")]
-    pub code_bucket: ::prost::alloc::string::String,
-    /// Cookie expiration policy for this application.
-    #[prost(message, optional, tag = "9")]
-    pub default_cookie_expiration: ::core::option::Option<::prost_types::Duration>,
-    /// Serving status of this application.
-    #[prost(enumeration = "application::ServingStatus", tag = "10")]
-    pub serving_status: i32,
-    /// Hostname used to reach this application, as resolved by App Engine.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "11")]
-    pub default_hostname: ::prost::alloc::string::String,
-    /// Google Cloud Storage bucket that can be used by this application to store
-    /// content.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "12")]
-    pub default_bucket: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "14")]
-    pub iap: ::core::option::Option<application::IdentityAwareProxy>,
-    /// The Google Container Registry domain used for storing managed build docker
-    /// images for this application.
-    #[prost(string, tag = "16")]
-    pub gcr_domain: ::prost::alloc::string::String,
-    /// The type of the Cloud Firestore or Cloud Datastore database associated with
-    /// this application.
-    #[prost(enumeration = "application::DatabaseType", tag = "17")]
-    pub database_type: i32,
-    /// The feature specific settings to be used in the application.
-    #[prost(message, optional, tag = "18")]
-    pub feature_settings: ::core::option::Option<application::FeatureSettings>,
-}
-/// Nested message and enum types in `Application`.
-pub mod application {
-    /// Identity-Aware Proxy
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IdentityAwareProxy {
-        /// Whether the serving infrastructure will authenticate and
-        /// authorize all incoming requests.
-        ///
-        /// If true, the `oauth2_client_id` and `oauth2_client_secret`
-        /// fields must be non-empty.
-        #[prost(bool, tag = "1")]
-        pub enabled: bool,
-        /// OAuth2 client ID to use for the authentication flow.
-        #[prost(string, tag = "2")]
-        pub oauth2_client_id: ::prost::alloc::string::String,
-        /// OAuth2 client secret to use for the authentication flow.
-        ///
-        /// For security reasons, this value cannot be retrieved via the API.
-        /// Instead, the SHA-256 hash of the value is returned in the
-        /// `oauth2_client_secret_sha256` field.
-        ///
-        /// @InputOnly
-        #[prost(string, tag = "3")]
-        pub oauth2_client_secret: ::prost::alloc::string::String,
-        /// Hex-encoded SHA-256 hash of the client secret.
-        ///
-        /// @OutputOnly
-        #[prost(string, tag = "4")]
-        pub oauth2_client_secret_sha256: ::prost::alloc::string::String,
-    }
-    /// The feature specific settings to be used in the application. These define
-    /// behaviors that are user configurable.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FeatureSettings {
-        /// Boolean value indicating if split health checks should be used instead
-        /// of the legacy health checks. At an app.yaml level, this means defaulting
-        /// to 'readiness_check' and 'liveness_check' values instead of
-        /// 'health_check' ones. Once the legacy 'health_check' behavior is
-        /// deprecated, and this value is always true, this setting can
-        /// be removed.
-        #[prost(bool, tag = "1")]
-        pub split_health_checks: bool,
-        /// If true, use [Container-Optimized OS](<https://cloud.google.com/container-optimized-os/>)
-        /// base image for VMs, rather than a base Debian image.
-        #[prost(bool, tag = "2")]
-        pub use_container_optimized_os: bool,
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ServingStatus {
-        /// Serving status is unspecified.
-        Unspecified = 0,
-        /// Application is serving.
-        Serving = 1,
-        /// Application has been disabled by the user.
-        UserDisabled = 2,
-        /// Application has been disabled by the system.
-        SystemDisabled = 3,
-    }
-    impl ServingStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ServingStatus::Unspecified => "UNSPECIFIED",
-                ServingStatus::Serving => "SERVING",
-                ServingStatus::UserDisabled => "USER_DISABLED",
-                ServingStatus::SystemDisabled => "SYSTEM_DISABLED",
-            }
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DatabaseType {
-        /// Database type is unspecified.
-        Unspecified = 0,
-        /// Cloud Datastore
-        CloudDatastore = 1,
-        /// Cloud Firestore Native
-        CloudFirestore = 2,
-        /// Cloud Firestore in Datastore Mode
-        CloudDatastoreCompatibility = 3,
-    }
-    impl DatabaseType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
-                DatabaseType::CloudDatastore => "CLOUD_DATASTORE",
-                DatabaseType::CloudFirestore => "CLOUD_FIRESTORE",
-                DatabaseType::CloudDatastoreCompatibility => {
-                    "CLOUD_DATASTORE_COMPATIBILITY"
-                }
-            }
-        }
-    }
-}
-/// Rules to match an HTTP request and dispatch that request to a service.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UrlDispatchRule {
-    /// Domain name to match against. The wildcard "`*`" is supported if
-    /// specified before a period: "`*.`".
-    ///
-    /// Defaults to matching all domains: "`*`".
-    #[prost(string, tag = "1")]
-    pub domain: ::prost::alloc::string::String,
-    /// Pathname within the host. Must start with a "`/`". A
-    /// single "`*`" can be included at the end of the path.
-    ///
-    /// The sum of the lengths of the domain and path may not
-    /// exceed 100 characters.
-    #[prost(string, tag = "2")]
-    pub path: ::prost::alloc::string::String,
-    /// Resource ID of a service in this application that should
-    /// serve the matched request. The service must already
-    /// exist. Example: `default`.
-    #[prost(string, tag = "3")]
-    pub service: ::prost::alloc::string::String,
-}
-/// A domain that a user has been authorized to administer. To authorize use
-/// of a domain, verify ownership via
-/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthorizedDomain {
-    /// Full path to the `AuthorizedDomain` resource in the API. Example:
-    /// `apps/myapp/authorizedDomains/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Fully qualified domain name of the domain authorized for use. Example:
-    /// `example.com`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-}
-/// A domain serving an App Engine application.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DomainMapping {
-    /// Full path to the `DomainMapping` resource in the API. Example:
-    /// `apps/myapp/domainMapping/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Relative name of the domain serving the application. Example:
-    /// `example.com`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-    /// SSL configuration for this domain. If unconfigured, this domain will not
-    /// serve with SSL.
+    /// Mapping that defines fractional HTTP traffic diversion to
+    /// different versions within the service.
     #[prost(message, optional, tag = "3")]
-    pub ssl_settings: ::core::option::Option<SslSettings>,
-    /// The resource records required to configure this domain mapping. These
-    /// records must be added to the domain's DNS configuration in order to
-    /// serve the application via this domain mapping.
-    ///
-    /// @OutputOnly
-    #[prost(message, repeated, tag = "4")]
-    pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
+    pub split: ::core::option::Option<TrafficSplit>,
+    /// Ingress settings for this service. Will apply to all versions.
+    #[prost(message, optional, tag = "6")]
+    pub network_settings: ::core::option::Option<NetworkSettings>,
 }
-/// SSL configuration for a `DomainMapping` resource.
+/// Traffic routing configuration for versions within a single service. Traffic
+/// splits define how traffic directed to the service is assigned to versions.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SslSettings {
-    /// ID of the `AuthorizedCertificate` resource configuring SSL for the
-    /// application. Clearing this field will remove SSL support.
-    ///
-    /// By default, a managed certificate is automatically created for every
-    /// domain mapping. To omit SSL support or to configure SSL manually, specify
-    /// `SslManagementType.MANUAL` on a `CREATE` or `UPDATE` request. You must
-    /// be authorized to administer the `AuthorizedCertificate` resource to
-    /// manually map it to a `DomainMapping` resource.
-    /// Example: `12345`.
-    #[prost(string, tag = "1")]
-    pub certificate_id: ::prost::alloc::string::String,
-    /// SSL management type for this domain. If `AUTOMATIC`, a managed certificate
-    /// is automatically provisioned. If `MANUAL`, `certificate_id` must be
-    /// manually specified in order to configure SSL for this domain.
-    #[prost(enumeration = "ssl_settings::SslManagementType", tag = "3")]
-    pub ssl_management_type: i32,
-    /// ID of the managed `AuthorizedCertificate` resource currently being
-    /// provisioned, if applicable. Until the new managed certificate has been
-    /// successfully provisioned, the previous SSL state will be preserved. Once
-    /// the provisioning process completes, the `certificate_id` field will reflect
-    /// the new managed certificate and this field will be left empty. To remove
-    /// SSL support while there is still a pending managed certificate, clear the
-    /// `certificate_id` field with an `UpdateDomainMappingRequest`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "4")]
-    pub pending_managed_certificate_id: ::prost::alloc::string::String,
+pub struct TrafficSplit {
+    /// Mechanism used to determine which version a request is sent to.
+    /// The traffic selection algorithm will
+    /// be stable for either type until allocations are changed.
+    #[prost(enumeration = "traffic_split::ShardBy", tag = "1")]
+    pub shard_by: i32,
+    /// Mapping from version IDs within the service to fractional
+    /// (0.000, 1] allocations of traffic for that version. Each version can
+    /// be specified only once, but some versions in the service may not
+    /// have any traffic allocation. Services that have traffic allocated
+    /// cannot be deleted until either the service is deleted or
+    /// their traffic allocation is removed. Allocations must sum to 1.
+    /// Up to two decimal place precision is supported for IP-based splits and
+    /// up to three decimal places is supported for cookie-based splits.
+    #[prost(btree_map = "string, double", tag = "2")]
+    pub allocations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        f64,
+    >,
 }
-/// Nested message and enum types in `SslSettings`.
-pub mod ssl_settings {
-    /// The SSL management type for this domain.
+/// Nested message and enum types in `TrafficSplit`.
+pub mod traffic_split {
+    /// Available sharding mechanisms.
     #[derive(
         Clone,
         Copy,
@@ -2052,76 +2097,31 @@ pub mod ssl_settings {
         ::prost::Enumeration
     )]
     #[repr(i32)]
-    pub enum SslManagementType {
-        /// SSL support for this domain is configured automatically. The mapped SSL
-        /// certificate will be automatically renewed.
-        Automatic = 0,
-        /// SSL support for this domain is configured manually by the user. Either
-        /// the domain has no SSL support or a user-obtained SSL certificate has been
-        /// explictly mapped to this domain.
-        Manual = 1,
+    pub enum ShardBy {
+        /// Diversion method unspecified.
+        Unspecified = 0,
+        /// Diversion based on a specially named cookie, "GOOGAPPUID." The cookie
+        /// must be set by the application itself or no diversion will occur.
+        Cookie = 1,
+        /// Diversion based on applying the modulus operation to a fingerprint
+        /// of the IP address.
+        Ip = 2,
+        /// Diversion based on weighted random assignment. An incoming request is
+        /// randomly routed to a version in the traffic split, with probability
+        /// proportional to the version's traffic share.
+        Random = 3,
     }
-    impl SslManagementType {
+    impl ShardBy {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                SslManagementType::Automatic => "AUTOMATIC",
-                SslManagementType::Manual => "MANUAL",
-            }
-        }
-    }
-}
-/// A DNS resource record.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResourceRecord {
-    /// Relative name of the object affected by this record. Only applicable for
-    /// `CNAME` records. Example: 'www'.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Data for this record. Values vary by record type, as defined in RFC 1035
-    /// (section 5) and RFC 1034 (section 3.6.1).
-    #[prost(string, tag = "2")]
-    pub rrdata: ::prost::alloc::string::String,
-    /// Resource record type. Example: `AAAA`.
-    #[prost(enumeration = "resource_record::RecordType", tag = "3")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `ResourceRecord`.
-pub mod resource_record {
-    /// A resource record type.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum RecordType {
-        /// An A resource record. Data is an IPv4 address.
-        A = 0,
-        /// An AAAA resource record. Data is an IPv6 address.
-        Aaaa = 1,
-        /// A CNAME resource record. Data is a domain name to be aliased.
-        Cname = 2,
-    }
-    impl RecordType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                RecordType::A => "A",
-                RecordType::Aaaa => "AAAA",
-                RecordType::Cname => "CNAME",
+                ShardBy::Unspecified => "UNSPECIFIED",
+                ShardBy::Cookie => "COOKIE",
+                ShardBy::Ip => "IP",
+                ShardBy::Random => "RANDOM",
             }
         }
     }
