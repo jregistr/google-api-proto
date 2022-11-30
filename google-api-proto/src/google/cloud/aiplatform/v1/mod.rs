@@ -1291,7 +1291,7 @@ pub struct Model {
     #[prost(message, optional, tag = "32")]
     pub version_update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Required. The display name of the Model.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -2067,7 +2067,7 @@ pub struct GenericOperationMetadata {
     /// Output only. Partial failures encountered.
     /// E.g. single files that couldn't be read.
     /// This field should never exceed 20 entries.
-    /// Status details field will contain standard GCP error details.
+    /// Status details field will contain standard Google Cloud error details.
     #[prost(message, repeated, tag = "1")]
     pub partial_failures: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
     /// Output only. Time when the operation was created.
@@ -3084,7 +3084,7 @@ pub struct Index {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The display name of the Index.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -5908,7 +5908,7 @@ pub struct Endpoint {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The display name of the Endpoint.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -8564,7 +8564,7 @@ pub mod index_service_client {
     }
 }
 /// Tensorboard is a physical database that stores users' training metrics.
-/// A default Tensorboard is provided in each region of a GCP project.
+/// A default Tensorboard is provided in each region of a Google Cloud project.
 /// If needed users can also create extra Tensorboards in their projects.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Tensorboard {
@@ -8679,7 +8679,7 @@ pub struct DataLabelingJob {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The user-defined name of the DataLabelingJob.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     /// Display name of a DataLabelingJob.
     #[prost(string, tag = "2")]
@@ -9410,7 +9410,7 @@ pub struct PipelineJob {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// The display name of the Pipeline.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -9478,8 +9478,8 @@ pub struct PipelineJob {
     /// network name.
     ///
     /// Private services access must already be configured for the network.
-    /// Pipeline job will apply the network configuration to the GCP resources
-    /// being launched, if applied, such as Vertex AI
+    /// Pipeline job will apply the network configuration to the Google Cloud
+    /// resources being launched, if applied, such as Vertex AI
     /// Training or Dataflow job. If left unspecified, the workload is not peered
     /// with any network.
     #[prost(string, tag = "18")]
@@ -10303,11 +10303,11 @@ pub struct Dataset {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The user-defined name of the Dataset.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
-    /// Optional. The description of the Dataset.
+    /// The description of the Dataset.
     #[prost(string, tag = "16")]
     pub description: ::prost::alloc::string::String,
     /// Required. Points to a YAML file stored on Google Cloud Storage describing additional
@@ -10353,6 +10353,11 @@ pub struct Dataset {
     /// and all sub-resources of this Dataset will be secured by this key.
     #[prost(message, optional, tag = "11")]
     pub encryption_spec: ::core::option::Option<EncryptionSpec>,
+    /// Output only. The resource name of the Artifact that was created in MetadataStore when
+    /// creating the Dataset. The Artifact resource name pattern is
+    /// `projects/{project}/locations/{location}/metadataStores/{metadata_store}/artifacts/{artifact}`.
+    #[prost(string, tag = "17")]
+    pub metadata_artifact: ::prost::alloc::string::String,
 }
 /// Describes the location from where we import data into a Dataset, together
 /// with the labels that will be applied to the DataItems and the Annotations.
@@ -10479,7 +10484,7 @@ pub struct SpecialistPool {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The user-defined name of the SpecialistPool.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     /// This field should be unique on project-level.
     #[prost(string, tag = "2")]
@@ -10864,7 +10869,7 @@ pub struct BatchPredictionJob {
     /// The service account that the DeployedModel's container runs as. If not
     /// specified, a system generated one will be used, which
     /// has minimal permissions and the custom container, if used, may not have
-    /// enough permission to access other GCP resources.
+    /// enough permission to access other Google Cloud resources.
     ///
     /// Users deploying the Model must have the `iam.serviceAccounts.actAs`
     /// permission on this service account.
@@ -10916,7 +10921,7 @@ pub struct BatchPredictionJob {
     /// Output only. Partial failures encountered.
     /// For example, single files that can't be read.
     /// This field never exceeds 20 entries.
-    /// Status details fields contain standard GCP error details.
+    /// Status details fields contain standard Google Cloud error details.
     #[prost(message, repeated, tag = "12")]
     pub partial_failures: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
     /// Output only. Information about resources that had been consumed by this job.
@@ -11099,7 +11104,7 @@ pub struct CustomJob {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The display name of the CustomJob.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -11342,7 +11347,7 @@ pub struct HyperparameterTuningJob {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The display name of the HyperparameterTuningJob.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -11751,7 +11756,7 @@ pub struct ModelDeploymentMonitoringJob {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The user-defined name of the ModelDeploymentMonitoringJob.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     /// Display name of a ModelDeploymentMonitoringJob.
     #[prost(string, tag = "2")]
@@ -12574,7 +12579,7 @@ pub mod search_model_deployment_monitoring_stats_anomalies_request {
         /// If set, all attribution scores between
         /// \[SearchModelDeploymentMonitoringStatsAnomaliesRequest.start_time][google.cloud.aiplatform.v1.SearchModelDeploymentMonitoringStatsAnomaliesRequest.start_time\] and
         /// \[SearchModelDeploymentMonitoringStatsAnomaliesRequest.end_time][google.cloud.aiplatform.v1.SearchModelDeploymentMonitoringStatsAnomaliesRequest.end_time\] are
-        /// fetched, and page token doesn't take affect in this case.
+        /// fetched, and page token doesn't take effect in this case.
         /// Only used to retrieve attribution score for the top Features which has
         /// the highest attribution score in the latest monitoring run.
         #[prost(int32, tag = "4")]
@@ -14594,6 +14599,9 @@ pub struct ImportFeatureValuesOperationMetadata {
     /// Number of Feature values that have been imported by the operation.
     #[prost(int64, tag = "3")]
     pub imported_feature_value_count: i64,
+    /// The source URI from where Feature values are imported.
+    #[prost(string, repeated, tag = "4")]
+    pub source_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// The number of rows in input source that weren't imported due to either
     /// * Not having any featureValues.
     /// * Having a null entityId.
@@ -16272,7 +16280,7 @@ pub struct AnnotationSpec {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Required. The user-defined name of the AnnotationSpec.
-    /// The name can be up to 128 characters long and can be consist of any UTF-8
+    /// The name can be up to 128 characters long and can consist of any UTF-8
     /// characters.
     #[prost(string, tag = "2")]
     pub display_name: ::prost::alloc::string::String,
@@ -18376,6 +18384,40 @@ pub mod tensorboard_service_client {
         }
     }
 }
+/// Request message for \[FeaturestoreOnlineServingService.WriteFeatureValues][google.cloud.aiplatform.v1.FeaturestoreOnlineServingService.WriteFeatureValues\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteFeatureValuesRequest {
+    /// Required. The resource name of the EntityType for the entities being written.
+    /// Value format: `projects/{project}/locations/{location}/featurestores/
+    /// {featurestore}/entityTypes/{entityType}`. For example,
+    /// for a machine learning model predicting user clicks on a website, an
+    /// EntityType ID could be `user`.
+    #[prost(string, tag = "1")]
+    pub entity_type: ::prost::alloc::string::String,
+    /// Required. The entities to be written. Up to 100,000 feature values can be written
+    /// across all `payloads`.
+    #[prost(message, repeated, tag = "2")]
+    pub payloads: ::prost::alloc::vec::Vec<WriteFeatureValuesPayload>,
+}
+/// Contains Feature values to be written for a specific entity.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteFeatureValuesPayload {
+    /// Required. The ID of the entity.
+    #[prost(string, tag = "1")]
+    pub entity_id: ::prost::alloc::string::String,
+    /// Required. Feature values to be written, mapping from Feature ID to value. Up to
+    /// 100,000 `feature_values` entries may be written across all payloads.  The
+    /// feature generation time, aligned by days, must be no older than five
+    /// years (1825 days) and no later than one year (366 days) in the future.
+    #[prost(btree_map = "string, message", tag = "2")]
+    pub feature_values: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        FeatureValue,
+    >,
+}
+/// Response message for \[FeaturestoreOnlineServingService.WriteFeatureValues][google.cloud.aiplatform.v1.FeaturestoreOnlineServingService.WriteFeatureValues\].
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteFeatureValuesResponse {}
 /// Request message for \[FeaturestoreOnlineServingService.ReadFeatureValues][google.cloud.aiplatform.v1.FeaturestoreOnlineServingService.ReadFeatureValues\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReadFeatureValuesRequest {
@@ -18663,6 +18705,30 @@ pub mod featurestore_online_serving_service_client {
                 "/google.cloud.aiplatform.v1.FeaturestoreOnlineServingService/StreamingReadFeatureValues",
             );
             self.inner.server_streaming(request.into_request(), path, codec).await
+        }
+        /// Writes Feature values of one or more entities of an EntityType.
+        ///
+        /// The Feature values are merged into existing entities if any. The Feature
+        /// values to be written must have timestamp within the online storage
+        /// retention.
+        pub async fn write_feature_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WriteFeatureValuesRequest>,
+        ) -> Result<tonic::Response<super::WriteFeatureValuesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.aiplatform.v1.FeaturestoreOnlineServingService/WriteFeatureValues",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
