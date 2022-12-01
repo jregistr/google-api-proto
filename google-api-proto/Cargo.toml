@@ -136,6 +136,7 @@ google-cloud-bigquery-analyticshub-v1 = ["google-api", "google-cloud", "google-i
 google-cloud-bigquery-connection-v1 = ["google-api", "google-cloud", "google-iam-v1"]
 google-cloud-bigquery-connection-v1beta1 = ["google-api", "google-cloud", "google-iam-v1"]
 google-cloud-bigquery-dataexchange-v1beta1 = ["google-api", "google-cloud", "google-iam-v1"]
+google-cloud-bigquery-datapolicies-v1 = ["google-api", "google-cloud", "google-iam-v1"]
 google-cloud-bigquery-datapolicies-v1beta1 = ["google-api", "google-cloud", "google-iam-v1"]
 google-cloud-bigquery-datatransfer-v1 = ["google-api", "google-cloud", "google-rpc"]
 google-cloud-bigquery-logging-v1 = ["google-cloud", "google-iam-v1", "google-rpc"]
