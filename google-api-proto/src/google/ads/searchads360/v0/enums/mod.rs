@@ -1,192 +1,3 @@
-/// Container for enum describing possible ad rotation modes of ads within an
-/// ad group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupAdRotationModeEnum {}
-/// Nested message and enum types in `AdGroupAdRotationModeEnum`.
-pub mod ad_group_ad_rotation_mode_enum {
-    /// The possible ad rotation modes of an ad group.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AdGroupAdRotationMode {
-        /// The ad rotation mode has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// Optimize ad group ads based on clicks or conversions.
-        Optimize = 2,
-        /// Rotate evenly forever.
-        RotateForever = 3,
-    }
-    impl AdGroupAdRotationMode {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdGroupAdRotationMode::Unspecified => "UNSPECIFIED",
-                AdGroupAdRotationMode::Unknown => "UNKNOWN",
-                AdGroupAdRotationMode::Optimize => "OPTIMIZE",
-                AdGroupAdRotationMode::RotateForever => "ROTATE_FOREVER",
-            }
-        }
-    }
-}
-/// Container for enum describing possible statuses of an ad group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupStatusEnum {}
-/// Nested message and enum types in `AdGroupStatusEnum`.
-pub mod ad_group_status_enum {
-    /// The possible statuses of an ad group.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AdGroupStatus {
-        /// The status has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The ad group is enabled.
-        Enabled = 2,
-        /// The ad group is paused.
-        Paused = 3,
-        /// The ad group is removed.
-        Removed = 4,
-    }
-    impl AdGroupStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdGroupStatus::Unspecified => "UNSPECIFIED",
-                AdGroupStatus::Unknown => "UNKNOWN",
-                AdGroupStatus::Enabled => "ENABLED",
-                AdGroupStatus::Paused => "PAUSED",
-                AdGroupStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
-/// Defines types of an ad group, specific to a particular campaign channel
-/// type. This type drives validations that restrict which entities can be
-/// added to the ad group.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdGroupTypeEnum {}
-/// Nested message and enum types in `AdGroupTypeEnum`.
-pub mod ad_group_type_enum {
-    /// Enum listing the possible types of an ad group.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AdGroupType {
-        /// The type has not been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The default ad group type for Search campaigns.
-        SearchStandard = 2,
-        /// The default ad group type for Display campaigns.
-        DisplayStandard = 3,
-        /// The ad group type for Shopping campaigns serving standard product ads.
-        ShoppingProductAds = 4,
-        /// The type for ad groups that are limited to serving Showcase or Merchant
-        /// ads in Shopping results.
-        ShoppingShowcaseAds = 5,
-        /// The default ad group type for Hotel campaigns.
-        HotelAds = 6,
-        /// The type for ad groups in Smart Shopping campaigns.
-        ShoppingSmartAds = 7,
-        /// Short unskippable in-stream video ads.
-        VideoBumper = 8,
-        /// TrueView (skippable) in-stream video ads.
-        VideoTrueViewInStream = 9,
-        /// TrueView in-display video ads.
-        VideoTrueViewInDisplay = 10,
-        /// Unskippable in-stream video ads.
-        VideoNonSkippableInStream = 11,
-        /// Outstream video ads.
-        VideoOutstream = 12,
-        /// Ad group type for Dynamic Search Ads ad groups.
-        SearchDynamicAds = 13,
-        /// The type for ad groups in Shopping Comparison Listing campaigns.
-        ShoppingComparisonListingAds = 14,
-        /// The ad group type for Promoted Hotel ad groups.
-        PromotedHotelAds = 15,
-        /// Video responsive ad groups.
-        VideoResponsive = 16,
-        /// Video efficient reach ad groups.
-        VideoEfficientReach = 17,
-        /// Ad group type for Smart campaigns.
-        SmartCampaignAds = 18,
-    }
-    impl AdGroupType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AdGroupType::Unspecified => "UNSPECIFIED",
-                AdGroupType::Unknown => "UNKNOWN",
-                AdGroupType::SearchStandard => "SEARCH_STANDARD",
-                AdGroupType::DisplayStandard => "DISPLAY_STANDARD",
-                AdGroupType::ShoppingProductAds => "SHOPPING_PRODUCT_ADS",
-                AdGroupType::ShoppingShowcaseAds => "SHOPPING_SHOWCASE_ADS",
-                AdGroupType::HotelAds => "HOTEL_ADS",
-                AdGroupType::ShoppingSmartAds => "SHOPPING_SMART_ADS",
-                AdGroupType::VideoBumper => "VIDEO_BUMPER",
-                AdGroupType::VideoTrueViewInStream => "VIDEO_TRUE_VIEW_IN_STREAM",
-                AdGroupType::VideoTrueViewInDisplay => "VIDEO_TRUE_VIEW_IN_DISPLAY",
-                AdGroupType::VideoNonSkippableInStream => "VIDEO_NON_SKIPPABLE_IN_STREAM",
-                AdGroupType::VideoOutstream => "VIDEO_OUTSTREAM",
-                AdGroupType::SearchDynamicAds => "SEARCH_DYNAMIC_ADS",
-                AdGroupType::ShoppingComparisonListingAds => {
-                    "SHOPPING_COMPARISON_LISTING_ADS"
-                }
-                AdGroupType::PromotedHotelAds => "PROMOTED_HOTEL_ADS",
-                AdGroupType::VideoResponsive => "VIDEO_RESPONSIVE",
-                AdGroupType::VideoEfficientReach => "VIDEO_EFFICIENT_REACH",
-                AdGroupType::SmartCampaignAds => "SMART_CAMPAIGN_ADS",
-            }
-        }
-    }
-}
 /// Container for enum describing where on the first search results page the
 /// automated bidding system should target impressions for the
 /// TargetImpressionShare bidding strategy.
@@ -1110,6 +921,550 @@ pub mod positive_geo_target_type_enum {
         }
     }
 }
+/// The value type of custom columns.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomColumnValueTypeEnum {}
+/// Nested message and enum types in `CustomColumnValueTypeEnum`.
+pub mod custom_column_value_type_enum {
+    /// Enum containing possible custom column value types.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum CustomColumnValueType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Unknown.
+        Unknown = 1,
+        /// The custom column value is a string.
+        String = 2,
+        /// The custom column value is an int64 number.
+        Int64 = 3,
+        /// The custom column value is a double number.
+        Double = 4,
+        /// The custom column value is a boolean.
+        Boolean = 5,
+    }
+    impl CustomColumnValueType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CustomColumnValueType::Unspecified => "UNSPECIFIED",
+                CustomColumnValueType::Unknown => "UNKNOWN",
+                CustomColumnValueType::String => "STRING",
+                CustomColumnValueType::Int64 => "INT64",
+                CustomColumnValueType::Double => "DOUBLE",
+                CustomColumnValueType::Boolean => "BOOLEAN",
+            }
+        }
+    }
+}
+/// Container for enum representing the attribution model that describes how to
+/// distribute credit for a particular conversion across potentially many prior
+/// interactions.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AttributionModelEnum {}
+/// Nested message and enum types in `AttributionModelEnum`.
+pub mod attribution_model_enum {
+    /// The attribution model that describes how to distribute credit for a
+    /// particular conversion across potentially many prior interactions.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AttributionModel {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Uses external attribution.
+        External = 100,
+        /// Attributes all credit for a conversion to its last click.
+        GoogleAdsLastClick = 101,
+        /// Attributes all credit for a conversion to its first click using Google
+        /// Search attribution.
+        GoogleSearchAttributionFirstClick = 102,
+        /// Attributes credit for a conversion equally across all of its clicks using
+        /// Google Search attribution.
+        GoogleSearchAttributionLinear = 103,
+        /// Attributes exponentially more credit for a conversion to its more recent
+        /// clicks using Google Search attribution (half-life is 1 week).
+        GoogleSearchAttributionTimeDecay = 104,
+        /// Attributes 40% of the credit for a conversion to its first and last
+        /// clicks. Remaining 20% is evenly distributed across all other clicks. This
+        /// uses Google Search attribution.
+        GoogleSearchAttributionPositionBased = 105,
+        /// Flexible model that uses machine learning to determine the appropriate
+        /// distribution of credit among clicks using Google Search attribution.
+        GoogleSearchAttributionDataDriven = 106,
+    }
+    impl AttributionModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttributionModel::Unspecified => "UNSPECIFIED",
+                AttributionModel::Unknown => "UNKNOWN",
+                AttributionModel::External => "EXTERNAL",
+                AttributionModel::GoogleAdsLastClick => "GOOGLE_ADS_LAST_CLICK",
+                AttributionModel::GoogleSearchAttributionFirstClick => {
+                    "GOOGLE_SEARCH_ATTRIBUTION_FIRST_CLICK"
+                }
+                AttributionModel::GoogleSearchAttributionLinear => {
+                    "GOOGLE_SEARCH_ATTRIBUTION_LINEAR"
+                }
+                AttributionModel::GoogleSearchAttributionTimeDecay => {
+                    "GOOGLE_SEARCH_ATTRIBUTION_TIME_DECAY"
+                }
+                AttributionModel::GoogleSearchAttributionPositionBased => {
+                    "GOOGLE_SEARCH_ATTRIBUTION_POSITION_BASED"
+                }
+                AttributionModel::GoogleSearchAttributionDataDriven => {
+                    "GOOGLE_SEARCH_ATTRIBUTION_DATA_DRIVEN"
+                }
+            }
+        }
+    }
+}
+/// Container for enum describing the category of conversions that are associated
+/// with a ConversionAction.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionActionCategoryEnum {}
+/// Nested message and enum types in `ConversionActionCategoryEnum`.
+pub mod conversion_action_category_enum {
+    /// The category of conversions that are associated with a ConversionAction.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConversionActionCategory {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Default category.
+        Default = 2,
+        /// User visiting a page.
+        PageView = 3,
+        /// Purchase, sales, or "order placed" event.
+        Purchase = 4,
+        /// Signup user action.
+        Signup = 5,
+        /// Lead-generating action.
+        Lead = 6,
+        /// Software download action (as for an app).
+        Download = 7,
+        /// The addition of items to a shopping cart or bag on an advertiser site.
+        AddToCart = 8,
+        /// When someone enters the checkout flow on an advertiser site.
+        BeginCheckout = 9,
+        /// The start of a paid subscription for a product or service.
+        SubscribePaid = 10,
+        /// A call to indicate interest in an advertiser's offering.
+        PhoneCallLead = 11,
+        /// A lead conversion imported from an external source into Google Ads.
+        ImportedLead = 12,
+        /// A submission of a form on an advertiser site indicating business
+        /// interest.
+        SubmitLeadForm = 13,
+        /// A booking of an appointment with an advertiser's business.
+        BookAppointment = 14,
+        /// A quote or price estimate request.
+        RequestQuote = 15,
+        /// A search for an advertiser's business location with intention to visit.
+        GetDirections = 16,
+        /// A click to an advertiser's partner's site.
+        OutboundClick = 17,
+        /// A call, SMS, email, chat or other type of contact to an advertiser.
+        Contact = 18,
+        /// A website engagement event such as long site time or a Google Analytics
+        /// (GA) Smart Goal. Intended to be used for GA, Firebase, GA Gold goal
+        /// imports.
+        Engagement = 19,
+        /// A visit to a physical store location.
+        StoreVisit = 20,
+        /// A sale occurring in a physical store.
+        StoreSale = 21,
+        /// A lead conversion imported from an external source into Google Ads,
+        /// that has been further qualified by the advertiser (marketing/sales team).
+        /// In the lead-to-sale journey, advertisers get leads, then act on them
+        /// by reaching out to the consumer. If the consumer is interested and
+        /// may end up buying their product, the advertiser marks such leads as
+        /// "qualified leads".
+        QualifiedLead = 22,
+        /// A lead conversion imported from an external source into Google Ads, that
+        /// has further completed a chosen stage as defined by the lead gen
+        /// advertiser.
+        ConvertedLead = 23,
+    }
+    impl ConversionActionCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionActionCategory::Unspecified => "UNSPECIFIED",
+                ConversionActionCategory::Unknown => "UNKNOWN",
+                ConversionActionCategory::Default => "DEFAULT",
+                ConversionActionCategory::PageView => "PAGE_VIEW",
+                ConversionActionCategory::Purchase => "PURCHASE",
+                ConversionActionCategory::Signup => "SIGNUP",
+                ConversionActionCategory::Lead => "LEAD",
+                ConversionActionCategory::Download => "DOWNLOAD",
+                ConversionActionCategory::AddToCart => "ADD_TO_CART",
+                ConversionActionCategory::BeginCheckout => "BEGIN_CHECKOUT",
+                ConversionActionCategory::SubscribePaid => "SUBSCRIBE_PAID",
+                ConversionActionCategory::PhoneCallLead => "PHONE_CALL_LEAD",
+                ConversionActionCategory::ImportedLead => "IMPORTED_LEAD",
+                ConversionActionCategory::SubmitLeadForm => "SUBMIT_LEAD_FORM",
+                ConversionActionCategory::BookAppointment => "BOOK_APPOINTMENT",
+                ConversionActionCategory::RequestQuote => "REQUEST_QUOTE",
+                ConversionActionCategory::GetDirections => "GET_DIRECTIONS",
+                ConversionActionCategory::OutboundClick => "OUTBOUND_CLICK",
+                ConversionActionCategory::Contact => "CONTACT",
+                ConversionActionCategory::Engagement => "ENGAGEMENT",
+                ConversionActionCategory::StoreVisit => "STORE_VISIT",
+                ConversionActionCategory::StoreSale => "STORE_SALE",
+                ConversionActionCategory::QualifiedLead => "QUALIFIED_LEAD",
+                ConversionActionCategory::ConvertedLead => "CONVERTED_LEAD",
+            }
+        }
+    }
+}
+/// Container for enum describing possible statuses of a conversion action.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionActionStatusEnum {}
+/// Nested message and enum types in `ConversionActionStatusEnum`.
+pub mod conversion_action_status_enum {
+    /// Possible statuses of a conversion action.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConversionActionStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Conversions will be recorded.
+        Enabled = 2,
+        /// Conversions will not be recorded.
+        Removed = 3,
+        /// Conversions will not be recorded and the conversion action will not
+        /// appear in the UI.
+        Hidden = 4,
+    }
+    impl ConversionActionStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionActionStatus::Unspecified => "UNSPECIFIED",
+                ConversionActionStatus::Unknown => "UNKNOWN",
+                ConversionActionStatus::Enabled => "ENABLED",
+                ConversionActionStatus::Removed => "REMOVED",
+                ConversionActionStatus::Hidden => "HIDDEN",
+            }
+        }
+    }
+}
+/// Container for enum describing possible types of a conversion action.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionActionTypeEnum {}
+/// Nested message and enum types in `ConversionActionTypeEnum`.
+pub mod conversion_action_type_enum {
+    /// Possible types of a conversion action.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConversionActionType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Conversions that occur when a user clicks on an ad's call extension.
+        AdCall = 2,
+        /// Conversions that occur when a user on a mobile device clicks a phone
+        /// number.
+        ClickToCall = 3,
+        /// Conversions that occur when a user downloads a mobile app from the Google
+        /// Play Store.
+        GooglePlayDownload = 4,
+        /// Conversions that occur when a user makes a purchase in an app through
+        /// Android billing.
+        GooglePlayInAppPurchase = 5,
+        /// Call conversions that are tracked by the advertiser and uploaded.
+        UploadCalls = 6,
+        /// Conversions that are tracked by the advertiser and uploaded with
+        /// attributed clicks.
+        UploadClicks = 7,
+        /// Conversions that occur on a webpage.
+        Webpage = 8,
+        /// Conversions that occur when a user calls a dynamically-generated phone
+        /// number from an advertiser's website.
+        WebsiteCall = 9,
+        /// Store Sales conversion based on first-party or third-party merchant
+        /// data uploads.
+        /// Only customers on the allowlist can use store sales direct upload types.
+        StoreSalesDirectUpload = 10,
+        /// Store Sales conversion based on first-party or third-party merchant
+        /// data uploads and/or from in-store purchases using cards from payment
+        /// networks.
+        /// Only customers on the allowlist can use store sales types.
+        /// Read only.
+        StoreSales = 11,
+        /// Android app first open conversions tracked through Firebase.
+        FirebaseAndroidFirstOpen = 12,
+        /// Android app in app purchase conversions tracked through Firebase.
+        FirebaseAndroidInAppPurchase = 13,
+        /// Android app custom conversions tracked through Firebase.
+        FirebaseAndroidCustom = 14,
+        /// iOS app first open conversions tracked through Firebase.
+        FirebaseIosFirstOpen = 15,
+        /// iOS app in app purchase conversions tracked through Firebase.
+        FirebaseIosInAppPurchase = 16,
+        /// iOS app custom conversions tracked through Firebase.
+        FirebaseIosCustom = 17,
+        /// Android app first open conversions tracked through Third Party App
+        /// Analytics.
+        ThirdPartyAppAnalyticsAndroidFirstOpen = 18,
+        /// Android app in app purchase conversions tracked through Third Party App
+        /// Analytics.
+        ThirdPartyAppAnalyticsAndroidInAppPurchase = 19,
+        /// Android app custom conversions tracked through Third Party App Analytics.
+        ThirdPartyAppAnalyticsAndroidCustom = 20,
+        /// iOS app first open conversions tracked through Third Party App Analytics.
+        ThirdPartyAppAnalyticsIosFirstOpen = 21,
+        /// iOS app in app purchase conversions tracked through Third Party App
+        /// Analytics.
+        ThirdPartyAppAnalyticsIosInAppPurchase = 22,
+        /// iOS app custom conversions tracked through Third Party App Analytics.
+        ThirdPartyAppAnalyticsIosCustom = 23,
+        /// Conversions that occur when a user pre-registers a mobile app from the
+        /// Google Play Store. Read only.
+        AndroidAppPreRegistration = 24,
+        /// Conversions that track all Google Play downloads which aren't tracked
+        /// by an app-specific type. Read only.
+        AndroidInstallsAllOtherApps = 25,
+        /// Floodlight activity that counts the number of times that users have
+        /// visited a particular webpage after seeing or clicking on one of
+        /// an advertiser's ads. Read only.
+        FloodlightAction = 26,
+        /// Floodlight activity that tracks the number of sales made or the number
+        /// of items purchased. Can also capture the total value of each sale.
+        /// Read only.
+        FloodlightTransaction = 27,
+        /// Conversions that track local actions from Google's products and
+        /// services after interacting with an ad. Read only.
+        GoogleHosted = 28,
+        /// Conversions reported when a user submits a lead form. Read only.
+        LeadFormSubmit = 29,
+        /// Conversions that come from Salesforce. Read only.
+        Salesforce = 30,
+        /// Conversions imported from Search Ads 360 Floodlight data. Read only.
+        SearchAds360 = 31,
+        /// Call conversions that occur on Smart campaign Ads without call tracking
+        /// setup, using Smart campaign custom criteria. Read only.
+        SmartCampaignAdClicksToCall = 32,
+        /// The user clicks on a call element within Google Maps. Smart campaign
+        /// only. Read only.
+        SmartCampaignMapClicksToCall = 33,
+        /// The user requests directions to a business location within Google Maps.
+        /// Smart campaign only. Read only.
+        SmartCampaignMapDirections = 34,
+        /// Call conversions that occur on Smart campaign Ads with call tracking
+        /// setup, using Smart campaign custom criteria. Read only.
+        SmartCampaignTrackedCalls = 35,
+        /// Conversions that occur when a user visits an advertiser's retail store.
+        /// Read only.
+        StoreVisits = 36,
+    }
+    impl ConversionActionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionActionType::Unspecified => "UNSPECIFIED",
+                ConversionActionType::Unknown => "UNKNOWN",
+                ConversionActionType::AdCall => "AD_CALL",
+                ConversionActionType::ClickToCall => "CLICK_TO_CALL",
+                ConversionActionType::GooglePlayDownload => "GOOGLE_PLAY_DOWNLOAD",
+                ConversionActionType::GooglePlayInAppPurchase => {
+                    "GOOGLE_PLAY_IN_APP_PURCHASE"
+                }
+                ConversionActionType::UploadCalls => "UPLOAD_CALLS",
+                ConversionActionType::UploadClicks => "UPLOAD_CLICKS",
+                ConversionActionType::Webpage => "WEBPAGE",
+                ConversionActionType::WebsiteCall => "WEBSITE_CALL",
+                ConversionActionType::StoreSalesDirectUpload => {
+                    "STORE_SALES_DIRECT_UPLOAD"
+                }
+                ConversionActionType::StoreSales => "STORE_SALES",
+                ConversionActionType::FirebaseAndroidFirstOpen => {
+                    "FIREBASE_ANDROID_FIRST_OPEN"
+                }
+                ConversionActionType::FirebaseAndroidInAppPurchase => {
+                    "FIREBASE_ANDROID_IN_APP_PURCHASE"
+                }
+                ConversionActionType::FirebaseAndroidCustom => "FIREBASE_ANDROID_CUSTOM",
+                ConversionActionType::FirebaseIosFirstOpen => "FIREBASE_IOS_FIRST_OPEN",
+                ConversionActionType::FirebaseIosInAppPurchase => {
+                    "FIREBASE_IOS_IN_APP_PURCHASE"
+                }
+                ConversionActionType::FirebaseIosCustom => "FIREBASE_IOS_CUSTOM",
+                ConversionActionType::ThirdPartyAppAnalyticsAndroidFirstOpen => {
+                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_FIRST_OPEN"
+                }
+                ConversionActionType::ThirdPartyAppAnalyticsAndroidInAppPurchase => {
+                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_IN_APP_PURCHASE"
+                }
+                ConversionActionType::ThirdPartyAppAnalyticsAndroidCustom => {
+                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_CUSTOM"
+                }
+                ConversionActionType::ThirdPartyAppAnalyticsIosFirstOpen => {
+                    "THIRD_PARTY_APP_ANALYTICS_IOS_FIRST_OPEN"
+                }
+                ConversionActionType::ThirdPartyAppAnalyticsIosInAppPurchase => {
+                    "THIRD_PARTY_APP_ANALYTICS_IOS_IN_APP_PURCHASE"
+                }
+                ConversionActionType::ThirdPartyAppAnalyticsIosCustom => {
+                    "THIRD_PARTY_APP_ANALYTICS_IOS_CUSTOM"
+                }
+                ConversionActionType::AndroidAppPreRegistration => {
+                    "ANDROID_APP_PRE_REGISTRATION"
+                }
+                ConversionActionType::AndroidInstallsAllOtherApps => {
+                    "ANDROID_INSTALLS_ALL_OTHER_APPS"
+                }
+                ConversionActionType::FloodlightAction => "FLOODLIGHT_ACTION",
+                ConversionActionType::FloodlightTransaction => "FLOODLIGHT_TRANSACTION",
+                ConversionActionType::GoogleHosted => "GOOGLE_HOSTED",
+                ConversionActionType::LeadFormSubmit => "LEAD_FORM_SUBMIT",
+                ConversionActionType::Salesforce => "SALESFORCE",
+                ConversionActionType::SearchAds360 => "SEARCH_ADS_360",
+                ConversionActionType::SmartCampaignAdClicksToCall => {
+                    "SMART_CAMPAIGN_AD_CLICKS_TO_CALL"
+                }
+                ConversionActionType::SmartCampaignMapClicksToCall => {
+                    "SMART_CAMPAIGN_MAP_CLICKS_TO_CALL"
+                }
+                ConversionActionType::SmartCampaignMapDirections => {
+                    "SMART_CAMPAIGN_MAP_DIRECTIONS"
+                }
+                ConversionActionType::SmartCampaignTrackedCalls => {
+                    "SMART_CAMPAIGN_TRACKED_CALLS"
+                }
+                ConversionActionType::StoreVisits => "STORE_VISITS",
+            }
+        }
+    }
+}
+/// Container for enum indicating data driven model status.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataDrivenModelStatusEnum {}
+/// Nested message and enum types in `DataDrivenModelStatusEnum`.
+pub mod data_driven_model_status_enum {
+    /// Enumerates data driven model statuses.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DataDrivenModelStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The data driven model is available.
+        Available = 2,
+        /// The data driven model is stale. It hasn't been updated for at least 7
+        /// days. It is still being used, but will become expired if it does not get
+        /// updated for 30 days.
+        Stale = 3,
+        /// The data driven model expired. It hasn't been updated for at least 30
+        /// days and cannot be used. Most commonly this is because there hasn't been
+        /// the required number of events in a recent 30-day period.
+        Expired = 4,
+        /// The data driven model has never been generated. Most commonly this is
+        /// because there has never been the required number of events in any 30-day
+        /// period.
+        NeverGenerated = 5,
+    }
+    impl DataDrivenModelStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DataDrivenModelStatus::Unspecified => "UNSPECIFIED",
+                DataDrivenModelStatus::Unknown => "UNKNOWN",
+                DataDrivenModelStatus::Available => "AVAILABLE",
+                DataDrivenModelStatus::Stale => "STALE",
+                DataDrivenModelStatus::Expired => "EXPIRED",
+                DataDrivenModelStatus::NeverGenerated => "NEVER_GENERATED",
+            }
+        }
+    }
+}
 /// Container for enum describing the type of demographic age ranges.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AgeRangeTypeEnum {}
@@ -1827,194 +2182,6 @@ pub mod criterion_type_enum {
         }
     }
 }
-/// The value type of custom columns.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomColumnValueTypeEnum {}
-/// Nested message and enum types in `CustomColumnValueTypeEnum`.
-pub mod custom_column_value_type_enum {
-    /// Enum containing possible custom column value types.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum CustomColumnValueType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Unknown.
-        Unknown = 1,
-        /// The custom column value is a string.
-        String = 2,
-        /// The custom column value is an int64 number.
-        Int64 = 3,
-        /// The custom column value is a double number.
-        Double = 4,
-        /// The custom column value is a boolean.
-        Boolean = 5,
-    }
-    impl CustomColumnValueType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CustomColumnValueType::Unspecified => "UNSPECIFIED",
-                CustomColumnValueType::Unknown => "UNKNOWN",
-                CustomColumnValueType::String => "STRING",
-                CustomColumnValueType::Int64 => "INT64",
-                CustomColumnValueType::Double => "DOUBLE",
-                CustomColumnValueType::Boolean => "BOOLEAN",
-            }
-        }
-    }
-}
-/// Message describing Budget delivery methods. A delivery method determines the
-/// rate at which the Budget is spent.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BudgetDeliveryMethodEnum {}
-/// Nested message and enum types in `BudgetDeliveryMethodEnum`.
-pub mod budget_delivery_method_enum {
-    /// Possible delivery methods of a Budget.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum BudgetDeliveryMethod {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The budget server will throttle serving evenly across
-        /// the entire time period.
-        Standard = 2,
-        /// The budget server will not throttle serving,
-        /// and ads will serve as fast as possible.
-        Accelerated = 3,
-    }
-    impl BudgetDeliveryMethod {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                BudgetDeliveryMethod::Unspecified => "UNSPECIFIED",
-                BudgetDeliveryMethod::Unknown => "UNKNOWN",
-                BudgetDeliveryMethod::Standard => "STANDARD",
-                BudgetDeliveryMethod::Accelerated => "ACCELERATED",
-            }
-        }
-    }
-}
-/// Message describing Budget period.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BudgetPeriodEnum {}
-/// Nested message and enum types in `BudgetPeriodEnum`.
-pub mod budget_period_enum {
-    /// Possible period of a Budget.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum BudgetPeriod {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Daily budget.
-        Daily = 2,
-        /// Fixed daily budget.
-        FixedDaily = 4,
-        /// Custom budget, added back in V5.
-        /// Custom bugdet can be used with total_amount to specify lifetime budget
-        /// limit.
-        CustomPeriod = 5,
-    }
-    impl BudgetPeriod {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                BudgetPeriod::Unspecified => "UNSPECIFIED",
-                BudgetPeriod::Unknown => "UNKNOWN",
-                BudgetPeriod::Daily => "DAILY",
-                BudgetPeriod::FixedDaily => "FIXED_DAILY",
-                BudgetPeriod::CustomPeriod => "CUSTOM_PERIOD",
-            }
-        }
-    }
-}
-/// Message describing BiddingStrategy statuses.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BiddingStrategyStatusEnum {}
-/// Nested message and enum types in `BiddingStrategyStatusEnum`.
-pub mod bidding_strategy_status_enum {
-    /// The possible statuses of a BiddingStrategy.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum BiddingStrategyStatus {
-        /// No value has been specified.
-        Unspecified = 0,
-        /// The received value is not known in this version.
-        ///
-        /// This is a response-only value.
-        Unknown = 1,
-        /// The bidding strategy is enabled.
-        Enabled = 2,
-        /// The bidding strategy is removed.
-        Removed = 4,
-    }
-    impl BiddingStrategyStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                BiddingStrategyStatus::Unspecified => "UNSPECIFIED",
-                BiddingStrategyStatus::Unknown => "UNKNOWN",
-                BiddingStrategyStatus::Enabled => "ENABLED",
-                BiddingStrategyStatus::Removed => "REMOVED",
-            }
-        }
-    }
-}
 /// Container for enum describing possible statuses of an account.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountStatusEnum {}
@@ -2242,555 +2409,6 @@ pub mod customer_status_enum {
         }
     }
 }
-/// Container for enum representing the attribution model that describes how to
-/// distribute credit for a particular conversion across potentially many prior
-/// interactions.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttributionModelEnum {}
-/// Nested message and enum types in `AttributionModelEnum`.
-pub mod attribution_model_enum {
-    /// The attribution model that describes how to distribute credit for a
-    /// particular conversion across potentially many prior interactions.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AttributionModel {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Uses external attribution.
-        External = 100,
-        /// Attributes all credit for a conversion to its last click.
-        GoogleAdsLastClick = 101,
-        /// Attributes all credit for a conversion to its first click using Google
-        /// Search attribution.
-        GoogleSearchAttributionFirstClick = 102,
-        /// Attributes credit for a conversion equally across all of its clicks using
-        /// Google Search attribution.
-        GoogleSearchAttributionLinear = 103,
-        /// Attributes exponentially more credit for a conversion to its more recent
-        /// clicks using Google Search attribution (half-life is 1 week).
-        GoogleSearchAttributionTimeDecay = 104,
-        /// Attributes 40% of the credit for a conversion to its first and last
-        /// clicks. Remaining 20% is evenly distributed across all other clicks. This
-        /// uses Google Search attribution.
-        GoogleSearchAttributionPositionBased = 105,
-        /// Flexible model that uses machine learning to determine the appropriate
-        /// distribution of credit among clicks using Google Search attribution.
-        GoogleSearchAttributionDataDriven = 106,
-    }
-    impl AttributionModel {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AttributionModel::Unspecified => "UNSPECIFIED",
-                AttributionModel::Unknown => "UNKNOWN",
-                AttributionModel::External => "EXTERNAL",
-                AttributionModel::GoogleAdsLastClick => "GOOGLE_ADS_LAST_CLICK",
-                AttributionModel::GoogleSearchAttributionFirstClick => {
-                    "GOOGLE_SEARCH_ATTRIBUTION_FIRST_CLICK"
-                }
-                AttributionModel::GoogleSearchAttributionLinear => {
-                    "GOOGLE_SEARCH_ATTRIBUTION_LINEAR"
-                }
-                AttributionModel::GoogleSearchAttributionTimeDecay => {
-                    "GOOGLE_SEARCH_ATTRIBUTION_TIME_DECAY"
-                }
-                AttributionModel::GoogleSearchAttributionPositionBased => {
-                    "GOOGLE_SEARCH_ATTRIBUTION_POSITION_BASED"
-                }
-                AttributionModel::GoogleSearchAttributionDataDriven => {
-                    "GOOGLE_SEARCH_ATTRIBUTION_DATA_DRIVEN"
-                }
-            }
-        }
-    }
-}
-/// Container for enum describing the category of conversions that are associated
-/// with a ConversionAction.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionActionCategoryEnum {}
-/// Nested message and enum types in `ConversionActionCategoryEnum`.
-pub mod conversion_action_category_enum {
-    /// The category of conversions that are associated with a ConversionAction.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConversionActionCategory {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Default category.
-        Default = 2,
-        /// User visiting a page.
-        PageView = 3,
-        /// Purchase, sales, or "order placed" event.
-        Purchase = 4,
-        /// Signup user action.
-        Signup = 5,
-        /// Lead-generating action.
-        Lead = 6,
-        /// Software download action (as for an app).
-        Download = 7,
-        /// The addition of items to a shopping cart or bag on an advertiser site.
-        AddToCart = 8,
-        /// When someone enters the checkout flow on an advertiser site.
-        BeginCheckout = 9,
-        /// The start of a paid subscription for a product or service.
-        SubscribePaid = 10,
-        /// A call to indicate interest in an advertiser's offering.
-        PhoneCallLead = 11,
-        /// A lead conversion imported from an external source into Google Ads.
-        ImportedLead = 12,
-        /// A submission of a form on an advertiser site indicating business
-        /// interest.
-        SubmitLeadForm = 13,
-        /// A booking of an appointment with an advertiser's business.
-        BookAppointment = 14,
-        /// A quote or price estimate request.
-        RequestQuote = 15,
-        /// A search for an advertiser's business location with intention to visit.
-        GetDirections = 16,
-        /// A click to an advertiser's partner's site.
-        OutboundClick = 17,
-        /// A call, SMS, email, chat or other type of contact to an advertiser.
-        Contact = 18,
-        /// A website engagement event such as long site time or a Google Analytics
-        /// (GA) Smart Goal. Intended to be used for GA, Firebase, GA Gold goal
-        /// imports.
-        Engagement = 19,
-        /// A visit to a physical store location.
-        StoreVisit = 20,
-        /// A sale occurring in a physical store.
-        StoreSale = 21,
-        /// A lead conversion imported from an external source into Google Ads,
-        /// that has been further qualified by the advertiser (marketing/sales team).
-        /// In the lead-to-sale journey, advertisers get leads, then act on them
-        /// by reaching out to the consumer. If the consumer is interested and
-        /// may end up buying their product, the advertiser marks such leads as
-        /// "qualified leads".
-        QualifiedLead = 22,
-        /// A lead conversion imported from an external source into Google Ads, that
-        /// has further completed a chosen stage as defined by the lead gen
-        /// advertiser.
-        ConvertedLead = 23,
-    }
-    impl ConversionActionCategory {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConversionActionCategory::Unspecified => "UNSPECIFIED",
-                ConversionActionCategory::Unknown => "UNKNOWN",
-                ConversionActionCategory::Default => "DEFAULT",
-                ConversionActionCategory::PageView => "PAGE_VIEW",
-                ConversionActionCategory::Purchase => "PURCHASE",
-                ConversionActionCategory::Signup => "SIGNUP",
-                ConversionActionCategory::Lead => "LEAD",
-                ConversionActionCategory::Download => "DOWNLOAD",
-                ConversionActionCategory::AddToCart => "ADD_TO_CART",
-                ConversionActionCategory::BeginCheckout => "BEGIN_CHECKOUT",
-                ConversionActionCategory::SubscribePaid => "SUBSCRIBE_PAID",
-                ConversionActionCategory::PhoneCallLead => "PHONE_CALL_LEAD",
-                ConversionActionCategory::ImportedLead => "IMPORTED_LEAD",
-                ConversionActionCategory::SubmitLeadForm => "SUBMIT_LEAD_FORM",
-                ConversionActionCategory::BookAppointment => "BOOK_APPOINTMENT",
-                ConversionActionCategory::RequestQuote => "REQUEST_QUOTE",
-                ConversionActionCategory::GetDirections => "GET_DIRECTIONS",
-                ConversionActionCategory::OutboundClick => "OUTBOUND_CLICK",
-                ConversionActionCategory::Contact => "CONTACT",
-                ConversionActionCategory::Engagement => "ENGAGEMENT",
-                ConversionActionCategory::StoreVisit => "STORE_VISIT",
-                ConversionActionCategory::StoreSale => "STORE_SALE",
-                ConversionActionCategory::QualifiedLead => "QUALIFIED_LEAD",
-                ConversionActionCategory::ConvertedLead => "CONVERTED_LEAD",
-            }
-        }
-    }
-}
-/// Container for enum describing possible statuses of a conversion action.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionActionStatusEnum {}
-/// Nested message and enum types in `ConversionActionStatusEnum`.
-pub mod conversion_action_status_enum {
-    /// Possible statuses of a conversion action.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConversionActionStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Conversions will be recorded.
-        Enabled = 2,
-        /// Conversions will not be recorded.
-        Removed = 3,
-        /// Conversions will not be recorded and the conversion action will not
-        /// appear in the UI.
-        Hidden = 4,
-    }
-    impl ConversionActionStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConversionActionStatus::Unspecified => "UNSPECIFIED",
-                ConversionActionStatus::Unknown => "UNKNOWN",
-                ConversionActionStatus::Enabled => "ENABLED",
-                ConversionActionStatus::Removed => "REMOVED",
-                ConversionActionStatus::Hidden => "HIDDEN",
-            }
-        }
-    }
-}
-/// Container for enum describing possible types of a conversion action.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionActionTypeEnum {}
-/// Nested message and enum types in `ConversionActionTypeEnum`.
-pub mod conversion_action_type_enum {
-    /// Possible types of a conversion action.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConversionActionType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Conversions that occur when a user clicks on an ad's call extension.
-        AdCall = 2,
-        /// Conversions that occur when a user on a mobile device clicks a phone
-        /// number.
-        ClickToCall = 3,
-        /// Conversions that occur when a user downloads a mobile app from the Google
-        /// Play Store.
-        GooglePlayDownload = 4,
-        /// Conversions that occur when a user makes a purchase in an app through
-        /// Android billing.
-        GooglePlayInAppPurchase = 5,
-        /// Call conversions that are tracked by the advertiser and uploaded.
-        UploadCalls = 6,
-        /// Conversions that are tracked by the advertiser and uploaded with
-        /// attributed clicks.
-        UploadClicks = 7,
-        /// Conversions that occur on a webpage.
-        Webpage = 8,
-        /// Conversions that occur when a user calls a dynamically-generated phone
-        /// number from an advertiser's website.
-        WebsiteCall = 9,
-        /// Store Sales conversion based on first-party or third-party merchant
-        /// data uploads.
-        /// Only customers on the allowlist can use store sales direct upload types.
-        StoreSalesDirectUpload = 10,
-        /// Store Sales conversion based on first-party or third-party merchant
-        /// data uploads and/or from in-store purchases using cards from payment
-        /// networks.
-        /// Only customers on the allowlist can use store sales types.
-        /// Read only.
-        StoreSales = 11,
-        /// Android app first open conversions tracked through Firebase.
-        FirebaseAndroidFirstOpen = 12,
-        /// Android app in app purchase conversions tracked through Firebase.
-        FirebaseAndroidInAppPurchase = 13,
-        /// Android app custom conversions tracked through Firebase.
-        FirebaseAndroidCustom = 14,
-        /// iOS app first open conversions tracked through Firebase.
-        FirebaseIosFirstOpen = 15,
-        /// iOS app in app purchase conversions tracked through Firebase.
-        FirebaseIosInAppPurchase = 16,
-        /// iOS app custom conversions tracked through Firebase.
-        FirebaseIosCustom = 17,
-        /// Android app first open conversions tracked through Third Party App
-        /// Analytics.
-        ThirdPartyAppAnalyticsAndroidFirstOpen = 18,
-        /// Android app in app purchase conversions tracked through Third Party App
-        /// Analytics.
-        ThirdPartyAppAnalyticsAndroidInAppPurchase = 19,
-        /// Android app custom conversions tracked through Third Party App Analytics.
-        ThirdPartyAppAnalyticsAndroidCustom = 20,
-        /// iOS app first open conversions tracked through Third Party App Analytics.
-        ThirdPartyAppAnalyticsIosFirstOpen = 21,
-        /// iOS app in app purchase conversions tracked through Third Party App
-        /// Analytics.
-        ThirdPartyAppAnalyticsIosInAppPurchase = 22,
-        /// iOS app custom conversions tracked through Third Party App Analytics.
-        ThirdPartyAppAnalyticsIosCustom = 23,
-        /// Conversions that occur when a user pre-registers a mobile app from the
-        /// Google Play Store. Read only.
-        AndroidAppPreRegistration = 24,
-        /// Conversions that track all Google Play downloads which aren't tracked
-        /// by an app-specific type. Read only.
-        AndroidInstallsAllOtherApps = 25,
-        /// Floodlight activity that counts the number of times that users have
-        /// visited a particular webpage after seeing or clicking on one of
-        /// an advertiser's ads. Read only.
-        FloodlightAction = 26,
-        /// Floodlight activity that tracks the number of sales made or the number
-        /// of items purchased. Can also capture the total value of each sale.
-        /// Read only.
-        FloodlightTransaction = 27,
-        /// Conversions that track local actions from Google's products and
-        /// services after interacting with an ad. Read only.
-        GoogleHosted = 28,
-        /// Conversions reported when a user submits a lead form. Read only.
-        LeadFormSubmit = 29,
-        /// Conversions that come from Salesforce. Read only.
-        Salesforce = 30,
-        /// Conversions imported from Search Ads 360 Floodlight data. Read only.
-        SearchAds360 = 31,
-        /// Call conversions that occur on Smart campaign Ads without call tracking
-        /// setup, using Smart campaign custom criteria. Read only.
-        SmartCampaignAdClicksToCall = 32,
-        /// The user clicks on a call element within Google Maps. Smart campaign
-        /// only. Read only.
-        SmartCampaignMapClicksToCall = 33,
-        /// The user requests directions to a business location within Google Maps.
-        /// Smart campaign only. Read only.
-        SmartCampaignMapDirections = 34,
-        /// Call conversions that occur on Smart campaign Ads with call tracking
-        /// setup, using Smart campaign custom criteria. Read only.
-        SmartCampaignTrackedCalls = 35,
-        /// Conversions that occur when a user visits an advertiser's retail store.
-        /// Read only.
-        StoreVisits = 36,
-    }
-    impl ConversionActionType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConversionActionType::Unspecified => "UNSPECIFIED",
-                ConversionActionType::Unknown => "UNKNOWN",
-                ConversionActionType::AdCall => "AD_CALL",
-                ConversionActionType::ClickToCall => "CLICK_TO_CALL",
-                ConversionActionType::GooglePlayDownload => "GOOGLE_PLAY_DOWNLOAD",
-                ConversionActionType::GooglePlayInAppPurchase => {
-                    "GOOGLE_PLAY_IN_APP_PURCHASE"
-                }
-                ConversionActionType::UploadCalls => "UPLOAD_CALLS",
-                ConversionActionType::UploadClicks => "UPLOAD_CLICKS",
-                ConversionActionType::Webpage => "WEBPAGE",
-                ConversionActionType::WebsiteCall => "WEBSITE_CALL",
-                ConversionActionType::StoreSalesDirectUpload => {
-                    "STORE_SALES_DIRECT_UPLOAD"
-                }
-                ConversionActionType::StoreSales => "STORE_SALES",
-                ConversionActionType::FirebaseAndroidFirstOpen => {
-                    "FIREBASE_ANDROID_FIRST_OPEN"
-                }
-                ConversionActionType::FirebaseAndroidInAppPurchase => {
-                    "FIREBASE_ANDROID_IN_APP_PURCHASE"
-                }
-                ConversionActionType::FirebaseAndroidCustom => "FIREBASE_ANDROID_CUSTOM",
-                ConversionActionType::FirebaseIosFirstOpen => "FIREBASE_IOS_FIRST_OPEN",
-                ConversionActionType::FirebaseIosInAppPurchase => {
-                    "FIREBASE_IOS_IN_APP_PURCHASE"
-                }
-                ConversionActionType::FirebaseIosCustom => "FIREBASE_IOS_CUSTOM",
-                ConversionActionType::ThirdPartyAppAnalyticsAndroidFirstOpen => {
-                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_FIRST_OPEN"
-                }
-                ConversionActionType::ThirdPartyAppAnalyticsAndroidInAppPurchase => {
-                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_IN_APP_PURCHASE"
-                }
-                ConversionActionType::ThirdPartyAppAnalyticsAndroidCustom => {
-                    "THIRD_PARTY_APP_ANALYTICS_ANDROID_CUSTOM"
-                }
-                ConversionActionType::ThirdPartyAppAnalyticsIosFirstOpen => {
-                    "THIRD_PARTY_APP_ANALYTICS_IOS_FIRST_OPEN"
-                }
-                ConversionActionType::ThirdPartyAppAnalyticsIosInAppPurchase => {
-                    "THIRD_PARTY_APP_ANALYTICS_IOS_IN_APP_PURCHASE"
-                }
-                ConversionActionType::ThirdPartyAppAnalyticsIosCustom => {
-                    "THIRD_PARTY_APP_ANALYTICS_IOS_CUSTOM"
-                }
-                ConversionActionType::AndroidAppPreRegistration => {
-                    "ANDROID_APP_PRE_REGISTRATION"
-                }
-                ConversionActionType::AndroidInstallsAllOtherApps => {
-                    "ANDROID_INSTALLS_ALL_OTHER_APPS"
-                }
-                ConversionActionType::FloodlightAction => "FLOODLIGHT_ACTION",
-                ConversionActionType::FloodlightTransaction => "FLOODLIGHT_TRANSACTION",
-                ConversionActionType::GoogleHosted => "GOOGLE_HOSTED",
-                ConversionActionType::LeadFormSubmit => "LEAD_FORM_SUBMIT",
-                ConversionActionType::Salesforce => "SALESFORCE",
-                ConversionActionType::SearchAds360 => "SEARCH_ADS_360",
-                ConversionActionType::SmartCampaignAdClicksToCall => {
-                    "SMART_CAMPAIGN_AD_CLICKS_TO_CALL"
-                }
-                ConversionActionType::SmartCampaignMapClicksToCall => {
-                    "SMART_CAMPAIGN_MAP_CLICKS_TO_CALL"
-                }
-                ConversionActionType::SmartCampaignMapDirections => {
-                    "SMART_CAMPAIGN_MAP_DIRECTIONS"
-                }
-                ConversionActionType::SmartCampaignTrackedCalls => {
-                    "SMART_CAMPAIGN_TRACKED_CALLS"
-                }
-                ConversionActionType::StoreVisits => "STORE_VISITS",
-            }
-        }
-    }
-}
-/// Container for enum indicating data driven model status.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataDrivenModelStatusEnum {}
-/// Nested message and enum types in `DataDrivenModelStatusEnum`.
-pub mod data_driven_model_status_enum {
-    /// Enumerates data driven model statuses.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DataDrivenModelStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// The data driven model is available.
-        Available = 2,
-        /// The data driven model is stale. It hasn't been updated for at least 7
-        /// days. It is still being used, but will become expired if it does not get
-        /// updated for 30 days.
-        Stale = 3,
-        /// The data driven model expired. It hasn't been updated for at least 30
-        /// days and cannot be used. Most commonly this is because there hasn't been
-        /// the required number of events in a recent 30-day period.
-        Expired = 4,
-        /// The data driven model has never been generated. Most commonly this is
-        /// because there has never been the required number of events in any 30-day
-        /// period.
-        NeverGenerated = 5,
-    }
-    impl DataDrivenModelStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DataDrivenModelStatus::Unspecified => "UNSPECIFIED",
-                DataDrivenModelStatus::Unknown => "UNKNOWN",
-                DataDrivenModelStatus::Available => "AVAILABLE",
-                DataDrivenModelStatus::Stale => "STALE",
-                DataDrivenModelStatus::Expired => "EXPIRED",
-                DataDrivenModelStatus::NeverGenerated => "NEVER_GENERATED",
-            }
-        }
-    }
-}
-/// Container for enum describing possible status of a manager and client link.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ManagerLinkStatusEnum {}
-/// Nested message and enum types in `ManagerLinkStatusEnum`.
-pub mod manager_link_status_enum {
-    /// Possible statuses of a link.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ManagerLinkStatus {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Indicates current in-effect relationship
-        Active = 2,
-        /// Indicates terminated relationship
-        Inactive = 3,
-        /// Indicates relationship has been requested by manager, but the client
-        /// hasn't accepted yet.
-        Pending = 4,
-        /// Relationship was requested by the manager, but the client has refused.
-        Refused = 5,
-        /// Indicates relationship has been requested by manager, but manager
-        /// canceled it.
-        Canceled = 6,
-    }
-    impl ManagerLinkStatus {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ManagerLinkStatus::Unspecified => "UNSPECIFIED",
-                ManagerLinkStatus::Unknown => "UNKNOWN",
-                ManagerLinkStatus::Active => "ACTIVE",
-                ManagerLinkStatus::Inactive => "INACTIVE",
-                ManagerLinkStatus::Pending => "PENDING",
-                ManagerLinkStatus::Refused => "REFUSED",
-                ManagerLinkStatus::Canceled => "CANCELED",
-            }
-        }
-    }
-}
 /// Container for enum that determines if the described artifact is a resource
 /// or a field, and if it is a field, when it segments search queries.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2936,6 +2554,388 @@ pub mod search_ads360_field_data_type_enum {
                 SearchAds360FieldDataType::ResourceName => "RESOURCE_NAME",
                 SearchAds360FieldDataType::String => "STRING",
                 SearchAds360FieldDataType::Uint64 => "UINT64",
+            }
+        }
+    }
+}
+/// Container for enum describing possible status of a manager and client link.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ManagerLinkStatusEnum {}
+/// Nested message and enum types in `ManagerLinkStatusEnum`.
+pub mod manager_link_status_enum {
+    /// Possible statuses of a link.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ManagerLinkStatus {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Indicates current in-effect relationship
+        Active = 2,
+        /// Indicates terminated relationship
+        Inactive = 3,
+        /// Indicates relationship has been requested by manager, but the client
+        /// hasn't accepted yet.
+        Pending = 4,
+        /// Relationship was requested by the manager, but the client has refused.
+        Refused = 5,
+        /// Indicates relationship has been requested by manager, but manager
+        /// canceled it.
+        Canceled = 6,
+    }
+    impl ManagerLinkStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ManagerLinkStatus::Unspecified => "UNSPECIFIED",
+                ManagerLinkStatus::Unknown => "UNKNOWN",
+                ManagerLinkStatus::Active => "ACTIVE",
+                ManagerLinkStatus::Inactive => "INACTIVE",
+                ManagerLinkStatus::Pending => "PENDING",
+                ManagerLinkStatus::Refused => "REFUSED",
+                ManagerLinkStatus::Canceled => "CANCELED",
+            }
+        }
+    }
+}
+/// Message describing Budget delivery methods. A delivery method determines the
+/// rate at which the Budget is spent.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BudgetDeliveryMethodEnum {}
+/// Nested message and enum types in `BudgetDeliveryMethodEnum`.
+pub mod budget_delivery_method_enum {
+    /// Possible delivery methods of a Budget.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum BudgetDeliveryMethod {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// The budget server will throttle serving evenly across
+        /// the entire time period.
+        Standard = 2,
+        /// The budget server will not throttle serving,
+        /// and ads will serve as fast as possible.
+        Accelerated = 3,
+    }
+    impl BudgetDeliveryMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BudgetDeliveryMethod::Unspecified => "UNSPECIFIED",
+                BudgetDeliveryMethod::Unknown => "UNKNOWN",
+                BudgetDeliveryMethod::Standard => "STANDARD",
+                BudgetDeliveryMethod::Accelerated => "ACCELERATED",
+            }
+        }
+    }
+}
+/// Message describing Budget period.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BudgetPeriodEnum {}
+/// Nested message and enum types in `BudgetPeriodEnum`.
+pub mod budget_period_enum {
+    /// Possible period of a Budget.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum BudgetPeriod {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Daily budget.
+        Daily = 2,
+        /// Fixed daily budget.
+        FixedDaily = 4,
+        /// Custom budget, added back in V5.
+        /// Custom bugdet can be used with total_amount to specify lifetime budget
+        /// limit.
+        CustomPeriod = 5,
+    }
+    impl BudgetPeriod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BudgetPeriod::Unspecified => "UNSPECIFIED",
+                BudgetPeriod::Unknown => "UNKNOWN",
+                BudgetPeriod::Daily => "DAILY",
+                BudgetPeriod::FixedDaily => "FIXED_DAILY",
+                BudgetPeriod::CustomPeriod => "CUSTOM_PERIOD",
+            }
+        }
+    }
+}
+/// Container for enum describing possible ad rotation modes of ads within an
+/// ad group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupAdRotationModeEnum {}
+/// Nested message and enum types in `AdGroupAdRotationModeEnum`.
+pub mod ad_group_ad_rotation_mode_enum {
+    /// The possible ad rotation modes of an ad group.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AdGroupAdRotationMode {
+        /// The ad rotation mode has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// Optimize ad group ads based on clicks or conversions.
+        Optimize = 2,
+        /// Rotate evenly forever.
+        RotateForever = 3,
+    }
+    impl AdGroupAdRotationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdGroupAdRotationMode::Unspecified => "UNSPECIFIED",
+                AdGroupAdRotationMode::Unknown => "UNKNOWN",
+                AdGroupAdRotationMode::Optimize => "OPTIMIZE",
+                AdGroupAdRotationMode::RotateForever => "ROTATE_FOREVER",
+            }
+        }
+    }
+}
+/// Container for enum describing possible statuses of an ad group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupStatusEnum {}
+/// Nested message and enum types in `AdGroupStatusEnum`.
+pub mod ad_group_status_enum {
+    /// The possible statuses of an ad group.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AdGroupStatus {
+        /// The status has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The ad group is enabled.
+        Enabled = 2,
+        /// The ad group is paused.
+        Paused = 3,
+        /// The ad group is removed.
+        Removed = 4,
+    }
+    impl AdGroupStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdGroupStatus::Unspecified => "UNSPECIFIED",
+                AdGroupStatus::Unknown => "UNKNOWN",
+                AdGroupStatus::Enabled => "ENABLED",
+                AdGroupStatus::Paused => "PAUSED",
+                AdGroupStatus::Removed => "REMOVED",
+            }
+        }
+    }
+}
+/// Defines types of an ad group, specific to a particular campaign channel
+/// type. This type drives validations that restrict which entities can be
+/// added to the ad group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdGroupTypeEnum {}
+/// Nested message and enum types in `AdGroupTypeEnum`.
+pub mod ad_group_type_enum {
+    /// Enum listing the possible types of an ad group.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AdGroupType {
+        /// The type has not been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The default ad group type for Search campaigns.
+        SearchStandard = 2,
+        /// The default ad group type for Display campaigns.
+        DisplayStandard = 3,
+        /// The ad group type for Shopping campaigns serving standard product ads.
+        ShoppingProductAds = 4,
+        /// The type for ad groups that are limited to serving Showcase or Merchant
+        /// ads in Shopping results.
+        ShoppingShowcaseAds = 5,
+        /// The default ad group type for Hotel campaigns.
+        HotelAds = 6,
+        /// The type for ad groups in Smart Shopping campaigns.
+        ShoppingSmartAds = 7,
+        /// Short unskippable in-stream video ads.
+        VideoBumper = 8,
+        /// TrueView (skippable) in-stream video ads.
+        VideoTrueViewInStream = 9,
+        /// TrueView in-display video ads.
+        VideoTrueViewInDisplay = 10,
+        /// Unskippable in-stream video ads.
+        VideoNonSkippableInStream = 11,
+        /// Outstream video ads.
+        VideoOutstream = 12,
+        /// Ad group type for Dynamic Search Ads ad groups.
+        SearchDynamicAds = 13,
+        /// The type for ad groups in Shopping Comparison Listing campaigns.
+        ShoppingComparisonListingAds = 14,
+        /// The ad group type for Promoted Hotel ad groups.
+        PromotedHotelAds = 15,
+        /// Video responsive ad groups.
+        VideoResponsive = 16,
+        /// Video efficient reach ad groups.
+        VideoEfficientReach = 17,
+        /// Ad group type for Smart campaigns.
+        SmartCampaignAds = 18,
+    }
+    impl AdGroupType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AdGroupType::Unspecified => "UNSPECIFIED",
+                AdGroupType::Unknown => "UNKNOWN",
+                AdGroupType::SearchStandard => "SEARCH_STANDARD",
+                AdGroupType::DisplayStandard => "DISPLAY_STANDARD",
+                AdGroupType::ShoppingProductAds => "SHOPPING_PRODUCT_ADS",
+                AdGroupType::ShoppingShowcaseAds => "SHOPPING_SHOWCASE_ADS",
+                AdGroupType::HotelAds => "HOTEL_ADS",
+                AdGroupType::ShoppingSmartAds => "SHOPPING_SMART_ADS",
+                AdGroupType::VideoBumper => "VIDEO_BUMPER",
+                AdGroupType::VideoTrueViewInStream => "VIDEO_TRUE_VIEW_IN_STREAM",
+                AdGroupType::VideoTrueViewInDisplay => "VIDEO_TRUE_VIEW_IN_DISPLAY",
+                AdGroupType::VideoNonSkippableInStream => "VIDEO_NON_SKIPPABLE_IN_STREAM",
+                AdGroupType::VideoOutstream => "VIDEO_OUTSTREAM",
+                AdGroupType::SearchDynamicAds => "SEARCH_DYNAMIC_ADS",
+                AdGroupType::ShoppingComparisonListingAds => {
+                    "SHOPPING_COMPARISON_LISTING_ADS"
+                }
+                AdGroupType::PromotedHotelAds => "PROMOTED_HOTEL_ADS",
+                AdGroupType::VideoResponsive => "VIDEO_RESPONSIVE",
+                AdGroupType::VideoEfficientReach => "VIDEO_EFFICIENT_REACH",
+                AdGroupType::SmartCampaignAds => "SMART_CAMPAIGN_ADS",
+            }
+        }
+    }
+}
+/// Message describing BiddingStrategy statuses.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BiddingStrategyStatusEnum {}
+/// Nested message and enum types in `BiddingStrategyStatusEnum`.
+pub mod bidding_strategy_status_enum {
+    /// The possible statuses of a BiddingStrategy.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum BiddingStrategyStatus {
+        /// No value has been specified.
+        Unspecified = 0,
+        /// The received value is not known in this version.
+        ///
+        /// This is a response-only value.
+        Unknown = 1,
+        /// The bidding strategy is enabled.
+        Enabled = 2,
+        /// The bidding strategy is removed.
+        Removed = 4,
+    }
+    impl BiddingStrategyStatus {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BiddingStrategyStatus::Unspecified => "UNSPECIFIED",
+                BiddingStrategyStatus::Unknown => "UNKNOWN",
+                BiddingStrategyStatus::Enabled => "ENABLED",
+                BiddingStrategyStatus::Removed => "REMOVED",
             }
         }
     }

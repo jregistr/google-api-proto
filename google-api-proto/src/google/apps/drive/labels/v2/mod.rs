@@ -948,116 +948,6 @@ impl LabelView {
         }
     }
 }
-/// Generated client implementations.
-pub mod label_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Manage metadata taxonomies based on Labels and Fields that may be used within
-    /// Google Drive to organize and find files using custom metadata.
-    #[derive(Debug, Clone)]
-    pub struct LabelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> LabelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> LabelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            LabelServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// List labels.
-        pub async fn list_labels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListLabelsRequest>,
-        ) -> Result<tonic::Response<super::ListLabelsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.apps.drive.labels.v2.LabelService/ListLabels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a label by its resource name.
-        /// Resource name may be any of:
-        ///
-        /// * `labels/{id}` - See `labels/{id}@latest`
-        /// * `labels/{id}@latest` - Gets the latest revision of the label.
-        /// * `labels/{id}@published` - Gets the current published revision of the
-        ///   label.
-        /// * `labels/{id}@{revision_id}` - Gets the label at the specified revision
-        ///   ID.
-        pub async fn get_label(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.apps.drive.labels.v2.LabelService/GetLabel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Normalized internal-only message that identifies the exact exception that
 /// caused the error on the server.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1363,6 +1253,116 @@ pub mod precondition_failure {
                     }
                 }
             }
+        }
+    }
+}
+/// Generated client implementations.
+pub mod label_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Manage metadata taxonomies based on Labels and Fields that may be used within
+    /// Google Drive to organize and find files using custom metadata.
+    #[derive(Debug, Clone)]
+    pub struct LabelServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> LabelServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> LabelServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            LabelServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// List labels.
+        pub async fn list_labels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListLabelsRequest>,
+        ) -> Result<tonic::Response<super::ListLabelsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.apps.drive.labels.v2.LabelService/ListLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a label by its resource name.
+        /// Resource name may be any of:
+        ///
+        /// * `labels/{id}` - See `labels/{id}@latest`
+        /// * `labels/{id}@latest` - Gets the latest revision of the label.
+        /// * `labels/{id}@published` - Gets the current published revision of the
+        ///   label.
+        /// * `labels/{id}@{revision_id}` - Gets the label at the specified revision
+        ///   ID.
+        pub async fn get_label(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLabelRequest>,
+        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.apps.drive.labels.v2.LabelService/GetLabel",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }

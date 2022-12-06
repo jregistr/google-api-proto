@@ -1,16 +1,3 @@
-/// A reference to a class which is used to declare the type of a field or return
-/// value. Enums are also a type of class that can be referenced using
-/// ClassReference.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassReference {
-    /// Required. Name of a built-in type or custom type of the parameter. Examples:
-    /// `PizzaToppings`, `actions.type.Number`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Indicates whether the data type represents a list of values.
-    #[prost(bool, tag = "2")]
-    pub list: bool,
-}
 /// Elements that will be displayed on the canvas once a particular type's entity
 /// is extracted from a query. Only relevant for canvas enabled apps.
 /// **This message is localizable.**
@@ -31,35 +18,6 @@ pub struct FreeTextType {
     /// from a query. Only relevant for canvas enabled apps.
     #[prost(message, optional, tag = "2")]
     pub display: ::core::option::Option<EntityDisplay>,
-}
-/// Type that matches text by regular expressions.
-/// **This message is localizable.**
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RegularExpressionType {
-    /// Required. Named map of entities which each contain Regex strings.
-    #[prost(btree_map = "string, message", tag = "1")]
-    pub entities: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        regular_expression_type::Entity,
-    >,
-}
-/// Nested message and enum types in `RegularExpressionType`.
-pub mod regular_expression_type {
-    /// Represents an entity object that contains the regular expression that is
-    /// used for comparison.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Entity {
-        /// Optional. Elements that will be displayed on the canvas once an entity is
-        /// extracted from a query. Only relevant for canvas enabled apps.
-        #[prost(message, optional, tag = "1")]
-        pub display: ::core::option::Option<super::EntityDisplay>,
-        /// Required. Uses RE2 regex syntax (See
-        /// <https://github.com/google/re2/wiki/Syntax> for more details)
-        #[prost(string, repeated, tag = "2")]
-        pub regular_expressions: ::prost::alloc::vec::Vec<
-            ::prost::alloc::string::String,
-        >,
-    }
 }
 /// Type that matches text by set of synonyms.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -132,6 +90,35 @@ pub mod synonym_type {
         }
     }
 }
+/// Type that matches text by regular expressions.
+/// **This message is localizable.**
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RegularExpressionType {
+    /// Required. Named map of entities which each contain Regex strings.
+    #[prost(btree_map = "string, message", tag = "1")]
+    pub entities: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        regular_expression_type::Entity,
+    >,
+}
+/// Nested message and enum types in `RegularExpressionType`.
+pub mod regular_expression_type {
+    /// Represents an entity object that contains the regular expression that is
+    /// used for comparison.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Entity {
+        /// Optional. Elements that will be displayed on the canvas once an entity is
+        /// extracted from a query. Only relevant for canvas enabled apps.
+        #[prost(message, optional, tag = "1")]
+        pub display: ::core::option::Option<super::EntityDisplay>,
+        /// Required. Uses RE2 regex syntax (See
+        /// <https://github.com/google/re2/wiki/Syntax> for more details)
+        #[prost(string, repeated, tag = "2")]
+        pub regular_expressions: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
+    }
+}
 /// Declaration of a custom type, as opposed to built-in types. Types can be
 /// assigned to slots in a scene or parameters of an intent's training phrases.
 /// Practically, Types can be thought of as enums.
@@ -163,4 +150,17 @@ pub mod r#type {
         #[prost(message, tag = "3")]
         FreeText(super::FreeTextType),
     }
+}
+/// A reference to a class which is used to declare the type of a field or return
+/// value. Enums are also a type of class that can be referenced using
+/// ClassReference.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassReference {
+    /// Required. Name of a built-in type or custom type of the parameter. Examples:
+    /// `PizzaToppings`, `actions.type.Number`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Indicates whether the data type represents a list of values.
+    #[prost(bool, tag = "2")]
+    pub list: bool,
 }

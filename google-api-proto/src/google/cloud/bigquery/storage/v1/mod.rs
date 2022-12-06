@@ -187,6 +187,66 @@ pub mod table_field_schema {
         }
     }
 }
+/// Avro schema.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag = "1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+    /// \[Deprecated\] The count of rows in the returning block.
+    /// Please use the format-independent ReadRowsResponse.row_count instead.
+    #[deprecated]
+    #[prost(int64, tag = "2")]
+    pub row_count: i64,
+}
+/// Contains options specific to Avro Serialization.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSerializationOptions {
+    /// Enable displayName attribute in Avro schema.
+    ///
+    /// The Avro specification requires field names to be alphanumeric.  By
+    /// default, in cases when column names do not conform to these requirements
+    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
+    /// format, the CreateReadSession call will fail.
+    ///
+    /// Setting this field to true, populates avro field names with a placeholder
+    /// value and populates a "displayName" attribute for every avro field with the
+    /// original column name.
+    #[prost(bool, tag = "1")]
+    pub enable_display_name_attribute: bool,
+}
+/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoSchema {
+    /// Descriptor for input message.  The provided descriptor must be self
+    /// contained, such that data rows sent can be fully decoded using only the
+    /// single descriptor.  For data rows that are compositions of multiple
+    /// independent messages, this means the descriptor may need to be transformed
+    /// to only use nested types:
+    /// <https://developers.google.com/protocol-buffers/docs/proto#nested>
+    ///
+    /// For additional information for how proto types and values map onto BigQuery
+    /// see: <https://cloud.google.com/bigquery/docs/write-api#data_type_conversions>
+    #[prost(message, optional, tag = "1")]
+    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProtoRows {
+    /// A sequence of rows serialized as a Protocol Buffer.
+    ///
+    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
+    /// information on deserializing this field.
+    #[prost(bytes = "bytes", repeated, tag = "1")]
+    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
+}
 /// Arrow schema as specified in
 /// <https://arrow.apache.org/docs/python/api/datatypes.html>
 /// and serialized to bytes using IPC:
@@ -255,66 +315,6 @@ pub mod arrow_serialization_options {
             }
         }
     }
-}
-/// Avro schema.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag = "1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
-    /// \[Deprecated\] The count of rows in the returning block.
-    /// Please use the format-independent ReadRowsResponse.row_count instead.
-    #[deprecated]
-    #[prost(int64, tag = "2")]
-    pub row_count: i64,
-}
-/// Contains options specific to Avro Serialization.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSerializationOptions {
-    /// Enable displayName attribute in Avro schema.
-    ///
-    /// The Avro specification requires field names to be alphanumeric.  By
-    /// default, in cases when column names do not conform to these requirements
-    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
-    /// format, the CreateReadSession call will fail.
-    ///
-    /// Setting this field to true, populates avro field names with a placeholder
-    /// value and populates a "displayName" attribute for every avro field with the
-    /// original column name.
-    #[prost(bool, tag = "1")]
-    pub enable_display_name_attribute: bool,
-}
-/// ProtoSchema describes the schema of the serialized protocol buffer data rows.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoSchema {
-    /// Descriptor for input message.  The provided descriptor must be self
-    /// contained, such that data rows sent can be fully decoded using only the
-    /// single descriptor.  For data rows that are compositions of multiple
-    /// independent messages, this means the descriptor may need to be transformed
-    /// to only use nested types:
-    /// <https://developers.google.com/protocol-buffers/docs/proto#nested>
-    ///
-    /// For additional information for how proto types and values map onto BigQuery
-    /// see: <https://cloud.google.com/bigquery/docs/write-api#data_type_conversions>
-    #[prost(message, optional, tag = "1")]
-    pub proto_descriptor: ::core::option::Option<::prost_types::DescriptorProto>,
-}
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProtoRows {
-    /// A sequence of rows serialized as a Protocol Buffer.
-    ///
-    /// See <https://developers.google.com/protocol-buffers/docs/overview> for more
-    /// information on deserializing this field.
-    #[prost(bytes = "bytes", repeated, tag = "1")]
-    pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
 }
 /// Information about the ReadSession.
 #[derive(Clone, PartialEq, ::prost::Message)]

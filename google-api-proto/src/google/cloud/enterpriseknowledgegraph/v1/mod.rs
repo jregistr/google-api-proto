@@ -1,48 +1,3 @@
-/// Describes the state of a job.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum JobState {
-    /// The job state is unspecified.
-    Unspecified = 0,
-    /// The service is preparing to run the job.
-    Pending = 9,
-    /// The job is in progress.
-    Running = 1,
-    /// The job completed successfully.
-    Succeeded = 2,
-    /// The job failed.
-    Failed = 3,
-    /// The job has been cancelled.
-    Cancelled = 4,
-    /// Entity Recon API: The knowledge extraction job is running.
-    KnowledgeExtraction = 5,
-    /// Entity Recon API: The preprocessing job is running.
-    ReconPreprocessing = 6,
-    /// Entity Recon API: The clustering job is running.
-    Clustering = 7,
-    /// Entity Recon API: The exporting clusters job is running.
-    ExportingClusters = 8,
-}
-impl JobState {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            JobState::Unspecified => "JOB_STATE_UNSPECIFIED",
-            JobState::Pending => "JOB_STATE_PENDING",
-            JobState::Running => "JOB_STATE_RUNNING",
-            JobState::Succeeded => "JOB_STATE_SUCCEEDED",
-            JobState::Failed => "JOB_STATE_FAILED",
-            JobState::Cancelled => "JOB_STATE_CANCELLED",
-            JobState::KnowledgeExtraction => "JOB_STATE_KNOWLEDGE_EXTRACTION",
-            JobState::ReconPreprocessing => "JOB_STATE_RECON_PREPROCESSING",
-            JobState::Clustering => "JOB_STATE_CLUSTERING",
-            JobState::ExportingClusters => "JOB_STATE_EXPORTING_CLUSTERS",
-        }
-    }
-}
 /// The common metadata for long running operations.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommonOperationMetadata {
@@ -102,6 +57,51 @@ pub mod common_operation_metadata {
                 State::Cancelled => "CANCELLED",
                 State::Pending => "PENDING",
             }
+        }
+    }
+}
+/// Describes the state of a job.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum JobState {
+    /// The job state is unspecified.
+    Unspecified = 0,
+    /// The service is preparing to run the job.
+    Pending = 9,
+    /// The job is in progress.
+    Running = 1,
+    /// The job completed successfully.
+    Succeeded = 2,
+    /// The job failed.
+    Failed = 3,
+    /// The job has been cancelled.
+    Cancelled = 4,
+    /// Entity Recon API: The knowledge extraction job is running.
+    KnowledgeExtraction = 5,
+    /// Entity Recon API: The preprocessing job is running.
+    ReconPreprocessing = 6,
+    /// Entity Recon API: The clustering job is running.
+    Clustering = 7,
+    /// Entity Recon API: The exporting clusters job is running.
+    ExportingClusters = 8,
+}
+impl JobState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            JobState::Unspecified => "JOB_STATE_UNSPECIFIED",
+            JobState::Pending => "JOB_STATE_PENDING",
+            JobState::Running => "JOB_STATE_RUNNING",
+            JobState::Succeeded => "JOB_STATE_SUCCEEDED",
+            JobState::Failed => "JOB_STATE_FAILED",
+            JobState::Cancelled => "JOB_STATE_CANCELLED",
+            JobState::KnowledgeExtraction => "JOB_STATE_KNOWLEDGE_EXTRACTION",
+            JobState::ReconPreprocessing => "JOB_STATE_RECON_PREPROCESSING",
+            JobState::Clustering => "JOB_STATE_CLUSTERING",
+            JobState::ExportingClusters => "JOB_STATE_EXPORTING_CLUSTERS",
         }
     }
 }

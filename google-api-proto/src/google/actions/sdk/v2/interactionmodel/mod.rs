@@ -300,6 +300,27 @@ pub mod intent {
         }
     }
 }
+/// Defines a global intent handler. Global intent events are scoped to the
+/// entire Actions project and may be overridden by intent handlers in a scene.
+/// Intent names must be unique within an Actions project.
+///
+/// Global intents can be matched anytime during a session, allowing users to
+/// access common flows like  "get help" or "go back home." They can also be
+/// used to deep link users into specific flows when they invoke an Action.
+///
+/// Note, the intent name is specified in the name of the file.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GlobalIntentEvent {
+    /// Optional. Destination scene which the conversation should jump to. The state of the
+    /// current scene is destroyed on the transition.
+    #[prost(string, tag = "1")]
+    pub transition_to_scene: ::prost::alloc::string::String,
+    /// Optional. Event handler which is triggered when the intent is matched. Should execute
+    /// before transitioning to the destination scene. Useful to generate Prompts
+    /// in response to events.
+    #[prost(message, optional, tag = "2")]
+    pub handler: ::core::option::Option<EventHandler>,
+}
 /// Entity sets describe the pre-defined set of entities that the values of
 /// built-in intent parameters can come from. Entity sets can be referenced from
 /// entity_set in built-in intent parameters.
@@ -321,25 +342,4 @@ pub mod entity_set {
         #[prost(string, tag = "1")]
         pub id: ::prost::alloc::string::String,
     }
-}
-/// Defines a global intent handler. Global intent events are scoped to the
-/// entire Actions project and may be overridden by intent handlers in a scene.
-/// Intent names must be unique within an Actions project.
-///
-/// Global intents can be matched anytime during a session, allowing users to
-/// access common flows like  "get help" or "go back home." They can also be
-/// used to deep link users into specific flows when they invoke an Action.
-///
-/// Note, the intent name is specified in the name of the file.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GlobalIntentEvent {
-    /// Optional. Destination scene which the conversation should jump to. The state of the
-    /// current scene is destroyed on the transition.
-    #[prost(string, tag = "1")]
-    pub transition_to_scene: ::prost::alloc::string::String,
-    /// Optional. Event handler which is triggered when the intent is matched. Should execute
-    /// before transitioning to the destination scene. Useful to generate Prompts
-    /// in response to events.
-    #[prost(message, optional, tag = "2")]
-    pub handler: ::core::option::Option<EventHandler>,
 }

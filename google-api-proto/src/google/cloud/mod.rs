@@ -536,7 +536,13 @@ pub mod tasks;
 pub mod texttospeech;
 #[cfg(any(feature = "google-cloud-timeseriesinsights-v1"))]
 pub mod timeseriesinsights;
-#[cfg(any(feature = "google-cloud-tpu-v1", feature = "google-cloud-tpu-v2alpha1"))]
+#[cfg(
+    any(
+        feature = "google-cloud-tpu-v1",
+        feature = "google-cloud-tpu-v2",
+        feature = "google-cloud-tpu-v2alpha1",
+    )
+)]
 pub mod tpu;
 #[cfg(
     any(

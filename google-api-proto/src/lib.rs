@@ -310,6 +310,7 @@ pub mod cloud;
         feature = "google-cloud-texttospeech-v1beta1",
         feature = "google-cloud-timeseriesinsights-v1",
         feature = "google-cloud-tpu-v1",
+        feature = "google-cloud-tpu-v2",
         feature = "google-cloud-tpu-v2alpha1",
         feature = "google-cloud-translation-v3",
         feature = "google-cloud-translation-v3beta1",

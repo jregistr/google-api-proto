@@ -79,33 +79,6 @@ pub struct EventParameter {
     #[prost(message, optional, tag = "2")]
     pub value: ::core::option::Option<ValueType>,
 }
-/// Enum Product.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Product {
-    /// Default value.
-    Unspecified = 0,
-    /// Integration Platform.
-    Ip = 1,
-    /// Apigee.
-    Apigee = 2,
-    /// Security Command Center.
-    Security = 3,
-}
-impl Product {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Product::Unspecified => "PRODUCT_UNSPECIFIED",
-            Product::Ip => "IP",
-            Product::Apigee => "APIGEE",
-            Product::Security => "SECURITY",
-        }
-    }
-}
 /// Options for how to validate json schemas.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -440,6 +413,33 @@ pub struct NextTask {
     /// User-provided label that is attached to this edge in the UI.
     #[prost(string, tag = "4")]
     pub display_name: ::prost::alloc::string::String,
+}
+/// Enum Product.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Product {
+    /// Default value.
+    Unspecified = 0,
+    /// Integration Platform.
+    Ip = 1,
+    /// Apigee.
+    Apigee = 2,
+    /// Security Command Center.
+    Security = 3,
+}
+impl Product {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Product::Unspecified => "PRODUCT_UNSPECIFIED",
+            Product::Ip => "IP",
+            Product::Apigee => "APIGEE",
+            Product::Security => "SECURITY",
+        }
+    }
 }
 /// Log entry to log execution info for the monitored resource
 /// `integrations.googleapis.com/IntegrationVersion`.

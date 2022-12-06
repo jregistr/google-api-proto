@@ -1,454 +1,3 @@
-/// A set of values used to specify the mode of travel.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RouteTravelMode {
-    /// No travel mode specified. Defaults to `DRIVE`.
-    TravelModeUnspecified = 0,
-    /// Travel by passenger car.
-    Drive = 1,
-    /// Travel by bicycle.
-    Bicycle = 2,
-    /// Travel by walking.
-    Walk = 3,
-    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
-    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
-    TwoWheeler = 4,
-}
-impl RouteTravelMode {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            RouteTravelMode::TravelModeUnspecified => "TRAVEL_MODE_UNSPECIFIED",
-            RouteTravelMode::Drive => "DRIVE",
-            RouteTravelMode::Bicycle => "BICYCLE",
-            RouteTravelMode::Walk => "WALK",
-            RouteTravelMode::TwoWheeler => "TWO_WHEELER",
-        }
-    }
-}
-/// List of toll passes around the world that we support.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TollPass {
-    /// Not used. If this value is used, then the request fails.
-    Unspecified = 0,
-    /// Sydney toll pass. See additional details at <https://www.myetoll.com.au.>
-    AuEtollTag = 82,
-    /// Sydney toll pass. See additional details at <https://www.tollpay.com.au.>
-    AuEwayTag = 83,
-    /// Australia-wide toll pass.
-    /// See additional details at <https://www.linkt.com.au/.>
-    AuLinkt = 2,
-    /// Argentina toll pass. See additional details at <https://telepase.com.ar>
-    ArTelepase = 3,
-    /// Brazil toll pass. See additional details at <https://www.autoexpreso.com>
-    BrAutoExpreso = 81,
-    /// Brazil toll pass. See additional details at <https://conectcar.com.>
-    BrConectcar = 7,
-    /// Brazil toll pass. See additional details at <https://movemais.com.>
-    BrMoveMais = 8,
-    /// Brazil toll pass. See additional details at <https://pasorapido.gob.do/>
-    BrPassaRapido = 88,
-    /// Brazil toll pass. See additional details at <https://www.semparar.com.br.>
-    BrSemParar = 9,
-    /// Brazil toll pass. See additional details at <https://taggy.com.br.>
-    BrTaggy = 10,
-    /// Brazil toll pass. See additional details at
-    /// <https://veloe.com.br/site/onde-usar.>
-    BrVeloe = 11,
-    /// Canada to United States border crossing.
-    CaUsAkwasasneSeawayCorporateCard = 84,
-    /// Canada to United States border crossing.
-    CaUsAkwasasneSeawayTransitCard = 85,
-    /// Ontario, Canada to Michigan, United States border crossing.
-    CaUsBlueWaterEdgePass = 18,
-    /// Ontario, Canada to Michigan, United States border crossing.
-    CaUsConnexion = 19,
-    /// Canada to United States border crossing.
-    CaUsNexusCard = 20,
-    /// Indonesia.
-    /// E-card provided by multiple banks used to pay for tolls. All e-cards
-    /// via banks are charged the same so only one enum value is needed. E.g.
-    /// - Bank Mandiri <https://www.bankmandiri.co.id/e-money>
-    /// - BCA <https://www.bca.co.id/flazz>
-    /// - BNI <https://www.bni.co.id/id-id/ebanking/tapcash>
-    IdEToll = 16,
-    /// India.
-    InFastag = 78,
-    /// India, HP state plate exemption.
-    InLocalHpPlateExempt = 79,
-    /// Mexico toll pass.
-    /// <https://iave.capufe.gob.mx/#/>
-    MxIave = 90,
-    /// Mexico
-    /// <https://www.pase.com.mx>
-    MxPase = 91,
-    /// Mexico
-    ///   <https://operadoravial.com/quick-pass/>
-    MxQuickpass = 93,
-    /// <http://appsh.chihuahua.gob.mx/transparencia/?doc=/ingresos/TelepeajeFormato4.pdf>
-    MxSistemaTelepeajeChihuahua = 89,
-    /// Mexico
-    MxTagIave = 12,
-    /// Mexico toll pass company. One of many operating in Mexico City. See
-    /// additional details at <https://www.televia.com.mx.>
-    MxTagTelevia = 13,
-    /// Mexico toll pass company. One of many operating in Mexico City.
-    /// <https://www.televia.com.mx>
-    MxTelevia = 92,
-    /// Mexico toll pass. See additional details at
-    /// <https://www.viapass.com.mx/viapass/web_home.aspx.>
-    MxViapass = 14,
-    /// AL, USA.
-    UsAlFreedomPass = 21,
-    /// AK, USA.
-    UsAkAntonAndersonTunnelBookOf10Tickets = 22,
-    /// CA, USA.
-    UsCaFastrak = 4,
-    /// Indicates driver has any FasTrak pass in addition to the DMV issued Clean
-    /// Air Vehicle (CAV) sticker.
-    /// <https://www.bayareafastrak.org/en/guide/doINeedFlex.shtml>
-    UsCaFastrakCavSticker = 86,
-    /// CO, USA.
-    UsCoExpresstoll = 23,
-    /// CO, USA.
-    UsCoGoPass = 24,
-    /// DE, USA.
-    UsDeEzpassde = 25,
-    /// FL, USA.
-    UsFlBobSikesTollBridgePass = 65,
-    /// FL, USA.
-    UsFlDunesCommunityDevelopmentDistrictExpresscard = 66,
-    /// FL, USA.
-    UsFlEpass = 67,
-    /// FL, USA.
-    UsFlGibaTollPass = 68,
-    /// FL, USA.
-    UsFlLeeway = 69,
-    /// FL, USA.
-    UsFlSunpass = 70,
-    /// FL, USA.
-    UsFlSunpassPro = 71,
-    /// IL, USA.
-    UsIlEzpassil = 73,
-    /// IL, USA.
-    UsIlIpass = 72,
-    /// IN, USA.
-    UsInEzpassin = 26,
-    /// KS, USA.
-    UsKsBestpassHorizon = 27,
-    /// KS, USA.
-    UsKsKtag = 28,
-    /// KS, USA.
-    UsKsNationalpass = 29,
-    /// KS, USA.
-    UsKsPrepassElitepass = 30,
-    /// KY, USA.
-    UsKyRiverlink = 31,
-    /// LA, USA.
-    UsLaGeauxpass = 32,
-    /// LA, USA.
-    UsLaTollTag = 33,
-    /// MA, USA.
-    UsMaEzpassma = 6,
-    /// MD, USA.
-    UsMdEzpassmd = 34,
-    /// ME, USA.
-    UsMeEzpassme = 35,
-    /// MI, USA.
-    UsMiAmbassadorBridgePremierCommuterCard = 36,
-    /// MI, USA.
-    UsMiGrosseIleTollBridgePassTag = 37,
-    /// MI, USA.
-    UsMiIqProxCard = 38,
-    /// MI, USA.
-    UsMiMackinacBridgeMacPass = 39,
-    /// MI, USA.
-    UsMiNexpressToll = 40,
-    /// MN, USA.
-    UsMnEzpassmn = 41,
-    /// NC, USA.
-    UsNcEzpassnc = 42,
-    /// NC, USA.
-    UsNcPeachPass = 87,
-    /// NC, USA.
-    UsNcQuickPass = 43,
-    /// NH, USA.
-    UsNhEzpassnh = 80,
-    /// NJ, USA.
-    UsNjDownbeachExpressPass = 75,
-    /// NJ, USA.
-    UsNjEzpassnj = 74,
-    /// NY, USA.
-    UsNyExpresspass = 76,
-    /// NY, USA.
-    UsNyEzpassny = 77,
-    /// OH, USA.
-    UsOhEzpassoh = 44,
-    /// PA, USA.
-    UsPaEzpasspa = 45,
-    /// RI, USA.
-    UsRiEzpassri = 46,
-    /// SC, USA.
-    UsScPalpass = 47,
-    /// TX, USA.
-    UsTxBancpass = 48,
-    /// TX, USA.
-    UsTxDelRioPass = 49,
-    /// TX, USA.
-    UsTxEfastPass = 50,
-    /// TX, USA.
-    UsTxEaglePassExpressCard = 51,
-    /// TX, USA.
-    UsTxEptoll = 52,
-    /// TX, USA.
-    UsTxEzCross = 53,
-    /// TX, USA.
-    UsTxEztag = 54,
-    /// TX, USA.
-    UsTxLaredoTradeTag = 55,
-    /// TX, USA.
-    UsTxPluspass = 56,
-    /// TX, USA.
-    UsTxTolltag = 57,
-    /// TX, USA.
-    UsTxTxtag = 58,
-    /// TX, USA.
-    UsTxXpressCard = 59,
-    /// UT, USA.
-    UsUtAdamsAveParkwayExpresscard = 60,
-    /// VA, USA.
-    UsVaEzpassva = 61,
-    /// WA, USA.
-    UsWaBreezeby = 17,
-    /// WA, USA.
-    UsWaGoodToGo = 1,
-    /// WV, USA.
-    UsWvEzpasswv = 62,
-    /// WV, USA.
-    UsWvMemorialBridgeTickets = 63,
-    /// WV, USA.
-    UsWvNewellTollBridgeTicket = 64,
-}
-impl TollPass {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            TollPass::Unspecified => "TOLL_PASS_UNSPECIFIED",
-            TollPass::AuEtollTag => "AU_ETOLL_TAG",
-            TollPass::AuEwayTag => "AU_EWAY_TAG",
-            TollPass::AuLinkt => "AU_LINKT",
-            TollPass::ArTelepase => "AR_TELEPASE",
-            TollPass::BrAutoExpreso => "BR_AUTO_EXPRESO",
-            TollPass::BrConectcar => "BR_CONECTCAR",
-            TollPass::BrMoveMais => "BR_MOVE_MAIS",
-            TollPass::BrPassaRapido => "BR_PASSA_RAPIDO",
-            TollPass::BrSemParar => "BR_SEM_PARAR",
-            TollPass::BrTaggy => "BR_TAGGY",
-            TollPass::BrVeloe => "BR_VELOE",
-            TollPass::CaUsAkwasasneSeawayCorporateCard => {
-                "CA_US_AKWASASNE_SEAWAY_CORPORATE_CARD"
-            }
-            TollPass::CaUsAkwasasneSeawayTransitCard => {
-                "CA_US_AKWASASNE_SEAWAY_TRANSIT_CARD"
-            }
-            TollPass::CaUsBlueWaterEdgePass => "CA_US_BLUE_WATER_EDGE_PASS",
-            TollPass::CaUsConnexion => "CA_US_CONNEXION",
-            TollPass::CaUsNexusCard => "CA_US_NEXUS_CARD",
-            TollPass::IdEToll => "ID_E_TOLL",
-            TollPass::InFastag => "IN_FASTAG",
-            TollPass::InLocalHpPlateExempt => "IN_LOCAL_HP_PLATE_EXEMPT",
-            TollPass::MxIave => "MX_IAVE",
-            TollPass::MxPase => "MX_PASE",
-            TollPass::MxQuickpass => "MX_QUICKPASS",
-            TollPass::MxSistemaTelepeajeChihuahua => "MX_SISTEMA_TELEPEAJE_CHIHUAHUA",
-            TollPass::MxTagIave => "MX_TAG_IAVE",
-            TollPass::MxTagTelevia => "MX_TAG_TELEVIA",
-            TollPass::MxTelevia => "MX_TELEVIA",
-            TollPass::MxViapass => "MX_VIAPASS",
-            TollPass::UsAlFreedomPass => "US_AL_FREEDOM_PASS",
-            TollPass::UsAkAntonAndersonTunnelBookOf10Tickets => {
-                "US_AK_ANTON_ANDERSON_TUNNEL_BOOK_OF_10_TICKETS"
-            }
-            TollPass::UsCaFastrak => "US_CA_FASTRAK",
-            TollPass::UsCaFastrakCavSticker => "US_CA_FASTRAK_CAV_STICKER",
-            TollPass::UsCoExpresstoll => "US_CO_EXPRESSTOLL",
-            TollPass::UsCoGoPass => "US_CO_GO_PASS",
-            TollPass::UsDeEzpassde => "US_DE_EZPASSDE",
-            TollPass::UsFlBobSikesTollBridgePass => "US_FL_BOB_SIKES_TOLL_BRIDGE_PASS",
-            TollPass::UsFlDunesCommunityDevelopmentDistrictExpresscard => {
-                "US_FL_DUNES_COMMUNITY_DEVELOPMENT_DISTRICT_EXPRESSCARD"
-            }
-            TollPass::UsFlEpass => "US_FL_EPASS",
-            TollPass::UsFlGibaTollPass => "US_FL_GIBA_TOLL_PASS",
-            TollPass::UsFlLeeway => "US_FL_LEEWAY",
-            TollPass::UsFlSunpass => "US_FL_SUNPASS",
-            TollPass::UsFlSunpassPro => "US_FL_SUNPASS_PRO",
-            TollPass::UsIlEzpassil => "US_IL_EZPASSIL",
-            TollPass::UsIlIpass => "US_IL_IPASS",
-            TollPass::UsInEzpassin => "US_IN_EZPASSIN",
-            TollPass::UsKsBestpassHorizon => "US_KS_BESTPASS_HORIZON",
-            TollPass::UsKsKtag => "US_KS_KTAG",
-            TollPass::UsKsNationalpass => "US_KS_NATIONALPASS",
-            TollPass::UsKsPrepassElitepass => "US_KS_PREPASS_ELITEPASS",
-            TollPass::UsKyRiverlink => "US_KY_RIVERLINK",
-            TollPass::UsLaGeauxpass => "US_LA_GEAUXPASS",
-            TollPass::UsLaTollTag => "US_LA_TOLL_TAG",
-            TollPass::UsMaEzpassma => "US_MA_EZPASSMA",
-            TollPass::UsMdEzpassmd => "US_MD_EZPASSMD",
-            TollPass::UsMeEzpassme => "US_ME_EZPASSME",
-            TollPass::UsMiAmbassadorBridgePremierCommuterCard => {
-                "US_MI_AMBASSADOR_BRIDGE_PREMIER_COMMUTER_CARD"
-            }
-            TollPass::UsMiGrosseIleTollBridgePassTag => {
-                "US_MI_GROSSE_ILE_TOLL_BRIDGE_PASS_TAG"
-            }
-            TollPass::UsMiIqProxCard => "US_MI_IQ_PROX_CARD",
-            TollPass::UsMiMackinacBridgeMacPass => "US_MI_MACKINAC_BRIDGE_MAC_PASS",
-            TollPass::UsMiNexpressToll => "US_MI_NEXPRESS_TOLL",
-            TollPass::UsMnEzpassmn => "US_MN_EZPASSMN",
-            TollPass::UsNcEzpassnc => "US_NC_EZPASSNC",
-            TollPass::UsNcPeachPass => "US_NC_PEACH_PASS",
-            TollPass::UsNcQuickPass => "US_NC_QUICK_PASS",
-            TollPass::UsNhEzpassnh => "US_NH_EZPASSNH",
-            TollPass::UsNjDownbeachExpressPass => "US_NJ_DOWNBEACH_EXPRESS_PASS",
-            TollPass::UsNjEzpassnj => "US_NJ_EZPASSNJ",
-            TollPass::UsNyExpresspass => "US_NY_EXPRESSPASS",
-            TollPass::UsNyEzpassny => "US_NY_EZPASSNY",
-            TollPass::UsOhEzpassoh => "US_OH_EZPASSOH",
-            TollPass::UsPaEzpasspa => "US_PA_EZPASSPA",
-            TollPass::UsRiEzpassri => "US_RI_EZPASSRI",
-            TollPass::UsScPalpass => "US_SC_PALPASS",
-            TollPass::UsTxBancpass => "US_TX_BANCPASS",
-            TollPass::UsTxDelRioPass => "US_TX_DEL_RIO_PASS",
-            TollPass::UsTxEfastPass => "US_TX_EFAST_PASS",
-            TollPass::UsTxEaglePassExpressCard => "US_TX_EAGLE_PASS_EXPRESS_CARD",
-            TollPass::UsTxEptoll => "US_TX_EPTOLL",
-            TollPass::UsTxEzCross => "US_TX_EZ_CROSS",
-            TollPass::UsTxEztag => "US_TX_EZTAG",
-            TollPass::UsTxLaredoTradeTag => "US_TX_LAREDO_TRADE_TAG",
-            TollPass::UsTxPluspass => "US_TX_PLUSPASS",
-            TollPass::UsTxTolltag => "US_TX_TOLLTAG",
-            TollPass::UsTxTxtag => "US_TX_TXTAG",
-            TollPass::UsTxXpressCard => "US_TX_XPRESS_CARD",
-            TollPass::UsUtAdamsAveParkwayExpresscard => {
-                "US_UT_ADAMS_AVE_PARKWAY_EXPRESSCARD"
-            }
-            TollPass::UsVaEzpassva => "US_VA_EZPASSVA",
-            TollPass::UsWaBreezeby => "US_WA_BREEZEBY",
-            TollPass::UsWaGoodToGo => "US_WA_GOOD_TO_GO",
-            TollPass::UsWvEzpasswv => "US_WV_EZPASSWV",
-            TollPass::UsWvMemorialBridgeTickets => "US_WV_MEMORIAL_BRIDGE_TICKETS",
-            TollPass::UsWvNewellTollBridgeTicket => "US_WV_NEWELL_TOLL_BRIDGE_TICKET",
-        }
-    }
-}
-/// A set of values describing the vehicle's emission type.
-/// Applies only to the DRIVE travel mode.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum VehicleEmissionType {
-    /// No emission type specified. Default to GASOLINE.
-    Unspecified = 0,
-    /// Gasoline/petrol fueled vehicle.
-    Gasoline = 1,
-    /// Electricity powered vehicle.
-    Electric = 2,
-    /// Hybrid fuel (such as gasoline + electric) vehicle.
-    Hybrid = 3,
-    /// Diesel fueled vehicle.
-    Diesel = 4,
-}
-impl VehicleEmissionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            VehicleEmissionType::Unspecified => "VEHICLE_EMISSION_TYPE_UNSPECIFIED",
-            VehicleEmissionType::Gasoline => "GASOLINE",
-            VehicleEmissionType::Electric => "ELECTRIC",
-            VehicleEmissionType::Hybrid => "HYBRID",
-            VehicleEmissionType::Diesel => "DIESEL",
-        }
-    }
-}
-/// Encapsulates the vehicle information, such as the license plate last
-/// character.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VehicleInfo {
-    /// Describes the vehicle's emission type.
-    /// Applies only to the DRIVE travel mode.
-    #[prost(enumeration = "VehicleEmissionType", tag = "2")]
-    pub emission_type: i32,
-}
-/// Encapsulates a set of optional conditions to satisfy when calculating the
-/// routes.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RouteModifiers {
-    /// Specifies whether to avoid toll roads where reasonable. Preference will be
-    /// given to routes not containing toll roads. Applies only to the `DRIVE` and
-    /// `TWO_WHEELER` travel modes.
-    #[prost(bool, tag = "1")]
-    pub avoid_tolls: bool,
-    /// Specifies whether to avoid highways where reasonable. Preference will be
-    /// given to routes not containing highways. Applies only to the `DRIVE` and
-    /// `TWO_WHEELER` travel modes.
-    #[prost(bool, tag = "2")]
-    pub avoid_highways: bool,
-    /// Specifies whether to avoid ferries where reasonable. Preference will be
-    /// given to routes not containing travel by ferries.
-    /// Applies only to the `DRIVE` and`TWO_WHEELER` travel modes.
-    #[prost(bool, tag = "3")]
-    pub avoid_ferries: bool,
-    /// Specifies whether to avoid navigating indoors where reasonable. Preference
-    /// will be given to routes not containing indoor navigation.
-    /// Applies only to the `WALK` travel mode.
-    #[prost(bool, tag = "4")]
-    pub avoid_indoor: bool,
-    /// Specifies the vehicle information.
-    #[prost(message, optional, tag = "5")]
-    pub vehicle_info: ::core::option::Option<VehicleInfo>,
-    /// Encapsulates information about toll passes.
-    /// If toll passes are provided, the API tries to return the pass price. If
-    /// toll passes are not provided, the API treats the toll pass as unknown and
-    /// tries to return the cash price.
-    /// Applies only to the DRIVE and TWO_WHEELER travel modes.
-    #[prost(enumeration = "TollPass", repeated, tag = "6")]
-    pub toll_passes: ::prost::alloc::vec::Vec<i32>,
-}
-/// A set of values that specify the unit of measure used in the display.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Units {
-    /// Units of measure not specified. Defaults to the unit of measure inferred
-    /// from the request.
-    Unspecified = 0,
-    /// Metric units of measure.
-    Metric = 1,
-    /// Imperial (English) units of measure.
-    Imperial = 2,
-}
-impl Units {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Units::Unspecified => "UNITS_UNSPECIFIED",
-            Units::Metric => "METRIC",
-            Units::Imperial => "IMPERIAL",
-        }
-    }
-}
 /// Information related to how and why a fallback result was used. If this field
 /// is set, then it means the server used a different routing mode from your
 /// preferred mode as fallback.
@@ -987,6 +536,432 @@ pub struct RouteLegStep {
     #[prost(message, optional, tag = "7")]
     pub travel_advisory: ::core::option::Option<RouteLegStepTravelAdvisory>,
 }
+/// List of toll passes around the world that we support.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TollPass {
+    /// Not used. If this value is used, then the request fails.
+    Unspecified = 0,
+    /// Sydney toll pass. See additional details at <https://www.myetoll.com.au.>
+    AuEtollTag = 82,
+    /// Sydney toll pass. See additional details at <https://www.tollpay.com.au.>
+    AuEwayTag = 83,
+    /// Australia-wide toll pass.
+    /// See additional details at <https://www.linkt.com.au/.>
+    AuLinkt = 2,
+    /// Argentina toll pass. See additional details at <https://telepase.com.ar>
+    ArTelepase = 3,
+    /// Brazil toll pass. See additional details at <https://www.autoexpreso.com>
+    BrAutoExpreso = 81,
+    /// Brazil toll pass. See additional details at <https://conectcar.com.>
+    BrConectcar = 7,
+    /// Brazil toll pass. See additional details at <https://movemais.com.>
+    BrMoveMais = 8,
+    /// Brazil toll pass. See additional details at <https://pasorapido.gob.do/>
+    BrPassaRapido = 88,
+    /// Brazil toll pass. See additional details at <https://www.semparar.com.br.>
+    BrSemParar = 9,
+    /// Brazil toll pass. See additional details at <https://taggy.com.br.>
+    BrTaggy = 10,
+    /// Brazil toll pass. See additional details at
+    /// <https://veloe.com.br/site/onde-usar.>
+    BrVeloe = 11,
+    /// Canada to United States border crossing.
+    CaUsAkwasasneSeawayCorporateCard = 84,
+    /// Canada to United States border crossing.
+    CaUsAkwasasneSeawayTransitCard = 85,
+    /// Ontario, Canada to Michigan, United States border crossing.
+    CaUsBlueWaterEdgePass = 18,
+    /// Ontario, Canada to Michigan, United States border crossing.
+    CaUsConnexion = 19,
+    /// Canada to United States border crossing.
+    CaUsNexusCard = 20,
+    /// Indonesia.
+    /// E-card provided by multiple banks used to pay for tolls. All e-cards
+    /// via banks are charged the same so only one enum value is needed. E.g.
+    /// - Bank Mandiri <https://www.bankmandiri.co.id/e-money>
+    /// - BCA <https://www.bca.co.id/flazz>
+    /// - BNI <https://www.bni.co.id/id-id/ebanking/tapcash>
+    IdEToll = 16,
+    /// India.
+    InFastag = 78,
+    /// India, HP state plate exemption.
+    InLocalHpPlateExempt = 79,
+    /// Mexico toll pass.
+    /// <https://iave.capufe.gob.mx/#/>
+    MxIave = 90,
+    /// Mexico
+    /// <https://www.pase.com.mx>
+    MxPase = 91,
+    /// Mexico
+    ///   <https://operadoravial.com/quick-pass/>
+    MxQuickpass = 93,
+    /// <http://appsh.chihuahua.gob.mx/transparencia/?doc=/ingresos/TelepeajeFormato4.pdf>
+    MxSistemaTelepeajeChihuahua = 89,
+    /// Mexico
+    MxTagIave = 12,
+    /// Mexico toll pass company. One of many operating in Mexico City. See
+    /// additional details at <https://www.televia.com.mx.>
+    MxTagTelevia = 13,
+    /// Mexico toll pass company. One of many operating in Mexico City.
+    /// <https://www.televia.com.mx>
+    MxTelevia = 92,
+    /// Mexico toll pass. See additional details at
+    /// <https://www.viapass.com.mx/viapass/web_home.aspx.>
+    MxViapass = 14,
+    /// AL, USA.
+    UsAlFreedomPass = 21,
+    /// AK, USA.
+    UsAkAntonAndersonTunnelBookOf10Tickets = 22,
+    /// CA, USA.
+    UsCaFastrak = 4,
+    /// Indicates driver has any FasTrak pass in addition to the DMV issued Clean
+    /// Air Vehicle (CAV) sticker.
+    /// <https://www.bayareafastrak.org/en/guide/doINeedFlex.shtml>
+    UsCaFastrakCavSticker = 86,
+    /// CO, USA.
+    UsCoExpresstoll = 23,
+    /// CO, USA.
+    UsCoGoPass = 24,
+    /// DE, USA.
+    UsDeEzpassde = 25,
+    /// FL, USA.
+    UsFlBobSikesTollBridgePass = 65,
+    /// FL, USA.
+    UsFlDunesCommunityDevelopmentDistrictExpresscard = 66,
+    /// FL, USA.
+    UsFlEpass = 67,
+    /// FL, USA.
+    UsFlGibaTollPass = 68,
+    /// FL, USA.
+    UsFlLeeway = 69,
+    /// FL, USA.
+    UsFlSunpass = 70,
+    /// FL, USA.
+    UsFlSunpassPro = 71,
+    /// IL, USA.
+    UsIlEzpassil = 73,
+    /// IL, USA.
+    UsIlIpass = 72,
+    /// IN, USA.
+    UsInEzpassin = 26,
+    /// KS, USA.
+    UsKsBestpassHorizon = 27,
+    /// KS, USA.
+    UsKsKtag = 28,
+    /// KS, USA.
+    UsKsNationalpass = 29,
+    /// KS, USA.
+    UsKsPrepassElitepass = 30,
+    /// KY, USA.
+    UsKyRiverlink = 31,
+    /// LA, USA.
+    UsLaGeauxpass = 32,
+    /// LA, USA.
+    UsLaTollTag = 33,
+    /// MA, USA.
+    UsMaEzpassma = 6,
+    /// MD, USA.
+    UsMdEzpassmd = 34,
+    /// ME, USA.
+    UsMeEzpassme = 35,
+    /// MI, USA.
+    UsMiAmbassadorBridgePremierCommuterCard = 36,
+    /// MI, USA.
+    UsMiGrosseIleTollBridgePassTag = 37,
+    /// MI, USA.
+    UsMiIqProxCard = 38,
+    /// MI, USA.
+    UsMiMackinacBridgeMacPass = 39,
+    /// MI, USA.
+    UsMiNexpressToll = 40,
+    /// MN, USA.
+    UsMnEzpassmn = 41,
+    /// NC, USA.
+    UsNcEzpassnc = 42,
+    /// NC, USA.
+    UsNcPeachPass = 87,
+    /// NC, USA.
+    UsNcQuickPass = 43,
+    /// NH, USA.
+    UsNhEzpassnh = 80,
+    /// NJ, USA.
+    UsNjDownbeachExpressPass = 75,
+    /// NJ, USA.
+    UsNjEzpassnj = 74,
+    /// NY, USA.
+    UsNyExpresspass = 76,
+    /// NY, USA.
+    UsNyEzpassny = 77,
+    /// OH, USA.
+    UsOhEzpassoh = 44,
+    /// PA, USA.
+    UsPaEzpasspa = 45,
+    /// RI, USA.
+    UsRiEzpassri = 46,
+    /// SC, USA.
+    UsScPalpass = 47,
+    /// TX, USA.
+    UsTxBancpass = 48,
+    /// TX, USA.
+    UsTxDelRioPass = 49,
+    /// TX, USA.
+    UsTxEfastPass = 50,
+    /// TX, USA.
+    UsTxEaglePassExpressCard = 51,
+    /// TX, USA.
+    UsTxEptoll = 52,
+    /// TX, USA.
+    UsTxEzCross = 53,
+    /// TX, USA.
+    UsTxEztag = 54,
+    /// TX, USA.
+    UsTxLaredoTradeTag = 55,
+    /// TX, USA.
+    UsTxPluspass = 56,
+    /// TX, USA.
+    UsTxTolltag = 57,
+    /// TX, USA.
+    UsTxTxtag = 58,
+    /// TX, USA.
+    UsTxXpressCard = 59,
+    /// UT, USA.
+    UsUtAdamsAveParkwayExpresscard = 60,
+    /// VA, USA.
+    UsVaEzpassva = 61,
+    /// WA, USA.
+    UsWaBreezeby = 17,
+    /// WA, USA.
+    UsWaGoodToGo = 1,
+    /// WV, USA.
+    UsWvEzpasswv = 62,
+    /// WV, USA.
+    UsWvMemorialBridgeTickets = 63,
+    /// WV, USA.
+    UsWvNewellTollBridgeTicket = 64,
+}
+impl TollPass {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TollPass::Unspecified => "TOLL_PASS_UNSPECIFIED",
+            TollPass::AuEtollTag => "AU_ETOLL_TAG",
+            TollPass::AuEwayTag => "AU_EWAY_TAG",
+            TollPass::AuLinkt => "AU_LINKT",
+            TollPass::ArTelepase => "AR_TELEPASE",
+            TollPass::BrAutoExpreso => "BR_AUTO_EXPRESO",
+            TollPass::BrConectcar => "BR_CONECTCAR",
+            TollPass::BrMoveMais => "BR_MOVE_MAIS",
+            TollPass::BrPassaRapido => "BR_PASSA_RAPIDO",
+            TollPass::BrSemParar => "BR_SEM_PARAR",
+            TollPass::BrTaggy => "BR_TAGGY",
+            TollPass::BrVeloe => "BR_VELOE",
+            TollPass::CaUsAkwasasneSeawayCorporateCard => {
+                "CA_US_AKWASASNE_SEAWAY_CORPORATE_CARD"
+            }
+            TollPass::CaUsAkwasasneSeawayTransitCard => {
+                "CA_US_AKWASASNE_SEAWAY_TRANSIT_CARD"
+            }
+            TollPass::CaUsBlueWaterEdgePass => "CA_US_BLUE_WATER_EDGE_PASS",
+            TollPass::CaUsConnexion => "CA_US_CONNEXION",
+            TollPass::CaUsNexusCard => "CA_US_NEXUS_CARD",
+            TollPass::IdEToll => "ID_E_TOLL",
+            TollPass::InFastag => "IN_FASTAG",
+            TollPass::InLocalHpPlateExempt => "IN_LOCAL_HP_PLATE_EXEMPT",
+            TollPass::MxIave => "MX_IAVE",
+            TollPass::MxPase => "MX_PASE",
+            TollPass::MxQuickpass => "MX_QUICKPASS",
+            TollPass::MxSistemaTelepeajeChihuahua => "MX_SISTEMA_TELEPEAJE_CHIHUAHUA",
+            TollPass::MxTagIave => "MX_TAG_IAVE",
+            TollPass::MxTagTelevia => "MX_TAG_TELEVIA",
+            TollPass::MxTelevia => "MX_TELEVIA",
+            TollPass::MxViapass => "MX_VIAPASS",
+            TollPass::UsAlFreedomPass => "US_AL_FREEDOM_PASS",
+            TollPass::UsAkAntonAndersonTunnelBookOf10Tickets => {
+                "US_AK_ANTON_ANDERSON_TUNNEL_BOOK_OF_10_TICKETS"
+            }
+            TollPass::UsCaFastrak => "US_CA_FASTRAK",
+            TollPass::UsCaFastrakCavSticker => "US_CA_FASTRAK_CAV_STICKER",
+            TollPass::UsCoExpresstoll => "US_CO_EXPRESSTOLL",
+            TollPass::UsCoGoPass => "US_CO_GO_PASS",
+            TollPass::UsDeEzpassde => "US_DE_EZPASSDE",
+            TollPass::UsFlBobSikesTollBridgePass => "US_FL_BOB_SIKES_TOLL_BRIDGE_PASS",
+            TollPass::UsFlDunesCommunityDevelopmentDistrictExpresscard => {
+                "US_FL_DUNES_COMMUNITY_DEVELOPMENT_DISTRICT_EXPRESSCARD"
+            }
+            TollPass::UsFlEpass => "US_FL_EPASS",
+            TollPass::UsFlGibaTollPass => "US_FL_GIBA_TOLL_PASS",
+            TollPass::UsFlLeeway => "US_FL_LEEWAY",
+            TollPass::UsFlSunpass => "US_FL_SUNPASS",
+            TollPass::UsFlSunpassPro => "US_FL_SUNPASS_PRO",
+            TollPass::UsIlEzpassil => "US_IL_EZPASSIL",
+            TollPass::UsIlIpass => "US_IL_IPASS",
+            TollPass::UsInEzpassin => "US_IN_EZPASSIN",
+            TollPass::UsKsBestpassHorizon => "US_KS_BESTPASS_HORIZON",
+            TollPass::UsKsKtag => "US_KS_KTAG",
+            TollPass::UsKsNationalpass => "US_KS_NATIONALPASS",
+            TollPass::UsKsPrepassElitepass => "US_KS_PREPASS_ELITEPASS",
+            TollPass::UsKyRiverlink => "US_KY_RIVERLINK",
+            TollPass::UsLaGeauxpass => "US_LA_GEAUXPASS",
+            TollPass::UsLaTollTag => "US_LA_TOLL_TAG",
+            TollPass::UsMaEzpassma => "US_MA_EZPASSMA",
+            TollPass::UsMdEzpassmd => "US_MD_EZPASSMD",
+            TollPass::UsMeEzpassme => "US_ME_EZPASSME",
+            TollPass::UsMiAmbassadorBridgePremierCommuterCard => {
+                "US_MI_AMBASSADOR_BRIDGE_PREMIER_COMMUTER_CARD"
+            }
+            TollPass::UsMiGrosseIleTollBridgePassTag => {
+                "US_MI_GROSSE_ILE_TOLL_BRIDGE_PASS_TAG"
+            }
+            TollPass::UsMiIqProxCard => "US_MI_IQ_PROX_CARD",
+            TollPass::UsMiMackinacBridgeMacPass => "US_MI_MACKINAC_BRIDGE_MAC_PASS",
+            TollPass::UsMiNexpressToll => "US_MI_NEXPRESS_TOLL",
+            TollPass::UsMnEzpassmn => "US_MN_EZPASSMN",
+            TollPass::UsNcEzpassnc => "US_NC_EZPASSNC",
+            TollPass::UsNcPeachPass => "US_NC_PEACH_PASS",
+            TollPass::UsNcQuickPass => "US_NC_QUICK_PASS",
+            TollPass::UsNhEzpassnh => "US_NH_EZPASSNH",
+            TollPass::UsNjDownbeachExpressPass => "US_NJ_DOWNBEACH_EXPRESS_PASS",
+            TollPass::UsNjEzpassnj => "US_NJ_EZPASSNJ",
+            TollPass::UsNyExpresspass => "US_NY_EXPRESSPASS",
+            TollPass::UsNyEzpassny => "US_NY_EZPASSNY",
+            TollPass::UsOhEzpassoh => "US_OH_EZPASSOH",
+            TollPass::UsPaEzpasspa => "US_PA_EZPASSPA",
+            TollPass::UsRiEzpassri => "US_RI_EZPASSRI",
+            TollPass::UsScPalpass => "US_SC_PALPASS",
+            TollPass::UsTxBancpass => "US_TX_BANCPASS",
+            TollPass::UsTxDelRioPass => "US_TX_DEL_RIO_PASS",
+            TollPass::UsTxEfastPass => "US_TX_EFAST_PASS",
+            TollPass::UsTxEaglePassExpressCard => "US_TX_EAGLE_PASS_EXPRESS_CARD",
+            TollPass::UsTxEptoll => "US_TX_EPTOLL",
+            TollPass::UsTxEzCross => "US_TX_EZ_CROSS",
+            TollPass::UsTxEztag => "US_TX_EZTAG",
+            TollPass::UsTxLaredoTradeTag => "US_TX_LAREDO_TRADE_TAG",
+            TollPass::UsTxPluspass => "US_TX_PLUSPASS",
+            TollPass::UsTxTolltag => "US_TX_TOLLTAG",
+            TollPass::UsTxTxtag => "US_TX_TXTAG",
+            TollPass::UsTxXpressCard => "US_TX_XPRESS_CARD",
+            TollPass::UsUtAdamsAveParkwayExpresscard => {
+                "US_UT_ADAMS_AVE_PARKWAY_EXPRESSCARD"
+            }
+            TollPass::UsVaEzpassva => "US_VA_EZPASSVA",
+            TollPass::UsWaBreezeby => "US_WA_BREEZEBY",
+            TollPass::UsWaGoodToGo => "US_WA_GOOD_TO_GO",
+            TollPass::UsWvEzpasswv => "US_WV_EZPASSWV",
+            TollPass::UsWvMemorialBridgeTickets => "US_WV_MEMORIAL_BRIDGE_TICKETS",
+            TollPass::UsWvNewellTollBridgeTicket => "US_WV_NEWELL_TOLL_BRIDGE_TICKET",
+        }
+    }
+}
+/// A set of values describing the vehicle's emission type.
+/// Applies only to the DRIVE travel mode.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum VehicleEmissionType {
+    /// No emission type specified. Default to GASOLINE.
+    Unspecified = 0,
+    /// Gasoline/petrol fueled vehicle.
+    Gasoline = 1,
+    /// Electricity powered vehicle.
+    Electric = 2,
+    /// Hybrid fuel (such as gasoline + electric) vehicle.
+    Hybrid = 3,
+    /// Diesel fueled vehicle.
+    Diesel = 4,
+}
+impl VehicleEmissionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            VehicleEmissionType::Unspecified => "VEHICLE_EMISSION_TYPE_UNSPECIFIED",
+            VehicleEmissionType::Gasoline => "GASOLINE",
+            VehicleEmissionType::Electric => "ELECTRIC",
+            VehicleEmissionType::Hybrid => "HYBRID",
+            VehicleEmissionType::Diesel => "DIESEL",
+        }
+    }
+}
+/// Encapsulates the vehicle information, such as the license plate last
+/// character.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VehicleInfo {
+    /// Describes the vehicle's emission type.
+    /// Applies only to the DRIVE travel mode.
+    #[prost(enumeration = "VehicleEmissionType", tag = "2")]
+    pub emission_type: i32,
+}
+/// Encapsulates a set of optional conditions to satisfy when calculating the
+/// routes.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RouteModifiers {
+    /// Specifies whether to avoid toll roads where reasonable. Preference will be
+    /// given to routes not containing toll roads. Applies only to the `DRIVE` and
+    /// `TWO_WHEELER` travel modes.
+    #[prost(bool, tag = "1")]
+    pub avoid_tolls: bool,
+    /// Specifies whether to avoid highways where reasonable. Preference will be
+    /// given to routes not containing highways. Applies only to the `DRIVE` and
+    /// `TWO_WHEELER` travel modes.
+    #[prost(bool, tag = "2")]
+    pub avoid_highways: bool,
+    /// Specifies whether to avoid ferries where reasonable. Preference will be
+    /// given to routes not containing travel by ferries.
+    /// Applies only to the `DRIVE` and`TWO_WHEELER` travel modes.
+    #[prost(bool, tag = "3")]
+    pub avoid_ferries: bool,
+    /// Specifies whether to avoid navigating indoors where reasonable. Preference
+    /// will be given to routes not containing indoor navigation.
+    /// Applies only to the `WALK` travel mode.
+    #[prost(bool, tag = "4")]
+    pub avoid_indoor: bool,
+    /// Specifies the vehicle information.
+    #[prost(message, optional, tag = "5")]
+    pub vehicle_info: ::core::option::Option<VehicleInfo>,
+    /// Encapsulates information about toll passes.
+    /// If toll passes are provided, the API tries to return the pass price. If
+    /// toll passes are not provided, the API treats the toll pass as unknown and
+    /// tries to return the cash price.
+    /// Applies only to the DRIVE and TWO_WHEELER travel modes.
+    #[prost(enumeration = "TollPass", repeated, tag = "6")]
+    pub toll_passes: ::prost::alloc::vec::Vec<i32>,
+}
+/// A set of values used to specify the mode of travel.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RouteTravelMode {
+    /// No travel mode specified. Defaults to `DRIVE`.
+    TravelModeUnspecified = 0,
+    /// Travel by passenger car.
+    Drive = 1,
+    /// Travel by bicycle.
+    Bicycle = 2,
+    /// Travel by walking.
+    Walk = 3,
+    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
+    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
+    TwoWheeler = 4,
+}
+impl RouteTravelMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RouteTravelMode::TravelModeUnspecified => "TRAVEL_MODE_UNSPECIFIED",
+            RouteTravelMode::Drive => "DRIVE",
+            RouteTravelMode::Bicycle => "BICYCLE",
+            RouteTravelMode::Walk => "WALK",
+            RouteTravelMode::TwoWheeler => "TWO_WHEELER",
+        }
+    }
+}
 /// A set of values that specify factors to take into consideration when
 /// calculating the route.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1024,6 +999,31 @@ impl RoutingPreference {
             RoutingPreference::TrafficUnaware => "TRAFFIC_UNAWARE",
             RoutingPreference::TrafficAware => "TRAFFIC_AWARE",
             RoutingPreference::TrafficAwareOptimal => "TRAFFIC_AWARE_OPTIMAL",
+        }
+    }
+}
+/// A set of values that specify the unit of measure used in the display.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Units {
+    /// Units of measure not specified. Defaults to the unit of measure inferred
+    /// from the request.
+    Unspecified = 0,
+    /// Metric units of measure.
+    Metric = 1,
+    /// Imperial (English) units of measure.
+    Imperial = 2,
+}
+impl Units {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Units::Unspecified => "UNITS_UNSPECIFIED",
+            Units::Metric => "METRIC",
+            Units::Imperial => "IMPERIAL",
         }
     }
 }

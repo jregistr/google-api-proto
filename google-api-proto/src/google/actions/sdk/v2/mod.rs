@@ -8,36 +8,6 @@ pub mod conversation;
     )
 )]
 pub mod interactionmodel;
-/// Wrapper for repeated validation result.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResults {
-    /// Multiple validation results.
-    #[prost(message, repeated, tag = "1")]
-    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
-}
-/// Represents a validation result associated with the app content.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResult {
-    /// Holds the validation message.
-    #[prost(string, tag = "1")]
-    pub validation_message: ::prost::alloc::string::String,
-    /// Context to identify the resource the validation message relates to.
-    #[prost(message, optional, tag = "2")]
-    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
-}
-/// Nested message and enum types in `ValidationResult`.
-pub mod validation_result {
-    /// Context to identify the resource the validation message relates to.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValidationContext {
-        /// Language code of the lozalized resource.
-        /// Empty if the error is for non-localized resource.
-        /// See the list of supported languages in
-        /// <https://developers.google.com/assistant/console/languages-locales>
-        #[prost(string, tag = "1")]
-        pub language_code: ::prost::alloc::string::String,
-    }
-}
 /// Styles applied to cards that are presented to users
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ThemeCustomization {
@@ -125,19 +95,145 @@ pub mod theme_customization {
         }
     }
 }
-/// Information about the encrypted OAuth client secret used in account linking
-/// flows (for AUTH_CODE grant type).
+/// Represents settings of an Actions project that are specific to a user locale.
+/// In this instance, user means the end user who invokes your Actions.
+/// **This message is localizable.**
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLinkingSecret {
-    /// Encrypted account linking client secret ciphertext.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub encrypted_client_secret: ::prost::bytes::Bytes,
-    /// The version of the crypto key used to encrypt the account linking client
-    /// secret.
-    /// Note that this field is ignored in push, preview, and version creation
-    /// flows.
+pub struct LocalizedSettings {
+    /// Required. The default display name for this Actions project (if there is no
+    /// translation available)
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The pronunciation of the display name to invoke it within a voice
+    /// (spoken) context.
     #[prost(string, tag = "2")]
-    pub encryption_key_version: ::prost::alloc::string::String,
+    pub pronunciation: ::prost::alloc::string::String,
+    /// Required. The default short description for the Actions project (if there is no
+    /// translation available). 80 character limit.
+    #[prost(string, tag = "3")]
+    pub short_description: ::prost::alloc::string::String,
+    /// Required. The default long description for the Actions project (if there is no
+    /// translation available). 4000 character limit.
+    #[prost(string, tag = "4")]
+    pub full_description: ::prost::alloc::string::String,
+    /// Required. Small square image, 192 x 192 px.
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console, the Google-managed URL
+    /// pulled could be used. URLs from external sources are not allowed.
+    #[prost(string, tag = "5")]
+    pub small_logo_image: ::prost::alloc::string::String,
+    /// Optional. Large landscape image, 1920 x 1080 px.
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console, the Google-managed URL
+    /// pulled could be used. URLs from external sources are not allowed.
+    #[prost(string, tag = "6")]
+    pub large_banner_image: ::prost::alloc::string::String,
+    /// Required. The name of the developer to be displayed to users.
+    #[prost(string, tag = "7")]
+    pub developer_name: ::prost::alloc::string::String,
+    /// Required. The contact email address for the developer.
+    #[prost(string, tag = "8")]
+    pub developer_email: ::prost::alloc::string::String,
+    /// Optional. The terms of service URL.
+    #[prost(string, tag = "9")]
+    pub terms_of_service_url: ::prost::alloc::string::String,
+    /// Required. The Google Assistant voice type that users hear when they interact with
+    /// your Actions. The supported values are "male_1", "male_2", "female_1", and
+    /// "female_2".
+    #[prost(string, tag = "10")]
+    pub voice: ::prost::alloc::string::String,
+    /// Optional. The locale for the specified voice. If not specified, this resolves
+    /// to the user's Assistant locale. If specified, the voice locale must have
+    /// the same root language as the locale specified in LocalizedSettings.
+    #[prost(string, tag = "14")]
+    pub voice_locale: ::prost::alloc::string::String,
+    /// Required. The privacy policy URL.
+    #[prost(string, tag = "11")]
+    pub privacy_policy_url: ::prost::alloc::string::String,
+    /// Optional. Sample invocation phrases displayed as part of your Actions project's
+    /// description in the Assistant directory. This will help users learn how to
+    /// use it.
+    #[prost(string, repeated, tag = "12")]
+    pub sample_invocations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Theme customizations for visual components of your Actions.
+    #[prost(message, optional, tag = "13")]
+    pub theme_customization: ::core::option::Option<ThemeCustomization>,
+}
+/// Metadata for different types of webhooks. If you're using
+/// `inlineCloudFunction`, your source code must be in a directory with the same
+/// name as the value for the `executeFunction` key.
+/// For example, a value of `my_webhook` for the`executeFunction` key would have
+/// a code structure like this:
+///   - `/webhooks/my_webhook.yaml`
+///   - `/webhooks/my_webhook/index.js`
+///   - `/webhooks/my_webhook/package.json`
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Webhook {
+    /// List of handlers for this webhook.
+    #[prost(message, repeated, tag = "1")]
+    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
+    /// Only one webhook type is supported.
+    #[prost(oneof = "webhook::WebhookType", tags = "2, 3")]
+    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
+}
+/// Nested message and enum types in `Webhook`.
+pub mod webhook {
+    /// Declares the name of the webhoook handler. A webhook can have
+    /// multiple handlers registered. These handlers can be called from multiple
+    /// places in your Actions project.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Handler {
+        /// Required. Name of the handler. Must be unique across all handlers the Actions
+        /// project. You can check the name of this handler to invoke the correct
+        /// function in your fulfillment source code.
+        #[prost(string, tag = "1")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// REST endpoint to notify if you're not using the inline editor.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct HttpsEndpoint {
+        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
+        /// Handler names are appended to the base URL path after a colon
+        /// (following the style guide in
+        /// <https://cloud.google.com/apis/design/custom_methods>).
+        /// For example a base URL of '<https://gactions.service.com/api'> would
+        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
+        #[prost(string, tag = "1")]
+        pub base_url: ::prost::alloc::string::String,
+        /// Map of HTTP parameters to be included in the POST request.
+        #[prost(btree_map = "string, string", tag = "2")]
+        pub http_headers: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
+        /// Version of the protocol used by the endpoint. This is the protocol shared
+        /// by all fulfillment types and not specific to Google fulfillment type.
+        #[prost(int32, tag = "3")]
+        pub endpoint_api_version: i32,
+    }
+    /// Holds the metadata of an inline Cloud Function deployed from the
+    /// webhooks folder.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InlineCloudFunction {
+        /// The name of the Cloud Function entry point. The value of this field
+        /// should match the name of the method exported from the source code.
+        #[prost(string, tag = "1")]
+        pub execute_function: ::prost::alloc::string::String,
+    }
+    /// Only one webhook type is supported.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum WebhookType {
+        /// Custom webhook HTTPS endpoint.
+        #[prost(message, tag = "2")]
+        HttpsEndpoint(HttpsEndpoint),
+        /// Metadata for cloud function deployed from code in the webhooks folder.
+        #[prost(message, tag = "3")]
+        InlineCloudFunction(InlineCloudFunction),
+    }
 }
 /// Contains information about execution event which happened during processing
 /// Actions Builder conversation request. For an overview of the stages involved
@@ -382,6 +478,166 @@ pub struct WaitingForUserInput {}
 /// Event which informs that conversation with agent was ended.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndConversation {}
+/// Definition of version resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Version {
+    /// The unique identifier of the version in the following format.
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The current state of the version.
+    #[prost(message, optional, tag = "2")]
+    pub version_state: ::core::option::Option<version::VersionState>,
+    /// Email of the user who created this version.
+    #[prost(string, tag = "3")]
+    pub creator: ::prost::alloc::string::String,
+    /// Timestamp of the last change to this version.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `Version`.
+pub mod version {
+    /// Represents the current state of the version.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct VersionState {
+        /// The current state of the version.
+        #[prost(enumeration = "version_state::State", tag = "1")]
+        pub state: i32,
+        /// User-friendly message for the current state of the version.
+        #[prost(string, tag = "2")]
+        pub message: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `VersionState`.
+    pub mod version_state {
+        /// Enum indicating the states that a Version can take. This enum is not yet
+        /// frozen and values maybe added later.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum State {
+            /// Default value of State.
+            Unspecified = 0,
+            /// The version creation is in progress.
+            CreationInProgress = 1,
+            /// The version creation failed.
+            CreationFailed = 2,
+            /// The version has been successfully created.
+            Created = 3,
+            /// The version is under policy review (aka Approval).
+            ReviewInProgress = 4,
+            /// The version has been approved for policy review and can be deployed.
+            Approved = 5,
+            /// The version has been conditionally approved but is pending final
+            /// review. It may be rolled back if final review is denied.
+            ConditionallyApproved = 6,
+            /// The version has been denied for policy review.
+            Denied = 7,
+            /// The version is taken down as entire agent and all versions are taken
+            /// down.
+            UnderTakedown = 8,
+            /// The version has been deleted.
+            Deleted = 9,
+        }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::CreationInProgress => "CREATION_IN_PROGRESS",
+                    State::CreationFailed => "CREATION_FAILED",
+                    State::Created => "CREATED",
+                    State::ReviewInProgress => "REVIEW_IN_PROGRESS",
+                    State::Approved => "APPROVED",
+                    State::ConditionallyApproved => "CONDITIONALLY_APPROVED",
+                    State::Denied => "DENIED",
+                    State::UnderTakedown => "UNDER_TAKEDOWN",
+                    State::Deleted => "DELETED",
+                }
+            }
+        }
+    }
+}
+/// Contains a set of requirements that the client surface must support to invoke
+/// Actions in your project.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SurfaceRequirements {
+    /// The minimum set of capabilities needed to invoke the Actions in your
+    /// project. If the surface is missing any of these, the Action will not be
+    /// triggered.
+    #[prost(message, repeated, tag = "1")]
+    pub minimum_requirements: ::prost::alloc::vec::Vec<CapabilityRequirement>,
+}
+/// Represents a requirement about the availability of a given capability.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CapabilityRequirement {
+    /// The type of capability.
+    #[prost(enumeration = "capability_requirement::SurfaceCapability", tag = "1")]
+    pub capability: i32,
+}
+/// Nested message and enum types in `CapabilityRequirement`.
+pub mod capability_requirement {
+    /// Possible set of surface capabilities.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SurfaceCapability {
+        /// Unknown / Unspecified.
+        Unspecified = 0,
+        /// Surface supports audio output.
+        AudioOutput = 1,
+        /// Surface supports screen/visual output.
+        ScreenOutput = 2,
+        /// Surface supports media response audio.
+        MediaResponseAudio = 3,
+        /// Surface supports web browsers.
+        WebBrowser = 4,
+        /// Surface supports account linking.
+        AccountLinking = 7,
+        /// Surface supports Interactive Canvas.
+        InteractiveCanvas = 8,
+        /// Surface supports home storage.
+        HomeStorage = 9,
+    }
+    impl SurfaceCapability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
+                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
+                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
+                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
+                SurfaceCapability::WebBrowser => "WEB_BROWSER",
+                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
+                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
+                SurfaceCapability::HomeStorage => "HOME_STORAGE",
+            }
+        }
+    }
+}
 /// Request for playing a round of the conversation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SendInteractionRequest {
@@ -756,184 +1012,19 @@ pub mod actions_testing_client {
         }
     }
 }
-/// Metadata for different types of webhooks. If you're using
-/// `inlineCloudFunction`, your source code must be in a directory with the same
-/// name as the value for the `executeFunction` key.
-/// For example, a value of `my_webhook` for the`executeFunction` key would have
-/// a code structure like this:
-///   - `/webhooks/my_webhook.yaml`
-///   - `/webhooks/my_webhook/index.js`
-///   - `/webhooks/my_webhook/package.json`
+/// Information about the encrypted OAuth client secret used in account linking
+/// flows (for AUTH_CODE grant type).
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Webhook {
-    /// List of handlers for this webhook.
-    #[prost(message, repeated, tag = "1")]
-    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
-    /// Only one webhook type is supported.
-    #[prost(oneof = "webhook::WebhookType", tags = "2, 3")]
-    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
-}
-/// Nested message and enum types in `Webhook`.
-pub mod webhook {
-    /// Declares the name of the webhoook handler. A webhook can have
-    /// multiple handlers registered. These handlers can be called from multiple
-    /// places in your Actions project.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Handler {
-        /// Required. Name of the handler. Must be unique across all handlers the Actions
-        /// project. You can check the name of this handler to invoke the correct
-        /// function in your fulfillment source code.
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// REST endpoint to notify if you're not using the inline editor.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct HttpsEndpoint {
-        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
-        /// Handler names are appended to the base URL path after a colon
-        /// (following the style guide in
-        /// <https://cloud.google.com/apis/design/custom_methods>).
-        /// For example a base URL of '<https://gactions.service.com/api'> would
-        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
-        #[prost(string, tag = "1")]
-        pub base_url: ::prost::alloc::string::String,
-        /// Map of HTTP parameters to be included in the POST request.
-        #[prost(btree_map = "string, string", tag = "2")]
-        pub http_headers: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-        /// Version of the protocol used by the endpoint. This is the protocol shared
-        /// by all fulfillment types and not specific to Google fulfillment type.
-        #[prost(int32, tag = "3")]
-        pub endpoint_api_version: i32,
-    }
-    /// Holds the metadata of an inline Cloud Function deployed from the
-    /// webhooks folder.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InlineCloudFunction {
-        /// The name of the Cloud Function entry point. The value of this field
-        /// should match the name of the method exported from the source code.
-        #[prost(string, tag = "1")]
-        pub execute_function: ::prost::alloc::string::String,
-    }
-    /// Only one webhook type is supported.
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum WebhookType {
-        /// Custom webhook HTTPS endpoint.
-        #[prost(message, tag = "2")]
-        HttpsEndpoint(HttpsEndpoint),
-        /// Metadata for cloud function deployed from code in the webhooks folder.
-        #[prost(message, tag = "3")]
-        InlineCloudFunction(InlineCloudFunction),
-    }
-}
-/// Definition of version resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Version {
-    /// The unique identifier of the version in the following format.
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The current state of the version.
-    #[prost(message, optional, tag = "2")]
-    pub version_state: ::core::option::Option<version::VersionState>,
-    /// Email of the user who created this version.
-    #[prost(string, tag = "3")]
-    pub creator: ::prost::alloc::string::String,
-    /// Timestamp of the last change to this version.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `Version`.
-pub mod version {
-    /// Represents the current state of the version.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct VersionState {
-        /// The current state of the version.
-        #[prost(enumeration = "version_state::State", tag = "1")]
-        pub state: i32,
-        /// User-friendly message for the current state of the version.
-        #[prost(string, tag = "2")]
-        pub message: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `VersionState`.
-    pub mod version_state {
-        /// Enum indicating the states that a Version can take. This enum is not yet
-        /// frozen and values maybe added later.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum State {
-            /// Default value of State.
-            Unspecified = 0,
-            /// The version creation is in progress.
-            CreationInProgress = 1,
-            /// The version creation failed.
-            CreationFailed = 2,
-            /// The version has been successfully created.
-            Created = 3,
-            /// The version is under policy review (aka Approval).
-            ReviewInProgress = 4,
-            /// The version has been approved for policy review and can be deployed.
-            Approved = 5,
-            /// The version has been conditionally approved but is pending final
-            /// review. It may be rolled back if final review is denied.
-            ConditionallyApproved = 6,
-            /// The version has been denied for policy review.
-            Denied = 7,
-            /// The version is taken down as entire agent and all versions are taken
-            /// down.
-            UnderTakedown = 8,
-            /// The version has been deleted.
-            Deleted = 9,
-        }
-        impl State {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    State::Unspecified => "STATE_UNSPECIFIED",
-                    State::CreationInProgress => "CREATION_IN_PROGRESS",
-                    State::CreationFailed => "CREATION_FAILED",
-                    State::Created => "CREATED",
-                    State::ReviewInProgress => "REVIEW_IN_PROGRESS",
-                    State::Approved => "APPROVED",
-                    State::ConditionallyApproved => "CONDITIONALLY_APPROVED",
-                    State::Denied => "DENIED",
-                    State::UnderTakedown => "UNDER_TAKEDOWN",
-                    State::Deleted => "DELETED",
-                }
-            }
-        }
-    }
-}
-/// Definition of release channel resource.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseChannel {
-    /// The unique name of the release channel in the following format.
-    /// `projects/{project}/releaseChannels/{release_channel}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Version currently deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
+pub struct AccountLinkingSecret {
+    /// Encrypted account linking client secret ciphertext.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub encrypted_client_secret: ::prost::bytes::Bytes,
+    /// The version of the crypto key used to encrypt the account linking client
+    /// secret.
+    /// Note that this field is ignored in push, preview, and version creation
+    /// flows.
     #[prost(string, tag = "2")]
-    pub current_version: ::prost::alloc::string::String,
-    /// Version to be deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag = "3")]
-    pub pending_version: ::prost::alloc::string::String,
+    pub encryption_key_version: ::prost::alloc::string::String,
 }
 /// Represents the list of Actions defined in a project.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1184,143 +1275,6 @@ pub mod account_linking {
                 AuthGrantType::Unspecified => "AUTH_GRANT_TYPE_UNSPECIFIED",
                 AuthGrantType::AuthCode => "AUTH_CODE",
                 AuthGrantType::Implicit => "IMPLICIT",
-            }
-        }
-    }
-}
-/// Represents settings of an Actions project that are specific to a user locale.
-/// In this instance, user means the end user who invokes your Actions.
-/// **This message is localizable.**
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocalizedSettings {
-    /// Required. The default display name for this Actions project (if there is no
-    /// translation available)
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The pronunciation of the display name to invoke it within a voice
-    /// (spoken) context.
-    #[prost(string, tag = "2")]
-    pub pronunciation: ::prost::alloc::string::String,
-    /// Required. The default short description for the Actions project (if there is no
-    /// translation available). 80 character limit.
-    #[prost(string, tag = "3")]
-    pub short_description: ::prost::alloc::string::String,
-    /// Required. The default long description for the Actions project (if there is no
-    /// translation available). 4000 character limit.
-    #[prost(string, tag = "4")]
-    pub full_description: ::prost::alloc::string::String,
-    /// Required. Small square image, 192 x 192 px.
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console, the Google-managed URL
-    /// pulled could be used. URLs from external sources are not allowed.
-    #[prost(string, tag = "5")]
-    pub small_logo_image: ::prost::alloc::string::String,
-    /// Optional. Large landscape image, 1920 x 1080 px.
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console, the Google-managed URL
-    /// pulled could be used. URLs from external sources are not allowed.
-    #[prost(string, tag = "6")]
-    pub large_banner_image: ::prost::alloc::string::String,
-    /// Required. The name of the developer to be displayed to users.
-    #[prost(string, tag = "7")]
-    pub developer_name: ::prost::alloc::string::String,
-    /// Required. The contact email address for the developer.
-    #[prost(string, tag = "8")]
-    pub developer_email: ::prost::alloc::string::String,
-    /// Optional. The terms of service URL.
-    #[prost(string, tag = "9")]
-    pub terms_of_service_url: ::prost::alloc::string::String,
-    /// Required. The Google Assistant voice type that users hear when they interact with
-    /// your Actions. The supported values are "male_1", "male_2", "female_1", and
-    /// "female_2".
-    #[prost(string, tag = "10")]
-    pub voice: ::prost::alloc::string::String,
-    /// Optional. The locale for the specified voice. If not specified, this resolves
-    /// to the user's Assistant locale. If specified, the voice locale must have
-    /// the same root language as the locale specified in LocalizedSettings.
-    #[prost(string, tag = "14")]
-    pub voice_locale: ::prost::alloc::string::String,
-    /// Required. The privacy policy URL.
-    #[prost(string, tag = "11")]
-    pub privacy_policy_url: ::prost::alloc::string::String,
-    /// Optional. Sample invocation phrases displayed as part of your Actions project's
-    /// description in the Assistant directory. This will help users learn how to
-    /// use it.
-    #[prost(string, repeated, tag = "12")]
-    pub sample_invocations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Theme customizations for visual components of your Actions.
-    #[prost(message, optional, tag = "13")]
-    pub theme_customization: ::core::option::Option<ThemeCustomization>,
-}
-/// Contains a set of requirements that the client surface must support to invoke
-/// Actions in your project.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SurfaceRequirements {
-    /// The minimum set of capabilities needed to invoke the Actions in your
-    /// project. If the surface is missing any of these, the Action will not be
-    /// triggered.
-    #[prost(message, repeated, tag = "1")]
-    pub minimum_requirements: ::prost::alloc::vec::Vec<CapabilityRequirement>,
-}
-/// Represents a requirement about the availability of a given capability.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CapabilityRequirement {
-    /// The type of capability.
-    #[prost(enumeration = "capability_requirement::SurfaceCapability", tag = "1")]
-    pub capability: i32,
-}
-/// Nested message and enum types in `CapabilityRequirement`.
-pub mod capability_requirement {
-    /// Possible set of surface capabilities.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SurfaceCapability {
-        /// Unknown / Unspecified.
-        Unspecified = 0,
-        /// Surface supports audio output.
-        AudioOutput = 1,
-        /// Surface supports screen/visual output.
-        ScreenOutput = 2,
-        /// Surface supports media response audio.
-        MediaResponseAudio = 3,
-        /// Surface supports web browsers.
-        WebBrowser = 4,
-        /// Surface supports account linking.
-        AccountLinking = 7,
-        /// Surface supports Interactive Canvas.
-        InteractiveCanvas = 8,
-        /// Surface supports home storage.
-        HomeStorage = 9,
-    }
-    impl SurfaceCapability {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
-                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
-                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
-                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
-                SurfaceCapability::WebBrowser => "WEB_BROWSER",
-                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
-                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
-                SurfaceCapability::HomeStorage => "HOME_STORAGE",
             }
         }
     }
@@ -1599,6 +1553,52 @@ pub mod config_file {
         #[prost(message, tag = "12")]
         ResourceBundle(::prost_types::Struct),
     }
+}
+/// Wrapper for repeated validation result.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResults {
+    /// Multiple validation results.
+    #[prost(message, repeated, tag = "1")]
+    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
+}
+/// Represents a validation result associated with the app content.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResult {
+    /// Holds the validation message.
+    #[prost(string, tag = "1")]
+    pub validation_message: ::prost::alloc::string::String,
+    /// Context to identify the resource the validation message relates to.
+    #[prost(message, optional, tag = "2")]
+    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
+}
+/// Nested message and enum types in `ValidationResult`.
+pub mod validation_result {
+    /// Context to identify the resource the validation message relates to.
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValidationContext {
+        /// Language code of the lozalized resource.
+        /// Empty if the error is for non-localized resource.
+        /// See the list of supported languages in
+        /// <https://developers.google.com/assistant/console/languages-locales>
+        #[prost(string, tag = "1")]
+        pub language_code: ::prost::alloc::string::String,
+    }
+}
+/// Definition of release channel resource.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseChannel {
+    /// The unique name of the release channel in the following format.
+    /// `projects/{project}/releaseChannels/{release_channel}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Version currently deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag = "2")]
+    pub current_version: ::prost::alloc::string::String,
+    /// Version to be deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag = "3")]
+    pub pending_version: ::prost::alloc::string::String,
 }
 /// Wrapper for repeated data file. Repeated fields cannot exist in a oneof.
 #[derive(Clone, PartialEq, ::prost::Message)]
