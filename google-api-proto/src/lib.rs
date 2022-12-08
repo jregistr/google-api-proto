@@ -328,6 +328,7 @@ pub mod cloud;
         feature = "google-cloud-vision-v1p2beta1",
         feature = "google-cloud-vision-v1p3beta1",
         feature = "google-cloud-vision-v1p4beta1",
+        feature = "google-cloud-visionai-v1",
         feature = "google-cloud-visionai-v1alpha1",
         feature = "google-cloud-vmmigration-v1",
         feature = "google-cloud-vmwareengine-v1",

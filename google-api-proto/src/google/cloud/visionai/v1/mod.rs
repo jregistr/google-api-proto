@@ -164,7 +164,7 @@ pub struct ListCorporaRequest {
     pub page_size: i32,
     /// A token identifying a page of results for the server to return.
     /// Typically obtained via \[ListCorpora.next_page_token][\] of the previous
-    /// \[Warehouse.ListCorpora][google.cloud.visionai.v1alpha1.Warehouse.ListCorpora\]
+    /// \[Warehouse.ListCorpora][google.cloud.visionai.v1.Warehouse.ListCorpora\]
     /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
@@ -177,7 +177,7 @@ pub struct ListCorporaResponse {
     pub corpora: ::prost::alloc::vec::Vec<Corpus>,
     /// A token to retrieve next page of results.
     /// Pass to
-    /// \[ListCorporaRequest.page_token][google.cloud.visionai.v1alpha1.ListCorporaRequest.page_token\]
+    /// \[ListCorporaRequest.page_token][google.cloud.visionai.v1.ListCorporaRequest.page_token\]
     /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
@@ -1536,7 +1536,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/CreateAsset",
+                "/google.cloud.visionai.v1.Warehouse/CreateAsset",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1556,7 +1556,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/UpdateAsset",
+                "/google.cloud.visionai.v1.Warehouse/UpdateAsset",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1576,7 +1576,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GetAsset",
+                "/google.cloud.visionai.v1.Warehouse/GetAsset",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1596,7 +1596,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ListAssets",
+                "/google.cloud.visionai.v1.Warehouse/ListAssets",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1619,7 +1619,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/DeleteAsset",
+                "/google.cloud.visionai.v1.Warehouse/DeleteAsset",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1642,7 +1642,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/CreateCorpus",
+                "/google.cloud.visionai.v1.Warehouse/CreateCorpus",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1662,7 +1662,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GetCorpus",
+                "/google.cloud.visionai.v1.Warehouse/GetCorpus",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1682,7 +1682,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/UpdateCorpus",
+                "/google.cloud.visionai.v1.Warehouse/UpdateCorpus",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1702,7 +1702,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ListCorpora",
+                "/google.cloud.visionai.v1.Warehouse/ListCorpora",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1723,7 +1723,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/DeleteCorpus",
+                "/google.cloud.visionai.v1.Warehouse/DeleteCorpus",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1743,7 +1743,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/CreateDataSchema",
+                "/google.cloud.visionai.v1.Warehouse/CreateDataSchema",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1763,7 +1763,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/UpdateDataSchema",
+                "/google.cloud.visionai.v1.Warehouse/UpdateDataSchema",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1783,7 +1783,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GetDataSchema",
+                "/google.cloud.visionai.v1.Warehouse/GetDataSchema",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1803,7 +1803,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/DeleteDataSchema",
+                "/google.cloud.visionai.v1.Warehouse/DeleteDataSchema",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1823,7 +1823,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ListDataSchemas",
+                "/google.cloud.visionai.v1.Warehouse/ListDataSchemas",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1843,7 +1843,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/CreateAnnotation",
+                "/google.cloud.visionai.v1.Warehouse/CreateAnnotation",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1863,7 +1863,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GetAnnotation",
+                "/google.cloud.visionai.v1.Warehouse/GetAnnotation",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1883,7 +1883,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ListAnnotations",
+                "/google.cloud.visionai.v1.Warehouse/ListAnnotations",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1903,7 +1903,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/UpdateAnnotation",
+                "/google.cloud.visionai.v1.Warehouse/UpdateAnnotation",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1923,7 +1923,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/DeleteAnnotation",
+                "/google.cloud.visionai.v1.Warehouse/DeleteAnnotation",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1951,7 +1951,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/IngestAsset",
+                "/google.cloud.visionai.v1.Warehouse/IngestAsset",
             );
             self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
@@ -1975,7 +1975,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ClipAsset",
+                "/google.cloud.visionai.v1.Warehouse/ClipAsset",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1997,7 +1997,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GenerateHlsUri",
+                "/google.cloud.visionai.v1.Warehouse/GenerateHlsUri",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2031,7 +2031,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/CreateSearchConfig",
+                "/google.cloud.visionai.v1.Warehouse/CreateSearchConfig",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2064,7 +2064,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/UpdateSearchConfig",
+                "/google.cloud.visionai.v1.Warehouse/UpdateSearchConfig",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2084,7 +2084,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/GetSearchConfig",
+                "/google.cloud.visionai.v1.Warehouse/GetSearchConfig",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2107,7 +2107,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/DeleteSearchConfig",
+                "/google.cloud.visionai.v1.Warehouse/DeleteSearchConfig",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2127,7 +2127,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/ListSearchConfigs",
+                "/google.cloud.visionai.v1.Warehouse/ListSearchConfigs",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2147,7 +2147,7 @@ pub mod warehouse_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.Warehouse/SearchAssets",
+                "/google.cloud.visionai.v1.Warehouse/SearchAssets",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -2899,13 +2899,6 @@ pub mod stream_annotation {
         CrossingLine(super::NormalizedPolyline),
     }
 }
-/// A wrapper of repeated StreamAnnotation.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StreamAnnotations {
-    /// Multiple annotations.
-    #[prost(message, repeated, tag = "1")]
-    pub stream_annotations: ::prost::alloc::vec::Vec<StreamAnnotation>,
-}
 /// Normalized Polygon.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NormalizedPolygon {
@@ -2933,104 +2926,6 @@ pub struct NormalizedVertex {
     /// Y coordinate.
     #[prost(float, tag = "2")]
     pub y: f32,
-}
-/// Message of essential metadata of App Platform.
-/// This message is usually attached to a certain processor output annotation for
-/// customer to identify the source of the data.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AppPlatformMetadata {
-    /// The application resource name.
-    #[prost(string, tag = "1")]
-    pub application: ::prost::alloc::string::String,
-    /// The instance resource id. Instance is the nested resource of application
-    /// under collection 'instances'.
-    #[prost(string, tag = "2")]
-    pub instance_id: ::prost::alloc::string::String,
-    /// The node name of the application graph.
-    #[prost(string, tag = "3")]
-    pub node: ::prost::alloc::string::String,
-    /// The referred processor resource name of the application node.
-    #[prost(string, tag = "4")]
-    pub processor: ::prost::alloc::string::String,
-}
-/// For any cloud function based customer processing logic, customer's cloud
-/// function is expected to receive AppPlatformCloudFunctionRequest as request
-/// and send back AppPlatformCloudFunctionResponse as response.
-/// Message of request from AppPlatform to Cloud Function.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AppPlatformCloudFunctionRequest {
-    /// The metadata of the AppPlatform for customer to identify the source of the
-    /// payload.
-    #[prost(message, optional, tag = "1")]
-    pub app_platform_metadata: ::core::option::Option<AppPlatformMetadata>,
-    /// The actual annotations to be processed by the customized Cloud Function.
-    #[prost(message, repeated, tag = "2")]
-    pub annotations: ::prost::alloc::vec::Vec<
-        app_platform_cloud_function_request::StructedInputAnnotation,
-    >,
-}
-/// Nested message and enum types in `AppPlatformCloudFunctionRequest`.
-pub mod app_platform_cloud_function_request {
-    /// A general annotation message that uses struct format to represent different
-    /// concrete annotation protobufs.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StructedInputAnnotation {
-        /// The ingestion time of the current annotation.
-        #[prost(int64, tag = "1")]
-        pub ingestion_time_micros: i64,
-        /// The struct format of the actual annotation.
-        #[prost(message, optional, tag = "2")]
-        pub annotation: ::core::option::Option<::prost_types::Struct>,
-    }
-}
-/// Message of the response from customer's Cloud Function to AppPlatform.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AppPlatformCloudFunctionResponse {
-    /// The modified annotations that is returned back to AppPlatform.
-    /// If the annotations fields are empty, then those annotations will be dropped
-    /// by AppPlatform.
-    #[prost(message, repeated, tag = "2")]
-    pub annotations: ::prost::alloc::vec::Vec<
-        app_platform_cloud_function_response::StructedOutputAnnotation,
-    >,
-    /// If set to true, AppPlatform will use original annotations instead of
-    /// dropping them, even if it is empty in the annotations filed.
-    #[prost(bool, tag = "3")]
-    pub annotation_passthrough: bool,
-    /// The event notifications that is returned back to AppPlatform. Typically it
-    /// will then be configured to be consumed/forwared to a operator that handles
-    /// events, such as Pub/Sub operator.
-    #[prost(message, repeated, tag = "4")]
-    pub events: ::prost::alloc::vec::Vec<AppPlatformEventBody>,
-}
-/// Nested message and enum types in `AppPlatformCloudFunctionResponse`.
-pub mod app_platform_cloud_function_response {
-    /// A general annotation message that uses struct format to represent different
-    /// concrete annotation protobufs.
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StructedOutputAnnotation {
-        /// The struct format of the actual annotation.
-        #[prost(message, optional, tag = "1")]
-        pub annotation: ::core::option::Option<::prost_types::Struct>,
-    }
-}
-/// Message of content of appPlatform event
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AppPlatformEventBody {
-    /// Human readable string of the event like "There are more than 6 people in
-    /// the scene". or "Shelf is empty!".
-    #[prost(string, tag = "1")]
-    pub event_message: ::prost::alloc::string::String,
-    /// For the case of Pub/Sub, it will be stored in the message attributes.
-    /// ​​pubsub.proto
-    #[prost(message, optional, tag = "2")]
-    pub payload: ::core::option::Option<::prost_types::Struct>,
-    /// User defined Event Id, used to classify event, within a delivery interval,
-    /// events from the same application instance with the same id will be
-    /// de-duplicated & only first one will be sent out. Empty event_id will be
-    /// treated as "".
-    #[prost(string, tag = "3")]
-    pub event_id: ::prost::alloc::string::String,
 }
 /// Enum describing all possible types of a stream annotation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -5061,7 +4956,7 @@ pub struct MachineSpec {
     pub machine_type: ::prost::alloc::string::String,
     /// Immutable. The type of accelerator(s) that may be attached to the machine
     /// as per
-    /// \[accelerator_count][google.cloud.visionai.v1alpha1.MachineSpec.accelerator_count\].
+    /// \[accelerator_count][google.cloud.visionai.v1.MachineSpec.accelerator_count\].
     #[prost(enumeration = "AcceleratorType", tag = "2")]
     pub accelerator_type: i32,
     /// The number of accelerators to attach to the machine.
@@ -5112,7 +5007,7 @@ pub struct DedicatedResources {
     /// service outages). If traffic against the DeployedModel increases beyond
     /// what its replicas at maximum may handle, a portion of the traffic will be
     /// dropped. If this value is not provided, will use
-    /// \[min_replica_count][google.cloud.visionai.v1alpha1.DedicatedResources.min_replica_count\]
+    /// \[min_replica_count][google.cloud.visionai.v1.DedicatedResources.min_replica_count\]
     /// as the default value.
     ///
     /// The value of this field impacts the charge against Vertex CPU and GPU
@@ -5127,22 +5022,22 @@ pub struct DedicatedResources {
     /// metric.
     ///
     /// If
-    /// \[machine_spec.accelerator_count][google.cloud.visionai.v1alpha1.MachineSpec.accelerator_count\]
+    /// \[machine_spec.accelerator_count][google.cloud.visionai.v1.MachineSpec.accelerator_count\]
     /// is above 0, the autoscaling will be based on both CPU utilization and
     /// accelerator's duty cycle metrics and scale up when either metrics exceeds
     /// its target value while scale down if both metrics are under their target
     /// value. The default target value is 60 for both metrics.
     ///
     /// If
-    /// \[machine_spec.accelerator_count][google.cloud.visionai.v1alpha1.MachineSpec.accelerator_count\]
+    /// \[machine_spec.accelerator_count][google.cloud.visionai.v1.MachineSpec.accelerator_count\]
     /// is 0, the autoscaling will be based on CPU utilization metric only with
     /// default target value 60 if not explicitly set.
     ///
     /// For example, in the case of Online Prediction, if you want to override
     /// target CPU utilization to 80, you should set
-    /// \[autoscaling_metric_specs.metric_name][google.cloud.visionai.v1alpha1.AutoscalingMetricSpec.metric_name\]
+    /// \[autoscaling_metric_specs.metric_name][google.cloud.visionai.v1.AutoscalingMetricSpec.metric_name\]
     /// to `aiplatform.googleapis.com/prediction/online/cpu/utilization` and
-    /// \[autoscaling_metric_specs.target][google.cloud.visionai.v1alpha1.AutoscalingMetricSpec.target\]
+    /// \[autoscaling_metric_specs.target][google.cloud.visionai.v1.AutoscalingMetricSpec.target\]
     /// to `80`.
     #[prost(message, repeated, tag = "4")]
     pub autoscaling_metric_specs: ::prost::alloc::vec::Vec<AutoscalingMetricSpec>,
@@ -5331,7 +5226,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/ListApplications",
+                "/google.cloud.visionai.v1.AppPlatform/ListApplications",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5351,7 +5246,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/GetApplication",
+                "/google.cloud.visionai.v1.AppPlatform/GetApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5374,7 +5269,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/CreateApplication",
+                "/google.cloud.visionai.v1.AppPlatform/CreateApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5397,7 +5292,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UpdateApplication",
+                "/google.cloud.visionai.v1.AppPlatform/UpdateApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5420,7 +5315,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/DeleteApplication",
+                "/google.cloud.visionai.v1.AppPlatform/DeleteApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5443,7 +5338,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/DeployApplication",
+                "/google.cloud.visionai.v1.AppPlatform/DeployApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5466,7 +5361,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UndeployApplication",
+                "/google.cloud.visionai.v1.AppPlatform/UndeployApplication",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5492,7 +5387,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/AddApplicationStreamInput",
+                "/google.cloud.visionai.v1.AppPlatform/AddApplicationStreamInput",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5517,7 +5412,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/RemoveApplicationStreamInput",
+                "/google.cloud.visionai.v1.AppPlatform/RemoveApplicationStreamInput",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5542,7 +5437,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UpdateApplicationStreamInput",
+                "/google.cloud.visionai.v1.AppPlatform/UpdateApplicationStreamInput",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5562,7 +5457,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/ListInstances",
+                "/google.cloud.visionai.v1.AppPlatform/ListInstances",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5582,7 +5477,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/GetInstance",
+                "/google.cloud.visionai.v1.AppPlatform/GetInstance",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5608,7 +5503,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/CreateApplicationInstances",
+                "/google.cloud.visionai.v1.AppPlatform/CreateApplicationInstances",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5633,7 +5528,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/DeleteApplicationInstances",
+                "/google.cloud.visionai.v1.AppPlatform/DeleteApplicationInstances",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5659,7 +5554,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UpdateApplicationInstances",
+                "/google.cloud.visionai.v1.AppPlatform/UpdateApplicationInstances",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5679,7 +5574,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/ListDrafts",
+                "/google.cloud.visionai.v1.AppPlatform/ListDrafts",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5699,7 +5594,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/GetDraft",
+                "/google.cloud.visionai.v1.AppPlatform/GetDraft",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5722,7 +5617,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/CreateDraft",
+                "/google.cloud.visionai.v1.AppPlatform/CreateDraft",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5745,7 +5640,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UpdateDraft",
+                "/google.cloud.visionai.v1.AppPlatform/UpdateDraft",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5768,7 +5663,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/DeleteDraft",
+                "/google.cloud.visionai.v1.AppPlatform/DeleteDraft",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5788,7 +5683,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/ListProcessors",
+                "/google.cloud.visionai.v1.AppPlatform/ListProcessors",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5812,7 +5707,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/ListPrebuiltProcessors",
+                "/google.cloud.visionai.v1.AppPlatform/ListPrebuiltProcessors",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5832,7 +5727,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/GetProcessor",
+                "/google.cloud.visionai.v1.AppPlatform/GetProcessor",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5855,7 +5750,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/CreateProcessor",
+                "/google.cloud.visionai.v1.AppPlatform/CreateProcessor",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5878,7 +5773,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/UpdateProcessor",
+                "/google.cloud.visionai.v1.AppPlatform/UpdateProcessor",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -5901,7 +5796,7 @@ pub mod app_platform_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.AppPlatform/DeleteProcessor",
+                "/google.cloud.visionai.v1.AppPlatform/DeleteProcessor",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6317,6 +6212,35 @@ pub struct DeleteStreamRequest {
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
 }
+/// Message for getting the thumbnail of a Stream.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStreamThumbnailRequest {
+    /// Required. The name of the stream for to get the thumbnail from.
+    #[prost(string, tag = "1")]
+    pub stream: ::prost::alloc::string::String,
+    /// Required. The name of the GCS object to store the thumbnail image.
+    #[prost(string, tag = "2")]
+    pub gcs_object_name: ::prost::alloc::string::String,
+    /// Optional. The name of the event. If unspecified, the thumbnail will be retrieved from
+    /// the latest event.
+    #[prost(string, tag = "3")]
+    pub event: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify the requests. Specify a unique request
+    /// ID so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
 /// Message for the response of GetStreamThumbnail. The empty response message
 /// indicates the thumbnail image has been uploaded to GCS successfully.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6687,7 +6611,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/ListClusters",
+                "/google.cloud.visionai.v1.StreamsService/ListClusters",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6707,7 +6631,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/GetCluster",
+                "/google.cloud.visionai.v1.StreamsService/GetCluster",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6730,7 +6654,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/CreateCluster",
+                "/google.cloud.visionai.v1.StreamsService/CreateCluster",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6753,7 +6677,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/UpdateCluster",
+                "/google.cloud.visionai.v1.StreamsService/UpdateCluster",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6776,7 +6700,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/DeleteCluster",
+                "/google.cloud.visionai.v1.StreamsService/DeleteCluster",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6796,7 +6720,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/ListStreams",
+                "/google.cloud.visionai.v1.StreamsService/ListStreams",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6816,7 +6740,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/GetStream",
+                "/google.cloud.visionai.v1.StreamsService/GetStream",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6839,7 +6763,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/CreateStream",
+                "/google.cloud.visionai.v1.StreamsService/CreateStream",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6862,7 +6786,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/UpdateStream",
+                "/google.cloud.visionai.v1.StreamsService/UpdateStream",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6885,7 +6809,30 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/DeleteStream",
+                "/google.cloud.visionai.v1.StreamsService/DeleteStream",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the thumbnail (image snapshot) of a single Stream.
+        pub async fn get_stream_thumbnail(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStreamThumbnailRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetStreamThumbnail",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6908,7 +6855,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/GenerateStreamHlsToken",
+                "/google.cloud.visionai.v1.StreamsService/GenerateStreamHlsToken",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6928,7 +6875,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/ListEvents",
+                "/google.cloud.visionai.v1.StreamsService/ListEvents",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6948,7 +6895,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/GetEvent",
+                "/google.cloud.visionai.v1.StreamsService/GetEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6971,7 +6918,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/CreateEvent",
+                "/google.cloud.visionai.v1.StreamsService/CreateEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -6994,7 +6941,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/UpdateEvent",
+                "/google.cloud.visionai.v1.StreamsService/UpdateEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7017,7 +6964,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/DeleteEvent",
+                "/google.cloud.visionai.v1.StreamsService/DeleteEvent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7037,7 +6984,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/ListSeries",
+                "/google.cloud.visionai.v1.StreamsService/ListSeries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7057,7 +7004,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/GetSeries",
+                "/google.cloud.visionai.v1.StreamsService/GetSeries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7080,7 +7027,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/CreateSeries",
+                "/google.cloud.visionai.v1.StreamsService/CreateSeries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7103,7 +7050,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/UpdateSeries",
+                "/google.cloud.visionai.v1.StreamsService/UpdateSeries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7126,7 +7073,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/DeleteSeries",
+                "/google.cloud.visionai.v1.StreamsService/DeleteSeries",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7149,7 +7096,7 @@ pub mod streams_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamsService/MaterializeChannel",
+                "/google.cloud.visionai.v1.StreamsService/MaterializeChannel",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7657,7 +7604,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/SendPackets",
+                "/google.cloud.visionai.v1.StreamingService/SendPackets",
             );
             self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
@@ -7682,7 +7629,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/ReceivePackets",
+                "/google.cloud.visionai.v1.StreamingService/ReceivePackets",
             );
             self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
@@ -7707,7 +7654,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/ReceiveEvents",
+                "/google.cloud.visionai.v1.StreamingService/ReceiveEvents",
             );
             self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
@@ -7727,7 +7674,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/AcquireLease",
+                "/google.cloud.visionai.v1.StreamingService/AcquireLease",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7747,7 +7694,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/RenewLease",
+                "/google.cloud.visionai.v1.StreamingService/RenewLease",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7767,7 +7714,7 @@ pub mod streaming_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.StreamingService/ReleaseLease",
+                "/google.cloud.visionai.v1.StreamingService/ReleaseLease",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8119,7 +8066,7 @@ pub mod live_video_analytics_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.LiveVideoAnalytics/ListAnalyses",
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListAnalyses",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8139,7 +8086,7 @@ pub mod live_video_analytics_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.LiveVideoAnalytics/GetAnalysis",
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetAnalysis",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8162,7 +8109,7 @@ pub mod live_video_analytics_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.LiveVideoAnalytics/CreateAnalysis",
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateAnalysis",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8185,7 +8132,7 @@ pub mod live_video_analytics_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.LiveVideoAnalytics/UpdateAnalysis",
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateAnalysis",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -8208,7 +8155,7 @@ pub mod live_video_analytics_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1alpha1.LiveVideoAnalytics/DeleteAnalysis",
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteAnalysis",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
