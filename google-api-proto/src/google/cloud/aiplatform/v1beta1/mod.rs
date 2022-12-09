@@ -13237,6 +13237,15 @@ pub struct UploadModelRequest {
     /// Required. The Model to create.
     #[prost(message, optional, tag = "2")]
     pub model: ::core::option::Option<Model>,
+    /// Optional. The user-provided custom service account to use to do the model
+    /// upload. If empty, [Vertex AI Service
+    /// Agent](<https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents>)
+    /// will be used. Users uploading the Model must have the
+    /// `iam.serviceAccounts.actAs` permission on this service account. Also, this
+    /// account must belong to the project specified in the `parent` field and have
+    /// all necessary read permissions.
+    #[prost(string, tag = "6")]
+    pub service_account: ::prost::alloc::string::String,
 }
 /// Details of \[ModelService.UploadModel][google.cloud.aiplatform.v1beta1.ModelService.UploadModel\] operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
