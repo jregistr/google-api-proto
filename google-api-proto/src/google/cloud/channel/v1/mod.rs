@@ -1,8 +1,9 @@
-/// Request message for \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
+/// Request message for
+/// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReportJobRequest {
-    /// Required. The report's resource name. Specifies the account and report used to
-    /// generate report data. The report_id identifier is a UID (for example,
+    /// Required. The report's resource name. Specifies the account and report used
+    /// to generate report data. The report_id identifier is a UID (for example,
     /// `613bf59q`).
     /// Name uses the format:
     /// accounts/{account_id}/reports/{report_id}
@@ -11,8 +12,8 @@ pub struct RunReportJobRequest {
     /// Optional. The range of usage or invoice dates to include in the result.
     #[prost(message, optional, tag = "2")]
     pub date_range: ::core::option::Option<DateRange>,
-    /// Optional. A structured string that defines conditions on dimension columns to
-    /// restrict the report output.
+    /// Optional. A structured string that defines conditions on dimension columns
+    /// to restrict the report output.
     ///
     /// Filters support logical operators (AND, OR, NOT) and conditional operators
     /// (=, !=, <, >, <=, and >=) using `column_id` as keys.
@@ -30,10 +31,12 @@ pub struct RunReportJobRequest {
     #[prost(string, tag = "4")]
     pub language_code: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
+/// Response message for
+/// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReportJobResponse {
-    /// Pass `report_job.name` to \[FetchReportResultsRequest.report_job][google.cloud.channel.v1.FetchReportResultsRequest.report_job\]
+    /// Pass `report_job.name` to
+    /// \[FetchReportResultsRequest.report_job][google.cloud.channel.v1.FetchReportResultsRequest.report_job\]
     /// to retrieve the report's results.
     #[prost(message, optional, tag = "1")]
     pub report_job: ::core::option::Option<ReportJob>,
@@ -43,17 +46,19 @@ pub struct RunReportJobResponse {
     #[prost(message, optional, tag = "2")]
     pub report_metadata: ::core::option::Option<ReportResultsMetadata>,
 }
-/// Request message for \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
+/// Request message for
+/// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchReportResultsRequest {
-    /// Required. The report job created by \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
+    /// Required. The report job created by
+    /// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
     /// Report_job uses the format:
     /// accounts/{account_id}/reportJobs/{report_job_id}
     #[prost(string, tag = "1")]
     pub report_job: ::prost::alloc::string::String,
-    /// Optional. Requested page size of the report. The server may return fewer results than
-    /// requested. If you don't specify a page size, the server uses a sensible
-    /// default (may change over time).
+    /// Optional. Requested page size of the report. The server may return fewer
+    /// results than requested. If you don't specify a page size, the server uses a
+    /// sensible default (may change over time).
     ///
     /// The maximum value is 30,000; the server will change larger values to
     /// 30,000.
@@ -61,12 +66,15 @@ pub struct FetchReportResultsRequest {
     pub page_size: i32,
     /// Optional. A token that specifies a page of results beyond the first page.
     /// Obtained through
-    /// \[FetchReportResultsResponse.next_page_token][google.cloud.channel.v1.FetchReportResultsResponse.next_page_token\] of the previous
-    /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\] call.
+    /// \[FetchReportResultsResponse.next_page_token][google.cloud.channel.v1.FetchReportResultsResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
+/// Response message for
+/// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
 /// Contains a tabular representation of the report results.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchReportResultsResponse {
@@ -78,28 +86,31 @@ pub struct FetchReportResultsResponse {
     /// of the columns from `report_metadata`.
     #[prost(message, repeated, tag = "2")]
     pub rows: ::prost::alloc::vec::Vec<Row>,
-    /// Pass this token to \[FetchReportResultsRequest.page_token][google.cloud.channel.v1.FetchReportResultsRequest.page_token\] to retrieve
-    /// the next page of results.
+    /// Pass this token to
+    /// \[FetchReportResultsRequest.page_token][google.cloud.channel.v1.FetchReportResultsRequest.page_token\]
+    /// to retrieve the next page of results.
     #[prost(string, tag = "3")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
+/// Request message for
+/// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReportsRequest {
-    /// Required. The resource name of the partner account to list available reports for.
-    /// Parent uses the format:
-    /// accounts/{account_id}
+    /// Required. The resource name of the partner account to list available
+    /// reports for. Parent uses the format: accounts/{account_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. Requested page size of the report. The server might return fewer results
-    /// than requested. If unspecified, returns 20 reports.
-    /// The maximum value is 100.
+    /// Optional. Requested page size of the report. The server might return fewer
+    /// results than requested. If unspecified, returns 20 reports. The maximum
+    /// value is 100.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token that specifies a page of results beyond the first page.
     /// Obtained through
-    /// \[ListReportsResponse.next_page_token][google.cloud.channel.v1.ListReportsResponse.next_page_token\] of the previous
-    /// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\] call.
+    /// \[ListReportsResponse.next_page_token][google.cloud.channel.v1.ListReportsResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. The BCP-47 language code, such as "en-US".  If specified, the
@@ -109,19 +120,22 @@ pub struct ListReportsRequest {
     #[prost(string, tag = "4")]
     pub language_code: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
+/// Response message for
+/// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReportsResponse {
     /// The reports available to the partner.
     #[prost(message, repeated, tag = "1")]
     pub reports: ::prost::alloc::vec::Vec<Report>,
-    /// Pass this token to \[FetchReportResultsRequest.page_token][google.cloud.channel.v1.FetchReportResultsRequest.page_token\] to retrieve
-    /// the next page of results.
+    /// Pass this token to
+    /// \[FetchReportResultsRequest.page_token][google.cloud.channel.v1.FetchReportResultsRequest.page_token\]
+    /// to retrieve the next page of results.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The result of a \[RunReportJob][\] operation. Contains the name to use in
-/// \[FetchReportResultsRequest.report_job][google.cloud.channel.v1.FetchReportResultsRequest.report_job\] and the status of the operation.
+/// \[FetchReportResultsRequest.report_job][google.cloud.channel.v1.FetchReportResultsRequest.report_job\]
+/// and the status of the operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportJob {
     /// Required. The resource name of a report job.
@@ -134,7 +148,8 @@ pub struct ReportJob {
     pub report_status: ::core::option::Option<ReportStatus>,
 }
 /// The features describing the data. Returned by
-/// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\] and
+/// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\]
+/// and
 /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportResultsMetadata {
@@ -363,9 +378,9 @@ pub mod report_status {
 /// For example, "GCP Daily Spend", "Google Workspace License Activity", etc.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Report {
-    /// Required. The report's resource name. Specifies the account and report used to
-    /// generate report data. The report_id identifier is a UID
-    /// (for example, `613bf59q`).
+    /// Required. The report's resource name. Specifies the account and report used
+    /// to generate report data. The report_id identifier is a UID (for example,
+    /// `613bf59q`).
     ///
     /// Name uses the format:
     /// accounts/{account_id}/reports/{report_id}
@@ -469,7 +484,8 @@ pub mod cloud_channel_reports_service_client {
         /// instance of [OperationMetadata][google.cloud.channel.v1.OperationMetadata].
         ///
         /// To get the results of report generation, call
-        /// [CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults] with the
+        /// [CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults]
+        /// with the
         /// [RunReportJobResponse.report_job][google.cloud.channel.v1.RunReportJobResponse.report_job].
         pub async fn run_report_job(
             &mut self,
@@ -493,7 +509,8 @@ pub mod cloud_channel_reports_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Retrieves data generated by [CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob].
+        /// Retrieves data generated by
+        /// [CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob].
         pub async fn fetch_report_results(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchReportResultsRequest>,
@@ -769,15 +786,17 @@ pub struct ChannelPartnerLink {
     /// Output only. Timestamp of when the channel partner link is updated.
     #[prost(message, optional, tag = "6")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Public identifier that a customer must use to generate a transfer token
-    /// to move to this distributor-reseller combination.
+    /// Output only. Public identifier that a customer must use to generate a
+    /// transfer token to move to this distributor-reseller combination.
     #[prost(string, tag = "7")]
     pub public_id: ::prost::alloc::string::String,
     /// Output only. Cloud Identity info of the channel partner (IR).
     #[prost(message, optional, tag = "8")]
     pub channel_partner_cloud_identity_info: ::core::option::Option<CloudIdentityInfo>,
 }
-/// The level of granularity the \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\] will display.
+/// The level of granularity the
+/// \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\] will
+/// display.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum ChannelPartnerLinkView {
@@ -994,8 +1013,8 @@ impl MediaType {
     }
 }
 /// Represents an offer made to resellers for purchase.
-/// An offer is associated with a \[Sku][google.cloud.channel.v1.Sku\], has a plan for payment, a price, and
-/// defines the constraints for buying.
+/// An offer is associated with a \[Sku][google.cloud.channel.v1.Sku\], has a plan
+/// for payment, a price, and defines the constraints for buying.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Offer {
     /// Resource Name of the Offer.
@@ -1412,7 +1431,8 @@ pub struct Entitlement {
     /// Output only. Service provisioning details for the entitlement.
     #[prost(message, optional, tag = "16")]
     pub provisioned_service: ::core::option::Option<ProvisionedService>,
-    /// Output only. Enumerable of all current suspension reasons for an entitlement.
+    /// Output only. Enumerable of all current suspension reasons for an
+    /// entitlement.
     #[prost(
         enumeration = "entitlement::SuspensionReason",
         repeated,
@@ -1420,11 +1440,11 @@ pub struct Entitlement {
         tag = "18"
     )]
     pub suspension_reasons: ::prost::alloc::vec::Vec<i32>,
-    /// Optional. This purchase order (PO) information is for resellers to use for their
-    /// company tracking usage. If a purchaseOrderId value is given, it appears in
-    /// the API responses and shows up in the invoice. The property accepts up to
-    /// 80 plain text characters. This is only supported for Google Workspace
-    /// entitlements.
+    /// Optional. This purchase order (PO) information is for resellers to use for
+    /// their company tracking usage. If a purchaseOrderId value is given, it
+    /// appears in the API responses and shows up in the invoice. The property
+    /// accepts up to 80 plain text characters. This is only supported for Google
+    /// Workspace entitlements.
     #[prost(string, tag = "19")]
     pub purchase_order_id: ::prost::alloc::string::String,
     /// Output only. Settings for trial offers.
@@ -1483,7 +1503,9 @@ pub mod entitlement {
             }
         }
     }
-    /// Suspension reason for an entitlement if \[provisioning_state][google.cloud.channel.v1.Entitlement.provisioning_state\] = SUSPENDED.
+    /// Suspension reason for an entitlement if
+    /// \[provisioning_state][google.cloud.channel.v1.Entitlement.provisioning_state\]
+    /// = SUSPENDED.
     #[derive(
         Clone,
         Copy,
@@ -1537,9 +1559,9 @@ pub struct Parameter {
     /// Value of the parameter.
     #[prost(message, optional, tag = "2")]
     pub value: ::core::option::Option<Value>,
-    /// Output only. Specifies whether this parameter is allowed to be changed. For example, for
-    /// a Google Workspace Business Starter entitlement in commitment plan,
-    /// num_units is editable when entitlement is active.
+    /// Output only. Specifies whether this parameter is allowed to be changed. For
+    /// example, for a Google Workspace Business Starter entitlement in commitment
+    /// plan, num_units is editable when entitlement is active.
     #[prost(bool, tag = "3")]
     pub editable: bool,
 }
@@ -1553,16 +1575,17 @@ pub struct AssociationInfo {
 /// Service provisioned for an entitlement.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProvisionedService {
-    /// Output only. Provisioning ID of the entitlement. For Google Workspace, this is the
-    /// underlying Subscription ID. For Google Cloud Platform, this is the
+    /// Output only. Provisioning ID of the entitlement. For Google Workspace, this
+    /// is the underlying Subscription ID. For Google Cloud Platform, this is the
     /// Billing Account ID of the billing subaccount."
     #[prost(string, tag = "1")]
     pub provisioning_id: ::prost::alloc::string::String,
-    /// Output only. The product pertaining to the provisioning resource as specified in the
-    /// Offer.
+    /// Output only. The product pertaining to the provisioning resource as
+    /// specified in the Offer.
     #[prost(string, tag = "2")]
     pub product_id: ::prost::alloc::string::String,
-    /// Output only. The SKU pertaining to the provisioning resource as specified in the Offer.
+    /// Output only. The SKU pertaining to the provisioning resource as specified
+    /// in the Offer.
     #[prost(string, tag = "3")]
     pub sku_id: ::prost::alloc::string::String,
 }
@@ -1623,7 +1646,8 @@ pub struct TransferableSku {
     /// The SKU pertaining to the provisioning resource as specified in the Offer.
     #[prost(message, optional, tag = "11")]
     pub sku: ::core::option::Option<Sku>,
-    /// Optional. The customer to transfer has an entitlement with the populated legacy SKU.
+    /// Optional. The customer to transfer has an entitlement with the populated
+    /// legacy SKU.
     #[prost(message, optional, tag = "12")]
     pub legacy_sku: ::core::option::Option<Sku>,
 }
@@ -1688,13 +1712,14 @@ pub struct CustomerRepricingConfig {
     /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller before
-    /// sending it to customers.
+    /// Required. The configuration for bill modifications made by a reseller
+    /// before sending it to customers.
     #[prost(message, optional, tag = "2")]
     pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
-    /// mid-month.
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
+    /// is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
+    /// then it indicates this was set mid-month.
     #[prost(message, optional, tag = "3")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
@@ -1707,21 +1732,22 @@ pub struct ChannelPartnerRepricingConfig {
     /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}/channelPartnerRepricingConfigs/{id}.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller before
-    /// sending it to ChannelPartner.
+    /// Required. The configuration for bill modifications made by a reseller
+    /// before sending it to ChannelPartner.
     #[prost(message, optional, tag = "2")]
     pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time` is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\] then it indicates this was set
-    /// mid-month.
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
+    /// is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
+    /// then it indicates this was set mid-month.
     #[prost(message, optional, tag = "3")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Configuration for repricing a Google bill over a period of time.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepricingConfig {
-    /// Required. The YearMonth when these adjustments activate. The Day field needs to be
-    /// "0" since we only accept YearMonth repricing boundaries.
+    /// Required. The YearMonth when these adjustments activate. The Day field
+    /// needs to be "0" since we only accept YearMonth repricing boundaries.
     #[prost(message, optional, tag = "1")]
     pub effective_invoice_month: ::core::option::Option<
         super::super::super::r#type::Date,
@@ -1729,10 +1755,16 @@ pub struct RepricingConfig {
     /// Required. Information about the adjustment.
     #[prost(message, optional, tag = "2")]
     pub adjustment: ::core::option::Option<RepricingAdjustment>,
-    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to use for this bill. Specifies the relative cost
-    /// based on repricing costs you will apply.
+    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
+    /// use for this bill. Specifies the relative cost based on repricing costs you
+    /// will apply.
     #[prost(enumeration = "RebillingBasis", tag = "3")]
     pub rebilling_basis: i32,
+    /// The conditional overrides to apply for this configuration. If you list
+    /// multiple overrides, only the first valid override is used.  If you don't
+    /// list any overrides, the API uses the normal adjustment and rebilling basis.
+    #[prost(message, repeated, tag = "6")]
+    pub conditional_overrides: ::prost::alloc::vec::Vec<ConditionalOverride>,
     /// Required. Defines the granularity for repricing.
     #[prost(oneof = "repricing_config::Granularity", tags = "4, 5")]
     pub granularity: ::core::option::Option<repricing_config::Granularity>,
@@ -1794,6 +1826,51 @@ pub struct PercentageAdjustment {
     #[prost(message, optional, tag = "2")]
     pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
 }
+/// Specifies the override to conditionally apply.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConditionalOverride {
+    /// Required. Information about the applied override's adjustment.
+    #[prost(message, optional, tag = "1")]
+    pub adjustment: ::core::option::Option<RepricingAdjustment>,
+    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
+    /// use for the applied override. Shows the relative cost based on your
+    /// repricing costs.
+    #[prost(enumeration = "RebillingBasis", tag = "2")]
+    pub rebilling_basis: i32,
+    /// Required. Specifies the condition which, if met, will apply the override.
+    #[prost(message, optional, tag = "3")]
+    pub repricing_condition: ::core::option::Option<RepricingCondition>,
+}
+/// Represents the various repricing conditions you can use for a conditional
+/// override.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingCondition {
+    /// Represents the types of existing conditional statements.
+    #[prost(oneof = "repricing_condition::Condition", tags = "1")]
+    pub condition: ::core::option::Option<repricing_condition::Condition>,
+}
+/// Nested message and enum types in `RepricingCondition`.
+pub mod repricing_condition {
+    /// Represents the types of existing conditional statements.
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Condition {
+        /// SKU Group condition for override.
+        #[prost(message, tag = "1")]
+        SkuGroupCondition(super::SkuGroupCondition),
+    }
+}
+/// A condition that applies the override if a line item SKU is found in the SKU
+/// group.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SkuGroupCondition {
+    /// Specifies a SKU group (<https://cloud.google.com/skus/sku-groups>).
+    /// Resource name of SKU group. Format:
+    /// accounts/{account}/skuGroups/{sku_group}.
+    /// Example:
+    /// "accounts/C01234/skuGroups/3d50fd57-3157-4577-a5a9-a219b8490041".
+    #[prost(string, tag = "1")]
+    pub sku_group: ::prost::alloc::string::String,
+}
 /// Specifies the different costs that the modified bill can be based on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1821,7 +1898,8 @@ impl RebillingBasis {
         }
     }
 }
-/// Request message for \[CloudChannelService.CheckCloudIdentityAccountsExist][google.cloud.channel.v1.CloudChannelService.CheckCloudIdentityAccountsExist\].
+/// Request message for
+/// \[CloudChannelService.CheckCloudIdentityAccountsExist][google.cloud.channel.v1.CloudChannelService.CheckCloudIdentityAccountsExist\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckCloudIdentityAccountsExistRequest {
     /// Required. The reseller account's resource name.
@@ -1861,42 +1939,50 @@ pub struct CheckCloudIdentityAccountsExistResponse {
     #[prost(message, repeated, tag = "1")]
     pub cloud_identity_accounts: ::prost::alloc::vec::Vec<CloudIdentityCustomerAccount>,
 }
-/// Request message for \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\]
+/// Request message for
+/// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomersRequest {
     /// Required. The resource name of the reseller account to list customers from.
     /// Parent uses the format: accounts/{account_id}.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of customers to return. The service may return fewer
-    /// than this value. If unspecified, returns at most 10 customers. The
+    /// Optional. The maximum number of customers to return. The service may return
+    /// fewer than this value. If unspecified, returns at most 10 customers. The
     /// maximum value is 50.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token identifying a page of results other than the first page.
     /// Obtained through
-    /// \[ListCustomersResponse.next_page_token][google.cloud.channel.v1.ListCustomersResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\] call.
+    /// \[ListCustomersResponse.next_page_token][google.cloud.channel.v1.ListCustomersResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
-    /// Optional. Filters applied to the \[CloudChannelService.ListCustomers\] results. See
+    /// Optional. Filters applied to the \[CloudChannelService.ListCustomers\]
+    /// results. See
     /// <https://cloud.google.com/channel/docs/concepts/google-cloud/filter-customers>
     /// for more information.
     #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\].
+/// Response message for
+/// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomersResponse {
     /// The customers belonging to a reseller or distributor.
     #[prost(message, repeated, tag = "1")]
     pub customers: ::prost::alloc::vec::Vec<Customer>,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListCustomersRequest.page_token][google.cloud.channel.v1.ListCustomersRequest.page_token\] to obtain that page.
+    /// Pass to
+    /// \[ListCustomersRequest.page_token][google.cloud.channel.v1.ListCustomersRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.GetCustomer][google.cloud.channel.v1.CloudChannelService.GetCustomer\].
+/// Request message for
+/// \[CloudChannelService.GetCustomer][google.cloud.channel.v1.CloudChannelService.GetCustomer\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCustomerRequest {
     /// Required. The resource name of the customer to retrieve.
@@ -1904,18 +1990,20 @@ pub struct GetCustomerRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.CreateCustomer][google.cloud.channel.v1.CloudChannelService.CreateCustomer\]
+/// Request message for
+/// \[CloudChannelService.CreateCustomer][google.cloud.channel.v1.CloudChannelService.CreateCustomer\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerRequest {
-    /// Required. The resource name of reseller account in which to create the customer.
-    /// Parent uses the format: accounts/{account_id}
+    /// Required. The resource name of reseller account in which to create the
+    /// customer. Parent uses the format: accounts/{account_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The customer to create.
     #[prost(message, optional, tag = "2")]
     pub customer: ::core::option::Option<Customer>,
 }
-/// Request message for \[CloudChannelService.UpdateCustomer][google.cloud.channel.v1.CloudChannelService.UpdateCustomer\].
+/// Request message for
+/// \[CloudChannelService.UpdateCustomer][google.cloud.channel.v1.CloudChannelService.UpdateCustomer\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCustomerRequest {
     /// Required. New contents of the customer.
@@ -1926,14 +2014,16 @@ pub struct UpdateCustomerRequest {
     #[prost(message, optional, tag = "3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
-/// Request message for \[CloudChannelService.DeleteCustomer][google.cloud.channel.v1.CloudChannelService.DeleteCustomer\].
+/// Request message for
+/// \[CloudChannelService.DeleteCustomer][google.cloud.channel.v1.CloudChannelService.DeleteCustomer\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCustomerRequest {
     /// Required. The resource name of the customer to delete.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ImportCustomer][google.cloud.channel.v1.CloudChannelService.ImportCustomer\]
+/// Request message for
+/// \[CloudChannelService.ImportCustomer][google.cloud.channel.v1.CloudChannelService.ImportCustomer\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCustomerRequest {
     /// Required. The resource name of the reseller's account.
@@ -1952,9 +2042,10 @@ pub struct ImportCustomerRequest {
     /// conflicting region code or domain.
     #[prost(bool, tag = "5")]
     pub overwrite_if_exists: bool,
-    /// Optional. Cloud Identity ID of a channel partner who will be the direct reseller for
-    /// the customer's order. This field is required for 2-tier transfer scenarios
-    /// and can be provided via the request Parent binding as well.
+    /// Optional. Cloud Identity ID of a channel partner who will be the direct
+    /// reseller for the customer's order. This field is required for 2-tier
+    /// transfer scenarios and can be provided via the request Parent binding as
+    /// well.
     #[prost(string, tag = "6")]
     pub channel_partner_id: ::prost::alloc::string::String,
     /// Optional. Specifies the customer that will receive imported Cloud Identity
@@ -1987,7 +2078,8 @@ pub mod import_customer_request {
         CloudIdentityId(::prost::alloc::string::String),
     }
 }
-/// Request message for \[CloudChannelService.ProvisionCloudIdentity][google.cloud.channel.v1.CloudChannelService.ProvisionCloudIdentity\]
+/// Request message for
+/// \[CloudChannelService.ProvisionCloudIdentity][google.cloud.channel.v1.CloudChannelService.ProvisionCloudIdentity\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProvisionCloudIdentityRequest {
     /// Required. Resource name of the customer.
@@ -2004,7 +2096,8 @@ pub struct ProvisionCloudIdentityRequest {
     #[prost(bool, tag = "4")]
     pub validate_only: bool,
 }
-/// Request message for \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\]
+/// Request message for
+/// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntitlementsRequest {
     /// Required. The resource name of the reseller's customer account to list
@@ -2012,30 +2105,36 @@ pub struct ListEntitlementsRequest {
     /// Parent uses the format: accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, return at most 50 entitlements.
-    /// The maximum value is 100; the server will coerce values above 100.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, return at most 50 entitlements. The maximum
+    /// value is 100; the server will coerce values above 100.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
     /// Obtained using
-    /// \[ListEntitlementsResponse.next_page_token][google.cloud.channel.v1.ListEntitlementsResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\] call.
+    /// \[ListEntitlementsResponse.next_page_token][google.cloud.channel.v1.ListEntitlementsResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\].
+/// Response message for
+/// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntitlementsResponse {
     /// The reseller customer's entitlements.
     #[prost(message, repeated, tag = "1")]
     pub entitlements: ::prost::alloc::vec::Vec<Entitlement>,
     /// A token to list the next page of results.
-    /// Pass to \[ListEntitlementsRequest.page_token][google.cloud.channel.v1.ListEntitlementsRequest.page_token\] to obtain that page.
+    /// Pass to
+    /// \[ListEntitlementsRequest.page_token][google.cloud.channel.v1.ListEntitlementsRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\]
+/// Request message for
+/// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableSkusRequest {
     /// Required. The reseller account's resource name.
@@ -2050,9 +2149,10 @@ pub struct ListTransferableSkusRequest {
     pub page_size: i32,
     /// A token for a page of results other than the first page.
     /// Obtained using
-    /// \[ListTransferableSkusResponse.next_page_token][google.cloud.channel.v1.ListTransferableSkusResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\] call.
-    /// Optional.
+    /// \[ListTransferableSkusResponse.next_page_token][google.cloud.channel.v1.ListTransferableSkusResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\]
+    /// call. Optional.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. The super admin of the resold customer generates this token to
@@ -2096,19 +2196,22 @@ pub mod list_transferable_skus_request {
         CustomerName(::prost::alloc::string::String),
     }
 }
-/// Response message for \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\].
+/// Response message for
+/// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableSkusResponse {
     /// Information about existing SKUs for a customer that needs a transfer.
     #[prost(message, repeated, tag = "1")]
     pub transferable_skus: ::prost::alloc::vec::Vec<TransferableSku>,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListTransferableSkusRequest.page_token][google.cloud.channel.v1.ListTransferableSkusRequest.page_token\] to obtain
-    /// that page.
+    /// Pass to
+    /// \[ListTransferableSkusRequest.page_token][google.cloud.channel.v1.ListTransferableSkusRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\]
+/// Request message for
+/// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableOffersRequest {
     /// Required. The resource name of the reseller's account.
@@ -2121,8 +2224,10 @@ pub struct ListTransferableOffersRequest {
     pub page_size: i32,
     /// A token for a page of results other than the first page.
     /// Obtained using
-    /// \[ListTransferableOffersResponse.next_page_token][google.cloud.channel.v1.ListTransferableOffersResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\] call.
+    /// \[ListTransferableOffersResponse.next_page_token][google.cloud.channel.v1.ListTransferableOffersResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Required. The SKU to look up Offers for.
@@ -2160,7 +2265,8 @@ pub mod list_transferable_offers_request {
         CustomerName(::prost::alloc::string::String),
     }
 }
-/// Response message for \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\].
+/// Response message for
+/// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableOffersResponse {
     /// Information about Offers for a customer that can be used for
@@ -2168,8 +2274,9 @@ pub struct ListTransferableOffersResponse {
     #[prost(message, repeated, tag = "1")]
     pub transferable_offers: ::prost::alloc::vec::Vec<TransferableOffer>,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListTransferableOffersRequest.page_token][google.cloud.channel.v1.ListTransferableOffersRequest.page_token\] to obtain
-    /// that page.
+    /// Pass to
+    /// \[ListTransferableOffersRequest.page_token][google.cloud.channel.v1.ListTransferableOffersRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
@@ -2181,7 +2288,8 @@ pub struct TransferableOffer {
     #[prost(message, optional, tag = "1")]
     pub offer: ::core::option::Option<Offer>,
 }
-/// Request message for \[CloudChannelService.GetEntitlement][google.cloud.channel.v1.CloudChannelService.GetEntitlement\].
+/// Request message for
+/// \[CloudChannelService.GetEntitlement][google.cloud.channel.v1.CloudChannelService.GetEntitlement\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEntitlementRequest {
     /// Required. The resource name of the entitlement to retrieve.
@@ -2190,41 +2298,47 @@ pub struct GetEntitlementRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\]
+/// Request message for
+/// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerLinksRequest {
-    /// Required. The resource name of the reseller account for listing channel partner
-    /// links.
-    /// Parent uses the format: accounts/{account_id}
+    /// Required. The resource name of the reseller account for listing channel
+    /// partner links. Parent uses the format: accounts/{account_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, server will pick a default size (25).
-    /// The maximum value is 200; the server will coerce values above 200.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, server will pick a default size (25). The
+    /// maximum value is 200; the server will coerce values above 200.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
     /// Obtained using
-    /// \[ListChannelPartnerLinksResponse.next_page_token][google.cloud.channel.v1.ListChannelPartnerLinksResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\] call.
+    /// \[ListChannelPartnerLinksResponse.next_page_token][google.cloud.channel.v1.ListChannelPartnerLinksResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. The level of granularity the ChannelPartnerLink will display.
     #[prost(enumeration = "ChannelPartnerLinkView", tag = "4")]
     pub view: i32,
 }
-/// Response message for \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\].
+/// Response message for
+/// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerLinksResponse {
     /// The Channel partner links for a reseller.
     #[prost(message, repeated, tag = "1")]
     pub channel_partner_links: ::prost::alloc::vec::Vec<ChannelPartnerLink>,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListChannelPartnerLinksRequest.page_token][google.cloud.channel.v1.ListChannelPartnerLinksRequest.page_token\] to obtain that page.
+    /// Pass to
+    /// \[ListChannelPartnerLinksRequest.page_token][google.cloud.channel.v1.ListChannelPartnerLinksRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.GetChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerLink\].
+/// Request message for
+/// \[CloudChannelService.GetChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerLink\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelPartnerLinkRequest {
     /// Required. The resource name of the channel partner link to retrieve.
@@ -2236,7 +2350,8 @@ pub struct GetChannelPartnerLinkRequest {
     #[prost(enumeration = "ChannelPartnerLinkView", tag = "2")]
     pub view: i32,
 }
-/// Request message for \[CloudChannelService.CreateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerLink\]
+/// Request message for
+/// \[CloudChannelService.CreateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerLink\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateChannelPartnerLinkRequest {
     /// Required. Create a channel partner link for the provided reseller account's
@@ -2250,7 +2365,8 @@ pub struct CreateChannelPartnerLinkRequest {
     #[prost(message, optional, tag = "2")]
     pub channel_partner_link: ::core::option::Option<ChannelPartnerLink>,
 }
-/// Request message for \[CloudChannelService.UpdateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.UpdateChannelPartnerLink\]
+/// Request message for
+/// \[CloudChannelService.UpdateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.UpdateChannelPartnerLink\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateChannelPartnerLinkRequest {
     /// Required. The resource name of the channel partner link to cancel.
@@ -2258,8 +2374,8 @@ pub struct UpdateChannelPartnerLinkRequest {
     /// where {id} is the Cloud Identity ID of the partner.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. The channel partner link to update. Only channel_partner_link.link_state
-    /// is allowed for updates.
+    /// Required. The channel partner link to update. Only
+    /// channel_partner_link.link_state is allowed for updates.
     #[prost(message, optional, tag = "2")]
     pub channel_partner_link: ::core::option::Option<ChannelPartnerLink>,
     /// Required. The update mask that applies to the resource.
@@ -2268,7 +2384,8 @@ pub struct UpdateChannelPartnerLinkRequest {
     #[prost(message, optional, tag = "3")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
-/// Request message for \[CloudChannelService.GetCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetCustomerRepricingConfig\].
+/// Request message for
+/// \[CloudChannelService.GetCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetCustomerRepricingConfig\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCustomerRepricingConfigRequest {
     /// Required. The resource name of the CustomerRepricingConfig.
@@ -2277,7 +2394,8 @@ pub struct GetCustomerRepricingConfigRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
+/// Request message for
+/// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomerRepricingConfigsRequest {
     /// Required. The resource name of the customer.
@@ -2286,15 +2404,17 @@ pub struct ListCustomerRepricingConfigsRequest {
     /// customers.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of repricing configs to return. The service may return
-    /// fewer than this value. If unspecified, returns a maximum of 50 rules. The
-    /// maximum value is 100; values above 100 will be coerced to 100.
+    /// Optional. The maximum number of repricing configs to return. The service
+    /// may return fewer than this value. If unspecified, returns a maximum of 50
+    /// rules. The maximum value is 100; values above 100 will be coerced to 100.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token identifying a page of results beyond the first page.
     /// Obtained through
-    /// \[ListCustomerRepricingConfigsResponse.next_page_token][google.cloud.channel.v1.ListCustomerRepricingConfigsResponse.next_page_token\] of the previous
-    /// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\] call.
+    /// \[ListCustomerRepricingConfigsResponse.next_page_token][google.cloud.channel.v1.ListCustomerRepricingConfigsResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// Optional. A filter for \[CloudChannelService.ListCustomerRepricingConfigs\]
@@ -2307,46 +2427,53 @@ pub struct ListCustomerRepricingConfigsRequest {
     #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
+/// Response message for
+/// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomerRepricingConfigsResponse {
     /// The repricing configs for this channel partner.
     #[prost(message, repeated, tag = "1")]
     pub customer_repricing_configs: ::prost::alloc::vec::Vec<CustomerRepricingConfig>,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListCustomerRepricingConfigsRequest.page_token][google.cloud.channel.v1.ListCustomerRepricingConfigsRequest.page_token\] to obtain that
-    /// page.
+    /// Pass to
+    /// \[ListCustomerRepricingConfigsRequest.page_token][google.cloud.channel.v1.ListCustomerRepricingConfigsRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.CreateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateCustomerRepricingConfig\].
+/// Request message for
+/// \[CloudChannelService.CreateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateCustomerRepricingConfig\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerRepricingConfigRequest {
-    /// Required. The resource name of the customer that will receive this repricing config.
-    /// Parent uses the format: accounts/{account_id}/customers/{customer_id}
+    /// Required. The resource name of the customer that will receive this
+    /// repricing config. Parent uses the format:
+    /// accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The CustomerRepricingConfig object to update.
     #[prost(message, optional, tag = "2")]
     pub customer_repricing_config: ::core::option::Option<CustomerRepricingConfig>,
 }
-/// Request message for \[CloudChannelService.UpdateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.UpdateCustomerRepricingConfig\].
+/// Request message for
+/// \[CloudChannelService.UpdateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.UpdateCustomerRepricingConfig\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCustomerRepricingConfigRequest {
     /// Required. The CustomerRepricingConfig object to update.
     #[prost(message, optional, tag = "1")]
     pub customer_repricing_config: ::core::option::Option<CustomerRepricingConfig>,
 }
-/// Request message for \[CloudChannelService.DeleteCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.DeleteCustomerRepricingConfig\].
+/// Request message for
+/// \[CloudChannelService.DeleteCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.DeleteCustomerRepricingConfig\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCustomerRepricingConfigRequest {
-    /// Required. The resource name of the customer repricing config rule to delete.
-    /// Format:
+    /// Required. The resource name of the customer repricing config rule to
+    /// delete. Format:
     /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.GetChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerRepricingConfig\]
+/// Request message for
+/// \[CloudChannelService.GetChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerRepricingConfig\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelPartnerRepricingConfigRequest {
     /// Required. The resource name of the ChannelPartnerRepricingConfig
@@ -2359,28 +2486,31 @@ pub struct GetChannelPartnerRepricingConfigRequest {
 /// \[CloudChannelService.ListChannelPartnerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerRepricingConfigs\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerRepricingConfigsRequest {
-    /// Required. The resource name of the account's \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\].
-    /// Parent uses the format:
+    /// Required. The resource name of the account's
+    /// \[ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink\]. Parent
+    /// uses the format:
     /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}.
     /// Supports accounts/{account_id}/channelPartnerLinks/- to retrieve configs
     /// for all channel partners.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of repricing configs to return. The service may return
-    /// fewer than this value. If unspecified, returns a maximum of 50 rules. The
-    /// maximum value is 100; values above 100 will be coerced to 100.
+    /// Optional. The maximum number of repricing configs to return. The service
+    /// may return fewer than this value. If unspecified, returns a maximum of 50
+    /// rules. The maximum value is 100; values above 100 will be coerced to 100.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token identifying a page of results beyond the first page.
     /// Obtained through
-    /// \[ListChannelPartnerRepricingConfigsResponse.next_page_token][google.cloud.channel.v1.ListChannelPartnerRepricingConfigsResponse.next_page_token\] of the
-    /// previous \[CloudChannelService.ListChannelPartnerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerRepricingConfigs\] call.
+    /// \[ListChannelPartnerRepricingConfigsResponse.next_page_token][google.cloud.channel.v1.ListChannelPartnerRepricingConfigsResponse.next_page_token\]
+    /// of the previous
+    /// \[CloudChannelService.ListChannelPartnerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerRepricingConfigs\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
-    /// Optional. A filter for \[CloudChannelService.ListChannelPartnerRepricingConfigs\]
-    /// results (channel_partner_link only). You can use this filter when you
-    /// support a BatchGet-like query.
-    /// To use the filter, you must set
+    /// Optional. A filter for
+    /// \[CloudChannelService.ListChannelPartnerRepricingConfigs\] results
+    /// (channel_partner_link only). You can use this filter when you support a
+    /// BatchGet-like query. To use the filter, you must set
     /// `parent=accounts/{account_id}/channelPartnerLinks/-`.
     ///
     /// Example: `channel_partner_link =
@@ -2399,8 +2529,9 @@ pub struct ListChannelPartnerRepricingConfigsResponse {
         ChannelPartnerRepricingConfig,
     >,
     /// A token to retrieve the next page of results.
-    /// Pass to \[ListChannelPartnerRepricingConfigsRequest.page_token][google.cloud.channel.v1.ListChannelPartnerRepricingConfigsRequest.page_token\] to obtain
-    /// that page.
+    /// Pass to
+    /// \[ListChannelPartnerRepricingConfigsRequest.page_token][google.cloud.channel.v1.ListChannelPartnerRepricingConfigsRequest.page_token\]
+    /// to obtain that page.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
@@ -2408,8 +2539,8 @@ pub struct ListChannelPartnerRepricingConfigsResponse {
 /// \[CloudChannelService.CreateChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerRepricingConfig\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateChannelPartnerRepricingConfigRequest {
-    /// Required. The resource name of the ChannelPartner that will receive the repricing
-    /// config. Parent uses the format:
+    /// Required. The resource name of the ChannelPartner that will receive the
+    /// repricing config. Parent uses the format:
     /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
@@ -2432,23 +2563,26 @@ pub struct UpdateChannelPartnerRepricingConfigRequest {
 /// Request message for DeleteChannelPartnerRepricingConfig.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteChannelPartnerRepricingConfigRequest {
-    /// Required. The resource name of the channel partner repricing config rule to delete.
+    /// Required. The resource name of the channel partner repricing config rule to
+    /// delete.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.CreateEntitlement][google.cloud.channel.v1.CloudChannelService.CreateEntitlement\]
+/// Request message for
+/// \[CloudChannelService.CreateEntitlement][google.cloud.channel.v1.CloudChannelService.CreateEntitlement\]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateEntitlementRequest {
-    /// Required. The resource name of the reseller's customer account in which to create the
-    /// entitlement.
-    /// Parent uses the format: accounts/{account_id}/customers/{customer_id}
+    /// Required. The resource name of the reseller's customer account in which to
+    /// create the entitlement. Parent uses the format:
+    /// accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The entitlement to create.
     #[prost(message, optional, tag = "2")]
     pub entitlement: ::core::option::Option<Entitlement>,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2461,12 +2595,13 @@ pub struct CreateEntitlementRequest {
     #[prost(string, tag = "5")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
+/// Request message for
+/// \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsRequest {
-    /// Required. The resource name of the reseller's customer account that will receive
-    /// transferred entitlements.
-    /// Parent uses the format: accounts/{account_id}/customers/{customer_id}
+    /// Required. The resource name of the reseller's customer account that will
+    /// receive transferred entitlements. Parent uses the format:
+    /// accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The new entitlements to create or transfer.
@@ -2478,8 +2613,9 @@ pub struct TransferEntitlementsRequest {
     /// See <https://support.google.com/a/answer/7643790> for more details.
     #[prost(string, tag = "4")]
     pub auth_token: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2492,7 +2628,8 @@ pub struct TransferEntitlementsRequest {
     #[prost(string, tag = "6")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Response message for \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
+/// Response message for
+/// \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
 /// This is put in the response field of google.longrunning.Operation.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsResponse {
@@ -2500,19 +2637,21 @@ pub struct TransferEntitlementsResponse {
     #[prost(message, repeated, tag = "1")]
     pub entitlements: ::prost::alloc::vec::Vec<Entitlement>,
 }
-/// Request message for \[CloudChannelService.TransferEntitlementsToGoogle][google.cloud.channel.v1.CloudChannelService.TransferEntitlementsToGoogle\].
+/// Request message for
+/// \[CloudChannelService.TransferEntitlementsToGoogle][google.cloud.channel.v1.CloudChannelService.TransferEntitlementsToGoogle\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsToGoogleRequest {
-    /// Required. The resource name of the reseller's customer account where the entitlements
-    /// transfer from.
-    /// Parent uses the format: accounts/{account_id}/customers/{customer_id}
+    /// Required. The resource name of the reseller's customer account where the
+    /// entitlements transfer from. Parent uses the format:
+    /// accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The entitlements to transfer to Google.
     #[prost(message, repeated, tag = "2")]
     pub entitlements: ::prost::alloc::vec::Vec<Entitlement>,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2533,14 +2672,17 @@ pub struct ChangeParametersRequest {
     /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. Entitlement parameters to update. You can only change editable parameters.
+    /// Required. Entitlement parameters to update. You can only change editable
+    /// parameters.
     ///
     /// To view the available Parameters for a request, refer to the
-    /// \[Offer.parameter_definitions][google.cloud.channel.v1.Offer.parameter_definitions\] from the desired offer.
+    /// \[Offer.parameter_definitions][google.cloud.channel.v1.Offer.parameter_definitions\]
+    /// from the desired offer.
     #[prost(message, repeated, tag = "2")]
     pub parameters: ::prost::alloc::vec::Vec<Parameter>,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2556,7 +2698,8 @@ pub struct ChangeParametersRequest {
     #[prost(string, tag = "5")]
     pub purchase_order_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ChangeRenewalSettings][google.cloud.channel.v1.CloudChannelService.ChangeRenewalSettings\].
+/// Request message for
+/// \[CloudChannelService.ChangeRenewalSettings][google.cloud.channel.v1.CloudChannelService.ChangeRenewalSettings\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeRenewalSettingsRequest {
     /// Required. The name of the entitlement to update.
@@ -2567,8 +2710,9 @@ pub struct ChangeRenewalSettingsRequest {
     /// Required. New renewal settings.
     #[prost(message, optional, tag = "4")]
     pub renewal_settings: ::core::option::Option<RenewalSettings>,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2581,7 +2725,8 @@ pub struct ChangeRenewalSettingsRequest {
     #[prost(string, tag = "5")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
+/// Request message for
+/// \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeOfferRequest {
     /// Required. The resource name of the entitlement to update.
@@ -2593,15 +2738,18 @@ pub struct ChangeOfferRequest {
     /// Format: accounts/{account_id}/offers/{offer_id}.
     #[prost(string, tag = "2")]
     pub offer: ::prost::alloc::string::String,
-    /// Optional. Parameters needed to purchase the Offer. To view the available Parameters
-    /// refer to the \[Offer.parameter_definitions][google.cloud.channel.v1.Offer.parameter_definitions\] from the desired offer.
+    /// Optional. Parameters needed to purchase the Offer. To view the available
+    /// Parameters refer to the
+    /// \[Offer.parameter_definitions][google.cloud.channel.v1.Offer.parameter_definitions\]
+    /// from the desired offer.
     #[prost(message, repeated, tag = "3")]
     pub parameters: ::prost::alloc::vec::Vec<Parameter>,
     /// Optional. Purchase order id provided by the reseller.
     #[prost(string, tag = "5")]
     pub purchase_order_id: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2614,7 +2762,8 @@ pub struct ChangeOfferRequest {
     #[prost(string, tag = "6")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.StartPaidService][google.cloud.channel.v1.CloudChannelService.StartPaidService\].
+/// Request message for
+/// \[CloudChannelService.StartPaidService][google.cloud.channel.v1.CloudChannelService.StartPaidService\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartPaidServiceRequest {
     /// Required. The name of the entitlement to start a paid service for.
@@ -2622,8 +2771,9 @@ pub struct StartPaidServiceRequest {
     /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2636,7 +2786,8 @@ pub struct StartPaidServiceRequest {
     #[prost(string, tag = "3")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.CancelEntitlement][google.cloud.channel.v1.CloudChannelService.CancelEntitlement\].
+/// Request message for
+/// \[CloudChannelService.CancelEntitlement][google.cloud.channel.v1.CloudChannelService.CancelEntitlement\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CancelEntitlementRequest {
     /// Required. The resource name of the entitlement to cancel.
@@ -2644,8 +2795,9 @@ pub struct CancelEntitlementRequest {
     /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2658,7 +2810,8 @@ pub struct CancelEntitlementRequest {
     #[prost(string, tag = "3")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.SuspendEntitlement][google.cloud.channel.v1.CloudChannelService.SuspendEntitlement\].
+/// Request message for
+/// \[CloudChannelService.SuspendEntitlement][google.cloud.channel.v1.CloudChannelService.SuspendEntitlement\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuspendEntitlementRequest {
     /// Required. The resource name of the entitlement to suspend.
@@ -2666,8 +2819,9 @@ pub struct SuspendEntitlementRequest {
     /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2680,7 +2834,8 @@ pub struct SuspendEntitlementRequest {
     #[prost(string, tag = "3")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request message for \[CloudChannelService.ActivateEntitlement][google.cloud.channel.v1.CloudChannelService.ActivateEntitlement\].
+/// Request message for
+/// \[CloudChannelService.ActivateEntitlement][google.cloud.channel.v1.CloudChannelService.ActivateEntitlement\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ActivateEntitlementRequest {
     /// Required. The resource name of the entitlement to activate.
@@ -2688,8 +2843,9 @@ pub struct ActivateEntitlementRequest {
     /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. You can specify an optional unique request ID, and if you need to retry
-    /// your request, the server will know to ignore the request if it's complete.
+    /// Optional. You can specify an optional unique request ID, and if you need to
+    /// retry your request, the server will know to ignore the request if it's
+    /// complete.
     ///
     /// For example, you make an initial request and the request times out. If you
     /// make the request again with the same request ID, the server can check if
@@ -2718,9 +2874,9 @@ pub struct ListProductsRequest {
     /// Format: accounts/{account_id}.
     #[prost(string, tag = "1")]
     pub account: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, returns at most 100 Products.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, returns at most 100 Products. The maximum value
+    /// is 1000; the server will coerce values above 1000.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
@@ -2754,9 +2910,9 @@ pub struct ListSkusRequest {
     /// Format: accounts/{account_id}.
     #[prost(string, tag = "2")]
     pub account: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, returns at most 100 SKUs.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, returns at most 100 SKUs. The maximum value is
+    /// 1000; the server will coerce values above 1000.
     #[prost(int32, tag = "3")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
@@ -2782,13 +2938,13 @@ pub struct ListSkusResponse {
 /// Request message for ListOffers.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOffersRequest {
-    /// Required. The resource name of the reseller account from which to list Offers.
-    /// Parent uses the format: accounts/{account_id}.
+    /// Required. The resource name of the reseller account from which to list
+    /// Offers. Parent uses the format: accounts/{account_id}.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, returns at most 500 Offers.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, returns at most 500 Offers. The maximum value is
+    /// 1000; the server will coerce values above 1000.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
@@ -2824,9 +2980,9 @@ pub struct ListPurchasableSkusRequest {
     /// Format: accounts/{account_id}/customers/{customer_id}.
     #[prost(string, tag = "1")]
     pub customer: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, returns at most 100 SKUs.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, returns at most 100 SKUs. The maximum value is
+    /// 1000; the server will coerce values above 1000.
     #[prost(int32, tag = "4")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
@@ -2856,7 +3012,8 @@ pub mod list_purchasable_skus_request {
         pub product: ::prost::alloc::string::String,
     }
     /// List SKUs for upgrading or downgrading an entitlement. Make the purchase
-    /// using \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
+    /// using
+    /// \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ChangeOfferPurchase {
         /// Required. Resource name of the entitlement.
@@ -2941,9 +3098,9 @@ pub struct ListPurchasableOffersRequest {
     /// Format: accounts/{account_id}/customers/{customer_id}.
     #[prost(string, tag = "1")]
     pub customer: ::prost::alloc::string::String,
-    /// Optional. Requested page size. Server might return fewer results than requested.
-    /// If unspecified, returns at most 100 Offers.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. Requested page size. Server might return fewer results than
+    /// requested. If unspecified, returns at most 100 Offers. The maximum value is
+    /// 1000; the server will coerce values above 1000.
     #[prost(int32, tag = "4")]
     pub page_size: i32,
     /// Optional. A token for a page of results other than the first page.
@@ -3019,7 +3176,8 @@ pub struct RegisterSubscriberRequest {
     /// Required. Resource name of the account.
     #[prost(string, tag = "1")]
     pub account: ::prost::alloc::string::String,
-    /// Required. Service account that provides subscriber access to the registered topic.
+    /// Required. Service account that provides subscriber access to the registered
+    /// topic.
     #[prost(string, tag = "2")]
     pub service_account: ::prost::alloc::string::String,
 }
@@ -3036,7 +3194,8 @@ pub struct UnregisterSubscriberRequest {
     /// Required. Resource name of the account.
     #[prost(string, tag = "1")]
     pub account: ::prost::alloc::string::String,
-    /// Required. Service account to unregister from subscriber access to the topic.
+    /// Required. Service account to unregister from subscriber access to the
+    /// topic.
     #[prost(string, tag = "2")]
     pub service_account: ::prost::alloc::string::String,
 }
@@ -3053,10 +3212,10 @@ pub struct ListSubscribersRequest {
     /// Required. Resource name of the account.
     #[prost(string, tag = "1")]
     pub account: ::prost::alloc::string::String,
-    /// Optional. The maximum number of service accounts to return. The service may return
-    /// fewer than this value.
-    /// If unspecified, returns at most 100 service accounts.
-    /// The maximum value is 1000; the server will coerce values above 1000.
+    /// Optional. The maximum number of service accounts to return. The service may
+    /// return fewer than this value. If unspecified, returns at most 100 service
+    /// accounts. The maximum value is 1000; the server will coerce values above
+    /// 1000.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
     /// Optional. A page token, received from a previous `ListSubscribers` call.
@@ -3096,15 +3255,16 @@ pub mod cloud_channel_service_client {
     /// 3. Resellers and distributors can manage customer entitlements.
     ///
     /// CloudChannelService exposes the following resources:
-    /// - [Customer][google.cloud.channel.v1.Customer]s: An entity—usually an enterprise—managed by a reseller or
-    /// distributor.
+    /// - [Customer][google.cloud.channel.v1.Customer]s: An entity-usually an
+    /// enterprise-managed by a reseller or distributor.
     ///
-    /// - [Entitlement][google.cloud.channel.v1.Entitlement]s: An entity that provides a customer with the means to use
-    /// a service. Entitlements are created or updated as a result of a successful
-    /// fulfillment.
+    /// - [Entitlement][google.cloud.channel.v1.Entitlement]s: An entity that
+    /// provides a customer with the means to use a service. Entitlements are created
+    /// or updated as a result of a successful fulfillment.
     ///
-    /// - [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]s: An entity that identifies links between
-    /// distributors and their indirect resellers in a channel.
+    /// - [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]s: An
+    /// entity that identifies links between distributors and their indirect
+    /// resellers in a channel.
     #[derive(Debug, Clone)]
     pub struct CloudChannelServiceClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -3167,7 +3327,8 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         ///
         /// Return value:
-        /// List of [Customer][google.cloud.channel.v1.Customer]s, or an empty list if there are no customers.
+        /// List of [Customer][google.cloud.channel.v1.Customer]s, or an empty list if
+        /// there are no customers.
         pub async fn list_customers(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCustomersRequest>,
@@ -3187,7 +3348,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Returns the requested [Customer][google.cloud.channel.v1.Customer] resource.
+        /// Returns the requested [Customer][google.cloud.channel.v1.Customer]
+        /// resource.
         ///
         /// Possible error codes:
         ///
@@ -3229,11 +3391,14 @@ pub mod cloud_channel_service_client {
         /// * INVALID_VALUE: Invalid domain value in the request.
         ///
         /// Return value:
-        /// A list of [CloudIdentityCustomerAccount][google.cloud.channel.v1.CloudIdentityCustomerAccount] resources for the domain (may be
-        /// empty)
+        /// A list of
+        /// [CloudIdentityCustomerAccount][google.cloud.channel.v1.CloudIdentityCustomerAccount]
+        /// resources for the domain (may be empty)
         ///
         /// Note: in the v1alpha1 version of the API, a NOT_FOUND error returns if
-        /// no [CloudIdentityCustomerAccount][google.cloud.channel.v1.CloudIdentityCustomerAccount] resources match the domain.
+        /// no
+        /// [CloudIdentityCustomerAccount][google.cloud.channel.v1.CloudIdentityCustomerAccount]
+        /// resources match the domain.
         pub async fn check_cloud_identity_accounts_exist(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -3258,8 +3423,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Creates a new [Customer][google.cloud.channel.v1.Customer] resource under the reseller or distributor
-        /// account.
+        /// Creates a new [Customer][google.cloud.channel.v1.Customer] resource under
+        /// the reseller or distributor account.
         ///
         /// Possible error codes:
         ///
@@ -3290,15 +3455,16 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Updates an existing [Customer][google.cloud.channel.v1.Customer] resource for the reseller or
-        /// distributor.
+        /// Updates an existing [Customer][google.cloud.channel.v1.Customer] resource
+        /// for the reseller or distributor.
         ///
         /// Possible error codes:
         ///
         /// * PERMISSION_DENIED: The reseller account making the request is different
         /// from the reseller account in the API request.
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
-        /// * NOT_FOUND: No [Customer][google.cloud.channel.v1.Customer] resource found for the name in the request.
+        /// * NOT_FOUND: No [Customer][google.cloud.channel.v1.Customer] resource found
+        /// for the name in the request.
         ///
         /// Return value:
         /// The updated [Customer][google.cloud.channel.v1.Customer] resource.
@@ -3329,7 +3495,8 @@ pub mod cloud_channel_service_client {
         /// this customer.
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         /// * FAILED_PRECONDITION: The customer has existing entitlements.
-        /// * NOT_FOUND: No [Customer][google.cloud.channel.v1.Customer] resource found for the name in the request.
+        /// * NOT_FOUND: No [Customer][google.cloud.channel.v1.Customer] resource found
+        /// for the name in the request.
         pub async fn delete_customer(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCustomerRequest>,
@@ -3349,10 +3516,10 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Imports a [Customer][google.cloud.channel.v1.Customer] from the Cloud Identity associated with the provided
-        /// Cloud Identity ID or domain before a TransferEntitlements call. If a
-        /// linked Customer already exists and overwrite_if_exists is true, it will
-        /// update that Customer's data.
+        /// Imports a [Customer][google.cloud.channel.v1.Customer] from the Cloud
+        /// Identity associated with the provided Cloud Identity ID or domain before a
+        /// TransferEntitlements call. If a linked Customer already exists and
+        /// overwrite_if_exists is true, it will update that Customer's data.
         ///
         /// Possible error codes:
         ///
@@ -3428,7 +3595,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Lists [Entitlement][google.cloud.channel.v1.Entitlement]s belonging to a customer.
+        /// Lists [Entitlement][google.cloud.channel.v1.Entitlement]s belonging to a
+        /// customer.
         ///
         /// Possible error codes:
         ///
@@ -3436,7 +3604,8 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         ///
         /// Return value:
-        /// A list of the customer's [Entitlement][google.cloud.channel.v1.Entitlement]s.
+        /// A list of the customer's
+        /// [Entitlement][google.cloud.channel.v1.Entitlement]s.
         pub async fn list_entitlements(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEntitlementsRequest>,
@@ -3456,8 +3625,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// List [TransferableSku][google.cloud.channel.v1.TransferableSku]s of a customer based on the Cloud Identity ID or
-        /// Customer Name in the request.
+        /// List [TransferableSku][google.cloud.channel.v1.TransferableSku]s of a
+        /// customer based on the Cloud Identity ID or Customer Name in the request.
         ///
         /// Use this method to list the entitlements information of an
         /// unowned customer. You should provide the customer's
@@ -3473,7 +3642,8 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         ///
         /// Return value:
-        /// A list of the customer's [TransferableSku][google.cloud.channel.v1.TransferableSku].
+        /// A list of the customer's
+        /// [TransferableSku][google.cloud.channel.v1.TransferableSku].
         pub async fn list_transferable_skus(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTransferableSkusRequest>,
@@ -3496,8 +3666,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// List [TransferableOffer][google.cloud.channel.v1.TransferableOffer]s of a customer based on Cloud Identity ID or
-        /// Customer Name in the request.
+        /// List [TransferableOffer][google.cloud.channel.v1.TransferableOffer]s of a
+        /// customer based on Cloud Identity ID or Customer Name in the request.
         ///
         /// Use this method when a reseller gets the entitlement information of an
         /// unowned customer. The reseller should provide the customer's
@@ -3514,7 +3684,8 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         ///
         /// Return value:
-        /// List of [TransferableOffer][google.cloud.channel.v1.TransferableOffer] for the given customer and SKU.
+        /// List of [TransferableOffer][google.cloud.channel.v1.TransferableOffer] for
+        /// the given customer and SKU.
         pub async fn list_transferable_offers(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTransferableOffersRequest>,
@@ -3537,7 +3708,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Returns the requested [Entitlement][google.cloud.channel.v1.Entitlement] resource.
+        /// Returns the requested [Entitlement][google.cloud.channel.v1.Entitlement]
+        /// resource.
         ///
         /// Possible error codes:
         ///
@@ -4045,8 +4217,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// List [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]s belonging to a distributor.
-        /// You must be a distributor to call this method.
+        /// List [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]s
+        /// belonging to a distributor. You must be a distributor to call this method.
         ///
         /// Possible error codes:
         ///
@@ -4055,7 +4227,8 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
         ///
         /// Return value:
-        /// The list of the distributor account's [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resources.
+        /// The list of the distributor account's
+        /// [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resources.
         pub async fn list_channel_partner_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListChannelPartnerLinksRequest>,
@@ -4078,7 +4251,8 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Returns the requested [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
+        /// Returns the requested
+        /// [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
         /// You must be a distributor to call this method.
         ///
         /// Possible error codes:
@@ -4090,7 +4264,8 @@ pub mod cloud_channel_service_client {
         /// invalid channel partner link name.
         ///
         /// Return value:
-        /// The [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
+        /// The [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]
+        /// resource.
         pub async fn get_channel_partner_link(
             &mut self,
             request: impl tonic::IntoRequest<super::GetChannelPartnerLinkRequest>,
@@ -4131,7 +4306,8 @@ pub mod cloud_channel_service_client {
         /// Contact Cloud Channel support.
         ///
         /// Return value:
-        /// The new [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
+        /// The new [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink]
+        /// resource.
         pub async fn create_channel_partner_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateChannelPartnerLinkRequest>,
@@ -4171,7 +4347,8 @@ pub mod cloud_channel_service_client {
         /// Contact Cloud Channel support.
         ///
         /// Return value:
-        /// The updated [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
+        /// The updated
+        /// [ChannelPartnerLink][google.cloud.channel.v1.ChannelPartnerLink] resource.
         pub async fn update_channel_partner_link(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateChannelPartnerLinkRequest>,
@@ -4198,13 +4375,16 @@ pub mod cloud_channel_service_client {
         ///
         /// * PERMISSION_DENIED: If the account making the request and the account
         /// being queried are different.
-        /// * NOT_FOUND: The [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] was not found.
+        /// * NOT_FOUND: The
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// was not found.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] resource, otherwise returns
-        /// an error.
+        /// If successful, the
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn get_customer_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCustomerRepricingConfigRequest>,
@@ -4231,14 +4411,17 @@ pub mod cloud_channel_service_client {
         ///
         /// * PERMISSION_DENIED: If the account making the request and the account
         /// being queried are different.
-        /// * NOT_FOUND: The [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] specified does not exist or is
-        /// not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] resources. The
-        /// data for each resource is displayed in the ascending order of:
+        /// If successful, the
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// resources. The data for each resource is displayed in the ascending order
+        /// of:
         /// * customer ID
         /// * [RepricingConfig.EntitlementGranularity.entitlement][google.cloud.channel.v1.RepricingConfig.EntitlementGranularity.entitlement]
         /// * [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
@@ -4269,9 +4452,9 @@ pub mod cloud_channel_service_client {
         }
         /// Creates a CustomerRepricingConfig. Call this method to set modifications
         /// for a specific customer's bill. You can only create configs if the
-        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is a
-        /// future month. If needed, you can create a config for the current month,
-        /// with some restrictions.
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is a future month. If needed, you can create a config for the current
+        /// month, with some restrictions.
         ///
         /// When creating a config for a future month, make sure there are no existing
         /// configs for that
@@ -4285,9 +4468,11 @@ pub mod cloud_channel_service_client {
         /// Changes to the config may be immediate, but may take up to 24 hours.
         /// * There is a limit of ten configs for any
         /// [RepricingConfig.EntitlementGranularity.entitlement][google.cloud.channel.v1.RepricingConfig.EntitlementGranularity.entitlement]
-        /// or [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
-        /// * The contained [CustomerRepricingConfig.repricing_config][google.cloud.channel.v1.CustomerRepricingConfig.repricing_config] vaule must be
-        /// different from the value used in the current config for a
+        /// or
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
+        /// * The contained
+        /// [CustomerRepricingConfig.repricing_config][google.cloud.channel.v1.CustomerRepricingConfig.repricing_config]
+        /// vaule must be different from the value used in the current config for a
         /// [RepricingConfig.EntitlementGranularity.entitlement][google.cloud.channel.v1.RepricingConfig.EntitlementGranularity.entitlement].
         ///
         /// Possible Error Codes:
@@ -4297,14 +4482,16 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Missing or invalid required parameters in the
         /// request. Also displays if the updated config is for the current month or
         /// past months.
-        /// * NOT_FOUND: The [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] specified does not exist or is
-        /// not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the updated [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] resource, otherwise
-        /// returns an error.
+        /// If successful, the updated
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn create_customer_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCustomerRepricingConfigRequest>,
@@ -4329,10 +4516,11 @@ pub mod cloud_channel_service_client {
         /// CustomerRepricingConfig.
         ///
         /// You can only update configs if the
-        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is a
-        /// future month. To make changes to configs for the current month, use
-        /// [CreateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateCustomerRepricingConfig], taking note of its restrictions. You
-        /// cannot update the [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is a future month. To make changes to configs for the current month, use
+        /// [CreateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateCustomerRepricingConfig],
+        /// taking note of its restrictions. You cannot update the
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
         ///
         /// When updating a config in the future:
         ///
@@ -4345,14 +4533,16 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Missing or invalid required parameters in the
         /// request. Also displays if the updated config is for the current month or
         /// past months.
-        /// * NOT_FOUND: The [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] specified does not exist or is
-        /// not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the updated [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] resource, otherwise
-        /// returns an error.
+        /// If successful, the updated
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn update_customer_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCustomerRepricingConfigRequest>,
@@ -4372,19 +4562,23 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Deletes the given [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] permanently. You can only
-        /// delete configs if their [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is set
-        /// to a date after the current month.
+        /// Deletes the given
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// permanently. You can only delete configs if their
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is set to a date after the current month.
         ///
         /// Possible error codes:
         ///
         /// * PERMISSION_DENIED: The account making the request does not own
         /// this customer.
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
-        /// * FAILED_PRECONDITION: The [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] is active or in the
-        /// past.
-        /// * NOT_FOUND: No [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig] found for the name in the
-        /// request.
+        /// * FAILED_PRECONDITION: The
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// is active or in the past.
+        /// * NOT_FOUND: No
+        /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
+        /// found for the name in the request.
         pub async fn delete_customer_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCustomerRepricingConfigRequest>,
@@ -4411,13 +4605,16 @@ pub mod cloud_channel_service_client {
         ///
         /// * PERMISSION_DENIED: If the account making the request and the account
         /// being queried are different.
-        /// * NOT_FOUND: The [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] was not found.
+        /// * NOT_FOUND: The
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// was not found.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] resource, otherwise
-        /// returns an error.
+        /// If successful, the
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn get_channel_partner_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -4449,14 +4646,17 @@ pub mod cloud_channel_service_client {
         ///
         /// * PERMISSION_DENIED: If the account making the request and the account
         /// being queried are different.
-        /// * NOT_FOUND: The [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] specified does not exist
-        /// or is not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] resources.
-        /// The data for each resource is displayed in the ascending order of:
+        /// If successful, the
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// resources. The data for each resource is displayed in the ascending order
+        /// of:
         /// * channel partner ID
         /// * [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
         /// * [ChannelPartnerRepricingConfig.update_time][google.cloud.channel.v1.ChannelPartnerRepricingConfig.update_time]
@@ -4488,9 +4688,10 @@ pub mod cloud_channel_service_client {
         }
         /// Creates a ChannelPartnerRepricingConfig. Call this method to set
         /// modifications for a specific ChannelPartner's bill. You can only create
-        /// configs if the [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is a future
-        /// month. If needed, you can create a config for the current month, with some
-        /// restrictions.
+        /// configs if the
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is a future month. If needed, you can create a config for the current
+        /// month, with some restrictions.
         ///
         /// When creating a config for a future month, make sure there are no existing
         /// configs for that
@@ -4504,8 +4705,9 @@ pub mod cloud_channel_service_client {
         /// Changes to the config may be immediate, but may take up to 24 hours.
         /// * There is a limit of ten configs for any ChannelPartner or
         /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
-        /// * The contained [ChannelPartnerRepricingConfig.repricing_config][google.cloud.channel.v1.ChannelPartnerRepricingConfig.repricing_config] vaule
-        /// must be different from the value used in the current config for a
+        /// * The contained
+        /// [ChannelPartnerRepricingConfig.repricing_config][google.cloud.channel.v1.ChannelPartnerRepricingConfig.repricing_config]
+        /// vaule must be different from the value used in the current config for a
         /// ChannelPartner.
         ///
         /// Possible Error Codes:
@@ -4515,14 +4717,16 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Missing or invalid required parameters in the
         /// request. Also displays if the updated config is for the current month or
         /// past months.
-        /// * NOT_FOUND: The [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] specified does not exist
-        /// or is not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the updated [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] resource,
-        /// otherwise returns an error.
+        /// If successful, the updated
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn create_channel_partner_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -4552,10 +4756,11 @@ pub mod cloud_channel_service_client {
         /// the existing CustomerRepricingConfig.
         ///
         /// You can only update configs if the
-        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is a
-        /// future month. To make changes to configs for the current month, use
-        /// [CreateChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerRepricingConfig], taking note of its restrictions.
-        /// You cannot update the [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is a future month. To make changes to configs for the current month, use
+        /// [CreateChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerRepricingConfig],
+        /// taking note of its restrictions. You cannot update the
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month].
         ///
         /// When updating a config in the future:
         ///
@@ -4568,14 +4773,16 @@ pub mod cloud_channel_service_client {
         /// * INVALID_ARGUMENT: Missing or invalid required parameters in the
         /// request. Also displays if the updated config is for the current month or
         /// past months.
-        /// * NOT_FOUND: The [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] specified does not exist
-        /// or is not associated with the given account.
+        /// * NOT_FOUND: The
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// specified does not exist or is not associated with the given account.
         /// * INTERNAL: Any non-user error related to technical issues in the
         /// backend. In this case, contact Cloud Channel support.
         ///
         /// Return Value:
-        /// If successful, the updated [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] resource,
-        /// otherwise returns an error.
+        /// If successful, the updated
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// resource, otherwise returns an error.
         pub async fn update_channel_partner_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -4600,19 +4807,23 @@ pub mod cloud_channel_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Deletes the given [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] permanently. You can
-        /// only delete configs if their [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month] is
-        /// set to a date after the current month.
+        /// Deletes the given
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// permanently. You can only delete configs if their
+        /// [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
+        /// is set to a date after the current month.
         ///
         /// Possible error codes:
         ///
         /// * PERMISSION_DENIED: The account making the request does not own
         /// this customer.
         /// * INVALID_ARGUMENT: Required request parameters are missing or invalid.
-        /// * FAILED_PRECONDITION: The [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] is active or
-        /// in the past.
-        /// * NOT_FOUND: No [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig] found for the name in the
-        /// request.
+        /// * FAILED_PRECONDITION: The
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// is active or in the past.
+        /// * NOT_FOUND: No
+        /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
+        /// found for the name in the request.
         pub async fn delete_channel_partner_repricing_config(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -4796,7 +5007,8 @@ pub mod cloud_channel_service_client {
         }
         /// Registers a service account with subscriber privileges on the Cloud Pub/Sub
         /// topic for this Channel Services account. After you create a
-        /// subscriber, you get the events through [SubscriberEvent][google.cloud.channel.v1.SubscriberEvent]
+        /// subscriber, you get the events through
+        /// [SubscriberEvent][google.cloud.channel.v1.SubscriberEvent]
         ///
         /// Possible error codes:
         ///
@@ -4911,7 +5123,8 @@ pub mod cloud_channel_service_client {
         }
     }
 }
-/// Provides contextual information about a \[google.longrunning.Operation][google.longrunning.Operation\].
+/// Provides contextual information about a
+/// \[google.longrunning.Operation][google.longrunning.Operation\].
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// The RPC that initiated this Long Running Operation.
