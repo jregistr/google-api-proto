@@ -12,6 +12,7 @@ pub mod sheets;
 pub mod slides;
 /// Common format for declaring a  menu item, or button, that appears within a
 /// host app.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MenuItemExtensionPoint {
     /// Required. The endpoint to execute when this extension point is
@@ -29,6 +30,7 @@ pub struct MenuItemExtensionPoint {
     pub logo_url: ::prost::alloc::string::String,
 }
 /// Common format for declaring an add-on's home-page view.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HomepageExtensionPoint {
     /// Required. The endpoint to execute when this extension point is
@@ -45,6 +47,7 @@ pub struct HomepageExtensionPoint {
     pub enabled: ::core::option::Option<bool>,
 }
 /// Format for declaring a universal action menu item extension point.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UniversalActionExtensionPoint {
     /// Required. User-visible text describing the action taken by activating this
@@ -62,6 +65,7 @@ pub struct UniversalActionExtensionPoint {
 pub mod universal_action_extension_point {
     /// Required. The action type supported on a universal action menu item. It
     /// could be either a link to open or an endpoint to execute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ActionType {
         /// URL to be opened by the UniversalAction.
@@ -73,6 +77,7 @@ pub mod universal_action_extension_point {
     }
 }
 /// The widget subset used by an add-on.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddOnWidgetSet {
     /// The list of widgets used in an add-on.
@@ -132,6 +137,7 @@ pub mod add_on_widget_set {
     }
 }
 /// Add-on configuration that is shared across all add-on host applications.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommonAddOnManifest {
     /// Required. The display name of the add-on.
@@ -173,6 +179,7 @@ pub struct CommonAddOnManifest {
     pub open_link_url_prefixes: ::core::option::Option<::prost_types::ListValue>,
 }
 /// Card layout properties shared across all add-on host applications.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LayoutProperties {
     /// The primary color of the add-on. It sets the color of toolbar. If no
@@ -189,6 +196,7 @@ pub struct LayoutProperties {
     pub secondary_color: ::prost::alloc::string::String,
 }
 /// Options for sending requests to add-on HTTP endpoints
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpOptions {
     /// Configuration for the token sent in the HTTP Authorization header

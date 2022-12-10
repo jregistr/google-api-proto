@@ -1,4 +1,5 @@
 /// Meta information is used to improve the performance of the service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestMetadata {
     /// Provides user unique identification and groups information.
@@ -6,6 +7,7 @@ pub struct RequestMetadata {
     pub user_info: ::core::option::Option<UserInfo>,
 }
 /// Additional information returned to client, such as debugging information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseMetadata {
     /// A unique id associated with this call. This id is logged for tracking
@@ -13,6 +15,7 @@ pub struct ResponseMetadata {
     #[prost(string, tag = "1")]
     pub request_id: ::prost::alloc::string::String,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserInfo {
     /// A unique user identification string, as determined by the client.
@@ -28,6 +31,7 @@ pub struct UserInfo {
     pub group_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Options for Update operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateOptions {
     /// Type for update.
@@ -44,6 +48,7 @@ pub struct UpdateOptions {
     pub merge_fields_options: ::core::option::Option<MergeFieldsOptions>,
 }
 /// Options for merging updated fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MergeFieldsOptions {
     /// When merging message fields, the default behavior is to merge
@@ -161,6 +166,7 @@ impl AccessControlMode {
     }
 }
 /// Defines the structure for content warehouse document proto.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Document {
     /// The resource name of the document.
@@ -231,6 +237,7 @@ pub struct Document {
 }
 /// Nested message and enum types in `Document`.
 pub mod document {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum StructuredContent {
         /// Other document format, such as PPTX, XLXS
@@ -241,6 +248,7 @@ pub mod document {
         CloudAiDocument(super::super::super::documentai::v1::Document),
     }
     /// Raw document file.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RawDocument {
         /// Raw document file in Cloud Storage path.
@@ -252,6 +260,7 @@ pub mod document {
     }
 }
 /// References to the documents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentReference {
     /// Required. Name of the referenced document.
@@ -281,6 +290,7 @@ pub struct DocumentReference {
     pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Property of a document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Property {
     /// Required. Must match the name of a PropertyDefinition in the DocumentSchema.
@@ -301,6 +311,7 @@ pub mod property {
     /// Value of the Property parsed into a specific data type.
     /// Specific type value(s) obtained from Document AIs Property.mention_text
     /// field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Values {
         /// Integer property values.
@@ -332,6 +343,7 @@ pub mod property {
     }
 }
 /// Integer values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IntegerArray {
     /// List of integer values.
@@ -339,6 +351,7 @@ pub struct IntegerArray {
     pub values: ::prost::alloc::vec::Vec<i32>,
 }
 /// Float values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FloatArray {
     /// List of float values.
@@ -346,6 +359,7 @@ pub struct FloatArray {
     pub values: ::prost::alloc::vec::Vec<f32>,
 }
 /// String/text values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextArray {
     /// List of text values.
@@ -353,6 +367,7 @@ pub struct TextArray {
     pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Enum values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumArray {
     /// List of enum values.
@@ -360,6 +375,7 @@ pub struct EnumArray {
     pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// DateTime values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateTimeArray {
     /// List of datetime values.
@@ -368,6 +384,7 @@ pub struct DateTimeArray {
     pub values: ::prost::alloc::vec::Vec<super::super::super::r#type::DateTime>,
 }
 /// Timestamp values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimestampArray {
     /// List of timestamp values.
@@ -375,6 +392,7 @@ pub struct TimestampArray {
     pub values: ::prost::alloc::vec::Vec<TimestampValue>,
 }
 /// Timestamp value type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimestampValue {
     #[prost(oneof = "timestamp_value::Value", tags = "1, 2")]
@@ -382,6 +400,7 @@ pub struct TimestampValue {
 }
 /// Nested message and enum types in `TimestampValue`.
 pub mod timestamp_value {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// Timestamp value
@@ -395,6 +414,7 @@ pub mod timestamp_value {
     }
 }
 /// Property values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyArray {
     /// List of property values.
@@ -404,6 +424,7 @@ pub struct PropertyArray {
 /// Map property value.
 /// Represents a structured entries of key value pairs, consisting of field names
 /// which map to dynamically typed values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MapProperty {
     /// Unordered map of dynamically typed values.
@@ -417,6 +438,7 @@ pub struct MapProperty {
 /// a float, a integer, a string, or a datetime value. A producer of value is
 /// expected to set one of these variants. Absence of any variant indicates an
 /// error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Value {
     /// The kind of value.
@@ -426,6 +448,7 @@ pub struct Value {
 /// Nested message and enum types in `Value`.
 pub mod value {
     /// The kind of value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         /// Represents a float value.
@@ -452,6 +475,7 @@ pub mod value {
     }
 }
 /// Represents the string value of the enum field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumValue {
     /// String value of the enum field. This must match defined set of enums
@@ -492,6 +516,7 @@ impl RawDocumentFileType {
         }
     }
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentQuery {
     /// The query string that matches against the full text of the document and
@@ -583,6 +608,7 @@ pub struct DocumentQuery {
     >,
 }
 /// Filter on create timestamp or update timestamp of documents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeFilter {
     #[prost(message, optional, tag = "1")]
@@ -630,6 +656,7 @@ pub mod time_filter {
         }
     }
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyFilter {
     /// The Document schema name \[Document.document_schema_name][google.cloud.contentwarehouse.v1.Document.document_schema_name\].
@@ -682,6 +709,7 @@ pub struct PropertyFilter {
     pub condition: ::prost::alloc::string::String,
 }
 /// Filter for the specific types of documents returned.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FileTypeFilter {
     /// The type of files to return.
@@ -729,6 +757,7 @@ pub mod file_type_filter {
     }
 }
 /// The histogram request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistogramQuery {
     /// An expression specifies a histogram request against matching documents for
@@ -751,6 +780,7 @@ pub struct HistogramQuery {
     #[prost(message, optional, tag = "3")]
     pub filters: ::core::option::Option<HistogramQueryPropertyNameFilter>,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistogramQueryPropertyNameFilter {
     /// This filter specifies the exact document schema(s)
@@ -820,6 +850,7 @@ pub mod histogram_query_property_name_filter {
     }
 }
 /// Histogram result that matches \[HistogramQuery][google.cloud.contentwarehouse.v1.HistogramQuery\] specified in searches.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistogramQueryResult {
     /// Requested histogram expression.
@@ -838,6 +869,7 @@ pub struct HistogramQueryResult {
     >,
 }
 /// Request Option for processing Cloud AI Document in CW Document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudAiDocumentOption {
     /// Whether to convert all the entities to properties.
@@ -851,6 +883,7 @@ pub struct CloudAiDocumentOption {
     >,
 }
 /// Request message for DocumentService.CreateDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentRequest {
     /// Required. The parent name.
@@ -880,6 +913,7 @@ pub struct CreateDocumentRequest {
     pub create_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for DocumentService.GetDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDocumentRequest {
     /// Required. The name of the document to retrieve.
@@ -894,6 +928,7 @@ pub struct GetDocumentRequest {
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
 /// Request message for DocumentService.UpdateDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDocumentRequest {
     /// Required. The name of the document to update.
@@ -918,6 +953,7 @@ pub struct UpdateDocumentRequest {
     pub update_options: ::core::option::Option<UpdateOptions>,
 }
 /// Request message for DocumentService.DeleteDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDocumentRequest {
     /// Required. The name of the document to delete.
@@ -933,6 +969,7 @@ pub struct DeleteDocumentRequest {
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
 /// Request message for DocumentService.SearchDocuments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchDocumentsRequest {
     /// Required. The parent, which owns this collection of documents.
@@ -1032,6 +1069,7 @@ pub struct SearchDocumentsRequest {
     pub qa_size_limit: i32,
 }
 /// Request message for DocumentService.FetchAcl
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchAclRequest {
     /// Required. REQUIRED: The resource for which the policy is being requested.
@@ -1050,6 +1088,7 @@ pub struct FetchAclRequest {
     pub project_owner: bool,
 }
 /// Request message for DocumentService.SetAcl.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetAclRequest {
     /// Required. REQUIRED: The resource for which the policy is being requested.
@@ -1072,6 +1111,7 @@ pub struct SetAclRequest {
     pub project_owner: bool,
 }
 /// Represents a set of rules from a single customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleSet {
     /// The resource name of the rule set. Managed internally.
@@ -1092,6 +1132,7 @@ pub struct RuleSet {
     pub rules: ::prost::alloc::vec::Vec<Rule>,
 }
 /// Represents the rule for a content warehouse trigger.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Rule {
     /// Short description of the rule and its context.
@@ -1150,6 +1191,7 @@ pub mod rule {
     }
 }
 /// Represents the action triggered by Rule Engine when the rule is true.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Action {
     /// ID of the action. Managed internally.
@@ -1160,6 +1202,7 @@ pub struct Action {
 }
 /// Nested message and enum types in `Action`.
 pub mod action {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Action {
         /// Action triggering access control operations.
@@ -1187,6 +1230,7 @@ pub mod action {
 }
 /// Represents the action responsible for access control list management
 /// operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccessControlAction {
     /// Identifies the type of operation.
@@ -1238,6 +1282,7 @@ pub mod access_control_action {
     }
 }
 /// Represents the action responsible for data validation operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataValidationAction {
     /// Map of (K, V) -> (field, string condition to be evaluated on the field)
@@ -1250,6 +1295,7 @@ pub struct DataValidationAction {
     >,
 }
 /// Represents the action responsible for properties update operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataUpdateAction {
     /// Map of (K, V) -> (valid name of the field, new value of the field)
@@ -1264,6 +1310,7 @@ pub struct DataUpdateAction {
     >,
 }
 /// Represents the action responsible for adding document under a folder.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddToFolderAction {
     /// Names of the folder under which new document is to be added.
@@ -1274,6 +1321,7 @@ pub struct AddToFolderAction {
 }
 /// Represents the action responsible for remove a document from a specific
 /// folder.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveFromFolderAction {
     /// Condition of the action to be executed.
@@ -1286,6 +1334,7 @@ pub struct RemoveFromFolderAction {
     pub folder: ::prost::alloc::string::String,
 }
 /// Represents the action responsible for publishing messages to a Pub/Sub topic.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PublishAction {
     /// The topic id in the Pub/Sub service for which messages will be published
@@ -1297,6 +1346,7 @@ pub struct PublishAction {
     pub messages: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Represents the action responsible for deleting the document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDocumentAction {
     /// Boolean field to select between hard vs soft delete options.
@@ -1306,6 +1356,7 @@ pub struct DeleteDocumentAction {
 }
 /// Records the output of Rule Engine including rule evaluation and actions
 /// result.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleEngineOutput {
     /// Name of the document against which the rules and actions were evaluated.
@@ -1320,6 +1371,7 @@ pub struct RuleEngineOutput {
     pub action_executor_output: ::core::option::Option<ActionExecutorOutput>,
 }
 /// Represents the output of the Rule Evaluator.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleEvaluatorOutput {
     /// List of rules fetched from database for the given request trigger type.
@@ -1334,6 +1386,7 @@ pub struct RuleEvaluatorOutput {
     pub invalid_rules: ::prost::alloc::vec::Vec<InvalidRule>,
 }
 /// A triggered rule that failed the validation check(s) after parsing.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InvalidRule {
     /// Triggered rule.
@@ -1344,6 +1397,7 @@ pub struct InvalidRule {
     pub error: ::prost::alloc::string::String,
 }
 /// Represents the output of the Action Executor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ActionExecutorOutput {
     /// List of rule and corresponding actions result.
@@ -1351,6 +1405,7 @@ pub struct ActionExecutorOutput {
     pub rule_actions_pairs: ::prost::alloc::vec::Vec<RuleActionsPair>,
 }
 /// Represents a rule and outputs of associated actions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuleActionsPair {
     /// Represents the rule.
@@ -1361,6 +1416,7 @@ pub struct RuleActionsPair {
     pub action_outputs: ::prost::alloc::vec::Vec<ActionOutput>,
 }
 /// Represents the result of executing an action.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ActionOutput {
     /// ID of the action.
@@ -1416,6 +1472,7 @@ pub mod action_output {
     }
 }
 /// Response message for DocumentService.CreateDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentResponse {
     /// Document created after executing create request.
@@ -1433,6 +1490,7 @@ pub struct CreateDocumentResponse {
     pub metadata: ::core::option::Option<ResponseMetadata>,
 }
 /// Response message for DocumentService.UpdateDocument.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDocumentResponse {
     /// Updated document after executing update request.
@@ -1450,6 +1508,7 @@ pub struct UpdateDocumentResponse {
     pub metadata: ::core::option::Option<ResponseMetadata>,
 }
 /// Additional result info for the question-answering feature.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QaResult {
     /// Highlighted sections in the snippet.
@@ -1465,6 +1524,7 @@ pub struct QaResult {
 pub mod qa_result {
     /// A text span in the search text snippet that represents a highlighted
     /// section (answer context, highly relevant sentence, etc.).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Highlight {
         /// Start index of the highlight.
@@ -1476,6 +1536,7 @@ pub mod qa_result {
     }
 }
 /// Response message for DocumentService.SearchDocuments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchDocumentsResponse {
     /// The document entities that match the specified \[SearchDocumentsRequest][google.cloud.contentwarehouse.v1.SearchDocumentsRequest\].
@@ -1507,6 +1568,7 @@ pub struct SearchDocumentsResponse {
 /// Nested message and enum types in `SearchDocumentsResponse`.
 pub mod search_documents_response {
     /// Document entry with metadata inside \[SearchDocumentsResponse][google.cloud.contentwarehouse.v1.SearchDocumentsResponse\]
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct MatchingDocument {
         /// Document that matches the specified \[SearchDocumentsRequest][google.cloud.contentwarehouse.v1.SearchDocumentsRequest\].
@@ -1531,6 +1593,7 @@ pub mod search_documents_response {
     }
 }
 /// Response message for DocumentService.FetchAcl.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchAclResponse {
     /// The IAM policy.
@@ -1542,6 +1605,7 @@ pub struct FetchAclResponse {
     pub metadata: ::core::option::Option<ResponseMetadata>,
 }
 /// Response message for DocumentService.SetAcl.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetAclResponse {
     /// The policy will be attached to a resource (e.g. projecct, document).
@@ -1760,6 +1824,7 @@ pub mod document_service_client {
     }
 }
 /// Response message for DocumentLinkService.ListLinkedTargets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLinkedTargetsResponse {
     /// Target document-links.
@@ -1771,6 +1836,7 @@ pub struct ListLinkedTargetsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for DocumentLinkService.ListLinkedTargets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLinkedTargetsRequest {
     /// Required. The name of the document, for which all target links are returned.
@@ -1784,6 +1850,7 @@ pub struct ListLinkedTargetsRequest {
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
 /// Response message for DocumentLinkService.ListLinkedSources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLinkedSourcesResponse {
     /// Source document-links.
@@ -1795,6 +1862,7 @@ pub struct ListLinkedSourcesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Response message for DocumentLinkService.ListLinkedSources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLinkedSourcesRequest {
     /// Required. The name of the document, for which all source links are returned.
@@ -1822,6 +1890,7 @@ pub struct ListLinkedSourcesRequest {
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
 /// A document-link between source and target document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentLink {
     /// Name of this document-link.
@@ -1890,6 +1959,7 @@ pub mod document_link {
     }
 }
 /// Request message for DocumentLinkService.CreateDocumentLink.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentLinkRequest {
     /// Required. Parent of the document-link to be created.
@@ -1907,6 +1977,7 @@ pub struct CreateDocumentLinkRequest {
     pub request_metadata: ::core::option::Option<RequestMetadata>,
 }
 /// Request message for DocumentLinkService.DeleteDocumentLink.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDocumentLinkRequest {
     /// Required. The name of the document-link to be deleted.
@@ -2062,12 +2133,15 @@ pub mod document_link_service_client {
     }
 }
 /// Metadata object for CreateDocument request (currently empty).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentMetadata {}
 /// Metadata object for UpdateDocument request (currently empty).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDocumentMetadata {}
 /// A document schema used to define document structure.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentSchema {
     /// The resource name of the document schema.
@@ -2098,6 +2172,7 @@ pub struct DocumentSchema {
     pub description: ::prost::alloc::string::String,
 }
 /// Defines the metadata for a schema property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyDefinition {
     /// Required. The name of the metadata property.
@@ -2139,6 +2214,7 @@ pub struct PropertyDefinition {
 /// Nested message and enum types in `PropertyDefinition`.
 pub mod property_definition {
     /// Type of the property.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ValueTypeOptions {
         /// Integer property.
@@ -2170,24 +2246,31 @@ pub mod property_definition {
     }
 }
 /// Configurations for an integer property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IntegerTypeOptions {}
 /// Configurations for a float property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FloatTypeOptions {}
 /// Configurations for a text property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextTypeOptions {}
 /// Configurations for a date time property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateTimeTypeOptions {}
 /// Configurations for a Map property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MapTypeOptions {}
 /// Configurations for a timestamp property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimestampTypeOptions {}
 /// Configurations for a nested structured data property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PropertyTypeOptions {
     /// Required. List of property definitions.
@@ -2195,6 +2278,7 @@ pub struct PropertyTypeOptions {
     pub property_definitions: ::prost::alloc::vec::Vec<PropertyDefinition>,
 }
 /// Configurations for an enum/categorical property.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumTypeOptions {
     /// Required. List of possible enum values.
@@ -2207,6 +2291,7 @@ pub struct EnumTypeOptions {
     pub validation_check_disabled: bool,
 }
 /// Request message for RuleSetService.CreateRuleSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRuleSetRequest {
     /// Required. The parent name.
@@ -2218,6 +2303,7 @@ pub struct CreateRuleSetRequest {
     pub rule_set: ::core::option::Option<RuleSet>,
 }
 /// Request message for RuleSetService.GetRuleSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRuleSetRequest {
     /// Required. The name of the rule set to retrieve.
@@ -2227,6 +2313,7 @@ pub struct GetRuleSetRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for RuleSetService.UpdateRuleSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateRuleSetRequest {
     /// Required. The name of the rule set to update.
@@ -2239,6 +2326,7 @@ pub struct UpdateRuleSetRequest {
     pub rule_set: ::core::option::Option<RuleSet>,
 }
 /// Request message for RuleSetService.DeleteRuleSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteRuleSetRequest {
     /// Required. The name of the rule set to delete.
@@ -2248,6 +2336,7 @@ pub struct DeleteRuleSetRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for RuleSetService.ListRuleSets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuleSetsRequest {
     /// Required. The parent, which owns this collection of document.
@@ -2269,6 +2358,7 @@ pub struct ListRuleSetsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for RuleSetService.ListRuleSets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuleSetsResponse {
     /// The rule sets from the specified parent.
@@ -2442,6 +2532,7 @@ pub mod rule_set_service_client {
     }
 }
 /// Request message for DocumentSchemaService.CreateDocumentSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDocumentSchemaRequest {
     /// Required. The parent name.
@@ -2452,6 +2543,7 @@ pub struct CreateDocumentSchemaRequest {
     pub document_schema: ::core::option::Option<DocumentSchema>,
 }
 /// Request message for DocumentSchemaService.GetDocumentSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDocumentSchemaRequest {
     /// Required. The name of the document schema to retrieve.
@@ -2459,6 +2551,7 @@ pub struct GetDocumentSchemaRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for DocumentSchemaService.UpdateDocumentSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDocumentSchemaRequest {
     /// Required. The name of the document schema to update.
@@ -2471,6 +2564,7 @@ pub struct UpdateDocumentSchemaRequest {
     pub document_schema: ::core::option::Option<DocumentSchema>,
 }
 /// Request message for DocumentSchemaService.DeleteDocumentSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDocumentSchemaRequest {
     /// Required. The name of the document schema to delete.
@@ -2478,6 +2572,7 @@ pub struct DeleteDocumentSchemaRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for DocumentSchemaService.ListDocumentSchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDocumentSchemasRequest {
     /// Required. The parent, which owns this collection of document schemas.
@@ -2499,6 +2594,7 @@ pub struct ListDocumentSchemasRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for DocumentSchemaService.ListDocumentSchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDocumentSchemasResponse {
     /// The document schemas from the specified parent.
@@ -2684,6 +2780,7 @@ pub mod document_schema_service_client {
 /// Synonym 2: money, credit, finance, payment
 /// Synonym 3: shipping, freight, transport
 /// Each SynonymSets should be disjoint
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SynonymSet {
     /// The resource name of the SynonymSet
@@ -2705,6 +2802,7 @@ pub struct SynonymSet {
 pub mod synonym_set {
     /// Represents a list of words given by the customer
     /// All these words are synonyms of each other.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Synonym {
         /// For example: sale, invoice, bill, order
@@ -2713,6 +2811,7 @@ pub mod synonym_set {
     }
 }
 /// Request message for SynonymSetService.CreateSynonymSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateSynonymSetRequest {
     /// Required. The parent name.
@@ -2725,6 +2824,7 @@ pub struct CreateSynonymSetRequest {
 }
 /// Request message for SynonymSetService.GetSynonymSet.
 /// Will return synonymSet for a certain context.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetSynonymSetRequest {
     /// Required. The name of the synonymSet to retrieve
@@ -2735,6 +2835,7 @@ pub struct GetSynonymSetRequest {
 }
 /// Request message for SynonymSetService.ListSynonymSets.
 /// Will return all synonymSets belonging to the customer project.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSynonymSetsRequest {
     /// Required. The parent name.
@@ -2756,6 +2857,7 @@ pub struct ListSynonymSetsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for SynonymSetService.ListSynonymSets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSynonymSetsResponse {
     /// The synonymSets from the specified parent.
@@ -2769,6 +2871,7 @@ pub struct ListSynonymSetsResponse {
 /// Request message for SynonymSetService.UpdateSynonymSet.
 /// Removes the SynonymSet for the specified context and replaces
 /// it with the SynonymSet in this request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSynonymSetRequest {
     /// Required. The name of the synonymSet to update
@@ -2781,6 +2884,7 @@ pub struct UpdateSynonymSetRequest {
     pub synonym_set: ::core::option::Option<SynonymSet>,
 }
 /// Request message for SynonymSetService.DeleteSynonymSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteSynonymSetRequest {
     /// Required. The name of the synonymSet to delete

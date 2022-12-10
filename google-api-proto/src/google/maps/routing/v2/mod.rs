@@ -1,6 +1,7 @@
 /// Information related to how and why a fallback result was used. If this field
 /// is set, then it means the server used a different routing mode from your
 /// preferred mode as fallback.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FallbackInfo {
     /// Routing mode used for the response. If fallback was triggered, the mode
@@ -69,6 +70,7 @@ impl FallbackRoutingMode {
     }
 }
 /// Encapsulates an encoded polyline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Polyline {
     /// Encapsulates the type of polyline. Defaults to encoded_polyline.
@@ -78,6 +80,7 @@ pub struct Polyline {
 /// Nested message and enum types in `Polyline`.
 pub mod polyline {
     /// Encapsulates the type of polyline. Defaults to encoded_polyline.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum PolylineType {
         /// The string encoding of the polyline using the [polyline encoding
@@ -146,6 +149,7 @@ impl PolylineEncoding {
     }
 }
 /// Encapsulates a location (a geographic point, and an optional heading).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Location {
     /// The waypoint's geographic coordinates.
@@ -234,6 +238,7 @@ impl Maneuver {
 }
 /// Encapsulates navigation instructions for a
 /// \[RouteLegStep][google.maps.routing.v2.RouteLegStep\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NavigationInstruction {
     /// Encapsulates the navigation instructions for the current step (e.g., turn
@@ -279,6 +284,7 @@ impl RouteLabel {
 /// Given a path with points P_0, P_1, ... , P_N (zero-based index), the
 /// SpeedReadingInterval defines an interval and describes its traffic using the
 /// following categories.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SpeedReadingInterval {
     /// The starting index of this interval in the polyline.
@@ -332,6 +338,7 @@ pub mod speed_reading_interval {
     }
 }
 /// Encapsulates toll information on a `Route` or on a `RouteLeg`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TollInfo {
     /// The monetary amount of tolls for the corresponding Route or RouteLeg.
@@ -345,6 +352,7 @@ pub struct TollInfo {
 }
 /// Encapsulates a route, which consists of a series of connected road segments
 /// that join beginning, ending, and intermediate waypoints.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Route {
     /// Labels for the `Route` that are useful to identify specific properties
@@ -400,6 +408,7 @@ pub struct Route {
 }
 /// Encapsulates the additional information that the user should be informed
 /// about, such as possible traffic zone restriction etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteTravelAdvisory {
     /// Encapsulates information about tolls on the Route.
@@ -427,6 +436,7 @@ pub struct RouteTravelAdvisory {
 }
 /// Encapsulates the additional information that the user should be informed
 /// about, such as possible traffic zone restriction etc. on a route leg.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteLegTravelAdvisory {
     /// Encapsulates information about tolls on the specific RouteLeg.
@@ -451,6 +461,7 @@ pub struct RouteLegTravelAdvisory {
 }
 /// Encapsulates the additional information that the user should be informed
 /// about, such as possible traffic zone restriction on a leg step.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteLegStepTravelAdvisory {
     /// Speed reading intervals detailing traffic density. Applicable in case of
@@ -467,6 +478,7 @@ pub struct RouteLegStepTravelAdvisory {
     pub speed_reading_intervals: ::prost::alloc::vec::Vec<SpeedReadingInterval>,
 }
 /// Encapsulates a segment between non-`via` waypoints.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteLeg {
     /// The travel distance of the route leg, in meters.
@@ -508,6 +520,7 @@ pub struct RouteLeg {
 }
 /// Encapsulates a segment of a `RouteLeg`. A step corresponds to a single
 /// navigation instruction. Route legs are made up of steps.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteLegStep {
     /// The travel distance of this step, in meters. In some circumstances, this
@@ -889,6 +902,7 @@ impl VehicleEmissionType {
 }
 /// Encapsulates the vehicle information, such as the license plate last
 /// character.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VehicleInfo {
     /// Describes the vehicle's emission type.
@@ -898,6 +912,7 @@ pub struct VehicleInfo {
 }
 /// Encapsulates a set of optional conditions to satisfy when calculating the
 /// routes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteModifiers {
     /// Specifies whether to avoid toll roads where reasonable. Preference will be
@@ -1029,6 +1044,7 @@ impl Units {
 }
 /// Encapsulates a waypoint. Waypoints mark both the beginning and end of a
 /// route, and include intermediate stops along the route.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Waypoint {
     /// Marks this waypoint as a milestone rather a stopping point. For
@@ -1066,6 +1082,7 @@ pub struct Waypoint {
 /// Nested message and enum types in `Waypoint`.
 pub mod waypoint {
     /// Different ways to represent a location.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum LocationType {
         /// A point specified using geographic coordinates, including an optional
@@ -1078,6 +1095,7 @@ pub mod waypoint {
     }
 }
 /// ComputeRoutes request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeRoutesRequest {
     /// Required. Origin waypoint.
@@ -1186,6 +1204,7 @@ pub mod compute_routes_request {
     }
 }
 /// ComputeRoutes the response message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeRoutesResponse {
     /// Contains an array of computed routes (up to three) when you specify
@@ -1203,6 +1222,7 @@ pub struct ComputeRoutesResponse {
     pub fallback_info: ::core::option::Option<FallbackInfo>,
 }
 /// ComputeRouteMatrix request message
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeRouteMatrixRequest {
     /// Required. Array of origins, which determines the rows of the response matrix.
@@ -1239,6 +1259,7 @@ pub struct ComputeRouteMatrixRequest {
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// A single origin for ComputeRouteMatrixRequest
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteMatrixOrigin {
     /// Required. Origin waypoint
@@ -1249,6 +1270,7 @@ pub struct RouteMatrixOrigin {
     pub route_modifiers: ::core::option::Option<RouteModifiers>,
 }
 /// A single destination for ComputeRouteMatrixRequest
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteMatrixDestination {
     /// Required. Destination waypoint
@@ -1257,6 +1279,7 @@ pub struct RouteMatrixDestination {
 }
 /// Encapsulates route information computed for an origin/destination pair in the
 /// ComputeRouteMatrix API. This proto can be streamed to the client.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteMatrixElement {
     /// Zero-based index of the origin in the request.

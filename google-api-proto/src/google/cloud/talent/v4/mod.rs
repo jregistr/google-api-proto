@@ -1,4 +1,5 @@
 /// The histogram request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistogramQuery {
     /// An expression specifies a histogram request against matching jobs for
@@ -9,6 +10,7 @@ pub struct HistogramQuery {
     pub histogram_query: ::prost::alloc::string::String,
 }
 /// Histogram result that matches \[HistogramQuery][google.cloud.talent.v4.HistogramQuery\] specified in searches.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HistogramQueryResult {
     /// Requested histogram expression.
@@ -35,6 +37,7 @@ pub struct HistogramQueryResult {
 /// quality of results for the API clients, enabling the
 /// service to perform optimally. The number of events sent must be consistent
 /// with other calls, such as job searches, issued to the service by the client.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClientEvent {
     /// Strongly recommended for the best service experience.
@@ -64,6 +67,7 @@ pub mod client_event {
     /// Required.
     ///
     /// The detail information of a specific event type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Event {
         /// An event issued when a job seeker interacts with the application that
@@ -74,6 +78,7 @@ pub mod client_event {
 }
 /// An event issued when a job seeker interacts with the application that
 /// implements Cloud Talent Solution.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobEvent {
     /// Required. The type of the event (see \[JobEventType][google.cloud.talent.v4.JobEvent.JobEventType\]).
@@ -217,6 +222,7 @@ pub mod job_event {
     }
 }
 /// The report event request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateClientEventRequest {
     /// Required. Resource name of the tenant under which the event is created.
@@ -321,6 +327,7 @@ pub mod event_service_client {
 /// entity that shares common access with specific privileges for resources like
 /// jobs. Customer may create multiple tenants to provide data isolation for
 /// different groups.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Tenant {
     /// Required during tenant update.
@@ -339,6 +346,7 @@ pub struct Tenant {
     pub external_id: ::prost::alloc::string::String,
 }
 /// Message representing a period of time between two timestamps.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimestampRange {
     /// Begin of the period (inclusive).
@@ -349,6 +357,7 @@ pub struct TimestampRange {
     pub end_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// A resource that represents a location with full geographic information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Location {
     /// The type of a location, which corresponds to the address lines field of
@@ -445,6 +454,7 @@ pub mod location {
 /// Meta information related to the job searcher or entity
 /// conducting the job search. This information is used to improve the
 /// performance of the service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestMetadata {
     /// Required if \[allow_missing_ids][google.cloud.talent.v4.RequestMetadata.allow_missing_ids\] is unset or `false`.
@@ -504,6 +514,7 @@ pub struct RequestMetadata {
     pub device_info: ::core::option::Option<DeviceInfo>,
 }
 /// Additional information returned to client, such as debugging information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResponseMetadata {
     /// A unique id associated with this call.
@@ -514,6 +525,7 @@ pub struct ResponseMetadata {
 /// Device information collected from the job seeker, candidate, or
 /// other entity conducting the job search. Providing this information improves
 /// the quality of the search results across devices.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeviceInfo {
     /// Type of the device.
@@ -577,6 +589,7 @@ pub mod device_info {
     }
 }
 /// Custom attribute values that are either filterable or non-filterable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomAttribute {
     /// Exactly one of \[string_values][google.cloud.talent.v4.CustomAttribute.string_values\] or \[long_values][google.cloud.talent.v4.CustomAttribute.long_values\] must be specified.
@@ -615,6 +628,7 @@ pub struct CustomAttribute {
     pub keyword_searchable: bool,
 }
 /// Spell check result.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SpellingCorrection {
     /// Indicates if the query was corrected by the spell checker.
@@ -634,6 +648,7 @@ pub struct SpellingCorrection {
     pub corrected_html: ::prost::alloc::string::String,
 }
 /// Job compensation details.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompensationInfo {
     /// Job compensation information.
@@ -672,6 +687,7 @@ pub mod compensation_info {
     /// - and its \[expected_units_per_year][google.cloud.talent.v4.CompensationInfo.CompensationEntry.expected_units_per_year\] is set or can be derived.
     /// Its annualized range is determined as (\[amount][google.cloud.talent.v4.CompensationInfo.CompensationEntry.amount\] or \[range][google.cloud.talent.v4.CompensationInfo.CompensationEntry.range\]) times
     /// \[expected_units_per_year][google.cloud.talent.v4.CompensationInfo.CompensationEntry.expected_units_per_year\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CompensationEntry {
         /// Compensation type.
@@ -708,6 +724,7 @@ pub mod compensation_info {
     /// Nested message and enum types in `CompensationEntry`.
     pub mod compensation_entry {
         /// Compensation amount. It could be a fixed amount or a floating range.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum CompensationAmount {
             /// Compensation amount.
@@ -719,6 +736,7 @@ pub mod compensation_info {
         }
     }
     /// Compensation range.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CompensationRange {
         /// The maximum amount of compensation. If left empty, the value is set
@@ -859,6 +877,7 @@ pub mod compensation_info {
 }
 /// Metadata used for long running operations returned by CTS batch APIs.
 /// It's used to replace \[google.longrunning.Operation.metadata][google.longrunning.Operation.metadata\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchOperationMetadata {
     /// The state of a long running operation.
@@ -1455,6 +1474,7 @@ impl CommuteMethod {
 /// A Job resource represents a job posting (also referred to as a "job listing"
 /// or "job requisition"). A job belongs to a \[Company][google.cloud.talent.v4.Company\], which is the hiring
 /// entity responsible for the job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Job {
     /// Required during job update.
@@ -1715,6 +1735,7 @@ pub struct Job {
 /// Nested message and enum types in `Job`.
 pub mod job {
     /// Application related details of a job posting.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ApplicationInfo {
         /// Use this field to specify email address(es) to which resumes or
@@ -1740,6 +1761,7 @@ pub mod job {
         pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// Derived details about the job posting.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DerivedInfo {
         /// Structured locations of the job, resolved from \[Job.addresses][google.cloud.talent.v4.Job.addresses\].
@@ -1753,6 +1775,7 @@ pub mod job {
         pub job_categories: ::prost::alloc::vec::Vec<i32>,
     }
     /// Options for job processing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ProcessingOptions {
         /// If set to `true`, the service does not attempt to resolve a
@@ -1776,6 +1799,7 @@ pub mod job {
     }
 }
 /// The query required to perform a search query.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobQuery {
     /// The query string that matches against the job title, description, and
@@ -1943,6 +1967,7 @@ pub struct JobQuery {
     pub excluded_jobs: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Geographic region of the search.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LocationFilter {
     /// The address name, such as "Mountain View" or "Bay Area".
@@ -2043,6 +2068,7 @@ pub mod location_filter {
     }
 }
 /// Filter on job compensation type and amount.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompensationFilter {
     /// Required. Type of filter.
@@ -2127,6 +2153,7 @@ pub mod compensation_filter {
     }
 }
 /// Parameters needed for commute search.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommuteFilter {
     /// Required. The method of transportation to calculate the commute time for.
@@ -2188,6 +2215,7 @@ pub mod commute_filter {
         }
     }
     /// Traffic factor to take into account while searching by commute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TrafficOption {
         /// Specifies the traffic density to use when calculating commute time.
@@ -2202,6 +2230,7 @@ pub mod commute_filter {
     }
 }
 /// Create job request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateJobRequest {
     /// Required. The resource name of the tenant under which the job is created.
@@ -2215,6 +2244,7 @@ pub struct CreateJobRequest {
     pub job: ::core::option::Option<Job>,
 }
 /// Get job request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetJobRequest {
     /// Required. The resource name of the job to retrieve.
@@ -2226,6 +2256,7 @@ pub struct GetJobRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Update job request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateJobRequest {
     /// Required. The Job to be updated.
@@ -2242,6 +2273,7 @@ pub struct UpdateJobRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Delete job request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteJobRequest {
     /// Required. The resource name of the job to be deleted.
@@ -2253,6 +2285,7 @@ pub struct DeleteJobRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// List jobs request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobsRequest {
     /// Required. The resource name of the tenant under which the job is created.
@@ -2304,6 +2337,7 @@ pub struct ListJobsRequest {
     pub job_view: i32,
 }
 /// List jobs response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobsResponse {
     /// The Jobs for a given company.
@@ -2321,6 +2355,7 @@ pub struct ListJobsResponse {
     pub metadata: ::core::option::Option<ResponseMetadata>,
 }
 /// The Request body of the `SearchJobs` call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchJobsRequest {
     /// Required. The resource name of the tenant to search within.
@@ -2583,6 +2618,7 @@ pub struct SearchJobsRequest {
 /// Nested message and enum types in `SearchJobsRequest`.
 pub mod search_jobs_request {
     /// Custom ranking information for \[SearchJobsRequest][google.cloud.talent.v4.SearchJobsRequest\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CustomRankingInfo {
         /// Required. Controls over how important the score of
@@ -2841,6 +2877,7 @@ pub mod search_jobs_request {
     }
 }
 /// Response for SearchJob method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchJobsResponse {
     /// The Job entities that match the specified \[SearchJobsRequest][google.cloud.talent.v4.SearchJobsRequest\].
@@ -2884,6 +2921,7 @@ pub struct SearchJobsResponse {
 /// Nested message and enum types in `SearchJobsResponse`.
 pub mod search_jobs_response {
     /// Job entry with metadata inside \[SearchJobsResponse][google.cloud.talent.v4.SearchJobsResponse\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct MatchingJob {
         /// Job resource that matches the specified \[SearchJobsRequest][google.cloud.talent.v4.SearchJobsRequest\].
@@ -2910,6 +2948,7 @@ pub mod search_jobs_response {
         pub commute_info: ::core::option::Option<CommuteInfo>,
     }
     /// Commute details related to this job.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CommuteInfo {
         /// Location used as the destination in the commute calculation.
@@ -2924,6 +2963,7 @@ pub mod search_jobs_response {
     }
 }
 /// Request to create a batch of jobs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateJobsRequest {
     /// Required. The resource name of the tenant under which the job is created.
@@ -2938,6 +2978,7 @@ pub struct BatchCreateJobsRequest {
     pub jobs: ::prost::alloc::vec::Vec<Job>,
 }
 /// Request to update a batch of jobs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchUpdateJobsRequest {
     /// Required. The resource name of the tenant under which the job is created.
@@ -2968,6 +3009,7 @@ pub struct BatchUpdateJobsRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request to delete a batch of jobs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchDeleteJobsRequest {
     /// Required. The resource name of the tenant under which the job is created.
@@ -2988,6 +3030,7 @@ pub struct BatchDeleteJobsRequest {
     pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Mutation result of a job from a batch operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobResult {
     /// Here \[Job][google.cloud.talent.v4.Job\] only contains basic information including \[name][google.cloud.talent.v4.Job.name\],
@@ -3003,6 +3046,7 @@ pub struct JobResult {
 }
 /// The result of \[JobService.BatchCreateJobs][google.cloud.talent.v4.JobService.BatchCreateJobs\]. It's used to
 /// replace \[google.longrunning.Operation.response][google.longrunning.Operation.response\] in case of success.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateJobsResponse {
     /// List of job mutation results from a batch create operation. It can change
@@ -3012,6 +3056,7 @@ pub struct BatchCreateJobsResponse {
 }
 /// The result of \[JobService.BatchUpdateJobs][google.cloud.talent.v4.JobService.BatchUpdateJobs\]. It's used to
 /// replace \[google.longrunning.Operation.response][google.longrunning.Operation.response\] in case of success.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchUpdateJobsResponse {
     /// List of job mutation results from a batch update operation. It can change
@@ -3021,6 +3066,7 @@ pub struct BatchUpdateJobsResponse {
 }
 /// The result of \[JobService.BatchDeleteJobs][google.cloud.talent.v4.JobService.BatchDeleteJobs\]. It's used to
 /// replace \[google.longrunning.Operation.response][google.longrunning.Operation.response\] in case of success.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchDeleteJobsResponse {
     /// List of job mutation results from a batch delete operation. It can change
@@ -3362,6 +3408,7 @@ pub mod job_service_client {
 /// A Company resource represents a company in the service. A company is the
 /// entity that owns job postings, that is, the hiring entity responsible for
 /// employing applicants for the job position.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Company {
     /// Required during company update.
@@ -3444,6 +3491,7 @@ pub struct Company {
 /// Nested message and enum types in `Company`.
 pub mod company {
     /// Derived details about the company.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DerivedInfo {
         /// A structured headquarters location of the company, resolved from
@@ -3453,6 +3501,7 @@ pub mod company {
     }
 }
 /// The Request of the CreateTenant method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateTenantRequest {
     /// Required. Resource name of the project under which the tenant is created.
@@ -3466,6 +3515,7 @@ pub struct CreateTenantRequest {
     pub tenant: ::core::option::Option<Tenant>,
 }
 /// Request for getting a tenant by name.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTenantRequest {
     /// Required. The resource name of the tenant to be retrieved.
@@ -3476,6 +3526,7 @@ pub struct GetTenantRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for updating a specified tenant.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateTenantRequest {
     /// Required. The tenant resource to replace the current resource in the system.
@@ -3492,6 +3543,7 @@ pub struct UpdateTenantRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request to delete a tenant.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteTenantRequest {
     /// Required. The resource name of the tenant to be deleted.
@@ -3502,6 +3554,7 @@ pub struct DeleteTenantRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// List tenants for which the client has ACL visibility.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTenantsRequest {
     /// Required. Resource name of the project under which the tenant is created.
@@ -3519,6 +3572,7 @@ pub struct ListTenantsRequest {
     pub page_size: i32,
 }
 /// The List tenants response object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTenantsResponse {
     /// Tenants for the current client.
@@ -3694,6 +3748,7 @@ pub mod tenant_service_client {
     }
 }
 /// The Request of the CreateCompany method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCompanyRequest {
     /// Required. Resource name of the tenant under which the company is created.
@@ -3707,6 +3762,7 @@ pub struct CreateCompanyRequest {
     pub company: ::core::option::Option<Company>,
 }
 /// Request for getting a company by name.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCompanyRequest {
     /// Required. The resource name of the company to be retrieved.
@@ -3718,6 +3774,7 @@ pub struct GetCompanyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for updating a specified company.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCompanyRequest {
     /// Required. The company resource to replace the current resource in the system.
@@ -3734,6 +3791,7 @@ pub struct UpdateCompanyRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request to delete a company.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCompanyRequest {
     /// Required. The resource name of the company to be deleted.
@@ -3745,6 +3803,7 @@ pub struct DeleteCompanyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// List companies for which the client has ACL visibility.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCompaniesRequest {
     /// Required. Resource name of the tenant under which the company is created.
@@ -3770,6 +3829,7 @@ pub struct ListCompaniesRequest {
     pub require_open_jobs: bool,
 }
 /// The List companies response object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCompaniesResponse {
     /// Companies for the current client.
@@ -3946,6 +4006,7 @@ pub mod company_service_client {
     }
 }
 /// Auto-complete parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryRequest {
     /// Required. Resource name of tenant the completion is performed within.
@@ -4073,6 +4134,7 @@ pub mod complete_query_request {
     }
 }
 /// Response of auto-complete query.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryResponse {
     /// Results of the matching job/company candidates.
@@ -4088,6 +4150,7 @@ pub struct CompleteQueryResponse {
 /// Nested message and enum types in `CompleteQueryResponse`.
 pub mod complete_query_response {
     /// Resource that represents completion results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CompletionResult {
         /// The suggestion for the query.

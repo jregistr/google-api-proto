@@ -1,4 +1,5 @@
 /// Describes a repository in which log entries are stored.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogBucket {
     /// Output only. The resource name of the bucket.
@@ -59,6 +60,7 @@ pub struct LogBucket {
     pub cmek_settings: ::core::option::Option<CmekSettings>,
 }
 /// Describes a view over log entries in a bucket.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogView {
     /// The resource name of the view.
@@ -99,6 +101,7 @@ pub struct LogView {
 /// Pub/Sub topic or a Cloud Logging log bucket. A logs filter controls which log
 /// entries are exported. The sink must be created within a project,
 /// organization, billing account, or folder.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogSink {
     /// Required. The client-assigned sink identifier, unique within the project.
@@ -240,6 +243,7 @@ pub mod log_sink {
         }
     }
     /// Destination dependent options.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Options {
         /// Optional. Options that affect sinks exporting data to BigQuery.
@@ -248,6 +252,7 @@ pub mod log_sink {
     }
 }
 /// Options that change functionality of a sink exporting data to BigQuery.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQueryOptions {
     /// Optional. Whether to use [BigQuery's partition
@@ -271,6 +276,7 @@ pub struct BigQueryOptions {
     pub uses_timestamp_column_partitioning: bool,
 }
 /// The parameters to `ListBuckets`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBucketsRequest {
     /// Required. The parent resource whose buckets are to be listed:
@@ -298,6 +304,7 @@ pub struct ListBucketsRequest {
     pub page_size: i32,
 }
 /// The response from ListBuckets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBucketsResponse {
     /// A list of buckets.
@@ -310,6 +317,7 @@ pub struct ListBucketsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to `CreateBucket`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateBucketRequest {
     /// Required. The resource in which to create the log bucket:
@@ -333,6 +341,7 @@ pub struct CreateBucketRequest {
     pub bucket: ::core::option::Option<LogBucket>,
 }
 /// The parameters to `UpdateBucket`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateBucketRequest {
     /// Required. The full resource name of the bucket to update.
@@ -362,6 +371,7 @@ pub struct UpdateBucketRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The parameters to `GetBucket`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetBucketRequest {
     /// Required. The resource name of the bucket:
@@ -378,6 +388,7 @@ pub struct GetBucketRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `DeleteBucket`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteBucketRequest {
     /// Required. The full resource name of the bucket to delete.
@@ -394,6 +405,7 @@ pub struct DeleteBucketRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `UndeleteBucket`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeleteBucketRequest {
     /// Required. The full resource name of the bucket to undelete.
@@ -410,6 +422,7 @@ pub struct UndeleteBucketRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `ListViews`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListViewsRequest {
     /// Required. The bucket whose views are to be listed:
@@ -431,6 +444,7 @@ pub struct ListViewsRequest {
     pub page_size: i32,
 }
 /// The response from ListViews.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListViewsResponse {
     /// A list of views.
@@ -443,6 +457,7 @@ pub struct ListViewsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to `CreateView`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateViewRequest {
     /// Required. The bucket in which to create the view
@@ -462,6 +477,7 @@ pub struct CreateViewRequest {
     pub view: ::core::option::Option<LogView>,
 }
 /// The parameters to `UpdateView`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateViewRequest {
     /// Required. The full resource name of the view to update
@@ -488,6 +504,7 @@ pub struct UpdateViewRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The parameters to `GetView`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetViewRequest {
     /// Required. The resource name of the policy:
@@ -501,6 +518,7 @@ pub struct GetViewRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `DeleteView`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteViewRequest {
     /// Required. The full resource name of the view to delete:
@@ -514,6 +532,7 @@ pub struct DeleteViewRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `ListSinks`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSinksRequest {
     /// Required. The parent resource whose sinks are to be listed:
@@ -537,6 +556,7 @@ pub struct ListSinksRequest {
     pub page_size: i32,
 }
 /// Result returned from `ListSinks`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSinksResponse {
     /// A list of sinks.
@@ -549,6 +569,7 @@ pub struct ListSinksResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to `GetSink`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetSinkRequest {
     /// Required. The resource name of the sink:
@@ -565,6 +586,7 @@ pub struct GetSinkRequest {
     pub sink_name: ::prost::alloc::string::String,
 }
 /// The parameters to `CreateSink`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateSinkRequest {
     /// Required. The resource in which to create the sink:
@@ -599,6 +621,7 @@ pub struct CreateSinkRequest {
     pub unique_writer_identity: bool,
 }
 /// The parameters to `UpdateSink`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSinkRequest {
     /// Required. The full resource name of the sink to update, including the parent
@@ -651,6 +674,7 @@ pub struct UpdateSinkRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The parameters to `DeleteSink`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteSinkRequest {
     /// Required. The full resource name of the sink to delete, including the parent
@@ -672,6 +696,7 @@ pub struct DeleteSinkRequest {
 /// use exclusions to reduce your chargeable logs. Note that exclusions on
 /// organization-level and folder-level sinks don't apply to child resources.
 /// Note also that you cannot modify the _Required sink or exclude logs from it.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogExclusion {
     /// Required. A client-assigned identifier, such as `"load-balancer-exclusion"`.
@@ -713,6 +738,7 @@ pub struct LogExclusion {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// The parameters to `ListExclusions`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExclusionsRequest {
     /// Required. The parent resource whose exclusions are to be listed.
@@ -736,6 +762,7 @@ pub struct ListExclusionsRequest {
     pub page_size: i32,
 }
 /// Result returned from `ListExclusions`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExclusionsResponse {
     /// A list of exclusions.
@@ -748,6 +775,7 @@ pub struct ListExclusionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to `GetExclusion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetExclusionRequest {
     /// Required. The resource name of an existing exclusion:
@@ -764,6 +792,7 @@ pub struct GetExclusionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The parameters to `CreateExclusion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateExclusionRequest {
     /// Required. The parent resource in which to create the exclusion:
@@ -785,6 +814,7 @@ pub struct CreateExclusionRequest {
     pub exclusion: ::core::option::Option<LogExclusion>,
 }
 /// The parameters to `UpdateExclusion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateExclusionRequest {
     /// Required. The resource name of the exclusion to update:
@@ -814,6 +844,7 @@ pub struct UpdateExclusionRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The parameters to `DeleteExclusion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteExclusionRequest {
     /// Required. The resource name of an existing exclusion to delete:
@@ -835,6 +866,7 @@ pub struct DeleteExclusionRequest {
 /// See [Enabling CMEK for Log
 /// Router](<https://cloud.google.com/logging/docs/routing/managed-encryption>) for
 /// more information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCmekSettingsRequest {
     /// Required. The resource for which to retrieve CMEK settings.
@@ -861,6 +893,7 @@ pub struct GetCmekSettingsRequest {
 /// See [Enabling CMEK for Log
 /// Router](<https://cloud.google.com/logging/docs/routing/managed-encryption>) for
 /// more information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCmekSettingsRequest {
     /// Required. The resource name for the CMEK settings to update.
@@ -906,6 +939,7 @@ pub struct UpdateCmekSettingsRequest {
 /// See [Enabling CMEK for Log
 /// Router](<https://cloud.google.com/logging/docs/routing/managed-encryption>) for
 /// more information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CmekSettings {
     /// Output only. The resource name of the CMEK settings.
@@ -962,6 +996,7 @@ pub struct CmekSettings {
 /// See [Enabling CMEK for Log
 /// Router](<https://cloud.google.com/logging/docs/routing/managed-encryption>) for
 /// more information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetSettingsRequest {
     /// Required. The resource for which to retrieve settings.
@@ -988,6 +1023,7 @@ pub struct GetSettingsRequest {
 /// See [Enabling CMEK for Log
 /// Router](<https://cloud.google.com/logging/docs/routing/managed-encryption>) for
 /// more information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSettingsRequest {
     /// Required. The resource name for the settings to update.
@@ -1022,6 +1058,7 @@ pub struct UpdateSettingsRequest {
 }
 /// Describes the settings associated with a project, folder, organization,
 /// billing account, or flexible resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Settings {
     /// Output only. The resource name of the settings.
@@ -1083,6 +1120,7 @@ pub struct Settings {
     pub disable_default_sink: bool,
 }
 /// The parameters to CopyLogEntries.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CopyLogEntriesRequest {
     /// Required. Log bucket from which to copy log entries.
@@ -1101,6 +1139,7 @@ pub struct CopyLogEntriesRequest {
     pub destination: ::prost::alloc::string::String,
 }
 /// Metadata for CopyLogEntries long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CopyLogEntriesMetadata {
     /// The create time of an operation.
@@ -1132,6 +1171,7 @@ pub struct CopyLogEntriesMetadata {
     pub writer_identity: ::prost::alloc::string::String,
 }
 /// Response type for CopyLogEntries long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CopyLogEntriesResponse {
     /// Number of log entries copied.
@@ -1872,6 +1912,7 @@ pub mod config_service_v2_client {
     }
 }
 /// An individual entry in a log.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntry {
     /// Required. The resource name of the log to which this log entry belongs:
@@ -2001,6 +2042,7 @@ pub struct LogEntry {
 /// Nested message and enum types in `LogEntry`.
 pub mod log_entry {
     /// The log entry payload, which can be one of multiple types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Payload {
         /// The log entry payload, represented as a protocol buffer. Some Google
@@ -2024,6 +2066,7 @@ pub mod log_entry {
 }
 /// Additional information about a potentially long-running operation with which
 /// a log entry is associated.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntryOperation {
     /// Optional. An arbitrary operation identifier. Log entries with the same
@@ -2044,6 +2087,7 @@ pub struct LogEntryOperation {
 }
 /// Additional information about the source code location that produced the log
 /// entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntrySourceLocation {
     /// Optional. Source file name. Depending on the runtime environment, this
@@ -2066,6 +2110,7 @@ pub struct LogEntrySourceLocation {
 /// Additional information used to correlate multiple log entries. Used when a
 /// single LogEntry would exceed the Google Cloud Logging size limit and is
 /// split across multiple log entries.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogSplit {
     /// A globally unique identifier for all log entries in a sequence of split log
@@ -2083,6 +2128,7 @@ pub struct LogSplit {
     pub total_splits: i32,
 }
 /// The parameters to DeleteLog.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteLogRequest {
     /// Required. The resource name of the log to delete:
@@ -2102,6 +2148,7 @@ pub struct DeleteLogRequest {
     pub log_name: ::prost::alloc::string::String,
 }
 /// The parameters to WriteLogEntries.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WriteLogEntriesRequest {
     /// Optional. A default log resource name that is assigned to all log entries
@@ -2182,9 +2229,11 @@ pub struct WriteLogEntriesRequest {
     pub dry_run: bool,
 }
 /// Result returned from WriteLogEntries.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WriteLogEntriesResponse {}
 /// Error details for WriteLogEntries with partial success.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WriteLogEntriesPartialErrors {
     /// When `WriteLogEntriesRequest.partial_success` is true, records the error
@@ -2200,6 +2249,7 @@ pub struct WriteLogEntriesPartialErrors {
     >,
 }
 /// The parameters to `ListLogEntries`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogEntriesRequest {
     /// Required. Names of one or more parent resources from which to
@@ -2251,6 +2301,7 @@ pub struct ListLogEntriesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Result returned from `ListLogEntries`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogEntriesResponse {
     /// A list of log entries.  If `entries` is empty, `nextPageToken` may still be
@@ -2272,6 +2323,7 @@ pub struct ListLogEntriesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to ListMonitoredResourceDescriptors
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMonitoredResourceDescriptorsRequest {
     /// Optional. The maximum number of results to return from this request.
@@ -2287,6 +2339,7 @@ pub struct ListMonitoredResourceDescriptorsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Result returned from ListMonitoredResourceDescriptors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMonitoredResourceDescriptorsResponse {
     /// A list of resource descriptors.
@@ -2301,6 +2354,7 @@ pub struct ListMonitoredResourceDescriptorsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to ListLogs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogsRequest {
     /// Required. The resource name that owns the logs:
@@ -2339,6 +2393,7 @@ pub struct ListLogsRequest {
     pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Result returned from ListLogs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogsResponse {
     /// A list of log names. For example,
@@ -2353,6 +2408,7 @@ pub struct ListLogsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to `TailLogEntries`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TailLogEntriesRequest {
     /// Required. Name of a parent resource from which to retrieve log entries:
@@ -2387,6 +2443,7 @@ pub struct TailLogEntriesRequest {
     pub buffer_window: ::core::option::Option<::prost_types::Duration>,
 }
 /// Result returned from `TailLogEntries`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TailLogEntriesResponse {
     /// A list of log entries. Each response in the stream will order entries with
@@ -2407,6 +2464,7 @@ pub struct TailLogEntriesResponse {
 /// Nested message and enum types in `TailLogEntriesResponse`.
 pub mod tail_log_entries_response {
     /// Information about entries that were omitted from the session.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SuppressionInfo {
         /// The reason that entries were omitted from the session.
@@ -2670,6 +2728,7 @@ pub mod logging_service_v2_client {
 /// distribution of the values. The distribution records the statistics of the
 /// extracted values along with an optional histogram of the values as specified
 /// by the bucket options.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogMetric {
     /// Required. The client-assigned metric identifier.
@@ -2825,6 +2884,7 @@ pub mod log_metric {
     }
 }
 /// The parameters to ListLogMetrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogMetricsRequest {
     /// Required. The name of the project containing the metrics:
@@ -2845,6 +2905,7 @@ pub struct ListLogMetricsRequest {
     pub page_size: i32,
 }
 /// Result returned from ListLogMetrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLogMetricsResponse {
     /// A list of logs-based metrics.
@@ -2857,6 +2918,7 @@ pub struct ListLogMetricsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The parameters to GetLogMetric.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetLogMetricRequest {
     /// Required. The resource name of the desired metric:
@@ -2866,6 +2928,7 @@ pub struct GetLogMetricRequest {
     pub metric_name: ::prost::alloc::string::String,
 }
 /// The parameters to CreateLogMetric.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateLogMetricRequest {
     /// Required. The resource name of the project in which to create the metric:
@@ -2881,6 +2944,7 @@ pub struct CreateLogMetricRequest {
     pub metric: ::core::option::Option<LogMetric>,
 }
 /// The parameters to UpdateLogMetric.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateLogMetricRequest {
     /// Required. The resource name of the metric to update:
@@ -2897,6 +2961,7 @@ pub struct UpdateLogMetricRequest {
     pub metric: ::core::option::Option<LogMetric>,
 }
 /// The parameters to DeleteLogMetric.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteLogMetricRequest {
     /// Required. The resource name of the metric to delete:

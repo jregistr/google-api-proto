@@ -1,4 +1,5 @@
 /// The create assessment request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAssessmentRequest {
     /// Required. The name of the project in which the assessment will be created,
@@ -10,6 +11,7 @@ pub struct CreateAssessmentRequest {
     pub assessment: ::core::option::Option<Assessment>,
 }
 /// The request message to annotate an Assessment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnnotateAssessmentRequest {
     /// Required. The resource name of the Assessment, in the format
@@ -173,9 +175,11 @@ pub mod annotate_assessment_request {
     }
 }
 /// Empty response for AnnotateAssessment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnnotateAssessmentResponse {}
 /// Information about a verification endpoint that can be used for 2FA.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndpointVerificationInfo {
     /// Output only. Token to provide to the client to trigger endpoint
@@ -191,6 +195,7 @@ pub struct EndpointVerificationInfo {
 }
 /// Nested message and enum types in `EndpointVerificationInfo`.
 pub mod endpoint_verification_info {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Endpoint {
         /// Email address for which to trigger a verification request.
@@ -203,6 +208,7 @@ pub mod endpoint_verification_info {
     }
 }
 /// Information about account verification, used for identity verification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountVerificationInfo {
     /// Endpoints that can be used for identity verification.
@@ -294,6 +300,7 @@ pub mod account_verification_info {
     }
 }
 /// Private password leak verification info.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PrivatePasswordLeakVerification {
     /// Optional. Exactly 26-bit prefix of the SHA-256 hash of the canonicalized
@@ -318,6 +325,7 @@ pub struct PrivatePasswordLeakVerification {
     pub reencrypted_user_credentials_hash: ::prost::bytes::Bytes,
 }
 /// A recaptcha assessment resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Assessment {
     /// Output only. The resource name for the Assessment in the format
@@ -348,6 +356,7 @@ pub struct Assessment {
         PrivatePasswordLeakVerification,
     >,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Event {
     /// Optional. The user response token provided by the reCAPTCHA client-side
@@ -377,6 +386,7 @@ pub struct Event {
     pub hashed_account_id: ::prost::bytes::Bytes,
 }
 /// Risk analysis result for an event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RiskAnalysis {
     /// Legitimate event score from 0.0 to 1.0.
@@ -438,6 +448,7 @@ pub mod risk_analysis {
         }
     }
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TokenProperties {
     /// Whether the provided user response token is valid. When valid = false, the
@@ -519,6 +530,7 @@ pub mod token_properties {
     }
 }
 /// Account defender risk assessment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountDefenderAssessment {
     /// Labels for this request.
@@ -583,6 +595,7 @@ pub mod account_defender_assessment {
     }
 }
 /// The create key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateKeyRequest {
     /// Required. The name of the project in which the key will be created, in the
@@ -594,6 +607,7 @@ pub struct CreateKeyRequest {
     pub key: ::core::option::Option<Key>,
 }
 /// The list keys request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListKeysRequest {
     /// Required. The name of the project that contains the keys that will be
@@ -610,6 +624,7 @@ pub struct ListKeysRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response to request to list keys in a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListKeysResponse {
     /// Key details.
@@ -621,6 +636,7 @@ pub struct ListKeysResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The retrieve legacy secret key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetrieveLegacySecretKeyRequest {
     /// Required. The public key name linked to the requested secret key in the
@@ -629,6 +645,7 @@ pub struct RetrieveLegacySecretKeyRequest {
     pub key: ::prost::alloc::string::String,
 }
 /// The get key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetKeyRequest {
     /// Required. The name of the requested key, in the format
@@ -637,6 +654,7 @@ pub struct GetKeyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The update key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateKeyRequest {
     /// Required. The key to update.
@@ -648,6 +666,7 @@ pub struct UpdateKeyRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The delete key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteKeyRequest {
     /// Required. The name of the key to be deleted, in the format
@@ -656,6 +675,7 @@ pub struct DeleteKeyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The migrate key request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MigrateKeyRequest {
     /// Required. The name of the key to be migrated, in the format
@@ -674,6 +694,7 @@ pub struct MigrateKeyRequest {
     pub skip_billing_check: bool,
 }
 /// The get metrics request message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMetricsRequest {
     /// Required. The name of the requested metrics, in the format
@@ -682,6 +703,7 @@ pub struct GetMetricsRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Metrics for a single Key.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Metrics {
     /// Output only. The name of the metrics, in the format
@@ -703,6 +725,7 @@ pub struct Metrics {
 }
 /// Secret key is used only in legacy reCAPTCHA. It must be used in a 3rd party
 /// integration with legacy reCAPTCHA.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetrieveLegacySecretKeyResponse {
     /// The secret key (also known as shared secret) authorizes communication
@@ -714,6 +737,7 @@ pub struct RetrieveLegacySecretKeyResponse {
 }
 /// A key used to identify and configure applications (web and/or mobile) that
 /// use reCAPTCHA Enterprise.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Key {
     /// The resource name for the Key in the format
@@ -748,6 +772,7 @@ pub struct Key {
 pub mod key {
     /// Platform specific settings for this key. The key can only be used on a
     /// platform for which the settings are enabled.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum PlatformSettings {
         /// Settings for keys that can be used by websites.
@@ -762,6 +787,7 @@ pub mod key {
     }
 }
 /// Options for user acceptance testing.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TestingOptions {
     /// All assessments for this Key will return this score. Must be between 0
@@ -816,6 +842,7 @@ pub mod testing_options {
     }
 }
 /// Settings specific to keys that can be used by websites.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WebKeySettings {
     /// If set to true, it means allowed_domains will not be enforced.
@@ -926,6 +953,7 @@ pub mod web_key_settings {
     }
 }
 /// Settings specific to keys that can be used by Android apps.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AndroidKeySettings {
     /// If set to true, allowed_package_names are not enforced.
@@ -937,6 +965,7 @@ pub struct AndroidKeySettings {
     pub allowed_package_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Settings specific to keys that can be used by iOS apps.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IosKeySettings {
     /// If set to true, allowed_bundle_ids are not enforced.
@@ -948,6 +977,7 @@ pub struct IosKeySettings {
     pub allowed_bundle_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Score distribution.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScoreDistribution {
     /// Map key is score value multiplied by 100. The scores are discrete values
@@ -957,6 +987,7 @@ pub struct ScoreDistribution {
     pub score_buckets: ::prost::alloc::collections::BTreeMap<i32, i64>,
 }
 /// Metrics related to scoring.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScoreMetrics {
     /// Aggregated score metrics for all traffic.
@@ -971,6 +1002,7 @@ pub struct ScoreMetrics {
     >,
 }
 /// Metrics related to challenges.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChallengeMetrics {
     /// Count of reCAPTCHA checkboxes or badges rendered. This is mostly equivalent
@@ -991,6 +1023,7 @@ pub struct ChallengeMetrics {
     pub passed_count: i64,
 }
 /// The request message to list memberships in a related account group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelatedAccountGroupMembershipsRequest {
     /// Required. The resource name for the related account group in the format
@@ -1012,6 +1045,7 @@ pub struct ListRelatedAccountGroupMembershipsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response to a `ListRelatedAccountGroupMemberships` call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelatedAccountGroupMembershipsResponse {
     /// The memberships listed by the query.
@@ -1025,6 +1059,7 @@ pub struct ListRelatedAccountGroupMembershipsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request message to list related account groups.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelatedAccountGroupsRequest {
     /// Required. The name of the project to list related account groups from, in
@@ -1046,6 +1081,7 @@ pub struct ListRelatedAccountGroupsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response to a `ListRelatedAccountGroups` call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRelatedAccountGroupsResponse {
     /// The groups of related accounts listed by the query.
@@ -1057,6 +1093,7 @@ pub struct ListRelatedAccountGroupsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request message to search related account group memberships.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchRelatedAccountGroupMembershipsRequest {
     /// Required. The name of the project to search related account group
@@ -1085,6 +1122,7 @@ pub struct SearchRelatedAccountGroupMembershipsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response to a `SearchRelatedAccountGroupMemberships` call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchRelatedAccountGroupMembershipsResponse {
     /// The queried memberships.
@@ -1098,6 +1136,7 @@ pub struct SearchRelatedAccountGroupMembershipsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// A membership in a group of related accounts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RelatedAccountGroupMembership {
     /// Required. The resource name for this membership in the format
@@ -1111,6 +1150,7 @@ pub struct RelatedAccountGroupMembership {
     pub hashed_account_id: ::prost::bytes::Bytes,
 }
 /// A group of related accounts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RelatedAccountGroup {
     /// Required. The resource name for the related account group in the format
@@ -1120,6 +1160,7 @@ pub struct RelatedAccountGroup {
 }
 /// Settings specific to keys that can be used for WAF (Web Application
 /// Firewall).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WafSettings {
     /// Required. The WAF service that uses this key.

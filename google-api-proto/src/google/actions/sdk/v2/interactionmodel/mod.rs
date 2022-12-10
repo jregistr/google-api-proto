@@ -4,6 +4,7 @@ pub mod prompt;
 pub mod r#type;
 /// Defines a handler to be executed after an event. Examples of events are
 /// intent and condition based events in a scene.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EventHandler {
     /// Name of the webhook handler to call.
@@ -16,6 +17,7 @@ pub struct EventHandler {
 /// Nested message and enum types in `EventHandler`.
 pub mod event_handler {
     /// Prompts can either be inlined or referenced by name.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Prompt {
         /// Inlined static prompt. Can contain references to string resources in
@@ -28,6 +30,7 @@ pub mod event_handler {
     }
 }
 /// Registers events that trigger as the result of a true condition.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConditionalEvent {
     /// Required. Filter condition for this event to trigger. If condition is evaluated to
@@ -59,6 +62,7 @@ pub struct ConditionalEvent {
     pub handler: ::core::option::Option<EventHandler>,
 }
 /// Registers Events which trigger as the result of an intent match.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IntentEvent {
     /// Required. Intent triggering the event.
@@ -77,6 +81,7 @@ pub struct IntentEvent {
 /// Configuration for a slot. Slots are single units of data that can be filled
 /// through natural language (ie. intent parameters), session parameters, and
 /// other sources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Slot {
     /// Required. Name of the slot.
@@ -125,6 +130,7 @@ pub struct Slot {
 /// Nested message and enum types in `Slot`.
 pub mod slot {
     /// A single place where slot prompts are defined.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PromptSettings {
         /// Prompt for the slot value itself. Example: "What size did you want?"
@@ -160,6 +166,7 @@ pub mod slot {
     }
     /// Message describing the commit behavior associated with the slot after it
     /// has been successfully filled.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CommitBehavior {
         /// The session parameter to write the slot value after it is filled. Note
@@ -171,6 +178,7 @@ pub mod slot {
         pub write_session_param: ::prost::alloc::string::String,
     }
     /// Configuration to populate a default value for this slot.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DefaultValue {
         /// Optional. The session parameter to be used to initialize the slot value, if it has
@@ -191,6 +199,7 @@ pub mod slot {
 /// can be chained together with other scenes, generate prompts for the end user,
 /// and define slots.
 /// The scene name is specified in the name of the file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Scene {
     /// Handler to invoke when transitioning into this scene.
@@ -226,6 +235,7 @@ pub struct Scene {
 /// (NLU). Intent matches can trigger events in your conversation design to
 /// progress the user's conversation.
 /// The intent name is specified in the name of the file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Intent {
     /// The list of parameters within the training phrases. All parameters must be
@@ -251,6 +261,7 @@ pub struct Intent {
 /// Nested message and enum types in `Intent`.
 pub mod intent {
     /// Definition of a parameter which can be used inside training phrases.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IntentParameter {
         /// Required. Unique name of the intent parameter. Can be used in conditions and
@@ -265,6 +276,7 @@ pub mod intent {
     /// Nested message and enum types in `IntentParameter`.
     pub mod intent_parameter {
         /// Entity set references for an intent parameter.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct EntitySetReferences {
             /// Required. Entity set references for an intent parameter.
@@ -276,6 +288,7 @@ pub mod intent {
         /// Nested message and enum types in `EntitySetReferences`.
         pub mod entity_set_references {
             /// A reference to the set of allowed entities for this intent parameter.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct EntitySetReference {
                 /// Required. Identifies the specific collection of entities to be considered for a
@@ -286,6 +299,7 @@ pub mod intent {
             }
         }
         /// The type of the intent parameter.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum ParameterType {
             /// Optional. Declares the data type of this parameter.
@@ -309,6 +323,7 @@ pub mod intent {
 /// used to deep link users into specific flows when they invoke an Action.
 ///
 /// Note, the intent name is specified in the name of the file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GlobalIntentEvent {
     /// Optional. Destination scene which the conversation should jump to. The state of the
@@ -324,6 +339,7 @@ pub struct GlobalIntentEvent {
 /// Entity sets describe the pre-defined set of entities that the values of
 /// built-in intent parameters can come from. Entity sets can be referenced from
 /// entity_set in built-in intent parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EntitySet {
     /// Required. The list of entities this entity set supports.
@@ -333,6 +349,7 @@ pub struct EntitySet {
 /// Nested message and enum types in `EntitySet`.
 pub mod entity_set {
     /// An entity a built-in intent parameter value can come from.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Entity {
         /// Required. The ID of the entity.

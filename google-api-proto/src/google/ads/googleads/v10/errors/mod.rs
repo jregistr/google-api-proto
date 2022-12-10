@@ -1,4 +1,5 @@
 /// Container for enum describing possible validation errors of a feed item.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemValidationErrorEnum {}
 /// Nested message and enum types in `FeedItemValidationErrorEnum`.
@@ -501,6 +502,7 @@ pub mod feed_item_validation_error_enum {
     }
 }
 /// Container for enum describing possible user list errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserListErrorEnum {}
 /// Nested message and enum types in `UserListErrorEnum`.
@@ -647,6 +649,7 @@ pub mod user_list_error_enum {
     }
 }
 /// Container for enum describing possible errors in payments account service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PaymentsAccountErrorEnum {}
 /// Nested message and enum types in `PaymentsAccountErrorEnum`.
@@ -691,6 +694,7 @@ pub mod payments_account_error_enum {
 /// Container for enum describing possible errors from applying a keyword plan
 /// resource (keyword plan, keyword plan campaign, keyword plan ad group or
 /// keyword plan keyword) or KeywordPlanService RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanErrorEnum {}
 /// Nested message and enum types in `KeywordPlanErrorEnum`.
@@ -781,6 +785,7 @@ pub mod keyword_plan_error_enum {
     }
 }
 /// Container for enum describing possible errors from KeywordPlanIdeaService.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanIdeaErrorEnum {}
 /// Nested message and enum types in `KeywordPlanIdeaErrorEnum`.
@@ -824,6 +829,7 @@ pub mod keyword_plan_idea_error_enum {
     }
 }
 /// Container for enum describing possible asset link errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetLinkErrorEnum {}
 /// Nested message and enum types in `AssetLinkErrorEnum`.
@@ -943,6 +949,7 @@ pub mod asset_link_error_enum {
     }
 }
 /// Container for enum describing possible ad errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdErrorEnum {}
 /// Nested message and enum types in `AdErrorEnum`.
@@ -1574,6 +1581,7 @@ pub mod ad_error_enum {
     }
 }
 /// Container for enum describing possible not empty errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NotEmptyErrorEnum {}
 /// Nested message and enum types in `NotEmptyErrorEnum`.
@@ -1614,6 +1622,7 @@ pub mod not_empty_error_enum {
     }
 }
 /// Container for enum describing possible policy validation parameter errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PolicyValidationParameterErrorEnum {}
 /// Nested message and enum types in `PolicyValidationParameterErrorEnum`.
@@ -1667,6 +1676,7 @@ pub mod policy_validation_parameter_error_enum {
     }
 }
 /// Container for enum describing possible date range errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateRangeErrorEnum {}
 /// Nested message and enum types in `DateRangeErrorEnum`.
@@ -1723,6 +1733,7 @@ pub mod date_range_error_enum {
     }
 }
 /// Container for enum describing possible campaign errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignErrorEnum {}
 /// Nested message and enum types in `CampaignErrorEnum`.
@@ -1975,6 +1986,7 @@ pub mod campaign_error_enum {
     }
 }
 /// Container for enum describing possible ad group ad errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupAdErrorEnum {}
 /// Nested message and enum types in `AdGroupAdErrorEnum`.
@@ -2060,6 +2072,7 @@ pub mod ad_group_ad_error_enum {
     }
 }
 /// Container for enum describing possible quota errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QuotaErrorEnum {}
 /// Nested message and enum types in `QuotaErrorEnum`.
@@ -2108,6 +2121,7 @@ pub mod quota_error_enum {
     }
 }
 /// Container for enum describing possible user data errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserDataErrorEnum {}
 /// Nested message and enum types in `UserDataErrorEnum`.
@@ -2157,6 +2171,7 @@ pub mod user_data_error_enum {
     }
 }
 /// Container for enum describing possible ad group feed errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupFeedErrorEnum {}
 /// Nested message and enum types in `AdGroupFeedErrorEnum`.
@@ -2229,6 +2244,7 @@ pub mod ad_group_feed_error_enum {
     }
 }
 /// Container for enum describing possible change event errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeEventErrorEnum {}
 /// Nested message and enum types in `ChangeEventErrorEnum`.
@@ -2285,6 +2301,7 @@ pub mod change_event_error_enum {
     }
 }
 /// Container for enum describing possible conversion upload errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionUploadErrorEnum {}
 /// Nested message and enum types in `ConversionUploadErrorEnum`.
@@ -2541,6 +2558,7 @@ pub mod conversion_upload_error_enum {
     }
 }
 /// Container for enum describing possible campaign experiment errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignExperimentErrorEnum {}
 /// Nested message and enum types in `CampaignExperimentErrorEnum`.
@@ -2631,6 +2649,7 @@ pub mod campaign_experiment_error_enum {
     }
 }
 /// Container for enum describing possible date errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateErrorEnum {}
 /// Nested message and enum types in `DateErrorEnum`.
@@ -2710,6 +2729,7 @@ pub mod date_error_enum {
     }
 }
 /// Container for enum describing possible feed item errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedMappingErrorEnum {}
 /// Nested message and enum types in `FeedMappingErrorEnum`.
@@ -2829,6 +2849,7 @@ pub mod feed_mapping_error_enum {
     }
 }
 /// Container for enum describing possible not allowlisted errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NotAllowlistedErrorEnum {}
 /// Nested message and enum types in `NotAllowlistedErrorEnum`.
@@ -2871,6 +2892,7 @@ pub mod not_allowlisted_error_enum {
     }
 }
 /// Container for enum describing possible distinct errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DistinctErrorEnum {}
 /// Nested message and enum types in `DistinctErrorEnum`.
@@ -2914,6 +2936,7 @@ pub mod distinct_error_enum {
     }
 }
 /// Container for enum describing possible database errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DatabaseErrorEnum {}
 /// Nested message and enum types in `DatabaseErrorEnum`.
@@ -2963,6 +2986,7 @@ pub mod database_error_enum {
     }
 }
 /// Container for enum describing possible change status errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeStatusErrorEnum {}
 /// Nested message and enum types in `ChangeStatusErrorEnum`.
@@ -3023,6 +3047,7 @@ pub mod change_status_error_enum {
     }
 }
 /// Container for enum describing possible merchant center errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantCenterErrorEnum {}
 /// Nested message and enum types in `MerchantCenterErrorEnum`.
@@ -3070,6 +3095,7 @@ pub mod merchant_center_error_enum {
     }
 }
 /// Container for enum describing possible context errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ContextErrorEnum {}
 /// Nested message and enum types in `ContextErrorEnum`.
@@ -3117,6 +3143,7 @@ pub mod context_error_enum {
     }
 }
 /// Container for enum describing possible media bundle errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MediaBundleErrorEnum {}
 /// Nested message and enum types in `MediaBundleErrorEnum`.
@@ -3230,6 +3257,7 @@ pub mod media_bundle_error_enum {
     }
 }
 /// Container for enum describing YouTube video registration errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YoutubeVideoRegistrationErrorEnum {}
 /// Nested message and enum types in `YoutubeVideoRegistrationErrorEnum`.
@@ -3278,6 +3306,7 @@ pub mod youtube_video_registration_error_enum {
     }
 }
 /// Container for enum describing possible adx errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdxErrorEnum {}
 /// Nested message and enum types in `AdxErrorEnum`.
@@ -3318,6 +3347,7 @@ pub mod adx_error_enum {
     }
 }
 /// Container for enum describing possible audience errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceErrorEnum {}
 /// Nested message and enum types in `AudienceErrorEnum`.
@@ -3385,6 +3415,7 @@ pub mod audience_error_enum {
     }
 }
 /// Container for enum describing possible AccessInvitation errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccessInvitationErrorEnum {}
 /// Nested message and enum types in `AccessInvitationErrorEnum`.
@@ -3459,6 +3490,7 @@ pub mod access_invitation_error_enum {
     }
 }
 /// Container for enum describing possible account budget proposal errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountBudgetProposalErrorEnum {}
 /// Nested message and enum types in `AccountBudgetProposalErrorEnum`.
@@ -3612,6 +3644,7 @@ pub mod account_budget_proposal_error_enum {
     }
 }
 /// Container for enum describing possible feed item errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemErrorEnum {}
 /// Nested message and enum types in `FeedItemErrorEnum`.
@@ -3686,6 +3719,7 @@ pub mod feed_item_error_enum {
     }
 }
 /// Container for enum describing possible resource access denied errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceAccessDeniedErrorEnum {}
 /// Nested message and enum types in `ResourceAccessDeniedErrorEnum`.
@@ -3726,6 +3760,7 @@ pub mod resource_access_denied_error_enum {
     }
 }
 /// Container for enum describing possible customer feed errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerFeedErrorEnum {}
 /// Nested message and enum types in `CustomerFeedErrorEnum`.
@@ -3797,6 +3832,7 @@ pub mod customer_feed_error_enum {
     }
 }
 /// Container for enum describing possible asset set asset errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetAssetErrorEnum {}
 /// Nested message and enum types in `AssetSetAssetErrorEnum`.
@@ -3846,6 +3882,7 @@ pub mod asset_set_asset_error_enum {
     }
 }
 /// Container for enum describing possible account link errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountLinkErrorEnum {}
 /// Nested message and enum types in `AccountLinkErrorEnum`.
@@ -3886,6 +3923,7 @@ pub mod account_link_error_enum {
     }
 }
 /// Container for enum describing possible ad customizer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdCustomizerErrorEnum {}
 /// Nested message and enum types in `AdCustomizerErrorEnum`.
@@ -3942,6 +3980,7 @@ pub mod ad_customizer_error_enum {
     }
 }
 /// Container for enum describing possible ad group bid modifier errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupBidModifierErrorEnum {}
 /// Nested message and enum types in `AdGroupBidModifierErrorEnum`.
@@ -3990,6 +4029,7 @@ pub mod ad_group_bid_modifier_error_enum {
     }
 }
 /// Container for enum describing possible ad group criterion customizer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterionCustomizerErrorEnum {}
 /// Nested message and enum types in `AdGroupCriterionCustomizerErrorEnum`.
@@ -4032,6 +4072,7 @@ pub mod ad_group_criterion_customizer_error_enum {
     }
 }
 /// Container for enum describing possible ad group criterion errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterionErrorEnum {}
 /// Nested message and enum types in `AdGroupCriterionErrorEnum`.
@@ -4204,6 +4245,7 @@ pub mod ad_group_criterion_error_enum {
     }
 }
 /// Container for enum describing possible ad group customizer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCustomizerErrorEnum {}
 /// Nested message and enum types in `AdGroupCustomizerErrorEnum`.
@@ -4241,6 +4283,7 @@ pub mod ad_group_customizer_error_enum {
     }
 }
 /// Container for enum describing possible ad group errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupErrorEnum {}
 /// Nested message and enum types in `AdGroupErrorEnum`.
@@ -4341,6 +4384,7 @@ pub mod ad_group_error_enum {
     }
 }
 /// Container for enum describing possible ad parameter errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdParameterErrorEnum {}
 /// Nested message and enum types in `AdParameterErrorEnum`.
@@ -4388,6 +4432,7 @@ pub mod ad_parameter_error_enum {
     }
 }
 /// Container for enum describing possible ad sharing errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdSharingErrorEnum {}
 /// Nested message and enum types in `AdSharingErrorEnum`.
@@ -4439,6 +4484,7 @@ pub mod ad_sharing_error_enum {
     }
 }
 /// Container for enum describing possible asset errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetErrorEnum {}
 /// Nested message and enum types in `AssetErrorEnum`.
@@ -4618,6 +4664,7 @@ pub mod asset_error_enum {
     }
 }
 /// Container for enum describing possible asset group asset errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupAssetErrorEnum {}
 /// Nested message and enum types in `AssetGroupAssetErrorEnum`.
@@ -4668,6 +4715,7 @@ pub mod asset_group_asset_error_enum {
     }
 }
 /// Container for enum describing possible asset group errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupErrorEnum {}
 /// Nested message and enum types in `AssetGroupErrorEnum`.
@@ -4750,6 +4798,7 @@ pub mod asset_group_error_enum {
 }
 /// Container for enum describing possible asset group listing group filter
 /// errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupListingGroupFilterErrorEnum {}
 /// Nested message and enum types in `AssetGroupListingGroupFilterErrorEnum`.
@@ -4849,6 +4898,7 @@ pub mod asset_group_listing_group_filter_error_enum {
     }
 }
 /// Container for enum describing possible asset set errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetErrorEnum {}
 /// Nested message and enum types in `AssetSetErrorEnum`.
@@ -4889,6 +4939,7 @@ pub mod asset_set_error_enum {
     }
 }
 /// Container for enum describing possible asset set link errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetLinkErrorEnum {}
 /// Nested message and enum types in `AssetSetLinkErrorEnum`.
@@ -4949,6 +5000,7 @@ pub mod asset_set_link_error_enum {
     }
 }
 /// Container for enum describing possible authentication errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthenticationErrorEnum {}
 /// Nested message and enum types in `AuthenticationErrorEnum`.
@@ -5059,6 +5111,7 @@ pub mod authentication_error_enum {
     }
 }
 /// Container for enum describing possible authorization errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthorizationErrorEnum {}
 /// Nested message and enum types in `AuthorizationErrorEnum`.
@@ -5157,6 +5210,7 @@ pub mod authorization_error_enum {
     }
 }
 /// Container for enum describing possible batch job errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchJobErrorEnum {}
 /// Nested message and enum types in `BatchJobErrorEnum`.
@@ -5215,6 +5269,7 @@ pub mod batch_job_error_enum {
     }
 }
 /// Container for enum describing possible bidding errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingErrorEnum {}
 /// Nested message and enum types in `BiddingErrorEnum`.
@@ -5385,6 +5440,7 @@ pub mod bidding_error_enum {
     }
 }
 /// Container for enum describing possible bidding strategy errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingStrategyErrorEnum {}
 /// Nested message and enum types in `BiddingStrategyErrorEnum`.
@@ -5447,6 +5503,7 @@ pub mod bidding_strategy_error_enum {
     }
 }
 /// Container for enum describing possible billing setup errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BillingSetupErrorEnum {}
 /// Nested message and enum types in `BillingSetupErrorEnum`.
@@ -5577,6 +5634,7 @@ pub mod billing_setup_error_enum {
     }
 }
 /// Container for enum describing possible campaign budget errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignBudgetErrorEnum {}
 /// Nested message and enum types in `CampaignBudgetErrorEnum`.
@@ -5692,6 +5750,7 @@ pub mod campaign_budget_error_enum {
     }
 }
 /// Container for enum describing possible campaign conversion goal errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignConversionGoalErrorEnum {}
 /// Nested message and enum types in `CampaignConversionGoalErrorEnum`.
@@ -5734,6 +5793,7 @@ pub mod campaign_conversion_goal_error_enum {
     }
 }
 /// Container for enum describing possible campaign criterion errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignCriterionErrorEnum {}
 /// Nested message and enum types in `CampaignCriterionErrorEnum`.
@@ -5852,6 +5912,7 @@ pub mod campaign_criterion_error_enum {
     }
 }
 /// Container for enum describing possible campaign customizer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignCustomizerErrorEnum {}
 /// Nested message and enum types in `CampaignCustomizerErrorEnum`.
@@ -5889,6 +5950,7 @@ pub mod campaign_customizer_error_enum {
     }
 }
 /// Container for enum describing possible campaign draft errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignDraftErrorEnum {}
 /// Nested message and enum types in `CampaignDraftErrorEnum`.
@@ -5977,6 +6039,7 @@ pub mod campaign_draft_error_enum {
     }
 }
 /// Container for enum describing possible campaign feed errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignFeedErrorEnum {}
 /// Nested message and enum types in `CampaignFeedErrorEnum`.
@@ -6049,6 +6112,7 @@ pub mod campaign_feed_error_enum {
     }
 }
 /// Container for enum describing possible campaign shared set errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignSharedSetErrorEnum {}
 /// Nested message and enum types in `CampaignSharedSetErrorEnum`.
@@ -6091,6 +6155,7 @@ pub mod campaign_shared_set_error_enum {
     }
 }
 /// Container for enum describing possible collection size errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CollectionSizeErrorEnum {}
 /// Nested message and enum types in `CollectionSizeErrorEnum`.
@@ -6134,6 +6199,7 @@ pub mod collection_size_error_enum {
     }
 }
 /// Container for enum describing possible conversion action errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionActionErrorEnum {}
 /// Nested message and enum types in `ConversionActionErrorEnum`.
@@ -6219,6 +6285,7 @@ pub mod conversion_action_error_enum {
     }
 }
 /// Container for enum describing possible conversion adjustment upload errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionAdjustmentUploadErrorEnum {}
 /// Nested message and enum types in `ConversionAdjustmentUploadErrorEnum`.
@@ -6388,6 +6455,7 @@ pub mod conversion_adjustment_upload_error_enum {
     }
 }
 /// Container for enum describing possible conversion custom variable errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionCustomVariableErrorEnum {}
 /// Nested message and enum types in `ConversionCustomVariableErrorEnum`.
@@ -6436,6 +6504,7 @@ pub mod conversion_custom_variable_error_enum {
 }
 /// Container for enum describing possible conversion goal campaign config
 /// errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionGoalCampaignConfigErrorEnum {}
 /// Nested message and enum types in `ConversionGoalCampaignConfigErrorEnum`.
@@ -6489,6 +6558,7 @@ pub mod conversion_goal_campaign_config_error_enum {
     }
 }
 /// Container for enum describing possible conversion value rule errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionValueRuleErrorEnum {}
 /// Nested message and enum types in `ConversionValueRuleErrorEnum`.
@@ -6594,6 +6664,7 @@ pub mod conversion_value_rule_error_enum {
     }
 }
 /// Container for enum describing possible conversion value rule set errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionValueRuleSetErrorEnum {}
 /// Nested message and enum types in `ConversionValueRuleSetErrorEnum`.
@@ -6711,6 +6782,7 @@ pub mod conversion_value_rule_set_error_enum {
     }
 }
 /// Container for enum describing country code errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CountryCodeErrorEnum {}
 /// Nested message and enum types in `CountryCodeErrorEnum`.
@@ -6751,6 +6823,7 @@ pub mod country_code_error_enum {
     }
 }
 /// Container for enum describing possible criterion errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CriterionErrorEnum {}
 /// Nested message and enum types in `CriterionErrorEnum`.
@@ -7375,6 +7448,7 @@ pub mod criterion_error_enum {
     }
 }
 /// Container for enum describing possible currency code errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CurrencyCodeErrorEnum {}
 /// Nested message and enum types in `CurrencyCodeErrorEnum`.
@@ -7415,6 +7489,7 @@ pub mod currency_code_error_enum {
     }
 }
 /// Container for enum describing possible custom audience errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomAudienceErrorEnum {}
 /// Nested message and enum types in `CustomAudienceErrorEnum`.
@@ -7482,6 +7557,7 @@ pub mod custom_audience_error_enum {
     }
 }
 /// Container for enum describing possible custom conversion goal errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomConversionGoalErrorEnum {}
 /// Nested message and enum types in `CustomConversionGoalErrorEnum`.
@@ -7546,6 +7622,7 @@ pub mod custom_conversion_goal_error_enum {
     }
 }
 /// Container for enum describing possible custom interest errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomInterestErrorEnum {}
 /// Nested message and enum types in `CustomInterestErrorEnum`.
@@ -7615,6 +7692,7 @@ pub mod custom_interest_error_enum {
     }
 }
 /// Container for enum describing possible CustomeClientLink errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerClientLinkErrorEnum {}
 /// Nested message and enum types in `CustomerClientLinkErrorEnum`.
@@ -7692,6 +7770,7 @@ pub mod customer_client_link_error_enum {
     }
 }
 /// Container for enum describing possible customer customizer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerCustomizerErrorEnum {}
 /// Nested message and enum types in `CustomerCustomizerErrorEnum`.
@@ -7729,6 +7808,7 @@ pub mod customer_customizer_error_enum {
     }
 }
 /// Container for enum describing possible customer errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerErrorEnum {}
 /// Nested message and enum types in `CustomerErrorEnum`.
@@ -7774,6 +7854,7 @@ pub mod customer_error_enum {
     }
 }
 /// Container for enum describing possible CustomerManagerLink errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerManagerLinkErrorEnum {}
 /// Nested message and enum types in `CustomerManagerLinkErrorEnum`.
@@ -7856,6 +7937,7 @@ pub mod customer_manager_link_error_enum {
     }
 }
 /// Container for enum describing possible CustomerUserAccess errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerUserAccessErrorEnum {}
 /// Nested message and enum types in `CustomerUserAccessErrorEnum`.
@@ -7913,6 +7995,7 @@ pub mod customer_user_access_error_enum {
     }
 }
 /// Container for enum describing possible customizer attribute errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomizerAttributeErrorEnum {}
 /// Nested message and enum types in `CustomizerAttributeErrorEnum`.
@@ -7956,6 +8039,7 @@ pub mod customizer_attribute_error_enum {
     }
 }
 /// Container for enum describing possible enum errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumErrorEnum {}
 /// Nested message and enum types in `EnumErrorEnum`.
@@ -7996,6 +8080,7 @@ pub mod enum_error_enum {
     }
 }
 /// Container for enum describing possible experiment arm error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExperimentArmErrorEnum {}
 /// Nested message and enum types in `ExperimentArmErrorEnum`.
@@ -8103,6 +8188,7 @@ pub mod experiment_arm_error_enum {
     }
 }
 /// Container for enum describing possible experiment error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExperimentErrorEnum {}
 /// Nested message and enum types in `ExperimentErrorEnum`.
@@ -8244,6 +8330,7 @@ pub mod experiment_error_enum {
     }
 }
 /// Container for enum describing possible extension feed item error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtensionFeedItemErrorEnum {}
 /// Nested message and enum types in `ExtensionFeedItemErrorEnum`.
@@ -8504,6 +8591,7 @@ pub mod extension_feed_item_error_enum {
     }
 }
 /// Container for enum describing validation errors of extension settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtensionSettingErrorEnum {}
 /// Nested message and enum types in `ExtensionSettingErrorEnum`.
@@ -8852,6 +8940,7 @@ pub mod extension_setting_error_enum {
     }
 }
 /// Container for enum describing possible feed attribute reference errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedAttributeReferenceErrorEnum {}
 /// Nested message and enum types in `FeedAttributeReferenceErrorEnum`.
@@ -8902,6 +8991,7 @@ pub mod feed_attribute_reference_error_enum {
     }
 }
 /// Container for enum describing possible feed errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedErrorEnum {}
 /// Nested message and enum types in `FeedErrorEnum`.
@@ -9027,6 +9117,7 @@ pub mod feed_error_enum {
     }
 }
 /// Container for enum describing possible feed item set errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemSetErrorEnum {}
 /// Nested message and enum types in `FeedItemSetErrorEnum`.
@@ -9099,6 +9190,7 @@ pub mod feed_item_set_error_enum {
     }
 }
 /// Container for enum describing possible feed item set link errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemSetLinkErrorEnum {}
 /// Nested message and enum types in `FeedItemSetLinkErrorEnum`.
@@ -9145,6 +9237,7 @@ pub mod feed_item_set_link_error_enum {
     }
 }
 /// Container for enum describing possible feed item target errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemTargetErrorEnum {}
 /// Nested message and enum types in `FeedItemTargetErrorEnum`.
@@ -9220,6 +9313,7 @@ pub mod feed_item_target_error_enum {
     }
 }
 /// Container for enum describing possible field errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FieldErrorEnum {}
 /// Nested message and enum types in `FieldErrorEnum`.
@@ -9278,6 +9372,7 @@ pub mod field_error_enum {
     }
 }
 /// Container for enum describing possible field mask errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FieldMaskErrorEnum {}
 /// Nested message and enum types in `FieldMaskErrorEnum`.
@@ -9329,6 +9424,7 @@ pub mod field_mask_error_enum {
     }
 }
 /// Container for enum describing possible function errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FunctionErrorEnum {}
 /// Nested message and enum types in `FunctionErrorEnum`.
@@ -9431,6 +9527,7 @@ pub mod function_error_enum {
     }
 }
 /// Container for enum describing possible function parsing errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FunctionParsingErrorEnum {}
 /// Nested message and enum types in `FunctionParsingErrorEnum`.
@@ -9507,6 +9604,7 @@ pub mod function_parsing_error_enum {
     }
 }
 /// Container for enum describing possible geo target constant suggestion errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeoTargetConstantSuggestionErrorEnum {}
 /// Nested message and enum types in `GeoTargetConstantSuggestionErrorEnum`.
@@ -9566,6 +9664,7 @@ pub mod geo_target_constant_suggestion_error_enum {
     }
 }
 /// Container for enum describing possible header errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HeaderErrorEnum {}
 /// Nested message and enum types in `HeaderErrorEnum`.
@@ -9609,6 +9708,7 @@ pub mod header_error_enum {
     }
 }
 /// Container for enum describing possible id errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IdErrorEnum {}
 /// Nested message and enum types in `IdErrorEnum`.
@@ -9649,6 +9749,7 @@ pub mod id_error_enum {
     }
 }
 /// Container for enum describing possible image errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageErrorEnum {}
 /// Nested message and enum types in `ImageErrorEnum`.
@@ -9814,6 +9915,7 @@ pub mod image_error_enum {
     }
 }
 /// Container for enum describing possible internal errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InternalErrorEnum {}
 /// Nested message and enum types in `InternalErrorEnum`.
@@ -9865,6 +9967,7 @@ pub mod internal_error_enum {
     }
 }
 /// Container for enum describing possible invoice errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InvoiceErrorEnum {}
 /// Nested message and enum types in `InvoiceErrorEnum`.
@@ -9921,6 +10024,7 @@ pub mod invoice_error_enum {
 }
 /// Container for enum describing possible errors from applying a keyword plan
 /// ad group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanAdGroupErrorEnum {}
 /// Nested message and enum types in `KeywordPlanAdGroupErrorEnum`.
@@ -9967,6 +10071,7 @@ pub mod keyword_plan_ad_group_error_enum {
 }
 /// Container for enum describing possible errors from applying an ad group
 /// keyword or a campaign keyword from a keyword plan.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanAdGroupKeywordErrorEnum {}
 /// Nested message and enum types in `KeywordPlanAdGroupKeywordErrorEnum`.
@@ -10045,6 +10150,7 @@ pub mod keyword_plan_ad_group_keyword_error_enum {
 }
 /// Container for enum describing possible errors from applying a keyword plan
 /// campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignErrorEnum {}
 /// Nested message and enum types in `KeywordPlanCampaignErrorEnum`.
@@ -10105,6 +10211,7 @@ pub mod keyword_plan_campaign_error_enum {
 }
 /// Container for enum describing possible errors from applying a keyword plan
 /// campaign keyword.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignKeywordErrorEnum {}
 /// Nested message and enum types in `KeywordPlanCampaignKeywordErrorEnum`.
@@ -10148,6 +10255,7 @@ pub mod keyword_plan_campaign_keyword_error_enum {
     }
 }
 /// Container for enum describing possible label errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LabelErrorEnum {}
 /// Nested message and enum types in `LabelErrorEnum`.
@@ -10222,6 +10330,7 @@ pub mod label_error_enum {
     }
 }
 /// Container for enum describing language code errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LanguageCodeErrorEnum {}
 /// Nested message and enum types in `LanguageCodeErrorEnum`.
@@ -10265,6 +10374,7 @@ pub mod language_code_error_enum {
     }
 }
 /// Container for enum describing possible list operation errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOperationErrorEnum {}
 /// Nested message and enum types in `ListOperationErrorEnum`.
@@ -10308,6 +10418,7 @@ pub mod list_operation_error_enum {
     }
 }
 /// Container for enum describing possible ManagerLink errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ManagerLinkErrorEnum {}
 /// Nested message and enum types in `ManagerLinkErrorEnum`.
@@ -10422,6 +10533,7 @@ pub mod manager_link_error_enum {
     }
 }
 /// Container for enum describing possible media file errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MediaFileErrorEnum {}
 /// Nested message and enum types in `MediaFileErrorEnum`.
@@ -10546,6 +10658,7 @@ pub mod media_file_error_enum {
     }
 }
 /// Container for enum describing possible media uploading errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MediaUploadErrorEnum {}
 /// Nested message and enum types in `MediaUploadErrorEnum`.
@@ -10715,6 +10828,7 @@ pub mod media_upload_error_enum {
     }
 }
 /// Container for enum describing possible multiplier errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MultiplierErrorEnum {}
 /// Nested message and enum types in `MultiplierErrorEnum`.
@@ -10805,6 +10919,7 @@ pub mod multiplier_error_enum {
     }
 }
 /// Container for enum describing possible mutate errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateErrorEnum {}
 /// Nested message and enum types in `MutateErrorEnum`.
@@ -10874,6 +10989,7 @@ pub mod mutate_error_enum {
     }
 }
 /// Container for enum describing possible new resource creation errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NewResourceCreationErrorEnum {}
 /// Nested message and enum types in `NewResourceCreationErrorEnum`.
@@ -10925,6 +11041,7 @@ pub mod new_resource_creation_error_enum {
     }
 }
 /// Container for enum describing possible null errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NullErrorEnum {}
 /// Nested message and enum types in `NullErrorEnum`.
@@ -10965,6 +11082,7 @@ pub mod null_error_enum {
     }
 }
 /// Container for enum describing possible offline user data job errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OfflineUserDataJobErrorEnum {}
 /// Nested message and enum types in `OfflineUserDataJobErrorEnum`.
@@ -11163,6 +11281,7 @@ pub mod offline_user_data_job_error_enum {
     }
 }
 /// Container for enum describing possible operation access denied errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationAccessDeniedErrorEnum {}
 /// Nested message and enum types in `OperationAccessDeniedErrorEnum`.
@@ -11248,6 +11367,7 @@ pub mod operation_access_denied_error_enum {
     }
 }
 /// Container for enum describing possible operator errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperatorErrorEnum {}
 /// Nested message and enum types in `OperatorErrorEnum`.
@@ -11288,6 +11408,7 @@ pub mod operator_error_enum {
     }
 }
 /// Container for enum describing possible partial failure errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PartialFailureErrorEnum {}
 /// Nested message and enum types in `PartialFailureErrorEnum`.
@@ -11331,6 +11452,7 @@ pub mod partial_failure_error_enum {
     }
 }
 /// Container for enum describing possible policy finding errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PolicyFindingErrorEnum {}
 /// Nested message and enum types in `PolicyFindingErrorEnum`.
@@ -11375,6 +11497,7 @@ pub mod policy_finding_error_enum {
     }
 }
 /// Container for enum describing possible policy violation errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PolicyViolationErrorEnum {}
 /// Nested message and enum types in `PolicyViolationErrorEnum`.
@@ -11415,6 +11538,7 @@ pub mod policy_violation_error_enum {
     }
 }
 /// Container for enum describing possible query errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryErrorEnum {}
 /// Nested message and enum types in `QueryErrorEnum`.
@@ -11677,6 +11801,7 @@ pub mod query_error_enum {
     }
 }
 /// Container for enum describing possible range errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RangeErrorEnum {}
 /// Nested message and enum types in `RangeErrorEnum`.
@@ -11721,6 +11846,7 @@ pub mod range_error_enum {
 }
 /// Container for enum describing possible errors returned from
 /// the ReachPlanService.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReachPlanErrorEnum {}
 /// Nested message and enum types in `ReachPlanErrorEnum`.
@@ -11763,6 +11889,7 @@ pub mod reach_plan_error_enum {
     }
 }
 /// Container for enum describing possible errors from applying a recommendation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RecommendationErrorEnum {}
 /// Nested message and enum types in `RecommendationErrorEnum`.
@@ -11854,6 +11981,7 @@ pub mod recommendation_error_enum {
     }
 }
 /// Container for enum describing possible region code errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegionCodeErrorEnum {}
 /// Nested message and enum types in `RegionCodeErrorEnum`.
@@ -11894,6 +12022,7 @@ pub mod region_code_error_enum {
     }
 }
 /// Container for enum describing possible request errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestErrorEnum {}
 /// Nested message and enum types in `RequestErrorEnum`.
@@ -12022,6 +12151,7 @@ pub mod request_error_enum {
     }
 }
 /// Container for enum describing possible resource count limit exceeded errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceCountLimitExceededErrorEnum {}
 /// Nested message and enum types in `ResourceCountLimitExceededErrorEnum`.
@@ -12114,6 +12244,7 @@ pub mod resource_count_limit_exceeded_error_enum {
     }
 }
 /// Container for enum describing possible setting errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SettingErrorEnum {}
 /// Nested message and enum types in `SettingErrorEnum`.
@@ -12214,6 +12345,7 @@ pub mod setting_error_enum {
     }
 }
 /// Container for enum describing possible shared criterion errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedCriterionErrorEnum {}
 /// Nested message and enum types in `SharedCriterionErrorEnum`.
@@ -12256,6 +12388,7 @@ pub mod shared_criterion_error_enum {
     }
 }
 /// Container for enum describing possible shared set errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedSetErrorEnum {}
 /// Nested message and enum types in `SharedSetErrorEnum`.
@@ -12307,6 +12440,7 @@ pub mod shared_set_error_enum {
     }
 }
 /// Container for enum describing possible size limit errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SizeLimitErrorEnum {}
 /// Nested message and enum types in `SizeLimitErrorEnum`.
@@ -12352,6 +12486,7 @@ pub mod size_limit_error_enum {
     }
 }
 /// Container for enum describing possible string format errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StringFormatErrorEnum {}
 /// Nested message and enum types in `StringFormatErrorEnum`.
@@ -12395,6 +12530,7 @@ pub mod string_format_error_enum {
     }
 }
 /// Container for enum describing possible string length errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StringLengthErrorEnum {}
 /// Nested message and enum types in `StringLengthErrorEnum`.
@@ -12442,6 +12578,7 @@ pub mod string_length_error_enum {
     }
 }
 /// Container for enum describing possible third party app analytics link errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ThirdPartyAppAnalyticsLinkErrorEnum {}
 /// Nested message and enum types in `ThirdPartyAppAnalyticsLinkErrorEnum`.
@@ -12500,6 +12637,7 @@ pub mod third_party_app_analytics_link_error_enum {
     }
 }
 /// Container for enum describing possible time zone errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeZoneErrorEnum {}
 /// Nested message and enum types in `TimeZoneErrorEnum`.
@@ -12540,6 +12678,7 @@ pub mod time_zone_error_enum {
     }
 }
 /// Container for enum describing possible url field errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UrlFieldErrorEnum {}
 /// Nested message and enum types in `UrlFieldErrorEnum`.
@@ -12805,6 +12944,7 @@ pub mod url_field_error_enum {
 }
 /// Describes how a GoogleAds API call failed. It's returned inside
 /// google.rpc.Status.details when a call fails.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GoogleAdsFailure {
     /// The list of errors that occurred.
@@ -12815,6 +12955,7 @@ pub struct GoogleAdsFailure {
     pub request_id: ::prost::alloc::string::String,
 }
 /// GoogleAds-specific error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GoogleAdsError {
     /// An enum value that indicates which error occurred.
@@ -12835,6 +12976,7 @@ pub struct GoogleAdsError {
     pub details: ::core::option::Option<ErrorDetails>,
 }
 /// The error reason represented by type and enum.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ErrorCode {
     /// The list of error enums
@@ -12847,6 +12989,7 @@ pub struct ErrorCode {
 /// Nested message and enum types in `ErrorCode`.
 pub mod error_code {
     /// The list of error enums
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ErrorCode {
         /// An error caused by the request
@@ -13566,6 +13709,7 @@ pub mod error_code {
     }
 }
 /// Describes the part of the request proto that caused the error.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ErrorLocation {
     /// A field path that indicates which field was invalid in the request.
@@ -13575,6 +13719,7 @@ pub struct ErrorLocation {
 /// Nested message and enum types in `ErrorLocation`.
 pub mod error_location {
     /// A part of a field path.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FieldPathElement {
         /// The name of a field or a oneof
@@ -13586,6 +13731,7 @@ pub mod error_location {
     }
 }
 /// Additional error details.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ErrorDetails {
     /// The error code that should have been returned, but wasn't. This is used
@@ -13609,6 +13755,7 @@ pub struct ErrorDetails {
 /// Error returned as part of a mutate response.
 /// This error indicates single policy violation by some text
 /// in one of the fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PolicyViolationDetails {
     /// Human readable description of policy violation.
@@ -13628,6 +13775,7 @@ pub struct PolicyViolationDetails {
 /// Error returned as part of a mutate response.
 /// This error indicates one or more policy findings in the fields of a
 /// resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PolicyFindingDetails {
     /// The list of policy topics for the resource. Contains the PROHIBITED or
@@ -13637,6 +13785,7 @@ pub struct PolicyFindingDetails {
     pub policy_topic_entries: ::prost::alloc::vec::Vec<super::common::PolicyTopicEntry>,
 }
 /// Additional quota error details when there is QuotaError.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QuotaErrorDetails {
     /// The rate scope of the quota limit.
@@ -13691,6 +13840,7 @@ pub mod quota_error_details {
     }
 }
 /// Error details returned when an resource count limit was exceeded.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceCountDetails {
     /// The ID of the resource whose limit was exceeded.

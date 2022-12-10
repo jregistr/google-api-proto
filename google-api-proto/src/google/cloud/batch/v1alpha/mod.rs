@@ -1,4 +1,5 @@
 /// Volume describes a volume and parameters for it to be mounted to a VM.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Volume {
     /// The mount path for the volume, e.g. /mnt/disks/share.
@@ -22,6 +23,7 @@ pub struct Volume {
 /// Nested message and enum types in `Volume`.
 pub mod volume {
     /// The source for the volume.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// A Network File System (NFS) volume. For example, a
@@ -44,6 +46,7 @@ pub mod volume {
     }
 }
 /// Represents an NFS volume.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Nfs {
     /// The IP address of the NFS.
@@ -54,6 +57,7 @@ pub struct Nfs {
     pub remote_path: ::prost::alloc::string::String,
 }
 /// Deprecated: please use device_name instead.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Pd {
     /// PD disk name, e.g. pd-1.
@@ -71,6 +75,7 @@ pub struct Pd {
     pub existing: bool,
 }
 /// Represents a Google Cloud Storage volume.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Gcs {
     /// Remote path, either a bucket name or a subdirectory of a bucket, e.g.:
@@ -79,6 +84,7 @@ pub struct Gcs {
     pub remote_path: ::prost::alloc::string::String,
 }
 /// Compute resource requirements
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeResource {
     /// The milliCPU count.
@@ -97,6 +103,7 @@ pub struct ComputeResource {
     pub boot_disk_mib: i64,
 }
 /// Status event
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StatusEvent {
     /// Type of the event.
@@ -114,6 +121,7 @@ pub struct StatusEvent {
 }
 /// This Task Execution field includes detail information for
 /// task execution procedures, based on StatusEvent types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TaskExecution {
     /// When task is completed as the status of FAILED or SUCCEEDED,
@@ -122,6 +130,7 @@ pub struct TaskExecution {
     pub exit_code: i32,
 }
 /// Status of a task
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TaskStatus {
     /// Task state
@@ -179,6 +188,7 @@ pub mod task_status {
 }
 /// Runnable describes instructions for executing a specific script or container
 /// as part of a Task.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Runnable {
     /// Normally, a non-zero exit status causes the Task to fail. This flag allows
@@ -220,6 +230,7 @@ pub struct Runnable {
 /// Nested message and enum types in `Runnable`.
 pub mod runnable {
     /// Container runnable.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Container {
         /// The URI to pull the container image from.
@@ -259,6 +270,7 @@ pub mod runnable {
         pub password: ::prost::alloc::string::String,
     }
     /// Script runnable.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Script {
         #[prost(oneof = "script::Command", tags = "1, 2")]
@@ -266,6 +278,7 @@ pub mod runnable {
     }
     /// Nested message and enum types in `Script`.
     pub mod script {
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Command {
             /// Script file path on the host VM.
@@ -277,6 +290,7 @@ pub mod runnable {
         }
     }
     /// Barrier runnable blocks until all tasks in a taskgroup reach it.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Barrier {
         /// Barriers are identified by their index in runnable list.
@@ -285,6 +299,7 @@ pub mod runnable {
         pub name: ::prost::alloc::string::String,
     }
     /// The script or container to run.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Executable {
         /// Container runnable.
@@ -299,6 +314,7 @@ pub mod runnable {
     }
 }
 /// Spec of a task
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TaskSpec {
     /// The sequence of scripts or containers to run for this Task. Each Task using
@@ -352,6 +368,7 @@ pub struct TaskSpec {
 }
 /// LifecyclePolicy describes how to deal with task failures
 /// based on different conditions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LifecyclePolicy {
     /// Action to execute when ActionCondition is true.
@@ -364,6 +381,7 @@ pub struct LifecyclePolicy {
 /// Nested message and enum types in `LifecyclePolicy`.
 pub mod lifecycle_policy {
     /// Conditions for actions to deal with task failures.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ActionCondition {
         /// Exit codes of a task execution.
@@ -409,6 +427,7 @@ pub mod lifecycle_policy {
     }
 }
 /// A Cloud Batch task.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Task {
     /// Task name.
@@ -423,6 +442,7 @@ pub struct Task {
 }
 /// An Environment describes a collection of environment variables to set when
 /// executing Tasks.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Environment {
     /// A map of environment variable names to values.
@@ -446,6 +466,7 @@ pub struct Environment {
 }
 /// Nested message and enum types in `Environment`.
 pub mod environment {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct KmsEnvMap {
         /// The name of the KMS key that will be used to decrypt the cipher text.
@@ -457,6 +478,7 @@ pub mod environment {
     }
 }
 /// The Cloud Batch Job description.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Job {
     /// Output only. Job name.
@@ -560,6 +582,7 @@ pub mod job {
 }
 /// LogsPolicy describes how outputs from a Job's Tasks (stdout/stderr) will be
 /// preserved.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogsPolicy {
     /// Where logs should be saved.
@@ -611,6 +634,7 @@ pub mod logs_policy {
 /// JobDependency describes the state of other Jobs that the start of this Job
 /// depends on.
 /// All dependent Jobs must have been submitted in the same region.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobDependency {
     /// Each item maps a Job name to a Type.
@@ -665,6 +689,7 @@ pub mod job_dependency {
     }
 }
 /// Job status.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobStatus {
     /// Job state
@@ -687,6 +712,7 @@ pub struct JobStatus {
 /// Nested message and enum types in `JobStatus`.
 pub mod job_status {
     /// VM instance status.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstanceStatus {
         /// The Compute Engine machine type.
@@ -700,6 +726,7 @@ pub mod job_status {
         pub task_pack: i64,
     }
     /// Aggregated task status for a TaskGroup.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TaskGroupStatus {
         /// Count of task in each state in the TaskGroup.
@@ -764,6 +791,7 @@ pub mod job_status {
     }
 }
 /// Notification configurations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobNotification {
     /// The Pub/Sub topic where notifications like the job state changes
@@ -783,6 +811,7 @@ pub mod job_notification {
     /// Message details.
     /// Describe the attribute that a message should have.
     /// Without specified message attributes, no message will be sent by default.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Message {
         /// The message type.
@@ -832,6 +861,7 @@ pub mod job_notification {
 }
 /// A Job's resource allocation policy describes when, where, and how compute
 /// resources should be allocated for the Job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AllocationPolicy {
     /// Location where compute resources should be allocated for the Job.
@@ -883,6 +913,7 @@ pub struct AllocationPolicy {
 }
 /// Nested message and enum types in `AllocationPolicy`.
 pub mod allocation_policy {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LocationPolicy {
         /// A list of allowed location names represented by internal URLs.
@@ -909,6 +940,7 @@ pub mod allocation_policy {
     /// A VM can only have one local SSD setting but multiple local SSD partitions.
     /// <https://cloud.google.com/compute/docs/disks#pdspecs.>
     /// <https://cloud.google.com/compute/docs/disks#localssds.>
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Disk {
         /// Disk type as shown in `gcloud compute disk-types list`
@@ -933,6 +965,7 @@ pub mod allocation_policy {
     /// Nested message and enum types in `Disk`.
     pub mod disk {
         /// A data source from which a PD will be created.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum DataSource {
             /// Name of a public or custom image used as the data source.
@@ -945,6 +978,7 @@ pub mod allocation_policy {
     }
     /// A new or an existing persistent disk (PD) or a local ssd attached to a VM
     /// instance.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AttachedDisk {
         /// Device name that the guest operating system will see.
@@ -958,6 +992,7 @@ pub mod allocation_policy {
     }
     /// Nested message and enum types in `AttachedDisk`.
     pub mod attached_disk {
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Attached {
             #[prost(message, tag = "1")]
@@ -968,6 +1003,7 @@ pub mod allocation_policy {
         }
     }
     /// Accelerator describes Compute Engine accelerators to be attached to the VM.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Accelerator {
         /// The accelerator type. For example, "nvidia-tesla-t4".
@@ -984,6 +1020,7 @@ pub mod allocation_policy {
     }
     /// InstancePolicy describes an instance type and resources attached to each VM
     /// created by this InstancePolicy.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstancePolicy {
         /// Deprecated: please use machine_type instead.
@@ -1016,6 +1053,7 @@ pub mod allocation_policy {
         pub reservation: ::prost::alloc::string::String,
     }
     /// Either an InstancePolicy or an instance template.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstancePolicyOrTemplate {
         /// Set this field true if users want Batch to help fetch drivers from a
@@ -1031,6 +1069,7 @@ pub mod allocation_policy {
     }
     /// Nested message and enum types in `InstancePolicyOrTemplate`.
     pub mod instance_policy_or_template {
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum PolicyTemplate {
             /// InstancePolicy.
@@ -1044,6 +1083,7 @@ pub mod allocation_policy {
         }
     }
     /// A network interface.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NetworkInterface {
         /// The URL of the network resource.
@@ -1063,6 +1103,7 @@ pub mod allocation_policy {
         pub no_external_ip_address: bool,
     }
     /// NetworkPolicy describes VM instance network configurations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NetworkPolicy {
         /// Network configurations.
@@ -1114,6 +1155,7 @@ pub mod allocation_policy {
 }
 /// A TaskGroup contains one or multiple Tasks that share the same
 /// Runnable but with different runtime parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TaskGroup {
     /// Output only. TaskGroup name.
@@ -1214,6 +1256,7 @@ pub mod task_group {
     }
 }
 /// Carries information about a Google Cloud service account.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServiceAccount {
     /// Email address of the service account. If not specified, the default
@@ -1229,6 +1272,7 @@ pub struct ServiceAccount {
     pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// CreateJob Request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateJobRequest {
     /// Required. The parent resource name where the Job will be created.
@@ -1266,6 +1310,7 @@ pub struct CreateJobRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// GetJob Request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetJobRequest {
     /// Required. Job name.
@@ -1273,6 +1318,7 @@ pub struct GetJobRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// DeleteJob Request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteJobRequest {
     /// Job name.
@@ -1298,6 +1344,7 @@ pub struct DeleteJobRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// ListJob Request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobsRequest {
     /// Parent path.
@@ -1314,6 +1361,7 @@ pub struct ListJobsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// ListJob Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobsResponse {
     /// Jobs.
@@ -1327,6 +1375,7 @@ pub struct ListJobsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// ListTasks Request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTasksRequest {
     /// Required. Name of a TaskGroup from which Tasks are being requested.
@@ -1347,6 +1396,7 @@ pub struct ListTasksRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// ListTasks Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTasksResponse {
     /// Tasks.
@@ -1360,6 +1410,7 @@ pub struct ListTasksResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for a single Task by name.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTaskRequest {
     /// Required. Task name.
@@ -1367,6 +1418,7 @@ pub struct GetTaskRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.

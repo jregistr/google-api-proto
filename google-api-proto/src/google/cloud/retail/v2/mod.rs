@@ -4,6 +4,7 @@
 /// all the fields are satisfied e.g. if a set of query terms and product_filter
 /// are set, then only items matching the product_filter for requests with a
 /// query matching the query terms wil get boosted.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Condition {
     /// A list (up to 10 entries) of terms to match the query on. If not
@@ -20,6 +21,7 @@ pub struct Condition {
 /// Nested message and enum types in `Condition`.
 pub mod condition {
     /// Query terms that we want to match on.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QueryTerm {
         /// The value of the term to match on.
@@ -36,6 +38,7 @@ pub mod condition {
     }
     /// Used for time-dependent conditions.
     /// Example: Want to have rule applied for week long sale.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TimeRange {
         /// Start of time range. Range is inclusive.
@@ -51,6 +54,7 @@ pub mod condition {
 /// * An action specifies what occurs on that trigger.
 /// Currently rules only work for \[controls][google.cloud.retail.v2.Control\] with
 /// \[SOLUTION_TYPE_SEARCH][google.cloud.retail.v2.SolutionType.SOLUTION_TYPE_SEARCH\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Rule {
     /// Required. The condition that triggers the rule.
@@ -64,6 +68,7 @@ pub struct Rule {
 /// Nested message and enum types in `Rule`.
 pub mod rule {
     /// A boost action to apply to results matching condition specified above.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BoostAction {
         /// Strength of the condition boost, which must be in [-1, 1]. Negative
@@ -116,6 +121,7 @@ pub mod rule {
     /// filters conflict.
     /// * Action Result: Filters the returned objects to be ONLY those that passed
     /// the filter.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FilterAction {
         /// A filter to apply on the matching condition results. Supported features:
@@ -142,6 +148,7 @@ pub mod rule {
     ///    \[Condition.query_terms][google.cloud.retail.v2.Condition.query_terms\].
     /// * Action Input: Request Query
     /// * Action Result: Redirects shopper to provided uri.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RedirectAction {
         /// URL must have length equal or less than 2000 characters.
@@ -152,6 +159,7 @@ pub mod rule {
     /// Example: synonyms of "sneakers" and "shoes".
     ///   * "sneakers" will use a synonym of "shoes".
     ///   * "shoes" will use a synonym of "sneakers".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TwowaySynonymsAction {
         /// Defines a set of synonyms.
@@ -165,6 +173,7 @@ pub mod rule {
     /// `query_terms` will not be treated as synonyms of each other.
     /// Example: "sneakers" will use a synonym of "shoes".
     /// "shoes" will not use a synonym of "sneakers".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct OnewaySynonymsAction {
         /// Terms from the search query.
@@ -185,6 +194,7 @@ pub mod rule {
     /// Prevents `query_term` from being associated with specified terms during
     /// search.
     /// Example: Don't associate "gShoe" and "cheap".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DoNotAssociateAction {
         /// Terms from the search query.
@@ -205,6 +215,7 @@ pub mod rule {
     /// Replaces a term in the query. Multiple replacement candidates can be
     /// specified. All `query_terms` will be replaced with the replacement term.
     /// Example: Replace "gShoe" with "google shoe".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ReplacementAction {
         /// Terms from the search query.
@@ -221,6 +232,7 @@ pub mod rule {
     }
     /// Prevents a term in the query from being used in search.
     /// Example: Don't search for "shoddy".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IgnoreAction {
         /// Terms to ignore in the search query.
@@ -228,6 +240,7 @@ pub mod rule {
         pub ignore_terms: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// An action must be provided.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Action {
         /// A boost action.
@@ -259,6 +272,7 @@ pub mod rule {
 }
 /// An intended audience of the \[Product][google.cloud.retail.v2.Product\] for
 /// whom it's sold.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Audience {
     /// The genders of the audience. Strongly encouraged to use the standard
@@ -292,6 +306,7 @@ pub struct Audience {
     pub age_groups: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The color information of a \[Product][google.cloud.retail.v2.Product\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ColorInfo {
     /// The standard color families. Strongly recommended to use the following
@@ -326,6 +341,7 @@ pub struct ColorInfo {
 }
 /// A custom attribute that is not explicitly modeled in
 /// \[Product][google.cloud.retail.v2.Product\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomAttribute {
     /// The textual values of this custom attribute. For example, `["yellow",
@@ -386,6 +402,7 @@ pub struct CustomAttribute {
 }
 /// Fulfillment information, such as the store IDs for in-store pickup or region
 /// IDs for different shipping methods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FulfillmentInfo {
     /// The fulfillment type, including commonly used types (such as pickup in
@@ -425,6 +442,7 @@ pub struct FulfillmentInfo {
 /// Retail Search do not use product images to improve prediction and search
 /// results. However, product images can be returned in results, and are shown in
 /// prediction or search previews in the console.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Image {
     /// Required. URI of the image.
@@ -451,6 +469,7 @@ pub struct Image {
     pub width: i32,
 }
 /// A floating point interval.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Interval {
     /// The lower bound of the interval. If neither of the min fields are set, then
@@ -475,6 +494,7 @@ pub mod interval {
     ///
     /// This field must not be larger than max.
     /// Otherwise, an INVALID_ARGUMENT error is returned.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Min {
         /// Inclusive lower bound.
@@ -489,6 +509,7 @@ pub mod interval {
     ///
     /// This field must be not smaller than min.
     /// Otherwise, an INVALID_ARGUMENT error is returned.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Max {
         /// Inclusive upper bound.
@@ -500,6 +521,7 @@ pub mod interval {
     }
 }
 /// The price information of a \[Product][google.cloud.retail.v2.Product\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PriceInfo {
     /// The 3-letter currency code defined in [ISO
@@ -589,6 +611,7 @@ pub mod price_info {
     /// \[variant][google.cloud.retail.v2.Product.Type.VARIANT\]
     /// \[Product][google.cloud.retail.v2.Product\] having the same
     /// \[Product.primary_product_id][google.cloud.retail.v2.Product.primary_product_id\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PriceRange {
         /// The inclusive
@@ -608,6 +631,7 @@ pub mod price_info {
     }
 }
 /// The rating of a \[Product][google.cloud.retail.v2.Product\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Rating {
     /// The total number of ratings. This value is independent of the value of
@@ -634,6 +658,7 @@ pub struct Rating {
     pub rating_histogram: ::prost::alloc::vec::Vec<i32>,
 }
 /// Information of an end user.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserInfo {
     /// Highly recommended for logged-in users. Unique identifier for logged-in
@@ -695,6 +720,7 @@ pub struct UserInfo {
 }
 /// The inventory information at a place (e.g. a store) identified
 /// by a place ID.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LocalInventory {
     /// The place ID for the current set of inventory information.
@@ -839,6 +865,7 @@ impl SearchSolutionUseCase {
 /// Configures dynamic metadata that can be linked to a
 /// \[ServingConfig][google.cloud.retail.v2.ServingConfig\] and affect search or
 /// recommendation results at serving time.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Control {
     /// Immutable. Fully qualified name
@@ -895,6 +922,7 @@ pub mod control {
     /// A behavior/type must be specified on creation. Type cannot be changed once
     /// specified (e.g. A Rule control will always be a Rule control.). An
     /// INVALID_ARGUMENT will be returned if either condition is violated.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Control {
         /// A rule control - a condition-action pair.
@@ -905,6 +933,7 @@ pub mod control {
     }
 }
 /// Promotion information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Promotion {
     /// ID of the promotion. For example, "free gift".
@@ -921,6 +950,7 @@ pub struct Promotion {
 }
 /// Product captures all metadata information of items to be recommended or
 /// searched.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Product {
     /// Immutable. Full resource name of the product, such as
@@ -1449,6 +1479,7 @@ pub mod product {
             }
         }
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Expiration {
         /// The timestamp when this product becomes unavailable for
@@ -1494,6 +1525,7 @@ pub mod product {
 }
 /// Request message for
 /// \[SearchService.Search][google.cloud.retail.v2.SearchService.Search\] method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchRequest {
     /// Required. The resource name of the Retail Search serving config, such as
@@ -1760,6 +1792,7 @@ pub struct SearchRequest {
 /// Nested message and enum types in `SearchRequest`.
 pub mod search_request {
     /// A facet specification to perform faceted search.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FacetSpec {
         /// Required. The facet key specification.
@@ -1838,6 +1871,7 @@ pub mod search_request {
     /// Nested message and enum types in `FacetSpec`.
     pub mod facet_spec {
         /// Specifies how a facet is computed.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct FacetKey {
             /// Required. Supported textual and numerical facet keys in
@@ -1990,6 +2024,7 @@ pub mod search_request {
         }
     }
     /// The specifications of dynamically generated facets.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DynamicFacetSpec {
         /// Mode of the DynamicFacet feature.
@@ -2037,6 +2072,7 @@ pub mod search_request {
         }
     }
     /// Boost specification to boost certain items.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BoostSpec {
         /// Condition boost specifications. If a product matches multiple conditions
@@ -2059,6 +2095,7 @@ pub mod search_request {
     /// Nested message and enum types in `BoostSpec`.
     pub mod boost_spec {
         /// Boost applies to products which match a condition.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ConditionBoostSpec {
             /// An expression which specifies a boost condition. The syntax and
@@ -2098,6 +2135,7 @@ pub mod search_request {
     }
     /// Specification to determine under which conditions query expansion should
     /// occur.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QueryExpansionSpec {
         /// The condition under which query expansion should occur. Default to
@@ -2152,6 +2190,7 @@ pub mod search_request {
         }
     }
     /// The specification for personalization.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PersonalizationSpec {
         /// Defaults to
@@ -2199,6 +2238,7 @@ pub mod search_request {
         }
     }
     /// The specification for query spell correction.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SpellCorrectionSpec {
         /// The mode under which spell correction should take effect to
@@ -2306,6 +2346,7 @@ pub mod search_request {
 }
 /// Response message for
 /// \[SearchService.Search][google.cloud.retail.v2.SearchService.Search\] method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchResponse {
     /// A list of matched items. The order represents the ranking.
@@ -2364,6 +2405,7 @@ pub struct SearchResponse {
 /// Nested message and enum types in `SearchResponse`.
 pub mod search_response {
     /// Represents the search results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SearchResult {
         /// \[Product.id][google.cloud.retail.v2.Product.id\] of the searched
@@ -2460,6 +2502,7 @@ pub mod search_response {
         pub personal_labels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// A facet result.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Facet {
         /// The key for this facet. E.g., "colorFamilies" or "price" or
@@ -2476,6 +2519,7 @@ pub mod search_response {
     /// Nested message and enum types in `Facet`.
     pub mod facet {
         /// A facet value which contains value names and their count.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct FacetValue {
             /// Number of items that have this facet value.
@@ -2502,6 +2546,7 @@ pub mod search_response {
         /// Nested message and enum types in `FacetValue`.
         pub mod facet_value {
             /// A facet value which contains values.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Oneof)]
             pub enum FacetValue {
                 /// Text value of a facet, such as "Black" for facet "colorFamilies".
@@ -2515,6 +2560,7 @@ pub mod search_response {
     }
     /// Information describing query expansion including whether expansion has
     /// occurred.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QueryExpansionInfo {
         /// Bool describing whether query expansion has occurred.
@@ -2617,6 +2663,7 @@ pub mod search_service_client {
 }
 /// Configures metadata that is used to generate serving time results (e.g.
 /// search results or recommendation predictions).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServingConfig {
     /// Immutable. Fully qualified name
@@ -2836,6 +2883,7 @@ pub struct ServingConfig {
     pub solution_types: ::prost::alloc::vec::Vec<i32>,
 }
 /// Request for CreateServingConfig method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateServingConfigRequest {
     /// Required. Full resource name of parent. Format:
@@ -2854,6 +2902,7 @@ pub struct CreateServingConfigRequest {
     pub serving_config_id: ::prost::alloc::string::String,
 }
 /// Request for UpdateServingConfig method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateServingConfigRequest {
     /// Required. The ServingConfig to update.
@@ -2870,6 +2919,7 @@ pub struct UpdateServingConfigRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request for DeleteServingConfig method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteServingConfigRequest {
     /// Required. The resource name of the ServingConfig to delete. Format:
@@ -2878,6 +2928,7 @@ pub struct DeleteServingConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for GetServingConfig method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetServingConfigRequest {
     /// Required. The resource name of the ServingConfig to get. Format:
@@ -2886,6 +2937,7 @@ pub struct GetServingConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for ListServingConfigs method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServingConfigsRequest {
     /// Required. The catalog resource name. Format:
@@ -2903,6 +2955,7 @@ pub struct ListServingConfigsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for ListServingConfigs method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServingConfigsResponse {
     /// All the ServingConfigs for a given catalog.
@@ -2913,6 +2966,7 @@ pub struct ListServingConfigsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request for AddControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddControlRequest {
     /// Required. The source ServingConfig resource name . Format:
@@ -2925,6 +2979,7 @@ pub struct AddControlRequest {
     pub control_id: ::prost::alloc::string::String,
 }
 /// Request for RemoveControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveControlRequest {
     /// Required. The source ServingConfig resource name . Format:
@@ -3156,6 +3211,7 @@ pub mod serving_config_service_client {
 }
 /// UserEvent captures all metadata information Retail API needs to know about
 /// how end users interact with customers' website.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEvent {
     /// Required. User event type. Allowed values are:
@@ -3397,6 +3453,7 @@ pub struct UserEvent {
     pub page_view_id: ::prost::alloc::string::String,
 }
 /// Detailed product information associated with a user event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductDetail {
     /// Required. \[Product][google.cloud.retail.v2.Product\] information.
@@ -3428,6 +3485,7 @@ pub struct ProductDetail {
 }
 /// Detailed completion information including completion attribution token and
 /// clicked completion info.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompletionDetail {
     /// Completion attribution token in
@@ -3445,6 +3503,7 @@ pub struct CompletionDetail {
     pub selected_position: i32,
 }
 /// A transaction represents the entire purchase transaction.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurchaseTransaction {
     /// The transaction ID with a length limit of 128 characters.
@@ -3473,6 +3532,7 @@ pub struct PurchaseTransaction {
     pub currency_code: ::prost::alloc::string::String,
 }
 /// Google Cloud Storage location for input content.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsSource {
     /// Required. Google Cloud Storage URIs to input files. URI can be up to
@@ -3515,6 +3575,7 @@ pub struct GcsSource {
     pub data_schema: ::prost::alloc::string::String,
 }
 /// BigQuery source import data from.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQuerySource {
     /// The project ID (can be project # or ID) that the BigQuery source is in with
@@ -3572,6 +3633,7 @@ pub struct BigQuerySource {
 pub mod big_query_source {
     /// BigQuery table partition info. Leave this empty if the BigQuery table
     /// is not partitioned.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Partition {
         /// BigQuery time partitioned table's _PARTITIONDATE in YYYY-MM-DD format.
@@ -3583,6 +3645,7 @@ pub mod big_query_source {
     }
 }
 /// The inline source for the input config for ImportProducts method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductInlineSource {
     /// Required. A list of products to update/create. Each product must have a
@@ -3592,6 +3655,7 @@ pub struct ProductInlineSource {
     pub products: ::prost::alloc::vec::Vec<Product>,
 }
 /// The inline source for the input config for ImportUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEventInlineSource {
     /// Required. A list of user events to import. Recommended max of 10k items.
@@ -3599,6 +3663,7 @@ pub struct UserEventInlineSource {
     pub user_events: ::prost::alloc::vec::Vec<UserEvent>,
 }
 /// Configuration of destination for Import related errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportErrorsConfig {
     /// Required. Errors destination.
@@ -3608,6 +3673,7 @@ pub struct ImportErrorsConfig {
 /// Nested message and enum types in `ImportErrorsConfig`.
 pub mod import_errors_config {
     /// Required. Errors destination.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
         /// Google Cloud Storage prefix for import errors. This must be an empty,
@@ -3619,6 +3685,7 @@ pub mod import_errors_config {
     }
 }
 /// Request message for Import methods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportProductsRequest {
     /// Required.
@@ -3701,6 +3768,7 @@ pub mod import_products_request {
     }
 }
 /// Request message for the ImportUserEvents request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportUserEventsRequest {
     /// Required. `projects/1234/locations/global/catalogs/default_catalog`
@@ -3715,6 +3783,7 @@ pub struct ImportUserEventsRequest {
     pub errors_config: ::core::option::Option<ImportErrorsConfig>,
 }
 /// Request message for ImportCompletionData methods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCompletionDataRequest {
     /// Required. The catalog which the suggestions dataset belongs to.
@@ -3734,6 +3803,7 @@ pub struct ImportCompletionDataRequest {
     pub notification_pubsub_topic: ::prost::alloc::string::String,
 }
 /// The input config source for products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductInputConfig {
     /// Required. The source of the input.
@@ -3743,6 +3813,7 @@ pub struct ProductInputConfig {
 /// Nested message and enum types in `ProductInputConfig`.
 pub mod product_input_config {
     /// Required. The source of the input.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// The Inline source for the input content for products.
@@ -3757,6 +3828,7 @@ pub mod product_input_config {
     }
 }
 /// The input config source for user events.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEventInputConfig {
     /// The source of the input.
@@ -3766,6 +3838,7 @@ pub struct UserEventInputConfig {
 /// Nested message and enum types in `UserEventInputConfig`.
 pub mod user_event_input_config {
     /// The source of the input.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Required. The Inline source for the input content for UserEvents.
@@ -3780,6 +3853,7 @@ pub mod user_event_input_config {
     }
 }
 /// The input config source for completion data.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompletionDataInputConfig {
     /// The source of the input.
@@ -3805,6 +3879,7 @@ pub mod completion_data_input_config {
     /// * `suggestions` (default): One JSON completion suggestion per line.
     /// * `denylist`:  One JSON deny suggestion per line.
     /// * `allowlist`:  One JSON allow suggestion per line.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Required. BigQuery input source.
@@ -3818,6 +3893,7 @@ pub mod completion_data_input_config {
 }
 /// Metadata related to the progress of the Import operation. This is
 /// returned by the google.longrunning.Operation.metadata field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportMetadata {
     /// Operation create time.
@@ -3849,6 +3925,7 @@ pub struct ImportMetadata {
 /// \[ImportProductsRequest][google.cloud.retail.v2.ImportProductsRequest\]. If the
 /// long running operation is done, then this message is returned by the
 /// google.longrunning.Operations.response field if the operation was successful.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportProductsResponse {
     /// A sample of errors encountered while processing the request.
@@ -3861,6 +3938,7 @@ pub struct ImportProductsResponse {
 /// Response of the ImportUserEventsRequest. If the long running
 /// operation was successful, then this message is returned by the
 /// google.longrunning.Operations.response field if the operation was successful.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportUserEventsResponse {
     /// A sample of errors encountered while processing the request.
@@ -3876,6 +3954,7 @@ pub struct ImportUserEventsResponse {
 }
 /// A summary of import result. The UserEventImportSummary summarizes
 /// the import status for user events.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEventImportSummary {
     /// Count of user events imported with complete existing catalog information.
@@ -3890,6 +3969,7 @@ pub struct UserEventImportSummary {
 /// \[ImportCompletionDataRequest][google.cloud.retail.v2.ImportCompletionDataRequest\].
 /// If the long running operation is done, this message is returned by the
 /// google.longrunning.Operations.response field if the operation is successful.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCompletionDataResponse {
     /// A sample of errors encountered while processing the request.
@@ -3898,6 +3978,7 @@ pub struct ImportCompletionDataResponse {
 }
 /// Configures what level the product should be uploaded with regards to
 /// how users will be send events and how predictions will be made.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductLevelConfig {
     /// The type of \[Product][google.cloud.retail.v2.Product\]s allowed to be
@@ -3953,6 +4034,7 @@ pub struct ProductLevelConfig {
 }
 /// Catalog level attribute config for an attribute. For example, if customers
 /// want to enable/disable facet for a specific attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CatalogAttribute {
     /// Required. Attribute name.
@@ -4171,6 +4253,7 @@ pub mod catalog_attribute {
     }
 }
 /// Catalog level attribute config.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AttributesConfig {
     /// Required. Immutable. The fully qualified resource name of the attribute
@@ -4199,6 +4282,7 @@ pub struct AttributesConfig {
 }
 /// Catalog level autocomplete config for customers to customize autocomplete
 /// feature's settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompletionConfig {
     /// Required. Immutable. Fully qualified name
@@ -4270,6 +4354,7 @@ pub struct CompletionConfig {
     pub last_allowlist_import_operation: ::prost::alloc::string::String,
 }
 /// The catalog configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Catalog {
     /// Required. Immutable. The fully qualified resource name of the catalog.
@@ -4288,6 +4373,7 @@ pub struct Catalog {
 /// Request message for
 /// \[ProductService.CreateProduct][google.cloud.retail.v2.ProductService.CreateProduct\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateProductRequest {
     /// Required. The parent catalog resource name, such as
@@ -4318,6 +4404,7 @@ pub struct CreateProductRequest {
 /// Request message for
 /// \[ProductService.GetProduct][google.cloud.retail.v2.ProductService.GetProduct\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProductRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4336,6 +4423,7 @@ pub struct GetProductRequest {
 /// Request message for
 /// \[ProductService.UpdateProduct][google.cloud.retail.v2.ProductService.UpdateProduct\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateProductRequest {
     /// Required. The product to update/create.
@@ -4373,6 +4461,7 @@ pub struct UpdateProductRequest {
 /// Request message for
 /// \[ProductService.DeleteProduct][google.cloud.retail.v2.ProductService.DeleteProduct\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProductRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4402,6 +4491,7 @@ pub struct DeleteProductRequest {
 /// Request message for
 /// \[ProductService.ListProducts][google.cloud.retail.v2.ProductService.ListProducts\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProductsRequest {
     /// Required. The parent branch resource name, such as
@@ -4486,6 +4576,7 @@ pub struct ListProductsRequest {
 /// Response message for
 /// \[ProductService.ListProducts][google.cloud.retail.v2.ProductService.ListProducts\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProductsResponse {
     /// The \[Product][google.cloud.retail.v2.Product\]s.
@@ -4501,6 +4592,7 @@ pub struct ListProductsResponse {
 /// Request message for
 /// \[ProductService.SetInventory][google.cloud.retail.v2.ProductService.SetInventory\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInventoryRequest {
     /// Required. The inventory information to update. The allowable fields to
@@ -4590,17 +4682,20 @@ pub struct SetInventoryRequest {
 /// Currently empty because there is no meaningful metadata populated from the
 /// \[ProductService.SetInventory][google.cloud.retail.v2.ProductService.SetInventory\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInventoryMetadata {}
 /// Response of the SetInventoryRequest.  Currently empty because
 /// there is no meaningful response populated from the
 /// \[ProductService.SetInventory][google.cloud.retail.v2.ProductService.SetInventory\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInventoryResponse {}
 /// Request message for
 /// \[ProductService.AddFulfillmentPlaces][google.cloud.retail.v2.ProductService.AddFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddFulfillmentPlacesRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4669,17 +4764,20 @@ pub struct AddFulfillmentPlacesRequest {
 /// Currently empty because there is no meaningful metadata populated from the
 /// \[ProductService.AddFulfillmentPlaces][google.cloud.retail.v2.ProductService.AddFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddFulfillmentPlacesMetadata {}
 /// Response of the AddFulfillmentPlacesRequest.  Currently empty because
 /// there is no meaningful response populated from the
 /// \[ProductService.AddFulfillmentPlaces][google.cloud.retail.v2.ProductService.AddFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddFulfillmentPlacesResponse {}
 /// Request message for
 /// \[ProductService.AddLocalInventories][google.cloud.retail.v2.ProductService.AddLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddLocalInventoriesRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4730,6 +4828,7 @@ pub struct AddLocalInventoriesRequest {
 /// Currently empty because there is no meaningful metadata populated from the
 /// \[ProductService.AddLocalInventories][google.cloud.retail.v2.ProductService.AddLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddLocalInventoriesMetadata {}
 /// Response of the
@@ -4738,11 +4837,13 @@ pub struct AddLocalInventoriesMetadata {}
 /// the
 /// \[ProductService.AddLocalInventories][google.cloud.retail.v2.ProductService.AddLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddLocalInventoriesResponse {}
 /// Request message for
 /// \[ProductService.RemoveLocalInventories][google.cloud.retail.v2.ProductService.RemoveLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveLocalInventoriesRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4776,6 +4877,7 @@ pub struct RemoveLocalInventoriesRequest {
 /// Currently empty because there is no meaningful metadata populated from the
 /// \[ProductService.RemoveLocalInventories][google.cloud.retail.v2.ProductService.RemoveLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveLocalInventoriesMetadata {}
 /// Response of the
@@ -4784,11 +4886,13 @@ pub struct RemoveLocalInventoriesMetadata {}
 /// the
 /// \[ProductService.RemoveLocalInventories][google.cloud.retail.v2.ProductService.RemoveLocalInventories\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveLocalInventoriesResponse {}
 /// Request message for
 /// \[ProductService.RemoveFulfillmentPlaces][google.cloud.retail.v2.ProductService.RemoveFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveFulfillmentPlacesRequest {
     /// Required. Full resource name of \[Product][google.cloud.retail.v2.Product\],
@@ -4852,12 +4956,14 @@ pub struct RemoveFulfillmentPlacesRequest {
 /// Currently empty because there is no meaningful metadata populated from the
 /// \[ProductService.RemoveFulfillmentPlaces][google.cloud.retail.v2.ProductService.RemoveFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveFulfillmentPlacesMetadata {}
 /// Response of the RemoveFulfillmentPlacesRequest. Currently empty because there
 /// is no meaningful response populated from the
 /// \[ProductService.RemoveFulfillmentPlaces][google.cloud.retail.v2.ProductService.RemoveFulfillmentPlaces\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveFulfillmentPlacesResponse {}
 /// Generated client implementations.
@@ -5312,6 +5418,7 @@ pub mod product_service_client {
     }
 }
 /// Request message for Predict method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PredictRequest {
     /// Required. Full resource name of the format:
@@ -5457,6 +5564,7 @@ pub struct PredictRequest {
     >,
 }
 /// Response message for predict method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PredictResponse {
     /// A list of recommended products. The order represents the ranking (from the
@@ -5479,6 +5587,7 @@ pub struct PredictResponse {
 /// Nested message and enum types in `PredictResponse`.
 pub mod predict_response {
     /// PredictionResult represents the recommendation prediction results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PredictionResult {
         /// ID of the recommended product
@@ -5583,6 +5692,7 @@ pub mod prediction_service_client {
 /// Request for
 /// \[CatalogService.ListCatalogs][google.cloud.retail.v2.CatalogService.ListCatalogs\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCatalogsRequest {
     /// Required. The account resource name with an associated location.
@@ -5616,6 +5726,7 @@ pub struct ListCatalogsRequest {
 /// Response for
 /// \[CatalogService.ListCatalogs][google.cloud.retail.v2.CatalogService.ListCatalogs\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCatalogsResponse {
     /// All the customer's \[Catalog][google.cloud.retail.v2.Catalog\]s.
@@ -5631,6 +5742,7 @@ pub struct ListCatalogsResponse {
 /// Request for
 /// \[CatalogService.UpdateCatalog][google.cloud.retail.v2.CatalogService.UpdateCatalog\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCatalogRequest {
     /// Required. The \[Catalog][google.cloud.retail.v2.Catalog\] to update.
@@ -5652,6 +5764,7 @@ pub struct UpdateCatalogRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message to set a specified branch as new default_branch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetDefaultBranchRequest {
     /// Full resource name of the catalog, such as
@@ -5683,6 +5796,7 @@ pub struct SetDefaultBranchRequest {
     pub force: bool,
 }
 /// Request message to show which branch is currently the default branch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDefaultBranchRequest {
     /// The parent catalog resource name, such as
@@ -5692,6 +5806,7 @@ pub struct GetDefaultBranchRequest {
 }
 /// Response message of
 /// \[CatalogService.GetDefaultBranch][google.cloud.retail.v2.CatalogService.GetDefaultBranch\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDefaultBranchResponse {
     /// Full resource name of the branch id currently set as default branch.
@@ -5709,6 +5824,7 @@ pub struct GetDefaultBranchResponse {
 /// Request for
 /// \[CatalogService.GetCompletionConfig][google.cloud.retail.v2.CatalogService.GetCompletionConfig\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCompletionConfigRequest {
     /// Required. Full CompletionConfig resource name. Format:
@@ -5719,6 +5835,7 @@ pub struct GetCompletionConfigRequest {
 /// Request for
 /// \[CatalogService.UpdateCompletionConfig][google.cloud.retail.v2.CatalogService.UpdateCompletionConfig\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCompletionConfigRequest {
     /// Required. The \[CompletionConfig][google.cloud.retail.v2.CompletionConfig\]
@@ -5748,6 +5865,7 @@ pub struct UpdateCompletionConfigRequest {
 /// Request for
 /// \[CatalogService.GetAttributesConfig][google.cloud.retail.v2.CatalogService.GetAttributesConfig\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAttributesConfigRequest {
     /// Required. Full AttributesConfig resource name. Format:
@@ -5758,6 +5876,7 @@ pub struct GetAttributesConfigRequest {
 /// Request for
 /// \[CatalogService.UpdateAttributesConfig][google.cloud.retail.v2.CatalogService.UpdateAttributesConfig\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAttributesConfigRequest {
     /// Required. The \[AttributesConfig][google.cloud.retail.v2.AttributesConfig\]
@@ -5777,6 +5896,7 @@ pub struct UpdateAttributesConfigRequest {
 /// Request for
 /// \[CatalogService.AddCatalogAttribute][google.cloud.retail.v2.CatalogService.AddCatalogAttribute\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddCatalogAttributeRequest {
     /// Required. Full AttributesConfig resource name. Format:
@@ -5791,6 +5911,7 @@ pub struct AddCatalogAttributeRequest {
 /// Request for
 /// \[CatalogService.RemoveCatalogAttribute][google.cloud.retail.v2.CatalogService.RemoveCatalogAttribute\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveCatalogAttributeRequest {
     /// Required. Full AttributesConfig resource name. Format:
@@ -5805,6 +5926,7 @@ pub struct RemoveCatalogAttributeRequest {
 /// Request for
 /// \[CatalogService.ReplaceCatalogAttribute][google.cloud.retail.v2.CatalogService.ReplaceCatalogAttribute\]
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReplaceCatalogAttributeRequest {
     /// Required. Full AttributesConfig resource name. Format:
@@ -6167,9 +6289,11 @@ pub mod catalog_service_client {
 }
 /// Metadata related to the progress of the Purge operation.
 /// This will be returned by the google.longrunning.Operation.metadata field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeMetadata {}
 /// Request message for PurgeUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeUserEventsRequest {
     /// Required. The resource name of the catalog under which the events are
@@ -6211,6 +6335,7 @@ pub struct PurgeUserEventsRequest {
 /// Response of the PurgeUserEventsRequest. If the long running operation is
 /// successfully done, then this message is returned by the
 /// google.longrunning.Operations.response field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeUserEventsResponse {
     /// The total count of events purged as a result of the operation.
@@ -6218,6 +6343,7 @@ pub struct PurgeUserEventsResponse {
     pub purged_events_count: i64,
 }
 /// Request for CreateControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateControlRequest {
     /// Required. Full resource name of parent catalog. Format:
@@ -6236,6 +6362,7 @@ pub struct CreateControlRequest {
     pub control_id: ::prost::alloc::string::String,
 }
 /// Request for UpdateControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateControlRequest {
     /// Required. The Control to update.
@@ -6252,6 +6379,7 @@ pub struct UpdateControlRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request for DeleteControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteControlRequest {
     /// Required. The resource name of the Control to delete. Format:
@@ -6260,6 +6388,7 @@ pub struct DeleteControlRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for GetControl method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetControlRequest {
     /// Required. The resource name of the Control to get. Format:
@@ -6268,6 +6397,7 @@ pub struct GetControlRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for ListControls method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListControlsRequest {
     /// Required. The catalog resource name. Format:
@@ -6292,6 +6422,7 @@ pub struct ListControlsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response for ListControls method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListControlsResponse {
     /// All the Controls for a given catalog.
@@ -6475,6 +6606,7 @@ pub mod control_service_client {
     }
 }
 /// Auto-complete parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryRequest {
     /// Required. Catalog for which the completion is performed.
@@ -6549,6 +6681,7 @@ pub struct CompleteQueryRequest {
     pub max_suggestions: i32,
 }
 /// Response of the auto-complete query.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryResponse {
     /// Results of the matching suggestions. The result list is ordered and the
@@ -6592,6 +6725,7 @@ pub struct CompleteQueryResponse {
 /// Nested message and enum types in `CompleteQueryResponse`.
 pub mod complete_query_response {
     /// Resource that represents completion results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CompletionResult {
         /// The suggestion for the query.
@@ -6613,6 +6747,7 @@ pub mod complete_query_response {
         >,
     }
     /// Recent search of this user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RecentSearchResult {
         /// The recent search query.
@@ -6739,6 +6874,7 @@ pub mod completion_service_client {
     }
 }
 /// Request message for WriteUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WriteUserEventRequest {
     /// Required. The parent catalog resource name, such as
@@ -6750,6 +6886,7 @@ pub struct WriteUserEventRequest {
     pub user_event: ::core::option::Option<UserEvent>,
 }
 /// Request message for CollectUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CollectUserEventRequest {
     /// Required. The parent catalog name, such as
@@ -6773,6 +6910,7 @@ pub struct CollectUserEventRequest {
     pub ets: i64,
 }
 /// Request message for RejoinUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RejoinUserEventsRequest {
     /// Required. The parent catalog resource name, such as
@@ -6833,6 +6971,7 @@ pub mod rejoin_user_events_request {
     }
 }
 /// Response message for RejoinUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RejoinUserEventsResponse {
     /// Number of user events that were joined with latest product catalog.
@@ -6840,6 +6979,7 @@ pub struct RejoinUserEventsResponse {
     pub rejoined_user_events_count: i64,
 }
 /// Metadata for RejoinUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RejoinUserEventsMetadata {}
 /// Generated client implementations.

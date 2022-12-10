@@ -1,4 +1,5 @@
 /// Request message for \[UserListService.MutateUserLists][google.ads.googleads.v11.services.UserListService.MutateUserLists\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateUserListsRequest {
     /// Required. The ID of the customer whose user lists are being modified.
@@ -19,6 +20,7 @@ pub struct MutateUserListsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update) on a user list.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserListOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -31,6 +33,7 @@ pub struct UserListOperation {
 /// Nested message and enum types in `UserListOperation`.
 pub mod user_list_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new user list.
@@ -49,6 +52,7 @@ pub mod user_list_operation {
     }
 }
 /// Response message for user list mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateUserListsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -64,6 +68,7 @@ pub struct MutateUserListsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateUserListResult>,
 }
 /// The result for the user list mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateUserListResult {
     /// Returned for successful operations.
@@ -175,6 +180,7 @@ pub mod user_list_service_client {
 }
 /// Request message for
 /// \[ConversionGoalCampaignConfigService.MutateConversionGoalCampaignConfig][\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionGoalCampaignConfigsRequest {
     /// Required. The ID of the customer whose custom conversion goals are being modified.
@@ -197,6 +203,7 @@ pub struct MutateConversionGoalCampaignConfigsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (update) on a conversion goal campaign config.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionGoalCampaignConfigOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -211,6 +218,7 @@ pub struct ConversionGoalCampaignConfigOperation {
 /// Nested message and enum types in `ConversionGoalCampaignConfigOperation`.
 pub mod conversion_goal_campaign_config_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The conversion goal campaign config is expected to have
@@ -220,6 +228,7 @@ pub mod conversion_goal_campaign_config_operation {
     }
 }
 /// Response message for a conversion goal campaign config mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionGoalCampaignConfigsResponse {
     /// All results for the mutate.
@@ -227,6 +236,7 @@ pub struct MutateConversionGoalCampaignConfigsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateConversionGoalCampaignConfigResult>,
 }
 /// The result for the conversion goal campaign config mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionGoalCampaignConfigResult {
     /// Returned for successful operations.
@@ -330,6 +340,7 @@ pub mod conversion_goal_campaign_config_service_client {
     }
 }
 /// Request message for \[CampaignLabelService.MutateCampaignLabels][google.ads.googleads.v11.services.CampaignLabelService.MutateCampaignLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignLabelsRequest {
     /// Required. ID of the customer whose campaign-label relationships are being modified.
@@ -350,6 +361,7 @@ pub struct MutateCampaignLabelsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on a campaign-label relationship.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignLabelOperation {
     /// The mutate operation.
@@ -359,6 +371,7 @@ pub struct CampaignLabelOperation {
 /// Nested message and enum types in `CampaignLabelOperation`.
 pub mod campaign_label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign-label
@@ -374,6 +387,7 @@ pub mod campaign_label_operation {
     }
 }
 /// Response message for a campaign labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -389,6 +403,7 @@ pub struct MutateCampaignLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignLabelResult>,
 }
 /// The result for a campaign label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignLabelResult {
     /// Returned for successful operations.
@@ -494,6 +509,7 @@ pub mod campaign_label_service_client {
     }
 }
 /// Request message for \[CustomerLabelService.MutateCustomerLabels][google.ads.googleads.v11.services.CustomerLabelService.MutateCustomerLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerLabelsRequest {
     /// Required. ID of the customer whose customer-label relationships are being modified.
@@ -514,6 +530,7 @@ pub struct MutateCustomerLabelsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on a customer-label relationship.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerLabelOperation {
     /// The mutate operation.
@@ -523,6 +540,7 @@ pub struct CustomerLabelOperation {
 /// Nested message and enum types in `CustomerLabelOperation`.
 pub mod customer_label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customer-label
@@ -538,6 +556,7 @@ pub mod customer_label_operation {
     }
 }
 /// Response message for a customer labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -553,6 +572,7 @@ pub struct MutateCustomerLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerLabelResult>,
 }
 /// The result for a customer label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerLabelResult {
     /// Returned for successful operations.
@@ -656,6 +676,7 @@ pub mod customer_label_service_client {
     }
 }
 /// Request message for \[KeywordPlanAdGroupService.MutateKeywordPlanAdGroups][google.ads.googleads.v11.services.KeywordPlanAdGroupService.MutateKeywordPlanAdGroups\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupsRequest {
     /// Required. The ID of the customer whose Keyword Plan ad groups are being modified.
@@ -676,6 +697,7 @@ pub struct MutateKeywordPlanAdGroupsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on a Keyword Plan ad group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanAdGroupOperation {
     /// The FieldMask that determines which resource fields are modified in an
@@ -689,6 +711,7 @@ pub struct KeywordPlanAdGroupOperation {
 /// Nested message and enum types in `KeywordPlanAdGroupOperation`.
 pub mod keyword_plan_ad_group_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new Keyword Plan
@@ -708,6 +731,7 @@ pub mod keyword_plan_ad_group_operation {
     }
 }
 /// Response message for a Keyword Plan ad group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -724,6 +748,7 @@ pub struct MutateKeywordPlanAdGroupsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateKeywordPlanAdGroupResult>,
 }
 /// The result for the Keyword Plan ad group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupResult {
     /// Returned for successful operations.
@@ -835,6 +860,7 @@ pub mod keyword_plan_ad_group_service_client {
 }
 /// Request message for
 /// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestKeywordThemeConstantsRequest {
     /// The query text of a keyword theme that will be used to map to similar
@@ -852,6 +878,7 @@ pub struct SuggestKeywordThemeConstantsRequest {
 }
 /// Response message for
 /// \[KeywordThemeConstantService.SuggestKeywordThemeConstants][google.ads.googleads.v11.services.KeywordThemeConstantService.SuggestKeywordThemeConstants\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestKeywordThemeConstantsResponse {
     /// Smart Campaign keyword theme suggestions.
@@ -955,6 +982,7 @@ pub mod keyword_theme_constant_service_client {
     }
 }
 /// Request message for \[AdGroupFeedService.MutateAdGroupFeeds][google.ads.googleads.v11.services.AdGroupFeedService.MutateAdGroupFeeds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupFeedsRequest {
     /// Required. The ID of the customer whose ad group feeds are being modified.
@@ -982,6 +1010,7 @@ pub struct MutateAdGroupFeedsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an ad group feed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupFeedOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -994,6 +1023,7 @@ pub struct AdGroupFeedOperation {
 /// Nested message and enum types in `AdGroupFeedOperation`.
 pub mod ad_group_feed_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group feed.
@@ -1012,6 +1042,7 @@ pub mod ad_group_feed_operation {
     }
 }
 /// Response message for an ad group feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -1027,6 +1058,7 @@ pub struct MutateAdGroupFeedsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupFeedResult>,
 }
 /// The result for the ad group feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupFeedResult {
     /// Returned for successful operations.
@@ -1145,6 +1177,7 @@ pub mod ad_group_feed_service_client {
     }
 }
 /// Request message for \[MediaFileService.MutateMediaFiles][google.ads.googleads.v11.services.MediaFileService.MutateMediaFiles\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMediaFilesRequest {
     /// Required. The ID of the customer whose media files are being modified.
@@ -1172,6 +1205,7 @@ pub struct MutateMediaFilesRequest {
     pub response_content_type: i32,
 }
 /// A single operation to create media file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MediaFileOperation {
     /// The mutate operation.
@@ -1181,6 +1215,7 @@ pub struct MediaFileOperation {
 /// Nested message and enum types in `MediaFileOperation`.
 pub mod media_file_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new media file.
@@ -1189,6 +1224,7 @@ pub mod media_file_operation {
     }
 }
 /// Response message for a media file mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMediaFilesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -1204,6 +1240,7 @@ pub struct MutateMediaFilesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateMediaFileResult>,
 }
 /// The result for the media file mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMediaFileResult {
     /// The resource name returned for successful operations.
@@ -1321,6 +1358,7 @@ pub mod media_file_service_client {
 }
 /// Request message for
 /// \[SmartCampaignSettingService.MutateSmartCampaignSetting][\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSmartCampaignSettingsRequest {
     /// Required. The ID of the customer whose Smart campaign settings are being modified.
@@ -1348,6 +1386,7 @@ pub struct MutateSmartCampaignSettingsRequest {
     pub response_content_type: i32,
 }
 /// A single operation to update Smart campaign settings for a campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SmartCampaignSettingOperation {
     /// Update operation: The Smart campaign setting must specify a valid
@@ -1359,6 +1398,7 @@ pub struct SmartCampaignSettingOperation {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Response message for campaign mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSmartCampaignSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -1374,6 +1414,7 @@ pub struct MutateSmartCampaignSettingsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateSmartCampaignSettingResult>,
 }
 /// The result for the Smart campaign setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSmartCampaignSettingResult {
     /// Returned for successful operations.
@@ -1474,6 +1515,7 @@ pub mod smart_campaign_setting_service_client {
     }
 }
 /// Request message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadClickConversionsRequest {
     /// Required. The ID of the customer performing the upload.
@@ -1497,6 +1539,7 @@ pub struct UploadClickConversionsRequest {
     pub validate_only: bool,
 }
 /// Response message for \[ConversionUploadService.UploadClickConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadClickConversions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadClickConversionsResponse {
     /// Errors that pertain to conversion failures in the partial failure mode.
@@ -1516,6 +1559,7 @@ pub struct UploadClickConversionsResponse {
     pub results: ::prost::alloc::vec::Vec<ClickConversionResult>,
 }
 /// Request message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadCallConversionsRequest {
     /// Required. The ID of the customer performing the upload.
@@ -1539,6 +1583,7 @@ pub struct UploadCallConversionsRequest {
     pub validate_only: bool,
 }
 /// Response message for \[ConversionUploadService.UploadCallConversions][google.ads.googleads.v11.services.ConversionUploadService.UploadCallConversions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadCallConversionsResponse {
     /// Errors that pertain to conversion failures in the partial failure mode.
@@ -1558,6 +1603,7 @@ pub struct UploadCallConversionsResponse {
     pub results: ::prost::alloc::vec::Vec<CallConversionResult>,
 }
 /// A click conversion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClickConversion {
     /// The Google click ID (gclid) associated with this conversion.
@@ -1617,6 +1663,7 @@ pub struct ClickConversion {
     pub conversion_environment: i32,
 }
 /// A call conversion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallConversion {
     /// The caller id from which this call was placed. Caller id is expected to be
@@ -1651,6 +1698,7 @@ pub struct CallConversion {
     pub custom_variables: ::prost::alloc::vec::Vec<CustomVariable>,
 }
 /// Contains additional information about externally attributed conversions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExternalAttributionData {
     /// Represents the fraction of the conversion that is attributed to the
@@ -1664,6 +1712,7 @@ pub struct ExternalAttributionData {
     >,
 }
 /// Identifying information for a successfully processed ClickConversion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClickConversionResult {
     /// The Google Click ID (gclid) associated with this conversion.
@@ -1691,6 +1740,7 @@ pub struct ClickConversionResult {
     pub user_identifiers: ::prost::alloc::vec::Vec<super::common::UserIdentifier>,
 }
 /// Identifying information for a successfully processed CallConversionUpload.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallConversionResult {
     /// The caller id from which this call was placed. Caller id is expected to be
@@ -1710,6 +1760,7 @@ pub struct CallConversionResult {
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// A custom variable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomVariable {
     /// Resource name of the custom variable associated with this conversion.
@@ -1726,6 +1777,7 @@ pub struct CustomVariable {
     pub value: ::prost::alloc::string::String,
 }
 /// Contains additional information about cart data.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CartData {
     /// The Merchant Center ID where the items are uploaded.
@@ -1749,6 +1801,7 @@ pub struct CartData {
 /// Nested message and enum types in `CartData`.
 pub mod cart_data {
     /// Contains data of the items purchased.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Item {
         /// The shopping id of the item. Must be equal to the Merchant Center product
@@ -1894,6 +1947,7 @@ pub mod conversion_upload_service_client {
     }
 }
 /// Request message for \[CustomInterestService.MutateCustomInterests][google.ads.googleads.v11.services.CustomInterestService.MutateCustomInterests\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomInterestsRequest {
     /// Required. The ID of the customer whose custom interests are being modified.
@@ -1908,6 +1962,7 @@ pub struct MutateCustomInterestsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update) on a custom interest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomInterestOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -1920,6 +1975,7 @@ pub struct CustomInterestOperation {
 /// Nested message and enum types in `CustomInterestOperation`.
 pub mod custom_interest_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new custom
@@ -1933,6 +1989,7 @@ pub mod custom_interest_operation {
     }
 }
 /// Response message for custom interest mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomInterestsResponse {
     /// All results for the mutate.
@@ -1940,6 +1997,7 @@ pub struct MutateCustomInterestsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomInterestResult>,
 }
 /// The result for the custom interest mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomInterestResult {
     /// Returned for successful operations.
@@ -2047,6 +2105,7 @@ pub mod custom_interest_service_client {
 /// \[AssetGroupListingGroupFilterService.MutateAssetGroupListingGroupFilters][google.ads.googleads.v11.services.AssetGroupListingGroupFilterService.MutateAssetGroupListingGroupFilters\].
 /// partial_failure is not supported because the tree needs to be validated
 /// together.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupListingGroupFiltersRequest {
     /// Required. The ID of the customer whose asset group listing group filters are being
@@ -2070,6 +2129,7 @@ pub struct MutateAssetGroupListingGroupFiltersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an asset group listing group filter.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupListingGroupFilterOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -2087,6 +2147,7 @@ pub struct AssetGroupListingGroupFilterOperation {
 /// Nested message and enum types in `AssetGroupListingGroupFilterOperation`.
 pub mod asset_group_listing_group_filter_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset group
@@ -2108,6 +2169,7 @@ pub mod asset_group_listing_group_filter_operation {
     }
 }
 /// Response message for an asset group listing group filter mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupListingGroupFiltersResponse {
     /// All results for the mutate.
@@ -2115,6 +2177,7 @@ pub struct MutateAssetGroupListingGroupFiltersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetGroupListingGroupFilterResult>,
 }
 /// The result for the asset group listing group filter mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupListingGroupFilterResult {
     /// Returned for successful operations.
@@ -2218,6 +2281,7 @@ pub mod asset_group_listing_group_filter_service_client {
     }
 }
 /// Request message for \[AdGroupLabelService.MutateAdGroupLabels][google.ads.googleads.v11.services.AdGroupLabelService.MutateAdGroupLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupLabelsRequest {
     /// Required. ID of the customer whose ad group labels are being modified.
@@ -2238,6 +2302,7 @@ pub struct MutateAdGroupLabelsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an ad group label.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupLabelOperation {
     /// The mutate operation.
@@ -2247,6 +2312,7 @@ pub struct AdGroupLabelOperation {
 /// Nested message and enum types in `AdGroupLabelOperation`.
 pub mod ad_group_label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -2262,6 +2328,7 @@ pub mod ad_group_label_operation {
     }
 }
 /// Response message for an ad group labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -2277,6 +2344,7 @@ pub struct MutateAdGroupLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupLabelResult>,
 }
 /// The result for an ad group label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupLabelResult {
     /// Returned for successful operations.
@@ -2379,6 +2447,7 @@ pub mod ad_group_label_service_client {
     }
 }
 /// Request message for \[RemarketingActionService.MutateRemarketingActions][google.ads.googleads.v11.services.RemarketingActionService.MutateRemarketingActions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateRemarketingActionsRequest {
     /// Required. The ID of the customer whose remarketing actions are being modified.
@@ -2399,6 +2468,7 @@ pub struct MutateRemarketingActionsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update) on a remarketing action.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemarketingActionOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -2411,6 +2481,7 @@ pub struct RemarketingActionOperation {
 /// Nested message and enum types in `RemarketingActionOperation`.
 pub mod remarketing_action_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new remarketing
@@ -2424,6 +2495,7 @@ pub mod remarketing_action_operation {
     }
 }
 /// Response message for remarketing action mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateRemarketingActionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -2439,6 +2511,7 @@ pub struct MutateRemarketingActionsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateRemarketingActionResult>,
 }
 /// The result for the remarketing action mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateRemarketingActionResult {
     /// Returned for successful operations.
@@ -2541,6 +2614,7 @@ pub mod remarketing_action_service_client {
     }
 }
 /// Request message for \[GoogleAdsFieldService.GetGoogleAdsField][google.ads.googleads.v11.services.GoogleAdsFieldService.GetGoogleAdsField\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGoogleAdsFieldRequest {
     /// Required. The resource name of the field to get.
@@ -2548,6 +2622,7 @@ pub struct GetGoogleAdsFieldRequest {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[GoogleAdsFieldService.SearchGoogleAdsFields][google.ads.googleads.v11.services.GoogleAdsFieldService.SearchGoogleAdsFields\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsFieldsRequest {
     /// Required. The query string.
@@ -2565,6 +2640,7 @@ pub struct SearchGoogleAdsFieldsRequest {
     pub page_size: i32,
 }
 /// Response message for \[GoogleAdsFieldService.SearchGoogleAdsFields][google.ads.googleads.v11.services.GoogleAdsFieldService.SearchGoogleAdsFields\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsFieldsResponse {
     /// The list of fields that matched the query.
@@ -2704,6 +2780,7 @@ pub mod google_ads_field_service_client {
     }
 }
 /// Request message for \[CampaignFeedService.MutateCampaignFeeds][google.ads.googleads.v11.services.CampaignFeedService.MutateCampaignFeeds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignFeedsRequest {
     /// Required. The ID of the customer whose campaign feeds are being modified.
@@ -2731,6 +2808,7 @@ pub struct MutateCampaignFeedsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign feed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignFeedOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -2743,6 +2821,7 @@ pub struct CampaignFeedOperation {
 /// Nested message and enum types in `CampaignFeedOperation`.
 pub mod campaign_feed_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign feed.
@@ -2761,6 +2840,7 @@ pub mod campaign_feed_operation {
     }
 }
 /// Response message for a campaign feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -2776,6 +2856,7 @@ pub struct MutateCampaignFeedsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignFeedResult>,
 }
 /// The result for the campaign feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignFeedResult {
     /// Returned for successful operations.
@@ -2895,6 +2976,7 @@ pub mod campaign_feed_service_client {
     }
 }
 /// Request message for \[RecommendationService.ApplyRecommendation][google.ads.googleads.v11.services.RecommendationService.ApplyRecommendation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplyRecommendationRequest {
     /// Required. The ID of the customer with the recommendation.
@@ -2914,6 +2996,7 @@ pub struct ApplyRecommendationRequest {
 }
 /// Information about the operation to apply a recommendation and any parameters
 /// to customize it.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplyRecommendationOperation {
     /// The resource name of the recommendation to apply.
@@ -2931,6 +3014,7 @@ pub struct ApplyRecommendationOperation {
 /// Nested message and enum types in `ApplyRecommendationOperation`.
 pub mod apply_recommendation_operation {
     /// Parameters to use when applying a campaign budget recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CampaignBudgetParameters {
         /// New budget amount to set for target budget resource. This is a required
@@ -2939,6 +3023,7 @@ pub mod apply_recommendation_operation {
         pub new_budget_amount_micros: ::core::option::Option<i64>,
     }
     /// Parameters to use when applying a text ad recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TextAdParameters {
         /// New ad to add to recommended ad group. All necessary fields need to be
@@ -2947,6 +3032,7 @@ pub mod apply_recommendation_operation {
         pub ad: ::core::option::Option<super::super::resources::Ad>,
     }
     /// Parameters to use when applying keyword recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct KeywordParameters {
         /// The ad group resource to add keyword to. This is a required field.
@@ -2964,6 +3050,7 @@ pub mod apply_recommendation_operation {
         pub cpc_bid_micros: ::core::option::Option<i64>,
     }
     /// Parameters to use when applying Target CPA recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetCpaOptInParameters {
         /// Average CPA to use for Target CPA bidding strategy. This is a required
@@ -2975,6 +3062,7 @@ pub mod apply_recommendation_operation {
         pub new_campaign_budget_amount_micros: ::core::option::Option<i64>,
     }
     /// Parameters to use when applying a Target ROAS opt-in recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetRoasOptInParameters {
         /// Average ROAS (revenue per unit of spend) to use for Target ROAS bidding
@@ -2987,6 +3075,7 @@ pub mod apply_recommendation_operation {
         pub new_campaign_budget_amount_micros: ::core::option::Option<i64>,
     }
     /// Parameters to use when applying callout extension recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CalloutExtensionParameters {
         /// Callout extensions to be added. This is a required field.
@@ -2996,6 +3085,7 @@ pub mod apply_recommendation_operation {
         >,
     }
     /// Parameters to use when applying call extension recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CallExtensionParameters {
         /// Call extensions to be added. This is a required field.
@@ -3005,6 +3095,7 @@ pub mod apply_recommendation_operation {
         >,
     }
     /// Parameters to use when applying sitelink extension recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SitelinkExtensionParameters {
         /// Sitelink extensions to be added. This is a required field.
@@ -3014,6 +3105,7 @@ pub mod apply_recommendation_operation {
         >,
     }
     /// Parameters to use when applying move unused budget recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct MoveUnusedBudgetParameters {
         /// Budget amount to move from excess budget to constrained budget. This is
@@ -3023,6 +3115,7 @@ pub mod apply_recommendation_operation {
     }
     /// Parameters to use when applying a responsive search ad asset
     /// recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ResponsiveSearchAdAssetParameters {
         /// Updated ad. The current ad's content will be replaced.
@@ -3031,6 +3124,7 @@ pub mod apply_recommendation_operation {
     }
     /// Parameters to use when applying a responsive search ad improve ad strength
     /// recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ResponsiveSearchAdImproveAdStrengthParameters {
         /// Updated ad. The current ad's content will be replaced.
@@ -3038,6 +3132,7 @@ pub mod apply_recommendation_operation {
         pub updated_ad: ::core::option::Option<super::super::resources::Ad>,
     }
     /// Parameters to use when applying a responsive search ad recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ResponsiveSearchAdParameters {
         /// Required. New ad to add to recommended ad group.
@@ -3045,6 +3140,7 @@ pub mod apply_recommendation_operation {
         pub ad: ::core::option::Option<super::super::resources::Ad>,
     }
     /// Parameters to use when applying a use broad match keyword recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct UseBroadMatchKeywordParameters {
         /// New budget amount to set for target budget resource.
@@ -3052,6 +3148,7 @@ pub mod apply_recommendation_operation {
         pub new_budget_amount_micros: ::core::option::Option<i64>,
     }
     /// Parameters to use when applying the recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ApplyParameters {
         /// Optional parameters to use when applying a campaign budget
@@ -3103,6 +3200,7 @@ pub mod apply_recommendation_operation {
     }
 }
 /// Response message for \[RecommendationService.ApplyRecommendation][google.ads.googleads.v11.services.RecommendationService.ApplyRecommendation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplyRecommendationResponse {
     /// Results of operations to apply recommendations.
@@ -3118,6 +3216,7 @@ pub struct ApplyRecommendationResponse {
     >,
 }
 /// The result of applying a recommendation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplyRecommendationResult {
     /// Returned for successful applies.
@@ -3125,6 +3224,7 @@ pub struct ApplyRecommendationResult {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[RecommendationService.DismissRecommendation][google.ads.googleads.v11.services.RecommendationService.DismissRecommendation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DismissRecommendationRequest {
     /// Required. The ID of the customer with the recommendation.
@@ -3147,6 +3247,7 @@ pub struct DismissRecommendationRequest {
 /// Nested message and enum types in `DismissRecommendationRequest`.
 pub mod dismiss_recommendation_request {
     /// Operation to dismiss a single recommendation identified by resource_name.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DismissRecommendationOperation {
         /// The resource name of the recommendation to dismiss.
@@ -3155,6 +3256,7 @@ pub mod dismiss_recommendation_request {
     }
 }
 /// Response message for \[RecommendationService.DismissRecommendation][google.ads.googleads.v11.services.RecommendationService.DismissRecommendation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DismissRecommendationResponse {
     /// Results of operations to dismiss recommendations.
@@ -3174,6 +3276,7 @@ pub struct DismissRecommendationResponse {
 /// Nested message and enum types in `DismissRecommendationResponse`.
 pub mod dismiss_recommendation_response {
     /// The result of dismissing a recommendation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DismissRecommendationResult {
         /// Returned for successful dismissals.
@@ -3308,6 +3411,7 @@ pub mod recommendation_service_client {
     }
 }
 /// Request message for \[AdService.GetAd][google.ads.googleads.v11.services.AdService.GetAd\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAdRequest {
     /// Required. The resource name of the ad to fetch.
@@ -3315,6 +3419,7 @@ pub struct GetAdRequest {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[AdService.MutateAds][google.ads.googleads.v11.services.AdService.MutateAds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdsRequest {
     /// Required. The ID of the customer whose ads are being modified.
@@ -3342,6 +3447,7 @@ pub struct MutateAdsRequest {
     pub validate_only: bool,
 }
 /// A single update operation on an ad.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -3359,6 +3465,7 @@ pub struct AdOperation {
 /// Nested message and enum types in `AdOperation`.
 pub mod ad_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The ad is expected to have a valid resource name
@@ -3370,6 +3477,7 @@ pub mod ad_operation {
     }
 }
 /// Response message for an ad mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -3385,6 +3493,7 @@ pub struct MutateAdsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdResult>,
 }
 /// The result for the ad mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdResult {
     /// The resource name returned for successful operations.
@@ -3547,6 +3656,7 @@ pub mod ad_service_client {
 }
 /// Request message for
 /// \[CustomerConversionGoalService.MutateCustomerConversionGoals][google.ads.googleads.v11.services.CustomerConversionGoalService.MutateCustomerConversionGoals\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerConversionGoalsRequest {
     /// Required. The ID of the customer whose customer conversion goals are being modified.
@@ -3561,6 +3671,7 @@ pub struct MutateCustomerConversionGoalsRequest {
     pub validate_only: bool,
 }
 /// A single operation (update) on a customer conversion goal.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerConversionGoalOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -3573,6 +3684,7 @@ pub struct CustomerConversionGoalOperation {
 /// Nested message and enum types in `CustomerConversionGoalOperation`.
 pub mod customer_conversion_goal_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The customer conversion goal is expected to have a
@@ -3582,6 +3694,7 @@ pub mod customer_conversion_goal_operation {
     }
 }
 /// Response message for a customer conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerConversionGoalsResponse {
     /// All results for the mutate.
@@ -3589,6 +3702,7 @@ pub struct MutateCustomerConversionGoalsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerConversionGoalResult>,
 }
 /// The result for the customer conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerConversionGoalResult {
     /// Returned for successful operations.
@@ -3684,6 +3798,7 @@ pub mod customer_conversion_goal_service_client {
 }
 /// Request message for
 /// \[CampaignExtensionSettingService.MutateCampaignExtensionSettings][google.ads.googleads.v11.services.CampaignExtensionSettingService.MutateCampaignExtensionSettings\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExtensionSettingsRequest {
     /// Required. The ID of the customer whose campaign extension settings are being
@@ -3713,6 +3828,7 @@ pub struct MutateCampaignExtensionSettingsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign extension setting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignExtensionSettingOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -3727,6 +3843,7 @@ pub struct CampaignExtensionSettingOperation {
 /// Nested message and enum types in `CampaignExtensionSettingOperation`.
 pub mod campaign_extension_setting_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -3746,6 +3863,7 @@ pub mod campaign_extension_setting_operation {
     }
 }
 /// Response message for a campaign extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -3761,6 +3879,7 @@ pub struct MutateCampaignExtensionSettingsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignExtensionSettingResult>,
 }
 /// The result for the campaign extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExtensionSettingResult {
     /// Returned for successful operations.
@@ -3893,6 +4012,7 @@ pub mod campaign_extension_setting_service_client {
     }
 }
 /// Request message for \[BiddingStrategyService.MutateBiddingStrategies][google.ads.googleads.v11.services.BiddingStrategyService.MutateBiddingStrategies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingStrategiesRequest {
     /// Required. The ID of the customer whose bidding strategies are being modified.
@@ -3920,6 +4040,7 @@ pub struct MutateBiddingStrategiesRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a bidding strategy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingStrategyOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -3932,6 +4053,7 @@ pub struct BiddingStrategyOperation {
 /// Nested message and enum types in `BiddingStrategyOperation`.
 pub mod bidding_strategy_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new bidding
@@ -3951,6 +4073,7 @@ pub mod bidding_strategy_operation {
     }
 }
 /// Response message for bidding strategy mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingStrategiesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -3966,6 +4089,7 @@ pub struct MutateBiddingStrategiesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateBiddingStrategyResult>,
 }
 /// The result for the bidding strategy mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingStrategyResult {
     /// Returned for successful operations.
@@ -4093,6 +4217,7 @@ pub mod bidding_strategy_service_client {
     }
 }
 /// Request message for \[AssetService.MutateAssets][google.ads.googleads.v11.services.AssetService.MutateAssets\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetsRequest {
     /// Required. The ID of the customer whose assets are being modified.
@@ -4122,6 +4247,7 @@ pub struct MutateAssetsRequest {
 /// A single operation to create an asset. Supported asset types are
 /// YoutubeVideoAsset, MediaBundleAsset, ImageAsset, and LeadFormAsset. TextAsset
 /// should be created with Ad inline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -4134,6 +4260,7 @@ pub struct AssetOperation {
 /// Nested message and enum types in `AssetOperation`.
 pub mod asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset.
@@ -4148,6 +4275,7 @@ pub mod asset_operation {
     }
 }
 /// Response message for an asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -4163,6 +4291,7 @@ pub struct MutateAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAssetResult>,
 }
 /// The result for the asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetResult {
     /// The resource name returned for successful operations.
@@ -4287,6 +4416,7 @@ pub mod asset_service_client {
 }
 /// Request message for
 /// \[CampaignBidModifierService.MutateCampaignBidModifiers][google.ads.googleads.v11.services.CampaignBidModifierService.MutateCampaignBidModifiers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBidModifiersRequest {
     /// Required. ID of the customer whose campaign bid modifiers are being modified.
@@ -4314,6 +4444,7 @@ pub struct MutateCampaignBidModifiersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on a campaign bid modifier.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignBidModifierOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -4326,6 +4457,7 @@ pub struct CampaignBidModifierOperation {
 /// Nested message and enum types in `CampaignBidModifierOperation`.
 pub mod campaign_bid_modifier_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign bid
@@ -4345,6 +4477,7 @@ pub mod campaign_bid_modifier_operation {
     }
 }
 /// Response message for campaign bid modifiers mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBidModifiersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -4360,6 +4493,7 @@ pub struct MutateCampaignBidModifiersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignBidModifierResult>,
 }
 /// The result for the criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBidModifierResult {
     /// Returned for successful operations.
@@ -4485,6 +4619,7 @@ pub mod campaign_bid_modifier_service_client {
     }
 }
 /// Request message for \[CampaignExperimentService.MutateCampaignExperiments][google.ads.googleads.v11.services.CampaignExperimentService.MutateCampaignExperiments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExperimentsRequest {
     /// Required. The ID of the customer whose campaign experiments are being modified.
@@ -4512,6 +4647,7 @@ pub struct MutateCampaignExperimentsRequest {
     pub response_content_type: i32,
 }
 /// A single update operation on a campaign experiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignExperimentOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -4524,6 +4660,7 @@ pub struct CampaignExperimentOperation {
 /// Nested message and enum types in `CampaignExperimentOperation`.
 pub mod campaign_experiment_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The campaign experiment is expected to have a valid
@@ -4539,6 +4676,7 @@ pub mod campaign_experiment_operation {
     }
 }
 /// Response message for campaign experiment mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExperimentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -4554,6 +4692,7 @@ pub struct MutateCampaignExperimentsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignExperimentResult>,
 }
 /// The result for the campaign experiment mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignExperimentResult {
     /// Returned for successful operations.
@@ -4568,6 +4707,7 @@ pub struct MutateCampaignExperimentResult {
     >,
 }
 /// Request message for \[CampaignExperimentService.CreateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.CreateCampaignExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCampaignExperimentRequest {
     /// Required. The ID of the customer whose campaign experiment is being created.
@@ -4585,6 +4725,7 @@ pub struct CreateCampaignExperimentRequest {
 }
 /// Message used as metadata returned in Long Running Operations for
 /// CreateCampaignExperimentRequest
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCampaignExperimentMetadata {
     /// Resource name of campaign experiment created.
@@ -4592,6 +4733,7 @@ pub struct CreateCampaignExperimentMetadata {
     pub campaign_experiment: ::prost::alloc::string::String,
 }
 /// Request message for \[CampaignExperimentService.GraduateCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.GraduateCampaignExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GraduateCampaignExperimentRequest {
     /// Required. The resource name of the campaign experiment to graduate.
@@ -4607,6 +4749,7 @@ pub struct GraduateCampaignExperimentRequest {
     pub validate_only: bool,
 }
 /// Response message for campaign experiment graduate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GraduateCampaignExperimentResponse {
     /// The resource name of the campaign from the graduated experiment.
@@ -4615,6 +4758,7 @@ pub struct GraduateCampaignExperimentResponse {
     pub graduated_campaign: ::prost::alloc::string::String,
 }
 /// Request message for \[CampaignExperimentService.PromoteCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.PromoteCampaignExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PromoteCampaignExperimentRequest {
     /// Required. The resource name of the campaign experiment to promote.
@@ -4626,6 +4770,7 @@ pub struct PromoteCampaignExperimentRequest {
     pub validate_only: bool,
 }
 /// Request message for \[CampaignExperimentService.EndCampaignExperiment][google.ads.googleads.v11.services.CampaignExperimentService.EndCampaignExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndCampaignExperimentRequest {
     /// Required. The resource name of the campaign experiment to end.
@@ -4638,6 +4783,7 @@ pub struct EndCampaignExperimentRequest {
 }
 /// Request message for
 /// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCampaignExperimentAsyncErrorsRequest {
     /// Required. The name of the campaign experiment from which to retrieve the async
@@ -4658,6 +4804,7 @@ pub struct ListCampaignExperimentAsyncErrorsRequest {
 }
 /// Response message for
 /// \[CampaignExperimentService.ListCampaignExperimentAsyncErrors][google.ads.googleads.v11.services.CampaignExperimentService.ListCampaignExperimentAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCampaignExperimentAsyncErrorsResponse {
     /// Details of the errors when performing the asynchronous operation.
@@ -4957,6 +5104,7 @@ pub mod campaign_experiment_service_client {
     }
 }
 /// Request message for \[FeedItemSetService.MutateFeedItemSets][google.ads.googleads.v11.services.FeedItemSetService.MutateFeedItemSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetsRequest {
     /// Required. The ID of the customer whose feed item sets are being modified.
@@ -4977,6 +5125,7 @@ pub struct MutateFeedItemSetsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an feed item set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemSetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -4989,6 +5138,7 @@ pub struct FeedItemSetOperation {
 /// Nested message and enum types in `FeedItemSetOperation`.
 pub mod feed_item_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new feed item set
@@ -5006,6 +5156,7 @@ pub mod feed_item_set_operation {
     }
 }
 /// Response message for an feed item set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetsResponse {
     /// All results for the mutate.
@@ -5021,6 +5172,7 @@ pub struct MutateFeedItemSetsResponse {
     >,
 }
 /// The result for the feed item set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetResult {
     /// Returned for successful operations.
@@ -5120,6 +5272,7 @@ pub mod feed_item_set_service_client {
 }
 /// Request message for
 /// \[OfflineUserDataJobService.CreateOfflineUserDataJob][google.ads.googleads.v11.services.OfflineUserDataJobService.CreateOfflineUserDataJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateOfflineUserDataJobRequest {
     /// Required. The ID of the customer for which to create an offline user data job.
@@ -5139,6 +5292,7 @@ pub struct CreateOfflineUserDataJobRequest {
 }
 /// Response message for
 /// \[OfflineUserDataJobService.CreateOfflineUserDataJob][google.ads.googleads.v11.services.OfflineUserDataJobService.CreateOfflineUserDataJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateOfflineUserDataJobResponse {
     /// The resource name of the OfflineUserDataJob.
@@ -5146,6 +5300,7 @@ pub struct CreateOfflineUserDataJobResponse {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[OfflineUserDataJobService.RunOfflineUserDataJob][google.ads.googleads.v11.services.OfflineUserDataJobService.RunOfflineUserDataJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunOfflineUserDataJobRequest {
     /// Required. The resource name of the OfflineUserDataJob to run.
@@ -5158,6 +5313,7 @@ pub struct RunOfflineUserDataJobRequest {
 }
 /// Request message for
 /// \[OfflineUserDataJobService.AddOfflineUserDataJobOperations][google.ads.googleads.v11.services.OfflineUserDataJobService.AddOfflineUserDataJobOperations\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddOfflineUserDataJobOperationsRequest {
     /// Required. The resource name of the OfflineUserDataJob.
@@ -5180,6 +5336,7 @@ pub struct AddOfflineUserDataJobOperationsRequest {
     pub validate_only: bool,
 }
 /// Operation to be made for the AddOfflineUserDataJobOperationsRequest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OfflineUserDataJobOperation {
     /// Operation to be made for the AddOfflineUserDataJobOperationsRequest.
@@ -5189,6 +5346,7 @@ pub struct OfflineUserDataJobOperation {
 /// Nested message and enum types in `OfflineUserDataJobOperation`.
 pub mod offline_user_data_job_operation {
     /// Operation to be made for the AddOfflineUserDataJobOperationsRequest.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Add the provided data to the transaction. Data cannot be retrieved after
@@ -5207,6 +5365,7 @@ pub mod offline_user_data_job_operation {
 }
 /// Response message for
 /// \[OfflineUserDataJobService.AddOfflineUserDataJobOperations][google.ads.googleads.v11.services.OfflineUserDataJobService.AddOfflineUserDataJobOperations\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddOfflineUserDataJobOperationsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -5394,6 +5553,7 @@ pub mod offline_user_data_job_service_client {
     }
 }
 /// Request message for \[AdGroupAssetService.MutateAdGroupAssets][google.ads.googleads.v11.services.AdGroupAssetService.MutateAdGroupAssets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAssetsRequest {
     /// Required. The ID of the customer whose ad group assets are being modified.
@@ -5421,6 +5581,7 @@ pub struct MutateAdGroupAssetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an ad group asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupAssetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -5433,6 +5594,7 @@ pub struct AdGroupAssetOperation {
 /// Nested message and enum types in `AdGroupAssetOperation`.
 pub mod ad_group_asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -5452,6 +5614,7 @@ pub mod ad_group_asset_operation {
     }
 }
 /// Response message for an ad group asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -5467,6 +5630,7 @@ pub struct MutateAdGroupAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupAssetResult>,
 }
 /// The result for the ad group asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAssetResult {
     /// Returned for successful operations.
@@ -5574,6 +5738,7 @@ pub mod ad_group_asset_service_client {
     }
 }
 /// Request message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionActionsRequest {
     /// Required. The ID of the customer whose conversion actions are being modified.
@@ -5601,6 +5766,7 @@ pub struct MutateConversionActionsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a conversion action.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionActionOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -5613,6 +5779,7 @@ pub struct ConversionActionOperation {
 /// Nested message and enum types in `ConversionActionOperation`.
 pub mod conversion_action_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new conversion
@@ -5632,6 +5799,7 @@ pub mod conversion_action_operation {
     }
 }
 /// Response message for \[ConversionActionService.MutateConversionActions][google.ads.googleads.v11.services.ConversionActionService.MutateConversionActions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionActionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -5647,6 +5815,7 @@ pub struct MutateConversionActionsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateConversionActionResult>,
 }
 /// The result for the conversion action mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionActionResult {
     /// Returned for successful operations.
@@ -5764,6 +5933,7 @@ pub mod conversion_action_service_client {
     }
 }
 /// Request message for \[CustomerAssetService.MutateCustomerAssets][google.ads.googleads.v11.services.CustomerAssetService.MutateCustomerAssets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerAssetsRequest {
     /// Required. The ID of the customer whose customer assets are being modified.
@@ -5791,6 +5961,7 @@ pub struct MutateCustomerAssetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a customer asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerAssetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -5803,6 +5974,7 @@ pub struct CustomerAssetOperation {
 /// Nested message and enum types in `CustomerAssetOperation`.
 pub mod customer_asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customer
@@ -5822,6 +5994,7 @@ pub mod customer_asset_operation {
     }
 }
 /// Response message for a customer asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -5837,6 +6010,7 @@ pub struct MutateCustomerAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerAssetResult>,
 }
 /// The result for the customer asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerAssetResult {
     /// Returned for successful operations.
@@ -5945,6 +6119,7 @@ pub mod customer_asset_service_client {
     }
 }
 /// Request message for \[AdGroupAdLabelService.MutateAdGroupAdLabels][google.ads.googleads.v11.services.AdGroupAdLabelService.MutateAdGroupAdLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdLabelsRequest {
     /// Required. ID of the customer whose ad group ad labels are being modified.
@@ -5965,6 +6140,7 @@ pub struct MutateAdGroupAdLabelsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an ad group ad label.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupAdLabelOperation {
     /// The mutate operation.
@@ -5974,6 +6150,7 @@ pub struct AdGroupAdLabelOperation {
 /// Nested message and enum types in `AdGroupAdLabelOperation`.
 pub mod ad_group_ad_label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group ad
@@ -5989,6 +6166,7 @@ pub mod ad_group_ad_label_operation {
     }
 }
 /// Response message for an ad group ad labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -6004,6 +6182,7 @@ pub struct MutateAdGroupAdLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupAdLabelResult>,
 }
 /// The result for an ad group ad label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdLabelResult {
     /// Returned for successful operations.
@@ -6108,6 +6287,7 @@ pub mod ad_group_ad_label_service_client {
     }
 }
 /// Request message for \[AdGroupAdService.MutateAdGroupAds][google.ads.googleads.v11.services.AdGroupAdService.MutateAdGroupAds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdsRequest {
     /// Required. The ID of the customer whose ads are being modified.
@@ -6135,6 +6315,7 @@ pub struct MutateAdGroupAdsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an ad group ad.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupAdOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -6152,6 +6333,7 @@ pub struct AdGroupAdOperation {
 /// Nested message and enum types in `AdGroupAdOperation`.
 pub mod ad_group_ad_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad.
@@ -6169,6 +6351,7 @@ pub mod ad_group_ad_operation {
     }
 }
 /// Response message for an ad group ad mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -6184,6 +6367,7 @@ pub struct MutateAdGroupAdsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupAdResult>,
 }
 /// The result for the ad mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupAdResult {
     /// The resource name returned for successful operations.
@@ -6322,6 +6506,7 @@ pub mod ad_group_ad_service_client {
     }
 }
 /// Request message for \[AdGroupBidModifierService.MutateAdGroupBidModifiers][google.ads.googleads.v11.services.AdGroupBidModifierService.MutateAdGroupBidModifiers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupBidModifiersRequest {
     /// Required. ID of the customer whose ad group bid modifiers are being modified.
@@ -6349,6 +6534,7 @@ pub struct MutateAdGroupBidModifiersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on an ad group bid modifier.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupBidModifierOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -6361,6 +6547,7 @@ pub struct AdGroupBidModifierOperation {
 /// Nested message and enum types in `AdGroupBidModifierOperation`.
 pub mod ad_group_bid_modifier_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group bid
@@ -6380,6 +6567,7 @@ pub mod ad_group_bid_modifier_operation {
     }
 }
 /// Response message for ad group bid modifiers mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupBidModifiersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -6395,6 +6583,7 @@ pub struct MutateAdGroupBidModifiersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupBidModifierResult>,
 }
 /// The result for the criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupBidModifierResult {
     /// Returned for successful operations.
@@ -6522,6 +6711,7 @@ pub mod ad_group_bid_modifier_service_client {
 }
 /// Request message for
 /// \[AdGroupCriterionCustomizerService.MutateAdGroupCriterionCustomizers][google.ads.googleads.v11.services.AdGroupCriterionCustomizerService.MutateAdGroupCriterionCustomizers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionCustomizersRequest {
     /// Required. The ID of the customer whose ad group criterion customizers are being
@@ -6551,6 +6741,7 @@ pub struct MutateAdGroupCriterionCustomizersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an customizer attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterionCustomizerOperation {
     /// The mutate operation.
@@ -6562,6 +6753,7 @@ pub struct AdGroupCriterionCustomizerOperation {
 /// Nested message and enum types in `AdGroupCriterionCustomizerOperation`.
 pub mod ad_group_criterion_customizer_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -6577,6 +6769,7 @@ pub mod ad_group_criterion_customizer_operation {
     }
 }
 /// Response message for an ad group criterion customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionCustomizersResponse {
     /// All results for the mutate.
@@ -6592,6 +6785,7 @@ pub struct MutateAdGroupCriterionCustomizersResponse {
     >,
 }
 /// The result for the ad group criterion customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionCustomizerResult {
     /// Returned for successful operations.
@@ -6696,6 +6890,7 @@ pub mod ad_group_criterion_customizer_service_client {
 }
 /// Request message for
 /// \[AdGroupCriterionLabelService.MutateAdGroupCriterionLabels][google.ads.googleads.v11.services.AdGroupCriterionLabelService.MutateAdGroupCriterionLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionLabelsRequest {
     /// Required. ID of the customer whose ad group criterion labels are being modified.
@@ -6716,6 +6911,7 @@ pub struct MutateAdGroupCriterionLabelsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an ad group criterion label.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterionLabelOperation {
     /// The mutate operation.
@@ -6725,6 +6921,7 @@ pub struct AdGroupCriterionLabelOperation {
 /// Nested message and enum types in `AdGroupCriterionLabelOperation`.
 pub mod ad_group_criterion_label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -6740,6 +6937,7 @@ pub mod ad_group_criterion_label_operation {
     }
 }
 /// Response message for an ad group criterion labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -6755,6 +6953,7 @@ pub struct MutateAdGroupCriterionLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupCriterionLabelResult>,
 }
 /// The result for an ad group criterion label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionLabelResult {
     /// Returned for successful operations.
@@ -6859,6 +7058,7 @@ pub mod ad_group_criterion_label_service_client {
     }
 }
 /// Request message for \[AdGroupCriterionService.MutateAdGroupCriteria][google.ads.googleads.v11.services.AdGroupCriterionService.MutateAdGroupCriteria\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriteriaRequest {
     /// Required. ID of the customer whose criteria are being modified.
@@ -6886,6 +7086,7 @@ pub struct MutateAdGroupCriteriaRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on an ad group criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterionOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -6911,6 +7112,7 @@ pub struct AdGroupCriterionOperation {
 /// Nested message and enum types in `AdGroupCriterionOperation`.
 pub mod ad_group_criterion_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new criterion.
@@ -6929,6 +7131,7 @@ pub mod ad_group_criterion_operation {
     }
 }
 /// Response message for an ad group criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -6944,6 +7147,7 @@ pub struct MutateAdGroupCriteriaResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupCriterionResult>,
 }
 /// The result for the criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCriterionResult {
     /// Returned for successful operations.
@@ -7078,6 +7282,7 @@ pub mod ad_group_criterion_service_client {
 }
 /// Request message for
 /// \[AdGroupCustomizerService.MutateAdGroupCustomizers][google.ads.googleads.v11.services.AdGroupCustomizerService.MutateAdGroupCustomizers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCustomizersRequest {
     /// Required. The ID of the customer whose ad group customizers are being modified.
@@ -7105,6 +7310,7 @@ pub struct MutateAdGroupCustomizersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an customizer attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCustomizerOperation {
     /// The mutate operation.
@@ -7114,6 +7320,7 @@ pub struct AdGroupCustomizerOperation {
 /// Nested message and enum types in `AdGroupCustomizerOperation`.
 pub mod ad_group_customizer_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -7128,6 +7335,7 @@ pub mod ad_group_customizer_operation {
     }
 }
 /// Response message for an ad group customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCustomizersResponse {
     /// All results for the mutate.
@@ -7143,6 +7351,7 @@ pub struct MutateAdGroupCustomizersResponse {
     >,
 }
 /// The result for the ad group customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupCustomizerResult {
     /// Returned for successful operations.
@@ -7243,6 +7452,7 @@ pub mod ad_group_customizer_service_client {
 }
 /// Request message for
 /// \[AdGroupExtensionSettingService.MutateAdGroupExtensionSettings][google.ads.googleads.v11.services.AdGroupExtensionSettingService.MutateAdGroupExtensionSettings\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupExtensionSettingsRequest {
     /// Required. The ID of the customer whose ad group extension settings are being
@@ -7265,6 +7475,7 @@ pub struct MutateAdGroupExtensionSettingsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on an ad group extension setting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupExtensionSettingOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -7286,6 +7497,7 @@ pub struct AdGroupExtensionSettingOperation {
 /// Nested message and enum types in `AdGroupExtensionSettingOperation`.
 pub mod ad_group_extension_setting_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group
@@ -7305,6 +7517,7 @@ pub mod ad_group_extension_setting_operation {
     }
 }
 /// Response message for an ad group extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -7320,6 +7533,7 @@ pub struct MutateAdGroupExtensionSettingsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupExtensionSettingResult>,
 }
 /// The result for the ad group extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupExtensionSettingResult {
     /// Returned for successful operations.
@@ -7453,6 +7667,7 @@ pub mod ad_group_extension_setting_service_client {
     }
 }
 /// Request message for \[AdGroupService.MutateAdGroups][google.ads.googleads.v11.services.AdGroupService.MutateAdGroups\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupsRequest {
     /// Required. The ID of the customer whose ad groups are being modified.
@@ -7480,6 +7695,7 @@ pub struct MutateAdGroupsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an ad group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -7492,6 +7708,7 @@ pub struct AdGroupOperation {
 /// Nested message and enum types in `AdGroupOperation`.
 pub mod ad_group_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad group.
@@ -7509,6 +7726,7 @@ pub mod ad_group_operation {
     }
 }
 /// Response message for an ad group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -7524,6 +7742,7 @@ pub struct MutateAdGroupsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdGroupResult>,
 }
 /// The result for the ad group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdGroupResult {
     /// Returned for successful operations.
@@ -7649,6 +7868,7 @@ pub mod ad_group_service_client {
     }
 }
 /// Request message for \[AdParameterService.MutateAdParameters][google.ads.googleads.v11.services.AdParameterService.MutateAdParameters\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdParametersRequest {
     /// Required. The ID of the customer whose ad parameters are being modified.
@@ -7676,6 +7896,7 @@ pub struct MutateAdParametersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on ad parameter.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdParameterOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -7688,6 +7909,7 @@ pub struct AdParameterOperation {
 /// Nested message and enum types in `AdParameterOperation`.
 pub mod ad_parameter_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new ad parameter.
@@ -7706,6 +7928,7 @@ pub mod ad_parameter_operation {
     }
 }
 /// Response message for an ad parameter mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdParametersResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -7721,6 +7944,7 @@ pub struct MutateAdParametersResponse {
     pub results: ::prost::alloc::vec::Vec<MutateAdParameterResult>,
 }
 /// The result for the ad parameter mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAdParameterResult {
     /// The resource name returned for successful operations.
@@ -7829,6 +8053,7 @@ pub mod ad_parameter_service_client {
     }
 }
 /// Request message for \[AssetGroupAssetService.MutateAssetGroupAssets][google.ads.googleads.v11.services.AssetGroupAssetService.MutateAssetGroupAssets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupAssetsRequest {
     /// Required. The ID of the customer whose asset group assets are being modified.
@@ -7849,6 +8074,7 @@ pub struct MutateAssetGroupAssetsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an asset group asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupAssetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -7861,6 +8087,7 @@ pub struct AssetGroupAssetOperation {
 /// Nested message and enum types in `AssetGroupAssetOperation`.
 pub mod asset_group_asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset group
@@ -7879,6 +8106,7 @@ pub mod asset_group_asset_operation {
     }
 }
 /// Response message for an asset group asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupAssetsResponse {
     /// All results for the mutate.
@@ -7894,6 +8122,7 @@ pub struct MutateAssetGroupAssetsResponse {
     >,
 }
 /// The result for the asset group asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupAssetResult {
     /// Returned for successful operations.
@@ -7988,6 +8217,7 @@ pub mod asset_group_asset_service_client {
     }
 }
 /// Request message for \[AssetGroupService.MutateAssetGroups][google.ads.googleads.v11.services.AssetGroupService.MutateAssetGroups\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupsRequest {
     /// Required. The ID of the customer whose asset groups are being modified.
@@ -8002,6 +8232,7 @@ pub struct MutateAssetGroupsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an asset group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -8014,6 +8245,7 @@ pub struct AssetGroupOperation {
 /// Nested message and enum types in `AssetGroupOperation`.
 pub mod asset_group_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset group
@@ -8031,6 +8263,7 @@ pub mod asset_group_operation {
     }
 }
 /// Response message for an asset group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupsResponse {
     /// All results for the mutate.
@@ -8046,6 +8279,7 @@ pub struct MutateAssetGroupsResponse {
     >,
 }
 /// The result for the asset group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupResult {
     /// Returned for successful operations.
@@ -8136,6 +8370,7 @@ pub mod asset_group_service_client {
 }
 /// Request message for
 /// \[AssetGroupSignalService.MutateAssetGroupSignals][google.ads.googleads.v11.services.AssetGroupSignalService.MutateAssetGroupSignals\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupSignalsRequest {
     /// Required. The ID of the customer whose asset group signals are being modified.
@@ -8162,6 +8397,7 @@ pub struct MutateAssetGroupSignalsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an asset group signal.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetGroupSignalOperation {
     /// The mutate operation. Update is not supported.
@@ -8171,6 +8407,7 @@ pub struct AssetGroupSignalOperation {
 /// Nested message and enum types in `AssetGroupSignalOperation`.
 pub mod asset_group_signal_operation {
     /// The mutate operation. Update is not supported.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset group
@@ -8185,6 +8422,7 @@ pub mod asset_group_signal_operation {
     }
 }
 /// Response message for an asset group signal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupSignalsResponse {
     /// All results for the mutate.
@@ -8200,6 +8438,7 @@ pub struct MutateAssetGroupSignalsResponse {
     >,
 }
 /// The result for the asset group signal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetGroupSignalResult {
     /// Returned for successful operations.
@@ -8299,6 +8538,7 @@ pub mod asset_group_signal_service_client {
     }
 }
 /// Request message for \[AssetSetAssetService.MutateAssetSetAssets][google.ads.googleads.v11.services.AssetSetAssetService.MutateAssetSetAssets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetAssetsRequest {
     /// Required. The ID of the customer whose asset set assets are being modified.
@@ -8326,6 +8566,7 @@ pub struct MutateAssetSetAssetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an asset set asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetAssetOperation {
     /// The mutate operation.
@@ -8335,6 +8576,7 @@ pub struct AssetSetAssetOperation {
 /// Nested message and enum types in `AssetSetAssetOperation`.
 pub mod asset_set_asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset set
@@ -8349,6 +8591,7 @@ pub mod asset_set_asset_operation {
     }
 }
 /// Response message for an asset set asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetAssetsResponse {
     /// All results for the mutate.
@@ -8364,6 +8607,7 @@ pub struct MutateAssetSetAssetsResponse {
     >,
 }
 /// The result for the asset set asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetAssetResult {
     /// Returned for successful operations.
@@ -8461,6 +8705,7 @@ pub mod asset_set_asset_service_client {
     }
 }
 /// Request message for \[AssetSetService.MutateAssetSets][google.ads.googleads.v11.services.AssetSetService.MutateAssetSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetsRequest {
     /// Required. The ID of the customer whose asset sets are being modified.
@@ -8488,6 +8733,7 @@ pub struct MutateAssetSetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an asset set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssetSetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -8500,6 +8746,7 @@ pub struct AssetSetOperation {
 /// Nested message and enum types in `AssetSetOperation`.
 pub mod asset_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new asset set
@@ -8517,6 +8764,7 @@ pub mod asset_set_operation {
     }
 }
 /// Response message for an asset set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetsResponse {
     /// All results for the mutate.
@@ -8532,6 +8780,7 @@ pub struct MutateAssetSetsResponse {
     >,
 }
 /// The result for the asset set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAssetSetResult {
     /// Returned for successful operations.
@@ -8625,6 +8874,7 @@ pub mod asset_set_service_client {
     }
 }
 /// Request message for \[AudienceService.MutateAudiences][google.ads.googleads.v11.services.AudienceService.MutateAudiences\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAudiencesRequest {
     /// Required. The ID of the customer whose audiences are being modified.
@@ -8651,6 +8901,7 @@ pub struct MutateAudiencesRequest {
     pub response_content_type: i32,
 }
 /// Response message for an audience mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAudiencesResponse {
     /// All results for the mutate.
@@ -8666,6 +8917,7 @@ pub struct MutateAudiencesResponse {
     >,
 }
 /// A single operation (create, update) on an audience.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -8678,6 +8930,7 @@ pub struct AudienceOperation {
 /// Nested message and enum types in `AudienceOperation`.
 pub mod audience_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new audience
@@ -8690,6 +8943,7 @@ pub mod audience_operation {
     }
 }
 /// The result for the audience mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAudienceResult {
     /// Returned for successful operations.
@@ -8787,6 +9041,7 @@ pub mod audience_service_client {
 }
 /// Request message for
 /// \[BiddingDataExclusionService.MutateBiddingDataExclusions][google.ads.googleads.v11.services.BiddingDataExclusionService.MutateBiddingDataExclusions\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingDataExclusionsRequest {
     /// Required. ID of the customer whose data exclusions are being modified.
@@ -8814,6 +9069,7 @@ pub struct MutateBiddingDataExclusionsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on a data exclusion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingDataExclusionOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -8826,6 +9082,7 @@ pub struct BiddingDataExclusionOperation {
 /// Nested message and enum types in `BiddingDataExclusionOperation`.
 pub mod bidding_data_exclusion_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new data
@@ -8845,6 +9102,7 @@ pub mod bidding_data_exclusion_operation {
     }
 }
 /// Response message for data exlusions mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingDataExclusionsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -8860,6 +9118,7 @@ pub struct MutateBiddingDataExclusionsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateBiddingDataExclusionsResult>,
 }
 /// The result for the data exclusion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingDataExclusionsResult {
     /// Returned for successful operations.
@@ -8962,6 +9221,7 @@ pub mod bidding_data_exclusion_service_client {
 }
 /// Request message for
 /// \[BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments][google.ads.googleads.v11.services.BiddingSeasonalityAdjustmentService.MutateBiddingSeasonalityAdjustments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingSeasonalityAdjustmentsRequest {
     /// Required. ID of the customer whose seasonality adjustments are being modified.
@@ -8989,6 +9249,7 @@ pub struct MutateBiddingSeasonalityAdjustmentsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on a seasonality adjustment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingSeasonalityAdjustmentOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -9006,6 +9267,7 @@ pub struct BiddingSeasonalityAdjustmentOperation {
 /// Nested message and enum types in `BiddingSeasonalityAdjustmentOperation`.
 pub mod bidding_seasonality_adjustment_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new seasonality
@@ -9025,6 +9287,7 @@ pub mod bidding_seasonality_adjustment_operation {
     }
 }
 /// Response message for seasonality adjustments mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingSeasonalityAdjustmentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -9040,6 +9303,7 @@ pub struct MutateBiddingSeasonalityAdjustmentsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateBiddingSeasonalityAdjustmentsResult>,
 }
 /// The result for the seasonality adjustment mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBiddingSeasonalityAdjustmentsResult {
     /// Returned for successful operations.
@@ -9143,6 +9407,7 @@ pub mod bidding_seasonality_adjustment_service_client {
     }
 }
 /// Request message for \[CampaignAssetService.MutateCampaignAssets][google.ads.googleads.v11.services.CampaignAssetService.MutateCampaignAssets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetsRequest {
     /// Required. The ID of the customer whose campaign assets are being modified.
@@ -9170,6 +9435,7 @@ pub struct MutateCampaignAssetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignAssetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -9182,6 +9448,7 @@ pub struct CampaignAssetOperation {
 /// Nested message and enum types in `CampaignAssetOperation`.
 pub mod campaign_asset_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -9201,6 +9468,7 @@ pub mod campaign_asset_operation {
     }
 }
 /// Response message for a campaign asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -9216,6 +9484,7 @@ pub struct MutateCampaignAssetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignAssetResult>,
 }
 /// The result for the campaign asset mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetResult {
     /// Returned for successful operations.
@@ -9327,6 +9596,7 @@ pub mod campaign_asset_service_client {
     }
 }
 /// Request message for \[CampaignAssetSetService.MutateCampaignAssetSets][google.ads.googleads.v11.services.CampaignAssetSetService.MutateCampaignAssetSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetSetsRequest {
     /// Required. The ID of the customer whose campaign asset sets are being modified.
@@ -9354,6 +9624,7 @@ pub struct MutateCampaignAssetSetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on a campaign asset set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignAssetSetOperation {
     /// The mutate operation.
@@ -9363,6 +9634,7 @@ pub struct CampaignAssetSetOperation {
 /// Nested message and enum types in `CampaignAssetSetOperation`.
 pub mod campaign_asset_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign asset
@@ -9377,6 +9649,7 @@ pub mod campaign_asset_set_operation {
     }
 }
 /// Response message for a campaign asset set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetSetsResponse {
     /// All results for the mutate.
@@ -9392,6 +9665,7 @@ pub struct MutateCampaignAssetSetsResponse {
     >,
 }
 /// The result for the campaign asset set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignAssetSetResult {
     /// Returned for successful operations.
@@ -9491,6 +9765,7 @@ pub mod campaign_asset_set_service_client {
     }
 }
 /// Request message for \[CampaignBudgetService.MutateCampaignBudgets][google.ads.googleads.v11.services.CampaignBudgetService.MutateCampaignBudgets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBudgetsRequest {
     /// Required. The ID of the customer whose campaign budgets are being modified.
@@ -9518,6 +9793,7 @@ pub struct MutateCampaignBudgetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign budget.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignBudgetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -9530,6 +9806,7 @@ pub struct CampaignBudgetOperation {
 /// Nested message and enum types in `CampaignBudgetOperation`.
 pub mod campaign_budget_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new budget.
@@ -9548,6 +9825,7 @@ pub mod campaign_budget_operation {
     }
 }
 /// Response message for campaign budget mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBudgetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -9563,6 +9841,7 @@ pub struct MutateCampaignBudgetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignBudgetResult>,
 }
 /// The result for the campaign budget mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignBudgetResult {
     /// Returned for successful operations.
@@ -9680,6 +9959,7 @@ pub mod campaign_budget_service_client {
 }
 /// Request message for
 /// \[CampaignConversionGoalService.MutateCampaignConversionGoals][google.ads.googleads.v11.services.CampaignConversionGoalService.MutateCampaignConversionGoals\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignConversionGoalsRequest {
     /// Required. The ID of the customer whose campaign conversion goals are being modified.
@@ -9694,6 +9974,7 @@ pub struct MutateCampaignConversionGoalsRequest {
     pub validate_only: bool,
 }
 /// A single operation (update) on a campaign conversion goal.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignConversionGoalOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -9706,6 +9987,7 @@ pub struct CampaignConversionGoalOperation {
 /// Nested message and enum types in `CampaignConversionGoalOperation`.
 pub mod campaign_conversion_goal_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The customer conversion goal is expected to have a
@@ -9715,6 +9997,7 @@ pub mod campaign_conversion_goal_operation {
     }
 }
 /// Response message for a campaign conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignConversionGoalsResponse {
     /// All results for the mutate.
@@ -9722,6 +10005,7 @@ pub struct MutateCampaignConversionGoalsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignConversionGoalResult>,
 }
 /// The result for the campaign conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignConversionGoalResult {
     /// Returned for successful operations.
@@ -9816,6 +10100,7 @@ pub mod campaign_conversion_goal_service_client {
     }
 }
 /// Request message for \[CampaignCriterionService.MutateCampaignCriteria][google.ads.googleads.v11.services.CampaignCriterionService.MutateCampaignCriteria\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCriteriaRequest {
     /// Required. The ID of the customer whose criteria are being modified.
@@ -9843,6 +10128,7 @@ pub struct MutateCampaignCriteriaRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignCriterionOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -9855,6 +10141,7 @@ pub struct CampaignCriterionOperation {
 /// Nested message and enum types in `CampaignCriterionOperation`.
 pub mod campaign_criterion_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new criterion.
@@ -9873,6 +10160,7 @@ pub mod campaign_criterion_operation {
     }
 }
 /// Response message for campaign criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -9888,6 +10176,7 @@ pub struct MutateCampaignCriteriaResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignCriterionResult>,
 }
 /// The result for the criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCriterionResult {
     /// Returned for successful operations.
@@ -10018,6 +10307,7 @@ pub mod campaign_criterion_service_client {
 }
 /// Request message for
 /// \[CampaignCustomizerService.MutateCampaignCustomizers][google.ads.googleads.v11.services.CampaignCustomizerService.MutateCampaignCustomizers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCustomizersRequest {
     /// Required. The ID of the customer whose campaign customizers are being modified.
@@ -10045,6 +10335,7 @@ pub struct MutateCampaignCustomizersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an customizer attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignCustomizerOperation {
     /// The mutate operation.
@@ -10054,6 +10345,7 @@ pub struct CampaignCustomizerOperation {
 /// Nested message and enum types in `CampaignCustomizerOperation`.
 pub mod campaign_customizer_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -10068,6 +10360,7 @@ pub mod campaign_customizer_operation {
     }
 }
 /// Response message for an campaign customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCustomizersResponse {
     /// All results for the mutate.
@@ -10083,6 +10376,7 @@ pub struct MutateCampaignCustomizersResponse {
     >,
 }
 /// The result for the campaign customizer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignCustomizerResult {
     /// Returned for successful operations.
@@ -10184,6 +10478,7 @@ pub mod campaign_customizer_service_client {
     }
 }
 /// Request message for \[CampaignDraftService.MutateCampaignDrafts][google.ads.googleads.v11.services.CampaignDraftService.MutateCampaignDrafts\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignDraftsRequest {
     /// Required. The ID of the customer whose campaign drafts are being modified.
@@ -10211,6 +10506,7 @@ pub struct MutateCampaignDraftsRequest {
     pub response_content_type: i32,
 }
 /// Request message for \[CampaignDraftService.PromoteCampaignDraft][google.ads.googleads.v11.services.CampaignDraftService.PromoteCampaignDraft\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PromoteCampaignDraftRequest {
     /// Required. The resource name of the campaign draft to promote.
@@ -10222,6 +10518,7 @@ pub struct PromoteCampaignDraftRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on a campaign draft.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignDraftOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -10234,6 +10531,7 @@ pub struct CampaignDraftOperation {
 /// Nested message and enum types in `CampaignDraftOperation`.
 pub mod campaign_draft_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -10253,6 +10551,7 @@ pub mod campaign_draft_operation {
     }
 }
 /// Response message for campaign draft mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignDraftsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -10268,6 +10567,7 @@ pub struct MutateCampaignDraftsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignDraftResult>,
 }
 /// The result for the campaign draft mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignDraftResult {
     /// Returned for successful operations.
@@ -10280,6 +10580,7 @@ pub struct MutateCampaignDraftResult {
     pub campaign_draft: ::core::option::Option<super::resources::CampaignDraft>,
 }
 /// Request message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCampaignDraftAsyncErrorsRequest {
     /// Required. The name of the campaign draft from which to retrieve the async errors.
@@ -10298,6 +10599,7 @@ pub struct ListCampaignDraftAsyncErrorsRequest {
     pub page_size: i32,
 }
 /// Response message for \[CampaignDraftService.ListCampaignDraftAsyncErrors][google.ads.googleads.v11.services.CampaignDraftService.ListCampaignDraftAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCampaignDraftAsyncErrorsResponse {
     /// Details of the errors when performing the asynchronous operation.
@@ -10481,6 +10783,7 @@ pub mod campaign_draft_service_client {
     }
 }
 /// Request message for \[CampaignGroupService.MutateCampaignGroups][google.ads.googleads.v11.services.CampaignGroupService.MutateCampaignGroups\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignGroupsRequest {
     /// Required. The ID of the customer whose campaign groups are being modified.
@@ -10508,6 +10811,7 @@ pub struct MutateCampaignGroupsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignGroupOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -10520,6 +10824,7 @@ pub struct CampaignGroupOperation {
 /// Nested message and enum types in `CampaignGroupOperation`.
 pub mod campaign_group_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -10539,6 +10844,7 @@ pub mod campaign_group_operation {
     }
 }
 /// Response message for campaign group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignGroupsResponse {
     /// All results for the mutate.
@@ -10554,6 +10860,7 @@ pub struct MutateCampaignGroupsResponse {
     >,
 }
 /// The result for the campaign group mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignGroupResult {
     /// Required. Returned for successful operations.
@@ -10651,6 +10958,7 @@ pub mod campaign_group_service_client {
     }
 }
 /// Request message for \[CampaignService.MutateCampaigns][google.ads.googleads.v11.services.CampaignService.MutateCampaigns\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignsRequest {
     /// Required. The ID of the customer whose campaigns are being modified.
@@ -10678,6 +10986,7 @@ pub struct MutateCampaignsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -10690,6 +10999,7 @@ pub struct CampaignOperation {
 /// Nested message and enum types in `CampaignOperation`.
 pub mod campaign_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign.
@@ -10708,6 +11018,7 @@ pub mod campaign_operation {
     }
 }
 /// Response message for campaign mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -10723,6 +11034,7 @@ pub struct MutateCampaignsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignResult>,
 }
 /// The result for the campaign mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignResult {
     /// Returned for successful operations.
@@ -10852,6 +11164,7 @@ pub mod campaign_service_client {
     }
 }
 /// Request message for \[CampaignSharedSetService.MutateCampaignSharedSets][google.ads.googleads.v11.services.CampaignSharedSetService.MutateCampaignSharedSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignSharedSetsRequest {
     /// Required. The ID of the customer whose campaign shared sets are being modified.
@@ -10879,6 +11192,7 @@ pub struct MutateCampaignSharedSetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an campaign shared set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignSharedSetOperation {
     /// The mutate operation.
@@ -10888,6 +11202,7 @@ pub struct CampaignSharedSetOperation {
 /// Nested message and enum types in `CampaignSharedSetOperation`.
 pub mod campaign_shared_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new campaign
@@ -10903,6 +11218,7 @@ pub mod campaign_shared_set_operation {
     }
 }
 /// Response message for a campaign shared set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignSharedSetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -10918,6 +11234,7 @@ pub struct MutateCampaignSharedSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCampaignSharedSetResult>,
 }
 /// The result for the campaign shared set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCampaignSharedSetResult {
     /// Returned for successful operations.
@@ -11041,6 +11358,7 @@ pub mod campaign_shared_set_service_client {
 }
 /// Request message for
 /// \[ConversionCustomVariableService.MutateConversionCustomVariables][google.ads.googleads.v11.services.ConversionCustomVariableService.MutateConversionCustomVariables\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionCustomVariablesRequest {
     /// Required. The ID of the customer whose conversion custom variables are being
@@ -11070,6 +11388,7 @@ pub struct MutateConversionCustomVariablesRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update) on a conversion custom variable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionCustomVariableOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -11084,6 +11403,7 @@ pub struct ConversionCustomVariableOperation {
 /// Nested message and enum types in `ConversionCustomVariableOperation`.
 pub mod conversion_custom_variable_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new conversion
@@ -11098,6 +11418,7 @@ pub mod conversion_custom_variable_operation {
 }
 /// Response message for
 /// \[ConversionCustomVariableService.MutateConversionCustomVariables][google.ads.googleads.v11.services.ConversionCustomVariableService.MutateConversionCustomVariables\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionCustomVariablesResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -11113,6 +11434,7 @@ pub struct MutateConversionCustomVariablesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateConversionCustomVariableResult>,
 }
 /// The result for the conversion custom variable mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionCustomVariableResult {
     /// Returned for successful operations.
@@ -11227,6 +11549,7 @@ pub mod conversion_custom_variable_service_client {
 }
 /// Request message for
 /// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRulesRequest {
     /// Required. The ID of the customer whose conversion value rules are being modified.
@@ -11254,6 +11577,7 @@ pub struct MutateConversionValueRulesRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a conversion value rule.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionValueRuleOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -11266,6 +11590,7 @@ pub struct ConversionValueRuleOperation {
 /// Nested message and enum types in `ConversionValueRuleOperation`.
 pub mod conversion_value_rule_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new conversion
@@ -11286,6 +11611,7 @@ pub mod conversion_value_rule_operation {
 }
 /// Response message for
 /// \[ConversionValueRuleService.MutateConversionValueRules][google.ads.googleads.v11.services.ConversionValueRuleService.MutateConversionValueRules\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRulesResponse {
     /// All results for the mutate.
@@ -11301,6 +11627,7 @@ pub struct MutateConversionValueRulesResponse {
     >,
 }
 /// The result for the conversion value rule mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRuleResult {
     /// Returned for successful operations.
@@ -11403,6 +11730,7 @@ pub mod conversion_value_rule_service_client {
 }
 /// Request message for
 /// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRuleSetsRequest {
     /// Required. The ID of the customer whose conversion value rule sets are being modified.
@@ -11430,6 +11758,7 @@ pub struct MutateConversionValueRuleSetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a conversion value rule set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionValueRuleSetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -11444,6 +11773,7 @@ pub struct ConversionValueRuleSetOperation {
 /// Nested message and enum types in `ConversionValueRuleSetOperation`.
 pub mod conversion_value_rule_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new conversion
@@ -11464,6 +11794,7 @@ pub mod conversion_value_rule_set_operation {
 }
 /// Response message for
 /// \[ConversionValueRuleSetService.MutateConversionValueRuleSets][google.ads.googleads.v11.services.ConversionValueRuleSetService.MutateConversionValueRuleSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRuleSetsResponse {
     /// All results for the mutate.
@@ -11479,6 +11810,7 @@ pub struct MutateConversionValueRuleSetsResponse {
     >,
 }
 /// The result for the conversion value rule set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateConversionValueRuleSetResult {
     /// Returned for successful operations.
@@ -11581,6 +11913,7 @@ pub mod conversion_value_rule_set_service_client {
 }
 /// Request message for
 /// \[CustomConversionGoalService.MutateCustomConversionGoals][google.ads.googleads.v11.services.CustomConversionGoalService.MutateCustomConversionGoals\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomConversionGoalsRequest {
     /// Required. The ID of the customer whose custom conversion goals are being modified.
@@ -11602,6 +11935,7 @@ pub struct MutateCustomConversionGoalsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on a custom conversion goal.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomConversionGoalOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -11614,6 +11948,7 @@ pub struct CustomConversionGoalOperation {
 /// Nested message and enum types in `CustomConversionGoalOperation`.
 pub mod custom_conversion_goal_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new custom
@@ -11633,6 +11968,7 @@ pub mod custom_conversion_goal_operation {
     }
 }
 /// Response message for a custom conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomConversionGoalsResponse {
     /// All results for the mutate.
@@ -11640,6 +11976,7 @@ pub struct MutateCustomConversionGoalsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomConversionGoalResult>,
 }
 /// The result for the custom conversion goal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomConversionGoalResult {
     /// Returned for successful operations.
@@ -11742,6 +12079,7 @@ pub mod custom_conversion_goal_service_client {
 }
 /// Request message for
 /// \[CustomerCustomizerService.MutateCustomerCustomizers][google.ads.googleads.v11.services.CustomerCustomizerService.MutateCustomerCustomizers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerCustomizersRequest {
     /// Required. The ID of the customer whose customer customizers are being modified.
@@ -11769,6 +12107,7 @@ pub struct MutateCustomerCustomizersRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an customizer attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerCustomizerOperation {
     /// The mutate operation.
@@ -11778,6 +12117,7 @@ pub struct CustomerCustomizerOperation {
 /// Nested message and enum types in `CustomerCustomizerOperation`.
 pub mod customer_customizer_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customer
@@ -11792,6 +12132,7 @@ pub mod customer_customizer_operation {
     }
 }
 /// Response message for an customizer attribute mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerCustomizersResponse {
     /// All results for the mutate.
@@ -11807,6 +12148,7 @@ pub struct MutateCustomerCustomizersResponse {
     >,
 }
 /// The result for the customizer attribute mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerCustomizerResult {
     /// Returned for successful operations.
@@ -11909,6 +12251,7 @@ pub mod customer_customizer_service_client {
 }
 /// Request message for
 /// \[CustomerExtensionSettingService.MutateCustomerExtensionSettings][google.ads.googleads.v11.services.CustomerExtensionSettingService.MutateCustomerExtensionSettings\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerExtensionSettingsRequest {
     /// Required. The ID of the customer whose customer extension settings are being
@@ -11938,6 +12281,7 @@ pub struct MutateCustomerExtensionSettingsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a customer extension setting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerExtensionSettingOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -11952,6 +12296,7 @@ pub struct CustomerExtensionSettingOperation {
 /// Nested message and enum types in `CustomerExtensionSettingOperation`.
 pub mod customer_extension_setting_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customer
@@ -11971,6 +12316,7 @@ pub mod customer_extension_setting_operation {
     }
 }
 /// Response message for a customer extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerExtensionSettingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -11986,6 +12332,7 @@ pub struct MutateCustomerExtensionSettingsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerExtensionSettingResult>,
 }
 /// The result for the customer extension setting mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerExtensionSettingResult {
     /// Returned for successful operations.
@@ -12116,6 +12463,7 @@ pub mod customer_extension_setting_service_client {
     }
 }
 /// Request message for \[CustomerFeedService.MutateCustomerFeeds][google.ads.googleads.v11.services.CustomerFeedService.MutateCustomerFeeds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerFeedsRequest {
     /// Required. The ID of the customer whose customer feeds are being modified.
@@ -12143,6 +12491,7 @@ pub struct MutateCustomerFeedsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on a customer feed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerFeedOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -12155,6 +12504,7 @@ pub struct CustomerFeedOperation {
 /// Nested message and enum types in `CustomerFeedOperation`.
 pub mod customer_feed_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customer feed.
@@ -12173,6 +12523,7 @@ pub mod customer_feed_operation {
     }
 }
 /// Response message for a customer feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -12188,6 +12539,7 @@ pub struct MutateCustomerFeedsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerFeedResult>,
 }
 /// The result for the customer feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerFeedResult {
     /// Returned for successful operations.
@@ -12307,6 +12659,7 @@ pub mod customer_feed_service_client {
 }
 /// Request message for
 /// \[CustomerNegativeCriterionService.MutateCustomerNegativeCriteria][google.ads.googleads.v11.services.CustomerNegativeCriterionService.MutateCustomerNegativeCriteria\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerNegativeCriteriaRequest {
     /// Required. The ID of the customer whose criteria are being modified.
@@ -12334,6 +12687,7 @@ pub struct MutateCustomerNegativeCriteriaRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create or remove) on a customer level negative criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerNegativeCriterionOperation {
     /// The mutate operation.
@@ -12345,6 +12699,7 @@ pub struct CustomerNegativeCriterionOperation {
 /// Nested message and enum types in `CustomerNegativeCriterionOperation`.
 pub mod customer_negative_criterion_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new criterion.
@@ -12359,6 +12714,7 @@ pub mod customer_negative_criterion_operation {
     }
 }
 /// Response message for customer negative criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerNegativeCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -12374,6 +12730,7 @@ pub struct MutateCustomerNegativeCriteriaResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerNegativeCriteriaResult>,
 }
 /// The result for the criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerNegativeCriteriaResult {
     /// Returned for successful operations.
@@ -12487,6 +12844,7 @@ pub mod customer_negative_criterion_service_client {
     }
 }
 /// Request message for \[CustomerService.MutateCustomer][google.ads.googleads.v11.services.CustomerService.MutateCustomer\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerRequest {
     /// Required. The ID of the customer being modified.
@@ -12508,6 +12866,7 @@ pub struct MutateCustomerRequest {
     pub response_content_type: i32,
 }
 /// Request message for \[CustomerService.CreateCustomerClient][google.ads.googleads.v11.services.CustomerService.CreateCustomerClient\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerClientRequest {
     /// Required. The ID of the Manager under whom client customer is being created.
@@ -12531,6 +12890,7 @@ pub struct CreateCustomerClientRequest {
     pub validate_only: bool,
 }
 /// A single update on a customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerOperation {
     /// Mutate operation. Only updates are supported for customer.
@@ -12541,6 +12901,7 @@ pub struct CustomerOperation {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Response message for CreateCustomerClient mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerClientResponse {
     /// The resource name of the newly created customer. Customer resource names
@@ -12553,6 +12914,7 @@ pub struct CreateCustomerClientResponse {
     pub invitation_link: ::prost::alloc::string::String,
 }
 /// Response message for customer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerResponse {
     /// Result for the mutate.
@@ -12560,6 +12922,7 @@ pub struct MutateCustomerResponse {
     pub result: ::core::option::Option<MutateCustomerResult>,
 }
 /// The result for the customer mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerResult {
     /// Returned for successful operations.
@@ -12571,9 +12934,11 @@ pub struct MutateCustomerResult {
     pub customer: ::core::option::Option<super::resources::Customer>,
 }
 /// Request message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAccessibleCustomersRequest {}
 /// Response message for \[CustomerService.ListAccessibleCustomers][google.ads.googleads.v11.services.CustomerService.ListAccessibleCustomers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAccessibleCustomersResponse {
     /// Resource name of customers directly accessible by the
@@ -12743,6 +13108,7 @@ pub mod customer_service_client {
 }
 /// Request message for
 /// \[CustomizerAttributeService.MutateCustomizerAttributes][google.ads.googleads.v11.services.CustomizerAttributeService.MutateCustomizerAttributes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomizerAttributesRequest {
     /// Required. The ID of the customer whose customizer attributes are being modified.
@@ -12770,6 +13136,7 @@ pub struct MutateCustomizerAttributesRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an customizer attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomizerAttributeOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -12782,6 +13149,7 @@ pub struct CustomizerAttributeOperation {
 /// Nested message and enum types in `CustomizerAttributeOperation`.
 pub mod customizer_attribute_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new customizer
@@ -12796,6 +13164,7 @@ pub mod customizer_attribute_operation {
     }
 }
 /// Response message for an customizer attribute mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomizerAttributesResponse {
     /// All results for the mutate.
@@ -12811,6 +13180,7 @@ pub struct MutateCustomizerAttributesResponse {
     >,
 }
 /// The result for the customizer attribute mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomizerAttributeResult {
     /// Returned for successful operations.
@@ -12912,6 +13282,7 @@ pub mod customizer_attribute_service_client {
     }
 }
 /// Request message for \[ExperimentArmService.MutateExperimentArms][google.ads.googleads.v11.services.ExperimentArmService.MutateExperimentArms\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentArmsRequest {
     /// Required. The ID of the customer whose experiments are being modified.
@@ -12939,6 +13310,7 @@ pub struct MutateExperimentArmsRequest {
     pub response_content_type: i32,
 }
 /// A single operation on an experiment arm.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExperimentArmOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -12951,6 +13323,7 @@ pub struct ExperimentArmOperation {
 /// Nested message and enum types in `ExperimentArmOperation`.
 pub mod experiment_arm_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation
@@ -12969,6 +13342,7 @@ pub mod experiment_arm_operation {
     }
 }
 /// Response message for experiment arm mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentArmsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -12984,6 +13358,7 @@ pub struct MutateExperimentArmsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateExperimentArmResult>,
 }
 /// The result for the experiment arm mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentArmResult {
     /// Returned for successful operations.
@@ -13090,6 +13465,7 @@ pub mod experiment_arm_service_client {
     }
 }
 /// Request message for \[ExperimentService.MutateExperiments][google.ads.googleads.v11.services.ExperimentService.MutateExperiments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentsRequest {
     /// Required. The ID of the customer whose experiments are being modified.
@@ -13110,6 +13486,7 @@ pub struct MutateExperimentsRequest {
     pub validate_only: bool,
 }
 /// A single operation on an experiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExperimentOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -13122,6 +13499,7 @@ pub struct ExperimentOperation {
 /// Nested message and enum types in `ExperimentOperation`.
 pub mod experiment_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation
@@ -13140,6 +13518,7 @@ pub mod experiment_operation {
     }
 }
 /// Response message for experiment mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -13155,6 +13534,7 @@ pub struct MutateExperimentsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateExperimentResult>,
 }
 /// The result for the campaign experiment mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExperimentResult {
     /// Returned for successful operations.
@@ -13162,6 +13542,7 @@ pub struct MutateExperimentResult {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[ExperimentService.EndExperiment][google.ads.googleads.v11.services.ExperimentService.EndExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndExperimentRequest {
     /// Required. The resource name of the campaign experiment to end.
@@ -13174,6 +13555,7 @@ pub struct EndExperimentRequest {
 }
 /// Request message for
 /// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExperimentAsyncErrorsRequest {
     /// Required. The name of the experiment from which to retrieve the async
@@ -13195,6 +13577,7 @@ pub struct ListExperimentAsyncErrorsRequest {
 }
 /// Response message for
 /// \[ExperimentService.ListExperimentAsyncErrors][google.ads.googleads.v11.services.ExperimentService.ListExperimentAsyncErrors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExperimentAsyncErrorsResponse {
     /// details of the errors when performing the asynchronous operation.
@@ -13208,6 +13591,7 @@ pub struct ListExperimentAsyncErrorsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for \[ExperimentService.GraduateExperiment][google.ads.googleads.v11.services.ExperimentService.GraduateExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GraduateExperimentRequest {
     /// Required. The experiment to be graduated.
@@ -13224,6 +13608,7 @@ pub struct GraduateExperimentRequest {
     pub validate_only: bool,
 }
 /// The mapping of experiment campaign and budget to be graduated.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignBudgetMapping {
     /// Required. The experiment campaign to graduate.
@@ -13234,6 +13619,7 @@ pub struct CampaignBudgetMapping {
     pub campaign_budget: ::prost::alloc::string::String,
 }
 /// Request message for \[ExperimentService.ScheduleExperiment][google.ads.googleads.v11.services.ExperimentService.ScheduleExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScheduleExperimentRequest {
     /// Required. The scheduled experiment.
@@ -13245,6 +13631,7 @@ pub struct ScheduleExperimentRequest {
     pub validate_only: bool,
 }
 /// The metadata of the scheduled experiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScheduleExperimentMetadata {
     /// Required. The scheduled experiment.
@@ -13252,6 +13639,7 @@ pub struct ScheduleExperimentMetadata {
     pub experiment: ::prost::alloc::string::String,
 }
 /// Request message for \[ExperimentService.PromoteExperiment][google.ads.googleads.v11.services.ExperimentService.PromoteExperiment\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PromoteExperimentRequest {
     /// Required. The resource name of the experiment to promote.
@@ -13263,6 +13651,7 @@ pub struct PromoteExperimentRequest {
     pub validate_only: bool,
 }
 /// The metadata of the promoted experiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PromoteExperimentMetadata {
     /// Required. The promoted experiment.
@@ -13538,6 +13927,7 @@ pub mod experiment_service_client {
     }
 }
 /// Request message for \[ExtensionFeedItemService.MutateExtensionFeedItems][google.ads.googleads.v11.services.ExtensionFeedItemService.MutateExtensionFeedItems\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExtensionFeedItemsRequest {
     /// Required. The ID of the customer whose extension feed items are being
@@ -13566,6 +13956,7 @@ pub struct MutateExtensionFeedItemsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an extension feed item.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtensionFeedItemOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -13578,6 +13969,7 @@ pub struct ExtensionFeedItemOperation {
 /// Nested message and enum types in `ExtensionFeedItemOperation`.
 pub mod extension_feed_item_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new extension
@@ -13597,6 +13989,7 @@ pub mod extension_feed_item_operation {
     }
 }
 /// Response message for an extension feed item mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExtensionFeedItemsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -13612,6 +14005,7 @@ pub struct MutateExtensionFeedItemsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateExtensionFeedItemResult>,
 }
 /// The result for the extension feed item mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateExtensionFeedItemResult {
     /// Returned for successful operations.
@@ -13736,6 +14130,7 @@ pub mod extension_feed_item_service_client {
     }
 }
 /// Request message for \[FeedItemService.MutateFeedItems][google.ads.googleads.v11.services.FeedItemService.MutateFeedItems\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemsRequest {
     /// Required. The ID of the customer whose feed items are being modified.
@@ -13763,6 +14158,7 @@ pub struct MutateFeedItemsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an feed item.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -13775,6 +14171,7 @@ pub struct FeedItemOperation {
 /// Nested message and enum types in `FeedItemOperation`.
 pub mod feed_item_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new feed item.
@@ -13793,6 +14190,7 @@ pub mod feed_item_operation {
     }
 }
 /// Response message for an feed item mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -13808,6 +14206,7 @@ pub struct MutateFeedItemsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedItemResult>,
 }
 /// The result for the feed item mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemResult {
     /// Returned for successful operations.
@@ -13928,6 +14327,7 @@ pub mod feed_item_service_client {
     }
 }
 /// Request message for \[FeedItemSetLinkService.MutateFeedItemSetLinks][google.ads.googleads.v11.services.FeedItemSetLinkService.MutateFeedItemSetLinks\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetLinksRequest {
     /// Required. The ID of the customer whose feed item set links are being modified.
@@ -13948,6 +14348,7 @@ pub struct MutateFeedItemSetLinksRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on a feed item set link.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemSetLinkOperation {
     /// The mutate operation.
@@ -13957,6 +14358,7 @@ pub struct FeedItemSetLinkOperation {
 /// Nested message and enum types in `FeedItemSetLinkOperation`.
 pub mod feed_item_set_link_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the
@@ -13972,6 +14374,7 @@ pub mod feed_item_set_link_operation {
     }
 }
 /// Response message for a feed item set link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetLinksResponse {
     /// All results for the mutate.
@@ -13987,6 +14390,7 @@ pub struct MutateFeedItemSetLinksResponse {
     >,
 }
 /// The result for the feed item set link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemSetLinkResult {
     /// Returned for successful operations.
@@ -14088,6 +14492,7 @@ pub mod feed_item_set_link_service_client {
     }
 }
 /// Request message for \[FeedItemTargetService.MutateFeedItemTargets][google.ads.googleads.v11.services.FeedItemTargetService.MutateFeedItemTargets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemTargetsRequest {
     /// Required. The ID of the customer whose feed item targets are being modified.
@@ -14115,6 +14520,7 @@ pub struct MutateFeedItemTargetsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, remove) on an feed item target.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedItemTargetOperation {
     /// The mutate operation.
@@ -14124,6 +14530,7 @@ pub struct FeedItemTargetOperation {
 /// Nested message and enum types in `FeedItemTargetOperation`.
 pub mod feed_item_target_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new feed item
@@ -14139,6 +14546,7 @@ pub mod feed_item_target_operation {
     }
 }
 /// Response message for an feed item target mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemTargetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -14154,6 +14562,7 @@ pub struct MutateFeedItemTargetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedItemTargetResult>,
 }
 /// The result for the feed item target mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedItemTargetResult {
     /// Returned for successful operations.
@@ -14271,6 +14680,7 @@ pub mod feed_item_target_service_client {
     }
 }
 /// Request message for \[FeedMappingService.MutateFeedMappings][google.ads.googleads.v11.services.FeedMappingService.MutateFeedMappings\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedMappingsRequest {
     /// Required. The ID of the customer whose feed mappings are being modified.
@@ -14298,6 +14708,7 @@ pub struct MutateFeedMappingsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on a feed mapping.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedMappingOperation {
     /// The mutate operation.
@@ -14307,6 +14718,7 @@ pub struct FeedMappingOperation {
 /// Nested message and enum types in `FeedMappingOperation`.
 pub mod feed_mapping_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new feed mapping.
@@ -14321,6 +14733,7 @@ pub mod feed_mapping_operation {
     }
 }
 /// Response message for a feed mapping mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedMappingsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -14336,6 +14749,7 @@ pub struct MutateFeedMappingsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedMappingResult>,
 }
 /// The result for the feed mapping mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedMappingResult {
     /// Returned for successful operations.
@@ -14451,6 +14865,7 @@ pub mod feed_mapping_service_client {
     }
 }
 /// Request message for \[FeedService.MutateFeeds][google.ads.googleads.v11.services.FeedService.MutateFeeds\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedsRequest {
     /// Required. The ID of the customer whose feeds are being modified.
@@ -14478,6 +14893,7 @@ pub struct MutateFeedsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an feed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeedOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -14490,6 +14906,7 @@ pub struct FeedOperation {
 /// Nested message and enum types in `FeedOperation`.
 pub mod feed_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new feed.
@@ -14508,6 +14925,7 @@ pub mod feed_operation {
     }
 }
 /// Response message for an feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -14523,6 +14941,7 @@ pub struct MutateFeedsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateFeedResult>,
 }
 /// The result for the feed mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateFeedResult {
     /// Returned for successful operations.
@@ -14643,6 +15062,7 @@ pub mod feed_service_client {
 }
 /// Request message for
 /// \[KeywordPlanAdGroupKeywordService.MutateKeywordPlanAdGroupKeywords][google.ads.googleads.v11.services.KeywordPlanAdGroupKeywordService.MutateKeywordPlanAdGroupKeywords\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupKeywordsRequest {
     /// Required. The ID of the customer whose Keyword Plan ad group keywords are being
@@ -14666,6 +15086,7 @@ pub struct MutateKeywordPlanAdGroupKeywordsRequest {
 }
 /// A single operation (create, update, remove) on a Keyword Plan ad group
 /// keyword.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanAdGroupKeywordOperation {
     /// The FieldMask that determines which resource fields are modified in an
@@ -14684,6 +15105,7 @@ pub struct KeywordPlanAdGroupKeywordOperation {
 /// Nested message and enum types in `KeywordPlanAdGroupKeywordOperation`.
 pub mod keyword_plan_ad_group_keyword_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new Keyword Plan
@@ -14703,6 +15125,7 @@ pub mod keyword_plan_ad_group_keyword_operation {
     }
 }
 /// Response message for a Keyword Plan ad group keyword mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupKeywordsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -14718,6 +15141,7 @@ pub struct MutateKeywordPlanAdGroupKeywordsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateKeywordPlanAdGroupKeywordResult>,
 }
 /// The result for the Keyword Plan ad group keyword mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanAdGroupKeywordResult {
     /// Returned for successful operations.
@@ -14833,6 +15257,7 @@ pub mod keyword_plan_ad_group_keyword_service_client {
 }
 /// Request message for
 /// \[KeywordPlanCampaignKeywordService.MutateKeywordPlanCampaignKeywords][google.ads.googleads.v11.services.KeywordPlanCampaignKeywordService.MutateKeywordPlanCampaignKeywords\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignKeywordsRequest {
     /// Required. The ID of the customer whose campaign keywords are being modified.
@@ -14855,6 +15280,7 @@ pub struct MutateKeywordPlanCampaignKeywordsRequest {
 }
 /// A single operation (create, update, remove) on a Keyword Plan campaign
 /// keyword.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignKeywordOperation {
     /// The FieldMask that determines which resource fields are modified in an
@@ -14873,6 +15299,7 @@ pub struct KeywordPlanCampaignKeywordOperation {
 /// Nested message and enum types in `KeywordPlanCampaignKeywordOperation`.
 pub mod keyword_plan_campaign_keyword_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new Keyword Plan
@@ -14892,6 +15319,7 @@ pub mod keyword_plan_campaign_keyword_operation {
     }
 }
 /// Response message for a Keyword Plan campaign keyword mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignKeywordsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -14907,6 +15335,7 @@ pub struct MutateKeywordPlanCampaignKeywordsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateKeywordPlanCampaignKeywordResult>,
 }
 /// The result for the Keyword Plan campaign keyword mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignKeywordResult {
     /// Returned for successful operations.
@@ -15020,6 +15449,7 @@ pub mod keyword_plan_campaign_keyword_service_client {
 }
 /// Request message for
 /// \[KeywordPlanCampaignService.MutateKeywordPlanCampaigns][google.ads.googleads.v11.services.KeywordPlanCampaignService.MutateKeywordPlanCampaigns\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignsRequest {
     /// Required. The ID of the customer whose Keyword Plan campaigns are being modified.
@@ -15040,6 +15470,7 @@ pub struct MutateKeywordPlanCampaignsRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on a Keyword Plan campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignOperation {
     /// The FieldMask that determines which resource fields are modified in an
@@ -15053,6 +15484,7 @@ pub struct KeywordPlanCampaignOperation {
 /// Nested message and enum types in `KeywordPlanCampaignOperation`.
 pub mod keyword_plan_campaign_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new Keyword Plan
@@ -15072,6 +15504,7 @@ pub mod keyword_plan_campaign_operation {
     }
 }
 /// Response message for a Keyword Plan campaign mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -15087,6 +15520,7 @@ pub struct MutateKeywordPlanCampaignsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateKeywordPlanCampaignResult>,
 }
 /// The result for the Keyword Plan campaign mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlanCampaignResult {
     /// Returned for successful operations.
@@ -15198,6 +15632,7 @@ pub mod keyword_plan_campaign_service_client {
     }
 }
 /// Request message for \[KeywordPlanService.MutateKeywordPlans][google.ads.googleads.v11.services.KeywordPlanService.MutateKeywordPlans\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlansRequest {
     /// Required. The ID of the customer whose keyword plans are being modified.
@@ -15218,6 +15653,7 @@ pub struct MutateKeywordPlansRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update, remove) on a keyword plan.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanOperation {
     /// The FieldMask that determines which resource fields are modified in an
@@ -15231,6 +15667,7 @@ pub struct KeywordPlanOperation {
 /// Nested message and enum types in `KeywordPlanOperation`.
 pub mod keyword_plan_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new keyword plan.
@@ -15249,6 +15686,7 @@ pub mod keyword_plan_operation {
     }
 }
 /// Response message for a keyword plan mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlansResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -15264,6 +15702,7 @@ pub struct MutateKeywordPlansResponse {
     pub results: ::prost::alloc::vec::Vec<MutateKeywordPlansResult>,
 }
 /// The result for the keyword plan mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateKeywordPlansResult {
     /// Returned for successful operations.
@@ -15271,6 +15710,7 @@ pub struct MutateKeywordPlansResult {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[KeywordPlanService.GenerateForecastCurve][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastCurve\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastCurveRequest {
     /// Required. The resource name of the keyword plan to be forecasted.
@@ -15278,6 +15718,7 @@ pub struct GenerateForecastCurveRequest {
     pub keyword_plan: ::prost::alloc::string::String,
 }
 /// Response message for \[KeywordPlanService.GenerateForecastCurve][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastCurve\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastCurveResponse {
     /// List of forecast curves for the keyword plan campaign.
@@ -15288,6 +15729,7 @@ pub struct GenerateForecastCurveResponse {
     >,
 }
 /// Request message for \[KeywordPlanService.GenerateForecastTimeSeries][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastTimeSeries\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastTimeSeriesRequest {
     /// Required. The resource name of the keyword plan to be forecasted.
@@ -15295,6 +15737,7 @@ pub struct GenerateForecastTimeSeriesRequest {
     pub keyword_plan: ::prost::alloc::string::String,
 }
 /// Response message for \[KeywordPlanService.GenerateForecastTimeSeries][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastTimeSeries\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastTimeSeriesResponse {
     /// List of weekly time series forecasts for the keyword plan campaign.
@@ -15305,6 +15748,7 @@ pub struct GenerateForecastTimeSeriesResponse {
     >,
 }
 /// Request message for \[KeywordPlanService.GenerateForecastMetrics][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastMetricsRequest {
     /// Required. The resource name of the keyword plan to be forecasted.
@@ -15312,6 +15756,7 @@ pub struct GenerateForecastMetricsRequest {
     pub keyword_plan: ::prost::alloc::string::String,
 }
 /// Response message for \[KeywordPlanService.GenerateForecastMetrics][google.ads.googleads.v11.services.KeywordPlanService.GenerateForecastMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateForecastMetricsResponse {
     /// List of campaign forecasts.
@@ -15326,6 +15771,7 @@ pub struct GenerateForecastMetricsResponse {
     pub keyword_forecasts: ::prost::alloc::vec::Vec<KeywordPlanKeywordForecast>,
 }
 /// A campaign forecast.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignForecast {
     /// The resource name of the Keyword Plan campaign related to the forecast.
@@ -15338,6 +15784,7 @@ pub struct KeywordPlanCampaignForecast {
     pub campaign_forecast: ::core::option::Option<ForecastMetrics>,
 }
 /// An ad group forecast.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanAdGroupForecast {
     /// The resource name of the Keyword Plan ad group related to the forecast.
@@ -15350,6 +15797,7 @@ pub struct KeywordPlanAdGroupForecast {
     pub ad_group_forecast: ::core::option::Option<ForecastMetrics>,
 }
 /// A keyword forecast.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanKeywordForecast {
     /// The resource name of the Keyword Plan keyword related to the forecast.
@@ -15364,6 +15812,7 @@ pub struct KeywordPlanKeywordForecast {
     pub keyword_forecast: ::core::option::Option<ForecastMetrics>,
 }
 /// The forecast curve for the campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanCampaignForecastCurve {
     /// The resource name of the Keyword Plan campaign related to the forecast.
@@ -15378,6 +15827,7 @@ pub struct KeywordPlanCampaignForecastCurve {
     >,
 }
 /// The max cpc bid forecast curve.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanMaxCpcBidForecastCurve {
     /// The forecasts for the Keyword Plan campaign at different max CPC bids.
@@ -15385,6 +15835,7 @@ pub struct KeywordPlanMaxCpcBidForecastCurve {
     pub max_cpc_bid_forecasts: ::prost::alloc::vec::Vec<KeywordPlanMaxCpcBidForecast>,
 }
 /// The forecast of the campaign at a specific bid.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanMaxCpcBidForecast {
     /// The max cpc bid in micros.
@@ -15395,6 +15846,7 @@ pub struct KeywordPlanMaxCpcBidForecast {
     pub max_cpc_bid_forecast: ::core::option::Option<ForecastMetrics>,
 }
 /// The weekly time series forecast for the keyword plan campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanWeeklyTimeSeriesForecast {
     /// The resource name of the Keyword Plan campaign related to the forecast.
@@ -15407,6 +15859,7 @@ pub struct KeywordPlanWeeklyTimeSeriesForecast {
     pub weekly_forecasts: ::prost::alloc::vec::Vec<KeywordPlanWeeklyForecast>,
 }
 /// The forecast of the campaign for the week starting start_date.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanWeeklyForecast {
     /// The start date, in yyyy-mm-dd format. This date is inclusive.
@@ -15417,6 +15870,7 @@ pub struct KeywordPlanWeeklyForecast {
     pub forecast: ::core::option::Option<ForecastMetrics>,
 }
 /// Forecast metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ForecastMetrics {
     /// Impressions
@@ -15436,6 +15890,7 @@ pub struct ForecastMetrics {
     pub cost_micros: ::core::option::Option<i64>,
 }
 /// Request message for \[KeywordPlanService.GenerateHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanService.GenerateHistoricalMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateHistoricalMetricsRequest {
     /// Required. The resource name of the keyword plan of which historical metrics are
@@ -15454,6 +15909,7 @@ pub struct GenerateHistoricalMetricsRequest {
     >,
 }
 /// Response message for \[KeywordPlanService.GenerateHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanService.GenerateHistoricalMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateHistoricalMetricsResponse {
     /// List of keyword historical metrics.
@@ -15466,6 +15922,7 @@ pub struct GenerateHistoricalMetricsResponse {
     >,
 }
 /// A keyword historical metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordPlanKeywordHistoricalMetrics {
     /// The text of the query associated with one or more ad_group_keywords in the
@@ -15727,6 +16184,7 @@ pub mod keyword_plan_service_client {
     }
 }
 /// Request message for \[LabelService.MutateLabels][google.ads.googleads.v11.services.LabelService.MutateLabels\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateLabelsRequest {
     /// Required. ID of the customer whose labels are being modified.
@@ -15754,6 +16212,7 @@ pub struct MutateLabelsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove, update) on a label.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LabelOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -15766,6 +16225,7 @@ pub struct LabelOperation {
 /// Nested message and enum types in `LabelOperation`.
 pub mod label_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new label.
@@ -15783,6 +16243,7 @@ pub mod label_operation {
     }
 }
 /// Response message for a labels mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateLabelsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -15798,6 +16259,7 @@ pub struct MutateLabelsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateLabelResult>,
 }
 /// The result for a label mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateLabelResult {
     /// Returned for successful operations.
@@ -15915,6 +16377,7 @@ pub mod label_service_client {
     }
 }
 /// Request message for \[SharedCriterionService.MutateSharedCriteria][google.ads.googleads.v11.services.SharedCriterionService.MutateSharedCriteria\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedCriteriaRequest {
     /// Required. The ID of the customer whose shared criteria are being modified.
@@ -15942,6 +16405,7 @@ pub struct MutateSharedCriteriaRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, remove) on an shared criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedCriterionOperation {
     /// The mutate operation.
@@ -15951,6 +16415,7 @@ pub struct SharedCriterionOperation {
 /// Nested message and enum types in `SharedCriterionOperation`.
 pub mod shared_criterion_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new shared
@@ -15966,6 +16431,7 @@ pub mod shared_criterion_operation {
     }
 }
 /// Response message for a shared criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedCriteriaResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -15981,6 +16447,7 @@ pub struct MutateSharedCriteriaResponse {
     pub results: ::prost::alloc::vec::Vec<MutateSharedCriterionResult>,
 }
 /// The result for the shared criterion mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedCriterionResult {
     /// Returned for successful operations.
@@ -16101,6 +16568,7 @@ pub mod shared_criterion_service_client {
     }
 }
 /// Request message for \[SharedSetService.MutateSharedSets][google.ads.googleads.v11.services.SharedSetService.MutateSharedSets\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedSetsRequest {
     /// Required. The ID of the customer whose shared sets are being modified.
@@ -16128,6 +16596,7 @@ pub struct MutateSharedSetsRequest {
     pub response_content_type: i32,
 }
 /// A single operation (create, update, remove) on an shared set.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SharedSetOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -16140,6 +16609,7 @@ pub struct SharedSetOperation {
 /// Nested message and enum types in `SharedSetOperation`.
 pub mod shared_set_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new shared set.
@@ -16158,6 +16628,7 @@ pub mod shared_set_operation {
     }
 }
 /// Response message for a shared set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedSetsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -16173,6 +16644,7 @@ pub struct MutateSharedSetsResponse {
     pub results: ::prost::alloc::vec::Vec<MutateSharedSetResult>,
 }
 /// The result for the shared set mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateSharedSetResult {
     /// Returned for successful operations.
@@ -16291,6 +16763,7 @@ pub mod shared_set_service_client {
     }
 }
 /// Request message for \[GoogleAdsService.Search][google.ads.googleads.v11.services.GoogleAdsService.Search\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsRequest {
     /// Required. The ID of the customer being queried.
@@ -16328,6 +16801,7 @@ pub struct SearchGoogleAdsRequest {
     pub summary_row_setting: i32,
 }
 /// Response message for \[GoogleAdsService.Search][google.ads.googleads.v11.services.GoogleAdsService.Search\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsResponse {
     /// The list of rows that matched the query.
@@ -16353,6 +16827,7 @@ pub struct SearchGoogleAdsResponse {
     pub summary_row: ::core::option::Option<GoogleAdsRow>,
 }
 /// Request message for \[GoogleAdsService.SearchStream][google.ads.googleads.v11.services.GoogleAdsService.SearchStream\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsStreamRequest {
     /// Required. The ID of the customer being queried.
@@ -16371,6 +16846,7 @@ pub struct SearchGoogleAdsStreamRequest {
     pub summary_row_setting: i32,
 }
 /// Response message for \[GoogleAdsService.SearchStream][google.ads.googleads.v11.services.GoogleAdsService.SearchStream\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchGoogleAdsStreamResponse {
     /// The list of rows that matched the query.
@@ -16389,6 +16865,7 @@ pub struct SearchGoogleAdsStreamResponse {
     pub request_id: ::prost::alloc::string::String,
 }
 /// A returned row from the query.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GoogleAdsRow {
     /// The account budget in the query.
@@ -16982,6 +17459,7 @@ pub struct GoogleAdsRow {
     pub segments: ::core::option::Option<super::common::Segments>,
 }
 /// Request message for \[GoogleAdsService.Mutate][google.ads.googleads.v11.services.GoogleAdsService.Mutate\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateGoogleAdsRequest {
     /// Required. The ID of the customer whose resources are being modified.
@@ -17011,6 +17489,7 @@ pub struct MutateGoogleAdsRequest {
     pub response_content_type: i32,
 }
 /// Response message for \[GoogleAdsService.Mutate][google.ads.googleads.v11.services.GoogleAdsService.Mutate\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateGoogleAdsResponse {
     /// Errors that pertain to operation failures in the partial failure mode.
@@ -17026,6 +17505,7 @@ pub struct MutateGoogleAdsResponse {
     pub mutate_operation_responses: ::prost::alloc::vec::Vec<MutateOperationResponse>,
 }
 /// A single operation (create, update, remove) on a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateOperation {
     /// The mutate operation.
@@ -17038,6 +17518,7 @@ pub struct MutateOperation {
 /// Nested message and enum types in `MutateOperation`.
 pub mod mutate_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// An ad group ad label mutate operation.
@@ -17277,6 +17758,7 @@ pub mod mutate_operation {
     }
 }
 /// Response message for the resource mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateOperationResponse {
     /// The mutate response.
@@ -17289,6 +17771,7 @@ pub struct MutateOperationResponse {
 /// Nested message and enum types in `MutateOperationResponse`.
 pub mod mutate_operation_response {
     /// The mutate response.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Response {
         /// The result for the ad group ad label mutate.
@@ -17789,6 +18272,7 @@ pub mod google_ads_service_client {
     }
 }
 /// Request message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBatchJobRequest {
     /// Required. The ID of the customer for which to create a batch job.
@@ -17799,6 +18283,7 @@ pub struct MutateBatchJobRequest {
     pub operation: ::core::option::Option<BatchJobOperation>,
 }
 /// A single operation on a batch job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchJobOperation {
     /// The mutate operation.
@@ -17808,6 +18293,7 @@ pub struct BatchJobOperation {
 /// Nested message and enum types in `BatchJobOperation`.
 pub mod batch_job_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new batch job.
@@ -17822,6 +18308,7 @@ pub mod batch_job_operation {
     }
 }
 /// Response message for \[BatchJobService.MutateBatchJob][google.ads.googleads.v11.services.BatchJobService.MutateBatchJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBatchJobResponse {
     /// The result for the mutate.
@@ -17829,6 +18316,7 @@ pub struct MutateBatchJobResponse {
     pub result: ::core::option::Option<MutateBatchJobResult>,
 }
 /// The result for the batch job mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBatchJobResult {
     /// The resource name of the batch job.
@@ -17836,6 +18324,7 @@ pub struct MutateBatchJobResult {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[BatchJobService.RunBatchJob][google.ads.googleads.v11.services.BatchJobService.RunBatchJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunBatchJobRequest {
     /// Required. The resource name of the BatchJob to run.
@@ -17843,6 +18332,7 @@ pub struct RunBatchJobRequest {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddBatchJobOperationsRequest {
     /// Required. The resource name of the batch job.
@@ -17869,6 +18359,7 @@ pub struct AddBatchJobOperationsRequest {
     pub mutate_operations: ::prost::alloc::vec::Vec<MutateOperation>,
 }
 /// Response message for \[BatchJobService.AddBatchJobOperations][google.ads.googleads.v11.services.BatchJobService.AddBatchJobOperations\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddBatchJobOperationsResponse {
     /// The total number of operations added so far for this batch job.
@@ -17881,6 +18372,7 @@ pub struct AddBatchJobOperationsResponse {
     pub next_sequence_token: ::prost::alloc::string::String,
 }
 /// Request message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBatchJobResultsRequest {
     /// Required. The resource name of the batch job whose results are being listed.
@@ -17906,6 +18398,7 @@ pub struct ListBatchJobResultsRequest {
     pub response_content_type: i32,
 }
 /// Response message for \[BatchJobService.ListBatchJobResults][google.ads.googleads.v11.services.BatchJobService.ListBatchJobResults\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBatchJobResultsResponse {
     /// The list of rows that matched the query.
@@ -17919,6 +18412,7 @@ pub struct ListBatchJobResultsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// An individual batch job result.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchJobResult {
     /// Index of the mutate operation.
@@ -18122,6 +18616,7 @@ pub mod batch_job_service_client {
     }
 }
 /// Request message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordIdeasRequest {
     /// The ID of the customer with the recommendation.
@@ -18187,6 +18682,7 @@ pub struct GenerateKeywordIdeasRequest {
 /// Nested message and enum types in `GenerateKeywordIdeasRequest`.
 pub mod generate_keyword_ideas_request {
     /// The type of seed to generate keyword ideas.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Seed {
         /// A Keyword and a specific Url to generate ideas from
@@ -18205,6 +18701,7 @@ pub mod generate_keyword_ideas_request {
     }
 }
 /// Keyword And Url Seed
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordAndUrlSeed {
     /// The URL to crawl in order to generate keyword ideas.
@@ -18215,6 +18712,7 @@ pub struct KeywordAndUrlSeed {
     pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Keyword Seed
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordSeed {
     /// Requires at least one keyword.
@@ -18222,6 +18720,7 @@ pub struct KeywordSeed {
     pub keywords: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Site Seed
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SiteSeed {
     /// The domain name of the site. If the customer requesting the ideas doesn't
@@ -18230,6 +18729,7 @@ pub struct SiteSeed {
     pub site: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Url Seed
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UrlSeed {
     /// The URL to crawl in order to generate keyword ideas.
@@ -18237,6 +18737,7 @@ pub struct UrlSeed {
     pub url: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Response message for \[KeywordPlanIdeaService.GenerateKeywordIdeas][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordIdeas\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordIdeaResponse {
     /// Results of generating keyword ideas.
@@ -18258,6 +18759,7 @@ pub struct GenerateKeywordIdeaResponse {
     pub total_size: i64,
 }
 /// The result of generating keyword ideas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordIdeaResult {
     /// Text of the keyword idea.
@@ -18284,6 +18786,7 @@ pub struct GenerateKeywordIdeaResult {
 }
 /// Request message for
 /// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordHistoricalMetricsRequest {
     /// The ID of the customer with the recommendation.
@@ -18330,6 +18833,7 @@ pub struct GenerateKeywordHistoricalMetricsRequest {
 }
 /// Response message for
 /// \[KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordHistoricalMetricsResponse {
     /// List of keywords and their historical metrics.
@@ -18342,6 +18846,7 @@ pub struct GenerateKeywordHistoricalMetricsResponse {
     >,
 }
 /// The result of generating keyword historical metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateKeywordHistoricalMetricsResult {
     /// The text of the query associated with one or more keywords.
@@ -18364,6 +18869,7 @@ pub struct GenerateKeywordHistoricalMetricsResult {
 }
 /// Request message for
 /// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAdGroupThemesRequest {
     /// Required. The ID of the customer.
@@ -18379,6 +18885,7 @@ pub struct GenerateAdGroupThemesRequest {
 }
 /// Response message for
 /// \[KeywordPlanIdeaService.GenerateAdGroupThemes][google.ads.googleads.v11.services.KeywordPlanIdeaService.GenerateAdGroupThemes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAdGroupThemesResponse {
     /// A list of suggested AdGroup/keyword pairings.
@@ -18389,6 +18896,7 @@ pub struct GenerateAdGroupThemesResponse {
     pub unusable_ad_groups: ::prost::alloc::vec::Vec<UnusableAdGroup>,
 }
 /// The suggested text and AdGroup/Campaign pairing for a given keyword.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupKeywordSuggestion {
     /// The original keyword text.
@@ -18417,6 +18925,7 @@ pub struct AdGroupKeywordSuggestion {
 /// AdGroups may not be usable if the AdGroup
 /// * belongs to Campaign that is not ENABLED or PAUSED
 /// * is itself not ENABLED
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UnusableAdGroup {
     /// The AdGroup resource name.
@@ -18589,6 +19098,7 @@ pub mod keyword_plan_idea_service_client {
     }
 }
 /// Request message for \[CustomAudienceService.MutateCustomAudiences][google.ads.googleads.v11.services.CustomAudienceService.MutateCustomAudiences\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomAudiencesRequest {
     /// Required. The ID of the customer whose custom audiences are being modified.
@@ -18603,6 +19113,7 @@ pub struct MutateCustomAudiencesRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update) on a custom audience.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomAudienceOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -18615,6 +19126,7 @@ pub struct CustomAudienceOperation {
 /// Nested message and enum types in `CustomAudienceOperation`.
 pub mod custom_audience_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new custom
@@ -18634,6 +19146,7 @@ pub mod custom_audience_operation {
     }
 }
 /// Response message for custom audience mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomAudiencesResponse {
     /// All results for the mutate.
@@ -18641,6 +19154,7 @@ pub struct MutateCustomAudiencesResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomAudienceResult>,
 }
 /// The result for the custom audience mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomAudienceResult {
     /// Returned for successful operations.
@@ -18747,6 +19261,7 @@ pub mod custom_audience_service_client {
     }
 }
 /// Request message for \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateInsightsFinderReportRequest {
     /// Required. The ID of the customer.
@@ -18767,6 +19282,7 @@ pub struct GenerateInsightsFinderReportRequest {
 /// The response message for
 /// \[AudienceInsightsService.GenerateInsightsFinderReport][google.ads.googleads.v11.services.AudienceInsightsService.GenerateInsightsFinderReport\], containing the
 /// shareable URL for the report.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateInsightsFinderReportResponse {
     /// An HTTPS URL providing a deep link into the Insights Finder UI with the
@@ -18776,6 +19292,7 @@ pub struct GenerateInsightsFinderReportResponse {
 }
 /// Request message for
 /// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAudienceCompositionInsightsRequest {
     /// Required. The ID of the customer.
@@ -18803,6 +19320,7 @@ pub struct GenerateAudienceCompositionInsightsRequest {
 }
 /// Response message for
 /// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v11.services.AudienceInsightsService.GenerateAudienceCompositionInsights\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAudienceCompositionInsightsResponse {
     /// The contents of the insights report, organized into sections.
@@ -18813,6 +19331,7 @@ pub struct GenerateAudienceCompositionInsightsResponse {
 }
 /// Request message for
 /// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAudienceInsightsAttributesRequest {
     /// Required. The ID of the customer.
@@ -18836,6 +19355,7 @@ pub struct ListAudienceInsightsAttributesRequest {
 }
 /// Response message for
 /// \[AudienceInsightsService.ListAudienceInsightsAttributes][google.ads.googleads.v11.services.AudienceInsightsService.ListAudienceInsightsAttributes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAudienceInsightsAttributesResponse {
     /// The attributes matching the search query.
@@ -18844,6 +19364,7 @@ pub struct ListAudienceInsightsAttributesResponse {
 }
 /// An audience attribute that can be used to request insights about the
 /// audience.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsAttribute {
     /// An audience attribute.
@@ -18856,6 +19377,7 @@ pub struct AudienceInsightsAttribute {
 /// Nested message and enum types in `AudienceInsightsAttribute`.
 pub mod audience_insights_attribute {
     /// An audience attribute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Attribute {
         /// An audience attribute defined by an age range.
@@ -18893,6 +19415,7 @@ pub mod audience_insights_attribute {
     }
 }
 /// An entity or category representing a topic that defines an audience.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsTopic {
     /// An entity or category attribute.
@@ -18902,6 +19425,7 @@ pub struct AudienceInsightsTopic {
 /// Nested message and enum types in `AudienceInsightsTopic`.
 pub mod audience_insights_topic {
     /// An entity or category attribute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Topic {
         /// A Knowledge Graph entity
@@ -18913,6 +19437,7 @@ pub mod audience_insights_topic {
     }
 }
 /// A Knowledge Graph entity, represented by its machine id.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsEntity {
     /// Required. The machine id (mid) of the Knowledge Graph entity.
@@ -18920,6 +19445,7 @@ pub struct AudienceInsightsEntity {
     pub knowledge_graph_machine_id: ::prost::alloc::string::String,
 }
 /// A Product and Service category.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsCategory {
     /// Required. The criterion id of the category.
@@ -18927,6 +19453,7 @@ pub struct AudienceInsightsCategory {
     pub category_id: ::prost::alloc::string::String,
 }
 /// A YouTube Dynamic Lineup.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsDynamicLineup {
     /// Required. The numeric ID of the dynamic lineup.
@@ -18934,6 +19461,7 @@ pub struct AudienceInsightsDynamicLineup {
     pub dynamic_lineup_id: ::prost::alloc::string::String,
 }
 /// A description of an audience used for requesting insights.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BasicInsightsAudience {
     /// Required. The countries for this audience.
@@ -18962,6 +19490,7 @@ pub struct BasicInsightsAudience {
 }
 /// An audience attribute, with metadata about it, returned in response to a
 /// search.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceInsightsAttributeMetadata {
     /// The type of the attribute.
@@ -18999,6 +19528,7 @@ pub struct AudienceInsightsAttributeMetadata {
 /// Nested message and enum types in `AudienceInsightsAttributeMetadata`.
 pub mod audience_insights_attribute_metadata {
     /// Metadata specific to the dimension of this attribute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum DimensionMetadata {
         /// Special metadata for a YouTube channel.
@@ -19010,6 +19540,7 @@ pub mod audience_insights_attribute_metadata {
     }
 }
 /// Metadata associated with a YouTube channel attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YouTubeChannelAttributeMetadata {
     /// The approximate number of subscribers to the YouTube channel.
@@ -19017,6 +19548,7 @@ pub struct YouTubeChannelAttributeMetadata {
     pub subscriber_count: i64,
 }
 /// Metadata associated with a Dynamic Lineup attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DynamicLineupAttributeMetadata {
     /// The national market associated with the lineup.
@@ -19034,6 +19566,7 @@ pub struct DynamicLineupAttributeMetadata {
 }
 /// A set of users, defined by various characteristics, for which insights can
 /// be requested in AudienceInsightsService.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InsightsAudience {
     /// Required. The countries for the audience.
@@ -19076,6 +19609,7 @@ pub struct InsightsAudience {
     >,
 }
 /// A list of AudienceInsightsAttributes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InsightsAudienceAttributeGroup {
     /// Required. A collection of audience attributes to be combined with logical OR.
@@ -19087,6 +19621,7 @@ pub struct InsightsAudienceAttributeGroup {
 }
 /// A collection of related attributes of the same type in an audience
 /// composition insights report.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceCompositionSection {
     /// The type of the attributes in this section.
@@ -19108,6 +19643,7 @@ pub struct AudienceCompositionSection {
 }
 /// A collection of related attributes, with metadata and metrics, in an audience
 /// composition insights report.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceCompositionAttributeCluster {
     /// The name of this cluster of attributes
@@ -19125,6 +19661,7 @@ pub struct AudienceCompositionAttributeCluster {
 }
 /// The share and index metrics associated with an attribute in an audience
 /// composition insights report.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceCompositionMetrics {
     /// The fraction (from 0 to 1 inclusive) of the baseline audience that match
@@ -19144,6 +19681,7 @@ pub struct AudienceCompositionMetrics {
     pub score: f64,
 }
 /// An audience attribute with metadata and metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceCompositionAttribute {
     /// The attribute with its metadata.
@@ -19325,6 +19863,7 @@ pub mod audience_insights_service_client {
 }
 /// Request message for
 /// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAccountLinkRequest {
     /// Required. The ID of the customer for which the account link is created.
@@ -19336,6 +19875,7 @@ pub struct CreateAccountLinkRequest {
 }
 /// Response message for
 /// \[AccountLinkService.CreateAccountLink][google.ads.googleads.v11.services.AccountLinkService.CreateAccountLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAccountLinkResponse {
     /// Returned for successful operations. Resource name of the account link.
@@ -19343,6 +19883,7 @@ pub struct CreateAccountLinkResponse {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[AccountLinkService.MutateAccountLink][google.ads.googleads.v11.services.AccountLinkService.MutateAccountLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountLinkRequest {
     /// Required. The ID of the customer being modified.
@@ -19363,6 +19904,7 @@ pub struct MutateAccountLinkRequest {
     pub validate_only: bool,
 }
 /// A single update on an account link.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountLinkOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -19375,6 +19917,7 @@ pub struct AccountLinkOperation {
 /// Nested message and enum types in `AccountLinkOperation`.
 pub mod account_link_operation {
     /// The operation to perform.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The account link is expected to have
@@ -19390,6 +19933,7 @@ pub mod account_link_operation {
     }
 }
 /// Response message for account link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountLinkResponse {
     /// Result for the mutate.
@@ -19405,6 +19949,7 @@ pub struct MutateAccountLinkResponse {
     >,
 }
 /// The result for the account link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountLinkResult {
     /// Returned for successful operations.
@@ -19541,6 +20086,7 @@ pub mod account_link_service_client {
 }
 /// Request message for
 /// \[AccountBudgetProposalService.MutateAccountBudgetProposal][google.ads.googleads.v11.services.AccountBudgetProposalService.MutateAccountBudgetProposal\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountBudgetProposalRequest {
     /// Required. The ID of the customer.
@@ -19556,6 +20102,7 @@ pub struct MutateAccountBudgetProposalRequest {
 }
 /// A single operation to propose the creation of a new account-level budget or
 /// edit/end/remove an existing one.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AccountBudgetProposalOperation {
     /// FieldMask that determines which budget fields are modified.  While budgets
@@ -19573,6 +20120,7 @@ pub struct AccountBudgetProposalOperation {
 /// Nested message and enum types in `AccountBudgetProposalOperation`.
 pub mod account_budget_proposal_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: A new proposal to create a new budget, edit an
@@ -19591,6 +20139,7 @@ pub mod account_budget_proposal_operation {
     }
 }
 /// Response message for account-level budget mutate operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountBudgetProposalResponse {
     /// The result of the mutate.
@@ -19598,6 +20147,7 @@ pub struct MutateAccountBudgetProposalResponse {
     pub result: ::core::option::Option<MutateAccountBudgetProposalResult>,
 }
 /// The result for the account budget proposal mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateAccountBudgetProposalResult {
     /// Returned for successful operations.
@@ -19716,6 +20266,7 @@ pub mod account_budget_proposal_service_client {
 }
 /// Request message for
 /// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegenerateShareableLinkIdRequest {
     /// Resource name of the third party app analytics link.
@@ -19724,6 +20275,7 @@ pub struct RegenerateShareableLinkIdRequest {
 }
 /// Response message for
 /// \[ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId][google.ads.googleads.v11.services.ThirdPartyAppAnalyticsLinkService.RegenerateShareableLinkId\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegenerateShareableLinkIdResponse {}
 /// Generated client implementations.
@@ -19824,6 +20376,7 @@ pub mod third_party_app_analytics_link_service_client {
 }
 /// Request message for
 /// \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestGeoTargetConstantsRequest {
     /// If possible, returned geo targets are translated using this locale. If not,
@@ -19841,6 +20394,7 @@ pub struct SuggestGeoTargetConstantsRequest {
 /// Nested message and enum types in `SuggestGeoTargetConstantsRequest`.
 pub mod suggest_geo_target_constants_request {
     /// A list of location names.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LocationNames {
         /// A list of location names.
@@ -19848,6 +20402,7 @@ pub mod suggest_geo_target_constants_request {
         pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// A list of geo target constant resource names.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GeoTargets {
         /// A list of geo target constant resource names.
@@ -19857,6 +20412,7 @@ pub mod suggest_geo_target_constants_request {
         >,
     }
     /// Required. A selector of geo target constants.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Query {
         /// The location names to search by. At most 25 names can be set.
@@ -19868,6 +20424,7 @@ pub mod suggest_geo_target_constants_request {
     }
 }
 /// Response message for \[GeoTargetConstantService.SuggestGeoTargetConstants][google.ads.googleads.v11.services.GeoTargetConstantService.SuggestGeoTargetConstants\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestGeoTargetConstantsResponse {
     /// Geo target constant suggestions.
@@ -19877,6 +20434,7 @@ pub struct SuggestGeoTargetConstantsResponse {
     >,
 }
 /// A geo target constant suggestion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeoTargetConstantSuggestion {
     /// The language this GeoTargetConstantSuggestion is currently translated to.
@@ -19998,6 +20556,7 @@ pub mod geo_target_constant_service_client {
     }
 }
 /// Request message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadUserDataRequest {
     /// Required. The ID of the customer for which to update the user data.
@@ -20013,6 +20572,7 @@ pub struct UploadUserDataRequest {
 /// Nested message and enum types in `UploadUserDataRequest`.
 pub mod upload_user_data_request {
     /// Metadata of the request.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Metadata {
         /// Metadata for data updates to a Customer Match user list.
@@ -20023,6 +20583,7 @@ pub mod upload_user_data_request {
     }
 }
 /// Operation to be made for the UploadUserDataRequest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserDataOperation {
     /// Operation to be made for the UploadUserDataRequest.
@@ -20032,6 +20593,7 @@ pub struct UserDataOperation {
 /// Nested message and enum types in `UserDataOperation`.
 pub mod user_data_operation {
     /// Operation to be made for the UploadUserDataRequest.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// The list of user data to be appended to the user list.
@@ -20045,6 +20607,7 @@ pub mod user_data_operation {
 /// Response message for \[UserDataService.UploadUserData][google.ads.googleads.v11.services.UserDataService.UploadUserData\]
 /// Uploads made through this service will not be visible under the 'Segment
 /// members' section for the Customer Match List in the Google Ads UI.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadUserDataResponse {
     /// The date time at which the request was received by API, formatted as
@@ -20156,6 +20719,7 @@ pub mod user_data_service_client {
 }
 /// Request message for
 /// \[CustomerUserAccessInvitation.MutateCustomerUserAccessInvitation][\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessInvitationRequest {
     /// Required. The ID of the customer whose access invitation is being modified.
@@ -20166,6 +20730,7 @@ pub struct MutateCustomerUserAccessInvitationRequest {
     pub operation: ::core::option::Option<CustomerUserAccessInvitationOperation>,
 }
 /// A single operation (create or remove) on customer user access invitation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerUserAccessInvitationOperation {
     /// The mutate operation
@@ -20180,6 +20745,7 @@ pub struct CustomerUserAccessInvitationOperation {
 /// Nested message and enum types in `CustomerUserAccessInvitationOperation`.
 pub mod customer_user_access_invitation_operation {
     /// The mutate operation
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new access
@@ -20195,6 +20761,7 @@ pub mod customer_user_access_invitation_operation {
     }
 }
 /// Response message for access invitation mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessInvitationResponse {
     /// Result for the mutate.
@@ -20202,6 +20769,7 @@ pub struct MutateCustomerUserAccessInvitationResponse {
     pub result: ::core::option::Option<MutateCustomerUserAccessInvitationResult>,
 }
 /// The result for the access invitation mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessInvitationResult {
     /// Returned for successful operations.
@@ -20308,6 +20876,7 @@ pub mod customer_user_access_invitation_service_client {
 }
 /// Request message for
 /// \[SmartCampaignSuggestService.SuggestSmartCampaignBudgets][\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestSmartCampaignBudgetOptionsRequest {
     /// Required. The ID of the customer whose budget options are to be suggested.
@@ -20329,6 +20898,7 @@ pub mod suggest_smart_campaign_budget_options_request {
     /// Required. For first time campaign creation use SuggestionInfo, for
     /// subsequent updates on BudgetOptions based on an already created campaign
     /// use that campaign.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SuggestionData {
         /// Required. The resource name of the campaign to get suggestion for.
@@ -20341,6 +20911,7 @@ pub mod suggest_smart_campaign_budget_options_request {
 }
 /// Information needed to get suggestion for Smart Campaign. More information
 /// provided will help the system to derive better suggestions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SmartCampaignSuggestionInfo {
     /// Optional. Landing page URL of the campaign.
@@ -20372,6 +20943,7 @@ pub struct SmartCampaignSuggestionInfo {
 /// Nested message and enum types in `SmartCampaignSuggestionInfo`.
 pub mod smart_campaign_suggestion_info {
     /// A list of locations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LocationList {
         /// Required. Locations.
@@ -20379,6 +20951,7 @@ pub mod smart_campaign_suggestion_info {
         pub locations: ::prost::alloc::vec::Vec<super::super::common::LocationInfo>,
     }
     /// A context that describes a business.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BusinessContext {
         /// Optional. The name of the business.
@@ -20388,6 +20961,7 @@ pub mod smart_campaign_suggestion_info {
     /// The business settings to consider when generating suggestions.
     /// Settings are automatically extracted from the business when provided.
     /// Otherwise, these settings must be specified explicitly.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BusinessSetting {
         /// Optional. Context describing the business to advertise.
@@ -20406,6 +20980,7 @@ pub mod smart_campaign_suggestion_info {
     }
     /// The geo target of the campaign, either a list of locations or
     /// a single proximity shall be specified.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum GeoTarget {
         /// Optional. The targeting geo location by locations.
@@ -20420,6 +20995,7 @@ pub mod smart_campaign_suggestion_info {
 /// \[SmartCampaignSuggestService.SuggestSmartCampaignBudgets][\]. Depending on
 /// whether the system could suggest the options, either all of the options or
 /// none of them might be returned.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestSmartCampaignBudgetOptionsResponse {
     /// Optional. The lowest budget option.
@@ -20441,6 +21017,7 @@ pub struct SuggestSmartCampaignBudgetOptionsResponse {
 /// Nested message and enum types in `SuggestSmartCampaignBudgetOptionsResponse`.
 pub mod suggest_smart_campaign_budget_options_response {
     /// Performance metrics for a given budget option.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Metrics {
         /// The estimated min daily clicks.
@@ -20451,6 +21028,7 @@ pub mod suggest_smart_campaign_budget_options_response {
         pub max_daily_clicks: i64,
     }
     /// Smart Campaign budget option.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BudgetOption {
         /// The amount of the budget, in the local currency for the account.
@@ -20466,6 +21044,7 @@ pub mod suggest_smart_campaign_budget_options_response {
 }
 /// Request message for
 /// \[SmartCampaignSuggestService.SuggestSmartCampaignAd][google.ads.googleads.v11.services.SmartCampaignSuggestService.SuggestSmartCampaignAd\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestSmartCampaignAdRequest {
     /// Required. The ID of the customer.
@@ -20480,6 +21059,7 @@ pub struct SuggestSmartCampaignAdRequest {
 }
 /// Response message for
 /// \[SmartCampaignSuggestService.SuggestSmartCampaignAd][google.ads.googleads.v11.services.SmartCampaignSuggestService.SuggestSmartCampaignAd\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestSmartCampaignAdResponse {
     /// Optional. Ad info includes 3 creative headlines and 2 creative descriptions.
@@ -20488,6 +21068,7 @@ pub struct SuggestSmartCampaignAdResponse {
 }
 /// Request message for
 /// \[SmartCampaignSuggestService.SuggestKeywordThemes][google.ads.googleads.v11.services.SmartCampaignSuggestService.SuggestKeywordThemes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestKeywordThemesRequest {
     /// Required. The ID of the customer.
@@ -20506,6 +21087,7 @@ pub struct SuggestKeywordThemesRequest {
 }
 /// Response message for
 /// \[SmartCampaignSuggestService.SuggestKeywordThemes][google.ads.googleads.v11.services.SmartCampaignSuggestService.SuggestKeywordThemes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuggestKeywordThemesResponse {
     /// Smart campaign keyword theme suggestions.
@@ -20648,6 +21230,7 @@ pub mod smart_campaign_suggest_service_client {
     }
 }
 /// Request message for fetching all accessible payments accounts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPaymentsAccountsRequest {
     /// Required. The ID of the customer to apply the PaymentsAccount list operation to.
@@ -20655,6 +21238,7 @@ pub struct ListPaymentsAccountsRequest {
     pub customer_id: ::prost::alloc::string::String,
 }
 /// Response message for \[PaymentsAccountService.ListPaymentsAccounts][google.ads.googleads.v11.services.PaymentsAccountService.ListPaymentsAccounts\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPaymentsAccountsResponse {
     /// The list of accessible payments accounts.
@@ -20760,6 +21344,7 @@ pub mod payments_account_service_client {
     }
 }
 /// Request message for \[MerchantCenterLinkService.ListMerchantCenterLinks][google.ads.googleads.v11.services.MerchantCenterLinkService.ListMerchantCenterLinks\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMerchantCenterLinksRequest {
     /// Required. The ID of the customer onto which to apply the Merchant Center link list
@@ -20768,6 +21353,7 @@ pub struct ListMerchantCenterLinksRequest {
     pub customer_id: ::prost::alloc::string::String,
 }
 /// Response message for \[MerchantCenterLinkService.ListMerchantCenterLinks][google.ads.googleads.v11.services.MerchantCenterLinkService.ListMerchantCenterLinks\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListMerchantCenterLinksResponse {
     /// Merchant Center links available for the requested customer
@@ -20777,6 +21363,7 @@ pub struct ListMerchantCenterLinksResponse {
     >,
 }
 /// Request message for \[MerchantCenterLinkService.GetMerchantCenterLink][google.ads.googleads.v11.services.MerchantCenterLinkService.GetMerchantCenterLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetMerchantCenterLinkRequest {
     /// Required. Resource name of the Merchant Center link.
@@ -20784,6 +21371,7 @@ pub struct GetMerchantCenterLinkRequest {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// Request message for \[MerchantCenterLinkService.MutateMerchantCenterLink][google.ads.googleads.v11.services.MerchantCenterLinkService.MutateMerchantCenterLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMerchantCenterLinkRequest {
     /// Required. The ID of the customer being modified.
@@ -20798,6 +21386,7 @@ pub struct MutateMerchantCenterLinkRequest {
     pub validate_only: bool,
 }
 /// A single update on a Merchant Center link.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerchantCenterLinkOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -20810,6 +21399,7 @@ pub struct MerchantCenterLinkOperation {
 /// Nested message and enum types in `MerchantCenterLinkOperation`.
 pub mod merchant_center_link_operation {
     /// The operation to perform
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The merchant center link is expected to have a valid
@@ -20825,6 +21415,7 @@ pub mod merchant_center_link_operation {
     }
 }
 /// Response message for Merchant Center link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMerchantCenterLinkResponse {
     /// Result for the mutate.
@@ -20832,6 +21423,7 @@ pub struct MutateMerchantCenterLinkResponse {
     pub result: ::core::option::Option<MutateMerchantCenterLinkResult>,
 }
 /// The result for the Merchant Center link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateMerchantCenterLinkResult {
     /// Returned for successful operations.
@@ -20997,6 +21589,7 @@ pub mod merchant_center_link_service_client {
     }
 }
 /// Request message for \[CustomerClientLinkService.MutateCustomerClientLink][google.ads.googleads.v11.services.CustomerClientLinkService.MutateCustomerClientLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerClientLinkRequest {
     /// Required. The ID of the customer whose customer link are being modified.
@@ -21011,6 +21604,7 @@ pub struct MutateCustomerClientLinkRequest {
     pub validate_only: bool,
 }
 /// A single operation (create, update) on a CustomerClientLink.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerClientLinkOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -21023,6 +21617,7 @@ pub struct CustomerClientLinkOperation {
 /// Nested message and enum types in `CustomerClientLinkOperation`.
 pub mod customer_client_link_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Create operation: No resource name is expected for the new link.
@@ -21034,6 +21629,7 @@ pub mod customer_client_link_operation {
     }
 }
 /// Response message for a CustomerClientLink mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerClientLinkResponse {
     /// A result that identifies the resource affected by the mutate request.
@@ -21041,6 +21637,7 @@ pub struct MutateCustomerClientLinkResponse {
     pub result: ::core::option::Option<MutateCustomerClientLinkResult>,
 }
 /// The result for a single customer client link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerClientLinkResult {
     /// Returned for successful operations.
@@ -21148,6 +21745,7 @@ pub mod customer_client_link_service_client {
     }
 }
 /// Request message for billing setup mutate operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBillingSetupRequest {
     /// Required. Id of the customer to apply the billing setup mutate operation to.
@@ -21159,6 +21757,7 @@ pub struct MutateBillingSetupRequest {
 }
 /// A single operation on a billing setup, which describes the cancellation of an
 /// existing billing setup.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BillingSetupOperation {
     /// Only one of these operations can be set. "Update" operations are not
@@ -21170,6 +21769,7 @@ pub struct BillingSetupOperation {
 pub mod billing_setup_operation {
     /// Only one of these operations can be set. "Update" operations are not
     /// supported.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Creates a billing setup. No resource name is expected for the new billing
@@ -21185,6 +21785,7 @@ pub mod billing_setup_operation {
     }
 }
 /// Response message for a billing setup operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBillingSetupResponse {
     /// A result that identifies the resource affected by the mutate request.
@@ -21192,6 +21793,7 @@ pub struct MutateBillingSetupResponse {
     pub result: ::core::option::Option<MutateBillingSetupResult>,
 }
 /// Result for a single billing setup mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateBillingSetupResult {
     /// Returned for successful operations.
@@ -21300,6 +21902,7 @@ pub mod billing_setup_service_client {
     }
 }
 /// Request message for \[CustomerManagerLinkService.MutateCustomerManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MutateCustomerManagerLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerManagerLinkRequest {
     /// Required. The ID of the customer whose customer manager links are being modified.
@@ -21314,6 +21917,7 @@ pub struct MutateCustomerManagerLinkRequest {
     pub validate_only: bool,
 }
 /// Request message for \[CustomerManagerLinkService.MoveManagerLink][google.ads.googleads.v11.services.CustomerManagerLinkService.MoveManagerLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MoveManagerLinkRequest {
     /// Required. The ID of the client customer that is being moved.
@@ -21338,6 +21942,7 @@ pub struct MoveManagerLinkRequest {
 /// 1. Update operation with status ACTIVE accepts a pending invitation.
 /// 2. Update operation with status REFUSED declines a pending invitation.
 /// 3. Update operation with status INACTIVE terminates link to manager.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerManagerLinkOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -21350,6 +21955,7 @@ pub struct CustomerManagerLinkOperation {
 /// Nested message and enum types in `CustomerManagerLinkOperation`.
 pub mod customer_manager_link_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The link is expected to have a valid resource name.
@@ -21358,6 +21964,7 @@ pub mod customer_manager_link_operation {
     }
 }
 /// Response message for a CustomerManagerLink mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerManagerLinkResponse {
     /// A result that identifies the resource affected by the mutate request.
@@ -21365,6 +21972,7 @@ pub struct MutateCustomerManagerLinkResponse {
     pub results: ::prost::alloc::vec::Vec<MutateCustomerManagerLinkResult>,
 }
 /// Response message for a CustomerManagerLink moveManagerLink.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MoveManagerLinkResponse {
     /// Returned for successful operations. Represents a CustomerManagerLink
@@ -21374,6 +21982,7 @@ pub struct MoveManagerLinkResponse {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// The result for the customer manager link mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerManagerLinkResult {
     /// Returned for successful operations.
@@ -21516,6 +22125,7 @@ pub mod customer_manager_link_service_client {
 }
 /// Request message for
 /// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadConversionAdjustmentsRequest {
     /// Required. The ID of the customer performing the upload.
@@ -21540,6 +22150,7 @@ pub struct UploadConversionAdjustmentsRequest {
 }
 /// Response message for
 /// \[ConversionAdjustmentUploadService.UploadConversionAdjustments][google.ads.googleads.v11.services.ConversionAdjustmentUploadService.UploadConversionAdjustments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadConversionAdjustmentsResponse {
     /// Errors that pertain to conversion adjustment failures in the partial
@@ -21559,6 +22170,7 @@ pub struct UploadConversionAdjustmentsResponse {
     pub results: ::prost::alloc::vec::Vec<ConversionAdjustmentResult>,
 }
 /// A conversion adjustment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionAdjustment {
     /// For adjustments, uniquely identifies a conversion that was reported
@@ -21614,6 +22226,7 @@ pub struct ConversionAdjustment {
     pub user_agent: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Contains information needed to restate a conversion's value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RestatementValue {
     /// The restated conversion value. This is the value of the conversion after
@@ -21634,6 +22247,7 @@ pub struct RestatementValue {
 }
 /// Uniquely identifies a conversion that was reported without an order ID
 /// specified.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GclidDateTimePair {
     /// Google click ID (gclid) associated with the original conversion for this
@@ -21647,6 +22261,7 @@ pub struct GclidDateTimePair {
     pub conversion_date_time: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Information identifying a successfully processed ConversionAdjustment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionAdjustmentResult {
     /// The gclid and conversion date time of the conversion.
@@ -21767,6 +22382,7 @@ pub mod conversion_adjustment_upload_service_client {
 }
 /// Request message for fetching the invoices of a given billing setup that were
 /// issued during a given month.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInvoicesRequest {
     /// Required. The ID of the customer to fetch invoices for.
@@ -21786,6 +22402,7 @@ pub struct ListInvoicesRequest {
     pub issue_month: i32,
 }
 /// Response message for \[InvoiceService.ListInvoices][google.ads.googleads.v11.services.InvoiceService.ListInvoices\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInvoicesResponse {
     /// The list of invoices that match the billing setup and time period.
@@ -21885,6 +22502,7 @@ pub mod invoice_service_client {
 }
 /// Mutate Request for
 /// \[CustomerUserAccessService.MutateCustomerUserAccess][google.ads.googleads.v11.services.CustomerUserAccessService.MutateCustomerUserAccess\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessRequest {
     /// Required. The ID of the customer being modified.
@@ -21895,6 +22513,7 @@ pub struct MutateCustomerUserAccessRequest {
     pub operation: ::core::option::Option<CustomerUserAccessOperation>,
 }
 /// A single operation (update, remove) on customer user access.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerUserAccessOperation {
     /// FieldMask that determines which resource fields are modified in an update.
@@ -21907,6 +22526,7 @@ pub struct CustomerUserAccessOperation {
 /// Nested message and enum types in `CustomerUserAccessOperation`.
 pub mod customer_user_access_operation {
     /// The mutate operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Operation {
         /// Update operation: The customer user access is expected to have a valid
@@ -21922,6 +22542,7 @@ pub mod customer_user_access_operation {
     }
 }
 /// Response message for customer user access mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessResponse {
     /// Result for the mutate.
@@ -21929,6 +22550,7 @@ pub struct MutateCustomerUserAccessResponse {
     pub result: ::core::option::Option<MutateCustomerUserAccessResult>,
 }
 /// The result for the customer user access mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MutateCustomerUserAccessResult {
     /// Returned for successful operations.
@@ -22034,9 +22656,11 @@ pub mod customer_user_access_service_client {
     }
 }
 /// Request message for \[ReachPlanService.ListPlannableLocations][google.ads.googleads.v11.services.ReachPlanService.ListPlannableLocations\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPlannableLocationsRequest {}
 /// The list of plannable locations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPlannableLocationsResponse {
     /// The list of locations available for planning.
@@ -22047,6 +22671,7 @@ pub struct ListPlannableLocationsResponse {
     pub plannable_locations: ::prost::alloc::vec::Vec<PlannableLocation>,
 }
 /// A plannable location: country, metro region, province, etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlannableLocation {
     /// The location identifier.
@@ -22071,6 +22696,7 @@ pub struct PlannableLocation {
     pub location_type: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Request to list available products in a given location.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPlannableProductsRequest {
     /// Required. The ID of the selected location for planning. To list the available
@@ -22079,6 +22705,7 @@ pub struct ListPlannableProductsRequest {
     pub plannable_location_id: ::prost::alloc::string::String,
 }
 /// A response with all available products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPlannableProductsResponse {
     /// The list of products available for planning and related targeting metadata.
@@ -22086,6 +22713,7 @@ pub struct ListPlannableProductsResponse {
     pub product_metadata: ::prost::alloc::vec::Vec<ProductMetadata>,
 }
 /// The metadata associated with an available plannable product.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductMetadata {
     /// The code associated with the ad product (for example: BUMPER,
@@ -22102,6 +22730,7 @@ pub struct ProductMetadata {
     pub plannable_targeting: ::core::option::Option<PlannableTargeting>,
 }
 /// The targeting for which traffic metrics will be reported.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlannableTargeting {
     /// Allowed plannable age ranges for the product for which metrics will be
@@ -22134,6 +22763,7 @@ pub struct PlannableTargeting {
     pub youtube_select_lineups: ::prost::alloc::vec::Vec<YouTubeSelectLineUp>,
 }
 /// Request message for \[ReachPlanService.GenerateProductMixIdeas][google.ads.googleads.v11.services.ReachPlanService.GenerateProductMixIdeas\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateProductMixIdeasRequest {
     /// Required. The ID of the customer.
@@ -22158,6 +22788,7 @@ pub struct GenerateProductMixIdeasRequest {
     pub preferences: ::core::option::Option<Preferences>,
 }
 /// Set of preferences about the planned mix.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Preferences {
     /// True if ad skippable.
@@ -22186,6 +22817,7 @@ pub struct Preferences {
     pub has_guaranteed_price: ::core::option::Option<bool>,
 }
 /// The suggested product mix.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateProductMixIdeasResponse {
     /// A list of products (ad formats) and the associated budget allocation idea.
@@ -22193,6 +22825,7 @@ pub struct GenerateProductMixIdeasResponse {
     pub product_allocation: ::prost::alloc::vec::Vec<ProductAllocation>,
 }
 /// An allocation of a part of the budget on a given product.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductAllocation {
     /// Selected product for planning. The product codes returned are within the
@@ -22206,6 +22839,7 @@ pub struct ProductAllocation {
     pub budget_micros: ::core::option::Option<i64>,
 }
 /// Request message for \[ReachPlanService.GenerateReachForecast][google.ads.googleads.v11.services.ReachPlanService.GenerateReachForecast\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateReachForecastRequest {
     /// Required. The ID of the customer.
@@ -22278,6 +22912,7 @@ pub struct GenerateReachForecastRequest {
     pub customer_reach_group: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Effective frequency limit.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EffectiveFrequencyLimit {
     /// The highest effective frequency value to include in
@@ -22288,6 +22923,7 @@ pub struct EffectiveFrequencyLimit {
 }
 /// A rule specifying the maximum number of times an ad can be shown to a user
 /// over a particular time period.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FrequencyCap {
     /// Required. The number of impressions, inclusive.
@@ -22301,6 +22937,7 @@ pub struct FrequencyCap {
     pub time_unit: i32,
 }
 /// The targeting for which traffic metrics will be reported.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Targeting {
     /// Required. The ID of the selected location. Plannable location IDs can be
@@ -22339,6 +22976,7 @@ pub struct Targeting {
     pub audience_targeting: ::core::option::Option<AudienceTargeting>,
 }
 /// The duration of a planned campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignDuration {
     /// The duration value in days.
@@ -22356,6 +22994,7 @@ pub struct CampaignDuration {
     pub date_range: ::core::option::Option<super::common::DateRange>,
 }
 /// A product being planned for reach.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlannedProduct {
     /// Required. Selected product for planning.
@@ -22376,6 +23015,7 @@ pub struct PlannedProduct {
     pub advanced_product_targeting: ::core::option::Option<AdvancedProductTargeting>,
 }
 /// Response message containing the generated reach curve.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateReachForecastResponse {
     /// Reference on target audiences for this curve.
@@ -22386,6 +23026,7 @@ pub struct GenerateReachForecastResponse {
     pub reach_curve: ::core::option::Option<ReachCurve>,
 }
 /// The reach curve for the planned products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReachCurve {
     /// All points on the reach curve.
@@ -22393,6 +23034,7 @@ pub struct ReachCurve {
     pub reach_forecasts: ::prost::alloc::vec::Vec<ReachForecast>,
 }
 /// A point on reach curve.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReachForecast {
     /// The cost in micros.
@@ -22409,6 +23051,7 @@ pub struct ReachForecast {
     >,
 }
 /// Forecasted traffic metrics for the planned products and targeting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Forecast {
     /// Number of unique people reached at least
@@ -22473,6 +23116,7 @@ pub struct Forecast {
 }
 /// The forecasted allocation and traffic metrics for a specific product
 /// at a point on the reach curve.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlannedProductReachForecast {
     /// Selected product for planning. The product codes returned are within the
@@ -22490,6 +23134,7 @@ pub struct PlannedProductReachForecast {
     pub planned_product_forecast: ::core::option::Option<PlannedProductForecast>,
 }
 /// Forecasted traffic metrics for a planned product.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PlannedProductForecast {
     /// Number of unique people reached that exactly matches the Targeting.
@@ -22545,6 +23190,7 @@ pub struct PlannedProductForecast {
 /// - Location
 /// - PlannableAgeRange
 /// - Gender
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OnTargetAudienceMetrics {
     /// Reference audience size matching the considered targeting for YouTube.
@@ -22556,6 +23202,7 @@ pub struct OnTargetAudienceMetrics {
 }
 /// A breakdown of the number of unique people reached at a given effective
 /// frequency.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EffectiveFrequencyBreakdown {
     /// The effective frequency \[1-10\].
@@ -22587,6 +23234,7 @@ pub struct EffectiveFrequencyBreakdown {
     pub on_target_effective_coview_reach: ::core::option::Option<i64>,
 }
 /// Controls forecast metrics to return.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ForecastMetricOptions {
     /// Indicates whether to include co-view metrics in the response forecast.
@@ -22594,6 +23242,7 @@ pub struct ForecastMetricOptions {
     pub include_coview: bool,
 }
 /// Audience targeting for reach forecast.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AudienceTargeting {
     /// List of audiences based on user interests to be targeted.
@@ -22601,6 +23250,7 @@ pub struct AudienceTargeting {
     pub user_interest: ::prost::alloc::vec::Vec<super::common::UserInterestInfo>,
 }
 /// Advanced targeting settings for products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdvancedProductTargeting {
     /// Targeting options for this product.
@@ -22612,6 +23262,7 @@ pub struct AdvancedProductTargeting {
 /// Nested message and enum types in `AdvancedProductTargeting`.
 pub mod advanced_product_targeting {
     /// Targeting options for this product.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum AdvancedTargeting {
         /// Settings for YouTube Select targeting.
@@ -22620,6 +23271,7 @@ pub mod advanced_product_targeting {
     }
 }
 /// Request settings for YouTube Select Lineups
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YouTubeSelectSettings {
     /// Lineup for YouTube Select Targeting.
@@ -22627,6 +23279,7 @@ pub struct YouTubeSelectSettings {
     pub lineup_id: i64,
 }
 /// A Plannable YouTube Select Lineup for product targeting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YouTubeSelectLineUp {
     /// The ID of the YouTube Select Lineup.

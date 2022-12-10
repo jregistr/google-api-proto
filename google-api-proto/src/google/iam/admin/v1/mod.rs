@@ -9,6 +9,7 @@
 /// service account, as well as a name that must be unique within the project.
 /// IAM uses these values to create an email address that identifies the service
 /// account.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServiceAccount {
     /// The resource name of the service account.
@@ -66,6 +67,7 @@ pub struct ServiceAccount {
     pub disabled: bool,
 }
 /// The service account create request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateServiceAccountRequest {
     /// Required. The resource name of the project associated with the service
@@ -85,6 +87,7 @@ pub struct CreateServiceAccountRequest {
     pub service_account: ::core::option::Option<ServiceAccount>,
 }
 /// The service account list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServiceAccountsRequest {
     /// Required. The resource name of the project associated with the service
@@ -105,6 +108,7 @@ pub struct ListServiceAccountsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The service account list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServiceAccountsResponse {
     /// The list of matching service accounts.
@@ -117,6 +121,7 @@ pub struct ListServiceAccountsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The service account get request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetServiceAccountRequest {
     /// Required. The resource name of the service account in the following format:
@@ -128,6 +133,7 @@ pub struct GetServiceAccountRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The service account delete request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteServiceAccountRequest {
     /// Required. The resource name of the service account in the following format:
@@ -145,6 +151,7 @@ pub struct DeleteServiceAccountRequest {
 ///
 /// Only the fields specified in the request are guaranteed to be returned in
 /// the response. Other fields may be empty in the response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchServiceAccountRequest {
     #[prost(message, optional, tag = "1")]
@@ -153,6 +160,7 @@ pub struct PatchServiceAccountRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The service account undelete request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeleteServiceAccountRequest {
     /// The resource name of the service account in the following format:
@@ -162,6 +170,7 @@ pub struct UndeleteServiceAccountRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeleteServiceAccountResponse {
     /// Metadata for the restored service account.
@@ -169,6 +178,7 @@ pub struct UndeleteServiceAccountResponse {
     pub restored_account: ::core::option::Option<ServiceAccount>,
 }
 /// The service account enable request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableServiceAccountRequest {
     /// The resource name of the service account in the following format:
@@ -180,6 +190,7 @@ pub struct EnableServiceAccountRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The service account disable request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DisableServiceAccountRequest {
     /// The resource name of the service account in the following format:
@@ -191,6 +202,7 @@ pub struct DisableServiceAccountRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The service account keys list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServiceAccountKeysRequest {
     /// Required. The resource name of the service account in the following format:
@@ -251,6 +263,7 @@ pub mod list_service_account_keys_request {
     }
 }
 /// The service account keys list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServiceAccountKeysResponse {
     /// The public keys for the service account.
@@ -258,6 +271,7 @@ pub struct ListServiceAccountKeysResponse {
     pub keys: ::prost::alloc::vec::Vec<ServiceAccountKey>,
 }
 /// The service account key get by id request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetServiceAccountKeyRequest {
     /// Required. The resource name of the service account key in the following format:
@@ -297,6 +311,7 @@ pub struct GetServiceAccountKeyRequest {
 ///
 /// Public keys for all service accounts are also published at the OAuth2
 /// Service Account API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServiceAccountKey {
     /// The resource name of the service account key in the following format
@@ -346,6 +361,7 @@ pub struct ServiceAccountKey {
     pub disabled: bool,
 }
 /// The service account key create request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateServiceAccountKeyRequest {
     /// Required. The resource name of the service account in the following format:
@@ -367,6 +383,7 @@ pub struct CreateServiceAccountKeyRequest {
     pub key_algorithm: i32,
 }
 /// The service account key upload request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadServiceAccountKeyRequest {
     /// The resource name of the service account in the following format:
@@ -384,6 +401,7 @@ pub struct UploadServiceAccountKeyRequest {
     pub public_key_data: ::prost::bytes::Bytes,
 }
 /// The service account key delete request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteServiceAccountKeyRequest {
     /// Required. The resource name of the service account key in the following format:
@@ -395,6 +413,7 @@ pub struct DeleteServiceAccountKeyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The service account key disable request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DisableServiceAccountKeyRequest {
     /// Required. The resource name of the service account key in the following format:
@@ -407,6 +426,7 @@ pub struct DisableServiceAccountKeyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The service account key enable request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableServiceAccountKeyRequest {
     /// Required. The resource name of the service account key in the following format:
@@ -422,6 +442,7 @@ pub struct EnableServiceAccountKeyRequest {
 /// API](<https://cloud.google.com/iam/help/credentials/migrate-api>).
 ///
 /// The service account sign blob request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SignBlobRequest {
     /// Required. Deprecated. [Migrate to Service Account Credentials
@@ -447,6 +468,7 @@ pub struct SignBlobRequest {
 /// API](<https://cloud.google.com/iam/help/credentials/migrate-api>).
 ///
 /// The service account sign blob response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SignBlobResponse {
     /// Deprecated. [Migrate to Service Account Credentials
@@ -468,6 +490,7 @@ pub struct SignBlobResponse {
 /// API](<https://cloud.google.com/iam/help/credentials/migrate-api>).
 ///
 /// The service account sign JWT request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SignJwtRequest {
     /// Required. Deprecated. [Migrate to Service Account Credentials
@@ -502,6 +525,7 @@ pub struct SignJwtRequest {
 /// API](<https://cloud.google.com/iam/help/credentials/migrate-api>).
 ///
 /// The service account sign JWT response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SignJwtResponse {
     /// Deprecated. [Migrate to Service Account Credentials
@@ -520,6 +544,7 @@ pub struct SignJwtResponse {
     pub signed_jwt: ::prost::alloc::string::String,
 }
 /// A role in the Identity and Access Management API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Role {
     /// The name of the role.
@@ -604,6 +629,7 @@ pub mod role {
     }
 }
 /// The grantable role query request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryGrantableRolesRequest {
     /// Required. The full resource name to query from the list of grantable roles.
@@ -626,6 +652,7 @@ pub struct QueryGrantableRolesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The grantable role query response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryGrantableRolesResponse {
     /// The list of matching roles.
@@ -637,6 +664,7 @@ pub struct QueryGrantableRolesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request to get all roles defined under a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolesRequest {
     /// The `parent` parameter's value depends on the target resource for the
@@ -690,6 +718,7 @@ pub struct ListRolesRequest {
     pub show_deleted: bool,
 }
 /// The response containing the roles defined under a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolesResponse {
     /// The Roles defined on this resource.
@@ -701,6 +730,7 @@ pub struct ListRolesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// The request to get the definition of an existing role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRoleRequest {
     /// The `name` parameter's value depends on the target resource for the
@@ -738,6 +768,7 @@ pub struct GetRoleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The request to create a new role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRoleRequest {
     /// The `parent` parameter's value depends on the target resource for the
@@ -777,6 +808,7 @@ pub struct CreateRoleRequest {
     pub role: ::core::option::Option<Role>,
 }
 /// The request to update a role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateRoleRequest {
     /// The `name` parameter's value depends on the target resource for the
@@ -812,6 +844,7 @@ pub struct UpdateRoleRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// The request to delete an existing role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteRoleRequest {
     /// The `name` parameter's value depends on the target resource for the
@@ -844,6 +877,7 @@ pub struct DeleteRoleRequest {
     pub etag: ::prost::bytes::Bytes,
 }
 /// The request to undelete an existing role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeleteRoleRequest {
     /// The `name` parameter's value depends on the target resource for the
@@ -876,6 +910,7 @@ pub struct UndeleteRoleRequest {
     pub etag: ::prost::bytes::Bytes,
 }
 /// A permission which can be included by a role.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Permission {
     /// The name of this Permission.
@@ -980,6 +1015,7 @@ pub mod permission {
     }
 }
 /// A request to get permissions which can be tested on a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryTestablePermissionsRequest {
     /// Required. The full resource name to query from the list of testable
@@ -1001,6 +1037,7 @@ pub struct QueryTestablePermissionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response containing permissions which can be tested on a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryTestablePermissionsResponse {
     /// The Permissions testable on the requested resource.
@@ -1012,6 +1049,7 @@ pub struct QueryTestablePermissionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// A request to get the list of auditable services for a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryAuditableServicesRequest {
     /// Required. The full resource name to query from the list of auditable
@@ -1024,6 +1062,7 @@ pub struct QueryAuditableServicesRequest {
     pub full_resource_name: ::prost::alloc::string::String,
 }
 /// A response containing a list of auditable services for a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryAuditableServicesResponse {
     /// The auditable services for a resource.
@@ -1035,6 +1074,7 @@ pub struct QueryAuditableServicesResponse {
 /// Nested message and enum types in `QueryAuditableServicesResponse`.
 pub mod query_auditable_services_response {
     /// Contains information about an auditable service.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AuditableService {
         /// Public name of the service.
@@ -1044,6 +1084,7 @@ pub mod query_auditable_services_response {
     }
 }
 /// The request to lint a Cloud IAM policy object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LintPolicyRequest {
     /// The full resource name of the policy this lint request is about.
@@ -1064,6 +1105,7 @@ pub struct LintPolicyRequest {
 /// Nested message and enum types in `LintPolicyRequest`.
 pub mod lint_policy_request {
     /// Required. The Cloud IAM object to be linted.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum LintObject {
         /// \[google.iam.v1.Binding.condition\] \[google.iam.v1.Binding.condition\] object to be linted.
@@ -1072,6 +1114,7 @@ pub mod lint_policy_request {
     }
 }
 /// Structured response of a single validation unit.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LintResult {
     /// The validation unit level.
@@ -1198,6 +1241,7 @@ pub mod lint_result {
 }
 /// The response of a lint operation. An empty response indicates
 /// the operation was able to fully execute and no lint issue was found.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LintPolicyResponse {
     /// List of lint results sorted by `severity` in descending order.
@@ -2187,6 +2231,7 @@ pub mod iam_client {
 /// Audit log information specific to Cloud IAM admin APIs. This message is
 /// serialized as an `Any` type in the `ServiceData` message of an
 /// `AuditLog` message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuditData {
     /// The permission_delta when when creating or updating a Role.
@@ -2197,6 +2242,7 @@ pub struct AuditData {
 pub mod audit_data {
     /// A PermissionDelta message to record the added_permissions and
     /// removed_permissions inside a role.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PermissionDelta {
         /// Added permissions.

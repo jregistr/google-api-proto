@@ -1,4 +1,5 @@
 /// Workload Identity settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkloadIdentityConfig {
     /// The OIDC issuer URL for this cluster.
@@ -13,6 +14,7 @@ pub struct WorkloadIdentityConfig {
     pub identity_provider: ::prost::alloc::string::String,
 }
 /// Constraints applied to pods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MaxPodsConstraint {
     /// Required. The maximum number of pods to schedule on a single node.
@@ -20,6 +22,7 @@ pub struct MaxPodsConstraint {
     pub max_pods_per_node: i64,
 }
 /// Metadata about a long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time at which this operation was created.
@@ -39,6 +42,7 @@ pub struct OperationMetadata {
     pub error_detail: ::prost::alloc::string::String,
 }
 /// The taint content for the node taint.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NodeTaint {
     /// Required. Key for the taint.
@@ -106,6 +110,7 @@ pub mod node_taint {
 /// See [Anthos
 /// Fleets](<https://cloud.google.com/anthos/multicluster-management/fleets>) for
 /// more details on Anthos multi-cluster capabilities using Fleets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Fleet {
     /// Required. The name of the Fleet host project where this cluster will be registered.
@@ -122,6 +127,7 @@ pub struct Fleet {
     pub membership: ::prost::alloc::string::String,
 }
 /// Parameters that describe the Logging configuration in a cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LoggingConfig {
     /// The configuration of the logging components;
@@ -129,6 +135,7 @@ pub struct LoggingConfig {
     pub component_config: ::core::option::Option<LoggingComponentConfig>,
 }
 /// Parameters that describe the Logging component configuration in a cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LoggingComponentConfig {
     /// The components to be enabled.
@@ -173,6 +180,7 @@ pub mod logging_component_config {
     }
 }
 /// An Anthos cluster running on AWS.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsCluster {
     /// The name of this resource.
@@ -311,6 +319,7 @@ pub mod aws_cluster {
     }
 }
 /// ControlPlane defines common parameters between control plane nodes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsControlPlane {
     /// Required. The Kubernetes version to run on control plane replicas
@@ -393,6 +402,7 @@ pub struct AwsControlPlane {
     pub instance_placement: ::core::option::Option<AwsInstancePlacement>,
 }
 /// Authentication configuration for the management of AWS resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsServicesAuthentication {
     /// Required. The Amazon Resource Name (ARN) of the role that the Anthos Multi-Cloud API
@@ -406,6 +416,7 @@ pub struct AwsServicesAuthentication {
     pub role_session_name: ::prost::alloc::string::String,
 }
 /// Configuration related to the cluster RBAC settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsAuthorization {
     /// Required. Users that can perform operations as a cluster admin. A managed
@@ -418,6 +429,7 @@ pub struct AwsAuthorization {
     pub admin_users: ::prost::alloc::vec::Vec<AwsClusterUser>,
 }
 /// Identities of a user-type subject for AWS clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsClusterUser {
     /// Required. The name of the user, e.g. `my-gcp-id@gmail.com`.
@@ -425,6 +437,7 @@ pub struct AwsClusterUser {
     pub username: ::prost::alloc::string::String,
 }
 /// Configuration related to application-layer secrets encryption.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsDatabaseEncryption {
     /// Required. The ARN of the AWS KMS key used to encrypt cluster secrets.
@@ -432,6 +445,7 @@ pub struct AwsDatabaseEncryption {
     pub kms_key_arn: ::prost::alloc::string::String,
 }
 /// Configuration template for AWS EBS volumes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsVolumeTemplate {
     /// Optional. The size of the volume, in GiBs.
@@ -500,6 +514,7 @@ pub mod aws_volume_template {
 ///
 /// Anthos clusters on AWS run on a single VPC. This includes control
 /// plane replicas and node pool nodes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsClusterNetworking {
     /// Required. The VPC associated with the cluster. All component clusters
@@ -524,6 +539,7 @@ pub struct AwsClusterNetworking {
     >,
 }
 /// An Anthos node pool running on AWS.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsNodePool {
     /// The name of this resource.
@@ -646,6 +662,7 @@ pub mod aws_node_pool {
     }
 }
 /// Parameters that describe the nodes in a cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsNodeConfig {
     /// Optional. The AWS instance type.
@@ -711,6 +728,7 @@ pub struct AwsNodeConfig {
 }
 /// AwsNodePoolAutoscaling contains information required by cluster autoscaler
 /// to adjust the size of the node pool to the current cluster usage.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsNodePoolAutoscaling {
     /// Required. Minimum number of nodes in the node pool. Must be greater than or equal to
@@ -723,6 +741,7 @@ pub struct AwsNodePoolAutoscaling {
     pub max_node_count: i32,
 }
 /// AwsServerConfig is the configuration of GKE cluster on AWS.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsServerConfig {
     /// The resource name of the config.
@@ -736,6 +755,7 @@ pub struct AwsServerConfig {
     pub supported_aws_regions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Kubernetes version information of GKE cluster on AWS.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsK8sVersionInfo {
     /// Kubernetes version name.
@@ -743,6 +763,7 @@ pub struct AwsK8sVersionInfo {
     pub version: ::prost::alloc::string::String,
 }
 /// SSH configuration for AWS resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsSshConfig {
     /// Required. The name of the EC2 key pair used to login into cluster machines.
@@ -750,6 +771,7 @@ pub struct AwsSshConfig {
     pub ec2_key_pair: ::prost::alloc::string::String,
 }
 /// Details of a proxy config stored in AWS Secret Manager.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsProxyConfig {
     /// The ARN of the AWS Secret Manager secret that contains the HTTP(S) proxy
@@ -762,6 +784,7 @@ pub struct AwsProxyConfig {
     pub secret_version: ::prost::alloc::string::String,
 }
 /// Config encryption for user data.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsConfigEncryption {
     /// Required. The ARN of the AWS KMS key used to encrypt user data.
@@ -773,6 +796,7 @@ pub struct AwsConfigEncryption {
 ///
 ///   * T3 instances that use the unlimited CPU credit option don't support host
 ///   tenancy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AwsInstancePlacement {
     /// Required. The tenancy for instance.
@@ -820,6 +844,7 @@ pub mod aws_instance_placement {
     }
 }
 /// Request message for `AwsClusters.CreateAwsCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAwsClusterRequest {
     /// Required. The parent location where this \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resource
@@ -849,6 +874,7 @@ pub struct CreateAwsClusterRequest {
     pub validate_only: bool,
 }
 /// Request message for `AwsClusters.UpdateAwsCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAwsClusterRequest {
     /// Required. The \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resource to update.
@@ -885,6 +911,7 @@ pub struct UpdateAwsClusterRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `AwsClusters.GetAwsCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAwsClusterRequest {
     /// Required. The name of the \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resource to describe.
@@ -898,6 +925,7 @@ pub struct GetAwsClusterRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AwsClusters.ListAwsClusters` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAwsClustersRequest {
     /// Required. The parent location which owns this collection of
@@ -924,6 +952,7 @@ pub struct ListAwsClustersRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AwsClusters.ListAwsClusters` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAwsClustersResponse {
     /// A list of \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resources in the specified GCP
@@ -936,6 +965,7 @@ pub struct ListAwsClustersResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `AwsClusters.DeleteAwsCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAwsClusterRequest {
     /// Required. The resource name the \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] to delete.
@@ -967,6 +997,7 @@ pub struct DeleteAwsClusterRequest {
     pub etag: ::prost::alloc::string::String,
 }
 /// Response message for `AwsClusters.CreateAwsNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAwsNodePoolRequest {
     /// Required. The \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resource where this node pool will be created.
@@ -997,6 +1028,7 @@ pub struct CreateAwsNodePoolRequest {
     pub validate_only: bool,
 }
 /// Request message for `AwsClusters.UpdateAwsNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAwsNodePoolRequest {
     /// Required. The \[AwsNodePool][google.cloud.gkemulticloud.v1.AwsNodePool\] resource to update.
@@ -1028,6 +1060,7 @@ pub struct UpdateAwsNodePoolRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `AwsClusters.GetAwsNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAwsNodePoolRequest {
     /// Required. The name of the \[AwsNodePool][google.cloud.gkemulticloud.v1.AwsNodePool\] resource to describe.
@@ -1041,6 +1074,7 @@ pub struct GetAwsNodePoolRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AwsClusters.ListAwsNodePools` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAwsNodePoolsRequest {
     /// Required. The parent `AwsCluster` which owns this collection of
@@ -1068,6 +1102,7 @@ pub struct ListAwsNodePoolsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AwsClusters.ListAwsNodePools` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAwsNodePoolsResponse {
     /// A list of \[AwsNodePool][google.cloud.gkemulticloud.v1.AwsNodePool\] resources in the specified `AwsCluster`.
@@ -1079,6 +1114,7 @@ pub struct ListAwsNodePoolsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `AwsClusters.DeleteNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAwsNodePoolRequest {
     /// Required. The resource name the \[AwsNodePool][google.cloud.gkemulticloud.v1.AwsNodePool\] to delete.
@@ -1111,6 +1147,7 @@ pub struct DeleteAwsNodePoolRequest {
     pub etag: ::prost::alloc::string::String,
 }
 /// GetAwsServerConfigRequest gets the server config of GKE cluster on AWS.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAwsServerConfigRequest {
     /// Required. The name of the \[AwsServerConfig][google.cloud.gkemulticloud.v1.AwsServerConfig\] resource to describe.
@@ -1124,6 +1161,7 @@ pub struct GetAwsServerConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AwsClusters.GenerateAwsAccessToken` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAwsAccessTokenRequest {
     /// Required. The name of the \[AwsCluster][google.cloud.gkemulticloud.v1.AwsCluster\] resource to authenticate to.
@@ -1137,6 +1175,7 @@ pub struct GenerateAwsAccessTokenRequest {
     pub aws_cluster: ::prost::alloc::string::String,
 }
 /// Response message for `AwsClusters.GenerateAwsAccessToken` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAwsAccessTokenResponse {
     /// Output only. Access token to authenticate to k8s api-server.
@@ -1492,6 +1531,7 @@ pub mod aws_clusters_client {
     }
 }
 /// An Anthos cluster running on Azure.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureCluster {
     /// The name of this resource.
@@ -1651,6 +1691,7 @@ pub mod azure_cluster {
     }
 }
 /// ClusterNetworking contains cluster-wide networking configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureClusterNetworking {
     /// Required. The Azure Resource Manager (ARM) ID of the VNet associated with your
@@ -1697,6 +1738,7 @@ pub struct AzureClusterNetworking {
     pub service_load_balancer_subnet_id: ::prost::alloc::string::String,
 }
 /// AzureControlPlane represents the control plane configurations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureControlPlane {
     /// Required. The Kubernetes version to run on control plane replicas
@@ -1775,6 +1817,7 @@ pub struct AzureControlPlane {
     pub endpoint_subnet_id: ::prost::alloc::string::String,
 }
 /// Configuration for the placement of a control plane replica.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReplicaPlacement {
     /// Required. For a given replica, the ARM ID of the subnet where the control plane VM is
@@ -1788,6 +1831,7 @@ pub struct ReplicaPlacement {
     pub azure_availability_zone: ::prost::alloc::string::String,
 }
 /// Details of a proxy config stored in Azure Key Vault.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureProxyConfig {
     /// The ARM ID the of the resource group containing proxy keyvault.
@@ -1807,6 +1851,7 @@ pub struct AzureProxyConfig {
 ///
 /// Anthos clusters on Azure encrypts your Kubernetes data at rest
 /// in etcd using Azure Key Vault.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureDatabaseEncryption {
     /// Required. The ARM ID of the Azure Key Vault key to encrypt / decrypt data.
@@ -1822,6 +1867,7 @@ pub struct AzureDatabaseEncryption {
 ///
 /// Azure VM bootstrap secret is envelope encrypted with the provided key vault
 /// key.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureConfigEncryption {
     /// Required. The ARM ID of the Azure Key Vault key to encrypt / decrypt config data.
@@ -1839,6 +1885,7 @@ pub struct AzureConfigEncryption {
     pub public_key: ::prost::alloc::string::String,
 }
 /// Configuration for Azure Disks.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureDiskTemplate {
     /// Optional. The size of the disk, in GiBs.
@@ -1859,6 +1906,7 @@ pub struct AzureDiskTemplate {
 ///
 /// Each `AzureClient` resource is bound to a single Azure Active Directory
 /// Application and tenant.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureClient {
     /// The name of this resource.
@@ -1901,6 +1949,7 @@ pub struct AzureClient {
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Configuration related to the cluster RBAC settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureAuthorization {
     /// Required. Users that can perform operations as a cluster admin. A managed
@@ -1913,6 +1962,7 @@ pub struct AzureAuthorization {
     pub admin_users: ::prost::alloc::vec::Vec<AzureClusterUser>,
 }
 /// Identities of a user-type subject for Azure clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureClusterUser {
     /// Required. The name of the user, e.g. `my-gcp-id@gmail.com`.
@@ -1920,6 +1970,7 @@ pub struct AzureClusterUser {
     pub username: ::prost::alloc::string::String,
 }
 /// An Anthos node pool running on Azure.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureNodePool {
     /// The name of this resource.
@@ -2045,6 +2096,7 @@ pub mod azure_node_pool {
 }
 /// Parameters that describe the configuration of all node machines
 /// on a given node pool.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureNodeConfig {
     /// Optional. The Azure VM size name. Example: `Standard_DS2_v2`.
@@ -2104,6 +2156,7 @@ pub struct AzureNodeConfig {
 ///
 /// The Kubernetes cluster autoscaler will automatically adjust the
 /// size of the node pool based on the cluster load.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureNodePoolAutoscaling {
     /// Required. Minimum number of nodes in the node pool. Must be greater than or equal to
@@ -2117,6 +2170,7 @@ pub struct AzureNodePoolAutoscaling {
 }
 /// AzureServerConfig contains information about a Google Cloud location, such as
 /// supported Azure regions and Kubernetes versions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureServerConfig {
     /// The `AzureServerConfig` resource name.
@@ -2138,6 +2192,7 @@ pub struct AzureServerConfig {
     >,
 }
 /// Information about a supported Kubernetes version.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureK8sVersionInfo {
     /// A supported Kubernetes version (for example, `1.19.10-gke.1000`)
@@ -2145,6 +2200,7 @@ pub struct AzureK8sVersionInfo {
     pub version: ::prost::alloc::string::String,
 }
 /// SSH configuration for Azure resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureSshConfig {
     /// Required. The SSH public key data for VMs managed by Anthos. This accepts the
@@ -2156,6 +2212,7 @@ pub struct AzureSshConfig {
 /// Managed Azure resources for the cluster.
 ///
 /// The values could change and be empty, depending on the state of the cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AzureClusterResources {
     /// Output only. The ARM ID of the cluster network security group.
@@ -2166,6 +2223,7 @@ pub struct AzureClusterResources {
     pub control_plane_application_security_group_id: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.CreateAzureCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAzureClusterRequest {
     /// Required. The parent location where this \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resource
@@ -2195,6 +2253,7 @@ pub struct CreateAzureClusterRequest {
     pub validate_only: bool,
 }
 /// Request message for `AzureClusters.UpdateAzureCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAzureClusterRequest {
     /// Required. The \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resource to update.
@@ -2219,6 +2278,7 @@ pub struct UpdateAzureClusterRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `AzureClusters.GetAzureCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAzureClusterRequest {
     /// Required. The name of the \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resource to describe.
@@ -2232,6 +2292,7 @@ pub struct GetAzureClusterRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.ListAzureClusters` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureClustersRequest {
     /// Required. The parent location which owns this collection of
@@ -2258,6 +2319,7 @@ pub struct ListAzureClustersRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AzureClusters.ListAzureClusters` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureClustersResponse {
     /// A list of \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resources in the specified GCP
@@ -2270,6 +2332,7 @@ pub struct ListAzureClustersResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `Clusters.DeleteAzureCluster` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAzureClusterRequest {
     /// Required. The resource name the \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] to delete.
@@ -2301,6 +2364,7 @@ pub struct DeleteAzureClusterRequest {
     pub etag: ::prost::alloc::string::String,
 }
 /// Response message for `AzureClusters.CreateAzureNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAzureNodePoolRequest {
     /// Required. The \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resource where this node pool will be created.
@@ -2330,6 +2394,7 @@ pub struct CreateAzureNodePoolRequest {
     pub validate_only: bool,
 }
 /// Request message for `AzureClusters.UpdateAzureNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAzureNodePoolRequest {
     /// Required. The \[AzureNodePool][google.cloud.gkemulticloud.v1.AzureNodePool\] resource to update.
@@ -2351,6 +2416,7 @@ pub struct UpdateAzureNodePoolRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `AzureClusters.GetAzureNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAzureNodePoolRequest {
     /// Required. The name of the \[AzureNodePool][google.cloud.gkemulticloud.v1.AzureNodePool\] resource to describe.
@@ -2364,6 +2430,7 @@ pub struct GetAzureNodePoolRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.ListAzureNodePools` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureNodePoolsRequest {
     /// Required. The parent `AzureCluster` which owns this collection of
@@ -2391,6 +2458,7 @@ pub struct ListAzureNodePoolsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AzureClusters.ListAzureNodePools` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureNodePoolsResponse {
     /// A list of \[AzureNodePool][google.cloud.gkemulticloud.v1.AzureNodePool\] resources in the specified `AzureCluster`.
@@ -2402,6 +2470,7 @@ pub struct ListAzureNodePoolsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Delete message for `AzureClusters.DeleteNodePool` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAzureNodePoolRequest {
     /// Required. The resource name the \[AzureNodePool][google.cloud.gkemulticloud.v1.AzureNodePool\] to delete.
@@ -2434,6 +2503,7 @@ pub struct DeleteAzureNodePoolRequest {
     pub etag: ::prost::alloc::string::String,
 }
 /// GetAzureServerConfigRequest gets the server config of GKE cluster on Azure.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAzureServerConfigRequest {
     /// Required. The name of the \[AzureServerConfig][google.cloud.gkemulticloud.v1.AzureServerConfig\] resource to describe.
@@ -2447,6 +2517,7 @@ pub struct GetAzureServerConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.CreateAzureClient` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAzureClientRequest {
     /// Required. The parent location where this \[AzureClient][google.cloud.gkemulticloud.v1.AzureClient\] resource
@@ -2476,6 +2547,7 @@ pub struct CreateAzureClientRequest {
     pub validate_only: bool,
 }
 /// Request message for `AzureClusters.GetAzureClient` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAzureClientRequest {
     /// Required. The name of the \[AzureClient][google.cloud.gkemulticloud.v1.AzureClient\] resource to describe.
@@ -2489,6 +2561,7 @@ pub struct GetAzureClientRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.ListAzureClients` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureClientsRequest {
     /// Required. The parent location which owns this collection of
@@ -2515,6 +2588,7 @@ pub struct ListAzureClientsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AzureClusters.ListAzureClients` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAzureClientsResponse {
     /// A list of \[AzureClient][google.cloud.gkemulticloud.v1.AzureClient\] resources in the specified Google Cloud
@@ -2527,6 +2601,7 @@ pub struct ListAzureClientsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `AzureClusters.DeleteAzureClient` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAzureClientRequest {
     /// Required. The resource name the \[AzureClient][google.cloud.gkemulticloud.v1.AzureClient\] to delete.
@@ -2550,6 +2625,7 @@ pub struct DeleteAzureClientRequest {
     pub validate_only: bool,
 }
 /// Request message for `AzureClusters.GenerateAzureAccessToken` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAzureAccessTokenRequest {
     /// Required. The name of the \[AzureCluster][google.cloud.gkemulticloud.v1.AzureCluster\] resource to authenticate to.
@@ -2563,6 +2639,7 @@ pub struct GenerateAzureAccessTokenRequest {
     pub azure_cluster: ::prost::alloc::string::String,
 }
 /// Response message for `AzureClusters.GenerateAzureAccessToken` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateAzureAccessTokenResponse {
     /// Output only. Access token to authenticate to k8s api-server.

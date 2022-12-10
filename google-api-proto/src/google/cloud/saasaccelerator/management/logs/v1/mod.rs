@@ -1,3 +1,4 @@
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InstanceEvent {
     /// The type of the event, e.g. Create, Update, etc.
@@ -19,6 +20,7 @@ pub struct InstanceEvent {
     pub node_id: ::prost::alloc::string::String,
 }
 /// Payload proto for Notification logs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NotificationStage {
     /// The type of the Notification Service event.

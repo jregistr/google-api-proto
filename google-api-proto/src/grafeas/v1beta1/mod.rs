@@ -17,6 +17,7 @@ pub mod source;
 #[cfg(any(feature = "grafeas-v1beta1-vulnerability"))]
 pub mod vulnerability;
 /// Metadata for any related URL information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RelatedUrl {
     /// Specific URL associated with the resource.
@@ -48,6 +49,7 @@ pub struct RelatedUrl {
 /// provided payload (e.g. a `payload` field on the proto message that holds
 /// this Signature, or the canonical serialization of the proto message that
 /// holds this signature).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Signature {
     /// The content of the signature, an opaque bytestring.
@@ -118,6 +120,7 @@ impl NoteKind {
     }
 }
 /// An instance of an analysis type that has been found on a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Occurrence {
     /// Output only. The name of the occurrence in the form of
@@ -154,6 +157,7 @@ pub struct Occurrence {
 pub mod occurrence {
     /// Required. Immutable. Describes the details of the note kind found on this
     /// resource.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Details {
         /// Describes a security vulnerability.
@@ -181,6 +185,7 @@ pub mod occurrence {
     }
 }
 /// An entity that can have metadata. For example, a Docker image.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Resource {
     /// The name of the resource. For example, the name of a Docker image -
@@ -196,6 +201,7 @@ pub struct Resource {
     pub content_hash: ::core::option::Option<provenance::Hash>,
 }
 /// A type of analysis that can be done for a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Note {
     /// Output only. The name of the note in the form of
@@ -236,6 +242,7 @@ pub struct Note {
 /// Nested message and enum types in `Note`.
 pub mod note {
     /// Required. Immutable. The type of analysis this note represents.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Type {
         /// A note describing a package vulnerability.
@@ -262,6 +269,7 @@ pub mod note {
     }
 }
 /// Request to get an occurrence.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetOccurrenceRequest {
     /// The name of the occurrence in the form of
@@ -270,6 +278,7 @@ pub struct GetOccurrenceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to list occurrences.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOccurrencesRequest {
     /// The name of the project to list occurrences for in the form of
@@ -287,6 +296,7 @@ pub struct ListOccurrencesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for listing occurrences.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOccurrencesResponse {
     /// The occurrences requested.
@@ -299,6 +309,7 @@ pub struct ListOccurrencesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request to delete a occurrence.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteOccurrenceRequest {
     /// The name of the occurrence in the form of
@@ -307,6 +318,7 @@ pub struct DeleteOccurrenceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to create a new occurrence.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateOccurrenceRequest {
     /// The name of the project in the form of `projects/\[PROJECT_ID\]`, under which
@@ -318,6 +330,7 @@ pub struct CreateOccurrenceRequest {
     pub occurrence: ::core::option::Option<Occurrence>,
 }
 /// Request to update an occurrence.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateOccurrenceRequest {
     /// The name of the occurrence in the form of
@@ -332,6 +345,7 @@ pub struct UpdateOccurrenceRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request to get a note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNoteRequest {
     /// The name of the note in the form of
@@ -340,6 +354,7 @@ pub struct GetNoteRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to get the note to which the specified occurrence is attached.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetOccurrenceNoteRequest {
     /// The name of the occurrence in the form of
@@ -348,6 +363,7 @@ pub struct GetOccurrenceNoteRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to list notes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNotesRequest {
     /// The name of the project to list notes for in the form of
@@ -365,6 +381,7 @@ pub struct ListNotesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for listing notes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNotesResponse {
     /// The notes requested.
@@ -377,6 +394,7 @@ pub struct ListNotesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request to delete a note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteNoteRequest {
     /// The name of the note in the form of
@@ -385,6 +403,7 @@ pub struct DeleteNoteRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to create a new note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateNoteRequest {
     /// The name of the project in the form of `projects/\[PROJECT_ID\]`, under which
@@ -399,6 +418,7 @@ pub struct CreateNoteRequest {
     pub note: ::core::option::Option<Note>,
 }
 /// Request to update a note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateNoteRequest {
     /// The name of the note in the form of
@@ -413,6 +433,7 @@ pub struct UpdateNoteRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request to list occurrences for a note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNoteOccurrencesRequest {
     /// The name of the note to list occurrences for in the form of
@@ -430,6 +451,7 @@ pub struct ListNoteOccurrencesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for listing occurrences for a note.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNoteOccurrencesResponse {
     /// The occurrences attached to the specified note.
@@ -440,6 +462,7 @@ pub struct ListNoteOccurrencesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request to create notes in batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateNotesRequest {
     /// The name of the project in the form of `projects/\[PROJECT_ID\]`, under which
@@ -454,6 +477,7 @@ pub struct BatchCreateNotesRequest {
     >,
 }
 /// Response for creating notes in batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateNotesResponse {
     /// The notes that were created.
@@ -461,6 +485,7 @@ pub struct BatchCreateNotesResponse {
     pub notes: ::prost::alloc::vec::Vec<Note>,
 }
 /// Request to create occurrences in batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateOccurrencesRequest {
     /// The name of the project in the form of `projects/\[PROJECT_ID\]`, under which
@@ -472,6 +497,7 @@ pub struct BatchCreateOccurrencesRequest {
     pub occurrences: ::prost::alloc::vec::Vec<Occurrence>,
 }
 /// Response for creating occurrences in batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchCreateOccurrencesResponse {
     /// The occurrences that were created.
@@ -479,6 +505,7 @@ pub struct BatchCreateOccurrencesResponse {
     pub occurrences: ::prost::alloc::vec::Vec<Occurrence>,
 }
 /// Request to get a vulnerability summary for some set of occurrences.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetVulnerabilityOccurrencesSummaryRequest {
     /// The name of the project to get a vulnerability summary for in the form of
@@ -491,6 +518,7 @@ pub struct GetVulnerabilityOccurrencesSummaryRequest {
 }
 /// A summary of how many vulnerability occurrences there are per resource and
 /// severity type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VulnerabilityOccurrencesSummary {
     /// A listing by resource of the number of fixable and total vulnerabilities.
@@ -502,6 +530,7 @@ pub struct VulnerabilityOccurrencesSummary {
 /// Nested message and enum types in `VulnerabilityOccurrencesSummary`.
 pub mod vulnerability_occurrences_summary {
     /// Per resource and severity counts of fixable and total vulnerabilities.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FixableTotalByDigest {
         /// The affected resource.

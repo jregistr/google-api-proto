@@ -1,4 +1,5 @@
 /// The desired input location information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InputConfig {
     /// The input data format that used to store the model in Cloud Storage.
@@ -13,6 +14,7 @@ pub struct InputConfig {
 pub mod input_config {
     /// The location of the input model in cloud storage.
     /// Required.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// The Google Cloud Storage location to read the input from. This must be a
@@ -22,6 +24,7 @@ pub mod input_config {
     }
 }
 /// The desired output location.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OutputConfig {
     /// The output data format that used to store the results in Cloud Storage.
@@ -36,6 +39,7 @@ pub struct OutputConfig {
 pub mod output_config {
     /// The location of the output result in cloud storage.
     /// Required.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
         /// The Google Cloud Storage location to write the output to.
@@ -44,6 +48,7 @@ pub mod output_config {
     }
 }
 /// The Google Cloud Storage location where the input file will be read from.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsSource {
     /// Required. URI of the Google Cloud Storage location.
@@ -51,6 +56,7 @@ pub struct GcsSource {
     pub uri: ::prost::alloc::string::String,
 }
 /// The Google Cloud Storage location where the output file will be written to.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsDestination {
     /// Required. URI of the Google Cloud Storage location.
@@ -58,6 +64,7 @@ pub struct GcsDestination {
     pub uri: ::prost::alloc::string::String,
 }
 /// The long running operation metadata for async model related methods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AsyncModelMetadata {
     /// The state of the current operation.
@@ -143,6 +150,7 @@ impl DataFormat {
 }
 /// Request to be given to a tour optimization solver which defines the
 /// shipment model to solve as well as optimization parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OptimizeToursRequest {
     /// Required. Target project and location to make a call.
@@ -442,6 +450,7 @@ pub mod optimize_tours_request {
 /// Response after solving a tour optimization problem containing the routes
 /// followed by each vehicle, the shipments which have been skipped and the
 /// overall cost of the solution.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OptimizeToursResponse {
     /// Routes computed for each vehicle; the i-th route corresponds to the i-th
@@ -476,6 +485,7 @@ pub struct OptimizeToursResponse {
 /// Nested message and enum types in `OptimizeToursResponse`.
 pub mod optimize_tours_response {
     /// Overall metrics, aggregated over all routes.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Metrics {
         /// Aggregated over the routes. Each metric is the sum (or max, for loads)
@@ -528,6 +538,7 @@ pub mod optimize_tours_response {
 /// file will contain one `OptimizeToursResponse`. The request contains
 /// information to read/write and parse the files. All the input and output files
 /// should be under the same project.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchOptimizeToursRequest {
     /// Required. Target project and location to make a call.
@@ -547,6 +558,7 @@ pub struct BatchOptimizeToursRequest {
 /// Nested message and enum types in `BatchOptimizeToursRequest`.
 pub mod batch_optimize_tours_request {
     /// Information for solving one optimization model asynchronously.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AsyncModelConfig {
         /// User defined model name, can be used as alias by users to keep track of
@@ -573,6 +585,7 @@ pub mod batch_optimize_tours_request {
 }
 /// Response to a `BatchOptimizeToursRequest`. This is returned in
 /// the LRO Operation after the operation is complete.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchOptimizeToursResponse {}
 /// A shipment model contains a set of shipments which must be performed by a
@@ -582,6 +595,7 @@ pub struct BatchOptimizeToursResponse {}
 ///    travel time, and fixed cost over all vehicles).
 /// * the unperformed shipment penalties.
 /// * the cost of the global duration of the shipments
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ShipmentModel {
     /// Set of shipments which must be performed in the model.
@@ -777,6 +791,7 @@ pub struct ShipmentModel {
 pub mod shipment_model {
     /// Specifies a duration and distance matrix from visit and vehicle start
     /// locations to visit and vehicle end locations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DurationDistanceMatrix {
         /// Specifies the rows of the duration and distance matrix. It must have as
@@ -799,6 +814,7 @@ pub mod shipment_model {
     /// Nested message and enum types in `DurationDistanceMatrix`.
     pub mod duration_distance_matrix {
         /// Specifies a row of the duration and distance matrix.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Row {
             /// Duration values for a given row. It must have as many elements as
@@ -822,6 +838,7 @@ pub mod shipment_model {
     ///
     /// Furthermore, precedences only apply when both shipments are performed and
     /// are otherwise ignored.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PrecedenceRule {
         /// Shipment index of the "first" event. This field must be specified.
@@ -852,6 +869,7 @@ pub mod shipment_model {
     /// * or before the vehicle start (the vehicle may not start in the middle of
     ///    a break), in which case it does not affect the vehicle start time.
     /// * or after the vehicle end (ditto, with the vehicle end time).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BreakRule {
         /// Sequence of breaks. See the `BreakRequest` message.
@@ -871,6 +889,7 @@ pub mod shipment_model {
         /// that sequence, in the order in which they must occur. Their time windows
         /// (`earliest_start_time` / `latest_start_time`) may overlap, but they must
         /// be compatible with the order (this is checked).
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct BreakRequest {
             /// Required. Lower bound (inclusive) on the start of the break.
@@ -916,6 +935,7 @@ pub mod shipment_model {
         ///     .. performing travel and visits ..
         ///    23:59 vehicle end
         /// ```
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct FrequencyConstraint {
             /// Required. Minimum break duration for this constraint. Nonnegative.
@@ -937,6 +957,7 @@ pub mod shipment_model {
 /// must visit one of its pickup locations (and decrease its spare capacities
 /// accordingly), then visit one of its delivery locations later on (and
 /// therefore re-increase its spare capacities accordingly).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Shipment {
     /// Set of pickup alternatives associated to the shipment. If not specified,
@@ -1077,6 +1098,7 @@ pub mod shipment {
     /// (or two, see below), opening and closing times represented by time windows,
     /// and a service duration time (time spent by the vehicle once it has arrived
     /// to pickup or drop off goods).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct VisitRequest {
         /// The geo-location where the vehicle arrives when performing this
@@ -1169,6 +1191,7 @@ pub mod shipment {
     /// load if it's a pickup, or subtracted if it's a delivery. This message
     /// defines such amount. See
     /// \[load_demands][google.cloud.optimization.v1.Shipment.load_demands\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Load {
         /// The amount by which the load of the vehicle performing the corresponding
@@ -1181,6 +1204,7 @@ pub mod shipment {
 /// Specifies incompatibilties between shipments depending on their
 /// shipment_type. The appearance of incompatible shipments on the same route is
 /// restricted based on the incompatibility mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ShipmentTypeIncompatibility {
     /// List of incompatible types. Two shipments having different `shipment_types`
@@ -1246,6 +1270,7 @@ pub mod shipment_type_incompatibility {
 }
 /// Specifies requirements between shipments based on their shipment_type.
 /// The specifics of the requirement are defined by the requirement mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ShipmentTypeRequirement {
     /// List of alternative shipment types required by the
@@ -1326,6 +1351,7 @@ pub mod shipment_type_requirement {
 /// Models a vehicle in a shipment problem. Solving a shipment problem will
 /// build a route starting from `start_location` and ending at `end_location`
 /// for this vehicle. A route is a sequence of visits (see `ShipmentRoute`).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Vehicle {
     /// The travel mode which affects the roads usable by the vehicle and its
@@ -1546,6 +1572,7 @@ pub mod vehicle {
     /// Defines a load limit applying to a vehicle, e.g. "this truck may only
     /// carry up to 3500 kg". See
     /// \[load_limits][google.cloud.optimization.v1.Vehicle.load_limits\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LoadLimit {
         /// The maximum acceptable amount of load.
@@ -1575,6 +1602,7 @@ pub mod vehicle {
     /// Nested message and enum types in `LoadLimit`.
     pub mod load_limit {
         /// Interval of acceptable load amounts.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Interval {
             /// A minimum acceptable load. Must be ≥ 0.
@@ -1599,6 +1627,7 @@ pub mod vehicle {
     ///
     /// When a soft limit field is defined, both the soft max threshold and its
     /// associated cost must be defined together.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DurationLimit {
         /// A hard limit constraining the duration to be at most max_duration.
@@ -1744,6 +1773,7 @@ pub mod vehicle {
 ///    0 <= `start_time` <= `soft_start_time` <= `end_time` and
 ///    0 <= `start_time` <= `soft_end_time` <= `end_time`.
 /// ```
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeWindow {
     /// The hard time window start time. If unspecified it will be set to
@@ -1789,6 +1819,7 @@ pub struct TimeWindow {
 }
 /// Deprecated: Use \[Shipment.Load][\], \[Vehicle.LoadLimit][\] and
 /// \[ShipmentRoute.VehicleLoad][\] instead.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CapacityQuantity {
     #[prost(string, tag = "1")]
@@ -1797,6 +1828,7 @@ pub struct CapacityQuantity {
     pub value: i64,
 }
 /// Deprecated: Use \[Vehicle.LoadLimit.Interval][\] instead.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CapacityQuantityInterval {
     #[prost(string, tag = "1")]
@@ -1811,6 +1843,7 @@ pub struct CapacityQuantityInterval {
 ///
 /// If a soft limit is defined, both `soft_max_meters` and
 /// `cost_per_kilometer_above_soft_max` must be defined and be nonnegative.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DistanceLimit {
     /// A hard limit constraining the distance to be at most max_meters. The limit
@@ -1840,6 +1873,7 @@ pub struct DistanceLimit {
 /// route. Several `TransitionAttributes` may apply to the same transition: in
 /// that case, all extra costs add up and the strictest constraint or limit
 /// applies (following natural "AND" semantics).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransitionAttributes {
     /// Tags defining the set of (src->dst) transitions these attributes apply to.
@@ -1892,6 +1926,7 @@ pub struct TransitionAttributes {
 }
 /// Encapsulates a waypoint. Waypoints mark arrival and departure locations of
 /// VisitRequests, and start and end locations of Vehicles.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Waypoint {
     /// Indicates that the location of this waypoint is meant to have a preference
@@ -1909,6 +1944,7 @@ pub struct Waypoint {
 /// Nested message and enum types in `Waypoint`.
 pub mod waypoint {
     /// Different ways to represent a location.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum LocationType {
         /// A point specified using geographic coordinates, including an optional
@@ -1921,6 +1957,7 @@ pub mod waypoint {
     }
 }
 /// Encapsulates a location (a geographic point, and an optional heading).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Location {
     /// The waypoint's geographic coordinates.
@@ -1943,6 +1980,7 @@ pub struct Location {
 /// * or before the vehicle start (the vehicle may not start in the middle of
 ///    a break), in which case it does not affect the vehicle start time.
 /// * or after the vehicle end (ditto, with the vehicle end time).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BreakRule {
     /// Sequence of breaks. See the `BreakRequest` message.
@@ -1960,6 +1998,7 @@ pub mod break_rule {
     /// that sequence, in the order in which they must occur. Their time windows
     /// (`earliest_start_time` / `latest_start_time`) may overlap, but they must
     /// be compatible with the order (this is checked).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BreakRequest {
         /// Required. Lower bound (inclusive) on the start of the break.
@@ -2005,6 +2044,7 @@ pub mod break_rule {
     ///     .. performing travel and visits ..
     ///    23:59 vehicle end
     /// ```
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FrequencyConstraint {
         /// Required. Minimum break duration for this constraint. Nonnegative.
@@ -2102,6 +2142,7 @@ pub mod break_rule {
 ///    ||     |       |           |       |           |         |         ||
 /// --++-----------------------------------------------------------------++-->
 /// ```
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ShipmentRoute {
     /// Vehicle performing the route, identified by its index in the source
@@ -2219,6 +2260,7 @@ pub mod shipment_route {
     /// Deprecated: Use \[ShipmentRoute.Transition.delay_duration][\] instead.
     /// Time interval spent on the route resulting from a
     /// \[TransitionAttributes.delay][google.cloud.optimization.v1.TransitionAttributes.delay\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Delay {
         /// Start of the delay.
@@ -2230,6 +2272,7 @@ pub mod shipment_route {
     }
     /// A visit performed during a route. This visit corresponds to a pickup or a
     /// delivery of a `Shipment`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Visit {
         /// Index of the `shipments` field in the source
@@ -2310,6 +2353,7 @@ pub mod shipment_route {
     ///
     /// If the vehicle does not have a `start_location` and/or `end_location`, the
     /// corresponding travel metrics are 0.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Transition {
         /// Travel duration during this transition.
@@ -2386,6 +2430,7 @@ pub mod shipment_route {
     /// Reports the actual load of the vehicle at some point along the route,
     /// for a given type (see
     /// \[Transition.vehicle_loads][google.cloud.optimization.v1.ShipmentRoute.Transition.vehicle_loads\]).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct VehicleLoad {
         /// The amount of load on the vehicle, for the given type. The unit of load
@@ -2398,6 +2443,7 @@ pub mod shipment_route {
     /// encoding can be found here:
     /// <https://developers.google.com/maps/documentation/utilities/polylinealgorithm>
     /// <https://developers.google.com/maps/documentation/javascript/reference/geometry#encoding.>
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EncodedPolyline {
         /// String representing encoded points of the polyline.
@@ -2405,6 +2451,7 @@ pub mod shipment_route {
         pub points: ::prost::alloc::string::String,
     }
     /// Data representing the execution of a break.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Break {
         /// Start time of a break.
@@ -2427,6 +2474,7 @@ pub mod shipment_route {
     ///
     /// If the vehicle does not have a start_ and/or end_location, the
     /// corresponding travel metrics are 0 and/or empty.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TravelStep {
         /// Duration of the travel step.
@@ -2455,6 +2503,7 @@ pub mod shipment_route {
 /// Specifies details of unperformed shipments in a solution. For trivial cases
 /// and/or if we are able to identify the cause for skipping, we report the
 /// reason here.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SkippedShipment {
     /// The index corresponds to the index of the shipment in the source
@@ -2499,6 +2548,7 @@ pub mod skipped_shipment {
     /// capacity would be exceeded (including vehicle 1), at least one vehicle's
     /// "Pears" capacity would be exceeded (including vehicle 3) and at least one
     /// vehicle's distance limit would be exceeded (including vehicle 1).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Reason {
         /// Refer to the comments of Code.
@@ -2601,6 +2651,7 @@ pub mod skipped_shipment {
 /// over all \[Transition][google.cloud.optimization.v1.ShipmentRoute.Transition\]
 /// and/or \[Visit][google.cloud.optimization.v1.ShipmentRoute.Visit\] (resp. over
 /// all \[ShipmentRoute][google.cloud.optimization.v1.ShipmentRoute\]) elements.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AggregatedMetrics {
     /// Number of shipments performed. Note that a pickup and delivery pair only
@@ -2658,6 +2709,7 @@ pub struct AggregatedMetrics {
 }
 /// Solution injected in the request including information about which visits
 /// must be constrained and how they must be constrained.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InjectedSolutionConstraint {
     /// Routes of the solution to inject. Some routes may be omitted from the
@@ -2683,6 +2735,7 @@ pub mod injected_solution_constraint {
     /// visits will be relaxed and to which level. Shipments listed in
     /// the `skipped_shipment` field are constrained to be skipped; i.e., they
     /// cannot be performed.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ConstraintRelaxation {
         /// All the visit constraint relaxations that will apply to visits on
@@ -2741,6 +2794,7 @@ pub mod injected_solution_constraint {
         /// and no visits may be inserted into these sequences. Also, if a
         /// vehicle start or end does not satisfy the conditions of any
         /// relaxation the time is fixed, unless the vehicle is empty.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Relaxation {
             /// The constraint relaxation level that applies when the conditions
@@ -2821,6 +2875,7 @@ pub mod injected_solution_constraint {
     }
 }
 /// Describes an error encountered when validating an `OptimizeToursRequest`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OptimizeToursValidationError {
     /// A validation error is defined by the pair (`code`, `display_name`) which
@@ -3093,6 +3148,7 @@ pub mod optimize_tours_validation_error {
     /// ```
     /// We however omit top-level entities such as `OptimizeToursRequest` or
     /// `ShipmentModel` to avoid crowding the message.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FieldReference {
         /// Name of the field, e.g., "vehicles".
@@ -3108,6 +3164,7 @@ pub mod optimize_tours_validation_error {
     }
     /// Nested message and enum types in `FieldReference`.
     pub mod field_reference {
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum IndexOrKey {
             /// Index of the field if repeated.

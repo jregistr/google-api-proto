@@ -1,4 +1,5 @@
 /// Metadata describing an \[Operation][google.longrunning.Operation\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadataV1 {
     /// Target of the operation - for example
@@ -61,6 +62,7 @@ impl OperationType {
 }
 /// Describes a Cloud Function that contains user computation executed in
 /// response to an event. It encapsulate function and triggers configurations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudFunction {
     /// A user-defined name of the function. Function names must be unique
@@ -396,6 +398,7 @@ pub mod cloud_function {
         }
     }
     /// The location of the function source code.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum SourceCode {
         /// The Google Cloud Storage URL, starting with `gs://`, pointing to the zip
@@ -417,6 +420,7 @@ pub mod cloud_function {
         SourceUploadUrl(::prost::alloc::string::String),
     }
     /// An event that triggers the function.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Trigger {
         /// An HTTPS endpoint type of source that can be triggered via URL.
@@ -429,6 +433,7 @@ pub mod cloud_function {
 }
 /// Describes SourceRepository, used to represent parameters related to
 /// source repository where a function is hosted.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SourceRepository {
     /// The URL pointing to the hosted repository where the function is defined.
@@ -453,6 +458,7 @@ pub struct SourceRepository {
     pub deployed_url: ::prost::alloc::string::String,
 }
 /// Describes HttpsTrigger, could be used to connect web hooks to function.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpsTrigger {
     /// Output only. The deployed url for the function.
@@ -509,6 +515,7 @@ pub mod https_trigger {
 }
 /// Describes EventTrigger, used to request events be sent from another
 /// service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EventTrigger {
     /// Required. The type of event to observe. For example:
@@ -561,6 +568,7 @@ pub struct EventTrigger {
 }
 /// Describes the policy in case of function's execution failure.
 /// If empty, then defaults to ignoring failures (i.e. not retrying them).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FailurePolicy {
     /// Defines the action taken in case of a function execution failure.
@@ -574,9 +582,11 @@ pub mod failure_policy {
     /// A failed execution will be retried up to 7 days with an exponential backoff
     /// (capped at 10 seconds).
     /// Retried execution is charged as any other execution.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Retry {}
     /// Defines the action taken in case of a function execution failure.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Action {
         /// If specified, then the function will be retried in case of a failure.
@@ -587,6 +597,7 @@ pub mod failure_policy {
 /// Configuration for a secret environment variable. It has the information
 /// necessary to fetch the secret value from secret manager and expose it as an
 /// environment variable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SecretEnvVar {
     /// Name of the environment variable.
@@ -612,6 +623,7 @@ pub struct SecretEnvVar {
 /// at the requested paths within the application container. Secret value is not
 /// a part of the configuration. Every filesystem read operation performs a
 /// lookup in secret manager to retrieve the secret value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SecretVolume {
     /// The path within the container to mount the secret volume. For example,
@@ -641,6 +653,7 @@ pub struct SecretVolume {
 /// Nested message and enum types in `SecretVolume`.
 pub mod secret_volume {
     /// Configuration for a single version.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SecretVersion {
         /// Version of the secret (version number or the string 'latest'). It is
@@ -657,6 +670,7 @@ pub mod secret_volume {
     }
 }
 /// Request for the `CreateFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateFunctionRequest {
     /// Required. The project and location in which the function should be created, specified
@@ -668,6 +682,7 @@ pub struct CreateFunctionRequest {
     pub function: ::core::option::Option<CloudFunction>,
 }
 /// Request for the `UpdateFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateFunctionRequest {
     /// Required. New version of the function.
@@ -678,6 +693,7 @@ pub struct UpdateFunctionRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request for the `GetFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetFunctionRequest {
     /// Required. The name of the function which details should be obtained.
@@ -685,6 +701,7 @@ pub struct GetFunctionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for the `ListFunctions` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFunctionsRequest {
     /// The project and location from which the function should be listed,
@@ -706,6 +723,7 @@ pub struct ListFunctionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for the `ListFunctions` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListFunctionsResponse {
     /// The functions that match the request.
@@ -723,6 +741,7 @@ pub struct ListFunctionsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for the `DeleteFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteFunctionRequest {
     /// Required. The name of the function which should be deleted.
@@ -730,6 +749,7 @@ pub struct DeleteFunctionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for the `CallFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallFunctionRequest {
     /// Required. The name of the function to be called.
@@ -740,6 +760,7 @@ pub struct CallFunctionRequest {
     pub data: ::prost::alloc::string::String,
 }
 /// Response of `CallFunction` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CallFunctionResponse {
     /// Execution id of function invocation.
@@ -755,6 +776,7 @@ pub struct CallFunctionResponse {
     pub error: ::prost::alloc::string::String,
 }
 /// Request of `GenerateSourceUploadUrl` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateUploadUrlRequest {
     /// The project and location in which the Google Cloud Storage signed URL
@@ -782,6 +804,7 @@ pub struct GenerateUploadUrlRequest {
     pub kms_key_name: ::prost::alloc::string::String,
 }
 /// Response of `GenerateSourceUploadUrl` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateUploadUrlResponse {
     /// The generated Google Cloud Storage signed URL that should be used for a
@@ -791,6 +814,7 @@ pub struct GenerateUploadUrlResponse {
     pub upload_url: ::prost::alloc::string::String,
 }
 /// Request of `GenerateDownloadUrl` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateDownloadUrlRequest {
     /// The name of function for which source code Google Cloud Storage signed
@@ -803,6 +827,7 @@ pub struct GenerateDownloadUrlRequest {
     pub version_id: u64,
 }
 /// Response of `GenerateDownloadUrl` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateDownloadUrlResponse {
     /// The generated Google Cloud Storage signed URL that should be used for

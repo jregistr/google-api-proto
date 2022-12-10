@@ -1,4 +1,5 @@
 /// A Network.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Network {
     /// Output only. The resource name of this `Network`.
@@ -119,6 +120,7 @@ pub mod network {
     }
 }
 /// A reservation of one or more addresses in a network.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NetworkAddressReservation {
     /// The first address of this reservation block.
@@ -136,6 +138,7 @@ pub struct NetworkAddressReservation {
     pub note: ::prost::alloc::string::String,
 }
 /// A network VRF.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Vrf {
     /// The name of the VRF.
@@ -154,6 +157,7 @@ pub struct Vrf {
 /// Nested message and enum types in `VRF`.
 pub mod vrf {
     /// QOS policy parameters.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QosPolicy {
         /// The bandwidth permitted by the QOS policy, in gbps.
@@ -161,6 +165,7 @@ pub mod vrf {
         pub bandwidth_gbps: f64,
     }
     /// VLAN attachment details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct VlanAttachment {
         /// The peer vlan ID of the attachment.
@@ -212,6 +217,7 @@ pub mod vrf {
 /// physical interface (for eg. bond, nic) of the instance. Each logical
 /// interface can effectively map to multiple network-IP pairs and still be
 /// mapped to one underlying physical interface.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogicalInterface {
     /// List of logical network interfaces within a logical interface.
@@ -231,6 +237,7 @@ pub struct LogicalInterface {
 /// Nested message and enum types in `LogicalInterface`.
 pub mod logical_interface {
     /// Each logical network interface is effectively a network and IP pair.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LogicalNetworkInterface {
         /// Name of the network
@@ -252,6 +259,7 @@ pub mod logical_interface {
     }
 }
 /// Message for requesting network information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNetworkRequest {
     /// Required. Name of the resource.
@@ -259,6 +267,7 @@ pub struct GetNetworkRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting a list of networks.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNetworksRequest {
     /// Required. Parent value for ListNetworksRequest.
@@ -276,6 +285,7 @@ pub struct ListNetworksRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message containing the list of networks.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNetworksResponse {
     /// The list of networks.
@@ -289,6 +299,7 @@ pub struct ListNetworksResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message requesting to updating a network.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateNetworkRequest {
     /// Required. The network to update.
@@ -304,6 +315,7 @@ pub struct UpdateNetworkRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Network with all used IP addresses.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NetworkUsage {
     /// Network.
@@ -314,6 +326,7 @@ pub struct NetworkUsage {
     pub used_ips: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request to get networks with IPs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNetworkUsageRequest {
     /// Required. Parent value (project and location).
@@ -321,6 +334,7 @@ pub struct ListNetworkUsageRequest {
     pub location: ::prost::alloc::string::String,
 }
 /// Response with Networks with IPs
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNetworkUsageResponse {
     /// Networks with IPs.
@@ -328,6 +342,7 @@ pub struct ListNetworkUsageResponse {
     pub networks: ::prost::alloc::vec::Vec<NetworkUsage>,
 }
 /// A storage volume logical unit number (LUN).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Lun {
     /// Output only. The name of the LUN.
@@ -471,6 +486,7 @@ pub mod lun {
     }
 }
 /// Message for requesting storage lun information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetLunRequest {
     /// Required. Name of the resource.
@@ -478,6 +494,7 @@ pub struct GetLunRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting a list of storage volume luns.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLunsRequest {
     /// Required. Parent value for ListLunsRequest.
@@ -492,6 +509,7 @@ pub struct ListLunsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message containing the list of storage volume luns.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListLunsResponse {
     /// The list of luns.
@@ -505,6 +523,7 @@ pub struct ListLunsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// A server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Output only. The resource name of this `Instance`.
@@ -617,6 +636,7 @@ pub mod instance {
     }
 }
 /// Message for requesting server information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. Name of the resource.
@@ -624,6 +644,7 @@ pub struct GetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting the list of servers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Required. Parent value for ListInstancesRequest.
@@ -641,6 +662,7 @@ pub struct ListInstancesRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for the list of servers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesResponse {
     /// The list of servers.
@@ -654,6 +676,7 @@ pub struct ListInstancesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message requesting to updating a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateInstanceRequest {
     /// Required. The server to update.
@@ -671,6 +694,7 @@ pub struct UpdateInstanceRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Message requesting to reset a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResetInstanceRequest {
     /// Required. Name of the resource.
@@ -678,6 +702,7 @@ pub struct ResetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message requesting to start a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartInstanceRequest {
     /// Required. Name of the resource.
@@ -685,6 +710,7 @@ pub struct StartInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message requesting to stop a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StopInstanceRequest {
     /// Required. Name of the resource.
@@ -692,6 +718,7 @@ pub struct StopInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for detach specific LUN from an Instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DetachLunRequest {
     /// Required. Name of the instance.
@@ -702,6 +729,7 @@ pub struct DetachLunRequest {
     pub lun: ::prost::alloc::string::String,
 }
 /// Network template.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServerNetworkTemplate {
     /// Output only. Template's unique name. The full resource name follows the pattern:
@@ -724,6 +752,7 @@ pub struct ServerNetworkTemplate {
 /// Nested message and enum types in `ServerNetworkTemplate`.
 pub mod server_network_template {
     /// Logical interface.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LogicalInterface {
         /// Interface name.
@@ -779,12 +808,15 @@ pub mod server_network_template {
     }
 }
 /// Response message from starting a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartInstanceResponse {}
 /// Response message from stopping a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StopInstanceResponse {}
 /// A storage volume.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Volume {
     /// Output only. The resource name of this `Volume`.
@@ -847,6 +879,7 @@ pub struct Volume {
 /// Nested message and enum types in `Volume`.
 pub mod volume {
     /// Details about snapshot space reservation and usage on the storage volume.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SnapshotReservationDetail {
         /// The space on this storage volume reserved for snapshots, shown in GiB.
@@ -984,6 +1017,7 @@ pub mod volume {
     }
 }
 /// Message for requesting storage volume information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetVolumeRequest {
     /// Required. Name of the resource.
@@ -991,6 +1025,7 @@ pub struct GetVolumeRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting a list of storage volumes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListVolumesRequest {
     /// Required. Parent value for ListVolumesRequest.
@@ -1008,6 +1043,7 @@ pub struct ListVolumesRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message containing the list of storage volumes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListVolumesResponse {
     /// The list of storage volumes.
@@ -1021,6 +1057,7 @@ pub struct ListVolumesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for updating a volume.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateVolumeRequest {
     /// Required. The volume to update.
@@ -1040,6 +1077,7 @@ pub struct UpdateVolumeRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request for emergency resize Volume.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResizeVolumeRequest {
     /// Required. Volume to resize.
@@ -1050,6 +1088,7 @@ pub struct ResizeVolumeRequest {
     pub size_gib: i64,
 }
 /// An NFS share.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NfsShare {
     /// Output only. The name of the NFS share.
@@ -1077,6 +1116,7 @@ pub struct NfsShare {
 /// Nested message and enum types in `NfsShare`.
 pub mod nfs_share {
     /// Represents an 'access point' for the share.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AllowedClient {
         /// The network the access point sits on.
@@ -1170,6 +1210,7 @@ pub mod nfs_share {
     }
 }
 /// Message for requesting NFS share information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetNfsShareRequest {
     /// Required. Name of the resource.
@@ -1177,6 +1218,7 @@ pub struct GetNfsShareRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting a list of NFS shares.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNfsSharesRequest {
     /// Required. Parent value for ListNfsSharesRequest.
@@ -1194,6 +1236,7 @@ pub struct ListNfsSharesRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message containing the list of NFS shares.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListNfsSharesResponse {
     /// The list of NFS shares.
@@ -1207,6 +1250,7 @@ pub struct ListNfsSharesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message requesting to updating a NFS share.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateNfsShareRequest {
     /// Required. The NFS share to update.
@@ -1222,6 +1266,7 @@ pub struct UpdateNfsShareRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Represents the metadata from a long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// The time the operation was created.
@@ -1250,6 +1295,7 @@ pub struct OperationMetadata {
     pub api_version: ::prost::alloc::string::String,
 }
 /// Response message from resetting a server.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResetInstanceResponse {}
 /// Generated client implementations.

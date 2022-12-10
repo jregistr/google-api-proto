@@ -1,4 +1,5 @@
 /// Prediction input format for Video Object Tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoObjectTrackingPredictionInstance {
     /// The Google Cloud Storage location of the video on which to perform the
@@ -24,6 +25,7 @@ pub struct VideoObjectTrackingPredictionInstance {
     pub time_segment_end: ::prost::alloc::string::String,
 }
 /// Prediction input format for Image Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageClassificationPredictionInstance {
     /// The image bytes or Cloud Storage URI to make the prediction on.
@@ -42,6 +44,7 @@ pub struct ImageClassificationPredictionInstance {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Prediction input format for Text Extraction.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextExtractionPredictionInstance {
     /// The text snippet to make the predictions on.
@@ -61,6 +64,7 @@ pub struct TextExtractionPredictionInstance {
     pub key: ::prost::alloc::string::String,
 }
 /// Prediction input format for Text Sentiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextSentimentPredictionInstance {
     /// The text snippet to make the predictions on.
@@ -73,6 +77,7 @@ pub struct TextSentimentPredictionInstance {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Prediction input format for Video Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoClassificationPredictionInstance {
     /// The Google Cloud Storage location of the video on which to perform the
@@ -98,6 +103,7 @@ pub struct VideoClassificationPredictionInstance {
     pub time_segment_end: ::prost::alloc::string::String,
 }
 /// Prediction input format for Image Segmentation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageSegmentationPredictionInstance {
     /// The image bytes to make the predictions on.
@@ -111,6 +117,7 @@ pub struct ImageSegmentationPredictionInstance {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Prediction input format for Image Object Detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageObjectDetectionPredictionInstance {
     /// The image bytes or Cloud Storage URI to make the prediction on.
@@ -129,6 +136,7 @@ pub struct ImageObjectDetectionPredictionInstance {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Prediction input format for Text Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextClassificationPredictionInstance {
     /// The text snippet to make the predictions on.
@@ -141,6 +149,7 @@ pub struct TextClassificationPredictionInstance {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Prediction input format for Video Action Recognition.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoActionRecognitionPredictionInstance {
     /// The Google Cloud Storage location of the video on which to perform the

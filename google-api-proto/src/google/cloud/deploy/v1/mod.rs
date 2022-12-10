@@ -25,6 +25,7 @@ impl Type {
 /// Payload proto for "clouddeploy.googleapis.com/rollout_notification"
 /// Platform Log event that describes the failure to send rollout status change
 /// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RolloutNotificationEvent {
     /// Debug message for when a notification fails to send.
@@ -48,6 +49,7 @@ pub struct RolloutNotificationEvent {
 }
 /// Payload proto for "clouddeploy.googleapis.com/release_render"
 /// Platform Log event that describes the render status change.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseRenderEvent {
     /// Debug message for when a render transition occurs. Provides further
@@ -61,6 +63,7 @@ pub struct ReleaseRenderEvent {
 /// Payload proto for "clouddeploy.googleapis.com/release_notification"
 /// Platform Log event that describes the failure to send release status change
 /// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseNotificationEvent {
     /// Debug message for when a notification fails to send.
@@ -76,6 +79,7 @@ pub struct ReleaseNotificationEvent {
 /// Payload proto for "clouddeploy.googleapis.com/deliverypipeline_notification"
 /// Platform Log event that describes the failure to send delivery pipeline
 /// status change Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeliveryPipelineNotificationEvent {
     /// Debug message for when a notification fails to send.
@@ -92,6 +96,7 @@ pub struct DeliveryPipelineNotificationEvent {
 ///
 /// A `DeliveryPipeline` defines a pipeline through which a Skaffold
 /// configuration can progress.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeliveryPipeline {
     /// Optional. Name of the `DeliveryPipeline`. Format is projects/{project}/
@@ -153,6 +158,7 @@ pub struct DeliveryPipeline {
 /// Nested message and enum types in `DeliveryPipeline`.
 pub mod delivery_pipeline {
     /// The ordering configuration of the `DeliveryPipeline`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Pipeline {
         /// SerialPipeline defines a sequential set of stages for a
@@ -162,6 +168,7 @@ pub mod delivery_pipeline {
     }
 }
 /// SerialPipeline defines a sequential set of stages for a `DeliveryPipeline`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SerialPipeline {
     /// Each stage specifies configuration for a `Target`. The ordering
@@ -170,6 +177,7 @@ pub struct SerialPipeline {
     pub stages: ::prost::alloc::vec::Vec<Stage>,
 }
 /// Stage specifies a location to which to deploy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Stage {
     /// The target_id to which this stage points. This field refers exclusively to
@@ -189,6 +197,7 @@ pub struct Stage {
     pub strategy: ::core::option::Option<Strategy>,
 }
 /// Strategy contains deployment strategy information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Strategy {
     /// Deployment strategy details.
@@ -198,6 +207,7 @@ pub struct Strategy {
 /// Nested message and enum types in `Strategy`.
 pub mod strategy {
     /// Deployment strategy details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum DeploymentStrategy {
         /// Standard deployment strategy executes a single deploy and allows
@@ -207,6 +217,7 @@ pub mod strategy {
     }
 }
 /// Standard represents the standard deployment strategy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Standard {
     /// Whether to verify a deployment.
@@ -215,6 +226,7 @@ pub struct Standard {
 }
 /// PipelineReadyCondition contains information around the status of the
 /// Pipeline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PipelineReadyCondition {
     /// True if the Pipeline is in a valid state. Otherwise at least one condition
@@ -229,6 +241,7 @@ pub struct PipelineReadyCondition {
 }
 /// TargetsPresentCondition contains information on any Targets defined in
 /// the Delivery Pipeline that do not actually exist.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetsPresentCondition {
     /// True if there aren't any missing Targets.
@@ -243,6 +256,7 @@ pub struct TargetsPresentCondition {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// PipelineCondition contains all conditions relevant to a Delivery Pipeline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PipelineCondition {
     /// Details around the Pipeline's overall status.
@@ -253,6 +267,7 @@ pub struct PipelineCondition {
     pub targets_present_condition: ::core::option::Option<TargetsPresentCondition>,
 }
 /// The request object for `ListDeliveryPipelines`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDeliveryPipelinesRequest {
     /// Required. The parent, which owns this collection of pipelines. Format must be
@@ -281,6 +296,7 @@ pub struct ListDeliveryPipelinesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListDeliveryPipelines`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDeliveryPipelinesResponse {
     /// The `DeliveryPipeline` objects.
@@ -295,6 +311,7 @@ pub struct ListDeliveryPipelinesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetDeliveryPipeline`
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDeliveryPipelineRequest {
     /// Required. Name of the `DeliveryPipeline`. Format must be
@@ -303,6 +320,7 @@ pub struct GetDeliveryPipelineRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateDeliveryPipeline`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDeliveryPipelineRequest {
     /// Required. The parent collection in which the `DeliveryPipeline` should be created.
@@ -336,6 +354,7 @@ pub struct CreateDeliveryPipelineRequest {
     pub validate_only: bool,
 }
 /// The request object for `UpdateDeliveryPipeline`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDeliveryPipelineRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -373,6 +392,7 @@ pub struct UpdateDeliveryPipelineRequest {
     pub validate_only: bool,
 }
 /// The request object for `DeleteDeliveryPipeline`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDeliveryPipelineRequest {
     /// Required. The name of the `DeliveryPipeline` to delete. Format should be
@@ -417,6 +437,7 @@ pub struct DeleteDeliveryPipelineRequest {
 ///
 /// A `Target` defines a location to which a Skaffold configuration
 /// can be deployed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Target {
     /// Optional. Name of the `Target`. Format is
@@ -490,6 +511,7 @@ pub struct Target {
 pub mod target {
     /// Destination to which the Skaffold configuration is applied during a
     /// rollout.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum DeploymentTarget {
         /// Information specifying a GKE Cluster.
@@ -504,6 +526,7 @@ pub mod target {
     }
 }
 /// Configuration of the environment to use when calling Skaffold.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecutionConfig {
     /// Required. Usages when this configuration should be applied.
@@ -584,6 +607,7 @@ pub mod execution_config {
         }
     }
     /// Details of the environment.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ExecutionEnvironment {
         /// Optional. Use default Cloud Build pool.
@@ -595,6 +619,7 @@ pub mod execution_config {
     }
 }
 /// Execution using the default Cloud Build pool.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DefaultPool {
     /// Optional. Google service account to use for execution. If unspecified,
@@ -610,6 +635,7 @@ pub struct DefaultPool {
     pub artifact_storage: ::prost::alloc::string::String,
 }
 /// Execution using a private Cloud Build pool.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PrivatePool {
     /// Required. Resource name of the Cloud Build worker pool to use. The format is
@@ -629,6 +655,7 @@ pub struct PrivatePool {
     pub artifact_storage: ::prost::alloc::string::String,
 }
 /// Information specifying a GKE Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GkeCluster {
     /// Information specifying a GKE Cluster. Format is
@@ -647,6 +674,7 @@ pub struct GkeCluster {
     pub internal_ip: bool,
 }
 /// Information specifying an Anthos Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnthosCluster {
     /// Membership of the GKE Hub-registered cluster to which to apply the Skaffold
@@ -656,6 +684,7 @@ pub struct AnthosCluster {
     pub membership: ::prost::alloc::string::String,
 }
 /// Information specifying where to deploy a Cloud Run Service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudRunLocation {
     /// Required. The location for the Cloud Run Service. Format must be
@@ -664,6 +693,7 @@ pub struct CloudRunLocation {
     pub location: ::prost::alloc::string::String,
 }
 /// The request object for `ListTargets`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTargetsRequest {
     /// Required. The parent, which owns this collection of targets. Format must be
@@ -691,6 +721,7 @@ pub struct ListTargetsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListTargets`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTargetsResponse {
     /// The `Target` objects.
@@ -705,6 +736,7 @@ pub struct ListTargetsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetTarget`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetTargetRequest {
     /// Required. Name of the `Target`. Format must be
@@ -713,6 +745,7 @@ pub struct GetTargetRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateTarget`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateTargetRequest {
     /// Required. The parent collection in which the `Target` should be created.
@@ -747,6 +780,7 @@ pub struct CreateTargetRequest {
     pub validate_only: bool,
 }
 /// The request object for `UpdateTarget`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateTargetRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -784,6 +818,7 @@ pub struct UpdateTargetRequest {
     pub validate_only: bool,
 }
 /// The request object for `DeleteTarget`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteTargetRequest {
     /// Required. The name of the `Target` to delete. Format should be
@@ -823,6 +858,7 @@ pub struct DeleteTargetRequest {
 ///
 /// A `Release` defines a specific Skaffold configuration instance
 /// that can be deployed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Release {
     /// Optional. Name of the `Release`. Format is projects/{project}/
@@ -921,6 +957,7 @@ pub struct Release {
 /// Nested message and enum types in `Release`.
 pub mod release {
     /// Details of rendering for a single target.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetRender {
         /// Output only. The resource name of the Cloud Build `Build` object that is used to
@@ -1055,6 +1092,7 @@ pub mod release {
     }
 }
 /// Description of an a image to use during Skaffold rendering.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildArtifact {
     /// Image name in Skaffold configuration.
@@ -1067,6 +1105,7 @@ pub struct BuildArtifact {
     pub tag: ::prost::alloc::string::String,
 }
 /// The artifacts produced by a target render operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetArtifact {
     /// Output only. File path of the resolved Skaffold configuration relative to the URI.
@@ -1080,6 +1119,7 @@ pub struct TargetArtifact {
 }
 /// Nested message and enum types in `TargetArtifact`.
 pub mod target_artifact {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Uri {
         /// Output only. URI of a directory containing the artifacts. This contains
@@ -1090,6 +1130,7 @@ pub mod target_artifact {
     }
 }
 /// The request object for `ListReleases`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReleasesRequest {
     /// Required. The `DeliveryPipeline` which owns this collection of `Release` objects.
@@ -1116,6 +1157,7 @@ pub struct ListReleasesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// The response object from `ListReleases`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReleasesResponse {
     /// The `Release` objects.
@@ -1130,6 +1172,7 @@ pub struct ListReleasesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The request object for `GetRelease`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetReleaseRequest {
     /// Required. Name of the `Release`. Format must be
@@ -1138,6 +1181,7 @@ pub struct GetReleaseRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The request object for `CreateRelease`,
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateReleaseRequest {
     /// Required. The parent collection in which the `Release` should be created.
@@ -1174,6 +1218,7 @@ pub struct CreateReleaseRequest {
 /// A `Rollout` resource in the Google Cloud Deploy API.
 ///
 /// A `Rollout` contains information around a specific deployment to a `Target`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Rollout {
     /// Optional. Name of the `Rollout`. Format is projects/{project}/
@@ -1407,6 +1452,7 @@ pub mod rollout {
     }
 }
 /// Metadata includes information associated with a `Rollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Metadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `Rollout`.
@@ -1415,6 +1461,7 @@ pub struct Metadata {
 }
 /// DeployJobRunMetadata surfaces information associated with a `DeployJobRun` to
 /// the user.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployJobRunMetadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `DeployJobRun`.
@@ -1422,6 +1469,7 @@ pub struct DeployJobRunMetadata {
     pub cloud_run: ::core::option::Option<CloudRunMetadata>,
 }
 /// CloudRunMetadata contains information from a Cloud Run deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudRunMetadata {
     /// Output only. The name of the Cloud Run Service that is associated with a `Rollout`.
@@ -1437,6 +1485,7 @@ pub struct CloudRunMetadata {
 }
 /// Phase represents a collection of jobs that are logically grouped together
 /// for a `Rollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Phase {
     /// Output only. The ID of the Phase.
@@ -1495,6 +1544,7 @@ pub mod phase {
         }
     }
     /// The job composition of this Phase.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Jobs {
         /// Output only. Deployment job composition.
@@ -1503,6 +1553,7 @@ pub mod phase {
     }
 }
 /// Deployment job composition.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeploymentJobs {
     /// Output only. The deploy Job. This is the first job run in the phase.
@@ -1513,6 +1564,7 @@ pub struct DeploymentJobs {
     pub verify_job: ::core::option::Option<Job>,
 }
 /// Job represents an operation for a `Rollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Job {
     /// Output only. The ID of the Job.
@@ -1578,6 +1630,7 @@ pub mod job {
         }
     }
     /// The type of Job.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobType {
         /// Output only. A deploy Job.
@@ -1589,12 +1642,15 @@ pub mod job {
     }
 }
 /// A deploy Job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployJob {}
 /// A verify Job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VerifyJob {}
 /// ListRolloutsRequest is the request object used by `ListRollouts`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolloutsRequest {
     /// Required. The `Release` which owns this collection of `Rollout` objects.
@@ -1621,6 +1677,7 @@ pub struct ListRolloutsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// ListRolloutsResponse is the response object reutrned by `ListRollouts`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRolloutsResponse {
     /// The `Rollout` objects.
@@ -1635,6 +1692,7 @@ pub struct ListRolloutsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// GetRolloutRequest is the request object used by `GetRollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRolloutRequest {
     /// Required. Name of the `Rollout`. Format must be
@@ -1643,6 +1701,7 @@ pub struct GetRolloutRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// CreateRolloutRequest is the request object used by `CreateRollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRolloutRequest {
     /// Required. The parent collection in which the `Rollout` should be created.
@@ -1677,6 +1736,7 @@ pub struct CreateRolloutRequest {
     pub validate_only: bool,
 }
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.
@@ -1705,6 +1765,7 @@ pub struct OperationMetadata {
     pub api_version: ::prost::alloc::string::String,
 }
 /// The request object used by `ApproveRollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApproveRolloutRequest {
     /// Required. Name of the Rollout. Format is
@@ -1717,9 +1778,11 @@ pub struct ApproveRolloutRequest {
     pub approved: bool,
 }
 /// The response object from `ApproveRollout`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApproveRolloutResponse {}
 /// RetryJobRequest is the request object used by `RetryJob`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetryJobRequest {
     /// Required. Name of the Rollout. Format is
@@ -1735,9 +1798,11 @@ pub struct RetryJobRequest {
     pub job_id: ::prost::alloc::string::String,
 }
 /// The response object from 'RetryJob'.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetryJobResponse {}
 /// The request object used by `AbandonRelease`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AbandonReleaseRequest {
     /// Required. Name of the Release. Format is
@@ -1747,11 +1812,13 @@ pub struct AbandonReleaseRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The response object for `AbandonRelease`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AbandonReleaseResponse {}
 /// A `JobRun` resource in the Google Cloud Deploy API.
 ///
 /// A `JobRun` contains information of a single `Rollout` job evaluation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobRun {
     /// Optional. Name of the `JobRun`. Format is projects/{project}/locations/{location}/
@@ -1829,6 +1896,7 @@ pub mod job_run {
         }
     }
     /// The `JobRun` type and the information for that type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobRun {
         /// Output only. Information specific to a deploy `JobRun`.
@@ -1840,6 +1908,7 @@ pub mod job_run {
     }
 }
 /// DeployJobRun contains information specific to a deploy `JobRun`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployJobRun {
     /// Output only. The resource name of the Cloud Build `Build` object that is used to deploy.
@@ -1901,6 +1970,7 @@ pub mod deploy_job_run {
     }
 }
 /// VerifyJobRun contains information specific to a verify `JobRun`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VerifyJobRun {
     /// Output only. The resource name of the Cloud Build `Build` object that is used to verify.
@@ -1971,6 +2041,7 @@ pub mod verify_job_run {
     }
 }
 /// ListJobRunsRequest is the request object used by `ListJobRuns`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobRunsRequest {
     /// Required. The `Rollout` which owns this collection of `JobRun` objects.
@@ -1997,6 +2068,7 @@ pub struct ListJobRunsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// ListJobRunsResponse is the response object returned by `ListJobRuns`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListJobRunsResponse {
     /// The `JobRun` objects.
@@ -2011,6 +2083,7 @@ pub struct ListJobRunsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// GetJobRunRequest is the request object used by `GetJobRun`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetJobRunRequest {
     /// Required. Name of the `JobRun`. Format must be
@@ -2019,6 +2092,7 @@ pub struct GetJobRunRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Service-wide configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Config {
     /// Name of the configuration.
@@ -2033,6 +2107,7 @@ pub struct Config {
     pub default_skaffold_version: ::prost::alloc::string::String,
 }
 /// Details of a supported Skaffold version.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SkaffoldVersion {
     /// Release version number. For example, "1.20.3".
@@ -2043,6 +2118,7 @@ pub struct SkaffoldVersion {
     pub support_end_date: ::core::option::Option<super::super::super::r#type::Date>,
 }
 /// Request to get a configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConfigRequest {
     /// Required. Name of requested configuration.
@@ -2581,6 +2657,7 @@ pub mod cloud_deploy_client {
 /// Payload proto for "clouddeploy.googleapis.com/jobrun_notification"
 /// Platform Log event that describes the failure to send JobRun resource update
 /// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct JobRunNotificationEvent {
     /// Debug message for when a notification fails to send.
@@ -2608,6 +2685,7 @@ pub struct JobRunNotificationEvent {
 /// Payload proto for "clouddeploy.googleapis.com/target_notification"
 /// Platform Log event that describes the failure to send target status change
 /// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetNotificationEvent {
     /// Debug message for when a notification fails to send.

@@ -1,4 +1,5 @@
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.
@@ -28,6 +29,7 @@ pub struct OperationMetadata {
 }
 /// ConfigVariableTemplate provides metadata about a `ConfigVariable` that is
 /// used in a Connection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfigVariableTemplate {
     /// Key of the config variable.
@@ -149,6 +151,7 @@ pub mod config_variable_template {
     }
 }
 /// Secret provides a reference to entries in Secret Manager.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Secret {
     /// The resource name of the secret version in the format,
@@ -157,6 +160,7 @@ pub struct Secret {
     pub secret_version: ::prost::alloc::string::String,
 }
 /// EnumOption definition
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnumOption {
     /// Id of the option.
@@ -168,6 +172,7 @@ pub struct EnumOption {
 }
 /// ConfigVariable represents a configuration variable present in a Connection.
 /// or AuthConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfigVariable {
     /// Key of the config variable.
@@ -180,6 +185,7 @@ pub struct ConfigVariable {
 /// Nested message and enum types in `ConfigVariable`.
 pub mod config_variable {
     /// Value type of the config variable.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// Value is an integer
@@ -201,6 +207,7 @@ pub mod config_variable {
 /// account. These configurations will let UI display to customers what
 /// IAM roles need to be granted by them. Or these configurations can be used
 /// by the UI to render a 'grant' button to do the same on behalf of the user.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RoleGrant {
     /// Prinicipal/Identity for whom the role need to assigned.
@@ -219,6 +226,7 @@ pub struct RoleGrant {
 /// Nested message and enum types in `RoleGrant`.
 pub mod role_grant {
     /// Resource definition
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Resource {
         /// Different types of resource supported.
@@ -311,6 +319,7 @@ pub mod role_grant {
 }
 /// This configuration captures the details required to render an authorization
 /// link for the OAuth Authorization Code Flow.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthorizationCodeLink {
     /// The base URI the user must click to trigger the authorization code login
@@ -358,6 +367,7 @@ impl LaunchStage {
     }
 }
 /// AuthConfig defines details of a authentication type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthConfig {
     /// The type of authentication configured.
@@ -373,6 +383,7 @@ pub struct AuthConfig {
 /// Nested message and enum types in `AuthConfig`.
 pub mod auth_config {
     /// Parameters to support Username and Password Authentication.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct UserPassword {
         /// Username.
@@ -385,6 +396,7 @@ pub mod auth_config {
     /// Parameters to support JSON Web Token (JWT) Profile for Oauth 2.0
     /// Authorization Grant based authentication.
     /// See <https://tools.ietf.org/html/rfc7523> for more details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Oauth2JwtBearer {
         /// Secret version reference containing a PKCS#8 PEM-encoded private
@@ -400,6 +412,7 @@ pub mod auth_config {
     /// Nested message and enum types in `Oauth2JwtBearer`.
     pub mod oauth2_jwt_bearer {
         /// JWT claims used for the jwt-bearer authorization grant.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct JwtClaims {
             /// Value for the "iss" claim.
@@ -415,6 +428,7 @@ pub mod auth_config {
     }
     /// Parameters to support Oauth 2.0 Client Credentials Grant Authentication.
     /// See <https://tools.ietf.org/html/rfc6749#section-1.3.4> for more details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Oauth2ClientCredentials {
         /// The client identifier.
@@ -425,6 +439,7 @@ pub mod auth_config {
         pub client_secret: ::core::option::Option<super::Secret>,
     }
     /// Parameters to support Ssh public key Authentication.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SshPublicKey {
         /// The user account used to authenticate.
@@ -445,6 +460,7 @@ pub mod auth_config {
         pub ssh_client_cert_pass: ::core::option::Option<super::Secret>,
     }
     /// Supported auth types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Type {
         /// UserPassword.
@@ -462,6 +478,7 @@ pub mod auth_config {
     }
 }
 /// AuthConfigTemplate defines required field over an authentication type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthConfigTemplate {
     /// The type of authentication configured.
@@ -503,6 +520,7 @@ impl AuthType {
     }
 }
 /// ConnectorVersion indicates a specific version of a connector.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConnectorVersion {
     /// Output only. Resource name of the Version.
@@ -555,6 +573,7 @@ pub struct ConnectorVersion {
     pub role_grant: ::core::option::Option<RoleGrant>,
 }
 /// Request message for Connectors.GetConnectorVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConnectorVersionRequest {
     /// Required. Resource name of the form:
@@ -568,6 +587,7 @@ pub struct GetConnectorVersionRequest {
     pub view: i32,
 }
 /// Request message for Connectors.ListConnectorVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectorVersionsRequest {
     /// Required. Parent resource of the connectors, of the form:
@@ -587,6 +607,7 @@ pub struct ListConnectorVersionsRequest {
     pub view: i32,
 }
 /// Response message for Connectors.ListConnectorVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectorVersionsResponse {
     /// A list of connector versions.
@@ -603,6 +624,7 @@ pub struct ListConnectorVersionsResponse {
 /// management layer to add a new connector version by the connector developer.
 /// Details about how this proto is passed to the management layer is covered in
 /// this doc - go/runtime-manifest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SupportedRuntimeFeatures {
     /// Specifies if the connector supports entity apis like 'createEntity'.
@@ -620,6 +642,7 @@ pub struct SupportedRuntimeFeatures {
 /// may be a static information for a particular connector version or it is
 /// derived from the configurations provided by the customer in Connection
 /// resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EgressControlConfig {
     #[prost(oneof = "egress_control_config::OneofBackends", tags = "1, 2")]
@@ -627,6 +650,7 @@ pub struct EgressControlConfig {
 }
 /// Nested message and enum types in `EgressControlConfig`.
 pub mod egress_control_config {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum OneofBackends {
         /// Static Comma separated backends which are common for all Connection
@@ -642,6 +666,7 @@ pub mod egress_control_config {
 }
 /// Extraction Rules to identity the backends from customer provided
 /// configuration in Connection resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtractionRules {
     /// Collection of Extraction Rule.
@@ -649,6 +674,7 @@ pub struct ExtractionRules {
     pub extraction_rule: ::prost::alloc::vec::Vec<ExtractionRule>,
 }
 /// Extraction Rule.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExtractionRule {
     /// Source on which the rule is applied.
@@ -662,6 +688,7 @@ pub struct ExtractionRule {
 /// Nested message and enum types in `ExtractionRule`.
 pub mod extraction_rule {
     /// Source to extract the backend from.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Source {
         /// Type of the source.
@@ -728,6 +755,7 @@ impl ConnectorVersionView {
     }
 }
 /// Define the Connectors target endpoint.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DestinationConfig {
     /// The key is the destination identifier that is supported by the Connector.
@@ -737,6 +765,7 @@ pub struct DestinationConfig {
     #[prost(message, repeated, tag = "2")]
     pub destinations: ::prost::alloc::vec::Vec<Destination>,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Destination {
     /// The port is the target port number that is accepted by the destination.
@@ -747,6 +776,7 @@ pub struct Destination {
 }
 /// Nested message and enum types in `Destination`.
 pub mod destination {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
         /// PSC service attachments.
@@ -759,6 +789,7 @@ pub mod destination {
     }
 }
 /// Connection represents an instance of connector.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Connection {
     /// Output only. Resource name of the Connection.
@@ -830,6 +861,7 @@ pub struct Connection {
     pub node_config: ::core::option::Option<NodeConfig>,
 }
 /// Configuration for the connection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NodeConfig {
     /// Minimum number of nodes in the runtime nodes.
@@ -840,6 +872,7 @@ pub struct NodeConfig {
     pub max_node_count: i32,
 }
 /// Metadata of connection schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConnectionSchemaMetadata {
     /// Output only. List of entity names.
@@ -850,6 +883,7 @@ pub struct ConnectionSchemaMetadata {
     pub actions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Schema of a runtime entity.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeEntitySchema {
     /// Output only. Name of the entity.
@@ -862,6 +896,7 @@ pub struct RuntimeEntitySchema {
 /// Nested message and enum types in `RuntimeEntitySchema`.
 pub mod runtime_entity_schema {
     /// Metadata of an entity field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Field {
         /// Name of the Field.
@@ -895,6 +930,7 @@ pub mod runtime_entity_schema {
     }
 }
 /// Schema of a runtime action.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeActionSchema {
     /// Output only. Name of the action.
@@ -912,6 +948,7 @@ pub struct RuntimeActionSchema {
 /// Nested message and enum types in `RuntimeActionSchema`.
 pub mod runtime_action_schema {
     /// Metadata of an input parameter.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InputParameter {
         /// Name of the Parameter.
@@ -932,6 +969,7 @@ pub mod runtime_action_schema {
         pub default_value: ::core::option::Option<::prost_types::Value>,
     }
     /// Metadata of result field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ResultMetadata {
         /// Name of the result field.
@@ -947,6 +985,7 @@ pub mod runtime_action_schema {
 }
 /// Determines whether or no a connection is locked. If locked, a reason must be
 /// specified.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LockConfig {
     /// Indicates whether or not the connection is locked.
@@ -957,6 +996,7 @@ pub struct LockConfig {
     pub reason: ::prost::alloc::string::String,
 }
 /// Request message for ConnectorsService.ListConnections
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectionsRequest {
     /// Required. Parent resource of the Connection, of the form:
@@ -981,6 +1021,7 @@ pub struct ListConnectionsRequest {
     pub view: i32,
 }
 /// Response message for ConnectorsService.ListConnections
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectionsResponse {
     /// Connections.
@@ -994,6 +1035,7 @@ pub struct ListConnectionsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for ConnectorsService.GetConnection
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConnectionRequest {
     /// Required. Resource name of the form:
@@ -1006,6 +1048,7 @@ pub struct GetConnectionRequest {
     pub view: i32,
 }
 /// Request message for ConnectorsService.CreateConnection
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateConnectionRequest {
     /// Required. Parent resource of the Connection, of the form:
@@ -1021,6 +1064,7 @@ pub struct CreateConnectionRequest {
     pub connection: ::core::option::Option<Connection>,
 }
 /// Request message for ConnectorsService.UpdateConnection
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateConnectionRequest {
     /// Required. Connection resource.
@@ -1035,6 +1079,7 @@ pub struct UpdateConnectionRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for ConnectorsService.DeleteConnection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteConnectionRequest {
     /// Required. Resource name of the form:
@@ -1043,6 +1088,7 @@ pub struct DeleteConnectionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ConnectorsService.GetConnectionSchemaMetadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConnectionSchemaMetadataRequest {
     /// Required. Connection name
@@ -1055,6 +1101,7 @@ pub struct GetConnectionSchemaMetadataRequest {
 /// For filter, only entity field is supported with literal equality operator.
 /// Accepted filter example: entity="Order"
 /// Wildcards are not supported in the filter currently.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimeEntitySchemasRequest {
     /// Required. Parent resource of RuntimeEntitySchema
@@ -1078,6 +1125,7 @@ pub struct ListRuntimeEntitySchemasRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ConnectorsService.ListRuntimeEntitySchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimeEntitySchemasResponse {
     /// Runtime entity schemas.
@@ -1091,6 +1139,7 @@ pub struct ListRuntimeEntitySchemasResponse {
 /// For filter, only action field is supported with literal equality operator.
 /// Accepted filter example: action="approveOrder"
 /// Wildcards are not supported in the filter currently.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimeActionSchemasRequest {
     /// Required. Parent resource of RuntimeActionSchema
@@ -1114,6 +1163,7 @@ pub struct ListRuntimeActionSchemasRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ConnectorsService.ListRuntimeActionSchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimeActionSchemasResponse {
     /// Runtime action schemas.
@@ -1124,6 +1174,7 @@ pub struct ListRuntimeActionSchemasResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// ConnectionStatus indicates the state of the connection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConnectionStatus {
     /// State.
@@ -1360,6 +1411,7 @@ impl ConnectionView {
     }
 }
 /// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Connector {
     /// Output only. Resource name of the Connector.
@@ -1402,6 +1454,7 @@ pub struct Connector {
     pub launch_stage: i32,
 }
 /// Request message for Connectors.GetConnector.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetConnectorRequest {
     /// Required. Resource name of the form:
@@ -1411,6 +1464,7 @@ pub struct GetConnectorRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectorsRequest {
     /// Required. Parent resource of the connectors, of the form:
@@ -1426,6 +1480,7 @@ pub struct ListConnectorsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectorsResponse {
     /// A list of connectors.
@@ -1439,6 +1494,7 @@ pub struct ListConnectorsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Provider indicates the owner who provides the connectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Provider {
     /// Output only. Resource name of the Provider.
@@ -1480,6 +1536,7 @@ pub struct Provider {
     pub launch_stage: i32,
 }
 /// Request message for Connectors.GetProvider.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProviderRequest {
     /// Required. Resource name of the form:
@@ -1489,6 +1546,7 @@ pub struct GetProviderRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProvidersRequest {
     /// Required. Parent resource of the API, of the form:
@@ -1504,6 +1562,7 @@ pub struct ListProvidersRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProvidersResponse {
     /// A list of providers.
@@ -1517,6 +1576,7 @@ pub struct ListProvidersResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for Connectors.GetRuntimeConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRuntimeConfigRequest {
     /// Required. Resource name of the form:
@@ -1528,6 +1588,7 @@ pub struct GetRuntimeConfigRequest {
 /// It includes generic resource configs consumed by control plane and runtime
 /// plane like: pub/sub topic/subscription resource name, Cloud Storage location
 /// storing schema etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeConfig {
     /// Output only. location_id of the runtime location. E.g. "us-west1".

@@ -1,4 +1,5 @@
 /// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadataV1Beta {
     /// API method that initiated this operation. Example:
@@ -47,6 +48,7 @@ pub struct OperationMetadataV1Beta {
 pub mod operation_metadata_v1_beta {
     /// Metadata specific to the type of operation in progress.
     /// @OutputOnly
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum MethodMetadata {
         #[prost(message, tag = "8")]
@@ -55,6 +57,7 @@ pub mod operation_metadata_v1_beta {
 }
 /// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
 /// \[google.appengine.v1beta.CreateVersionRequest][google.appengine.v1beta.CreateVersionRequest\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateVersionMetadataV1Beta {
     /// The Cloud Build ID if one was created as part of the version create.
@@ -64,6 +67,7 @@ pub struct CreateVersionMetadataV1Beta {
 }
 /// [Google Cloud Endpoints](<https://cloud.google.com/appengine/docs/python/endpoints/>)
 /// configuration for API handlers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiConfigHandler {
     /// Action to take when users access resources that require
@@ -85,6 +89,7 @@ pub struct ApiConfigHandler {
     pub url: ::prost::alloc::string::String,
 }
 /// Custom static error page to be served when an error occurs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ErrorHandler {
     /// Error condition this handler applies to.
@@ -141,6 +146,7 @@ pub mod error_handler {
 /// URL pattern and description of how the URL should be handled. App Engine can
 /// handle URLs by executing application code or by serving static files
 /// uploaded with the version, such as images, CSS, or JavaScript.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UrlMap {
     /// URL prefix. Uses regular expression syntax, which means regexp
@@ -221,6 +227,7 @@ pub mod url_map {
         }
     }
     /// Type of handler for this URL pattern.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum HandlerType {
         /// Returns the contents of a file, such as an image, as the response.
@@ -240,6 +247,7 @@ pub mod url_map {
 /// stylesheets, or JavaScript source files. Static file handlers describe which
 /// files in the application directory are static files, and which URLs serve
 /// them.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StaticFilesHandler {
     /// Path to the static files matched by the URL pattern, from the
@@ -280,6 +288,7 @@ pub struct StaticFilesHandler {
     pub application_readable: bool,
 }
 /// Executes a script to handle the request that matches the URL pattern.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScriptHandler {
     /// Path to the script from the application root directory.
@@ -287,6 +296,7 @@ pub struct ScriptHandler {
     pub script_path: ::prost::alloc::string::String,
 }
 /// Uses Google Cloud Endpoints to handle requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiEndpointHandler {
     /// Path to the script from the application root directory.
@@ -296,6 +306,7 @@ pub struct ApiEndpointHandler {
 /// Health checking configuration for VM instances. Unhealthy instances
 /// are killed and replaced with new instances. Only applicable for
 /// instances in App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HealthCheck {
     /// Whether to explicitly disable health checks for this instance.
@@ -326,6 +337,7 @@ pub struct HealthCheck {
 }
 /// Readiness checking configuration for VM instances. Unhealthy instances
 /// are removed from traffic rotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReadinessCheck {
     /// The request path.
@@ -357,6 +369,7 @@ pub struct ReadinessCheck {
 }
 /// Health checking configuration for VM instances. Unhealthy instances
 /// are killed and replaced with new instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LivenessCheck {
     /// The request path.
@@ -385,6 +398,7 @@ pub struct LivenessCheck {
     pub initial_delay: ::core::option::Option<::prost_types::Duration>,
 }
 /// Third-party Python runtime library that is required by the application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Library {
     /// Name of the library. Example: "django".
@@ -485,6 +499,7 @@ impl SecurityLevel {
     }
 }
 /// Code and application artifacts used to deploy a version to App Engine.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Deployment {
     /// Manifest of the files stored in Google Cloud Storage that are included
@@ -516,6 +531,7 @@ pub struct Deployment {
 }
 /// Single source file that is part of the version to be deployed. Each source
 /// file that is deployed must be specified separately.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FileInfo {
     /// URL source to use to fetch this file. Must be a URL to a resource in
@@ -535,6 +551,7 @@ pub struct FileInfo {
 /// Docker image that is used to create a container and start a VM instance for
 /// the version that you deploy. Only applicable for instances running in the App
 /// Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ContainerInfo {
     /// URI to the hosted container image in Google Container Registry. The URI
@@ -544,6 +561,7 @@ pub struct ContainerInfo {
     pub image: ::prost::alloc::string::String,
 }
 /// Google Cloud Build information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildInfo {
     /// The Google Cloud Build id.
@@ -554,6 +572,7 @@ pub struct BuildInfo {
 /// Options for the build operations performed as a part of the version
 /// deployment. Only applicable for App Engine flexible environment when creating
 /// a version using source code directly.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudBuildOptions {
     /// Path to the yaml file used in deployment, used to determine runtime
@@ -571,6 +590,7 @@ pub struct CloudBuildOptions {
     pub cloud_build_timeout: ::core::option::Option<::prost_types::Duration>,
 }
 /// The zip file information for a zip deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ZipInfo {
     /// URL of the zip file to deploy from. Must be a URL to a resource in
@@ -586,6 +606,7 @@ pub struct ZipInfo {
 }
 /// A NetworkSettings resource is a container for ingress settings for a version
 /// or service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NetworkSettings {
     /// The ingress settings for version or service.
@@ -640,6 +661,7 @@ pub mod network_settings {
 }
 /// A Version resource is a specific set of source code and configuration files
 /// that are deployed into a service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Version {
     /// Full path to the Version resource in the API.  Example:
@@ -849,6 +871,7 @@ pub mod version {
     /// Controls how instances are created, scaled, and reaped.
     ///
     /// Defaults to `AutomaticScaling`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Scaling {
         /// Automatic scaling is based on request rate, response latencies, and other
@@ -876,6 +899,7 @@ pub mod version {
 ///
 /// The fields here refer to the name and configuration ID of a "service"
 /// resource in the [Service Management API](<https://cloud.google.com/service-management/overview>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndpointsApiService {
     /// Endpoints service name which is the name of the "service" resource in the
@@ -947,6 +971,7 @@ pub mod endpoints_api_service {
 }
 /// Automatic scaling is based on request rate, response latencies, and other
 /// application metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AutomaticScaling {
     /// The time period that the
@@ -1011,6 +1036,7 @@ pub struct AutomaticScaling {
 /// receives a request. The instance will be turned down when the app becomes
 /// idle. Basic scaling is ideal for work that is intermittent or driven by
 /// user activity.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BasicScaling {
     /// Duration of time after the last request that an instance must wait before
@@ -1023,6 +1049,7 @@ pub struct BasicScaling {
 }
 /// A service with manual scaling runs continuously, allowing you to perform
 /// complex initialization and rely on the state of its memory over time.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ManualScaling {
     /// Number of instances to assign to the service at the start. This number
@@ -1033,6 +1060,7 @@ pub struct ManualScaling {
     pub instances: i32,
 }
 /// Target scaling by CPU usage.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CpuUtilization {
     /// Period of time over which CPU utilization is calculated.
@@ -1045,6 +1073,7 @@ pub struct CpuUtilization {
 }
 /// Target scaling by request utilization.
 /// Only applicable in the App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestUtilization {
     /// Target requests per second.
@@ -1056,6 +1085,7 @@ pub struct RequestUtilization {
 }
 /// Target scaling by disk usage.
 /// Only applicable in the App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DiskUtilization {
     /// Target bytes written per second.
@@ -1073,6 +1103,7 @@ pub struct DiskUtilization {
 }
 /// Target scaling by network usage.
 /// Only applicable in the App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NetworkUtilization {
     /// Target bytes sent per second.
@@ -1089,6 +1120,7 @@ pub struct NetworkUtilization {
     pub target_received_packets_per_second: i32,
 }
 /// Allows autoscaling based on Stackdriver metrics.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomMetric {
     /// The name of the metric.
@@ -1108,6 +1140,7 @@ pub struct CustomMetric {
 /// Nested message and enum types in `CustomMetric`.
 pub mod custom_metric {
     /// The target spec.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TargetSpec {
         /// The target value for the metric.
@@ -1123,6 +1156,7 @@ pub mod custom_metric {
     }
 }
 /// Scheduler settings for standard environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StandardSchedulerSettings {
     /// Target CPU utilization ratio to maintain when scaling.
@@ -1142,6 +1176,7 @@ pub struct StandardSchedulerSettings {
 }
 /// Extra network settings.
 /// Only applicable in the App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Network {
     /// List of ports, or port pairs, to forward from the virtual machine to the
@@ -1186,6 +1221,7 @@ pub struct Network {
 }
 /// Volumes mounted within the app container.
 /// Only applicable in the App Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Volume {
     /// Unique name for the volume.
@@ -1199,6 +1235,7 @@ pub struct Volume {
     pub size_gb: f64,
 }
 /// Machine resources for a version.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Resources {
     /// Number of CPU cores needed.
@@ -1219,6 +1256,7 @@ pub struct Resources {
     pub kms_key_reference: ::prost::alloc::string::String,
 }
 /// VPC access connector specification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VpcAccessConnector {
     /// Full Serverless VPC Access Connector name e.g.
@@ -1227,6 +1265,7 @@ pub struct VpcAccessConnector {
     pub name: ::prost::alloc::string::String,
 }
 /// The entrypoint for the application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Entrypoint {
     /// The command to run.
@@ -1236,6 +1275,7 @@ pub struct Entrypoint {
 /// Nested message and enum types in `Entrypoint`.
 pub mod entrypoint {
     /// The command to run.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Command {
         /// The format should be a shell command that can be fed to `bash -c`.
@@ -1325,6 +1365,7 @@ impl ServingStatus {
 }
 /// An Application resource contains the top-level configuration of an App
 /// Engine application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Application {
     /// Full path to the Application resource in the API.
@@ -1401,6 +1442,7 @@ pub struct Application {
 /// Nested message and enum types in `Application`.
 pub mod application {
     /// Identity-Aware Proxy
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IdentityAwareProxy {
         /// Whether the serving infrastructure will authenticate and
@@ -1430,6 +1472,7 @@ pub mod application {
     }
     /// The feature specific settings to be used in the application. These define
     /// behaviors that are user configurable.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FeatureSettings {
         /// Boolean value indicating if split health checks should be used instead
@@ -1521,6 +1564,7 @@ pub mod application {
     }
 }
 /// Rules to match an HTTP request and dispatch that request to a service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UrlDispatchRule {
     /// Domain name to match against. The wildcard "`*`" is supported if
@@ -1545,6 +1589,7 @@ pub struct UrlDispatchRule {
 /// An SSL certificate that a user has been authorized to administer. A user
 /// is authorized to administer any certificate that applies to one of their
 /// authorized domains.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthorizedCertificate {
     /// Full path to the `AuthorizedCertificate` resource in the API. Example:
@@ -1615,6 +1660,7 @@ pub struct AuthorizedCertificate {
     pub domain_mappings_count: i32,
 }
 /// An SSL certificate obtained from a certificate authority.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CertificateRawData {
     /// PEM encoded x.509 public key certificate. This field is set once on
@@ -1639,6 +1685,7 @@ pub struct CertificateRawData {
     pub private_key: ::prost::alloc::string::String,
 }
 /// A certificate managed by App Engine.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ManagedCertificate {
     /// Time at which the certificate was last renewed. The renewal process is
@@ -1709,6 +1756,7 @@ impl ManagementStatus {
 /// A domain that a user has been authorized to administer. To authorize use
 /// of a domain, verify ownership via
 /// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuthorizedDomain {
     /// Full path to the `AuthorizedDomain` resource in the API. Example:
@@ -1723,6 +1771,7 @@ pub struct AuthorizedDomain {
     pub id: ::prost::alloc::string::String,
 }
 /// A domain serving an App Engine application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DomainMapping {
     /// Full path to the `DomainMapping` resource in the API. Example:
@@ -1748,6 +1797,7 @@ pub struct DomainMapping {
     pub resource_records: ::prost::alloc::vec::Vec<ResourceRecord>,
 }
 /// SSL configuration for a `DomainMapping` resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SslSettings {
     /// ID of the `AuthorizedCertificate` resource configuring SSL for the
@@ -1816,6 +1866,7 @@ pub mod ssl_settings {
     }
 }
 /// A DNS resource record.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceRecord {
     /// Relative name of the object affected by this record. Only applicable for
@@ -1869,6 +1920,7 @@ pub mod resource_record {
 }
 /// A single firewall rule that is evaluated against incoming traffic
 /// and provides an action to take on matched requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FirewallRule {
     /// A positive integer between [1, Int32.MaxValue-1] that defines the order of
@@ -1938,6 +1990,7 @@ pub mod firewall_rule {
 }
 /// An Instance resource is the computing unit that App Engine uses to
 /// automatically scale an application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Output only. Full path to the Instance resource in the API.
@@ -2006,6 +2059,7 @@ pub struct Instance {
 /// Nested message and enum types in `Instance`.
 pub mod instance {
     /// Wrapper for LivenessState enum.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Liveness {}
     /// Nested message and enum types in `Liveness`.
@@ -2101,6 +2155,7 @@ pub mod instance {
 /// analysis or API requests from mobile devices. Each service has a
 /// collection of versions that define a specific set of code used to
 /// implement the functionality of that service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Service {
     /// Full path to the Service resource in the API.
@@ -2125,6 +2180,7 @@ pub struct Service {
 }
 /// Traffic routing configuration for versions within a single service. Traffic
 /// splits define how traffic directed to the service is assigned to versions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrafficSplit {
     /// Mechanism used to determine which version a request is sent to.
@@ -2191,6 +2247,7 @@ pub mod traffic_split {
     }
 }
 /// Request message for `Applications.GetApplication`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApplicationRequest {
     /// Name of the Application resource to get. Example: `apps/myapp`.
@@ -2198,6 +2255,7 @@ pub struct GetApplicationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Applications.CreateApplication`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApplicationRequest {
     /// Application configuration.
@@ -2205,6 +2263,7 @@ pub struct CreateApplicationRequest {
     pub application: ::core::option::Option<Application>,
 }
 /// Request message for `Applications.UpdateApplication`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationRequest {
     /// Name of the Application resource to update. Example: `apps/myapp`.
@@ -2218,6 +2277,7 @@ pub struct UpdateApplicationRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for 'Applications.RepairApplication'.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepairApplicationRequest {
     /// Name of the application to repair. Example: `apps/myapp`
@@ -2225,6 +2285,7 @@ pub struct RepairApplicationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Services.ListServices`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServicesRequest {
     /// Name of the parent Application resource. Example: `apps/myapp`.
@@ -2238,6 +2299,7 @@ pub struct ListServicesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `Services.ListServices`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListServicesResponse {
     /// The services belonging to the requested application.
@@ -2248,6 +2310,7 @@ pub struct ListServicesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `Services.GetService`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetServiceRequest {
     /// Name of the resource requested. Example: `apps/myapp/services/default`.
@@ -2255,6 +2318,7 @@ pub struct GetServiceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Services.UpdateService`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateServiceRequest {
     /// Name of the resource to update. Example: `apps/myapp/services/default`.
@@ -2283,6 +2347,7 @@ pub struct UpdateServiceRequest {
     pub migrate_traffic: bool,
 }
 /// Request message for `Services.DeleteService`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteServiceRequest {
     /// Name of the resource requested. Example: `apps/myapp/services/default`.
@@ -2290,6 +2355,7 @@ pub struct DeleteServiceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Versions.ListVersions`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListVersionsRequest {
     /// Name of the parent Service resource. Example:
@@ -2307,6 +2373,7 @@ pub struct ListVersionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `Versions.ListVersions`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListVersionsResponse {
     /// The versions belonging to the requested service.
@@ -2317,6 +2384,7 @@ pub struct ListVersionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `Versions.GetVersion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetVersionRequest {
     /// Name of the resource requested. Example:
@@ -2328,6 +2396,7 @@ pub struct GetVersionRequest {
     pub view: i32,
 }
 /// Request message for `Versions.CreateVersion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateVersionRequest {
     /// Name of the parent resource to create this version under. Example:
@@ -2339,6 +2408,7 @@ pub struct CreateVersionRequest {
     pub version: ::core::option::Option<Version>,
 }
 /// Request message for `Versions.UpdateVersion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateVersionRequest {
     /// Name of the resource to update. Example:
@@ -2354,6 +2424,7 @@ pub struct UpdateVersionRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `Versions.DeleteVersion`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteVersionRequest {
     /// Name of the resource requested. Example:
@@ -2362,6 +2433,7 @@ pub struct DeleteVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Instances.ListInstances`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Name of the parent Version resource. Example:
@@ -2376,6 +2448,7 @@ pub struct ListInstancesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `Instances.ListInstances`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesResponse {
     /// The instances belonging to the requested version.
@@ -2386,6 +2459,7 @@ pub struct ListInstancesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `Instances.GetInstance`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Name of the resource requested. Example:
@@ -2394,6 +2468,7 @@ pub struct GetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Instances.DeleteInstance`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteInstanceRequest {
     /// Name of the resource requested. Example:
@@ -2402,6 +2477,7 @@ pub struct DeleteInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Instances.DebugInstance`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DebugInstanceRequest {
     /// Name of the resource requested. Example:
@@ -2419,6 +2495,7 @@ pub struct DebugInstanceRequest {
     pub ssh_key: ::prost::alloc::string::String,
 }
 /// Request message for `Firewall.ListIngressRules`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListIngressRulesRequest {
     /// Name of the Firewall collection to retrieve.
@@ -2438,6 +2515,7 @@ pub struct ListIngressRulesRequest {
     pub matching_address: ::prost::alloc::string::String,
 }
 /// Response message for `Firewall.ListIngressRules`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListIngressRulesResponse {
     /// The ingress FirewallRules for this application.
@@ -2448,6 +2526,7 @@ pub struct ListIngressRulesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `Firewall.BatchUpdateIngressRules`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchUpdateIngressRulesRequest {
     /// Name of the Firewall collection to set.
@@ -2459,6 +2538,7 @@ pub struct BatchUpdateIngressRulesRequest {
     pub ingress_rules: ::prost::alloc::vec::Vec<FirewallRule>,
 }
 /// Response message for `Firewall.UpdateAllIngressRules`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchUpdateIngressRulesResponse {
     /// The full list of ingress FirewallRules for this application.
@@ -2466,6 +2546,7 @@ pub struct BatchUpdateIngressRulesResponse {
     pub ingress_rules: ::prost::alloc::vec::Vec<FirewallRule>,
 }
 /// Request message for `Firewall.CreateIngressRule`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateIngressRuleRequest {
     /// Name of the parent Firewall collection in which to create a new rule.
@@ -2486,6 +2567,7 @@ pub struct CreateIngressRuleRequest {
     pub rule: ::core::option::Option<FirewallRule>,
 }
 /// Request message for `Firewall.GetIngressRule`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetIngressRuleRequest {
     /// Name of the Firewall resource to retrieve.
@@ -2494,6 +2576,7 @@ pub struct GetIngressRuleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `Firewall.UpdateIngressRule`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateIngressRuleRequest {
     /// Name of the Firewall resource to update.
@@ -2508,6 +2591,7 @@ pub struct UpdateIngressRuleRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `Firewall.DeleteIngressRule`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteIngressRuleRequest {
     /// Name of the Firewall resource to delete.
@@ -2516,6 +2600,7 @@ pub struct DeleteIngressRuleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `AuthorizedDomains.ListAuthorizedDomains`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAuthorizedDomainsRequest {
     /// Name of the parent Application resource. Example: `apps/myapp`.
@@ -2529,6 +2614,7 @@ pub struct ListAuthorizedDomainsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AuthorizedDomains.ListAuthorizedDomains`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAuthorizedDomainsResponse {
     /// The authorized domains belonging to the user.
@@ -2539,6 +2625,7 @@ pub struct ListAuthorizedDomainsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `AuthorizedCertificates.ListAuthorizedCertificates`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAuthorizedCertificatesRequest {
     /// Name of the parent `Application` resource. Example: `apps/myapp`.
@@ -2555,6 +2642,7 @@ pub struct ListAuthorizedCertificatesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `AuthorizedCertificates.ListAuthorizedCertificates`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAuthorizedCertificatesResponse {
     /// The SSL certificates the user is authorized to administer.
@@ -2565,6 +2653,7 @@ pub struct ListAuthorizedCertificatesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `AuthorizedCertificates.GetAuthorizedCertificate`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAuthorizedCertificateRequest {
     /// Name of the resource requested. Example:
@@ -2576,6 +2665,7 @@ pub struct GetAuthorizedCertificateRequest {
     pub view: i32,
 }
 /// Request message for `AuthorizedCertificates.CreateAuthorizedCertificate`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAuthorizedCertificateRequest {
     /// Name of the parent `Application` resource. Example: `apps/myapp`.
@@ -2586,6 +2676,7 @@ pub struct CreateAuthorizedCertificateRequest {
     pub certificate: ::core::option::Option<AuthorizedCertificate>,
 }
 /// Request message for `AuthorizedCertificates.UpdateAuthorizedCertificate`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAuthorizedCertificateRequest {
     /// Name of the resource to update. Example:
@@ -2602,6 +2693,7 @@ pub struct UpdateAuthorizedCertificateRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `AuthorizedCertificates.DeleteAuthorizedCertificate`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAuthorizedCertificateRequest {
     /// Name of the resource to delete. Example:
@@ -2610,6 +2702,7 @@ pub struct DeleteAuthorizedCertificateRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `DomainMappings.ListDomainMappings`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDomainMappingsRequest {
     /// Name of the parent Application resource. Example: `apps/myapp`.
@@ -2623,6 +2716,7 @@ pub struct ListDomainMappingsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for `DomainMappings.ListDomainMappings`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDomainMappingsResponse {
     /// The domain mappings for the application.
@@ -2633,6 +2727,7 @@ pub struct ListDomainMappingsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `DomainMappings.GetDomainMapping`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDomainMappingRequest {
     /// Name of the resource requested. Example:
@@ -2641,6 +2736,7 @@ pub struct GetDomainMappingRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for `DomainMappings.CreateDomainMapping`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDomainMappingRequest {
     /// Name of the parent Application resource. Example: `apps/myapp`.
@@ -2655,6 +2751,7 @@ pub struct CreateDomainMappingRequest {
     pub override_strategy: i32,
 }
 /// Request message for `DomainMappings.UpdateDomainMapping`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDomainMappingRequest {
     /// Name of the resource to update. Example:
@@ -2670,6 +2767,7 @@ pub struct UpdateDomainMappingRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for `DomainMappings.DeleteDomainMapping`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDomainMappingRequest {
     /// Name of the resource to delete. Example:
@@ -4080,6 +4178,7 @@ pub mod domain_mappings_client {
     }
 }
 /// App Engine admin service audit log.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AuditData {
     /// Detailed information about methods that require it. Does not include
@@ -4095,6 +4194,7 @@ pub mod audit_data {
     /// simple Get, List or Delete methods because all significant information
     /// (resource name, number of returned elements for List operations) is already
     /// included in parent audit log message.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Method {
         /// Detailed information about UpdateService call.
@@ -4106,6 +4206,7 @@ pub mod audit_data {
     }
 }
 /// Detailed information about UpdateService call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateServiceMethod {
     /// Update service request.
@@ -4113,6 +4214,7 @@ pub struct UpdateServiceMethod {
     pub request: ::core::option::Option<UpdateServiceRequest>,
 }
 /// Detailed information about CreateVersion call.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateVersionMethod {
     /// Create version request.
@@ -4120,6 +4222,7 @@ pub struct CreateVersionMethod {
     pub request: ::core::option::Option<CreateVersionRequest>,
 }
 /// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LocationMetadata {
     /// App Engine standard environment is available in the given location.

@@ -1,4 +1,5 @@
 /// gRPC request payload for tether.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EgressRequest {
     /// Unique identifier for the request.
@@ -22,6 +23,7 @@ pub struct EgressRequest {
     pub timeout: ::core::option::Option<::prost_types::Duration>,
 }
 /// Payload for EgressRequest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Payload {
     /// The kind of payload.
@@ -31,6 +33,7 @@ pub struct Payload {
 /// Nested message and enum types in `Payload`.
 pub mod payload {
     /// The kind of payload.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         /// The HttpRequest proto.
@@ -45,6 +48,7 @@ pub mod payload {
     }
 }
 /// The Information of bi-directional stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamInfo {
     /// Unique identifier for the stream.
@@ -52,6 +56,7 @@ pub struct StreamInfo {
     pub id: ::prost::alloc::string::String,
 }
 /// gRPC response payload for tether.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EgressResponse {
     /// Unique identifier for the response. Matches the EgressRequest's id.
@@ -80,6 +85,7 @@ pub struct EgressResponse {
     pub name: ::prost::alloc::string::String,
 }
 /// The proto definition of http request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpRequest {
     /// A unique identifier for the request.
@@ -103,6 +109,7 @@ pub struct HttpRequest {
 /// A url represents a URL and the general form represented is:
 ///
 ///   `\[scheme://][google.cloud.apigeeconnect.v1.Url.host][path\]`
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Url {
     /// Scheme.
@@ -116,6 +123,7 @@ pub struct Url {
     pub path: ::prost::alloc::string::String,
 }
 /// The http headers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Header {
     #[prost(string, tag = "1")]
@@ -124,6 +132,7 @@ pub struct Header {
     pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The proto definition of http response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpResponse {
     /// A unique identifier that matches the request ID.
@@ -310,6 +319,7 @@ pub mod tether_client {
     }
 }
 /// The request for \[ListConnections][Management.ListConnections\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectionsRequest {
     /// Required. Parent name of the form:
@@ -331,6 +341,7 @@ pub struct ListConnectionsRequest {
 }
 /// The response for
 /// \[ListConnections][Management.ListConnections\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListConnectionsResponse {
     /// A list of clients.
@@ -341,6 +352,7 @@ pub struct ListConnectionsResponse {
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Connection {
     /// The endpoint that the connection is made against.
@@ -354,6 +366,7 @@ pub struct Connection {
     #[prost(int32, tag = "3")]
     pub stream_count: i32,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Cluster {
     /// The name of the cluster.

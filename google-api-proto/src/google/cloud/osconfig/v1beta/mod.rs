@@ -1,5 +1,6 @@
 /// Message encapsulating a value that can be either absolute ("fixed") or
 /// relative ("percent") to a value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FixedOrPercent {
     /// Type of the value.
@@ -9,6 +10,7 @@ pub struct FixedOrPercent {
 /// Nested message and enum types in `FixedOrPercent`.
 pub mod fixed_or_percent {
     /// Type of the value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Mode {
         /// Specifies a fixed value.
@@ -21,6 +23,7 @@ pub mod fixed_or_percent {
     }
 }
 /// A request message to initiate patching across Compute Engine instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecutePatchJobRequest {
     /// Required. The project in which to run this patch in the form `projects/*`
@@ -54,6 +57,7 @@ pub struct ExecutePatchJobRequest {
     pub rollout: ::core::option::Option<PatchRollout>,
 }
 /// Request to get an active or completed patch job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPatchJobRequest {
     /// Required. Name of the patch in the form `projects/*/patchJobs/*`
@@ -61,6 +65,7 @@ pub struct GetPatchJobRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to list details for all instances that are part of a patch job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchJobInstanceDetailsRequest {
     /// Required. The parent for the instances are in the form of `projects/*/patchJobs/*`.
@@ -80,6 +85,7 @@ pub struct ListPatchJobInstanceDetailsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// A response message for listing the instances details for a patch job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchJobInstanceDetailsResponse {
     /// A list of instance status.
@@ -93,6 +99,7 @@ pub struct ListPatchJobInstanceDetailsResponse {
 /// instance details, see
 /// [Listing all VM instance details for a specific patch
 /// job](<https://cloud.google.com/compute/docs/os-patch-management/manage-patch-jobs#list-instance-details>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchJobInstanceDetails {
     /// The instance name in the form `projects/*/zones/*/instances/*`
@@ -113,6 +120,7 @@ pub struct PatchJobInstanceDetails {
     pub attempt_count: i64,
 }
 /// A request message for listing patch jobs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchJobsRequest {
     /// Required. In the form of `projects/*`
@@ -132,6 +140,7 @@ pub struct ListPatchJobsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// A response message for listing patch jobs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchJobsResponse {
     /// The list of patch jobs.
@@ -150,6 +159,7 @@ pub struct ListPatchJobsResponse {
 /// For more information about patch jobs, see
 /// [Creating patch
 /// jobs](<https://cloud.google.com/compute/docs/os-patch-management/create-patch-job>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchJob {
     /// Unique identifier for this patch job in the form
@@ -212,6 +222,7 @@ pub mod patch_job {
     /// job affects. Contains counts of instances in different states. These states
     /// map to `InstancePatchState`. List patch job instance details to see the
     /// specific states of each instance.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstanceDetailsSummary {
         /// Number of instances pending patch job.
@@ -315,6 +326,7 @@ pub mod patch_job {
 }
 /// Patch configuration specifications. Contains details on how to apply the
 /// patch(es) to a VM instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchConfig {
     /// Post-patch reboot settings.
@@ -393,6 +405,7 @@ pub mod patch_config {
     }
 }
 /// Namespace for instance state enums.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {}
 /// Nested message and enum types in `Instance`.
@@ -474,6 +487,7 @@ pub mod instance {
     }
 }
 /// Message for canceling a patch job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CancelPatchJobRequest {
     /// Required. Name of the patch in the form `projects/*/patchJobs/*`
@@ -482,6 +496,7 @@ pub struct CancelPatchJobRequest {
 }
 /// Apt patching is completed by executing `apt-get update && apt-get
 /// upgrade`. Additional options can be set to control how this is executed.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AptSettings {
     /// By changing the type to DIST, the patching is performed
@@ -539,6 +554,7 @@ pub mod apt_settings {
 /// can be set to control how this is executed.
 ///
 /// Note that not all settings are supported on all platforms.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YumSettings {
     /// Adds the `--security` flag to `yum update`. Not supported on
@@ -560,10 +576,12 @@ pub struct YumSettings {
     pub exclusive_packages: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Googet patching is performed by running `googet update`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GooSettings {}
 /// Zypper patching is performed by running `zypper patch`.
 /// See also <https://en.opensuse.org/SDB:Zypper_manual.>
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ZypperSettings {
     /// Adds the `--with-optional` flag to `zypper patch`.
@@ -590,6 +608,7 @@ pub struct ZypperSettings {
     pub exclusive_patches: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Windows patching is performed using the Windows Update Agent.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WindowsUpdateSettings {
     /// Only apply updates of these windows update classifications. If empty, all
@@ -687,6 +706,7 @@ pub mod windows_update_settings {
     }
 }
 /// A step that runs an executable for a PatchJob.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecStep {
     /// The ExecStepConfig for all Linux VMs targeted by the PatchJob.
@@ -697,6 +717,7 @@ pub struct ExecStep {
     pub windows_exec_step_config: ::core::option::Option<ExecStepConfig>,
 }
 /// Common configurations for an ExecStep.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecStepConfig {
     /// Defaults to \[0\]. A list of possible return values that the
@@ -754,6 +775,7 @@ pub mod exec_step_config {
         }
     }
     /// Location of the executable.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Executable {
         /// An absolute path to the executable on the VM.
@@ -765,6 +787,7 @@ pub mod exec_step_config {
     }
 }
 /// Google Cloud Storage object representation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsObject {
     /// Required. Bucket of the Google Cloud Storage object.
@@ -782,6 +805,7 @@ pub struct GcsObject {
 /// VMs must meet all criteria specified. So if both labels and zones are
 /// specified, the patch job targets only VMs with those labels and in those
 /// zones.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchInstanceFilter {
     /// Target all VM instances in the project. If true, no other criteria is
@@ -812,6 +836,7 @@ pub struct PatchInstanceFilter {
 pub mod patch_instance_filter {
     /// Represents a group of VMs that can be identified as having all these
     /// labels, for example "env=prod and app=web".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GroupLabel {
         /// Compute Engine instance labels that must be present for a VM instance to
@@ -825,6 +850,7 @@ pub mod patch_instance_filter {
 }
 /// Patch rollout configuration specifications. Contains details on the
 /// concurrency control when applying patch(es) to all targeted VMs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchRollout {
     /// Mode of the patch rollout.
@@ -903,6 +929,7 @@ pub mod patch_rollout {
 /// repository settings, and a schedule. For more information about creating and
 /// managing patch deployments, see [Scheduling patch
 /// jobs](<https://cloud.google.com/compute/docs/os-patch-management/schedule-patch-jobs>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PatchDeployment {
     /// Unique name for the patch deployment resource in a project. The patch
@@ -985,6 +1012,7 @@ pub mod patch_deployment {
         }
     }
     /// Schedule for the patch.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Schedule {
         /// Required. Schedule a one-time execution.
@@ -997,6 +1025,7 @@ pub mod patch_deployment {
 }
 /// Sets the time for a one time patch deployment. Timestamp is in
 /// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OneTimeSchedule {
     /// Required. The desired patch job execution time.
@@ -1004,6 +1033,7 @@ pub struct OneTimeSchedule {
     pub execute_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Sets the time for recurring patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RecurringSchedule {
     /// Required. Defines the time zone that `time_of_day` is relative to.
@@ -1079,6 +1109,7 @@ pub mod recurring_schedule {
     }
     /// Configurations for this recurring schedule.
     /// Configurations must match frequency.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ScheduleConfig {
         /// Required. Schedule with weekly executions.
@@ -1090,6 +1121,7 @@ pub mod recurring_schedule {
     }
 }
 /// Represents a weekly schedule.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WeeklySchedule {
     /// Required. Day of the week.
@@ -1098,6 +1130,7 @@ pub struct WeeklySchedule {
 }
 /// Represents a monthly schedule. An example of a valid monthly schedule is
 /// "on the third Tuesday of the month" or "on the 15th of the month".
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MonthlySchedule {
     /// One day in a month.
@@ -1107,6 +1140,7 @@ pub struct MonthlySchedule {
 /// Nested message and enum types in `MonthlySchedule`.
 pub mod monthly_schedule {
     /// One day in a month.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum DayOfMonth {
         /// Required. Week day in a month.
@@ -1121,6 +1155,7 @@ pub mod monthly_schedule {
     }
 }
 /// Represents one week day in a month. An example is "the 4th Sunday".
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WeekDayOfMonth {
     /// Required. Week number in a month. 1-4 indicates the 1st to 4th week of the month. -1
@@ -1141,6 +1176,7 @@ pub struct WeekDayOfMonth {
     pub day_offset: i32,
 }
 /// A request message for creating a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePatchDeploymentRequest {
     /// Required. The project to apply this patch deployment to in the form `projects/*`.
@@ -1160,6 +1196,7 @@ pub struct CreatePatchDeploymentRequest {
     pub patch_deployment: ::core::option::Option<PatchDeployment>,
 }
 /// A request message for retrieving a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetPatchDeploymentRequest {
     /// Required. The resource name of the patch deployment in the form
@@ -1168,6 +1205,7 @@ pub struct GetPatchDeploymentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// A request message for listing patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchDeploymentsRequest {
     /// Required. The resource name of the parent in the form `projects/*`.
@@ -1182,6 +1220,7 @@ pub struct ListPatchDeploymentsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// A response message for listing patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPatchDeploymentsResponse {
     /// The list of patch deployments.
@@ -1193,6 +1232,7 @@ pub struct ListPatchDeploymentsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// A request message for deleting a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeletePatchDeploymentRequest {
     /// Required. The resource name of the patch deployment in the form
@@ -1201,6 +1241,7 @@ pub struct DeletePatchDeploymentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// A request message for updating a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdatePatchDeploymentRequest {
     /// Required. The patch deployment to Update.
@@ -1212,6 +1253,7 @@ pub struct UpdatePatchDeploymentRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// A request message for pausing a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PausePatchDeploymentRequest {
     /// Required. The resource name of the patch deployment in the form
@@ -1220,6 +1262,7 @@ pub struct PausePatchDeploymentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// A request message for resuming a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResumePatchDeploymentRequest {
     /// Required. The resource name of the patch deployment in the form
@@ -1231,6 +1274,7 @@ pub struct ResumePatchDeploymentRequest {
 /// policies represent the desired state for VM instance guest environments
 /// including packages to install or remove, package repository configurations,
 /// and software to install.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GuestPolicy {
     /// Required. Unique name of the resource in this project using one of the following
@@ -1284,6 +1328,7 @@ pub struct GuestPolicy {
 /// targeted VM instances must meet all the criteria specified. So if both
 /// labels and zones are specified, the policy applies to VM instances with those
 /// labels and in those zones.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Assignment {
     /// Targets instances matching at least one of these label sets. This allows
@@ -1328,6 +1373,7 @@ pub struct Assignment {
 pub mod assignment {
     /// Represents a group of VM intances that can be identified as having all
     /// these labels, for example "env=prod and app=web".
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GroupLabel {
         /// Google Compute Engine instance labels that must be present for an
@@ -1339,6 +1385,7 @@ pub mod assignment {
         >,
     }
     /// Defines the criteria for selecting VM Instances by OS type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct OsType {
         /// Targets VM instances with OS Inventory enabled and having the following
@@ -1378,6 +1425,7 @@ pub mod assignment {
 /// Googet
 /// install: `googet -noconfirm install package1 package2 package3`
 /// remove: `googet -noconfirm remove package1 package2 package3`
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Package {
     /// Required. The name of the package. A package is uniquely identified for conflict
@@ -1450,6 +1498,7 @@ pub mod package {
 /// Represents a single Apt package repository. This repository is added to
 /// a repo file that is stored at
 /// `/etc/apt/sources.list.d/google_osconfig.list`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AptRepository {
     /// Type of archive files in this repository. The default behavior is DEB.
@@ -1509,6 +1558,7 @@ pub mod apt_repository {
 }
 /// Represents a single Yum package repository. This repository is added to a
 /// repo file that is stored at `/etc/yum.repos.d/google_osconfig.repo`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct YumRepository {
     /// Required. A one word, unique name for this repository. This is
@@ -1529,6 +1579,7 @@ pub struct YumRepository {
 }
 /// Represents a single Zypper package repository. This repository is added to a
 /// repo file that is stored at `/etc/zypp/repos.d/google_osconfig.repo`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ZypperRepository {
     /// Required. A one word, unique name for this repository. This is
@@ -1549,6 +1600,7 @@ pub struct ZypperRepository {
 }
 /// Represents a Goo package repository. These is added to a repo file
 /// that is stored at C:/ProgramData/GooGet/repos/google_osconfig.repo.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GooRepository {
     /// Required. The name of the repository.
@@ -1559,6 +1611,7 @@ pub struct GooRepository {
     pub url: ::prost::alloc::string::String,
 }
 /// A package repository.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PackageRepository {
     /// A specific type of repository.
@@ -1568,6 +1621,7 @@ pub struct PackageRepository {
 /// Nested message and enum types in `PackageRepository`.
 pub mod package_repository {
     /// A specific type of repository.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Repository {
         /// An Apt Repository.
@@ -1607,6 +1661,7 @@ pub mod package_repository {
 ///
 /// Each script or execution step is run in its own temporary directory which
 /// is deleted after completing the step.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SoftwareRecipe {
     /// Required. Unique identifier for the recipe. Only one recipe with a given name is
@@ -1651,6 +1706,7 @@ pub struct SoftwareRecipe {
 /// Nested message and enum types in `SoftwareRecipe`.
 pub mod software_recipe {
     /// Specifies a resource to be used in the recipe.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Artifact {
         /// Required. Id of the artifact, which the installation and update steps of this
@@ -1672,6 +1728,7 @@ pub mod software_recipe {
     /// Nested message and enum types in `Artifact`.
     pub mod artifact {
         /// Specifies an artifact available via some URI.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Remote {
             /// URI from which to fetch the object. It should contain both the protocol
@@ -1687,6 +1744,7 @@ pub mod software_recipe {
             pub checksum: ::prost::alloc::string::String,
         }
         /// Specifies an artifact available as a Google Cloud Storage object.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Gcs {
             /// Bucket of the Google Cloud Storage object.
@@ -1711,6 +1769,7 @@ pub mod software_recipe {
             pub generation: i64,
         }
         /// A specific type of artifact.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Artifact {
             /// A generic remote artifact.
@@ -1722,6 +1781,7 @@ pub mod software_recipe {
         }
     }
     /// An action that can be taken as part of installing or updating a recipe.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Step {
         /// A specific type of step.
@@ -1731,6 +1791,7 @@ pub mod software_recipe {
     /// Nested message and enum types in `Step`.
     pub mod step {
         /// Copies the artifact to the specified path on the instance.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct CopyFile {
             /// Required. The id of the relevant artifact in the recipe.
@@ -1761,6 +1822,7 @@ pub mod software_recipe {
             pub permissions: ::prost::alloc::string::String,
         }
         /// Extracts an archive of the type specified in the specified directory.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ExtractArchive {
             /// Required. The id of the relevant artifact in the recipe.
@@ -1824,6 +1886,7 @@ pub mod software_recipe {
             }
         }
         /// Installs an MSI file.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct InstallMsi {
             /// Required. The id of the relevant artifact in the recipe.
@@ -1839,6 +1902,7 @@ pub mod software_recipe {
             pub allowed_exit_codes: ::prost::alloc::vec::Vec<i32>,
         }
         /// Installs a deb via dpkg.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct InstallDpkg {
             /// Required. The id of the relevant artifact in the recipe.
@@ -1846,6 +1910,7 @@ pub mod software_recipe {
             pub artifact_id: ::prost::alloc::string::String,
         }
         /// Installs an rpm file via the rpm utility.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct InstallRpm {
             /// Required. The id of the relevant artifact in the recipe.
@@ -1853,6 +1918,7 @@ pub mod software_recipe {
             pub artifact_id: ::prost::alloc::string::String,
         }
         /// Executes an artifact or local file.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ExecFile {
             /// Arguments to be passed to the provided executable.
@@ -1869,6 +1935,7 @@ pub mod software_recipe {
         /// Nested message and enum types in `ExecFile`.
         pub mod exec_file {
             /// Location of the file to execute.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Oneof)]
             pub enum LocationType {
                 /// The id of the relevant artifact in the recipe.
@@ -1880,6 +1947,7 @@ pub mod software_recipe {
             }
         }
         /// Runs a script through an interpreter.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct RunScript {
             /// Required. The shell script to be executed.
@@ -1935,6 +2003,7 @@ pub mod software_recipe {
             }
         }
         /// A specific type of step.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Step {
             /// Copies a file onto the instance.
@@ -1962,6 +2031,7 @@ pub mod software_recipe {
     }
 }
 /// A request message for creating a guest policy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateGuestPolicyRequest {
     /// Required. The resource name of the parent using one of the following forms:
@@ -1983,6 +2053,7 @@ pub struct CreateGuestPolicyRequest {
     pub guest_policy: ::core::option::Option<GuestPolicy>,
 }
 /// A request message for retrieving a guest policy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGuestPolicyRequest {
     /// Required. The resource name of the guest policy using one of the following forms:
@@ -1991,6 +2062,7 @@ pub struct GetGuestPolicyRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// A request message for listing guest policies.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGuestPoliciesRequest {
     /// Required. The resource name of the parent using one of the following forms:
@@ -2006,6 +2078,7 @@ pub struct ListGuestPoliciesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// A response message for listing guest policies.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGuestPoliciesResponse {
     /// The list of GuestPolicies.
@@ -2017,6 +2090,7 @@ pub struct ListGuestPoliciesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// A request message for updating a guest policy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateGuestPolicyRequest {
     /// Required. The updated GuestPolicy.
@@ -2028,6 +2102,7 @@ pub struct UpdateGuestPolicyRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// A request message for deleting a guest policy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteGuestPolicyRequest {
     /// Required. The resource name of the guest policy  using one of the following forms:
@@ -2037,6 +2112,7 @@ pub struct DeleteGuestPolicyRequest {
 }
 /// A request message for getting the effective guest policy assigned to the
 /// instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LookupEffectiveGuestPolicyRequest {
     /// Required. The VM instance whose policies are being looked up.
@@ -2059,6 +2135,7 @@ pub struct LookupEffectiveGuestPolicyRequest {
     pub os_architecture: ::prost::alloc::string::String,
 }
 /// The effective guest policy that applies to a VM instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EffectiveGuestPolicy {
     /// List of package configurations assigned to the VM instance.
@@ -2078,6 +2155,7 @@ pub struct EffectiveGuestPolicy {
 /// Nested message and enum types in `EffectiveGuestPolicy`.
 pub mod effective_guest_policy {
     /// A guest policy package including its source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SourcedPackage {
         /// Name of the guest policy providing this config.
@@ -2088,6 +2166,7 @@ pub mod effective_guest_policy {
         pub package: ::core::option::Option<super::Package>,
     }
     /// A guest policy package repository including its source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SourcedPackageRepository {
         /// Name of the guest policy providing this config.
@@ -2098,6 +2177,7 @@ pub mod effective_guest_policy {
         pub package_repository: ::core::option::Option<super::PackageRepository>,
     }
     /// A guest policy recipe including its source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SourcedSoftwareRecipe {
         /// Name of the guest policy providing this config.

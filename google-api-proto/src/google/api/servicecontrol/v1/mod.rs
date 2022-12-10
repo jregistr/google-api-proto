@@ -1,6 +1,7 @@
 /// A common proto for logging HTTP requests. Only contains semantics
 /// defined by the HTTP specification. Product-specific logging
 /// information MUST be defined in a separate message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HttpRequest {
     /// The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
@@ -66,6 +67,7 @@ pub struct HttpRequest {
     pub protocol: ::prost::alloc::string::String,
 }
 /// An individual log entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntry {
     /// Required. The log to which this log entry belongs. Examples: `"syslog"`,
@@ -119,6 +121,7 @@ pub struct LogEntry {
 /// Nested message and enum types in `LogEntry`.
 pub mod log_entry {
     /// The log entry payload, which can be one of multiple types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Payload {
         /// The log entry payload, represented as a protocol buffer that is
@@ -137,6 +140,7 @@ pub mod log_entry {
 }
 /// Additional information about a potentially long-running operation with which
 /// a log entry is associated.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntryOperation {
     /// Optional. An arbitrary operation identifier. Log entries with the
@@ -157,6 +161,7 @@ pub struct LogEntryOperation {
 }
 /// Additional information about the source code location that produced the log
 /// entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LogEntrySourceLocation {
     /// Optional. Source file name. Depending on the runtime environment, this
@@ -184,6 +189,7 @@ pub struct LogEntrySourceLocation {
 /// * the minimum and maximum of the samples
 /// * the sum-squared-deviation of the samples, used to compute variance
 /// * a histogram of the values of the sample points
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Distribution {
     /// The total number of samples in the distribution. Must be >= 0.
@@ -250,6 +256,7 @@ pub struct Distribution {
 /// Nested message and enum types in `Distribution`.
 pub mod distribution {
     /// Describing buckets with constant width.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LinearBuckets {
         /// The number of finite buckets. With the underflow and overflow buckets,
@@ -270,6 +277,7 @@ pub mod distribution {
         pub offset: f64,
     }
     /// Describing buckets with exponentially growing width.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ExponentialBuckets {
         /// The number of finite buckets. With the underflow and overflow buckets,
@@ -291,6 +299,7 @@ pub mod distribution {
         pub scale: f64,
     }
     /// Describing buckets with arbitrary user-provided width.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ExplicitBuckets {
         /// 'bound' is a list of strictly increasing boundaries between
@@ -334,6 +343,7 @@ pub mod distribution {
     /// lower bound of the smallest finite bucket; the lower bound of the
     /// overflow bucket is equal to the upper bound of the largest finite
     /// bucket.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BucketOption {
         /// Buckets with constant width.
@@ -348,6 +358,7 @@ pub mod distribution {
     }
 }
 /// Represents a single metric value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MetricValue {
     /// The labels describing the metric value.
@@ -382,6 +393,7 @@ pub mod metric_value {
     /// The value. The type of value used in the request must
     /// agree with the metric definition in the service configuration, otherwise
     /// the MetricValue is rejected.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// A boolean value.
@@ -404,6 +416,7 @@ pub mod metric_value {
 /// Represents a set of metric values in the same metric.
 /// Each metric value in the set should have a unique combination of start time,
 /// end time, and label values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MetricValueSet {
     /// The metric name defined in the service configuration.
@@ -414,6 +427,7 @@ pub struct MetricValueSet {
     pub metric_values: ::prost::alloc::vec::Vec<MetricValue>,
 }
 /// Represents information regarding an operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Operation {
     /// Identity of the operation. This must be unique within the scope of the
@@ -536,6 +550,7 @@ pub mod operation {
 }
 /// Defines the errors to be returned in
 /// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckError {
     /// The error code.
@@ -659,6 +674,7 @@ pub mod check_error {
     }
 }
 /// Request message for the Check method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckRequest {
     /// The service name as specified in its service configuration. For example,
@@ -681,6 +697,7 @@ pub struct CheckRequest {
     pub service_config_id: ::prost::alloc::string::String,
 }
 /// Response message for the Check method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckResponse {
     /// The same operation_id value used in the
@@ -708,6 +725,7 @@ pub struct CheckResponse {
 /// Nested message and enum types in `CheckResponse`.
 pub mod check_response {
     /// Contains additional information about the check operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CheckInfo {
         /// A list of fields and label keys that are ignored by the server.
@@ -720,6 +738,7 @@ pub mod check_response {
         pub consumer_info: ::core::option::Option<ConsumerInfo>,
     }
     /// `ConsumerInfo` provides information about the consumer.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ConsumerInfo {
         /// The Google cloud project number, e.g. 1234567890. A value of 0 indicates
@@ -787,6 +806,7 @@ pub mod check_response {
     }
 }
 /// Request message for the Report method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportRequest {
     /// The service name as specified in its service configuration. For example,
@@ -819,6 +839,7 @@ pub struct ReportRequest {
     pub service_config_id: ::prost::alloc::string::String,
 }
 /// Response message for the Report method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportResponse {
     /// Partial failures, one for each `Operation` in the request that failed
@@ -848,6 +869,7 @@ pub struct ReportResponse {
 pub mod report_response {
     /// Represents the processing error of one
     /// \[Operation][google.api.servicecontrol.v1.Operation\] in the request.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ReportError {
         /// The
@@ -996,6 +1018,7 @@ pub mod service_controller_client {
     }
 }
 /// Request message for the AllocateQuota method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AllocateQuotaRequest {
     /// Name of the service as specified in the service configuration. For example,
@@ -1014,6 +1037,7 @@ pub struct AllocateQuotaRequest {
     pub service_config_id: ::prost::alloc::string::String,
 }
 /// Represents information regarding a quota operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QuotaOperation {
     /// Identity of the operation. This is expected to be unique within the scope
@@ -1141,6 +1165,7 @@ pub mod quota_operation {
     }
 }
 /// Response message for the AllocateQuota method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AllocateQuotaResponse {
     /// The same operation_id value used in the AllocateQuotaRequest. Used for
@@ -1167,6 +1192,7 @@ pub struct AllocateQuotaResponse {
     pub service_config_id: ::prost::alloc::string::String,
 }
 /// Represents error information for \[QuotaOperation][google.api.servicecontrol.v1.QuotaOperation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QuotaError {
     /// Error code.

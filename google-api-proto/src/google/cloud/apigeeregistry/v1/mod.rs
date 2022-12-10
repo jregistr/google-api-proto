@@ -1,5 +1,6 @@
 /// A top-level description of an API.
 /// Produced by producers and are commitments to provide services.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Api {
     /// Resource name.
@@ -60,6 +61,7 @@ pub struct Api {
 }
 /// Describes a particular version of an API.
 /// ApiVersions are what consumers actually use.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiVersion {
     /// Resource name.
@@ -119,6 +121,7 @@ pub struct ApiVersion {
 /// exist to provide representations in different API description formats.
 /// Synchronization of these representations would be provided by tooling and
 /// background services.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiSpec {
     /// Resource name.
@@ -206,6 +209,7 @@ pub struct ApiSpec {
 /// correspond to different configurations of a single deployment in time.
 /// Revision identifiers should be updated whenever the served API spec or
 /// endpoint address changes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApiDeployment {
     /// Resource name.
@@ -288,6 +292,7 @@ pub struct ApiDeployment {
 /// perhaps displayed or downloaded upon request. The `ListArtifacts` method
 /// allows artifacts to be quickly enumerated and checked for presence without
 /// downloading their (potentially-large) contents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Artifact {
     /// Resource name.
@@ -322,6 +327,7 @@ pub struct Artifact {
     pub contents: ::prost::bytes::Bytes,
 }
 /// Request message for ListApis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApisRequest {
     /// Required. The parent, which owns this collection of APIs.
@@ -347,6 +353,7 @@ pub struct ListApisRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListApis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApisResponse {
     /// The APIs from the specified publisher.
@@ -358,6 +365,7 @@ pub struct ListApisResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetApi.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiRequest {
     /// Required. The name of the API to retrieve.
@@ -366,6 +374,7 @@ pub struct GetApiRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateApi.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiRequest {
     /// Required. The parent, which owns this collection of APIs.
@@ -386,6 +395,7 @@ pub struct CreateApiRequest {
     pub api_id: ::prost::alloc::string::String,
 }
 /// Request message for UpdateApi.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApiRequest {
     /// Required. The API to update.
@@ -406,6 +416,7 @@ pub struct UpdateApiRequest {
     pub allow_missing: bool,
 }
 /// Request message for DeleteApi.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiRequest {
     /// Required. The name of the API to delete.
@@ -418,6 +429,7 @@ pub struct DeleteApiRequest {
     pub force: bool,
 }
 /// Request message for ListApiVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiVersionsRequest {
     /// Required. The parent, which owns this collection of versions.
@@ -443,6 +455,7 @@ pub struct ListApiVersionsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListApiVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiVersionsResponse {
     /// The versions from the specified publisher.
@@ -454,6 +467,7 @@ pub struct ListApiVersionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetApiVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiVersionRequest {
     /// Required. The name of the version to retrieve.
@@ -462,6 +476,7 @@ pub struct GetApiVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateApiVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiVersionRequest {
     /// Required. The parent, which owns this collection of versions.
@@ -482,6 +497,7 @@ pub struct CreateApiVersionRequest {
     pub api_version_id: ::prost::alloc::string::String,
 }
 /// Request message for UpdateApiVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApiVersionRequest {
     /// Required. The version to update.
@@ -502,6 +518,7 @@ pub struct UpdateApiVersionRequest {
     pub allow_missing: bool,
 }
 /// Request message for DeleteApiVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiVersionRequest {
     /// Required. The name of the version to delete.
@@ -514,6 +531,7 @@ pub struct DeleteApiVersionRequest {
     pub force: bool,
 }
 /// Request message for ListApiSpecs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiSpecsRequest {
     /// Required. The parent, which owns this collection of specs.
@@ -539,6 +557,7 @@ pub struct ListApiSpecsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListApiSpecs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiSpecsResponse {
     /// The specs from the specified publisher.
@@ -550,6 +569,7 @@ pub struct ListApiSpecsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetApiSpec.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiSpecRequest {
     /// Required. The name of the spec to retrieve.
@@ -558,6 +578,7 @@ pub struct GetApiSpecRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GetApiSpecContents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiSpecContentsRequest {
     /// Required. The name of the spec whose contents should be retrieved.
@@ -566,6 +587,7 @@ pub struct GetApiSpecContentsRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateApiSpec.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiSpecRequest {
     /// Required. The parent, which owns this collection of specs.
@@ -586,6 +608,7 @@ pub struct CreateApiSpecRequest {
     pub api_spec_id: ::prost::alloc::string::String,
 }
 /// Request message for UpdateApiSpec.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApiSpecRequest {
     /// Required. The spec to update.
@@ -606,6 +629,7 @@ pub struct UpdateApiSpecRequest {
     pub allow_missing: bool,
 }
 /// Request message for DeleteApiSpec.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiSpecRequest {
     /// Required. The name of the spec to delete.
@@ -618,6 +642,7 @@ pub struct DeleteApiSpecRequest {
     pub force: bool,
 }
 /// Request message for TagApiSpecRevision.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TagApiSpecRevisionRequest {
     /// Required. The name of the spec to be tagged, including the revision ID.
@@ -629,6 +654,7 @@ pub struct TagApiSpecRevisionRequest {
     pub tag: ::prost::alloc::string::String,
 }
 /// Request message for ListApiSpecRevisions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiSpecRevisionsRequest {
     /// Required. The name of the spec to list revisions for.
@@ -643,6 +669,7 @@ pub struct ListApiSpecRevisionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListApiSpecRevisionsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiSpecRevisionsResponse {
     /// The revisions of the spec.
@@ -654,6 +681,7 @@ pub struct ListApiSpecRevisionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for RollbackApiSpec.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RollbackApiSpecRequest {
     /// Required. The spec being rolled back.
@@ -667,6 +695,7 @@ pub struct RollbackApiSpecRequest {
     pub revision_id: ::prost::alloc::string::String,
 }
 /// Request message for DeleteApiSpecRevision.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiSpecRevisionRequest {
     /// Required. The name of the spec revision to be deleted,
@@ -678,6 +707,7 @@ pub struct DeleteApiSpecRevisionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListApiDeployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiDeploymentsRequest {
     /// Required. The parent, which owns this collection of deployments.
@@ -703,6 +733,7 @@ pub struct ListApiDeploymentsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListApiDeployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiDeploymentsResponse {
     /// The deployments from the specified publisher.
@@ -714,6 +745,7 @@ pub struct ListApiDeploymentsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetApiDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApiDeploymentRequest {
     /// Required. The name of the deployment to retrieve.
@@ -722,6 +754,7 @@ pub struct GetApiDeploymentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateApiDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApiDeploymentRequest {
     /// Required. The parent, which owns this collection of deployments.
@@ -742,6 +775,7 @@ pub struct CreateApiDeploymentRequest {
     pub api_deployment_id: ::prost::alloc::string::String,
 }
 /// Request message for UpdateApiDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApiDeploymentRequest {
     /// Required. The deployment to update.
@@ -762,6 +796,7 @@ pub struct UpdateApiDeploymentRequest {
     pub allow_missing: bool,
 }
 /// Request message for DeleteApiDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiDeploymentRequest {
     /// Required. The name of the deployment to delete.
@@ -774,6 +809,7 @@ pub struct DeleteApiDeploymentRequest {
     pub force: bool,
 }
 /// Request message for TagApiDeploymentRevision.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TagApiDeploymentRevisionRequest {
     /// Required. The name of the deployment to be tagged, including the revision ID.
@@ -785,6 +821,7 @@ pub struct TagApiDeploymentRevisionRequest {
     pub tag: ::prost::alloc::string::String,
 }
 /// Request message for ListApiDeploymentRevisions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiDeploymentRevisionsRequest {
     /// Required. The name of the deployment to list revisions for.
@@ -799,6 +836,7 @@ pub struct ListApiDeploymentRevisionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListApiDeploymentRevisionsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApiDeploymentRevisionsResponse {
     /// The revisions of the deployment.
@@ -810,6 +848,7 @@ pub struct ListApiDeploymentRevisionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for RollbackApiDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RollbackApiDeploymentRequest {
     /// Required. The deployment being rolled back.
@@ -823,6 +862,7 @@ pub struct RollbackApiDeploymentRequest {
     pub revision_id: ::prost::alloc::string::String,
 }
 /// Request message for DeleteApiDeploymentRevision.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApiDeploymentRevisionRequest {
     /// Required. The name of the deployment revision to be deleted,
@@ -834,6 +874,7 @@ pub struct DeleteApiDeploymentRevisionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListArtifacts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListArtifactsRequest {
     /// Required. The parent, which owns this collection of artifacts.
@@ -859,6 +900,7 @@ pub struct ListArtifactsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListArtifacts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListArtifactsResponse {
     /// The artifacts from the specified publisher.
@@ -870,6 +912,7 @@ pub struct ListArtifactsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetArtifact.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetArtifactRequest {
     /// Required. The name of the artifact to retrieve.
@@ -878,6 +921,7 @@ pub struct GetArtifactRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GetArtifactContents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetArtifactContentsRequest {
     /// Required. The name of the artifact whose contents should be retrieved.
@@ -886,6 +930,7 @@ pub struct GetArtifactContentsRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateArtifact.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateArtifactRequest {
     /// Required. The parent, which owns this collection of artifacts.
@@ -906,6 +951,7 @@ pub struct CreateArtifactRequest {
     pub artifact_id: ::prost::alloc::string::String,
 }
 /// Request message for ReplaceArtifact.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReplaceArtifactRequest {
     /// Required. The artifact to replace.
@@ -916,6 +962,7 @@ pub struct ReplaceArtifactRequest {
     pub artifact: ::core::option::Option<Artifact>,
 }
 /// Request message for DeleteArtifact.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteArtifactRequest {
     /// Required. The name of the artifact to delete.
@@ -1712,6 +1759,7 @@ pub mod registry_client {
     }
 }
 /// Request message for CreateInstance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateInstanceRequest {
     /// Required. Parent resource of the Instance, of the form: `projects/*/locations/*`
@@ -1726,6 +1774,7 @@ pub struct CreateInstanceRequest {
     pub instance: ::core::option::Option<Instance>,
 }
 /// Request message for DeleteInstance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteInstanceRequest {
     /// Required. The name of the Instance to delete.
@@ -1734,6 +1783,7 @@ pub struct DeleteInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GetInstance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. The name of the Instance to retrieve.
@@ -1742,6 +1792,7 @@ pub struct GetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// The time the operation was created.
@@ -1771,6 +1822,7 @@ pub struct OperationMetadata {
 }
 /// An Instance represents the instance resources of the Registry.
 /// Currently, only one instance is allowed for each project.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Format: `projects/*/locations/*/instance`.
@@ -1796,6 +1848,7 @@ pub struct Instance {
 /// Nested message and enum types in `Instance`.
 pub mod instance {
     /// Available configurations to provision an Instance.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Config {
         /// Output only. The GCP location where the Instance resides.

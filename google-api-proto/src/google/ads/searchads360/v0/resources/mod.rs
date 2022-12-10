@@ -1,4 +1,5 @@
 /// A campaign.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Campaign {
     /// Immutable. The resource name of the campaign.
@@ -187,6 +188,7 @@ pub struct Campaign {
 /// Nested message and enum types in `Campaign`.
 pub mod campaign {
     /// The network settings for the campaign.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NetworkSettings {
         /// Whether ads will be served with google.com search results.
@@ -206,6 +208,7 @@ pub mod campaign {
         pub target_partner_search_network: ::core::option::Option<bool>,
     }
     /// The setting for controlling Dynamic Search Ads (DSA).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DynamicSearchAdsSetting {
         /// Required. The Internet domain name that this setting represents, for example,
@@ -223,6 +226,7 @@ pub mod campaign {
     /// The setting for Shopping campaigns. Defines the universe of products that
     /// can be advertised by the campaign, and how this campaign interacts with
     /// other Shopping campaigns.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ShoppingSetting {
         /// Immutable. ID of the Merchant Center account.
@@ -258,6 +262,7 @@ pub mod campaign {
         pub use_vehicle_inventory: bool,
     }
     /// Campaign-level settings for tracking information.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TrackingSetting {
         /// Output only. The url used for dynamic tracking.
@@ -265,6 +270,7 @@ pub mod campaign {
         pub tracking_url: ::core::option::Option<::prost::alloc::string::String>,
     }
     /// Represents a collection of settings related to ads geotargeting.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GeoTargetTypeSetting {
         /// The setting used for positive geotargeting in this particular campaign.
@@ -282,6 +288,7 @@ pub mod campaign {
     }
     /// Selective optimization setting for this campaign, which includes a set of
     /// conversion actions to optimize this campaign towards.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SelectiveOptimization {
         /// The selected set of conversion actions for optimizing this campaign.
@@ -290,6 +297,7 @@ pub mod campaign {
     }
     /// Optimization goal setting for this campaign, which includes a set of
     /// optimization goal types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct OptimizationGoalSetting {
         /// The list of optimization goal types.
@@ -304,6 +312,7 @@ pub mod campaign {
     ///
     /// Must be either portfolio (created through BiddingStrategy service) or
     /// standard, that is embedded into the campaign.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum CampaignBiddingStrategy {
         /// Portfolio bidding strategy used by campaign.
@@ -361,6 +370,7 @@ pub mod campaign {
 /// A custom column.
 /// See Search Ads 360 custom column at
 /// <https://support.google.com/sa360/answer/9633916>
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomColumn {
     /// Immutable. The resource name of the custom column.
@@ -403,6 +413,7 @@ pub struct CustomColumn {
     >,
 }
 /// A conversion action.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionAction {
     /// Immutable. The resource name of the conversion action.
@@ -490,6 +501,7 @@ pub struct ConversionAction {
 /// Nested message and enum types in `ConversionAction`.
 pub mod conversion_action {
     /// Settings related to this conversion action's attribution model.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AttributionModelSettings {
         /// The attribution model type of this conversion action.
@@ -508,6 +520,7 @@ pub mod conversion_action {
     }
     /// Settings related to the value for conversion events associated with this
     /// conversion action.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ValueSettings {
         /// The value to use when conversion events for this conversion action are
@@ -529,6 +542,7 @@ pub mod conversion_action {
         pub always_use_default_value: ::core::option::Option<bool>,
     }
     /// Settings related to a Floodlight conversion action.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FloodlightSettings {
         /// Output only. String used to identify a Floodlight activity group when reporting
@@ -544,6 +558,7 @@ pub mod conversion_action {
     }
 }
 /// An ad group criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupCriterion {
     /// Immutable. The resource name of the ad group criterion.
@@ -622,6 +637,7 @@ pub struct AdGroupCriterion {
 /// Nested message and enum types in `AdGroupCriterion`.
 pub mod ad_group_criterion {
     /// A container for ad group criterion quality information.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct QualityInfo {
         /// Output only. The quality score.
@@ -634,6 +650,7 @@ pub mod ad_group_criterion {
     /// The ad group criterion.
     ///
     /// Exactly one must be set.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Criterion {
         /// Immutable. Keyword.
@@ -654,6 +671,7 @@ pub mod ad_group_criterion {
     }
 }
 /// A keyword view.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KeywordView {
     /// Output only. The resource name of the keyword view.
@@ -664,6 +682,7 @@ pub struct KeywordView {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// A campaign criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignCriterion {
     /// Immutable. The resource name of the campaign criterion.
@@ -704,6 +723,7 @@ pub mod campaign_criterion {
     /// The campaign criterion.
     ///
     /// Exactly one must be set.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Criterion {
         /// Immutable. Location.
@@ -721,6 +741,7 @@ pub mod campaign_criterion {
     }
 }
 /// A customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Customer {
     /// Immutable. The resource name of the customer.
@@ -789,6 +810,7 @@ pub struct Customer {
 }
 /// A collection of customer-wide settings related to Search Ads 360 Conversion
 /// Tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConversionTrackingSetting {
     /// Output only. The conversion tracking id used for this account. This id doesn't indicate
@@ -834,6 +856,7 @@ pub struct ConversionTrackingSetting {
     pub google_ads_conversion_customer: ::prost::alloc::string::String,
 }
 /// DoubleClick Campaign Manager (DCM) setting for a manager customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DoubleClickCampaignManagerSetting {
     /// Output only. ID of the Campaign Manager advertiser associated with this customer.
@@ -850,6 +873,7 @@ pub struct DoubleClickCampaignManagerSetting {
 /// A link between the given customer and a client customer. CustomerClients only
 /// exist for manager customers. All direct and indirect client customers are
 /// included, as well as the manager itself.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerClient {
     /// Output only. The resource name of the customer client.
@@ -904,6 +928,7 @@ pub struct CustomerClient {
     pub status: i32,
 }
 /// A field or resource (artifact) used by SearchAds360Service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchAds360Field {
     /// Output only. The resource name of the artifact.
@@ -975,6 +1000,7 @@ pub struct SearchAds360Field {
     pub is_repeated: ::core::option::Option<bool>,
 }
 /// Represents customer-manager link relationship.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerManagerLink {
     /// Immutable. Name of the resource.
@@ -996,6 +1022,7 @@ pub struct CustomerManagerLink {
     pub status: i32,
 }
 /// A campaign budget.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CampaignBudget {
     /// Immutable. The resource name of the campaign budget.
@@ -1023,6 +1050,7 @@ pub struct CampaignBudget {
     pub period: i32,
 }
 /// Represents an ad group bid modifier.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroupBidModifier {
     /// Immutable. The resource name of the ad group bid modifier.
@@ -1038,6 +1066,7 @@ pub struct AdGroupBidModifier {
     pub bid_modifier: ::core::option::Option<f64>,
 }
 /// A product group view.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductGroupView {
     /// Output only. The resource name of the product group view.
@@ -1048,6 +1077,7 @@ pub struct ProductGroupView {
     pub resource_name: ::prost::alloc::string::String,
 }
 /// An ad group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdGroup {
     /// Immutable. The resource name of the ad group.
@@ -1090,6 +1120,7 @@ pub struct AdGroup {
     pub cpc_bid_micros: ::core::option::Option<i64>,
 }
 /// A bidding strategy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BiddingStrategy {
     /// Immutable. The resource name of the bidding strategy.
@@ -1166,6 +1197,7 @@ pub mod bidding_strategy {
     /// The bidding scheme.
     ///
     /// Only one can be set.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Scheme {
         /// A bidding strategy that raises bids for clicks that seem more likely to

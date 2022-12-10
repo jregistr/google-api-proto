@@ -1,4 +1,5 @@
 /// Defines flags that are used to run the diagnostic tool
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DiagnosticConfig {
     /// Required. User Cloud Storage bucket location (REQUIRED).
@@ -36,6 +37,7 @@ pub struct DiagnosticConfig {
 }
 /// Definition of a software environment that is used to start a notebook
 /// instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Environment {
     /// Output only. Name of this environment.
@@ -64,6 +66,7 @@ pub struct Environment {
 /// Nested message and enum types in `Environment`.
 pub mod environment {
     /// Type of the environment; can be one of VM image, or container image.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ImageType {
         /// Use a Compute Engine VM image to start the notebook instance.
@@ -76,6 +79,7 @@ pub mod environment {
 }
 /// Definition of a custom Compute Engine virtual machine image for starting a
 /// notebook instance with the environment installed directly on the VM.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VmImage {
     /// Required. The name of the Google Cloud project that this VM image belongs to.
@@ -89,6 +93,7 @@ pub struct VmImage {
 /// Nested message and enum types in `VmImage`.
 pub mod vm_image {
     /// The reference to an external Compute Engine VM image.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Image {
         /// Use VM image name to find the image.
@@ -102,6 +107,7 @@ pub mod vm_image {
 }
 /// Definition of a container image for starting a notebook instance with the
 /// environment installed in a container.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ContainerImage {
     /// Required. The path to the container image repository. For example:
@@ -114,6 +120,7 @@ pub struct ContainerImage {
     pub tag: ::prost::alloc::string::String,
 }
 /// Reservation Affinity for consuming Zonal reservation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReservationAffinity {
     /// Optional. Type of reservation to consume
@@ -168,6 +175,7 @@ pub mod reservation_affinity {
     }
 }
 /// The definition of a notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Output only. The name of this notebook instance. Format:
@@ -346,6 +354,7 @@ pub mod instance {
     /// of `type` and `core_count` are valid. Check [GPUs on
     /// Compute Engine](/compute/docs/gpus/#gpus-list) to find a valid
     /// combination. TPUs are not supported.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct AcceleratorConfig {
         /// Type of this accelerator.
@@ -356,6 +365,7 @@ pub mod instance {
         pub core_count: i64,
     }
     /// An instance-attached disk resource.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Disk {
         /// Indicates whether the disk will be auto-deleted when the instance is
@@ -433,6 +443,7 @@ pub mod instance {
     /// Nested message and enum types in `Disk`.
     pub mod disk {
         /// Guest OS features for boot disk.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct GuestOsFeature {
             /// The ID of a supported feature. Read  Enabling guest operating system
@@ -452,6 +463,7 @@ pub mod instance {
     /// A set of Shielded Instance options.
     /// Check [Images using supported Shielded VM features]
     /// Not all combinations are valid.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ShieldedInstanceConfig {
         /// Defines whether the instance has Secure Boot enabled.
@@ -474,6 +486,7 @@ pub mod instance {
         pub enable_integrity_monitoring: bool,
     }
     /// The entry of VM image upgrade history.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct UpgradeHistoryEntry {
         /// The snapshot of the boot disk of this notebook instance before upgrade.
@@ -816,6 +829,7 @@ pub mod instance {
         }
     }
     /// Type of the environment; can be one of VM image, or container image.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Environment {
         /// Use a Compute Engine VM image to start the notebook instance.
@@ -827,6 +841,7 @@ pub mod instance {
     }
 }
 /// The description a notebook execution workload.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecutionTemplate {
     /// Required. Scale tier of the hardware used for notebook execution.
@@ -958,6 +973,7 @@ pub mod execution_template {
     /// of `type` and `core_count` are valid. Check [GPUs on
     /// Compute Engine](<https://cloud.google.com/compute/docs/gpus>) to find a valid
     /// combination. TPUs are not supported.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SchedulerAcceleratorConfig {
         /// Type of this accelerator.
@@ -968,6 +984,7 @@ pub mod execution_template {
         pub core_count: i64,
     }
     /// Parameters used in Dataproc JobType executions.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DataprocParameters {
         /// URI for cluster used to run Dataproc execution.
@@ -976,6 +993,7 @@ pub mod execution_template {
         pub cluster: ::prost::alloc::string::String,
     }
     /// Parameters used in Vertex AI JobType executions.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct VertexAiParameters {
         /// The full name of the Compute Engine
@@ -1145,6 +1163,7 @@ pub mod execution_template {
     }
     /// Parameters for an execution type.
     /// NOTE: There are currently no extra parameters for VertexAI jobs.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobParameters {
         /// Parameters used in Dataproc JobType executions.
@@ -1156,6 +1175,7 @@ pub mod execution_template {
     }
 }
 /// The definition of a single executed notebook.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Execution {
     /// execute metadata including name, hardware spec, region, labels, etc.
@@ -1251,6 +1271,7 @@ pub mod execution {
     }
 }
 /// Notebook instance configurations that can be updated.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InstanceConfig {
     /// Cron expression in UTC timezone, used to schedule instance auto upgrade.
@@ -1262,6 +1283,7 @@ pub struct InstanceConfig {
     pub enable_health_monitoring: bool,
 }
 /// The definition of a schedule.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Schedule {
     /// Output only. The name of this schedule. Format:
@@ -1363,6 +1385,7 @@ pub mod schedule {
     }
 }
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// The time the operation was created.
@@ -1394,6 +1417,7 @@ pub struct OperationMetadata {
     pub endpoint: ::prost::alloc::string::String,
 }
 /// Request for listing notebook instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Required. Format:
@@ -1409,6 +1433,7 @@ pub struct ListInstancesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for listing notebook instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesResponse {
     /// A list of returned instances.
@@ -1425,6 +1450,7 @@ pub struct ListInstancesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for getting a notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. Format:
@@ -1433,6 +1459,7 @@ pub struct GetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for creating a notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateInstanceRequest {
     /// Required. Format:
@@ -1447,6 +1474,7 @@ pub struct CreateInstanceRequest {
     pub instance: ::core::option::Option<Instance>,
 }
 /// Request for registering a notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegisterInstanceRequest {
     /// Required. Format:
@@ -1461,6 +1489,7 @@ pub struct RegisterInstanceRequest {
     pub instance_id: ::prost::alloc::string::String,
 }
 /// Request for setting instance accelerator.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInstanceAcceleratorRequest {
     /// Required. Format:
@@ -1478,6 +1507,7 @@ pub struct SetInstanceAcceleratorRequest {
     pub core_count: i64,
 }
 /// Request for setting instance machine type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInstanceMachineTypeRequest {
     /// Required. Format:
@@ -1490,6 +1520,7 @@ pub struct SetInstanceMachineTypeRequest {
     pub machine_type: ::prost::alloc::string::String,
 }
 /// Request for updating instance configurations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateInstanceConfigRequest {
     /// Required. Format:
@@ -1501,6 +1532,7 @@ pub struct UpdateInstanceConfigRequest {
     pub config: ::core::option::Option<InstanceConfig>,
 }
 /// Request for setting instance labels.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetInstanceLabelsRequest {
     /// Required. Format:
@@ -1516,6 +1548,7 @@ pub struct SetInstanceLabelsRequest {
     >,
 }
 /// Request for adding/changing metadata items  for an instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateInstanceMetadataItemsRequest {
     /// Required. Format:
@@ -1530,6 +1563,7 @@ pub struct UpdateInstanceMetadataItemsRequest {
     >,
 }
 /// Response for adding/changing metadata items for an instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateInstanceMetadataItemsResponse {
     /// Map of items that were added/updated to/in the metadata.
@@ -1541,6 +1575,7 @@ pub struct UpdateInstanceMetadataItemsResponse {
 }
 /// Request for updating the Shielded Instance config for a notebook instance.
 /// You can only use this method on a stopped instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateShieldedInstanceConfigRequest {
     /// Required. Format:
@@ -1554,6 +1589,7 @@ pub struct UpdateShieldedInstanceConfigRequest {
     >,
 }
 /// Request for deleting a notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteInstanceRequest {
     /// Required. Format:
@@ -1562,6 +1598,7 @@ pub struct DeleteInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for starting a notebook instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartInstanceRequest {
     /// Required. Format:
@@ -1570,6 +1607,7 @@ pub struct StartInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for stopping a notebook instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StopInstanceRequest {
     /// Required. Format:
@@ -1578,6 +1616,7 @@ pub struct StopInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for resetting a notebook instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResetInstanceRequest {
     /// Required. Format:
@@ -1586,6 +1625,7 @@ pub struct ResetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for notebook instances to report information to Notebooks API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportInstanceInfoRequest {
     /// Required. Format:
@@ -1605,6 +1645,7 @@ pub struct ReportInstanceInfoRequest {
     >,
 }
 /// Request for checking if a notebook instance is upgradeable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IsInstanceUpgradeableRequest {
     /// Required. Format:
@@ -1617,6 +1658,7 @@ pub struct IsInstanceUpgradeableRequest {
     pub r#type: i32,
 }
 /// Response for checking if a notebook instance is upgradeable.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IsInstanceUpgradeableResponse {
     /// If an instance is upgradeable.
@@ -1636,6 +1678,7 @@ pub struct IsInstanceUpgradeableResponse {
     pub upgrade_image: ::prost::alloc::string::String,
 }
 /// Request for checking if a notebook instance is healthy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceHealthRequest {
     /// Required. Format:
@@ -1644,6 +1687,7 @@ pub struct GetInstanceHealthRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Response for checking if a notebook instance is healthy.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceHealthResponse {
     /// Output only. Runtime health_state.
@@ -1714,6 +1758,7 @@ pub mod get_instance_health_response {
     }
 }
 /// Request for upgrading a notebook instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpgradeInstanceRequest {
     /// Required. Format:
@@ -1726,6 +1771,7 @@ pub struct UpgradeInstanceRequest {
     pub r#type: i32,
 }
 /// Request for rollbacking a notebook instance
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RollbackInstanceRequest {
     /// Required. Format:
@@ -1738,6 +1784,7 @@ pub struct RollbackInstanceRequest {
     pub target_snapshot: ::prost::alloc::string::String,
 }
 /// Request for upgrading a notebook instance from within the VM
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpgradeInstanceInternalRequest {
     /// Required. Format:
@@ -1754,6 +1801,7 @@ pub struct UpgradeInstanceInternalRequest {
     pub r#type: i32,
 }
 /// Request for listing environments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEnvironmentsRequest {
     /// Required. Format: `projects/{project_id}/locations/{location}`
@@ -1768,6 +1816,7 @@ pub struct ListEnvironmentsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Request for creating a notebook instance diagnostic file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DiagnoseInstanceRequest {
     /// Required. Format:
@@ -1779,6 +1828,7 @@ pub struct DiagnoseInstanceRequest {
     pub diagnostic_config: ::core::option::Option<DiagnosticConfig>,
 }
 /// Response for listing environments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEnvironmentsResponse {
     /// A list of returned environments.
@@ -1793,6 +1843,7 @@ pub struct ListEnvironmentsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for getting a notebook environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEnvironmentRequest {
     /// Required. Format:
@@ -1801,6 +1852,7 @@ pub struct GetEnvironmentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for creating a notebook environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateEnvironmentRequest {
     /// Required. Format: `projects/{project_id}/locations/{location}`
@@ -1817,6 +1869,7 @@ pub struct CreateEnvironmentRequest {
     pub environment: ::core::option::Option<Environment>,
 }
 /// Request for deleting a notebook environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteEnvironmentRequest {
     /// Required. Format:
@@ -1825,6 +1878,7 @@ pub struct DeleteEnvironmentRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for listing scheduled notebook job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSchedulesRequest {
     /// Required. Format:
@@ -1846,6 +1900,7 @@ pub struct ListSchedulesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response for listing scheduled notebook job.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSchedulesResponse {
     /// A list of returned instances.
@@ -1863,6 +1918,7 @@ pub struct ListSchedulesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for getting scheduled notebook.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetScheduleRequest {
     /// Required. Format:
@@ -1871,6 +1927,7 @@ pub struct GetScheduleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for deleting an Schedule
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteScheduleRequest {
     /// Required. Format:
@@ -1879,6 +1936,7 @@ pub struct DeleteScheduleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for created scheduled notebooks
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateScheduleRequest {
     /// Required. Format:
@@ -1893,6 +1951,7 @@ pub struct CreateScheduleRequest {
     pub schedule: ::core::option::Option<Schedule>,
 }
 /// Request for created scheduled notebooks
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TriggerScheduleRequest {
     /// Required. Format:
@@ -1901,6 +1960,7 @@ pub struct TriggerScheduleRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for listing scheduled notebook executions.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExecutionsRequest {
     /// Required. Format:
@@ -1924,6 +1984,7 @@ pub struct ListExecutionsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response for listing scheduled notebook executions
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListExecutionsResponse {
     /// A list of returned instances.
@@ -1941,6 +2002,7 @@ pub struct ListExecutionsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for getting scheduled notebook execution
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetExecutionRequest {
     /// Required. Format:
@@ -1949,6 +2011,7 @@ pub struct GetExecutionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for deleting a scheduled notebook execution
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteExecutionRequest {
     /// Required. Format:
@@ -1957,6 +2020,7 @@ pub struct DeleteExecutionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to create notebook execution
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateExecutionRequest {
     /// Required. Format:
@@ -2825,6 +2889,7 @@ pub mod notebook_service_client {
     }
 }
 /// The definition of an Event for a managed / semi-managed notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Event {
     /// Event report time.
@@ -2890,6 +2955,7 @@ pub mod event {
     }
 }
 /// The definition of a Runtime for a managed notebook instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Runtime {
     /// Output only. The resource name of the runtime.
@@ -3025,6 +3091,7 @@ pub mod runtime {
         }
     }
     /// Type of the runtime; currently only supports Compute Engine VM.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RuntimeType {
         /// Use a Compute Engine VM image to start the managed notebook instance.
@@ -3044,6 +3111,7 @@ pub mod runtime {
 /// * `nvidia-tesla-p4`
 /// * `nvidia-tesla-t4`
 /// * `nvidia-tesla-a100`
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeAcceleratorConfig {
     /// Accelerator model.
@@ -3119,6 +3187,7 @@ pub mod runtime_accelerator_config {
 }
 /// Represents a custom encryption key configuration that can be applied to
 /// a resource. This will encrypt all disks in Virtual Machine.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EncryptionConfig {
     /// The Cloud KMS resource identifier of the customer-managed encryption key
@@ -3129,6 +3198,7 @@ pub struct EncryptionConfig {
     pub kms_key: ::prost::alloc::string::String,
 }
 /// A Local attached disk resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LocalDisk {
     /// Optional. Output only. Specifies whether the disk will be auto-deleted when the
@@ -3214,6 +3284,7 @@ pub mod local_disk {
     /// features](<https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#guest-os-features>)
     /// to see a list of available options.
     /// Guest OS features for boot disk.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RuntimeGuestOsFeature {
         /// The ID of a supported feature. Read [Enabling guest operating system
@@ -3237,6 +3308,7 @@ pub mod local_disk {
 /// disks or local SSDs attached to the new runtime.
 /// This property is mutually exclusive with the source property; you can only
 /// define one or the other, but not both.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LocalDiskInitializeParams {
     /// Optional. Provide this property when creating the disk.
@@ -3308,6 +3380,7 @@ pub mod local_disk_initialize_params {
     }
 }
 /// Specifies the login configuration for Runtime
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeAccessConfig {
     /// The type of access mode this instance.
@@ -3369,6 +3442,7 @@ pub mod runtime_access_config {
 /// * `idle_shutdown: true`
 /// * `idle_shutdown_timeout: 180`
 /// * `enable_health_monitoring: true`
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeSoftwareConfig {
     /// Cron expression in UTC timezone, used to schedule instance auto upgrade.
@@ -3461,6 +3535,7 @@ pub mod runtime_software_config {
     }
 }
 /// Contains runtime daemon metrics, such as OS and kernels and sessions stats.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeMetrics {
     /// Output only. The system metrics.
@@ -3474,6 +3549,7 @@ pub struct RuntimeMetrics {
 /// Check [Images using supported Shielded VM
 /// features](<https://cloud.google.com/compute/docs/instances/modifying-shielded-vm>).
 /// Not all combinations are valid.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RuntimeShieldedInstanceConfig {
     /// Defines whether the instance has Secure Boot enabled.
@@ -3496,6 +3572,7 @@ pub struct RuntimeShieldedInstanceConfig {
     pub enable_integrity_monitoring: bool,
 }
 /// Runtime using Virtual Machine for computing.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VirtualMachine {
     /// Output only. The user-friendly name of the Managed Compute Engine instance.
@@ -3509,6 +3586,7 @@ pub struct VirtualMachine {
     pub virtual_machine_config: ::core::option::Option<VirtualMachineConfig>,
 }
 /// The config settings for virtual machine.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VirtualMachineConfig {
     /// Output only. The zone where the virtual machine is located.
@@ -3637,6 +3715,7 @@ pub struct VirtualMachineConfig {
 pub mod virtual_machine_config {
     /// Definition of the boot image used by the Runtime.
     /// Used to facilitate runtime upgradeability.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BootImage {}
     /// The type of vNIC driver.
@@ -3676,6 +3755,7 @@ pub mod virtual_machine_config {
     }
 }
 /// Request for listing Managed Notebook Runtimes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimesRequest {
     /// Required. Format:
@@ -3691,6 +3771,7 @@ pub struct ListRuntimesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response for listing Managed Notebook Runtimes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRuntimesResponse {
     /// A list of returned Runtimes.
@@ -3707,6 +3788,7 @@ pub struct ListRuntimesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request for getting a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRuntimeRequest {
     /// Required. Format:
@@ -3715,6 +3797,7 @@ pub struct GetRuntimeRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request for creating a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRuntimeRequest {
     /// Required. Format:
@@ -3732,6 +3815,7 @@ pub struct CreateRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for deleting a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteRuntimeRequest {
     /// Required. Format:
@@ -3743,6 +3827,7 @@ pub struct DeleteRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for starting a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartRuntimeRequest {
     /// Required. Format:
@@ -3754,6 +3839,7 @@ pub struct StartRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for stopping a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StopRuntimeRequest {
     /// Required. Format:
@@ -3765,6 +3851,7 @@ pub struct StopRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for switching a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SwitchRuntimeRequest {
     /// Required. Format:
@@ -3782,6 +3869,7 @@ pub struct SwitchRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for resetting a Managed Notebook Runtime.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResetRuntimeRequest {
     /// Required. Format:
@@ -3795,6 +3883,7 @@ pub struct ResetRuntimeRequest {
 /// Request for upgrading a Managed Notebook Runtime to the latest version.
 /// option (google.api.message_visibility).restriction =
 ///      "TRUSTED_TESTER,SPECIAL_TESTER";
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpgradeRuntimeRequest {
     /// Required. Format:
@@ -3806,6 +3895,7 @@ pub struct UpgradeRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for reporting a Managed Notebook Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportRuntimeEventRequest {
     /// Required. Format:
@@ -3821,6 +3911,7 @@ pub struct ReportRuntimeEventRequest {
     pub event: ::core::option::Option<Event>,
 }
 /// Request for updating a Managed Notebook configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateRuntimeRequest {
     /// Required. The Runtime to be updated.
@@ -3856,6 +3947,7 @@ pub struct UpdateRuntimeRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request for getting a new access token.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RefreshRuntimeTokenInternalRequest {
     /// Required. Format:
@@ -3868,6 +3960,7 @@ pub struct RefreshRuntimeTokenInternalRequest {
     pub vm_id: ::prost::alloc::string::String,
 }
 /// Response with a new access token.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RefreshRuntimeTokenInternalResponse {
     /// The OAuth 2.0 access token.
@@ -3878,6 +3971,7 @@ pub struct RefreshRuntimeTokenInternalResponse {
     pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Request for creating a notebook instance diagnostic file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DiagnoseRuntimeRequest {
     /// Required. Format:

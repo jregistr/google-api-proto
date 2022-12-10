@@ -1,4 +1,5 @@
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.
@@ -38,6 +39,7 @@ pub struct OperationMetadata {
         OperationStatus,
     >,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationStatus {
     /// Output only. Whether the operation is done or still in progress.
@@ -86,6 +88,7 @@ pub mod operation_status {
     }
 }
 /// The label selector, used to group labels on the resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LabelSelector {
     /// Resource labels for this selector.
@@ -96,6 +99,7 @@ pub struct LabelSelector {
     >,
 }
 /// The realm selector, used to match realm resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RealmSelector {
     /// List of realms to match.
@@ -112,6 +116,7 @@ pub struct RealmSelector {
 /// start_time|-------[cron job]-------[cron job]-------[cron job]---|end_time
 /// cron job: cron spec start time + duration
 /// ```
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Schedule {
     /// The start time of the event.
@@ -131,6 +136,7 @@ pub struct Schedule {
     pub cron_spec: ::prost::alloc::string::String,
 }
 /// Encapsulates Agones fleet spec and Agones autoscaler spec sources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SpecSource {
     /// The game server config resource. Uses the form:
@@ -144,6 +150,7 @@ pub struct SpecSource {
     pub name: ::prost::alloc::string::String,
 }
 /// Details about the Agones resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetDetails {
     /// The game server cluster name. Uses the form:
@@ -163,6 +170,7 @@ pub struct TargetDetails {
 /// Nested message and enum types in `TargetDetails`.
 pub mod target_details {
     /// Details of the target Agones fleet.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetFleetDetails {
         /// Reference to target Agones fleet.
@@ -177,6 +185,7 @@ pub mod target_details {
     /// Nested message and enum types in `TargetFleetDetails`.
     pub mod target_fleet_details {
         /// Target Agones fleet specification.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct TargetFleet {
             /// The name of the Agones fleet.
@@ -188,6 +197,7 @@ pub mod target_details {
             pub spec_source: ::core::option::Option<super::super::SpecSource>,
         }
         /// Target Agones autoscaler policy reference.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct TargetFleetAutoscaler {
             /// The name of the Agones autoscaler.
@@ -201,6 +211,7 @@ pub mod target_details {
     }
 }
 /// Encapsulates the Target state.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TargetState {
     /// Details about Agones fleets.
@@ -208,6 +219,7 @@ pub struct TargetState {
     pub details: ::prost::alloc::vec::Vec<TargetDetails>,
 }
 /// Details of the deployed Agones fleet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployedFleetDetails {
     /// Information about the Agones fleet.
@@ -222,6 +234,7 @@ pub struct DeployedFleetDetails {
 /// Nested message and enum types in `DeployedFleetDetails`.
 pub mod deployed_fleet_details {
     /// Agones fleet specification and details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DeployedFleet {
         /// The name of the Agones fleet.
@@ -243,6 +256,7 @@ pub mod deployed_fleet_details {
     pub mod deployed_fleet {
         /// DeployedFleetStatus has details about the Agones fleets such as how many
         /// are running, how many allocated, and so on.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct DeployedFleetStatus {
             /// The number of GameServer replicas in the READY state in this fleet.
@@ -262,6 +276,7 @@ pub mod deployed_fleet_details {
         }
     }
     /// Details about the Agones autoscaler.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DeployedFleetAutoscaler {
         /// The name of the Agones autoscaler.
@@ -277,6 +292,7 @@ pub mod deployed_fleet_details {
     }
 }
 /// Request message for GameServerConfigsService.ListGameServerConfigs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerConfigsRequest {
     /// Required. The parent resource name. Uses the form:
@@ -304,6 +320,7 @@ pub struct ListGameServerConfigsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response message for GameServerConfigsService.ListGameServerConfigs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerConfigsResponse {
     /// The list of game server configs.
@@ -318,6 +335,7 @@ pub struct ListGameServerConfigsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for GameServerConfigsService.GetGameServerConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGameServerConfigRequest {
     /// Required. The name of the game server config to retrieve. Uses the form:
@@ -327,6 +345,7 @@ pub struct GetGameServerConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GameServerConfigsService.CreateGameServerConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateGameServerConfigRequest {
     /// Required. The parent resource name. Uses the form:
@@ -342,6 +361,7 @@ pub struct CreateGameServerConfigRequest {
     pub game_server_config: ::core::option::Option<GameServerConfig>,
 }
 /// Request message for GameServerConfigsService.DeleteGameServerConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteGameServerConfigRequest {
     /// Required. The name of the game server config to delete. Uses the form:
@@ -351,6 +371,7 @@ pub struct DeleteGameServerConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Autoscaling config for an Agones fleet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ScalingConfig {
     /// Required. The name of the Scaling Config
@@ -370,6 +391,7 @@ pub struct ScalingConfig {
     pub schedules: ::prost::alloc::vec::Vec<Schedule>,
 }
 /// Fleet configs for Agones.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FleetConfig {
     /// Agones fleet spec. Example spec:
@@ -381,6 +403,7 @@ pub struct FleetConfig {
     pub name: ::prost::alloc::string::String,
 }
 /// A game server config resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerConfig {
     /// The resource name of the game server config. Uses the form:
@@ -416,6 +439,7 @@ pub struct GameServerConfig {
     pub description: ::prost::alloc::string::String,
 }
 /// Request message for GameServerClustersService.ListGameServerClusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerClustersRequest {
     /// Required. The parent resource name. Uses the form:
@@ -442,6 +466,7 @@ pub struct ListGameServerClustersRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response message for GameServerClustersService.ListGameServerClusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerClustersResponse {
     /// The list of game server clusters.
@@ -456,6 +481,7 @@ pub struct ListGameServerClustersResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for GameServerClustersService.GetGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGameServerClusterRequest {
     /// Required. The name of the game server cluster to retrieve. Uses the form:
@@ -465,6 +491,7 @@ pub struct GetGameServerClusterRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GameServerClustersService.CreateGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateGameServerClusterRequest {
     /// Required. The parent resource name. Uses the form:
@@ -479,6 +506,7 @@ pub struct CreateGameServerClusterRequest {
     pub game_server_cluster: ::core::option::Option<GameServerCluster>,
 }
 /// Request message for GameServerClustersService.PreviewCreateGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewCreateGameServerClusterRequest {
     /// Required. The parent resource name. Uses the form:
@@ -497,6 +525,7 @@ pub struct PreviewCreateGameServerClusterRequest {
 }
 /// Response message for
 /// GameServerClustersService.PreviewCreateGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewCreateGameServerClusterResponse {
     /// The ETag of the game server cluster.
@@ -507,6 +536,7 @@ pub struct PreviewCreateGameServerClusterResponse {
     pub target_state: ::core::option::Option<TargetState>,
 }
 /// Request message for GameServerClustersService.DeleteGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteGameServerClusterRequest {
     /// Required. The name of the game server cluster to delete. Uses the form:
@@ -515,6 +545,7 @@ pub struct DeleteGameServerClusterRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GameServerClustersService.PreviewDeleteGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewDeleteGameServerClusterRequest {
     /// Required. The name of the game server cluster to delete. Uses the form:
@@ -527,6 +558,7 @@ pub struct PreviewDeleteGameServerClusterRequest {
 }
 /// Response message for
 /// GameServerClustersService.PreviewDeleteGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewDeleteGameServerClusterResponse {
     /// The ETag of the game server cluster.
@@ -537,6 +569,7 @@ pub struct PreviewDeleteGameServerClusterResponse {
     pub target_state: ::core::option::Option<TargetState>,
 }
 /// Request message for GameServerClustersService.UpdateGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateGameServerClusterRequest {
     /// Required. The game server cluster to be updated.
@@ -553,6 +586,7 @@ pub struct UpdateGameServerClusterRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for GameServerClustersService.UpdateGameServerCluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewUpdateGameServerClusterRequest {
     /// Required. The game server cluster to be updated.
@@ -572,6 +606,7 @@ pub struct PreviewUpdateGameServerClusterRequest {
     pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Response message for GameServerClustersService.PreviewUpdateGameServerCluster
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewUpdateGameServerClusterResponse {
     /// The ETag of the game server cluster.
@@ -582,6 +617,7 @@ pub struct PreviewUpdateGameServerClusterResponse {
     pub target_state: ::core::option::Option<TargetState>,
 }
 /// The game server cluster connection information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerClusterConnectionInfo {
     /// Namespace designated on the game server cluster where the Agones game
@@ -598,6 +634,7 @@ pub struct GameServerClusterConnectionInfo {
 /// Nested message and enum types in `GameServerClusterConnectionInfo`.
 pub mod game_server_cluster_connection_info {
     /// The location of the Kubernetes cluster.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ClusterReference {
         /// Reference to the GKE cluster where the game servers are installed.
@@ -606,6 +643,7 @@ pub mod game_server_cluster_connection_info {
     }
 }
 /// A reference to a GKE cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GkeClusterReference {
     /// The full or partial name of a GKE cluster, using one of the following
@@ -620,6 +658,7 @@ pub struct GkeClusterReference {
     pub cluster: ::prost::alloc::string::String,
 }
 /// A game server cluster resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerCluster {
     /// Required. The resource name of the game server cluster. Uses the form:
@@ -907,6 +946,7 @@ pub mod game_server_clusters_service_client {
     }
 }
 /// Request message for RealmsService.ListRealms.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRealmsRequest {
     /// Required. The parent resource name. Uses the form:
@@ -933,6 +973,7 @@ pub struct ListRealmsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response message for RealmsService.ListRealms.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListRealmsResponse {
     /// The list of realms.
@@ -947,6 +988,7 @@ pub struct ListRealmsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for RealmsService.GetRealm.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetRealmRequest {
     /// Required. The name of the realm to retrieve. Uses the form:
@@ -955,6 +997,7 @@ pub struct GetRealmRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for RealmsService.CreateRealm.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateRealmRequest {
     /// Required. The parent resource name. Uses the form:
@@ -969,6 +1012,7 @@ pub struct CreateRealmRequest {
     pub realm: ::core::option::Option<Realm>,
 }
 /// Request message for RealmsService.DeleteRealm.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteRealmRequest {
     /// Required. The name of the realm to delete. Uses the form:
@@ -977,6 +1021,7 @@ pub struct DeleteRealmRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for RealmsService.UpdateRealm.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateRealmRequest {
     /// Required. The realm to be updated.
@@ -993,6 +1038,7 @@ pub struct UpdateRealmRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for RealmsService.PreviewRealmUpdate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewRealmUpdateRequest {
     /// Required. The realm to be updated.
@@ -1012,6 +1058,7 @@ pub struct PreviewRealmUpdateRequest {
     pub preview_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Response message for RealmsService.PreviewRealmUpdate.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewRealmUpdateResponse {
     /// ETag of the realm.
@@ -1022,6 +1069,7 @@ pub struct PreviewRealmUpdateResponse {
     pub target_state: ::core::option::Option<TargetState>,
 }
 /// A realm resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Realm {
     /// The resource name of the realm. Uses the form:
@@ -1245,6 +1293,7 @@ pub mod realms_service_client {
     }
 }
 /// Request message for GameServerDeploymentsService.ListGameServerDeployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerDeploymentsRequest {
     /// Required. The parent resource name. Uses the form:
@@ -1271,6 +1320,7 @@ pub struct ListGameServerDeploymentsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Response message for GameServerDeploymentsService.ListGameServerDeployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListGameServerDeploymentsResponse {
     /// The list of game server deployments.
@@ -1285,6 +1335,7 @@ pub struct ListGameServerDeploymentsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request message for GameServerDeploymentsService.GetGameServerDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGameServerDeploymentRequest {
     /// Required. The name of the game server delpoyment to retrieve. Uses the
@@ -1296,6 +1347,7 @@ pub struct GetGameServerDeploymentRequest {
 }
 /// Request message for
 /// GameServerDeploymentsService.GetGameServerDeploymentRollout.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetGameServerDeploymentRolloutRequest {
     /// Required. The name of the game server delpoyment to retrieve. Uses the
@@ -1306,6 +1358,7 @@ pub struct GetGameServerDeploymentRolloutRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for GameServerDeploymentsService.CreateGameServerDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateGameServerDeploymentRequest {
     /// Required. The parent resource name. Uses the form:
@@ -1320,6 +1373,7 @@ pub struct CreateGameServerDeploymentRequest {
     pub game_server_deployment: ::core::option::Option<GameServerDeployment>,
 }
 /// Request message for GameServerDeploymentsService.DeleteGameServerDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteGameServerDeploymentRequest {
     /// Required. The name of the game server delpoyment to delete. Uses the form:
@@ -1330,6 +1384,7 @@ pub struct DeleteGameServerDeploymentRequest {
 }
 /// Request message for GameServerDeploymentsService.UpdateGameServerDeployment.
 /// Only allows updates for labels.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateGameServerDeploymentRequest {
     /// Required. The game server delpoyment to be updated.
@@ -1347,6 +1402,7 @@ pub struct UpdateGameServerDeploymentRequest {
 }
 /// Request message for
 /// GameServerDeploymentsService.UpdateGameServerRolloutDeployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateGameServerDeploymentRolloutRequest {
     /// Required. The game server delpoyment rollout to be updated.
@@ -1363,6 +1419,7 @@ pub struct UpdateGameServerDeploymentRolloutRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for GameServerDeploymentsService.FetchDeploymentState.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchDeploymentStateRequest {
     /// Required. The name of the game server delpoyment. Uses the form:
@@ -1372,6 +1429,7 @@ pub struct FetchDeploymentStateRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Response message for GameServerDeploymentsService.FetchDeploymentState.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchDeploymentStateResponse {
     /// The state of the game server deployment in each game server cluster.
@@ -1386,6 +1444,7 @@ pub struct FetchDeploymentStateResponse {
 /// Nested message and enum types in `FetchDeploymentStateResponse`.
 pub mod fetch_deployment_state_response {
     /// The game server cluster changes made by the game server deployment.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DeployedClusterState {
         /// The name of the cluster.
@@ -1398,6 +1457,7 @@ pub mod fetch_deployment_state_response {
     }
 }
 /// A game server deployment resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerDeployment {
     /// The resource name of the game server deployment. Uses the form:
@@ -1429,6 +1489,7 @@ pub struct GameServerDeployment {
     pub description: ::prost::alloc::string::String,
 }
 /// A game server config override.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerConfigOverride {
     /// Selector chooses the game server config targets.
@@ -1441,6 +1502,7 @@ pub struct GameServerConfigOverride {
 /// Nested message and enum types in `GameServerConfigOverride`.
 pub mod game_server_config_override {
     /// Selector chooses the game server config targets.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Selector {
         /// Selector for choosing applicable realms.
@@ -1448,6 +1510,7 @@ pub mod game_server_config_override {
         RealmsSelector(super::RealmSelector),
     }
     /// Selects the game server config and how it should be applied.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Change {
         /// The game server config for this override.
@@ -1457,6 +1520,7 @@ pub mod game_server_config_override {
 }
 /// The game server deployment rollout which represents the desired rollout
 /// state.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameServerDeploymentRollout {
     /// The resource name of the game server deployment rollout. Uses the form:
@@ -1489,6 +1553,7 @@ pub struct GameServerDeploymentRollout {
     pub etag: ::prost::alloc::string::String,
 }
 /// Request message for PreviewGameServerDeploymentRollout.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewGameServerDeploymentRolloutRequest {
     /// Required. The game server deployment rollout to be updated.
@@ -1510,6 +1575,7 @@ pub struct PreviewGameServerDeploymentRolloutRequest {
 }
 /// Response message for PreviewGameServerDeploymentRollout.
 /// This has details about the Agones fleet and autoscaler to be actuated.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PreviewGameServerDeploymentRolloutResponse {
     /// Locations that could not be reached on this request.

@@ -1,4 +1,5 @@
 /// Specifies a build to retry.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RetryBuildRequest {
     /// The name of the `Build` to retry.
@@ -13,6 +14,7 @@ pub struct RetryBuildRequest {
     pub id: ::prost::alloc::string::String,
 }
 /// Specifies a build trigger to run and the source to use.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunBuildTriggerRequest {
     /// The name of the `Trigger` to run.
@@ -30,6 +32,7 @@ pub struct RunBuildTriggerRequest {
     pub source: ::core::option::Option<RepoSource>,
 }
 /// Location of the source in an archive file in Google Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StorageSource {
     /// Google Cloud Storage bucket containing the source (see
@@ -49,6 +52,7 @@ pub struct StorageSource {
     pub generation: i64,
 }
 /// Location of the source in a Google Cloud Source Repository.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepoSource {
     /// ID of the project that owns the Cloud Source Repository. If omitted, the
@@ -84,6 +88,7 @@ pub struct RepoSource {
 pub mod repo_source {
     /// A revision within the Cloud Source Repository must be specified in
     /// one of these ways.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Revision {
         /// Regex matching branches to build.
@@ -106,6 +111,7 @@ pub mod repo_source {
 /// Location of the source manifest in Google Cloud Storage.
 /// This feature is in Preview; see description
 /// \[here\](<https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/gcs-fetcher>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StorageSourceManifest {
     /// Google Cloud Storage bucket containing the source manifest (see [Bucket
@@ -124,6 +130,7 @@ pub struct StorageSourceManifest {
     pub generation: i64,
 }
 /// Location of the source in a supported storage service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Source {
     /// Location of source.
@@ -133,6 +140,7 @@ pub struct Source {
 /// Nested message and enum types in `Source`.
 pub mod source {
     /// Location of source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// If provided, get the source from this location in Google Cloud Storage.
@@ -150,6 +158,7 @@ pub mod source {
     }
 }
 /// An image built by the pipeline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuiltImage {
     /// Name used to push the container image to Google Container Registry, as
@@ -164,6 +173,7 @@ pub struct BuiltImage {
     pub push_timing: ::core::option::Option<TimeSpan>,
 }
 /// Artifact uploaded using the PythonPackage directive.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadedPythonPackage {
     /// URI of the uploaded artifact.
@@ -177,6 +187,7 @@ pub struct UploadedPythonPackage {
     pub push_timing: ::core::option::Option<TimeSpan>,
 }
 /// A Maven artifact uploaded using the MavenArtifact directive.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UploadedMavenArtifact {
     /// URI of the uploaded artifact.
@@ -190,6 +201,7 @@ pub struct UploadedMavenArtifact {
     pub push_timing: ::core::option::Option<TimeSpan>,
 }
 /// A step in the build pipeline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildStep {
     /// Required. The name of the container image that will run this particular
@@ -307,6 +319,7 @@ pub struct BuildStep {
 }
 /// Volume describes a Docker container volume which is mounted into build steps
 /// in order to persist files across build step execution.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Volume {
     /// Name of the volume to mount.
@@ -323,6 +336,7 @@ pub struct Volume {
     pub path: ::prost::alloc::string::String,
 }
 /// Artifacts created by the build pipeline.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Results {
     /// Container images that were built as a part of the build.
@@ -358,6 +372,7 @@ pub struct Results {
 }
 /// An artifact that was uploaded during a build. This
 /// is a single record in the artifact manifest JSON file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ArtifactResult {
     /// The path of an artifact in a Google Cloud Storage bucket, with the
@@ -387,6 +402,7 @@ pub struct ArtifactResult {
 /// - $REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or
 ///    resolved from the specified branch or tag.
 /// - $SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Build {
     /// Output only. The 'Build' name with format:
@@ -533,6 +549,7 @@ pub struct Build {
 /// Nested message and enum types in `Build`.
 pub mod build {
     /// A non-fatal problem encountered during the execution of the build.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Warning {
         /// Explanation of the warning generated.
@@ -583,6 +600,7 @@ pub mod build {
         }
     }
     /// A fatal problem encountered during the execution of the build.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FailureInfo {
         /// The name of the failure.
@@ -701,6 +719,7 @@ pub mod build {
 }
 /// Artifacts produced by a build that should be uploaded upon
 /// successful completion of all build steps.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Artifacts {
     /// A list of images to be pushed upon the successful completion of all build
@@ -750,6 +769,7 @@ pub struct Artifacts {
 pub mod artifacts {
     /// Files in the workspace to upload to Cloud Storage upon successful
     /// completion of all build steps.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ArtifactObjects {
         /// Cloud Storage bucket and optional object path, in the form
@@ -769,6 +789,7 @@ pub mod artifacts {
     }
     /// A Maven artifact to upload to Artifact Registry upon successful completion
     /// of all build steps.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct MavenArtifact {
         /// Artifact Registry repository, in the form
@@ -802,6 +823,7 @@ pub mod artifacts {
     /// Python package to upload to Artifact Registry upon successful completion
     /// of all build steps. A package can encapsulate multiple objects to be
     /// uploaded to a single repository.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PythonPackage {
         /// Artifact Registry repository, in the form
@@ -819,6 +841,7 @@ pub mod artifacts {
     }
 }
 /// Start and end times for a build execution phase.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TimeSpan {
     /// Start of time span.
@@ -829,6 +852,7 @@ pub struct TimeSpan {
     pub end_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Metadata for build operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildOperationMetadata {
     /// The build that the operation is tracking.
@@ -837,6 +861,7 @@ pub struct BuildOperationMetadata {
 }
 /// Provenance of the source. Ways to find the original source, or verify that
 /// some source was used for this build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SourceProvenance {
     /// A copy of the build's `source.storage_source`, if exists, with any
@@ -870,6 +895,7 @@ pub struct SourceProvenance {
 }
 /// Container message for hashes of byte content of files, used in
 /// SourceProvenance messages to verify integrity of source input to the build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FileHashes {
     /// Collection of file hashes.
@@ -877,6 +903,7 @@ pub struct FileHashes {
     pub file_hash: ::prost::alloc::vec::Vec<Hash>,
 }
 /// Container message for hash values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hash {
     /// The type of hash that was performed.
@@ -924,6 +951,7 @@ pub mod hash {
     }
 }
 /// Secrets and secret environment variables.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Secrets {
     /// Secrets in Secret Manager and associated secret environment variable.
@@ -936,6 +964,7 @@ pub struct Secrets {
 }
 /// Pairs a set of secret environment variables mapped to encrypted
 /// values with the Cloud KMS key to use to decrypt the value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InlineSecret {
     /// Resource name of Cloud KMS crypto key to decrypt the encrypted value.
@@ -955,6 +984,7 @@ pub struct InlineSecret {
     >,
 }
 /// Pairs a secret environment variable with a SecretVersion in Secret Manager.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SecretManagerSecret {
     /// Resource name of the SecretVersion. In format:
@@ -972,6 +1002,7 @@ pub struct SecretManagerSecret {
 /// Note: Use `kmsKeyName` with  `available_secrets` instead of using
 /// `kmsKeyName` with `secret`. For instructions see:
 /// <https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-credentials.>
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Secret {
     /// Cloud KMS key name to use to decrypt these envs.
@@ -990,6 +1021,7 @@ pub struct Secret {
     >,
 }
 /// Request to create a new build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateBuildRequest {
     /// The parent resource where this build will be created.
@@ -1004,6 +1036,7 @@ pub struct CreateBuildRequest {
     pub build: ::core::option::Option<Build>,
 }
 /// Request to get a build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetBuildRequest {
     /// The name of the `Build` to retrieve.
@@ -1018,6 +1051,7 @@ pub struct GetBuildRequest {
     pub id: ::prost::alloc::string::String,
 }
 /// Request to list builds.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBuildsRequest {
     /// The parent of the collection of `Builds`.
@@ -1046,6 +1080,7 @@ pub struct ListBuildsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response including listed builds.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBuildsResponse {
     /// Builds will be sorted by `create_time`, descending.
@@ -1057,6 +1092,7 @@ pub struct ListBuildsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request to cancel an ongoing build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CancelBuildRequest {
     /// The name of the `Build` to cancel.
@@ -1071,6 +1107,7 @@ pub struct CancelBuildRequest {
     pub id: ::prost::alloc::string::String,
 }
 /// Request to approve or reject a pending build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApproveBuildRequest {
     /// Required. Name of the target build.
@@ -1083,6 +1120,7 @@ pub struct ApproveBuildRequest {
 }
 /// BuildApproval describes a build's approval configuration, state, and
 /// result.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildApproval {
     /// Output only. The state of this build's approval.
@@ -1139,6 +1177,7 @@ pub mod build_approval {
     }
 }
 /// ApprovalConfig describes configuration for manual approval of a build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApprovalConfig {
     /// Whether or not approval is needed. If this is set on a build, it will
@@ -1149,6 +1188,7 @@ pub struct ApprovalConfig {
 }
 /// ApprovalResult describes the decision and associated metadata of a manual
 /// approval of a build.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApprovalResult {
     /// Output only. Email of the user that called the ApproveBuild API to
@@ -1211,6 +1251,7 @@ pub mod approval_result {
 }
 /// Configuration for an automated build in response to source repository
 /// changes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildTrigger {
     /// The `Trigger` name with format:
@@ -1309,6 +1350,7 @@ pub struct BuildTrigger {
 /// Nested message and enum types in `BuildTrigger`.
 pub mod build_trigger {
     /// Template describing the Build request to make when the trigger is matched.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BuildTemplate {
         /// Autodetect build configuration.  The following precedence is used (case
@@ -1335,6 +1377,7 @@ pub mod build_trigger {
 /// build whenever a GitHub event is received.
 ///
 /// This message is experimental.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GitHubEventsConfig {
     /// The installationID that emits the GitHub event.
@@ -1359,6 +1402,7 @@ pub struct GitHubEventsConfig {
 pub mod git_hub_events_config {
     /// Filter describing the types of events to trigger a build.
     /// Currently supported event types: push, pull_request.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Event {
         /// filter to match changes in pull requests.
@@ -1371,6 +1415,7 @@ pub mod git_hub_events_config {
 }
 /// PubsubConfig describes the configuration of a trigger that
 /// creates a build whenever a Pub/Sub message is published.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PubsubConfig {
     /// Output only. Name of the subscription. Format is
@@ -1435,6 +1480,7 @@ pub mod pubsub_config {
 }
 /// WebhookConfig describes the configuration of a trigger that
 /// creates a build whenever a webhook is sent to a trigger's webhook URL.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WebhookConfig {
     /// Potential issues with the underlying Pub/Sub subscription configuration.
@@ -1483,6 +1529,7 @@ pub mod webhook_config {
         }
     }
     /// Auth method specifies how the webhook authenticates with GCP.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum AuthMethod {
         /// Required. Resource name for the secret required as a URL parameter.
@@ -1492,6 +1539,7 @@ pub mod webhook_config {
 }
 /// PullRequestFilter contains filter properties for matching GitHub Pull
 /// Requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PullRequestFilter {
     /// Configure builds to run whether a repository owner or collaborator need to
@@ -1548,6 +1596,7 @@ pub mod pull_request_filter {
     }
     /// Target refs to match.
     /// A target ref is the git reference where the pull request will be applied.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum GitRef {
         /// Regex of branches to match.
@@ -1559,6 +1608,7 @@ pub mod pull_request_filter {
     }
 }
 /// Push contains filter properties for matching GitHub git pushes.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PushFilter {
     /// When true, only trigger a build if the revision regex does NOT match the
@@ -1574,6 +1624,7 @@ pub struct PushFilter {
 pub mod push_filter {
     /// Modified refs to match.
     /// A modified refs are the refs modified by a git push operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum GitRef {
         /// Regexes matching branches to build.
@@ -1591,6 +1642,7 @@ pub mod push_filter {
     }
 }
 /// Request to create a new `BuildTrigger`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateBuildTriggerRequest {
     /// The parent resource where this trigger will be created.
@@ -1605,6 +1657,7 @@ pub struct CreateBuildTriggerRequest {
     pub trigger: ::core::option::Option<BuildTrigger>,
 }
 /// Returns the `BuildTrigger` with the specified ID.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetBuildTriggerRequest {
     /// The name of the `Trigger` to retrieve.
@@ -1619,6 +1672,7 @@ pub struct GetBuildTriggerRequest {
     pub trigger_id: ::prost::alloc::string::String,
 }
 /// Request to list existing `BuildTriggers`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBuildTriggersRequest {
     /// The parent of the collection of `Triggers`.
@@ -1636,6 +1690,7 @@ pub struct ListBuildTriggersRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response containing existing `BuildTriggers`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListBuildTriggersResponse {
     /// `BuildTriggers` for the project, sorted by `create_time` descending.
@@ -1646,6 +1701,7 @@ pub struct ListBuildTriggersResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request to delete a `BuildTrigger`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteBuildTriggerRequest {
     /// The name of the `Trigger` to delete.
@@ -1660,6 +1716,7 @@ pub struct DeleteBuildTriggerRequest {
     pub trigger_id: ::prost::alloc::string::String,
 }
 /// Request to update an existing `BuildTrigger`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateBuildTriggerRequest {
     /// Required. ID of the project that owns the trigger.
@@ -1673,6 +1730,7 @@ pub struct UpdateBuildTriggerRequest {
     pub trigger: ::core::option::Option<BuildTrigger>,
 }
 /// Optional arguments to enable specific features of builds.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildOptions {
     /// Requested hash for SourceProvenance.
@@ -1758,6 +1816,7 @@ pub mod build_options {
     /// See [running builds in a private
     /// pool](<https://cloud.google.com/build/docs/private-pools/run-builds-in-private-pool>)
     /// for more information.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PoolOption {
         /// The `WorkerPool` resource to execute the build on.
@@ -1957,6 +2016,7 @@ pub mod build_options {
 }
 /// ReceiveTriggerWebhookRequest \[Experimental\] is the request object accepted by
 /// the ReceiveTriggerWebhook method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceiveTriggerWebhookRequest {
     /// The name of the `ReceiveTriggerWebhook` to retrieve.
@@ -1978,6 +2038,7 @@ pub struct ReceiveTriggerWebhookRequest {
 }
 /// ReceiveTriggerWebhookResponse \[Experimental\] is the response object for the
 /// ReceiveTriggerWebhook method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceiveTriggerWebhookResponse {}
 /// Configuration for a `WorkerPool`.
@@ -1993,6 +2054,7 @@ pub struct ReceiveTriggerWebhookResponse {}
 /// network. For an overview of private pools, see
 /// [Private pools
 /// overview](<https://cloud.google.com/build/docs/private-pools/private-pools-overview>).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WorkerPool {
     /// Output only. The resource name of the `WorkerPool`, with format
@@ -2083,6 +2145,7 @@ pub mod worker_pool {
         }
     }
     /// Private Pool configuration for the `WorkerPool`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Config {
         /// Private Pool using a v1 configuration.
@@ -2091,6 +2154,7 @@ pub mod worker_pool {
     }
 }
 /// Configuration for a V1 `PrivatePool`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PrivatePoolV1Config {
     /// Machine configuration for the workers in the pool.
@@ -2104,6 +2168,7 @@ pub struct PrivatePoolV1Config {
 pub mod private_pool_v1_config {
     /// Defines the configuration to be used for creating workers in
     /// the pool.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct WorkerConfig {
         /// Machine type of a worker, such as `e2-medium`.
@@ -2121,6 +2186,7 @@ pub mod private_pool_v1_config {
         pub disk_size_gb: i64,
     }
     /// Defines the network configuration for the pool.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NetworkConfig {
         /// Required. Immutable. The network definition that the workers are peered
@@ -2178,6 +2244,7 @@ pub mod private_pool_v1_config {
     }
 }
 /// Request to create a new `WorkerPool`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateWorkerPoolRequest {
     /// Required. The parent resource where this worker pool will be created.
@@ -2200,6 +2267,7 @@ pub struct CreateWorkerPoolRequest {
     pub validate_only: bool,
 }
 /// Request to get a `WorkerPool` with the specified name.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetWorkerPoolRequest {
     /// Required. The name of the `WorkerPool` to retrieve.
@@ -2208,6 +2276,7 @@ pub struct GetWorkerPoolRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request to delete a `WorkerPool`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteWorkerPoolRequest {
     /// Required. The name of the `WorkerPool` to delete.
@@ -2229,6 +2298,7 @@ pub struct DeleteWorkerPoolRequest {
     pub validate_only: bool,
 }
 /// Request to update a `WorkerPool`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateWorkerPoolRequest {
     /// Required. The `WorkerPool` to update.
@@ -2246,6 +2316,7 @@ pub struct UpdateWorkerPoolRequest {
     pub validate_only: bool,
 }
 /// Request to list `WorkerPool`s.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListWorkerPoolsRequest {
     /// Required. The parent of the collection of `WorkerPools`.
@@ -2262,6 +2333,7 @@ pub struct ListWorkerPoolsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response containing existing `WorkerPools`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListWorkerPoolsResponse {
     /// `WorkerPools` for the specified project.
@@ -2274,6 +2346,7 @@ pub struct ListWorkerPoolsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Metadata for the `CreateWorkerPool` operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateWorkerPoolOperationMetadata {
     /// The resource name of the `WorkerPool` to create.
@@ -2289,6 +2362,7 @@ pub struct CreateWorkerPoolOperationMetadata {
     pub complete_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Metadata for the `UpdateWorkerPool` operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateWorkerPoolOperationMetadata {
     /// The resource name of the `WorkerPool` being updated.
@@ -2304,6 +2378,7 @@ pub struct UpdateWorkerPoolOperationMetadata {
     pub complete_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Metadata for the `DeleteWorkerPool` operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteWorkerPoolOperationMetadata {
     /// The resource name of the `WorkerPool` being deleted.

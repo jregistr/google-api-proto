@@ -1,5 +1,6 @@
 /// Request message for
 /// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReportJobRequest {
     /// Required. The report's resource name. Specifies the account and report used
@@ -33,6 +34,7 @@ pub struct RunReportJobRequest {
 }
 /// Response message for
 /// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RunReportJobResponse {
     /// Pass `report_job.name` to
@@ -48,6 +50,7 @@ pub struct RunReportJobResponse {
 }
 /// Request message for
 /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchReportResultsRequest {
     /// Required. The report job created by
@@ -76,6 +79,7 @@ pub struct FetchReportResultsRequest {
 /// Response message for
 /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
 /// Contains a tabular representation of the report results.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchReportResultsResponse {
     /// The metadata for the report results (display name, columns, row count, and
@@ -94,6 +98,7 @@ pub struct FetchReportResultsResponse {
 }
 /// Request message for
 /// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReportsRequest {
     /// Required. The resource name of the partner account to list available
@@ -122,6 +127,7 @@ pub struct ListReportsRequest {
 }
 /// Response message for
 /// \[CloudChannelReportsService.ListReports][google.cloud.channel.v1.CloudChannelReportsService.ListReports\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListReportsResponse {
     /// The reports available to the partner.
@@ -136,6 +142,7 @@ pub struct ListReportsResponse {
 /// The result of a \[RunReportJob][\] operation. Contains the name to use in
 /// \[FetchReportResultsRequest.report_job][google.cloud.channel.v1.FetchReportResultsRequest.report_job\]
 /// and the status of the operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportJob {
     /// Required. The resource name of a report job.
@@ -151,6 +158,7 @@ pub struct ReportJob {
 /// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\]
 /// and
 /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportResultsMetadata {
     /// Details of the completed report.
@@ -173,6 +181,7 @@ pub struct ReportResultsMetadata {
 }
 /// The definition of a report column. Specifies the data properties
 /// in the corresponding position of the report rows.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Column {
     /// The unique name of the column (for example, customer_domain,
@@ -240,6 +249,7 @@ pub mod column {
     }
 }
 /// A representation of usage or invoice date ranges.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateRange {
     /// The earliest usage date time (inclusive).
@@ -277,6 +287,7 @@ pub struct DateRange {
     pub invoice_end_date: ::core::option::Option<super::super::super::r#type::Date>,
 }
 /// A row of report values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Row {
     /// The list of values in the row.
@@ -284,6 +295,7 @@ pub struct Row {
     pub values: ::prost::alloc::vec::Vec<ReportValue>,
 }
 /// A single report value.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportValue {
     /// A single report value.
@@ -293,6 +305,7 @@ pub struct ReportValue {
 /// Nested message and enum types in `ReportValue`.
 pub mod report_value {
     /// A single report value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// A value of type `string`.
@@ -319,6 +332,7 @@ pub mod report_value {
     }
 }
 /// Status of a report generation process.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReportStatus {
     /// The current state of the report generation process.
@@ -376,6 +390,7 @@ pub mod report_status {
 }
 /// The ID and description of a report that was used to generate report data.
 /// For example, "GCP Daily Spend", "Google Workspace License Activity", etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Report {
     /// Required. The report's resource name. Specifies the account and report used
@@ -554,6 +569,7 @@ pub mod cloud_channel_reports_service_client {
     }
 }
 /// Required Edu Attributes
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EduData {
     /// Designated institute type of customer.
@@ -653,6 +669,7 @@ pub mod edu_data {
     }
 }
 /// Cloud Identity information for the Cloud Channel Customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudIdentityInfo {
     /// CustomerType indicates verification type needed for using services.
@@ -722,6 +739,7 @@ pub mod cloud_identity_info {
     }
 }
 /// Data type and value of a parameter.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Value {
     /// The kind of value.
@@ -731,6 +749,7 @@ pub struct Value {
 /// Nested message and enum types in `Value`.
 pub mod value {
     /// The kind of value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Kind {
         /// Represents an int64 value.
@@ -751,6 +770,7 @@ pub mod value {
     }
 }
 /// Information needed to create an Admin User for Google Workspace.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdminUser {
     /// Primary email of the admin user.
@@ -765,6 +785,7 @@ pub struct AdminUser {
 }
 /// Entity representing a link between distributors and their indirect
 /// resellers in an n-tier resale channel.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelPartnerLink {
     /// Output only. Resource name for the channel partner link, in the format
@@ -856,6 +877,7 @@ impl ChannelPartnerLinkState {
     }
 }
 /// Entity representing a customer of a reseller or distributor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Customer {
     /// Output only. Resource name of the customer.
@@ -912,6 +934,7 @@ pub struct Customer {
     pub channel_partner_id: ::prost::alloc::string::String,
 }
 /// Contact information for a customer account.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ContactInfo {
     /// The customer account contact's first name. Optional for Team customers.
@@ -938,6 +961,7 @@ pub struct ContactInfo {
 }
 /// A Product is the entity a customer uses when placing an order. For example,
 /// Google Workspace, Google Voice, etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Product {
     /// Resource Name of the Product.
@@ -952,6 +976,7 @@ pub struct Product {
 /// SKUs represent the different variations of the product. For example, Google
 /// Workspace Business Standard and Google Workspace Business Plus are Google
 /// Workspace product SKUs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Sku {
     /// Resource Name of the SKU.
@@ -966,6 +991,7 @@ pub struct Sku {
     pub product: ::core::option::Option<Product>,
 }
 /// Represents the marketing information for a Product, SKU or Offer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MarketingInfo {
     /// Human readable name.
@@ -979,6 +1005,7 @@ pub struct MarketingInfo {
     pub default_logo: ::core::option::Option<Media>,
 }
 /// Represents media information.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Media {
     /// Title of the media.
@@ -1015,6 +1042,7 @@ impl MediaType {
 /// Represents an offer made to resellers for purchase.
 /// An offer is associated with a \[Sku][google.cloud.channel.v1.Sku\], has a plan
 /// for payment, a price, and defines the constraints for buying.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Offer {
     /// Resource Name of the Offer.
@@ -1051,6 +1079,7 @@ pub struct Offer {
 }
 /// Parameter's definition. Specifies what parameter is required to use the
 /// current Offer to purchase.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ParameterDefinition {
     /// Name of the parameter.
@@ -1120,6 +1149,7 @@ pub mod parameter_definition {
     }
 }
 /// Represents the constraints for buying the Offer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Constraints {
     /// Represents constraints required to purchase the Offer for a customer.
@@ -1127,6 +1157,7 @@ pub struct Constraints {
     pub customer_constraints: ::core::option::Option<CustomerConstraints>,
 }
 /// Represents constraints required to purchase the Offer for a customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerConstraints {
     /// Allowed geographical regions of the customer.
@@ -1140,6 +1171,7 @@ pub struct CustomerConstraints {
     pub promotional_order_types: ::prost::alloc::vec::Vec<i32>,
 }
 /// The payment plan for the Offer. Describes how to make a payment.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Plan {
     /// Describes how a reseller will be billed.
@@ -1166,6 +1198,7 @@ pub struct Plan {
     pub billing_account: ::prost::alloc::string::String,
 }
 /// Represents price by resource type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PriceByResource {
     /// Resource Type. Example: SEAT
@@ -1179,6 +1212,7 @@ pub struct PriceByResource {
     pub price_phases: ::prost::alloc::vec::Vec<PricePhase>,
 }
 /// Represents the price of the Offer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Price {
     /// Base price.
@@ -1198,6 +1232,7 @@ pub struct Price {
 /// Specifies the price by the duration of months.
 /// For example, a 20% discount for the first six months, then a 10% discount
 /// starting on the seventh month.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PricePhase {
     /// Defines the phase period type.
@@ -1224,6 +1259,7 @@ pub struct PricePhase {
 /// * Tier 3: Provide flat 15% discount for all seats above 100.
 ///
 /// Each of these tiers is represented as a PriceTier.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PriceTier {
     /// First resource for which the tier price applies.
@@ -1237,6 +1273,7 @@ pub struct PriceTier {
     pub price: ::core::option::Option<Price>,
 }
 /// Represents period in days/months/years.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Period {
     /// Total duration of Period Type defined.
@@ -1405,6 +1442,7 @@ impl PeriodType {
     }
 }
 /// An entitlement is a representation of a customer's ability to use a service.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Entitlement {
     /// Output only. Resource name of an entitlement in the form:
@@ -1551,6 +1589,7 @@ pub mod entitlement {
     }
 }
 /// Definition for extended entitlement parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Parameter {
     /// Name of the parameter.
@@ -1566,6 +1605,7 @@ pub struct Parameter {
     pub editable: bool,
 }
 /// Association links that an entitlement has to other entitlements.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AssociationInfo {
     /// The name of the base entitlement, for which this entitlement is an add-on.
@@ -1573,6 +1613,7 @@ pub struct AssociationInfo {
     pub base_entitlement: ::prost::alloc::string::String,
 }
 /// Service provisioned for an entitlement.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProvisionedService {
     /// Output only. Provisioning ID of the entitlement. For Google Workspace, this
@@ -1590,6 +1631,7 @@ pub struct ProvisionedService {
     pub sku_id: ::prost::alloc::string::String,
 }
 /// Commitment settings for commitment-based offers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommitmentSettings {
     /// Output only. Commitment start timestamp.
@@ -1603,6 +1645,7 @@ pub struct CommitmentSettings {
     pub renewal_settings: ::core::option::Option<RenewalSettings>,
 }
 /// Renewal settings for renewable Offers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RenewalSettings {
     /// If false, the plan will be completed at the end date.
@@ -1621,6 +1664,7 @@ pub struct RenewalSettings {
     pub payment_cycle: ::core::option::Option<Period>,
 }
 /// Settings for trial offers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrialSettings {
     /// Determines if the entitlement is in a trial or not:
@@ -1638,6 +1682,7 @@ pub struct TrialSettings {
 /// TransferableSku represents information a reseller needs to view existing
 /// provisioned services for a customer that they do not own.
 /// Read-only.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferableSku {
     /// Describes the transfer eligibility of a SKU.
@@ -1652,6 +1697,7 @@ pub struct TransferableSku {
     pub legacy_sku: ::core::option::Option<Sku>,
 }
 /// Specifies transfer eligibility of a SKU.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEligibility {
     /// Whether reseller is eligible to transfer the SKU.
@@ -1705,6 +1751,7 @@ pub mod transfer_eligibility {
     }
 }
 /// Configuration for how a reseller will reprice a Customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerRepricingConfig {
     /// Output only. Resource name of the CustomerRepricingConfig.
@@ -1725,6 +1772,7 @@ pub struct CustomerRepricingConfig {
 }
 /// Configuration for how a distributor will rebill a channel partner
 /// (also known as a distributor-authorized reseller).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChannelPartnerRepricingConfig {
     /// Output only. Resource name of the ChannelPartnerRepricingConfig.
@@ -1744,6 +1792,7 @@ pub struct ChannelPartnerRepricingConfig {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Configuration for repricing a Google bill over a period of time.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepricingConfig {
     /// Required. The YearMonth when these adjustments activate. The Day field
@@ -1772,6 +1821,7 @@ pub struct RepricingConfig {
 /// Nested message and enum types in `RepricingConfig`.
 pub mod repricing_config {
     /// Applies the repricing configuration at the entitlement level.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EntitlementGranularity {
         /// Resource name of the entitlement.
@@ -1783,9 +1833,11 @@ pub mod repricing_config {
     /// Applies the repricing configuration at the channel partner level.
     /// The channel partner value is derived from the resource name. Takes an
     /// empty json object.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ChannelPartnerGranularity {}
     /// Required. Defines the granularity for repricing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Granularity {
         /// Applies the repricing configuration at the entitlement level. This is
@@ -1799,6 +1851,7 @@ pub mod repricing_config {
     }
 }
 /// A type that represents the various adjustments you can apply to a bill.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepricingAdjustment {
     /// A oneof that represents the different types for this adjustment.
@@ -1808,6 +1861,7 @@ pub struct RepricingAdjustment {
 /// Nested message and enum types in `RepricingAdjustment`.
 pub mod repricing_adjustment {
     /// A oneof that represents the different types for this adjustment.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Adjustment {
         /// Flat markup or markdown on an entire bill.
@@ -1816,6 +1870,7 @@ pub mod repricing_adjustment {
     }
 }
 /// An adjustment that applies a flat markup or markdown to an entire bill.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PercentageAdjustment {
     /// The percentage of the bill to adjust.
@@ -1827,6 +1882,7 @@ pub struct PercentageAdjustment {
     pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
 }
 /// Specifies the override to conditionally apply.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConditionalOverride {
     /// Required. Information about the applied override's adjustment.
@@ -1843,6 +1899,7 @@ pub struct ConditionalOverride {
 }
 /// Represents the various repricing conditions you can use for a conditional
 /// override.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RepricingCondition {
     /// Represents the types of existing conditional statements.
@@ -1852,6 +1909,7 @@ pub struct RepricingCondition {
 /// Nested message and enum types in `RepricingCondition`.
 pub mod repricing_condition {
     /// Represents the types of existing conditional statements.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Condition {
         /// SKU Group condition for override.
@@ -1861,6 +1919,7 @@ pub mod repricing_condition {
 }
 /// A condition that applies the override if a line item SKU is found in the SKU
 /// group.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SkuGroupCondition {
     /// Specifies a SKU group (<https://cloud.google.com/skus/sku-groups>).
@@ -1900,6 +1959,7 @@ impl RebillingBasis {
 }
 /// Request message for
 /// \[CloudChannelService.CheckCloudIdentityAccountsExist][google.cloud.channel.v1.CloudChannelService.CheckCloudIdentityAccountsExist\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckCloudIdentityAccountsExistRequest {
     /// Required. The reseller account's resource name.
@@ -1912,6 +1972,7 @@ pub struct CheckCloudIdentityAccountsExistRequest {
 }
 /// Entity representing a Cloud Identity account that may be
 /// associated with a Channel Services API partner.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CloudIdentityCustomerAccount {
     /// Returns true if a Cloud Identity account exists for a specific domain.
@@ -1933,6 +1994,7 @@ pub struct CloudIdentityCustomerAccount {
 }
 /// Response message for
 /// \[CloudChannelService.CheckCloudIdentityAccountsExist][google.cloud.channel.v1.CloudChannelService.CheckCloudIdentityAccountsExist\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CheckCloudIdentityAccountsExistResponse {
     /// The Cloud Identity accounts associated with the domain.
@@ -1941,6 +2003,7 @@ pub struct CheckCloudIdentityAccountsExistResponse {
 }
 /// Request message for
 /// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomersRequest {
     /// Required. The resource name of the reseller account to list customers from.
@@ -1969,6 +2032,7 @@ pub struct ListCustomersRequest {
 }
 /// Response message for
 /// \[CloudChannelService.ListCustomers][google.cloud.channel.v1.CloudChannelService.ListCustomers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomersResponse {
     /// The customers belonging to a reseller or distributor.
@@ -1983,6 +2047,7 @@ pub struct ListCustomersResponse {
 }
 /// Request message for
 /// \[CloudChannelService.GetCustomer][google.cloud.channel.v1.CloudChannelService.GetCustomer\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCustomerRequest {
     /// Required. The resource name of the customer to retrieve.
@@ -1992,6 +2057,7 @@ pub struct GetCustomerRequest {
 }
 /// Request message for
 /// \[CloudChannelService.CreateCustomer][google.cloud.channel.v1.CloudChannelService.CreateCustomer\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerRequest {
     /// Required. The resource name of reseller account in which to create the
@@ -2004,6 +2070,7 @@ pub struct CreateCustomerRequest {
 }
 /// Request message for
 /// \[CloudChannelService.UpdateCustomer][google.cloud.channel.v1.CloudChannelService.UpdateCustomer\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCustomerRequest {
     /// Required. New contents of the customer.
@@ -2016,6 +2083,7 @@ pub struct UpdateCustomerRequest {
 }
 /// Request message for
 /// \[CloudChannelService.DeleteCustomer][google.cloud.channel.v1.CloudChannelService.DeleteCustomer\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCustomerRequest {
     /// Required. The resource name of the customer to delete.
@@ -2024,6 +2092,7 @@ pub struct DeleteCustomerRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ImportCustomer][google.cloud.channel.v1.CloudChannelService.ImportCustomer\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCustomerRequest {
     /// Required. The resource name of the reseller's account.
@@ -2068,6 +2137,7 @@ pub mod import_customer_request {
     /// A customer's cloud_identity_id or domain is required to look up the
     /// customer's Cloud Identity. For Team customers, only the cloud_identity_id
     /// option is valid.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum CustomerIdentity {
         /// Required. Customer domain.
@@ -2080,6 +2150,7 @@ pub mod import_customer_request {
 }
 /// Request message for
 /// \[CloudChannelService.ProvisionCloudIdentity][google.cloud.channel.v1.CloudChannelService.ProvisionCloudIdentity\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProvisionCloudIdentityRequest {
     /// Required. Resource name of the customer.
@@ -2098,6 +2169,7 @@ pub struct ProvisionCloudIdentityRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntitlementsRequest {
     /// Required. The resource name of the reseller's customer account to list
@@ -2121,6 +2193,7 @@ pub struct ListEntitlementsRequest {
 }
 /// Response message for
 /// \[CloudChannelService.ListEntitlements][google.cloud.channel.v1.CloudChannelService.ListEntitlements\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEntitlementsResponse {
     /// The reseller customer's entitlements.
@@ -2135,6 +2208,7 @@ pub struct ListEntitlementsResponse {
 }
 /// Request message for
 /// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableSkusRequest {
     /// Required. The reseller account's resource name.
@@ -2183,6 +2257,7 @@ pub mod list_transferable_skus_request {
     /// Specifies the identity of transferred customer.
     /// Either a cloud_identity_id of the customer or the customer name is
     /// required to look up transferable SKUs.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TransferredCustomerIdentity {
         /// Customer's Cloud Identity ID
@@ -2198,6 +2273,7 @@ pub mod list_transferable_skus_request {
 }
 /// Response message for
 /// \[CloudChannelService.ListTransferableSkus][google.cloud.channel.v1.CloudChannelService.ListTransferableSkus\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableSkusResponse {
     /// Information about existing SKUs for a customer that needs a transfer.
@@ -2212,6 +2288,7 @@ pub struct ListTransferableSkusResponse {
 }
 /// Request message for
 /// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableOffersRequest {
     /// Required. The resource name of the reseller's account.
@@ -2254,6 +2331,7 @@ pub mod list_transferable_offers_request {
     /// Specifies the identity of transferred customer.
     /// Either a cloud_identity_id of the customer or the customer name is
     /// required to look up transferrable Offers.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum TransferredCustomerIdentity {
         /// Customer's Cloud Identity ID
@@ -2267,6 +2345,7 @@ pub mod list_transferable_offers_request {
 }
 /// Response message for
 /// \[CloudChannelService.ListTransferableOffers][google.cloud.channel.v1.CloudChannelService.ListTransferableOffers\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListTransferableOffersResponse {
     /// Information about Offers for a customer that can be used for
@@ -2282,6 +2361,7 @@ pub struct ListTransferableOffersResponse {
 }
 /// TransferableOffer represents an Offer that can be used in Transfer.
 /// Read-only.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferableOffer {
     /// Offer with parameter constraints updated to allow the Transfer.
@@ -2290,6 +2370,7 @@ pub struct TransferableOffer {
 }
 /// Request message for
 /// \[CloudChannelService.GetEntitlement][google.cloud.channel.v1.CloudChannelService.GetEntitlement\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEntitlementRequest {
     /// Required. The resource name of the entitlement to retrieve.
@@ -2300,6 +2381,7 @@ pub struct GetEntitlementRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerLinksRequest {
     /// Required. The resource name of the reseller account for listing channel
@@ -2325,6 +2407,7 @@ pub struct ListChannelPartnerLinksRequest {
 }
 /// Response message for
 /// \[CloudChannelService.ListChannelPartnerLinks][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerLinks\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerLinksResponse {
     /// The Channel partner links for a reseller.
@@ -2339,6 +2422,7 @@ pub struct ListChannelPartnerLinksResponse {
 }
 /// Request message for
 /// \[CloudChannelService.GetChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerLink\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelPartnerLinkRequest {
     /// Required. The resource name of the channel partner link to retrieve.
@@ -2352,6 +2436,7 @@ pub struct GetChannelPartnerLinkRequest {
 }
 /// Request message for
 /// \[CloudChannelService.CreateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerLink\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateChannelPartnerLinkRequest {
     /// Required. Create a channel partner link for the provided reseller account's
@@ -2367,6 +2452,7 @@ pub struct CreateChannelPartnerLinkRequest {
 }
 /// Request message for
 /// \[CloudChannelService.UpdateChannelPartnerLink][google.cloud.channel.v1.CloudChannelService.UpdateChannelPartnerLink\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateChannelPartnerLinkRequest {
     /// Required. The resource name of the channel partner link to cancel.
@@ -2386,6 +2472,7 @@ pub struct UpdateChannelPartnerLinkRequest {
 }
 /// Request message for
 /// \[CloudChannelService.GetCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetCustomerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCustomerRepricingConfigRequest {
     /// Required. The resource name of the CustomerRepricingConfig.
@@ -2396,6 +2483,7 @@ pub struct GetCustomerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomerRepricingConfigsRequest {
     /// Required. The resource name of the customer.
@@ -2429,6 +2517,7 @@ pub struct ListCustomerRepricingConfigsRequest {
 }
 /// Response message for
 /// \[CloudChannelService.ListCustomerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListCustomerRepricingConfigs\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCustomerRepricingConfigsResponse {
     /// The repricing configs for this channel partner.
@@ -2443,6 +2532,7 @@ pub struct ListCustomerRepricingConfigsResponse {
 }
 /// Request message for
 /// \[CloudChannelService.CreateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateCustomerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCustomerRepricingConfigRequest {
     /// Required. The resource name of the customer that will receive this
@@ -2456,6 +2546,7 @@ pub struct CreateCustomerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.UpdateCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.UpdateCustomerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCustomerRepricingConfigRequest {
     /// Required. The CustomerRepricingConfig object to update.
@@ -2464,6 +2555,7 @@ pub struct UpdateCustomerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.DeleteCustomerRepricingConfig][google.cloud.channel.v1.CloudChannelService.DeleteCustomerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCustomerRepricingConfigRequest {
     /// Required. The resource name of the customer repricing config rule to
@@ -2474,6 +2566,7 @@ pub struct DeleteCustomerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.GetChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.GetChannelPartnerRepricingConfig\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetChannelPartnerRepricingConfigRequest {
     /// Required. The resource name of the ChannelPartnerRepricingConfig
@@ -2484,6 +2577,7 @@ pub struct GetChannelPartnerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ListChannelPartnerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerRepricingConfigs\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerRepricingConfigsRequest {
     /// Required. The resource name of the account's
@@ -2521,6 +2615,7 @@ pub struct ListChannelPartnerRepricingConfigsRequest {
 }
 /// Response message for
 /// \[CloudChannelService.ListChannelPartnerRepricingConfigs][google.cloud.channel.v1.CloudChannelService.ListChannelPartnerRepricingConfigs\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListChannelPartnerRepricingConfigsResponse {
     /// The repricing configs for this channel partner.
@@ -2537,6 +2632,7 @@ pub struct ListChannelPartnerRepricingConfigsResponse {
 }
 /// Request message for
 /// \[CloudChannelService.CreateChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.CreateChannelPartnerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateChannelPartnerRepricingConfigRequest {
     /// Required. The resource name of the ChannelPartner that will receive the
@@ -2552,6 +2648,7 @@ pub struct CreateChannelPartnerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.UpdateChannelPartnerRepricingConfig][google.cloud.channel.v1.CloudChannelService.UpdateChannelPartnerRepricingConfig\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateChannelPartnerRepricingConfigRequest {
     /// Required. The ChannelPartnerRepricingConfig object to update.
@@ -2561,6 +2658,7 @@ pub struct UpdateChannelPartnerRepricingConfigRequest {
     >,
 }
 /// Request message for DeleteChannelPartnerRepricingConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteChannelPartnerRepricingConfigRequest {
     /// Required. The resource name of the channel partner repricing config rule to
@@ -2570,6 +2668,7 @@ pub struct DeleteChannelPartnerRepricingConfigRequest {
 }
 /// Request message for
 /// \[CloudChannelService.CreateEntitlement][google.cloud.channel.v1.CloudChannelService.CreateEntitlement\]
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateEntitlementRequest {
     /// Required. The resource name of the reseller's customer account in which to
@@ -2597,6 +2696,7 @@ pub struct CreateEntitlementRequest {
 }
 /// Request message for
 /// \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsRequest {
     /// Required. The resource name of the reseller's customer account that will
@@ -2631,6 +2731,7 @@ pub struct TransferEntitlementsRequest {
 /// Response message for
 /// \[CloudChannelService.TransferEntitlements][google.cloud.channel.v1.CloudChannelService.TransferEntitlements\].
 /// This is put in the response field of google.longrunning.Operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsResponse {
     /// The transferred entitlements.
@@ -2639,6 +2740,7 @@ pub struct TransferEntitlementsResponse {
 }
 /// Request message for
 /// \[CloudChannelService.TransferEntitlementsToGoogle][google.cloud.channel.v1.CloudChannelService.TransferEntitlementsToGoogle\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransferEntitlementsToGoogleRequest {
     /// Required. The resource name of the reseller's customer account where the
@@ -2665,6 +2767,7 @@ pub struct TransferEntitlementsToGoogleRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request message for \[CloudChannelService.ChangeParametersRequest][\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeParametersRequest {
     /// Required. The name of the entitlement to update.
@@ -2700,6 +2803,7 @@ pub struct ChangeParametersRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ChangeRenewalSettings][google.cloud.channel.v1.CloudChannelService.ChangeRenewalSettings\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeRenewalSettingsRequest {
     /// Required. The name of the entitlement to update.
@@ -2727,6 +2831,7 @@ pub struct ChangeRenewalSettingsRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ChangeOfferRequest {
     /// Required. The resource name of the entitlement to update.
@@ -2764,6 +2869,7 @@ pub struct ChangeOfferRequest {
 }
 /// Request message for
 /// \[CloudChannelService.StartPaidService][google.cloud.channel.v1.CloudChannelService.StartPaidService\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StartPaidServiceRequest {
     /// Required. The name of the entitlement to start a paid service for.
@@ -2788,6 +2894,7 @@ pub struct StartPaidServiceRequest {
 }
 /// Request message for
 /// \[CloudChannelService.CancelEntitlement][google.cloud.channel.v1.CloudChannelService.CancelEntitlement\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CancelEntitlementRequest {
     /// Required. The resource name of the entitlement to cancel.
@@ -2812,6 +2919,7 @@ pub struct CancelEntitlementRequest {
 }
 /// Request message for
 /// \[CloudChannelService.SuspendEntitlement][google.cloud.channel.v1.CloudChannelService.SuspendEntitlement\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SuspendEntitlementRequest {
     /// Required. The resource name of the entitlement to suspend.
@@ -2836,6 +2944,7 @@ pub struct SuspendEntitlementRequest {
 }
 /// Request message for
 /// \[CloudChannelService.ActivateEntitlement][google.cloud.channel.v1.CloudChannelService.ActivateEntitlement\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ActivateEntitlementRequest {
     /// Required. The resource name of the entitlement to activate.
@@ -2859,6 +2968,7 @@ pub struct ActivateEntitlementRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Request message for LookupOffer.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct LookupOfferRequest {
     /// Required. The resource name of the entitlement to retrieve the Offer.
@@ -2868,6 +2978,7 @@ pub struct LookupOfferRequest {
     pub entitlement: ::prost::alloc::string::String,
 }
 /// Request message for ListProducts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProductsRequest {
     /// Required. The resource name of the reseller account.
@@ -2889,6 +3000,7 @@ pub struct ListProductsRequest {
     pub language_code: ::prost::alloc::string::String,
 }
 /// Response message for ListProducts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProductsResponse {
     /// List of Products requested.
@@ -2899,6 +3011,7 @@ pub struct ListProductsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for ListSkus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSkusRequest {
     /// Required. The resource name of the Product to list SKUs for.
@@ -2926,6 +3039,7 @@ pub struct ListSkusRequest {
     pub language_code: ::prost::alloc::string::String,
 }
 /// Response message for ListSkus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSkusResponse {
     /// The list of SKUs requested.
@@ -2936,6 +3050,7 @@ pub struct ListSkusResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for ListOffers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOffersRequest {
     /// Required. The resource name of the reseller account from which to list
@@ -2964,6 +3079,7 @@ pub struct ListOffersRequest {
     pub language_code: ::prost::alloc::string::String,
 }
 /// Response message for ListOffers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListOffersResponse {
     /// The list of Offers requested.
@@ -2974,6 +3090,7 @@ pub struct ListOffersResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for ListPurchasableSkus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPurchasableSkusRequest {
     /// Required. The resource name of the customer to list SKUs for.
@@ -3003,6 +3120,7 @@ pub struct ListPurchasableSkusRequest {
 pub mod list_purchasable_skus_request {
     /// List SKUs for a new entitlement. Make the purchase using
     /// \[CloudChannelService.CreateEntitlement][google.cloud.channel.v1.CloudChannelService.CreateEntitlement\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CreateEntitlementPurchase {
         /// Required. List SKUs belonging to this Product.
@@ -3014,6 +3132,7 @@ pub mod list_purchasable_skus_request {
     /// List SKUs for upgrading or downgrading an entitlement. Make the purchase
     /// using
     /// \[CloudChannelService.ChangeOffer][google.cloud.channel.v1.CloudChannelService.ChangeOffer\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ChangeOfferPurchase {
         /// Required. Resource name of the entitlement.
@@ -3063,6 +3182,7 @@ pub mod list_purchasable_skus_request {
         }
     }
     /// Defines the intended purchase.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum PurchaseOption {
         /// List SKUs for CreateEntitlement purchase.
@@ -3074,6 +3194,7 @@ pub mod list_purchasable_skus_request {
     }
 }
 /// Response message for ListPurchasableSkus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPurchasableSkusResponse {
     /// The list of SKUs requested.
@@ -3085,6 +3206,7 @@ pub struct ListPurchasableSkusResponse {
 }
 /// SKU that you can purchase. This is used in ListPurchasableSku API
 /// response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurchasableSku {
     /// SKU
@@ -3092,6 +3214,7 @@ pub struct PurchasableSku {
     pub sku: ::core::option::Option<Sku>,
 }
 /// Request message for ListPurchasableOffers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPurchasableOffersRequest {
     /// Required. The resource name of the customer to list Offers for.
@@ -3120,6 +3243,7 @@ pub struct ListPurchasableOffersRequest {
 /// Nested message and enum types in `ListPurchasableOffersRequest`.
 pub mod list_purchasable_offers_request {
     /// List Offers for CreateEntitlement purchase.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CreateEntitlementPurchase {
         /// Required. SKU that the result should be restricted to.
@@ -3128,6 +3252,7 @@ pub mod list_purchasable_offers_request {
         pub sku: ::prost::alloc::string::String,
     }
     /// List Offers for ChangeOffer purchase.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ChangeOfferPurchase {
         /// Required. Resource name of the entitlement.
@@ -3142,6 +3267,7 @@ pub mod list_purchasable_offers_request {
         pub new_sku: ::prost::alloc::string::String,
     }
     /// Defines the intended purchase.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum PurchaseOption {
         /// List Offers for CreateEntitlement purchase.
@@ -3153,6 +3279,7 @@ pub mod list_purchasable_offers_request {
     }
 }
 /// Response message for ListPurchasableOffers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPurchasableOffersResponse {
     /// The list of Offers requested.
@@ -3164,6 +3291,7 @@ pub struct ListPurchasableOffersResponse {
 }
 /// Offer that you can purchase for a customer. This is used in the
 /// ListPurchasableOffer API response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurchasableOffer {
     /// Offer.
@@ -3171,6 +3299,7 @@ pub struct PurchasableOffer {
     pub offer: ::core::option::Option<Offer>,
 }
 /// Request Message for RegisterSubscriber.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegisterSubscriberRequest {
     /// Required. Resource name of the account.
@@ -3182,6 +3311,7 @@ pub struct RegisterSubscriberRequest {
     pub service_account: ::prost::alloc::string::String,
 }
 /// Response Message for RegisterSubscriber.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RegisterSubscriberResponse {
     /// Name of the topic the subscriber will listen to.
@@ -3189,6 +3319,7 @@ pub struct RegisterSubscriberResponse {
     pub topic: ::prost::alloc::string::String,
 }
 /// Request Message for UnregisterSubscriber.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UnregisterSubscriberRequest {
     /// Required. Resource name of the account.
@@ -3200,6 +3331,7 @@ pub struct UnregisterSubscriberRequest {
     pub service_account: ::prost::alloc::string::String,
 }
 /// Response Message for UnregisterSubscriber.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UnregisterSubscriberResponse {
     /// Name of the topic the service account subscriber access was removed from.
@@ -3207,6 +3339,7 @@ pub struct UnregisterSubscriberResponse {
     pub topic: ::prost::alloc::string::String,
 }
 /// Request Message for ListSubscribers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSubscribersRequest {
     /// Required. Resource name of the account.
@@ -3227,6 +3360,7 @@ pub struct ListSubscribersRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response Message for ListSubscribers.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSubscribersResponse {
     /// Name of the topic registered with the reseller.
@@ -5125,6 +5259,7 @@ pub mod cloud_channel_service_client {
 }
 /// Provides contextual information about a
 /// \[google.longrunning.Operation][google.longrunning.Operation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// The RPC that initiated this Long Running Operation.
@@ -5198,6 +5333,7 @@ pub mod operation_metadata {
     }
 }
 /// Represents Pub/Sub message content describing customer update.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomerEvent {
     /// Resource name of the customer.
@@ -5246,6 +5382,7 @@ pub mod customer_event {
     }
 }
 /// Represents Pub/Sub message content describing entitlement update.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EntitlementEvent {
     /// Resource name of an entitlement of the form:
@@ -5328,6 +5465,7 @@ pub mod entitlement_event {
 }
 /// Represents information which resellers will get as part of notification from
 /// Pub/Sub.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SubscriberEvent {
     /// Specifies the Pub/Sub event provided to the partners.
@@ -5339,6 +5477,7 @@ pub struct SubscriberEvent {
 pub mod subscriber_event {
     /// Specifies the Pub/Sub event provided to the partners.
     /// This is a required field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Event {
         /// Customer event sent as part of Pub/Sub event to partners.

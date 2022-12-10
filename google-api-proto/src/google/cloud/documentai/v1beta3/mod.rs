@@ -1,4 +1,5 @@
 /// The common metadata for long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommonOperationMetadata {
     /// The state of the operation.
@@ -64,6 +65,7 @@ pub mod common_operation_metadata {
     }
 }
 /// Encodes the detailed information of a barcode.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Barcode {
     /// Format of a barcode.
@@ -110,6 +112,7 @@ pub struct Barcode {
 }
 /// A vertex represents a 2D point in the image.
 /// NOTE: the vertex coordinates are in the same scale as the original image.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Vertex {
     /// X coordinate.
@@ -122,6 +125,7 @@ pub struct Vertex {
 /// A vertex represents a 2D point in the image.
 /// NOTE: the normalized vertex coordinates are relative to the original image
 /// and range from 0 to 1.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NormalizedVertex {
     /// X coordinate.
@@ -132,6 +136,7 @@ pub struct NormalizedVertex {
     pub y: f32,
 }
 /// A bounding polygon for the detected image annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BoundingPoly {
     /// The bounding polygon vertices.
@@ -145,6 +150,7 @@ pub struct BoundingPoly {
 /// interchange format that provides insights into documents and allows for
 /// collaboration between users and Document AI to iterate and optimize for
 /// quality.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Document {
     /// An IANA published MIME type (also referred to as media type). For more
@@ -192,6 +198,7 @@ pub mod document {
     /// For a large document, sharding may be performed to produce several
     /// document shards. Each document shard contains this field to detail which
     /// shard it is.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ShardInfo {
         /// The 0-based index of this shard.
@@ -207,6 +214,7 @@ pub mod document {
     }
     /// Annotation for common text style attributes. This adheres to CSS
     /// conventions as much as possible.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Style {
         /// Text anchor indexing into the \[Document.text][google.cloud.documentai.v1beta3.Document.text\].
@@ -244,6 +252,7 @@ pub mod document {
     /// Nested message and enum types in `Style`.
     pub mod style {
         /// Font size with unit.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct FontSize {
             /// Font size for the text.
@@ -255,6 +264,7 @@ pub mod document {
         }
     }
     /// A page in a \[Document][google.cloud.documentai.v1beta3.Document\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Page {
         /// 1-based index for current \[Page][google.cloud.documentai.v1beta3.Document.Page\] in a parent \[Document][google.cloud.documentai.v1beta3.Document\].
@@ -323,6 +333,7 @@ pub mod document {
     /// Nested message and enum types in `Page`.
     pub mod page {
         /// Dimension for the page.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Dimension {
             /// Page width.
@@ -336,6 +347,7 @@ pub mod document {
             pub unit: ::prost::alloc::string::String,
         }
         /// Rendered image contents for this page.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Image {
             /// Raw byte content of the image.
@@ -353,6 +365,7 @@ pub mod document {
         }
         /// Representation for transformation matrix, intended to be compatible and
         /// used with OpenCV format for image manipulation.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Matrix {
             /// Number of rows in the matrix.
@@ -372,6 +385,7 @@ pub mod document {
             pub data: ::prost::bytes::Bytes,
         }
         /// Visual element describing a layout unit on a page.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Layout {
             /// Text anchor indexing into the \[Document.text][google.cloud.documentai.v1beta3.Document.text\].
@@ -437,6 +451,7 @@ pub mod document {
         }
         /// A block has a set of lines (collected into paragraphs) that have a
         /// common line-spacing and orientation.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Block {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Block][google.cloud.documentai.v1beta3.Document.Page.Block\].
@@ -451,6 +466,7 @@ pub mod document {
             pub provenance: ::core::option::Option<super::Provenance>,
         }
         /// A collection of lines that a human would perceive as a paragraph.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Paragraph {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Paragraph][google.cloud.documentai.v1beta3.Document.Page.Paragraph\].
@@ -466,6 +482,7 @@ pub mod document {
         }
         /// A collection of tokens that a human would perceive as a line.
         /// Does not cross column boundaries, can be horizontal, vertical, etc.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Line {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Line][google.cloud.documentai.v1beta3.Document.Page.Line\].
@@ -480,6 +497,7 @@ pub mod document {
             pub provenance: ::core::option::Option<super::Provenance>,
         }
         /// A detected token.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Token {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Token][google.cloud.documentai.v1beta3.Document.Page.Token\].
@@ -499,6 +517,7 @@ pub mod document {
         /// Nested message and enum types in `Token`.
         pub mod token {
             /// Detected break at the end of a \[Token][google.cloud.documentai.v1beta3.Document.Page.Token\].
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct DetectedBreak {
                 /// Detected break type.
@@ -547,6 +566,7 @@ pub mod document {
             }
         }
         /// A detected symbol.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Symbol {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Symbol][google.cloud.documentai.v1beta3.Document.Page.Symbol\].
@@ -558,6 +578,7 @@ pub mod document {
         }
         /// Detected non-text visual elements e.g. checkbox, signature etc. on the
         /// page.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct VisualElement {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[VisualElement][google.cloud.documentai.v1beta3.Document.Page.VisualElement\].
@@ -571,6 +592,7 @@ pub mod document {
             pub detected_languages: ::prost::alloc::vec::Vec<DetectedLanguage>,
         }
         /// A table representation similar to HTML table structure.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Table {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[Table][google.cloud.documentai.v1beta3.Document.Page.Table\].
@@ -592,6 +614,7 @@ pub mod document {
         /// Nested message and enum types in `Table`.
         pub mod table {
             /// A row of table cells.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct TableRow {
                 /// Cells that make up this row.
@@ -599,6 +622,7 @@ pub mod document {
                 pub cells: ::prost::alloc::vec::Vec<TableCell>,
             }
             /// A cell representation inside the table.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct TableCell {
                 /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[TableCell][google.cloud.documentai.v1beta3.Document.Page.Table.TableCell\].
@@ -618,6 +642,7 @@ pub mod document {
             }
         }
         /// A form field detected on the page.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct FormField {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for the \[FormField][google.cloud.documentai.v1beta3.Document.Page.FormField\] name. e.g. `Address`, `Email`,
@@ -655,6 +680,7 @@ pub mod document {
             pub provenance: ::core::option::Option<super::Provenance>,
         }
         /// A detected barcode.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct DetectedBarcode {
             /// \[Layout][google.cloud.documentai.v1beta3.Document.Page.Layout\] for \[DetectedBarcode][google.cloud.documentai.v1beta3.Document.Page.DetectedBarcode\].
@@ -665,6 +691,7 @@ pub mod document {
             pub barcode: ::core::option::Option<super::super::Barcode>,
         }
         /// Detected language for a structural component.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct DetectedLanguage {
             /// The BCP-47 language code, such as `en-US` or `sr-Latn`. For more
@@ -677,6 +704,7 @@ pub mod document {
             pub confidence: f32,
         }
         /// Image Quality Scores for the page image
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ImageQualityScores {
             /// The overall quality score. Range `[0, 1]` where 1 is perfect quality.
@@ -691,6 +719,7 @@ pub mod document {
         /// Nested message and enum types in `ImageQualityScores`.
         pub mod image_quality_scores {
             /// Image Quality Defects
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct DetectedDefect {
                 /// Name of the defect type. Supported values are:
@@ -715,6 +744,7 @@ pub mod document {
     /// An entity that could be a phrase in the text or a property that belongs to
     /// the document. It is a known entity type, such as a person, an organization,
     /// or location.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Entity {
         /// Optional. Provenance of the entity.
@@ -761,6 +791,7 @@ pub mod document {
     /// Nested message and enum types in `Entity`.
     pub mod entity {
         /// Parsed and normalized entity value.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct NormalizedValue {
             /// Optional. An optional field to store a normalized string.
@@ -794,6 +825,7 @@ pub mod document {
             /// Must match entity type defined in schema if
             /// known. If this field is present, the `text` field could also be
             /// populated.
+            #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Oneof)]
             pub enum StructuredValue {
                 /// Money value. See also:
@@ -830,6 +862,7 @@ pub mod document {
         }
     }
     /// Relationship between \[Entities][google.cloud.documentai.v1beta3.Document.Entity\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EntityRelation {
         /// Subject entity id.
@@ -843,6 +876,7 @@ pub mod document {
         pub relation: ::prost::alloc::string::String,
     }
     /// Text reference indexing into the \[Document.text][google.cloud.documentai.v1beta3.Document.text\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TextAnchor {
         /// The text segments from the \[Document.text][google.cloud.documentai.v1beta3.Document.text\].
@@ -859,6 +893,7 @@ pub mod document {
         /// A text segment in the \[Document.text][google.cloud.documentai.v1beta3.Document.text\]. The indices may be out of bounds
         /// which indicate that the text extends into another document shard for
         /// large sharded documents. See \[ShardInfo.text_offset][google.cloud.documentai.v1beta3.Document.ShardInfo.text_offset\]
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct TextSegment {
             /// \[TextSegment][google.cloud.documentai.v1beta3.Document.TextAnchor.TextSegment\] start UTF-8 char index in the \[Document.text][google.cloud.documentai.v1beta3.Document.text\].
@@ -873,6 +908,7 @@ pub mod document {
     /// Referencing the visual context of the entity in the \[Document.pages][google.cloud.documentai.v1beta3.Document.pages\].
     /// Page anchors can be cross-page, consist of multiple bounding polygons and
     /// optionally reference specific layout element types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PageAnchor {
         /// One or more references to visual page elements
@@ -882,6 +918,7 @@ pub mod document {
     /// Nested message and enum types in `PageAnchor`.
     pub mod page_anchor {
         /// Represents a weak reference to a page element within a document.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct PageRef {
             /// Required. Index into the \[Document.pages][google.cloud.documentai.v1beta3.Document.pages\] element, for example using
@@ -959,6 +996,7 @@ pub mod document {
     }
     /// Structure to identify provenance relationships between annotations in
     /// different revisions.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Provenance {
         /// The index of the revision that produced this element.
@@ -980,6 +1018,7 @@ pub mod document {
     pub mod provenance {
         /// The parent element the current element is based on. Used for
         /// referencing/aligning, removal and replacement operations.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Parent {
             /// The index of the index into current revision's parent_ids list.
@@ -1044,6 +1083,7 @@ pub mod document {
         }
     }
     /// Contains past or forward revisions of this document.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Revision {
         /// Id of the revision.  Unique within the context of the document.
@@ -1073,6 +1113,7 @@ pub mod document {
     /// Nested message and enum types in `Revision`.
     pub mod revision {
         /// Human Review information of the document.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct HumanReview {
             /// Human review state. e.g. `requested`, `succeeded`, `rejected`.
@@ -1084,6 +1125,7 @@ pub mod document {
             pub state_message: ::prost::alloc::string::String,
         }
         /// Who/what made the change
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum Source {
             /// If the change was made by a person specify the name or id of that
@@ -1097,6 +1139,7 @@ pub mod document {
         }
     }
     /// This message is used for text changes aka. OCR corrections.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TextChange {
         /// Provenance of the correction.
@@ -1115,6 +1158,7 @@ pub mod document {
         pub provenance: ::prost::alloc::vec::Vec<Provenance>,
     }
     /// Original source document from the user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// Optional. Currently supports Google Cloud Storage URI of the form
@@ -1132,6 +1176,7 @@ pub mod document {
     }
 }
 /// Payload message of raw document content (bytes).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RawDocument {
     /// Inline document content.
@@ -1143,6 +1188,7 @@ pub struct RawDocument {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Specifies a document stored on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsDocument {
     /// The Cloud Storage object uri.
@@ -1153,6 +1199,7 @@ pub struct GcsDocument {
     pub mime_type: ::prost::alloc::string::String,
 }
 /// Specifies a set of documents on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsDocuments {
     /// The list of documents.
@@ -1160,6 +1207,7 @@ pub struct GcsDocuments {
     pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
 }
 /// Specifies all documents on Cloud Storage with a common prefix.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsPrefix {
     /// The URI prefix.
@@ -1167,6 +1215,7 @@ pub struct GcsPrefix {
     pub gcs_uri_prefix: ::prost::alloc::string::String,
 }
 /// The common config to specify a set of documents used as input.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchDocumentsInputConfig {
     /// The source.
@@ -1176,6 +1225,7 @@ pub struct BatchDocumentsInputConfig {
 /// Nested message and enum types in `BatchDocumentsInputConfig`.
 pub mod batch_documents_input_config {
     /// The source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
@@ -1188,6 +1238,7 @@ pub mod batch_documents_input_config {
 }
 /// Config that controls the output of documents. All documents will be written
 /// as a JSON file.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentOutputConfig {
     /// The destination of the results.
@@ -1197,6 +1248,7 @@ pub struct DocumentOutputConfig {
 /// Nested message and enum types in `DocumentOutputConfig`.
 pub mod document_output_config {
     /// The configuration used when outputting documents.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GcsOutputConfig {
         /// The Cloud Storage uri (a directory) of the output.
@@ -1209,6 +1261,7 @@ pub mod document_output_config {
         pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
     }
     /// The destination of the results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
         /// Output config to write the results to Cloud Storage.
@@ -1217,6 +1270,7 @@ pub mod document_output_config {
     }
 }
 /// The schema defines the output of the processed document by a processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DocumentSchema {
     /// Display name to show to users.
@@ -1237,6 +1291,7 @@ pub mod document_schema {
     /// EntityType is the wrapper of a label of the corresponding model with
     /// detailed attributes and limitations for entity-based processors. Multiple
     /// types can also compose a dependency tree to represent nested types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EntityType {
         /// User defined name for the type.
@@ -1271,6 +1326,7 @@ pub mod document_schema {
     /// Nested message and enum types in `EntityType`.
     pub mod entity_type {
         /// Defines the a list of enum values.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct EnumValues {
             /// The individual values that this enum values type can include.
@@ -1278,6 +1334,7 @@ pub mod document_schema {
             pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
         }
         /// Defines properties that can be part of the entity type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Property {
             /// The name of the property.  Follows the same guidelines as the
@@ -1338,6 +1395,7 @@ pub mod document_schema {
                 }
             }
         }
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum ValueSource {
             /// If specified, lists all the possible values for this entity.  This
@@ -1350,6 +1408,7 @@ pub mod document_schema {
         }
     }
     /// Metadata for global schema behavior.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Metadata {
         /// If true, a `document` entity type can be applied to subdocument (
@@ -1372,6 +1431,7 @@ pub mod document_schema {
     }
 }
 /// An evaluation of a ProcessorVersion's performance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Evaluation {
     /// The resource name of the evaluation.
@@ -1404,6 +1464,7 @@ pub struct Evaluation {
 /// Nested message and enum types in `Evaluation`.
 pub mod evaluation {
     /// Evaluation counters for the documents that were used.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Counters {
         /// How many documents were sent for evaluation.
@@ -1422,6 +1483,7 @@ pub mod evaluation {
         pub evaluated_documents_count: i32,
     }
     /// Evaluation metrics, either in aggregate or about a specific entity.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Metrics {
         /// The calculated precision.
@@ -1459,6 +1521,7 @@ pub mod evaluation {
         pub total_documents_count: i32,
     }
     /// Evaluations metrics, at a specific confidence level.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ConfidenceLevelMetrics {
         /// The confidence level.
@@ -1469,6 +1532,7 @@ pub mod evaluation {
         pub metrics: ::core::option::Option<Metrics>,
     }
     /// Metrics across multiple confidence levels.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct MultiConfidenceMetrics {
         /// Metrics across confidence levels with fuzzy matching enabled.
@@ -1545,6 +1609,7 @@ pub mod evaluation {
 /// by the customer. At a time, a processor can only have one default version
 /// version. So the processor's behavior (when processing documents) is defined
 /// by a default version
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessorVersion {
     /// The resource name of the processor version.
@@ -1580,6 +1645,7 @@ pub struct ProcessorVersion {
 /// Nested message and enum types in `ProcessorVersion`.
 pub mod processor_version {
     /// Information about the upcoming deprecation of this processor version.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DeprecationInfo {
         /// The time at which this processor version will be deprecated.
@@ -1641,6 +1707,7 @@ pub mod processor_version {
 }
 /// The first-class citizen for Document AI. Each processor defines how to
 /// extract structural information from a document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Processor {
     /// Output only. Immutable. The resource name of the processor.
@@ -1734,6 +1801,7 @@ pub mod processor {
 }
 /// A processor type is responsible for performing a certain document
 /// understanding task on a certain type of document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessorType {
     /// The resource name of the processor type.
@@ -1760,6 +1828,7 @@ pub struct ProcessorType {
 /// Nested message and enum types in `ProcessorType`.
 pub mod processor_type {
     /// The location information about where the processor is available.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LocationInfo {
         /// The location id, currently must be one of [us, eu].
@@ -1768,6 +1837,7 @@ pub mod processor_type {
     }
 }
 /// Request message for the process document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessRequest {
     /// Required. The resource name of the \[Processor][google.cloud.documentai.v1beta3.Processor\] or
@@ -1798,6 +1868,7 @@ pub struct ProcessRequest {
 /// Nested message and enum types in `ProcessRequest`.
 pub mod process_request {
     /// The document payload.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// An inline document proto.
@@ -1809,6 +1880,7 @@ pub mod process_request {
     }
 }
 /// The status of human review on a processed document.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct HumanReviewStatus {
     /// The state of human review on the processing request.
@@ -1871,6 +1943,7 @@ pub mod human_review_status {
     }
 }
 /// Response message for the process document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessResponse {
     /// The document payload, will populate fields based on the processor's
@@ -1889,6 +1962,7 @@ pub struct ProcessResponse {
     pub human_review_status: ::core::option::Option<HumanReviewStatus>,
 }
 /// Request message for batch process document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchProcessRequest {
     /// Required. The resource name of \[Processor][google.cloud.documentai.v1beta3.Processor\] or
@@ -1920,6 +1994,7 @@ pub struct BatchProcessRequest {
 /// Nested message and enum types in `BatchProcessRequest`.
 pub mod batch_process_request {
     /// The message for input config in batch process.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BatchInputConfig {
         /// The Cloud Storage location as the source of the document.
@@ -1932,6 +2007,7 @@ pub mod batch_process_request {
         pub mime_type: ::prost::alloc::string::String,
     }
     /// The message for output config in batch process.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BatchOutputConfig {
         /// The output Cloud Storage directory to put the processed documents.
@@ -1940,9 +2016,11 @@ pub mod batch_process_request {
     }
 }
 /// Response message for batch process document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchProcessResponse {}
 /// The long running operation metadata for batch process method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BatchProcessMetadata {
     /// The state of the current batch processing.
@@ -1967,6 +2045,7 @@ pub struct BatchProcessMetadata {
 /// Nested message and enum types in `BatchProcessMetadata`.
 pub mod batch_process_metadata {
     /// The status of a each individual document in the batch process.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IndividualProcessStatus {
         /// The source of the document, same as the \[input_gcs_source\] field in the
@@ -2041,6 +2120,7 @@ pub mod batch_process_metadata {
     }
 }
 /// Request message for fetch processor types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchProcessorTypesRequest {
     /// Required. The project of processor type to list.
@@ -2050,6 +2130,7 @@ pub struct FetchProcessorTypesRequest {
     pub parent: ::prost::alloc::string::String,
 }
 /// Response message for fetch processor types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FetchProcessorTypesResponse {
     /// The list of processor types.
@@ -2057,6 +2138,7 @@ pub struct FetchProcessorTypesResponse {
     pub processor_types: ::prost::alloc::vec::Vec<ProcessorType>,
 }
 /// Request message for list processor types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorTypesRequest {
     /// Required. The location of processor type to list.
@@ -2074,6 +2156,7 @@ pub struct ListProcessorTypesRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for list processor types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorTypesResponse {
     /// The processor types.
@@ -2084,6 +2167,7 @@ pub struct ListProcessorTypesResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for list all processors belongs to a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorsRequest {
     /// Required. The parent (project and location) which owns this collection of Processors.
@@ -2101,6 +2185,7 @@ pub struct ListProcessorsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for list processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorsResponse {
     /// The list of processors.
@@ -2111,6 +2196,7 @@ pub struct ListProcessorsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for get processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProcessorRequest {
     /// Required. The processor resource name.
@@ -2118,6 +2204,7 @@ pub struct GetProcessorRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for get processor version.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProcessorVersionRequest {
     /// Required. The processor resource name.
@@ -2125,6 +2212,7 @@ pub struct GetProcessorVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for list all processor versions belongs to a processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorVersionsRequest {
     /// Required. The parent (project, location and processor) to list all versions.
@@ -2142,6 +2230,7 @@ pub struct ListProcessorVersionsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for list processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorVersionsResponse {
     /// The list of processors.
@@ -2152,6 +2241,7 @@ pub struct ListProcessorVersionsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for the delete processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProcessorVersionRequest {
     /// Required. The processor version resource name to be deleted.
@@ -2159,6 +2249,7 @@ pub struct DeleteProcessorVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The long running operation metadata for delete processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2166,6 +2257,7 @@ pub struct DeleteProcessorVersionMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the deploy processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployProcessorVersionRequest {
     /// Required. The processor version resource name to be deployed.
@@ -2173,9 +2265,11 @@ pub struct DeployProcessorVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Response message for the deploy processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployProcessorVersionResponse {}
 /// The long running operation metadata for deploy processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2183,6 +2277,7 @@ pub struct DeployProcessorVersionMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the undeploy processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeployProcessorVersionRequest {
     /// Required. The processor version resource name to be undeployed.
@@ -2190,10 +2285,12 @@ pub struct UndeployProcessorVersionRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Response message for the undeploy processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeployProcessorVersionResponse {}
 /// The long running operation metadata for the undeploy processor version
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeployProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2203,6 +2300,7 @@ pub struct UndeployProcessorVersionMetadata {
 /// Request message for create a processor. Notice this request is sent to
 /// a regionalized backend service, and if the processor type is not available
 /// on that region, the creation will fail.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateProcessorRequest {
     /// Required. The parent (project and location) under which to create the processor.
@@ -2215,6 +2313,7 @@ pub struct CreateProcessorRequest {
     pub processor: ::core::option::Option<Processor>,
 }
 /// Request message for the delete processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProcessorRequest {
     /// Required. The processor resource name to be deleted.
@@ -2222,6 +2321,7 @@ pub struct DeleteProcessorRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// The long running operation metadata for delete processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProcessorMetadata {
     /// The basic metadata of the long running operation.
@@ -2229,6 +2329,7 @@ pub struct DeleteProcessorMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the enable processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableProcessorRequest {
     /// Required. The processor resource name to be enabled.
@@ -2237,9 +2338,11 @@ pub struct EnableProcessorRequest {
 }
 /// Response message for the enable processor method.
 /// Intentionally empty proto for adding fields in future.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableProcessorResponse {}
 /// The long running operation metadata for enable processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EnableProcessorMetadata {
     /// The basic metadata of the long running operation.
@@ -2247,6 +2350,7 @@ pub struct EnableProcessorMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the disable processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DisableProcessorRequest {
     /// Required. The processor resource name to be disabled.
@@ -2255,9 +2359,11 @@ pub struct DisableProcessorRequest {
 }
 /// Response message for the disable processor method.
 /// Intentionally empty proto for adding fields in future.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DisableProcessorResponse {}
 /// The long running operation metadata for disable processor method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DisableProcessorMetadata {
     /// The basic metadata of the long running operation.
@@ -2265,6 +2371,7 @@ pub struct DisableProcessorMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the set default processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetDefaultProcessorVersionRequest {
     /// Required. The resource name of the \[Processor][google.cloud.documentai.v1beta3.Processor\] to change default version.
@@ -2277,10 +2384,12 @@ pub struct SetDefaultProcessorVersionRequest {
     pub default_processor_version: ::prost::alloc::string::String,
 }
 /// Response message for set default processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetDefaultProcessorVersionResponse {}
 /// The long running operation metadata for set default processor version
 /// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SetDefaultProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2288,6 +2397,7 @@ pub struct SetDefaultProcessorVersionMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Request message for the create processor version method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrainProcessorVersionRequest {
     /// Required. The parent (project, location and processor) to create the new version for.
@@ -2312,6 +2422,7 @@ pub struct TrainProcessorVersionRequest {
 /// Nested message and enum types in `TrainProcessorVersionRequest`.
 pub mod train_processor_version_request {
     /// The input data used to train a new `ProcessorVersion`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InputData {
         /// The documents used for training the new version.
@@ -2323,6 +2434,7 @@ pub mod train_processor_version_request {
     }
 }
 /// The response for the TrainProcessorVersion method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrainProcessorVersionResponse {
     /// The resource name of the processor version produced by training.
@@ -2330,6 +2442,7 @@ pub struct TrainProcessorVersionResponse {
     pub processor_version: ::prost::alloc::string::String,
 }
 /// The metadata that represents a processor version being created.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TrainProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2350,6 +2463,7 @@ pub struct TrainProcessorVersionMetadata {
 pub mod train_processor_version_metadata {
     /// The dataset validation information.
     /// This includes any and all errors with documents and the dataset.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DatasetValidation {
         /// The total number of document errors.
@@ -2375,6 +2489,7 @@ pub mod train_processor_version_metadata {
     }
 }
 /// Request message for review document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReviewDocumentRequest {
     /// Required. The resource name of the HumanReviewConfig that the document will be
@@ -2433,6 +2548,7 @@ pub mod review_document_request {
         }
     }
     /// The document payload.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// An inline document proto.
@@ -2441,6 +2557,7 @@ pub mod review_document_request {
     }
 }
 /// Response message for review document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReviewDocumentResponse {
     /// The Cloud Storage uri for the human reviewed document if the review is
@@ -2492,6 +2609,7 @@ pub mod review_document_response {
     }
 }
 /// The long running operation metadata for review document method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReviewDocumentOperationMetadata {
     /// Used only when Operation.done is false.
@@ -2561,6 +2679,7 @@ pub mod review_document_operation_metadata {
     }
 }
 /// Evaluates the given ProcessorVersion against the supplied documents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EvaluateProcessorVersionRequest {
     /// Required. The resource name of the \[ProcessorVersion][google.cloud.documentai.v1beta3.ProcessorVersion\] to evaluate.
@@ -2573,6 +2692,7 @@ pub struct EvaluateProcessorVersionRequest {
     pub evaluation_documents: ::core::option::Option<BatchDocumentsInputConfig>,
 }
 /// Metadata of the EvaluateProcessorVersion method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EvaluateProcessorVersionMetadata {
     /// The basic metadata of the long running operation.
@@ -2580,6 +2700,7 @@ pub struct EvaluateProcessorVersionMetadata {
     pub common_metadata: ::core::option::Option<CommonOperationMetadata>,
 }
 /// Metadata of the EvaluateProcessorVersion method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EvaluateProcessorVersionResponse {
     /// The resource name of the created evaluation.
@@ -2587,6 +2708,7 @@ pub struct EvaluateProcessorVersionResponse {
     pub evaluation: ::prost::alloc::string::String,
 }
 /// Retrieves a specific Evaluation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEvaluationRequest {
     /// Required. The resource name of the \[Evaluation][google.cloud.documentai.v1beta3.Evaluation\] to get.
@@ -2595,6 +2717,7 @@ pub struct GetEvaluationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Retrieves a list of evaluations for a given ProcessorVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEvaluationsRequest {
     /// Required. The resource name of the \[ProcessorVersion][google.cloud.documentai.v1beta3.ProcessorVersion\] to list evaluations for.
@@ -2612,6 +2735,7 @@ pub struct ListEvaluationsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// The response from ListEvaluations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEvaluationsResponse {
     /// The evaluations requested.

@@ -1,4 +1,5 @@
 /// Registered Api Key.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PredictionApiKeyRegistration {
     /// The API key.
@@ -6,6 +7,7 @@ pub struct PredictionApiKeyRegistration {
     pub api_key: ::prost::alloc::string::String,
 }
 /// Request message for the `CreatePredictionApiKeyRegistration` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreatePredictionApiKeyRegistrationRequest {
     /// Required. The parent resource path.
@@ -19,6 +21,7 @@ pub struct CreatePredictionApiKeyRegistrationRequest {
     >,
 }
 /// Request message for the `ListPredictionApiKeyRegistrations`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPredictionApiKeyRegistrationsRequest {
     /// Required. The parent placement resource name such as
@@ -34,6 +37,7 @@ pub struct ListPredictionApiKeyRegistrationsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for the `ListPredictionApiKeyRegistrations`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPredictionApiKeyRegistrationsResponse {
     /// The list of registered API keys.
@@ -47,6 +51,7 @@ pub struct ListPredictionApiKeyRegistrationsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for `DeletePredictionApiKeyRegistration` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeletePredictionApiKeyRegistrationRequest {
     /// Required. The API key to unregister including full resource path.
@@ -196,6 +201,7 @@ pub mod prediction_api_key_registry_client {
 /// FeatureMap represents extra features that customers want to include in the
 /// recommendation model for catalogs/user events as categorical/numerical
 /// features.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FeatureMap {
     /// Categorical features that can take on one of a limited number of possible
@@ -227,6 +233,7 @@ pub struct FeatureMap {
 /// Nested message and enum types in `FeatureMap`.
 pub mod feature_map {
     /// A list of string features.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct StringList {
         /// String feature value with a length limit of 128 bytes.
@@ -234,6 +241,7 @@ pub mod feature_map {
         pub value: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// A list of float features.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FloatList {
         /// Float feature value.
@@ -242,6 +250,7 @@ pub mod feature_map {
     }
 }
 /// CatalogItem captures all metadata information of items to be recommended.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CatalogItem {
     /// Required. Catalog item identifier. UTF-8 encoded string with a length limit
@@ -309,6 +318,7 @@ pub struct CatalogItem {
 /// Nested message and enum types in `CatalogItem`.
 pub mod catalog_item {
     /// Category represents catalog item category hierarchy.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CategoryHierarchy {
         /// Required. Catalog item categories. Each category should be a UTF-8
@@ -320,6 +330,7 @@ pub mod catalog_item {
         pub categories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
     /// Extra catalog item metadata for different recommendation types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RecommendationType {
         /// Optional. Metadata specific to retail products.
@@ -328,6 +339,7 @@ pub mod catalog_item {
     }
 }
 /// ProductCatalogItem captures item metadata specific to retail products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductCatalogItem {
     /// Optional. A map to pass the costs associated with the product.
@@ -367,6 +379,7 @@ pub struct ProductCatalogItem {
 /// Nested message and enum types in `ProductCatalogItem`.
 pub mod product_catalog_item {
     /// Exact product price.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ExactPrice {
         /// Optional. Display price of the product.
@@ -379,6 +392,7 @@ pub mod product_catalog_item {
     }
     /// Product price range when there are a range of prices for different
     /// variations of the same product.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PriceRange {
         /// Required. The minimum product price.
@@ -427,6 +441,7 @@ pub mod product_catalog_item {
         }
     }
     /// Product price. Only one of 'exactPrice'/'priceRange' can be provided.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Price {
         /// Optional. The exact product price.
@@ -438,6 +453,7 @@ pub mod product_catalog_item {
     }
 }
 /// Catalog item thumbnail/detail image.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Image {
     /// Required. URL of the image with a length limit of 5 KiB.
@@ -452,6 +468,7 @@ pub struct Image {
 }
 /// UserEvent captures all metadata information recommendation engine needs to
 /// know about how end users interact with customers' website.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEvent {
     /// Required. User event type. Allowed values are:
@@ -559,6 +576,7 @@ pub mod user_event {
     }
 }
 /// Information of end users.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserInfo {
     /// Required. A unique identifier for tracking visitors with a length limit of
@@ -597,6 +615,7 @@ pub struct UserInfo {
     pub direct_user_request: bool,
 }
 /// User event details shared by all recommendation types.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EventDetail {
     /// Optional. Complete url (window.location.href) of the user's current page.
@@ -652,6 +671,7 @@ pub struct EventDetail {
 }
 /// ProductEventDetail captures user event information specific to retail
 /// products.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductEventDetail {
     /// Required for `search` events. Other event types should not set this field.
@@ -711,6 +731,7 @@ pub struct ProductEventDetail {
     pub purchase_transaction: ::core::option::Option<PurchaseTransaction>,
 }
 /// A transaction represents the entire purchase transaction.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurchaseTransaction {
     /// Optional. The transaction ID with a length limit of 128 bytes.
@@ -750,6 +771,7 @@ pub struct PurchaseTransaction {
     pub currency_code: ::prost::alloc::string::String,
 }
 /// Detailed product information associated with a user event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProductDetail {
     /// Required. Catalog item ID. UTF-8 encoded string with a length limit of 128
@@ -794,6 +816,7 @@ pub struct ProductDetail {
 }
 /// Google Cloud Storage location for input content.
 /// format.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsSource {
     /// Required. Google Cloud Storage URIs to input files. URI can be up to
@@ -807,6 +830,7 @@ pub struct GcsSource {
     pub input_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// The inline source for the input config for ImportCatalogItems method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CatalogInlineSource {
     /// Optional. A list of catalog items to update/create. Recommended max of 10k
@@ -815,6 +839,7 @@ pub struct CatalogInlineSource {
     pub catalog_items: ::prost::alloc::vec::Vec<CatalogItem>,
 }
 /// The inline source for the input config for ImportUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEventInlineSource {
     /// Optional. A list of user events to import. Recommended max of 10k items.
@@ -822,6 +847,7 @@ pub struct UserEventInlineSource {
     pub user_events: ::prost::alloc::vec::Vec<UserEvent>,
 }
 /// Configuration of destination for Import related errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportErrorsConfig {
     /// Required. Errors destination.
@@ -831,6 +857,7 @@ pub struct ImportErrorsConfig {
 /// Nested message and enum types in `ImportErrorsConfig`.
 pub mod import_errors_config {
     /// Required. Errors destination.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Destination {
         /// Google Cloud Storage path for import errors. This must be an empty,
@@ -842,6 +869,7 @@ pub mod import_errors_config {
     }
 }
 /// Request message for Import methods.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCatalogItemsRequest {
     /// Required. `projects/1234/locations/global/catalogs/default_catalog`
@@ -861,6 +889,7 @@ pub struct ImportCatalogItemsRequest {
     pub errors_config: ::core::option::Option<ImportErrorsConfig>,
 }
 /// Request message for the ImportUserEvents request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportUserEventsRequest {
     /// Required.
@@ -883,6 +912,7 @@ pub struct ImportUserEventsRequest {
     pub errors_config: ::core::option::Option<ImportErrorsConfig>,
 }
 /// The input config source.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct InputConfig {
     /// Required. The source of the input.
@@ -892,6 +922,7 @@ pub struct InputConfig {
 /// Nested message and enum types in `InputConfig`.
 pub mod input_config {
     /// Required. The source of the input.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
         /// The Inline source for the input content for Catalog items.
@@ -907,6 +938,7 @@ pub mod input_config {
 }
 /// Metadata related to the progress of the Import operation. This will be
 /// returned by the google.longrunning.Operation.metadata field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportMetadata {
     /// Name of the operation.
@@ -933,6 +965,7 @@ pub struct ImportMetadata {
 /// Response of the ImportCatalogItemsRequest. If the long running
 /// operation is done, then this message is returned by the
 /// google.longrunning.Operations.response field if the operation was successful.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportCatalogItemsResponse {
     /// A sample of errors encountered while processing the request.
@@ -945,6 +978,7 @@ pub struct ImportCatalogItemsResponse {
 /// Response of the ImportUserEventsRequest. If the long running
 /// operation was successful, then this message is returned by the
 /// google.longrunning.Operations.response field if the operation was successful.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportUserEventsResponse {
     /// A sample of errors encountered while processing the request.
@@ -960,6 +994,7 @@ pub struct ImportUserEventsResponse {
 }
 /// A summary of import result. The UserEventImportSummary summarizes
 /// the import status for user events.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserEventImportSummary {
     /// Count of user events imported with complete existing catalog information.
@@ -971,6 +1006,7 @@ pub struct UserEventImportSummary {
     pub unjoined_events_count: i64,
 }
 /// Request message for Predict method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PredictRequest {
     /// Required. Full resource name of the format:
@@ -1078,6 +1114,7 @@ pub struct PredictRequest {
     >,
 }
 /// Response message for predict method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PredictResponse {
     /// A list of recommended items. The order represents the ranking (from the
@@ -1111,6 +1148,7 @@ pub struct PredictResponse {
 /// Nested message and enum types in `PredictResponse`.
 pub mod predict_response {
     /// PredictionResult represents the recommendation prediction results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PredictionResult {
         /// ID of the recommended catalog item
@@ -1216,6 +1254,7 @@ pub mod prediction_service_client {
     }
 }
 /// Request message for CreateCatalogItem method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCatalogItemRequest {
     /// Required. The parent catalog resource name, such as
@@ -1227,6 +1266,7 @@ pub struct CreateCatalogItemRequest {
     pub catalog_item: ::core::option::Option<CatalogItem>,
 }
 /// Request message for GetCatalogItem method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCatalogItemRequest {
     /// Required. Full resource name of catalog item, such as
@@ -1235,6 +1275,7 @@ pub struct GetCatalogItemRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListCatalogItems method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCatalogItemsRequest {
     /// Required. The parent catalog resource name, such as
@@ -1253,6 +1294,7 @@ pub struct ListCatalogItemsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListCatalogItems method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCatalogItemsResponse {
     /// The catalog items.
@@ -1264,6 +1306,7 @@ pub struct ListCatalogItemsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for UpdateCatalogItem method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCatalogItemRequest {
     /// Required. Full resource name of catalog item, such as
@@ -1280,6 +1323,7 @@ pub struct UpdateCatalogItemRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for DeleteCatalogItem method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCatalogItemRequest {
     /// Required. Full resource name of catalog item, such as
@@ -1478,6 +1522,7 @@ pub mod catalog_service_client {
     }
 }
 /// Request message for PurgeUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeUserEventsRequest {
     /// Required. The resource name of the event_store under which the events are
@@ -1513,6 +1558,7 @@ pub struct PurgeUserEventsRequest {
 }
 /// Metadata related to the progress of the PurgeUserEvents operation.
 /// This will be returned by the google.longrunning.Operation.metadata field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeUserEventsMetadata {
     /// The ID of the request / operation.
@@ -1525,6 +1571,7 @@ pub struct PurgeUserEventsMetadata {
 /// Response of the PurgeUserEventsRequest. If the long running operation is
 /// successfully done, then this message is returned by the
 /// google.longrunning.Operations.response field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PurgeUserEventsResponse {
     /// The total count of events purged as a result of the operation.
@@ -1536,6 +1583,7 @@ pub struct PurgeUserEventsResponse {
     pub user_events_sample: ::prost::alloc::vec::Vec<UserEvent>,
 }
 /// Request message for WriteUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct WriteUserEventRequest {
     /// Required. The parent eventStore resource name, such as
@@ -1547,6 +1595,7 @@ pub struct WriteUserEventRequest {
     pub user_event: ::core::option::Option<UserEvent>,
 }
 /// Request message for CollectUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CollectUserEventRequest {
     /// Required. The parent eventStore name, such as
@@ -1569,6 +1618,7 @@ pub struct CollectUserEventRequest {
     pub ets: i64,
 }
 /// Request message for ListUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListUserEventsRequest {
     /// Required. The parent eventStore resource name, such as
@@ -1618,6 +1668,7 @@ pub struct ListUserEventsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Response message for ListUserEvents method.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListUserEventsResponse {
     /// The user events.

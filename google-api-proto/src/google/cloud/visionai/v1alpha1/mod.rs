@@ -1,4 +1,5 @@
 /// Request message for CreateAssetRequest.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAssetRequest {
     /// Required. The parent resource where this asset will be created.
@@ -19,6 +20,7 @@ pub struct CreateAssetRequest {
     pub asset_id: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// Request message for GetAsset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAssetRequest {
     /// Required. The name of the asset to retrieve.
@@ -28,6 +30,7 @@ pub struct GetAssetRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListAssets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAssetsRequest {
     /// Required. The parent, which owns this collection of assets.
@@ -50,6 +53,7 @@ pub struct ListAssetsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListAssets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAssetsResponse {
     /// The assets from the specified corpus.
@@ -61,6 +65,7 @@ pub struct ListAssetsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Response message for UpdateAsset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAssetRequest {
     /// Required. The asset to update.
@@ -75,6 +80,7 @@ pub struct UpdateAssetRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for DeleteAsset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAssetRequest {
     /// Required. The name of the asset to delete.
@@ -87,6 +93,7 @@ pub struct DeleteAssetRequest {
 /// contains metadata and another resource annotation. Different feature could be
 /// applied to the asset to generate annotations. User could specified annotation
 /// related to the target asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Asset {
     /// Resource name of the asset.
@@ -101,6 +108,7 @@ pub struct Asset {
     pub ttl: ::core::option::Option<::prost_types::Duration>,
 }
 /// Request message of CreateCorpus API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCorpusRequest {
     /// Required. Form: `projects/{project_number}/locations/{location_id}`
@@ -111,10 +119,12 @@ pub struct CreateCorpusRequest {
     pub corpus: ::core::option::Option<Corpus>,
 }
 /// Metadata for CreateCorpus API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateCorpusMetadata {}
 /// Corpus is a set of video contents for management. Within a corpus, videos
 /// share the same data schema. Search is also restricted within a single corpus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Corpus {
     /// Resource name of the corpus.
@@ -136,6 +146,7 @@ pub struct Corpus {
     pub default_ttl: ::core::option::Option<::prost_types::Duration>,
 }
 /// Request message for GetCorpus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCorpusRequest {
     /// Required. The resource name of the corpus to retrieve.
@@ -143,6 +154,7 @@ pub struct GetCorpusRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for UpdateCorpus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateCorpusRequest {
     /// Required. The corpus which replaces the resource on the server.
@@ -153,6 +165,7 @@ pub struct UpdateCorpusRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for ListCorpora.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCorporaRequest {
     /// Required. The resource name of the project from which to list corpora.
@@ -172,6 +185,7 @@ pub struct ListCorporaRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListCorpora.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListCorporaResponse {
     /// The corpora in the project.
@@ -183,6 +197,7 @@ pub struct ListCorporaResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for DeleteCorpus.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteCorpusRequest {
     /// Required. The resource name of the corpus to delete.
@@ -190,6 +205,7 @@ pub struct DeleteCorpusRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateDataSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDataSchemaRequest {
     /// Required. The parent resource where this data schema will be created.
@@ -202,6 +218,7 @@ pub struct CreateDataSchemaRequest {
 }
 /// Data schema indicates how the user specified annotation is interpreted in the
 /// system.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSchema {
     /// Resource name of the data schema in the form of:
@@ -221,6 +238,7 @@ pub struct DataSchema {
 }
 /// Data schema details indicates the data type and the data struct corresponding
 /// to the key of user specified annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSchemaDetails {
     /// Type of the annotation.
@@ -239,6 +257,7 @@ pub struct DataSchemaDetails {
 /// Nested message and enum types in `DataSchemaDetails`.
 pub mod data_schema_details {
     /// The configuration for `PROTO_ANY` data type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ProtoAnyConfig {
         /// The type URI of the proto message.
@@ -246,6 +265,7 @@ pub mod data_schema_details {
         pub type_uri: ::prost::alloc::string::String,
     }
     /// The search strategy for annotations value of the `key`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SearchStrategy {
         /// The type of search strategy to be applied on the `key` above.
@@ -430,6 +450,7 @@ pub mod data_schema_details {
     }
 }
 /// Request message for UpdateDataSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDataSchemaRequest {
     /// Required. The data schema's `name` field is used to identify the data schema to be
@@ -442,6 +463,7 @@ pub struct UpdateDataSchemaRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for GetDataSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDataSchemaRequest {
     /// Required. The name of the data schema to retrieve.
@@ -451,6 +473,7 @@ pub struct GetDataSchemaRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for DeleteDataSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDataSchemaRequest {
     /// Required. The name of the data schema to delete.
@@ -460,6 +483,7 @@ pub struct DeleteDataSchemaRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListDataSchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDataSchemasRequest {
     /// Required. The parent, which owns this collection of data schemas.
@@ -481,6 +505,7 @@ pub struct ListDataSchemasRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListDataSchemas.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDataSchemasResponse {
     /// The data schemas from the specified corpus.
@@ -492,6 +517,7 @@ pub struct ListDataSchemasResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for CreateAnnotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAnnotationRequest {
     /// Required. The parent resource where this annotation will be created.
@@ -513,6 +539,7 @@ pub struct CreateAnnotationRequest {
 }
 /// An annotation is a resource in asset. It represents a key-value mapping of
 /// content in asset.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Annotation {
     /// Resource name of the annotation.
@@ -525,6 +552,7 @@ pub struct Annotation {
     pub user_specified_annotation: ::core::option::Option<UserSpecifiedAnnotation>,
 }
 /// Annotation provided by users.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UserSpecifiedAnnotation {
     /// Required. Key of the annotation. The key must be set with type by CreateDataSchema.
@@ -539,6 +567,7 @@ pub struct UserSpecifiedAnnotation {
     pub partition: ::core::option::Option<Partition>,
 }
 /// Location Coordinate Representation
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeoCoordinate {
     /// Latitude Coordinate. Degrees [-90 .. 90]
@@ -549,6 +578,7 @@ pub struct GeoCoordinate {
     pub longitude: f64,
 }
 /// Value of annotation, including all types available in data schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnnotationValue {
     #[prost(oneof = "annotation_value::Value", tags = "1, 2, 3, 5, 7, 8, 9, 10")]
@@ -556,6 +586,7 @@ pub struct AnnotationValue {
 }
 /// Nested message and enum types in `AnnotationValue`.
 pub mod annotation_value {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// Value of int type annotation.
@@ -585,6 +616,7 @@ pub mod annotation_value {
     }
 }
 /// Request message for GetAnnotation API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAnnotationsRequest {
     /// The parent, which owns this collection of annotations.
@@ -618,6 +650,7 @@ pub struct ListAnnotationsRequest {
     pub filter: ::prost::alloc::string::String,
 }
 /// Request message for ListAnnotations API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAnnotationsResponse {
     /// The annotations from the specified asset.
@@ -629,6 +662,7 @@ pub struct ListAnnotationsResponse {
     pub next_page_token: ::prost::alloc::string::String,
 }
 /// Request message for GetAnnotation API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAnnotationRequest {
     /// Required. The name of the annotation to retrieve.
@@ -638,6 +672,7 @@ pub struct GetAnnotationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for UpdateAnnotation API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAnnotationRequest {
     /// Required. The annotation to update.
@@ -651,6 +686,7 @@ pub struct UpdateAnnotationRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for DeleteAnnotation API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAnnotationRequest {
     /// Required. The name of the annotation to delete.
@@ -660,6 +696,7 @@ pub struct DeleteAnnotationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for CreateSearchConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateSearchConfigRequest {
     /// Required. The parent resource where this search configuration will be created.
@@ -677,6 +714,7 @@ pub struct CreateSearchConfigRequest {
     pub search_config_id: ::prost::alloc::string::String,
 }
 /// Request message for UpdateSearchConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSearchConfigRequest {
     /// Required. The search configuration to update.
@@ -692,6 +730,7 @@ pub struct UpdateSearchConfigRequest {
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// Request message for GetSearchConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetSearchConfigRequest {
     /// Required. The name of the search configuration to retrieve.
@@ -701,6 +740,7 @@ pub struct GetSearchConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for DeleteSearchConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteSearchConfigRequest {
     /// Required. The name of the search configuration to delete.
@@ -710,6 +750,7 @@ pub struct DeleteSearchConfigRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Request message for ListSearchConfigs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSearchConfigsRequest {
     /// Required. The parent, which owns this collection of search configurations.
@@ -732,6 +773,7 @@ pub struct ListSearchConfigsRequest {
     pub page_token: ::prost::alloc::string::String,
 }
 /// Response message for ListSearchConfigs.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSearchConfigsResponse {
     /// The search configurations from the specified corpus.
@@ -744,6 +786,7 @@ pub struct ListSearchConfigsResponse {
 }
 /// SearchConfig stores different properties that will affect search
 /// behaviors and search results.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchConfig {
     /// Resource name of the search configuration.
@@ -762,6 +805,7 @@ pub struct SearchConfig {
     pub search_criteria_property: ::core::option::Option<SearchCriteriaProperty>,
 }
 /// Central configuration for a facet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FacetProperty {
     /// Name of the facets, which are the dimensions users want to use to refine
@@ -803,6 +847,7 @@ pub mod facet_property {
     /// will be aggregated via the following buckets:
     /// [-inf, 0), [0, 10), [10, 20), [20, 30), [30, inf).
     /// Notably, bucket_count <= 1 is an invalid spec.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct FixedRangeBucketSpec {
         /// Lower bound of the bucket. NOTE: Only integer type is currently supported
@@ -825,6 +870,7 @@ pub mod facet_property {
     /// - endpoints must be listed in ascending order. Otherwise, the SearchConfig
     ///    API will reject the facet config.
     /// - < 1 endpoints is an invalid spec.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct CustomRangeBucketSpec {
         /// Currently, only integer type is supported for this field.
@@ -832,6 +878,7 @@ pub mod facet_property {
         pub endpoints: ::prost::alloc::vec::Vec<super::FacetValue>,
     }
     /// If bucket type is DATE, specify how date values are bucketized.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DateTimeBucketSpec {
         /// Granularity of date type facet.
@@ -878,6 +925,7 @@ pub mod facet_property {
             }
         }
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RangeFacetConfig {
         /// Fixed range facet bucket config.
@@ -892,6 +940,7 @@ pub mod facet_property {
     }
 }
 /// Central configuration for custom search criteria.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchCriteriaProperty {
     /// Each mapped_field corresponds to a UGA key. To understand how this property
@@ -920,6 +969,7 @@ pub struct SearchCriteriaProperty {
     pub mapped_fields: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Definition of a single value with generic type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FacetValue {
     #[prost(oneof = "facet_value::Value", tags = "1, 2, 3")]
@@ -927,6 +977,7 @@ pub struct FacetValue {
 }
 /// Nested message and enum types in `FacetValue`.
 pub mod facet_value {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// String type value.
@@ -941,6 +992,7 @@ pub mod facet_value {
     }
 }
 /// Holds the facet value, selections state, and metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FacetBucket {
     /// Whether one facet bucket is selected. This field represents user's facet
@@ -956,6 +1008,7 @@ pub struct FacetBucket {
 /// Nested message and enum types in `FacetBucket`.
 pub mod facet_bucket {
     /// The range of values [start, end) for which faceting is applied.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Range {
         /// Start of the range. Non-existence indicates some bound (e.g. -inf).
@@ -968,6 +1021,7 @@ pub mod facet_bucket {
     /// Bucket associated with a facet. For example, bucket of facet “team”
     /// can be "49ers", "patriots", etc; bucket of facet "player" can be "tom
     /// brady", "drew brees", etc.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum BucketValue {
         /// Singular value.
@@ -980,6 +1034,7 @@ pub mod facet_bucket {
 }
 /// A group of facet buckets to be passed back and forth between backend &
 /// frontend.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FacetGroup {
     /// Unique id of the facet group.
@@ -1004,6 +1059,7 @@ pub struct FacetGroup {
     pub fetch_matched_annotations: bool,
 }
 /// Request message for IngestAsset API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IngestAssetRequest {
     #[prost(oneof = "ingest_asset_request::StreamingRequest", tags = "1, 2")]
@@ -1014,6 +1070,7 @@ pub struct IngestAssetRequest {
 /// Nested message and enum types in `IngestAssetRequest`.
 pub mod ingest_asset_request {
     /// Configuration for the data.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Config {
         /// Required. The resource name of the asset that the ingested data belongs to.
@@ -1025,6 +1082,7 @@ pub mod ingest_asset_request {
     /// Nested message and enum types in `Config`.
     pub mod config {
         /// Type information for video data.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct VideoType {
             /// Container format of the video data.
@@ -1065,6 +1123,7 @@ pub mod ingest_asset_request {
                 }
             }
         }
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum DataType {
             /// Type information for video data.
@@ -1073,6 +1132,7 @@ pub mod ingest_asset_request {
         }
     }
     /// Contains the data and the corresponding time range this data is for.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TimeIndexedData {
         /// Data to be ingested.
@@ -1084,6 +1144,7 @@ pub mod ingest_asset_request {
             super::partition::TemporalPartition,
         >,
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum StreamingRequest {
         /// Provides information for the data and the asset resource name that the
@@ -1097,6 +1158,7 @@ pub mod ingest_asset_request {
     }
 }
 /// Response message for IngestAsset API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IngestAssetResponse {
     /// Time range of the data that has been successfully ingested.
@@ -1106,6 +1168,7 @@ pub struct IngestAssetResponse {
     >,
 }
 /// Request message for ClipAsset API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClipAssetRequest {
     /// Required. The resource name of the asset to request clips for.
@@ -1118,6 +1181,7 @@ pub struct ClipAssetRequest {
     pub temporal_partition: ::core::option::Option<partition::TemporalPartition>,
 }
 /// Response message for ClipAsset API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClipAssetResponse {
     /// A list of signed uris to download the video clips that cover the requested
@@ -1128,6 +1192,7 @@ pub struct ClipAssetResponse {
 /// Nested message and enum types in `ClipAssetResponse`.
 pub mod clip_asset_response {
     /// Signed uri with corresponding time range.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TimeIndexedUri {
         /// Time range of the video that the uri is for.
@@ -1141,6 +1206,7 @@ pub mod clip_asset_response {
     }
 }
 /// Request message for GenerateHlsUri API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateHlsUriRequest {
     /// Required. The resource name of the asset to request clips for.
@@ -1153,6 +1219,7 @@ pub struct GenerateHlsUriRequest {
     pub temporal_partitions: ::prost::alloc::vec::Vec<partition::TemporalPartition>,
 }
 /// Response message for GenerateHlsUri API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateHlsUriResponse {
     /// A signed uri to download the HLS manifest corresponding to the requested
@@ -1165,6 +1232,7 @@ pub struct GenerateHlsUriResponse {
     pub temporal_partitions: ::prost::alloc::vec::Vec<partition::TemporalPartition>,
 }
 /// Request message for SearchAssets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchAssetsRequest {
     /// Required. The parent corpus to search.
@@ -1203,9 +1271,11 @@ pub struct SearchAssetsRequest {
 }
 /// The metadata for DeleteAsset API that embeds in
 /// \[metadata][google.longrunning.Operation.metadata\] field.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAssetMetadata {}
 /// Stores the criteria-annotation matching results for each search result item.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnnotationMatchingResult {
     /// The criteria used for matching. It can be an input search criteria or a
@@ -1222,6 +1292,7 @@ pub struct AnnotationMatchingResult {
     pub status: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// Search result contains asset name and corresponding time ranges.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchResultItem {
     /// The resource name of the asset.
@@ -1248,6 +1319,7 @@ pub struct SearchResultItem {
     pub annotation_matching_results: ::prost::alloc::vec::Vec<AnnotationMatchingResult>,
 }
 /// Response message for SearchAssets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SearchAssetsResponse {
     /// Returned search results.
@@ -1262,6 +1334,7 @@ pub struct SearchAssetsResponse {
     pub facet_results: ::prost::alloc::vec::Vec<FacetGroup>,
 }
 /// Integer range type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IntRange {
     /// Start of the int range.
@@ -1272,6 +1345,7 @@ pub struct IntRange {
     pub end: ::core::option::Option<i64>,
 }
 /// Float range type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FloatRange {
     /// Start of the float range.
@@ -1282,6 +1356,7 @@ pub struct FloatRange {
     pub end: ::core::option::Option<f32>,
 }
 /// A list of string-type values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StringArray {
     /// String type values.
@@ -1289,6 +1364,7 @@ pub struct StringArray {
     pub txt_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// A list of integer range values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct IntRangeArray {
     /// Int range values.
@@ -1296,6 +1372,7 @@ pub struct IntRangeArray {
     pub int_ranges: ::prost::alloc::vec::Vec<IntRange>,
 }
 /// A list of float range values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FloatRangeArray {
     /// Float range values.
@@ -1303,6 +1380,7 @@ pub struct FloatRangeArray {
     pub float_ranges: ::prost::alloc::vec::Vec<FloatRange>,
 }
 /// Datetime range type.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateTimeRange {
     /// Start date time.
@@ -1313,6 +1391,7 @@ pub struct DateTimeRange {
     pub end: ::core::option::Option<super::super::super::r#type::DateTime>,
 }
 /// A list of datetime range values.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DateTimeRangeArray {
     /// Date time ranges.
@@ -1320,6 +1399,7 @@ pub struct DateTimeRangeArray {
     pub date_time_ranges: ::prost::alloc::vec::Vec<DateTimeRange>,
 }
 /// Representation of a circle area.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CircleArea {
     /// Latitude of circle area's center. Degrees [-90 .. 90]
@@ -1333,18 +1413,21 @@ pub struct CircleArea {
     pub radius_meter: f64,
 }
 /// A list of locations.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeoLocationArray {
     /// A list of circle areas.
     #[prost(message, repeated, tag = "1")]
     pub circle_areas: ::prost::alloc::vec::Vec<CircleArea>,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BoolValue {
     #[prost(bool, tag = "1")]
     pub value: bool,
 }
 /// Filter criteria applied to current search results.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Criteria {
     /// The UGA field or ML field to apply filtering criteria.
@@ -1364,6 +1447,7 @@ pub struct Criteria {
 }
 /// Nested message and enum types in `Criteria`.
 pub mod criteria {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// The text values associated with the field.
@@ -1388,6 +1472,7 @@ pub mod criteria {
 }
 /// Partition to specify the partition in time and space for sub-asset level
 /// annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Partition {
     /// Partition of asset in time.
@@ -1400,6 +1485,7 @@ pub struct Partition {
 /// Nested message and enum types in `Partition`.
 pub mod partition {
     /// Partition of asset in UTC Epoch time.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TemporalPartition {
         /// Start time of the partition.
@@ -1410,6 +1496,7 @@ pub mod partition {
         pub end_time: ::core::option::Option<::prost_types::Timestamp>,
     }
     /// Partition of asset in space.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SpatialPartition {
         /// The minimum x coordinate value.
@@ -2149,6 +2236,7 @@ pub mod warehouse_client {
     }
 }
 /// The descriptor for a gstreamer buffer payload.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GstreamerBufferDescriptor {
     /// The caps string of the payload.
@@ -2168,6 +2256,7 @@ pub struct GstreamerBufferDescriptor {
     pub duration: ::core::option::Option<::prost_types::Duration>,
 }
 /// The descriptor for a raw image.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RawImageDescriptor {
     /// Raw image format. Its possible values are: "srgb".
@@ -2181,6 +2270,7 @@ pub struct RawImageDescriptor {
     pub width: i32,
 }
 /// The message that represents the data type of a packet.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PacketType {
     /// The type class of the packet. Its possible values are:
@@ -2194,6 +2284,7 @@ pub struct PacketType {
 /// Nested message and enum types in `PacketType`.
 pub mod packet_type {
     /// The message that fully specifies the type of the packet.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TypeDescriptor {
         /// The type of the packet. Its possible values is codec dependent.
@@ -2221,6 +2312,7 @@ pub mod packet_type {
         ///
         /// It is non-empty only for specific type class codecs. Needed only when the
         /// type string alone is not enough to disambiguate the specific type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum TypeDetails {
             /// GstreamerBufferDescriptor is the descriptor for gstreamer buffer type.
@@ -2233,6 +2325,7 @@ pub mod packet_type {
     }
 }
 /// The message that represents server metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ServerMetadata {
     /// The offset position for the packet in its stream.
@@ -2248,6 +2341,7 @@ pub struct ServerMetadata {
     pub ingest_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// The message that represents series metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SeriesMetadata {
     /// Series name. It's in the format of
@@ -2256,6 +2350,7 @@ pub struct SeriesMetadata {
     pub series: ::prost::alloc::string::String,
 }
 /// The message that represents packet header.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PacketHeader {
     /// Input only. The capture time of the packet.
@@ -2294,6 +2389,7 @@ pub struct PacketHeader {
     pub trace_context: ::prost::alloc::string::String,
 }
 /// The quanta of datum that the series accepts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Packet {
     /// The packet header.
@@ -2304,6 +2400,7 @@ pub struct Packet {
     pub payload: ::prost::bytes::Bytes,
 }
 /// Output format for Personal Protective Equipment Detection Operator.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PersonalProtectiveEquipmentDetectionOutput {
     /// Current timestamp.
@@ -2318,6 +2415,7 @@ pub struct PersonalProtectiveEquipmentDetectionOutput {
 /// Nested message and enum types in `PersonalProtectiveEquipmentDetectionOutput`.
 pub mod personal_protective_equipment_detection_output {
     /// The entity info for annotations from person detection prediction result.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PersonEntity {
         /// Entity id.
@@ -2325,6 +2423,7 @@ pub mod personal_protective_equipment_detection_output {
         pub person_entity_id: i64,
     }
     /// The entity info for annotations from PPE detection prediction result.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PpeEntity {
         /// Label id.
@@ -2342,6 +2441,7 @@ pub mod personal_protective_equipment_detection_output {
         pub ppe_entity_id: i64,
     }
     /// Bounding Box in the normalized coordinates.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NormalizedBoundingBox {
         /// Min in x coordinate.
@@ -2359,6 +2459,7 @@ pub mod personal_protective_equipment_detection_output {
     }
     /// PersonIdentified box contains the location and the entity info of the
     /// person.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PersonIdentifiedBox {
         /// An unique id for this box.
@@ -2375,6 +2476,7 @@ pub mod personal_protective_equipment_detection_output {
         pub person_entity: ::core::option::Option<PersonEntity>,
     }
     /// PPEIdentified box contains the location and the entity info of the PPE.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct PpeIdentifiedBox {
         /// An unique id for this box.
@@ -2392,6 +2494,7 @@ pub mod personal_protective_equipment_detection_output {
     }
     /// Detected Person contains the detected person and their associated
     /// ppes and their protecting information.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DetectedPerson {
         /// The id of detected person.
@@ -2425,6 +2528,7 @@ pub mod personal_protective_equipment_detection_output {
     }
 }
 /// Prediction output format for Generic Object Detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectDetectionPredictionResult {
     /// Current timestamp.
@@ -2439,6 +2543,7 @@ pub struct ObjectDetectionPredictionResult {
 /// Nested message and enum types in `ObjectDetectionPredictionResult`.
 pub mod object_detection_prediction_result {
     /// The entity info for annotations from object detection prediction result.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Entity {
         /// Label id.
@@ -2449,6 +2554,7 @@ pub mod object_detection_prediction_result {
         pub label_string: ::prost::alloc::string::String,
     }
     /// Identified box contains location and the entity of the object.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IdentifiedBox {
         /// An unique id for this box.
@@ -2469,6 +2575,7 @@ pub mod object_detection_prediction_result {
     /// Nested message and enum types in `IdentifiedBox`.
     pub mod identified_box {
         /// Bounding Box in the normalized coordinates.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct NormalizedBoundingBox {
             /// Min in x coordinate.
@@ -2487,6 +2594,7 @@ pub mod object_detection_prediction_result {
     }
 }
 /// Prediction output format for Image Object Detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageObjectDetectionPredictionResult {
     /// The resource IDs of the AnnotationSpecs that had been identified, ordered
@@ -2512,6 +2620,7 @@ pub struct ImageObjectDetectionPredictionResult {
     pub bboxes: ::prost::alloc::vec::Vec<::prost_types::ListValue>,
 }
 /// Prediction output format for Image and Text Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClassificationPredictionResult {
     /// The resource IDs of the AnnotationSpecs that had been identified.
@@ -2527,6 +2636,7 @@ pub struct ClassificationPredictionResult {
     pub confidences: ::prost::alloc::vec::Vec<f32>,
 }
 /// Prediction output format for Image Segmentation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImageSegmentationPredictionResult {
     /// A PNG image where each pixel in the mask represents the category in which
@@ -2546,6 +2656,7 @@ pub struct ImageSegmentationPredictionResult {
     pub confidence_mask: ::prost::alloc::string::String,
 }
 /// Prediction output format for Video Action Recognition.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoActionRecognitionPredictionResult {
     /// The beginning, inclusive, of the video's time segment in which the
@@ -2568,6 +2679,7 @@ pub mod video_action_recognition_prediction_result {
     /// Each IdentifiedAction is one particular identification of an action
     /// specified with the AnnotationSpec id, display_name and the associated
     /// confidence score.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IdentifiedAction {
         /// The resource ID of the AnnotationSpec that had been identified.
@@ -2583,6 +2695,7 @@ pub mod video_action_recognition_prediction_result {
     }
 }
 /// Prediction output format for Video Object Tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoObjectTrackingPredictionResult {
     /// The beginning, inclusive, of the video's time segment in which the
@@ -2605,6 +2718,7 @@ pub mod video_object_tracking_prediction_result {
     /// Boundingbox for detected object. I.e. the rectangle over the video frame
     /// pinpointing the found AnnotationSpec. The coordinates are relative to the
     /// frame size, and the point 0,0 is in the top left of the frame.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct BoundingBox {
         /// The leftmost coordinate of the bounding box.
@@ -2623,6 +2737,7 @@ pub mod video_object_tracking_prediction_result {
     /// Each DetectedObject is one particular identification of an object
     /// specified with the AnnotationSpec id and display_name, the bounding box,
     /// the associated confidence score and the corresponding track_id.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DetectedObject {
         /// The resource ID of the AnnotationSpec that had been identified.
@@ -2647,6 +2762,7 @@ pub mod video_object_tracking_prediction_result {
     }
 }
 /// Prediction output format for Video Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoClassificationPredictionResult {
     /// The beginning, inclusive, of the video's time segment in which the
@@ -2670,6 +2786,7 @@ pub mod video_classification_prediction_result {
     /// Each IdentifiedClassification is one particular identification of an
     /// classification specified with the AnnotationSpec id and display_name,
     /// and the associated confidence score.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IdentifiedClassification {
         /// The resource ID of the AnnotationSpec that had been identified.
@@ -2685,6 +2802,7 @@ pub mod video_classification_prediction_result {
     }
 }
 /// The prediction result proto for occupancy counting.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OccupancyCountingPredictionResult {
     /// Current timestamp.
@@ -2714,6 +2832,7 @@ pub struct OccupancyCountingPredictionResult {
 /// Nested message and enum types in `OccupancyCountingPredictionResult`.
 pub mod occupancy_counting_prediction_result {
     /// The entity info for annotations from occupancy counting operator.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Entity {
         /// Label id.
@@ -2724,6 +2843,7 @@ pub mod occupancy_counting_prediction_result {
         pub label_string: ::prost::alloc::string::String,
     }
     /// Identified box contains location and the entity of the object.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IdentifiedBox {
         /// An unique id for this box.
@@ -2748,6 +2868,7 @@ pub mod occupancy_counting_prediction_result {
     /// Nested message and enum types in `IdentifiedBox`.
     pub mod identified_box {
         /// Bounding Box in the normalized coordinates.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct NormalizedBoundingBox {
             /// Min in x coordinate.
@@ -2765,6 +2886,7 @@ pub mod occupancy_counting_prediction_result {
         }
     }
     /// The statistics info for annotations from occupancy counting operator.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Stats {
         /// Counts of the full frame.
@@ -2781,6 +2903,7 @@ pub mod occupancy_counting_prediction_result {
     pub mod stats {
         /// The object info and instant count for annotations from occupancy counting
         /// operator.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ObjectCount {
             /// Entity of this object.
@@ -2792,6 +2915,7 @@ pub mod occupancy_counting_prediction_result {
         }
         /// The object info and accumulated count for annotations from occupancy
         /// counting operator.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct AccumulatedObjectCount {
             /// The start time of the accumulated count.
@@ -2802,6 +2926,7 @@ pub mod occupancy_counting_prediction_result {
             pub object_count: ::core::option::Option<ObjectCount>,
         }
         /// Message for Crossing line count.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct CrossingLineCount {
             /// Line annotation from the user.
@@ -2825,6 +2950,7 @@ pub mod occupancy_counting_prediction_result {
             >,
         }
         /// Message for the active zone count.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct ActiveZoneCount {
             /// Active zone annotation from the user.
@@ -2836,6 +2962,7 @@ pub mod occupancy_counting_prediction_result {
         }
     }
     /// The track info for annotations from occupancy counting operator.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TrackInfo {
         /// An unique id to identify a track. It should be consistent across frames.
@@ -2846,6 +2973,7 @@ pub mod occupancy_counting_prediction_result {
         pub start_time: ::core::option::Option<::prost_types::Timestamp>,
     }
     /// The dwell time info for annotations from occupancy counting operator.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DwellTimeInfo {
         /// An unique id to identify a track. It should be consistent across frames.
@@ -2863,6 +2991,7 @@ pub mod occupancy_counting_prediction_result {
     }
 }
 /// message about annotations about Vision AI stream resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamAnnotation {
     /// ID of the annotation. It must be unique when used in the certain context.
@@ -2884,6 +3013,7 @@ pub struct StreamAnnotation {
 }
 /// Nested message and enum types in `StreamAnnotation`.
 pub mod stream_annotation {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum AnnotationPayload {
         /// Annotation for type ACTIVE_ZONE
@@ -2895,6 +3025,7 @@ pub mod stream_annotation {
     }
 }
 /// A wrapper of repeated StreamAnnotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamAnnotations {
     /// Multiple annotations.
@@ -2902,6 +3033,7 @@ pub struct StreamAnnotations {
     pub stream_annotations: ::prost::alloc::vec::Vec<StreamAnnotation>,
 }
 /// Normalized Polygon.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NormalizedPolygon {
     /// The bounding polygon normalized vertices. Top left corner of the image
@@ -2911,6 +3043,7 @@ pub struct NormalizedPolygon {
 }
 /// Normalized Pplyline, which represents a curve consisting of connected
 /// straight-line segments.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NormalizedPolyline {
     /// A sequence of vertices connected by straight lines.
@@ -2920,6 +3053,7 @@ pub struct NormalizedPolyline {
 /// A vertex represents a 2D point in the image.
 /// NOTE: the normalized vertex coordinates are relative to the original image
 /// and range from 0 to 1.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NormalizedVertex {
     /// X coordinate.
@@ -2932,6 +3066,7 @@ pub struct NormalizedVertex {
 /// Message of essential metadata of App Platform.
 /// This message is usually attached to a certain processor output annotation for
 /// customer to identify the source of the data.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AppPlatformMetadata {
     /// The application resource name.
@@ -2952,6 +3087,7 @@ pub struct AppPlatformMetadata {
 /// function is expected to receive AppPlatformCloudFunctionRequest as request
 /// and send back AppPlatformCloudFunctionResponse as response.
 /// Message of request from AppPlatform to Cloud Function.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AppPlatformCloudFunctionRequest {
     /// The metadata of the AppPlatform for customer to identify the source of the
@@ -2968,6 +3104,7 @@ pub struct AppPlatformCloudFunctionRequest {
 pub mod app_platform_cloud_function_request {
     /// A general annotation message that uses struct format to represent different
     /// concrete annotation protobufs.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct StructedInputAnnotation {
         /// The ingestion time of the current annotation.
@@ -2979,6 +3116,7 @@ pub mod app_platform_cloud_function_request {
     }
 }
 /// Message of the response from customer's Cloud Function to AppPlatform.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AppPlatformCloudFunctionResponse {
     /// The modified annotations that is returned back to AppPlatform.
@@ -3002,6 +3140,7 @@ pub struct AppPlatformCloudFunctionResponse {
 pub mod app_platform_cloud_function_response {
     /// A general annotation message that uses struct format to represent different
     /// concrete annotation protobufs.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct StructedOutputAnnotation {
         /// The struct format of the actual annotation.
@@ -3010,6 +3149,7 @@ pub mod app_platform_cloud_function_response {
     }
 }
 /// Message of content of appPlatform event
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AppPlatformEventBody {
     /// Human readable string of the event like "There are more than 6 people in
@@ -3057,6 +3197,7 @@ impl StreamAnnotationType {
     }
 }
 /// Message describing the Cluster object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Cluster {
     /// Output only. Name of the resource.
@@ -3136,6 +3277,7 @@ pub mod cluster {
     }
 }
 /// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OperationMetadata {
     /// Output only. The time the operation was created.
@@ -3164,6 +3306,7 @@ pub struct OperationMetadata {
     pub api_version: ::prost::alloc::string::String,
 }
 /// The Google Cloud Storage location for the input content.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcsSource {
     /// Required. References to a Google Cloud Storage paths.
@@ -3171,15 +3314,19 @@ pub struct GcsSource {
     pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for DeleteApplicationInstance Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApplicationInstancesResponse {}
 /// Message for CreateApplicationInstance Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApplicationInstancesResponse {}
 /// Message for UpdateApplicationInstances Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationInstancesResponse {}
 /// Message for adding stream input to an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApplicationInstancesRequest {
     /// Required. the name of the application to retrieve.
@@ -3207,6 +3354,7 @@ pub struct CreateApplicationInstancesRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for removing stream input from an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApplicationInstancesRequest {
     /// Required. the name of the application to retrieve.
@@ -3235,21 +3383,27 @@ pub struct DeleteApplicationInstancesRequest {
 }
 /// RPC Request Messages.
 /// Message for DeployApplication Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployApplicationResponse {}
 /// Message for UndeployApplication Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeployApplicationResponse {}
 /// Message for RemoveApplicationStreamInput Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveApplicationStreamInputResponse {}
 /// Message for AddApplicationStreamInput Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddApplicationStreamInputResponse {}
 /// Message for AddApplicationStreamInput Response.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationStreamInputResponse {}
 /// Message for requesting list of Applications.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApplicationsRequest {
     /// Required. Parent value for ListApplicationsRequest.
@@ -3270,6 +3424,7 @@ pub struct ListApplicationsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Applications.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListApplicationsResponse {
     /// The list of Application.
@@ -3283,6 +3438,7 @@ pub struct ListApplicationsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetApplicationRequest {
     /// Required. Name of the resource.
@@ -3290,6 +3446,7 @@ pub struct GetApplicationRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateApplicationRequest {
     /// Required. Value for parent.
@@ -3318,6 +3475,7 @@ pub struct CreateApplicationRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationRequest {
     /// Optional. Field mask is used to specify the fields to be overwritten in the
@@ -3347,6 +3505,7 @@ pub struct UpdateApplicationRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteApplicationRequest {
     /// Required. Name of the resource.
@@ -3374,6 +3533,7 @@ pub struct DeleteApplicationRequest {
     pub force: bool,
 }
 /// Message for deploying an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeployApplicationRequest {
     /// Required. the name of the application to retrieve.
@@ -3405,6 +3565,7 @@ pub struct DeployApplicationRequest {
     pub enable_monitoring: bool,
 }
 /// Message for undeploying an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UndeployApplicationRequest {
     /// Required. the name of the application to retrieve.
@@ -3429,12 +3590,14 @@ pub struct UndeployApplicationRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message about a single stream input config.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplicationStreamInput {
     #[prost(message, optional, tag = "1")]
     pub stream_with_annotation: ::core::option::Option<StreamWithAnnotation>,
 }
 /// Message for adding stream input to an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AddApplicationStreamInputRequest {
     /// Required. the name of the application to retrieve.
@@ -3463,6 +3626,7 @@ pub struct AddApplicationStreamInputRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating stream input to an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationStreamInputRequest {
     /// Required. the name of the application to retrieve.
@@ -3495,6 +3659,7 @@ pub struct UpdateApplicationStreamInputRequest {
     pub allow_missing: bool,
 }
 /// Message for removing stream input from an Application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RemoveApplicationStreamInputRequest {
     /// Required. the name of the application to retrieve.
@@ -3526,6 +3691,7 @@ pub struct RemoveApplicationStreamInputRequest {
 /// Nested message and enum types in `RemoveApplicationStreamInputRequest`.
 pub mod remove_application_stream_input_request {
     /// Message about target streamInput to remove.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TargetStreamInput {
         #[prost(string, tag = "1")]
@@ -3533,6 +3699,7 @@ pub mod remove_application_stream_input_request {
     }
 }
 /// Message for requesting list of Instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesRequest {
     /// Required. Parent value for ListInstancesRequest.
@@ -3553,6 +3720,7 @@ pub struct ListInstancesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Instances.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListInstancesResponse {
     /// The list of Instance.
@@ -3566,6 +3734,7 @@ pub struct ListInstancesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetInstanceRequest {
     /// Required. Name of the resource.
@@ -3573,6 +3742,7 @@ pub struct GetInstanceRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for requesting list of Drafts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDraftsRequest {
     /// Required. Parent value for ListDraftsRequest.
@@ -3593,6 +3763,7 @@ pub struct ListDraftsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Drafts.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListDraftsResponse {
     /// The list of Draft.
@@ -3606,6 +3777,7 @@ pub struct ListDraftsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Draft.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDraftRequest {
     /// Required. Name of the resource.
@@ -3613,6 +3785,7 @@ pub struct GetDraftRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Draft.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateDraftRequest {
     /// Required. Value for parent.
@@ -3641,6 +3814,7 @@ pub struct CreateDraftRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating an Draft.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateDraftRequest {
     /// Optional. Field mask is used to specify the fields to be overwritten in the
@@ -3674,6 +3848,7 @@ pub struct UpdateDraftRequest {
     pub allow_missing: bool,
 }
 /// Message for updating an ApplicationInstance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateApplicationInstancesRequest {
     /// Required. the name of the application to retrieve.
@@ -3707,6 +3882,7 @@ pub struct UpdateApplicationInstancesRequest {
 }
 /// Nested message and enum types in `UpdateApplicationInstancesRequest`.
 pub mod update_application_instances_request {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct UpdateApplicationInstance {
         /// Optional. Field mask is used to specify the fields to be overwritten in the
@@ -3725,6 +3901,7 @@ pub mod update_application_instances_request {
     }
 }
 /// Message for deleting an Draft.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteDraftRequest {
     /// Required. Name of the resource.
@@ -3747,6 +3924,7 @@ pub struct DeleteDraftRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for requesting list of Processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorsRequest {
     /// Required. Parent value for ListProcessorsRequest.
@@ -3767,6 +3945,7 @@ pub struct ListProcessorsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListProcessorsResponse {
     /// The list of Processor.
@@ -3780,6 +3959,7 @@ pub struct ListProcessorsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Request Message for listing Prebuilt Processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPrebuiltProcessorsRequest {
     /// Required. Parent path.
@@ -3787,6 +3967,7 @@ pub struct ListPrebuiltProcessorsRequest {
     pub parent: ::prost::alloc::string::String,
 }
 /// Response Message for listing Prebuilt Processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListPrebuiltProcessorsResponse {
     /// The list of Processor.
@@ -3794,6 +3975,7 @@ pub struct ListPrebuiltProcessorsResponse {
     pub processors: ::prost::alloc::vec::Vec<Processor>,
 }
 /// Message for getting a Processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetProcessorRequest {
     /// Required. Name of the resource.
@@ -3801,6 +3983,7 @@ pub struct GetProcessorRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateProcessorRequest {
     /// Required. Value for parent.
@@ -3829,6 +4012,7 @@ pub struct CreateProcessorRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating a Processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateProcessorRequest {
     /// Optional. Field mask is used to specify the fields to be overwritten in the
@@ -3858,6 +4042,7 @@ pub struct UpdateProcessorRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting a Processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteProcessorRequest {
     /// Required. Name of the resource
@@ -3880,6 +4065,7 @@ pub struct DeleteProcessorRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message describing Application object
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Application {
     /// name of resource
@@ -3917,6 +4103,7 @@ pub struct Application {
 /// Nested message and enum types in `Application`.
 pub mod application {
     /// Message storing the runtime information of the application.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ApplicationRuntimeInfo {
         /// Timestamp when the engine be deployed
@@ -3936,6 +4123,7 @@ pub mod application {
     /// Nested message and enum types in `ApplicationRuntimeInfo`.
     pub mod application_runtime_info {
         /// Message about output resources from application.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct GlobalOutputResource {
             /// The full resource name of the outputted resources.
@@ -3955,6 +4143,7 @@ pub mod application {
             pub key: ::prost::alloc::string::String,
         }
         /// Monitoring-related configuration for an application.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct MonitoringConfig {
             /// Whether this application has monitoring enabled.
@@ -4022,6 +4211,7 @@ pub mod application {
     }
 }
 /// Message storing the graph of the application.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplicationConfigs {
     /// A list of nodes  in the application graph.
@@ -4036,6 +4226,7 @@ pub struct ApplicationConfigs {
 /// Nested message and enum types in `ApplicationConfigs`.
 pub mod application_configs {
     /// message storing the config for event delivery
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct EventDeliveryConfig {
         /// The delivery channel for the event notification, only pub/sub topic is
@@ -4053,6 +4244,7 @@ pub mod application_configs {
     }
 }
 /// Message describing node object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Node {
     /// Required. A unique name for the node.
@@ -4078,6 +4270,7 @@ pub struct Node {
 /// Nested message and enum types in `Node`.
 pub mod node {
     /// Message describing one edge pointing into a node.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InputEdge {
         /// The name of the parent node.
@@ -4092,6 +4285,7 @@ pub mod node {
         #[prost(string, tag = "3")]
         pub connected_input_channel: ::prost::alloc::string::String,
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum StreamOutputConfig {
         /// By default, the output of the node will only be available to downstream
@@ -4116,6 +4310,7 @@ pub mod node {
     }
 }
 /// Message describing Draft object
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Draft {
     /// name of resource
@@ -4144,6 +4339,7 @@ pub struct Draft {
     pub draft_application_configs: ::core::option::Option<ApplicationConfigs>,
 }
 /// Message describing Instance object
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Instance {
     /// Output only. name of resource
@@ -4183,6 +4379,7 @@ pub struct Instance {
 /// Nested message and enum types in `Instance`.
 pub mod instance {
     /// Message of input resource used in one application instance.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InputResource {
         /// The name of graph node who receives the input resource.
@@ -4208,6 +4405,7 @@ pub mod instance {
     /// Nested message and enum types in `InputResource`.
     pub mod input_resource {
         /// Required. Specify the input to the application instance.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum InputResourceInformation {
             /// The direct input resource name.
@@ -4220,6 +4418,7 @@ pub mod instance {
         }
     }
     /// Message of output resource used in one application instance.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct OutputResource {
         /// The output resource name for the current application instance.
@@ -4307,6 +4506,7 @@ pub mod instance {
     }
 }
 /// Message for creating a Instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplicationInstance {
     /// Required. Id of the requesting object.
@@ -4318,6 +4518,7 @@ pub struct ApplicationInstance {
 }
 /// Message describing Processor object.
 /// Next ID: 18
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Processor {
     /// name of resource.
@@ -4463,6 +4664,7 @@ pub mod processor {
     }
 }
 /// Message describing the input / output specifications of a processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessorIoSpec {
     /// For processors with input_channel_specs, the processor must be explicitly
@@ -4493,6 +4695,7 @@ pub struct ProcessorIoSpec {
 /// Nested message and enum types in `ProcessorIOSpec`.
 pub mod processor_io_spec {
     /// Message for input channel specification.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GraphInputChannelSpec {
         /// The name of the current input channel.
@@ -4522,6 +4725,7 @@ pub mod processor_io_spec {
         pub max_connection_allowed: i64,
     }
     /// Message for output channel specification.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct GraphOutputChannelSpec {
         /// The name of the current output channel.
@@ -4537,6 +4741,7 @@ pub mod processor_io_spec {
     /// External resources are virtual nodes which are not expressed in the
     /// application graph. Each processor expresses its out-graph spec, so customer
     /// is able to override the external source or destinations to the
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstanceResourceInputBindingSpec {
         /// Name of the input binding, unique within the processor.
@@ -4552,6 +4757,7 @@ pub mod processor_io_spec {
     }
     /// Nested message and enum types in `InstanceResourceInputBindingSpec`.
     pub mod instance_resource_input_binding_spec {
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum ResourceType {
             /// The configuration proto that includes the Googleapis resources. I.e.
@@ -4564,6 +4770,7 @@ pub mod processor_io_spec {
             ResourceTypeUri(::prost::alloc::string::String),
         }
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct InstanceResourceOutputBindingSpec {
         /// Name of the output binding, unique within the processor.
@@ -4613,6 +4820,7 @@ pub mod processor_io_spec {
     }
 }
 /// Describes the source info for a custom processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CustomProcessorSourceInfo {
     /// The original product which holds the custom processor's functionality.
@@ -4642,6 +4850,7 @@ pub struct CustomProcessorSourceInfo {
 pub mod custom_processor_source_info {
     /// The schema is defined as an OpenAPI 3.0.2 [Schema
     /// Object](<https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md#schemaObject>).
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct ModelSchema {
         /// Cloud Storage location to a YAML file that defines the format of a single
@@ -4692,6 +4901,7 @@ pub mod custom_processor_source_info {
         }
     }
     /// The path where App Platform loads the artifacts for the custom processor.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ArtifactPath {
         /// The resource name original model hosted in the vertex AI platform.
@@ -4700,6 +4910,7 @@ pub mod custom_processor_source_info {
     }
 }
 /// Next ID: 24
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessorConfig {
     #[prost(
@@ -4710,6 +4921,7 @@ pub struct ProcessorConfig {
 }
 /// Nested message and enum types in `ProcessorConfig`.
 pub mod processor_config {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ProcessorConfig {
         /// Configs of stream input processor.
@@ -4754,6 +4966,7 @@ pub mod processor_config {
 }
 /// Message describing Vision AI stream with application specific annotations.
 /// All the StreamAnnotation object inside this message MUST have unique id.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StreamWithAnnotation {
     /// Vision AI Stream resource name.
@@ -4778,6 +4991,7 @@ pub struct StreamWithAnnotation {
 /// Nested message and enum types in `StreamWithAnnotation`.
 pub mod stream_with_annotation {
     /// Message describing annotations specific to application node.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NodeAnnotation {
         /// The node name of the application graph.
@@ -4790,6 +5004,7 @@ pub mod stream_with_annotation {
 }
 /// Message describing annotations specific to application node.
 /// This message is a duplication of StreamWithAnnotation.NodeAnnotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ApplicationNodeAnnotation {
     /// The node name of the application graph.
@@ -4800,6 +5015,7 @@ pub struct ApplicationNodeAnnotation {
     pub annotations: ::prost::alloc::vec::Vec<StreamAnnotation>,
 }
 /// Message describing general annotation for resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ResourceAnnotations {
     /// Annotations that will be applied to the whole application.
@@ -4820,6 +5036,7 @@ pub struct ResourceAnnotations {
 /// This message should only be used as a placeholder for builtin:stream-input
 /// processor, actual stream binding should be specified using corresponding
 /// API.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VideoStreamInputConfig {
     #[deprecated]
@@ -4830,9 +5047,11 @@ pub struct VideoStreamInputConfig {
     pub streams_with_annotation: ::prost::alloc::vec::Vec<StreamWithAnnotation>,
 }
 /// Message describing AI-enabled Devices Input Config.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AiEnabledDevicesInputConfig {}
 /// Message describing MediaWarehouseConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MediaWarehouseConfig {
     /// Resource name of the Media Warehouse corpus.
@@ -4850,6 +5069,7 @@ pub struct MediaWarehouseConfig {
     pub ttl: ::core::option::Option<::prost_types::Duration>,
 }
 /// Message describing FaceBlurConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PersonBlurConfig {
     /// Person blur type.
@@ -4897,6 +5117,7 @@ pub mod person_blur_config {
     }
 }
 /// Message describing OccupancyCountConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct OccupancyCountConfig {
     /// Whether to count the appearances of people, output counts have 'people' as
@@ -4913,6 +5134,7 @@ pub struct OccupancyCountConfig {
     pub enable_dwelling_time_tracking: bool,
 }
 /// Message describing PersonVehicleDetectionConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PersonVehicleDetectionConfig {
     /// At least one of enable_people_counting and enable_vehicle_counting fields
@@ -4927,6 +5149,7 @@ pub struct PersonVehicleDetectionConfig {
     pub enable_vehicle_counting: bool,
 }
 /// Message describing PersonalProtectiveEquipmentDetectionConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PersonalProtectiveEquipmentDetectionConfig {
     /// Whether to enable face coverage detection.
@@ -4940,9 +5163,11 @@ pub struct PersonalProtectiveEquipmentDetectionConfig {
     pub enable_hands_coverage_detection: bool,
 }
 /// Message of configurations for General Object Detection processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeneralObjectDetectionConfig {}
 /// Message of configurations for BigQuery processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BigQueryConfig {
     /// BigQuery table resource for Vision AI Platform to ingest annotations to.
@@ -4997,6 +5222,7 @@ pub struct BigQueryConfig {
     pub create_default_table_if_not_exists: bool,
 }
 /// Message of configurations of Vertex AutoML Vision Processors.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VertexAutoMlVisionConfig {
     /// Only entities with higher score than the threshold will be returned.
@@ -5009,6 +5235,7 @@ pub struct VertexAutoMlVisionConfig {
     pub max_predictions: i32,
 }
 /// Message describing VertexAutoMLVideoConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VertexAutoMlVideoConfig {
     /// Only entities with higher score than the threshold will be returned.
@@ -5029,6 +5256,7 @@ pub struct VertexAutoMlVideoConfig {
     pub bounding_box_size_limit: f32,
 }
 /// Message describing VertexCustomConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VertexCustomConfig {
     /// The max prediction frame per second. This attribute sets how fast the
@@ -5064,6 +5292,7 @@ pub struct VertexCustomConfig {
     pub attach_application_metadata: bool,
 }
 /// Specification of a single machine.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MachineSpec {
     /// Immutable. The type of the machine.
@@ -5090,6 +5319,7 @@ pub struct MachineSpec {
 /// The metric specification that defines the target resource utilization
 /// (CPU utilization, accelerator's duty cycle, and so on) for calculating the
 /// desired replica count.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AutoscalingMetricSpec {
     /// Required. The resource metric name.
@@ -5109,6 +5339,7 @@ pub struct AutoscalingMetricSpec {
 }
 /// A description of resources that are dedicated to a DeployedModel, and
 /// that need a higher degree of manual configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DedicatedResources {
     /// Required. Immutable. The specification of a single machine used by the prediction.
@@ -5898,6 +6129,7 @@ pub mod app_platform_client {
 /// Message describing the Stream object. The Stream and the Event resources are
 /// many to many; i.e., each Stream resource can associate to many Event
 /// resources and each Event resource can associate to many Stream resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Stream {
     /// Name of the resource.
@@ -5934,6 +6166,7 @@ pub struct Stream {
     pub media_warehouse_asset: ::prost::alloc::string::String,
 }
 /// Message describing the Event object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Event {
     /// Name of the resource.
@@ -6006,6 +6239,7 @@ pub mod event {
     }
 }
 /// Message describing the Series object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Series {
     /// Name of the resource.
@@ -6037,6 +6271,7 @@ pub struct Series {
     pub event: ::prost::alloc::string::String,
 }
 /// Message describing the Channel object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Channel {
     /// Name of the resource.
@@ -6068,6 +6303,7 @@ pub struct Channel {
     pub event: ::prost::alloc::string::String,
 }
 /// Message for requesting list of Clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListClustersRequest {
     /// Required. Parent value for ListClustersRequest.
@@ -6088,6 +6324,7 @@ pub struct ListClustersRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListClustersResponse {
     /// The list of Cluster.
@@ -6101,6 +6338,7 @@ pub struct ListClustersResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetClusterRequest {
     /// Required. Name of the resource.
@@ -6108,6 +6346,7 @@ pub struct GetClusterRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateClusterRequest {
     /// Required. Value for parent.
@@ -6136,6 +6375,7 @@ pub struct CreateClusterRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateClusterRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -6165,6 +6405,7 @@ pub struct UpdateClusterRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteClusterRequest {
     /// Required. Name of the resource
@@ -6187,6 +6428,7 @@ pub struct DeleteClusterRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for requesting list of Streams.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListStreamsRequest {
     /// Required. Parent value for ListStreamsRequest.
@@ -6207,6 +6449,7 @@ pub struct ListStreamsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Streams.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListStreamsResponse {
     /// The list of Stream.
@@ -6220,6 +6463,7 @@ pub struct ListStreamsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetStreamRequest {
     /// Required. Name of the resource.
@@ -6227,6 +6471,7 @@ pub struct GetStreamRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateStreamRequest {
     /// Required. Value for parent.
@@ -6255,6 +6500,7 @@ pub struct CreateStreamRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateStreamRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -6284,6 +6530,7 @@ pub struct UpdateStreamRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteStreamRequest {
     /// Required. Name of the resource.
@@ -6307,9 +6554,11 @@ pub struct DeleteStreamRequest {
 }
 /// Message for the response of GetStreamThumbnail. The empty response message
 /// indicates the thumbnail image has been uploaded to GCS successfully.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetStreamThumbnailResponse {}
 /// Request message for getting the auth token to access the stream HLS contents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateStreamHlsTokenRequest {
     /// Required. The name of the stream.
@@ -6317,6 +6566,7 @@ pub struct GenerateStreamHlsTokenRequest {
     pub stream: ::prost::alloc::string::String,
 }
 /// Response message for GenerateStreamHlsToken.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenerateStreamHlsTokenResponse {
     /// The generated JWT token.
@@ -6332,6 +6582,7 @@ pub struct GenerateStreamHlsTokenResponse {
     pub expiration_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Message for requesting list of Events.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEventsRequest {
     /// Required. Parent value for ListEventsRequest.
@@ -6352,6 +6603,7 @@ pub struct ListEventsRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Events.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListEventsResponse {
     /// The list of Event.
@@ -6365,6 +6617,7 @@ pub struct ListEventsResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetEventRequest {
     /// Required. Name of the resource.
@@ -6372,6 +6625,7 @@ pub struct GetEventRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateEventRequest {
     /// Required. Value for parent.
@@ -6400,6 +6654,7 @@ pub struct CreateEventRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateEventRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -6429,6 +6684,7 @@ pub struct UpdateEventRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteEventRequest {
     /// Required. Name of the resource.
@@ -6451,6 +6707,7 @@ pub struct DeleteEventRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for requesting list of Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSeriesRequest {
     /// Required. Parent value for ListSeriesRequest.
@@ -6471,6 +6728,7 @@ pub struct ListSeriesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListSeriesResponse {
     /// The list of Series.
@@ -6484,6 +6742,7 @@ pub struct ListSeriesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetSeriesRequest {
     /// Required. Name of the resource.
@@ -6491,6 +6750,7 @@ pub struct GetSeriesRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateSeriesRequest {
     /// Required. Value for parent.
@@ -6519,6 +6779,7 @@ pub struct CreateSeriesRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSeriesRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the Series
@@ -6548,6 +6809,7 @@ pub struct UpdateSeriesRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteSeriesRequest {
     /// Required. Name of the resource.
@@ -6570,6 +6832,7 @@ pub struct DeleteSeriesRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for materializing a channel.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MaterializeChannelRequest {
     /// Required. Value for parent.
@@ -7144,6 +7407,7 @@ pub mod streams_service_client {
     }
 }
 /// Request message for ReceiveEvents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceiveEventsRequest {
     #[prost(oneof = "receive_events_request::Request", tags = "1, 2")]
@@ -7153,6 +7417,7 @@ pub struct ReceiveEventsRequest {
 pub mod receive_events_request {
     /// SetupRequest is the first message sent to the service to setup the RPC
     /// connection.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SetupRequest {
         /// The cluster name.
@@ -7186,6 +7451,7 @@ pub mod receive_events_request {
         #[prost(message, optional, tag = "6")]
         pub writes_done_grace_period: ::core::option::Option<::prost_types::Duration>,
     }
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Request {
         /// The setup request to setup the RPC connection.
@@ -7197,6 +7463,7 @@ pub mod receive_events_request {
     }
 }
 /// The event update message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EventUpdate {
     /// The name of the stream that the event is attached to.
@@ -7217,6 +7484,7 @@ pub struct EventUpdate {
     pub offset: i64,
 }
 /// Control message for a ReceiveEventsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceiveEventsControlResponse {
     /// Possible control messages.
@@ -7226,6 +7494,7 @@ pub struct ReceiveEventsControlResponse {
 /// Nested message and enum types in `ReceiveEventsControlResponse`.
 pub mod receive_events_control_response {
     /// Possible control messages.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Control {
         /// A server heartbeat.
@@ -7245,6 +7514,7 @@ pub mod receive_events_control_response {
     }
 }
 /// Response message for the ReceiveEvents.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceiveEventsResponse {
     /// Possible response types.
@@ -7254,6 +7524,7 @@ pub struct ReceiveEventsResponse {
 /// Nested message and enum types in `ReceiveEventsResponse`.
 pub mod receive_events_response {
     /// Possible response types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Response {
         /// The event update message.
@@ -7265,6 +7536,7 @@ pub mod receive_events_response {
     }
 }
 /// The lease message.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Lease {
     /// The lease id.
@@ -7284,6 +7556,7 @@ pub struct Lease {
     pub lease_type: i32,
 }
 /// Request message for acquiring a lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AcquireLeaseRequest {
     /// The series name.
@@ -7300,6 +7573,7 @@ pub struct AcquireLeaseRequest {
     pub lease_type: i32,
 }
 /// Request message for renewing a lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RenewLeaseRequest {
     /// Lease id.
@@ -7316,6 +7590,7 @@ pub struct RenewLeaseRequest {
     pub term: ::core::option::Option<::prost_types::Duration>,
 }
 /// Request message for releasing lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseLeaseRequest {
     /// Lease id.
@@ -7329,9 +7604,11 @@ pub struct ReleaseLeaseRequest {
     pub owner: ::prost::alloc::string::String,
 }
 /// Response message for release lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReleaseLeaseResponse {}
 /// RequestMetadata is the metadata message for the request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RequestMetadata {
     /// Stream name.
@@ -7357,6 +7634,7 @@ pub struct RequestMetadata {
     pub lease_term: ::core::option::Option<::prost_types::Duration>,
 }
 /// Request message for sending packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SendPacketsRequest {
     #[prost(oneof = "send_packets_request::Request", tags = "1, 2")]
@@ -7364,6 +7642,7 @@ pub struct SendPacketsRequest {
 }
 /// Nested message and enum types in `SendPacketsRequest`.
 pub mod send_packets_request {
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Request {
         /// Packets sent over the streaming rpc.
@@ -7375,9 +7654,11 @@ pub mod send_packets_request {
     }
 }
 /// Response message for sending packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SendPacketsResponse {}
 /// Request message for receiving packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceivePacketsRequest {
     /// Possible request types from the client.
@@ -7387,6 +7668,7 @@ pub struct ReceivePacketsRequest {
 /// Nested message and enum types in `ReceivePacketsRequest`.
 pub mod receive_packets_request {
     /// The message specifying the initial settings for the ReceivePackets session.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SetupRequest {
         /// The configurations that specify where packets are retrieved.
@@ -7420,6 +7702,7 @@ pub mod receive_packets_request {
     /// Nested message and enum types in `SetupRequest`.
     pub mod setup_request {
         /// The mode in which the consumer reads messages.
+        #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Oneof)]
         pub enum ConsumerMode {
             /// Options for configuring eager mode.
@@ -7431,6 +7714,7 @@ pub mod receive_packets_request {
         }
     }
     /// Possible request types from the client.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Request {
         /// The request to setup the initial state of session.
@@ -7444,6 +7728,7 @@ pub mod receive_packets_request {
     }
 }
 /// Control message for a ReceivePacketsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceivePacketsControlResponse {
     /// Possible control messages.
@@ -7453,6 +7738,7 @@ pub struct ReceivePacketsControlResponse {
 /// Nested message and enum types in `ReceivePacketsControlResponse`.
 pub mod receive_packets_control_response {
     /// Possible control messages.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Control {
         /// A server heartbeat.
@@ -7472,6 +7758,7 @@ pub mod receive_packets_control_response {
     }
 }
 /// Response message from ReceivePackets.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ReceivePacketsResponse {
     /// Possible response types.
@@ -7481,6 +7768,7 @@ pub struct ReceivePacketsResponse {
 /// Nested message and enum types in `ReceivePacketsResponse`.
 pub mod receive_packets_response {
     /// Possible response types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Response {
         /// A genuine data payload originating from the sender.
@@ -7492,9 +7780,11 @@ pub mod receive_packets_response {
     }
 }
 /// The options for receiver under the eager mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EagerMode {}
 /// The options for receiver under the controlled mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ControlledMode {
     /// This is the logical starting point to fallback upon should the
@@ -7514,6 +7804,7 @@ pub struct ControlledMode {
 /// Nested message and enum types in `ControlledMode`.
 pub mod controlled_mode {
     /// This is the offset from which to start receiveing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum StartingOffset {
         /// This can be set to the following logical starting points:
@@ -7535,6 +7826,7 @@ pub mod controlled_mode {
 ///
 /// This may only be used when `ReceivePacketsControlledMode` is set in the
 /// initial setup request.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommitRequest {
     /// The offset to commit.
@@ -7762,6 +8054,7 @@ pub mod streaming_service_client {
     }
 }
 /// Represents an actual value of an operator attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AttributeValue {
     /// Attribute value.
@@ -7771,6 +8064,7 @@ pub struct AttributeValue {
 /// Nested message and enum types in `AttributeValue`.
 pub mod attribute_value {
     /// Attribute value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Value {
         /// int.
@@ -7792,6 +8086,7 @@ pub mod attribute_value {
 /// An analyzer processes data from its input streams using the logic defined in
 /// the Operator that it represents. Of course, it produces data for the output
 /// streams declared in the Operator.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnalyzerDefinition {
     /// The name of this analyzer.
@@ -7841,6 +8136,7 @@ pub mod analyzer_definition {
     /// output as its first input and "some-analyzer"'s "bar" output as its
     /// second input, you can set this field to the following:
     /// input = ["some-analyzer:foo", "some-analyzer:bar"]
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct StreamInput {
         /// The name of the stream input (as discussed above).
@@ -7848,6 +8144,7 @@ pub mod analyzer_definition {
         pub input: ::prost::alloc::string::String,
     }
     /// Options available for debugging purposes only.
+    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct DebugOptions {
         /// Environment variables.
@@ -7866,6 +8163,7 @@ pub mod analyzer_definition {
 /// This may be directly authored by a human in protobuf textformat, or it may be
 /// generated by a programming API (perhaps Python or JavaScript depending on
 /// context).
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AnalysisDefinition {
     /// Analyzer definitions.
@@ -7873,6 +8171,7 @@ pub struct AnalysisDefinition {
     pub analyzers: ::prost::alloc::vec::Vec<AnalyzerDefinition>,
 }
 /// Message describing the Analysis object.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Analysis {
     /// The name of resource.
@@ -7913,6 +8212,7 @@ pub struct Analysis {
     >,
 }
 /// Message for requesting list of Analyses
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAnalysesRequest {
     /// Required. Parent value for ListAnalysesRequest
@@ -7933,6 +8233,7 @@ pub struct ListAnalysesRequest {
     pub order_by: ::prost::alloc::string::String,
 }
 /// Message for response to listing Analyses
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ListAnalysesResponse {
     /// The list of Analysis
@@ -7946,6 +8247,7 @@ pub struct ListAnalysesResponse {
     pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Message for getting an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetAnalysisRequest {
     /// Required. Name of the resource.
@@ -7953,6 +8255,7 @@ pub struct GetAnalysisRequest {
     pub name: ::prost::alloc::string::String,
 }
 /// Message for creating an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CreateAnalysisRequest {
     /// Required. Value for parent.
@@ -7981,6 +8284,7 @@ pub struct CreateAnalysisRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for updating an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateAnalysisRequest {
     /// Required. Field mask is used to specify the fields to be overwritten in the
@@ -8010,6 +8314,7 @@ pub struct UpdateAnalysisRequest {
     pub request_id: ::prost::alloc::string::String,
 }
 /// Message for deleting an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteAnalysisRequest {
     /// Required. Name of the resource.

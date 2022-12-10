@@ -1,4 +1,5 @@
 /// A log entry for a Consent store QueryAccessibleData long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryAccessibleDataLogEntry {
     /// The resource being processed.
@@ -9,6 +10,7 @@ pub struct QueryAccessibleDataLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a User Data Mapping indexing notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConsentUserDataMappingLogEntry {
     /// The User Data Mapping being indexed (for example,
@@ -20,6 +22,7 @@ pub struct ConsentUserDataMappingLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR import long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportFhirLogEntry {
     /// The source in Cloud Storage (for example,
@@ -35,6 +38,7 @@ pub struct ImportFhirLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR export long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportFhirLogEntry {
     /// The destination in Cloud Storage (for example,
@@ -51,6 +55,7 @@ pub struct ExportFhirLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR configure search long-running operation
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FhirConfigureSearchLogEntry {
     /// The ID of the resource being reindexed.
@@ -61,6 +66,7 @@ pub struct FhirConfigureSearchLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR store Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FhirNotificationLogEntry {
     /// The resource being changed (for example,
@@ -75,6 +81,7 @@ pub struct FhirNotificationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR streaming export notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FhirStreamLogEntry {
     /// The resource being changed (for example,
@@ -90,6 +97,7 @@ pub struct FhirStreamLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a FHIR streaming deidentification notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FhirDeidentifyStreamToStoreLogEntry {
     /// The resource that changed (for example,
@@ -105,6 +113,7 @@ pub struct FhirDeidentifyStreamToStoreLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a de-identification long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeidentifyLogEntry {
     /// The resource being de-identified.
@@ -115,6 +124,7 @@ pub struct DeidentifyLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a HL7v2 import long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportHl7V2LogEntry {
     /// The source in Cloud Storage (for example,
@@ -126,6 +136,7 @@ pub struct ImportHl7V2LogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a HL7v2 store Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Hl7V2NotificationLogEntry {
     /// The HL7v2 message being created (for example,
@@ -140,6 +151,7 @@ pub struct Hl7V2NotificationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for an Annotation import long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportAnnotationLogEntry {
     /// The source in Cloud Storage. For example,
@@ -151,6 +163,7 @@ pub struct ImportAnnotationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for an Annotation export long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportAnnotationLogEntry {
     /// The destination in Cloud Storage or BigQuery.
@@ -165,6 +178,7 @@ pub struct ExportAnnotationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for an Annotation evaluate long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EvaluateAnnotationLogEntry {
     /// The report destination in BigQuery.
@@ -183,6 +197,7 @@ pub struct EvaluateAnnotationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a DICOM import long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ImportDicomLogEntry {
     /// The source file, in the format `gs://{bucket-id}/{path/to/file}`.
@@ -193,6 +208,7 @@ pub struct ImportDicomLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a DICOM export long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportDicomLogEntry {
     /// The DICOM resource being exported.
@@ -203,6 +219,7 @@ pub struct ExportDicomLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a DICOM store Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DicomNotificationLogEntry {
     /// The DICOM resource being created.
@@ -216,6 +233,7 @@ pub struct DicomNotificationLogEntry {
     pub error: ::core::option::Option<super::super::super::rpc::Status>,
 }
 /// A log entry for a DICOM streaming export notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DicomStreamLogEntry {
     /// The DICOM resource being exported.
