@@ -1,1307 +1,3 @@
-/// The runtime logging config of the job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LoggingConfig {
-    /// The per-package log levels for the driver. This may include
-    /// "root" package name to configure rootLogger.
-    /// Examples:
-    ///    'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    #[prost(btree_map = "string, enumeration(logging_config::Level)", tag = "2")]
-    pub driver_log_levels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        i32,
-    >,
-}
-/// Nested message and enum types in `LoggingConfig`.
-pub mod logging_config {
-    /// The Log4j level for job execution. When running an
-    /// [Apache Hive](<https://hive.apache.org/>) job, Cloud
-    /// Dataproc configures the Hive client to an equivalent verbosity level.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Level {
-        /// Level is unspecified. Use default level for log4j.
-        Unspecified = 0,
-        /// Use ALL level for log4j.
-        All = 1,
-        /// Use TRACE level for log4j.
-        Trace = 2,
-        /// Use DEBUG level for log4j.
-        Debug = 3,
-        /// Use INFO level for log4j.
-        Info = 4,
-        /// Use WARN level for log4j.
-        Warn = 5,
-        /// Use ERROR level for log4j.
-        Error = 6,
-        /// Use FATAL level for log4j.
-        Fatal = 7,
-        /// Turn off log4j.
-        Off = 8,
-    }
-    impl Level {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Level::Unspecified => "LEVEL_UNSPECIFIED",
-                Level::All => "ALL",
-                Level::Trace => "TRACE",
-                Level::Debug => "DEBUG",
-                Level::Info => "INFO",
-                Level::Warn => "WARN",
-                Level::Error => "ERROR",
-                Level::Fatal => "FATAL",
-                Level::Off => "OFF",
-            }
-        }
-    }
-}
-/// A Dataproc job for running
-/// [Apache Hadoop
-/// MapReduce](<https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html>)
-/// jobs on [Apache Hadoop
-/// YARN](<https://hadoop.apache.org/docs/r2.7.1/hadoop-yarn/hadoop-yarn-site/YARN.html>).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HadoopJob {
-    /// Optional. The arguments to pass to the driver. Do not
-    /// include arguments, such as `-libjars` or `-Dfoo=bar`, that can be set as
-    /// job properties, since a collision may occur that causes an incorrect job
-    /// submission.
-    #[prost(string, repeated, tag = "3")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Jar file URIs to add to the CLASSPATHs of the
-    /// Hadoop driver and tasks.
-    #[prost(string, repeated, tag = "4")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS (Hadoop Compatible Filesystem) URIs of files to be copied
-    /// to the working directory of Hadoop drivers and distributed tasks. Useful
-    /// for naively parallel tasks.
-    #[prost(string, repeated, tag = "5")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted in the working directory of
-    /// Hadoop drivers and tasks. Supported file types:
-    /// .jar, .tar, .tar.gz, .tgz, or .zip.
-    #[prost(string, repeated, tag = "6")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A mapping of property names to values, used to configure Hadoop.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site and
-    /// classes in user code.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "8")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-    /// Required. Indicates the location of the driver's main class. Specify
-    /// either the jar file that contains the main class or the main class name.
-    /// To specify both, add the jar file to `jar_file_uris`, and then specify
-    /// the main class name in this property.
-    #[prost(oneof = "hadoop_job::Driver", tags = "1, 2")]
-    pub driver: ::core::option::Option<hadoop_job::Driver>,
-}
-/// Nested message and enum types in `HadoopJob`.
-pub mod hadoop_job {
-    /// Required. Indicates the location of the driver's main class. Specify
-    /// either the jar file that contains the main class or the main class name.
-    /// To specify both, add the jar file to `jar_file_uris`, and then specify
-    /// the main class name in this property.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Driver {
-        /// The HCFS URI of the jar file containing the main class.
-        /// Examples:
-        ///      'gs://foo-bucket/analytics-binaries/extract-useful-metrics-mr.jar'
-        ///      'hdfs:/tmp/test-samples/custom-wordcount.jar'
-        ///      'file:///home/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar'
-        #[prost(string, tag = "1")]
-        MainJarFileUri(::prost::alloc::string::String),
-        /// The name of the driver's main class. The jar file containing the class
-        /// must be in the default CLASSPATH or specified in `jar_file_uris`.
-        #[prost(string, tag = "2")]
-        MainClass(::prost::alloc::string::String),
-    }
-}
-/// A Dataproc job for running [Apache Spark](<http://spark.apache.org/>)
-/// applications on YARN.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkJob {
-    /// Optional. The arguments to pass to the driver. Do not include arguments,
-    /// such as `--conf`, that can be set as job properties, since a collision may
-    /// occur that causes an incorrect job submission.
-    #[prost(string, repeated, tag = "3")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of jar files to add to the CLASSPATHs of the
-    /// Spark driver and tasks.
-    #[prost(string, repeated, tag = "4")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor. Useful for naively parallel tasks.
-    #[prost(string, repeated, tag = "5")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// .jar, .tar, .tar.gz, .tgz, and .zip.
-    #[prost(string, repeated, tag = "6")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A mapping of property names to values, used to configure Spark.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in
-    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "8")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-    /// Required. The specification of the main method to call to drive the job.
-    /// Specify either the jar file that contains the main class or the main class
-    /// name. To pass both a main jar and a main class in that jar, add the jar to
-    /// `CommonJob.jar_file_uris`, and then specify the main class name in
-    /// `main_class`.
-    #[prost(oneof = "spark_job::Driver", tags = "1, 2")]
-    pub driver: ::core::option::Option<spark_job::Driver>,
-}
-/// Nested message and enum types in `SparkJob`.
-pub mod spark_job {
-    /// Required. The specification of the main method to call to drive the job.
-    /// Specify either the jar file that contains the main class or the main class
-    /// name. To pass both a main jar and a main class in that jar, add the jar to
-    /// `CommonJob.jar_file_uris`, and then specify the main class name in
-    /// `main_class`.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Driver {
-        /// The HCFS URI of the jar file that contains the main class.
-        #[prost(string, tag = "1")]
-        MainJarFileUri(::prost::alloc::string::String),
-        /// The name of the driver's main class. The jar file that contains the class
-        /// must be in the default CLASSPATH or specified in `jar_file_uris`.
-        #[prost(string, tag = "2")]
-        MainClass(::prost::alloc::string::String),
-    }
-}
-/// A Dataproc job for running
-/// [Apache
-/// PySpark](<https://spark.apache.org/docs/0.9.0/python-programming-guide.html>)
-/// applications on YARN.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PySparkJob {
-    /// Required. The HCFS URI of the main Python file to use as the driver. Must
-    /// be a .py file.
-    #[prost(string, tag = "1")]
-    pub main_python_file_uri: ::prost::alloc::string::String,
-    /// Optional. The arguments to pass to the driver.  Do not include arguments,
-    /// such as `--conf`, that can be set as job properties, since a collision may
-    /// occur that causes an incorrect job submission.
-    #[prost(string, repeated, tag = "2")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS file URIs of Python files to pass to the PySpark
-    /// framework. Supported file types: .py, .egg, and .zip.
-    #[prost(string, repeated, tag = "3")]
-    pub python_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of jar files to add to the CLASSPATHs of the
-    /// Python driver and tasks.
-    #[prost(string, repeated, tag = "4")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor. Useful for naively parallel tasks.
-    #[prost(string, repeated, tag = "5")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// .jar, .tar, .tar.gz, .tgz, and .zip.
-    #[prost(string, repeated, tag = "6")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A mapping of property names to values, used to configure PySpark.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in
-    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "8")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-}
-/// A list of queries to run on a cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryList {
-    /// Required. The queries to execute. You do not need to end a query expression
-    /// with a semicolon. Multiple queries can be specified in one
-    /// string by separating each with a semicolon. Here is an example of a
-    /// Dataproc API snippet that uses a QueryList to specify a HiveJob:
-    ///
-    ///      "hiveJob": {
-    ///        "queryList": {
-    ///          "queries": [
-    ///            "query1",
-    ///            "query2",
-    ///            "query3;query4",
-    ///          ]
-    ///        }
-    ///      }
-    #[prost(string, repeated, tag = "1")]
-    pub queries: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A Dataproc job for running [Apache Hive](<https://hive.apache.org/>)
-/// queries on YARN.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HiveJob {
-    /// Optional. Whether to continue executing queries if a query fails.
-    /// The default value is `false`. Setting to `true` can be useful when
-    /// executing independent parallel queries.
-    #[prost(bool, tag = "3")]
-    pub continue_on_failure: bool,
-    /// Optional. Mapping of query variable names to values (equivalent to the
-    /// Hive command: `SET name="value";`).
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub script_variables: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. A mapping of property names and values, used to configure Hive.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site.xml,
-    /// /etc/hive/conf/hive-site.xml, and classes in user code.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. HCFS URIs of jar files to add to the CLASSPATH of the
-    /// Hive server and Hadoop MapReduce (MR) tasks. Can contain Hive SerDes
-    /// and UDFs.
-    #[prost(string, repeated, tag = "6")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. The sequence of Hive queries to execute, specified as either
-    /// an HCFS file URI or a list of queries.
-    #[prost(oneof = "hive_job::Queries", tags = "1, 2")]
-    pub queries: ::core::option::Option<hive_job::Queries>,
-}
-/// Nested message and enum types in `HiveJob`.
-pub mod hive_job {
-    /// Required. The sequence of Hive queries to execute, specified as either
-    /// an HCFS file URI or a list of queries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Queries {
-        /// The HCFS URI of the script that contains Hive queries.
-        #[prost(string, tag = "1")]
-        QueryFileUri(::prost::alloc::string::String),
-        /// A list of queries.
-        #[prost(message, tag = "2")]
-        QueryList(super::QueryList),
-    }
-}
-/// A Dataproc job for running [Apache Spark
-/// SQL](<http://spark.apache.org/sql/>) queries.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkSqlJob {
-    /// Optional. Mapping of query variable names to values (equivalent to the
-    /// Spark SQL command: SET `name="value";`).
-    #[prost(btree_map = "string, string", tag = "3")]
-    pub script_variables: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. A mapping of property names to values, used to configure
-    /// Spark SQL's SparkConf. Properties that conflict with values set by the
-    /// Dataproc API may be overwritten.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. HCFS URIs of jar files to be added to the Spark CLASSPATH.
-    #[prost(string, repeated, tag = "56")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "6")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-    /// Required. The sequence of Spark SQL queries to execute, specified as
-    /// either an HCFS file URI or as a list of queries.
-    #[prost(oneof = "spark_sql_job::Queries", tags = "1, 2")]
-    pub queries: ::core::option::Option<spark_sql_job::Queries>,
-}
-/// Nested message and enum types in `SparkSqlJob`.
-pub mod spark_sql_job {
-    /// Required. The sequence of Spark SQL queries to execute, specified as
-    /// either an HCFS file URI or as a list of queries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Queries {
-        /// The HCFS URI of the script that contains SQL queries.
-        #[prost(string, tag = "1")]
-        QueryFileUri(::prost::alloc::string::String),
-        /// A list of queries.
-        #[prost(message, tag = "2")]
-        QueryList(super::QueryList),
-    }
-}
-/// A Dataproc job for running [Apache Pig](<https://pig.apache.org/>)
-/// queries on YARN.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PigJob {
-    /// Optional. Whether to continue executing queries if a query fails.
-    /// The default value is `false`. Setting to `true` can be useful when
-    /// executing independent parallel queries.
-    #[prost(bool, tag = "3")]
-    pub continue_on_failure: bool,
-    /// Optional. Mapping of query variable names to values (equivalent to the Pig
-    /// command: `name=\[value\]`).
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub script_variables: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. A mapping of property names to values, used to configure Pig.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site.xml,
-    /// /etc/pig/conf/pig.properties, and classes in user code.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. HCFS URIs of jar files to add to the CLASSPATH of
-    /// the Pig Client and Hadoop MapReduce (MR) tasks. Can contain Pig UDFs.
-    #[prost(string, repeated, tag = "6")]
-    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "7")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-    /// Required. The sequence of Pig queries to execute, specified as an HCFS
-    /// file URI or a list of queries.
-    #[prost(oneof = "pig_job::Queries", tags = "1, 2")]
-    pub queries: ::core::option::Option<pig_job::Queries>,
-}
-/// Nested message and enum types in `PigJob`.
-pub mod pig_job {
-    /// Required. The sequence of Pig queries to execute, specified as an HCFS
-    /// file URI or a list of queries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Queries {
-        /// The HCFS URI of the script that contains the Pig queries.
-        #[prost(string, tag = "1")]
-        QueryFileUri(::prost::alloc::string::String),
-        /// A list of queries.
-        #[prost(message, tag = "2")]
-        QueryList(super::QueryList),
-    }
-}
-/// A Dataproc job for running
-/// [Apache SparkR](<https://spark.apache.org/docs/latest/sparkr.html>)
-/// applications on YARN.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SparkRJob {
-    /// Required. The HCFS URI of the main R file to use as the driver.
-    /// Must be a .R file.
-    #[prost(string, tag = "1")]
-    pub main_r_file_uri: ::prost::alloc::string::String,
-    /// Optional. The arguments to pass to the driver.  Do not include arguments,
-    /// such as `--conf`, that can be set as job properties, since a collision may
-    /// occur that causes an incorrect job submission.
-    #[prost(string, repeated, tag = "2")]
-    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of files to be placed in the working directory of
-    /// each executor. Useful for naively parallel tasks.
-    #[prost(string, repeated, tag = "3")]
-    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. HCFS URIs of archives to be extracted into the working directory
-    /// of each executor. Supported file types:
-    /// .jar, .tar, .tar.gz, .tgz, and .zip.
-    #[prost(string, repeated, tag = "4")]
-    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A mapping of property names to values, used to configure SparkR.
-    /// Properties that conflict with values set by the Dataproc API may be
-    /// overwritten. Can include properties set in
-    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "6")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-}
-/// A Dataproc job for running \[Presto\](<https://prestosql.io/>) queries.
-/// **IMPORTANT**: The [Dataproc Presto Optional
-/// Component](<https://cloud.google.com/dataproc/docs/concepts/components/presto>)
-/// must be enabled when the cluster is created to submit a Presto job to the
-/// cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PrestoJob {
-    /// Optional. Whether to continue executing queries if a query fails.
-    /// The default value is `false`. Setting to `true` can be useful when
-    /// executing independent parallel queries.
-    #[prost(bool, tag = "3")]
-    pub continue_on_failure: bool,
-    /// Optional. The format in which query output will be displayed. See the
-    /// Presto documentation for supported output formats
-    #[prost(string, tag = "4")]
-    pub output_format: ::prost::alloc::string::String,
-    /// Optional. Presto client tags to attach to this query
-    #[prost(string, repeated, tag = "5")]
-    pub client_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. A mapping of property names to values. Used to set Presto
-    /// [session properties](<https://prestodb.io/docs/current/sql/set-session.html>)
-    /// Equivalent to using the --session flag in the Presto CLI
-    #[prost(btree_map = "string, string", tag = "6")]
-    pub properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. The runtime log config for job execution.
-    #[prost(message, optional, tag = "7")]
-    pub logging_config: ::core::option::Option<LoggingConfig>,
-    /// Required. The sequence of Presto queries to execute, specified as
-    /// either an HCFS file URI or as a list of queries.
-    #[prost(oneof = "presto_job::Queries", tags = "1, 2")]
-    pub queries: ::core::option::Option<presto_job::Queries>,
-}
-/// Nested message and enum types in `PrestoJob`.
-pub mod presto_job {
-    /// Required. The sequence of Presto queries to execute, specified as
-    /// either an HCFS file URI or as a list of queries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Queries {
-        /// The HCFS URI of the script that contains SQL queries.
-        #[prost(string, tag = "1")]
-        QueryFileUri(::prost::alloc::string::String),
-        /// A list of queries.
-        #[prost(message, tag = "2")]
-        QueryList(super::QueryList),
-    }
-}
-/// Dataproc job config.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobPlacement {
-    /// Required. The name of the cluster where the job will be submitted.
-    #[prost(string, tag = "1")]
-    pub cluster_name: ::prost::alloc::string::String,
-    /// Output only. A cluster UUID generated by the Dataproc service when
-    /// the job is submitted.
-    #[prost(string, tag = "2")]
-    pub cluster_uuid: ::prost::alloc::string::String,
-    /// Optional. Cluster labels to identify a cluster where the job will be submitted.
-    #[prost(btree_map = "string, string", tag = "3")]
-    pub cluster_labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Dataproc job status.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobStatus {
-    /// Output only. A state message specifying the overall job state.
-    #[prost(enumeration = "job_status::State", tag = "1")]
-    pub state: i32,
-    /// Optional. Output only. Job state details, such as an error
-    /// description if the state is <code>ERROR</code>.
-    #[prost(string, tag = "2")]
-    pub details: ::prost::alloc::string::String,
-    /// Output only. The time when this state was entered.
-    #[prost(message, optional, tag = "6")]
-    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Additional state information, which includes
-    /// status reported by the agent.
-    #[prost(enumeration = "job_status::Substate", tag = "7")]
-    pub substate: i32,
-}
-/// Nested message and enum types in `JobStatus`.
-pub mod job_status {
-    /// The job state.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// The job state is unknown.
-        Unspecified = 0,
-        /// The job is pending; it has been submitted, but is not yet running.
-        Pending = 1,
-        /// Job has been received by the service and completed initial setup;
-        /// it will soon be submitted to the cluster.
-        SetupDone = 8,
-        /// The job is running on the cluster.
-        Running = 2,
-        /// A CancelJob request has been received, but is pending.
-        CancelPending = 3,
-        /// Transient in-flight resources have been canceled, and the request to
-        /// cancel the running job has been issued to the cluster.
-        CancelStarted = 7,
-        /// The job cancellation was successful.
-        Cancelled = 4,
-        /// The job has completed successfully.
-        Done = 5,
-        /// The job has completed, but encountered an error.
-        Error = 6,
-        /// Job attempt has failed. The detail field contains failure details for
-        /// this attempt.
-        ///
-        /// Applies to restartable jobs only.
-        AttemptFailure = 9,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Pending => "PENDING",
-                State::SetupDone => "SETUP_DONE",
-                State::Running => "RUNNING",
-                State::CancelPending => "CANCEL_PENDING",
-                State::CancelStarted => "CANCEL_STARTED",
-                State::Cancelled => "CANCELLED",
-                State::Done => "DONE",
-                State::Error => "ERROR",
-                State::AttemptFailure => "ATTEMPT_FAILURE",
-            }
-        }
-    }
-    /// The job substate.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Substate {
-        /// The job substate is unknown.
-        Unspecified = 0,
-        /// The Job is submitted to the agent.
-        ///
-        /// Applies to RUNNING state.
-        Submitted = 1,
-        /// The Job has been received and is awaiting execution (it may be waiting
-        /// for a condition to be met). See the "details" field for the reason for
-        /// the delay.
-        ///
-        /// Applies to RUNNING state.
-        Queued = 2,
-        /// The agent-reported status is out of date, which may be caused by a
-        /// loss of communication between the agent and Dataproc. If the
-        /// agent does not send a timely update, the job will fail.
-        ///
-        /// Applies to RUNNING state.
-        StaleStatus = 3,
-    }
-    impl Substate {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Substate::Unspecified => "UNSPECIFIED",
-                Substate::Submitted => "SUBMITTED",
-                Substate::Queued => "QUEUED",
-                Substate::StaleStatus => "STALE_STATUS",
-            }
-        }
-    }
-}
-/// Encapsulates the full scoping used to reference a job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobReference {
-    /// Optional. The ID of the Google Cloud Platform project that the job belongs to. If
-    /// specified, must match the request project ID.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Optional. The job ID, which must be unique within the project.
-    ///
-    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), or hyphens (-). The maximum length is 100 characters.
-    ///
-    /// If not specified by the caller, the job ID will be provided by the server.
-    #[prost(string, tag = "2")]
-    pub job_id: ::prost::alloc::string::String,
-}
-/// A YARN application created by a job. Application information is a subset of
-/// <code>org.apache.hadoop.yarn.proto.YarnProtos.ApplicationReportProto</code>.
-///
-/// **Beta Feature**: This report is available for testing purposes only. It may
-/// be changed before final release.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct YarnApplication {
-    /// Required. The application name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The application state.
-    #[prost(enumeration = "yarn_application::State", tag = "2")]
-    pub state: i32,
-    /// Required. The numerical progress of the application, from 1 to 100.
-    #[prost(float, tag = "3")]
-    pub progress: f32,
-    /// Optional. The HTTP URL of the ApplicationMaster, HistoryServer, or
-    /// TimelineServer that provides application-specific information. The URL uses
-    /// the internal hostname, and requires a proxy server for resolution and,
-    /// possibly, access.
-    #[prost(string, tag = "4")]
-    pub tracking_url: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `YarnApplication`.
-pub mod yarn_application {
-    /// The application state, corresponding to
-    /// <code>YarnProtos.YarnApplicationStateProto</code>.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Status is unspecified.
-        Unspecified = 0,
-        /// Status is NEW.
-        New = 1,
-        /// Status is NEW_SAVING.
-        NewSaving = 2,
-        /// Status is SUBMITTED.
-        Submitted = 3,
-        /// Status is ACCEPTED.
-        Accepted = 4,
-        /// Status is RUNNING.
-        Running = 5,
-        /// Status is FINISHED.
-        Finished = 6,
-        /// Status is FAILED.
-        Failed = 7,
-        /// Status is KILLED.
-        Killed = 8,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::New => "NEW",
-                State::NewSaving => "NEW_SAVING",
-                State::Submitted => "SUBMITTED",
-                State::Accepted => "ACCEPTED",
-                State::Running => "RUNNING",
-                State::Finished => "FINISHED",
-                State::Failed => "FAILED",
-                State::Killed => "KILLED",
-            }
-        }
-    }
-}
-/// A Dataproc job resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Job {
-    /// Optional. The fully qualified reference to the job, which can be used to
-    /// obtain the equivalent REST path of the job resource. If this property
-    /// is not specified when a job is created, the server generates a
-    /// <code>job_id</code>.
-    #[prost(message, optional, tag = "1")]
-    pub reference: ::core::option::Option<JobReference>,
-    /// Required. Job information, including how, when, and where to
-    /// run the job.
-    #[prost(message, optional, tag = "2")]
-    pub placement: ::core::option::Option<JobPlacement>,
-    /// Output only. The job status. Additional application-specific
-    /// status information may be contained in the <code>type_job</code>
-    /// and <code>yarn_applications</code> fields.
-    #[prost(message, optional, tag = "8")]
-    pub status: ::core::option::Option<JobStatus>,
-    /// Output only. The previous job status.
-    #[prost(message, repeated, tag = "13")]
-    pub status_history: ::prost::alloc::vec::Vec<JobStatus>,
-    /// Output only. The collection of YARN applications spun up by this job.
-    ///
-    /// **Beta** Feature: This report is available for testing purposes only. It
-    /// may be changed before final release.
-    #[prost(message, repeated, tag = "9")]
-    pub yarn_applications: ::prost::alloc::vec::Vec<YarnApplication>,
-    /// Output only. A URI pointing to the location of the stdout of the job's
-    /// driver program.
-    #[prost(string, tag = "17")]
-    pub driver_output_resource_uri: ::prost::alloc::string::String,
-    /// Output only. If present, the location of miscellaneous control files
-    /// which may be used as part of job setup and handling. If not present,
-    /// control files may be placed in the same location as `driver_output_uri`.
-    #[prost(string, tag = "15")]
-    pub driver_control_files_uri: ::prost::alloc::string::String,
-    /// Optional. The labels to associate with this job.
-    /// Label **keys** must contain 1 to 63 characters, and must conform to
-    /// [RFC 1035](<https://www.ietf.org/rfc/rfc1035.txt>).
-    /// Label **values** may be empty, but, if present, must contain 1 to 63
-    /// characters, and must conform to [RFC
-    /// 1035](<https://www.ietf.org/rfc/rfc1035.txt>). No more than 32 labels can be
-    /// associated with a job.
-    #[prost(btree_map = "string, string", tag = "18")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. Job scheduling configuration.
-    #[prost(message, optional, tag = "20")]
-    pub scheduling: ::core::option::Option<JobScheduling>,
-    /// Output only. A UUID that uniquely identifies a job within the project
-    /// over time. This is in contrast to a user-settable reference.job_id that
-    /// may be reused over time.
-    #[prost(string, tag = "22")]
-    pub job_uuid: ::prost::alloc::string::String,
-    /// Output only. Indicates whether the job is completed. If the value is `false`,
-    /// the job is still in progress. If `true`, the job is completed, and
-    /// `status.state` field will indicate if it was successful, failed,
-    /// or cancelled.
-    #[prost(bool, tag = "24")]
-    pub done: bool,
-    /// Required. The application/framework-specific portion of the job.
-    #[prost(oneof = "job::TypeJob", tags = "3, 4, 5, 6, 7, 21, 12, 23")]
-    pub type_job: ::core::option::Option<job::TypeJob>,
-}
-/// Nested message and enum types in `Job`.
-pub mod job {
-    /// Required. The application/framework-specific portion of the job.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TypeJob {
-        /// Optional. Job is a Hadoop job.
-        #[prost(message, tag = "3")]
-        HadoopJob(super::HadoopJob),
-        /// Optional. Job is a Spark job.
-        #[prost(message, tag = "4")]
-        SparkJob(super::SparkJob),
-        /// Optional. Job is a PySpark job.
-        #[prost(message, tag = "5")]
-        PysparkJob(super::PySparkJob),
-        /// Optional. Job is a Hive job.
-        #[prost(message, tag = "6")]
-        HiveJob(super::HiveJob),
-        /// Optional. Job is a Pig job.
-        #[prost(message, tag = "7")]
-        PigJob(super::PigJob),
-        /// Optional. Job is a SparkR job.
-        #[prost(message, tag = "21")]
-        SparkRJob(super::SparkRJob),
-        /// Optional. Job is a SparkSql job.
-        #[prost(message, tag = "12")]
-        SparkSqlJob(super::SparkSqlJob),
-        /// Optional. Job is a Presto job.
-        #[prost(message, tag = "23")]
-        PrestoJob(super::PrestoJob),
-    }
-}
-/// Job scheduling options.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobScheduling {
-    /// Optional. Maximum number of times per hour a driver may be restarted as
-    /// a result of driver exiting with non-zero code before job is
-    /// reported failed.
-    ///
-    /// A job may be reported as thrashing if driver exits with non-zero code
-    /// 4 times within 10 minute window.
-    ///
-    /// Maximum value is 10.
-    ///
-    /// **Note:** Currently, this restartable job option is
-    /// not supported in Dataproc
-    /// [workflow
-    /// template](<https://cloud.google.com/dataproc/docs/concepts/workflows/using-workflows#adding_jobs_to_a_template>)
-    /// jobs.
-    #[prost(int32, tag = "1")]
-    pub max_failures_per_hour: i32,
-    /// Optional. Maximum number of times in total a driver may be restarted as a result of
-    /// driver exiting with non-zero code before job is reported failed.
-    /// Maximum value is 240.
-    ///
-    /// **Note:** Currently, this restartable job option is
-    /// not supported in Dataproc
-    /// [workflow
-    /// template](<https://cloud.google.com/dataproc/docs/concepts/workflows/using-workflows#adding_jobs_to_a_template>)
-    /// jobs.
-    #[prost(int32, tag = "2")]
-    pub max_failures_total: i32,
-}
-/// A request to submit a job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SubmitJobRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "3")]
-    pub region: ::prost::alloc::string::String,
-    /// Required. The job resource.
-    #[prost(message, optional, tag = "2")]
-    pub job: ::core::option::Option<Job>,
-    /// Optional. A unique id used to identify the request. If the server
-    /// receives two
-    /// \[SubmitJobRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.SubmitJobRequest>)s
-    /// with the same id, then the second request will be ignored and the
-    /// first \[Job][google.cloud.dataproc.v1.Job\] created and stored in the backend
-    /// is returned.
-    ///
-    /// It is recommended to always set this value to a
-    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
-    ///
-    /// The id must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Job Operation metadata.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobMetadata {
-    /// Output only. The job id.
-    #[prost(string, tag = "1")]
-    pub job_id: ::prost::alloc::string::String,
-    /// Output only. Most recent job status.
-    #[prost(message, optional, tag = "2")]
-    pub status: ::core::option::Option<JobStatus>,
-    /// Output only. Operation type.
-    #[prost(string, tag = "3")]
-    pub operation_type: ::prost::alloc::string::String,
-    /// Output only. Job submission time.
-    #[prost(message, optional, tag = "4")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// A request to get the resource representation for a job in a project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetJobRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "3")]
-    pub region: ::prost::alloc::string::String,
-    /// Required. The job ID.
-    #[prost(string, tag = "2")]
-    pub job_id: ::prost::alloc::string::String,
-}
-/// A request to list jobs in a project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobsRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "6")]
-    pub region: ::prost::alloc::string::String,
-    /// Optional. The number of results to return in each response.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. The page token, returned by a previous call, to request the
-    /// next page of results.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. If set, the returned jobs list includes only jobs that were
-    /// submitted to the named cluster.
-    #[prost(string, tag = "4")]
-    pub cluster_name: ::prost::alloc::string::String,
-    /// Optional. Specifies enumerated categories of jobs to list.
-    /// (default = match ALL jobs).
-    ///
-    /// If `filter` is provided, `jobStateMatcher` will be ignored.
-    #[prost(enumeration = "list_jobs_request::JobStateMatcher", tag = "5")]
-    pub job_state_matcher: i32,
-    /// Optional. A filter constraining the jobs to list. Filters are
-    /// case-sensitive and have the following syntax:
-    ///
-    /// [field = value] AND [field [= value]] ...
-    ///
-    /// where **field** is `status.state` or `labels.\[KEY\]`, and `\[KEY\]` is a label
-    /// key. **value** can be `*` to match all values.
-    /// `status.state` can be either `ACTIVE` or `NON_ACTIVE`.
-    /// Only the logical `AND` operator is supported; space-separated items are
-    /// treated as having an implicit `AND` operator.
-    ///
-    /// Example filter:
-    ///
-    /// status.state = ACTIVE AND labels.env = staging AND labels.starred = *
-    #[prost(string, tag = "7")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ListJobsRequest`.
-pub mod list_jobs_request {
-    /// A matcher that specifies categories of job states.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum JobStateMatcher {
-        /// Match all jobs, regardless of state.
-        All = 0,
-        /// Only match jobs in non-terminal states: PENDING, RUNNING, or
-        /// CANCEL_PENDING.
-        Active = 1,
-        /// Only match jobs in terminal states: CANCELLED, DONE, or ERROR.
-        NonActive = 2,
-    }
-    impl JobStateMatcher {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                JobStateMatcher::All => "ALL",
-                JobStateMatcher::Active => "ACTIVE",
-                JobStateMatcher::NonActive => "NON_ACTIVE",
-            }
-        }
-    }
-}
-/// A request to update a job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateJobRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "2")]
-    pub region: ::prost::alloc::string::String,
-    /// Required. The job ID.
-    #[prost(string, tag = "3")]
-    pub job_id: ::prost::alloc::string::String,
-    /// Required. The changes to the job.
-    #[prost(message, optional, tag = "4")]
-    pub job: ::core::option::Option<Job>,
-    /// Required. Specifies the path, relative to <code>Job</code>, of
-    /// the field to update. For example, to update the labels of a Job the
-    /// <code>update_mask</code> parameter would be specified as
-    /// <code>labels</code>, and the `PATCH` request body would specify the new
-    /// value. <strong>Note:</strong> Currently, <code>labels</code> is the only
-    /// field that can be updated.
-    #[prost(message, optional, tag = "5")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// A list of jobs in a project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListJobsResponse {
-    /// Output only. Jobs list.
-    #[prost(message, repeated, tag = "1")]
-    pub jobs: ::prost::alloc::vec::Vec<Job>,
-    /// Optional. This token is included in the response if there are more results
-    /// to fetch. To fetch additional results, provide this value as the
-    /// `page_token` in a subsequent <code>ListJobsRequest</code>.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A request to cancel a job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CancelJobRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "3")]
-    pub region: ::prost::alloc::string::String,
-    /// Required. The job ID.
-    #[prost(string, tag = "2")]
-    pub job_id: ::prost::alloc::string::String,
-}
-/// A request to delete a job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteJobRequest {
-    /// Required. The ID of the Google Cloud Platform project that the job
-    /// belongs to.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Required. The Dataproc region in which to handle the request.
-    #[prost(string, tag = "3")]
-    pub region: ::prost::alloc::string::String,
-    /// Required. The job ID.
-    #[prost(string, tag = "2")]
-    pub job_id: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod job_controller_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The JobController provides methods to manage jobs.
-    #[derive(Debug, Clone)]
-    pub struct JobControllerClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> JobControllerClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> JobControllerClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            JobControllerClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Submits a job to a cluster.
-        pub async fn submit_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SubmitJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/SubmitJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Submits job to a cluster.
-        pub async fn submit_job_as_operation(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SubmitJobRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/SubmitJobAsOperation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the resource representation for a job in a project.
-        pub async fn get_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/GetJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists regions/{region}/jobs in a project.
-        pub async fn list_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListJobsRequest>,
-        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/ListJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a job in a project.
-        pub async fn update_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/UpdateJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Starts a job cancellation request. To access the job resource
-        /// after cancellation, call
-        /// [regions/{region}/jobs.list](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs/list)
-        /// or
-        /// [regions/{region}/jobs.get](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs/get).
-        pub async fn cancel_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CancelJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/CancelJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes the job from the project. If the job is active, the delete fails,
-        /// and the response returns `FAILED_PRECONDITION`.
-        pub async fn delete_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteJobRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.JobController/DeleteJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Runtime configuration for a workload.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1733,8 +429,10 @@ pub struct Cluster {
     /// Required. The Google Cloud Platform project ID that the cluster belongs to.
     #[prost(string, tag = "1")]
     pub project_id: ::prost::alloc::string::String,
-    /// Required. The cluster name. Cluster names within a project must be
-    /// unique. Names of deleted clusters can be reused.
+    /// Required. The cluster name, which must be unique within a project.
+    /// The name must start with a lowercase letter, and can contain
+    /// up to 51 lowercase letters, numbers, and hyphens. It cannot end
+    /// with a hyphen. The name of a deleted cluster can be reused.
     #[prost(string, tag = "2")]
     pub cluster_name: ::prost::alloc::string::String,
     /// Optional. The cluster config for a cluster of Compute Engine Instances.
@@ -1742,13 +440,15 @@ pub struct Cluster {
     /// when clusters are updated.
     #[prost(message, optional, tag = "3")]
     pub config: ::core::option::Option<ClusterConfig>,
-    /// Optional. The virtual cluster config, used when creating a Dataproc cluster that
-    /// does not directly control the underlying compute resources, for example,
-    /// when creating a [Dataproc-on-GKE
-    /// cluster](<https://cloud.google.com/dataproc/docs/concepts/jobs/dataproc-gke#create-a-dataproc-on-gke-cluster>).
-    /// Note that Dataproc may set default values, and values may change when
-    /// clusters are updated. Exactly one of config or virtualClusterConfig must be
-    /// specified.
+    /// Optional. The virtual cluster config is used when creating a Dataproc
+    /// cluster that does not directly control the underlying compute resources,
+    /// for example, when creating a [Dataproc-on-GKE
+    /// cluster](<https://cloud.google.com/dataproc/docs/guides/dpgke/dataproc-gke>).
+    /// Dataproc may set default values, and values may change when
+    /// clusters are updated. Exactly one of
+    /// \[config][google.cloud.dataproc.v1.Cluster.config\] or
+    /// \[virtual_cluster_config][google.cloud.dataproc.v1.Cluster.virtual_cluster_config\]
+    /// must be specified.
     #[prost(message, optional, tag = "10")]
     pub virtual_cluster_config: ::core::option::Option<VirtualClusterConfig>,
     /// Optional. The labels to associate with this cluster.
@@ -1797,15 +497,13 @@ pub struct ClusterConfig {
     /// a Cloud Storage bucket.**
     #[prost(string, tag = "1")]
     pub config_bucket: ::prost::alloc::string::String,
-    /// Optional. A Cloud Storage bucket used to store ephemeral cluster and jobs data,
-    /// such as Spark and MapReduce history files.
-    /// If you do not specify a temp bucket,
-    /// Dataproc will determine a Cloud Storage location (US,
-    /// ASIA, or EU) for your cluster's temp bucket according to the
-    /// Compute Engine zone where your cluster is deployed, and then create
-    /// and manage this project-level, per-location bucket. The default bucket has
-    /// a TTL of 90 days, but you can use any TTL (or none) if you specify a
-    /// bucket (see
+    /// Optional. A Cloud Storage bucket used to store ephemeral cluster and jobs
+    /// data, such as Spark and MapReduce history files. If you do not specify a
+    /// temp bucket, Dataproc will determine a Cloud Storage location (US, ASIA, or
+    /// EU) for your cluster's temp bucket according to the Compute Engine zone
+    /// where your cluster is deployed, and then create and manage this
+    /// project-level, per-location bucket. The default bucket has a TTL of 90
+    /// days, but you can use any TTL (or none) if you specify a bucket (see
     /// [Dataproc staging and temp
     /// buckets](<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/staging-bucket>)).
     /// **This field requires a Cloud Storage bucket name, not a `gs://...` URI to
@@ -1868,14 +566,17 @@ pub struct ClusterConfig {
     /// Optional. The config for Dataproc metrics.
     #[prost(message, optional, tag = "23")]
     pub dataproc_metric_config: ::core::option::Option<DataprocMetricConfig>,
+    /// Optional. The node group settings.
+    #[prost(message, repeated, tag = "25")]
+    pub auxiliary_node_groups: ::prost::alloc::vec::Vec<AuxiliaryNodeGroup>,
 }
-/// Dataproc cluster config for a cluster that does not directly control the
+/// The Dataproc cluster config for a cluster that does not directly control the
 /// underlying compute resources, such as a [Dataproc-on-GKE
-/// cluster](<https://cloud.google.com/dataproc/docs/concepts/jobs/dataproc-gke#create-a-dataproc-on-gke-cluster>).
+/// cluster](<https://cloud.google.com/dataproc/docs/guides/dpgke/dataproc-gke>).
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VirtualClusterConfig {
-    /// Optional. A Storage bucket used to stage job
+    /// Optional. A Cloud Storage bucket used to stage job
     /// dependencies, config files, and job driver console output.
     /// If you do not specify a staging bucket, Cloud
     /// Dataproc will determine a Cloud Storage location (US,
@@ -1901,7 +602,8 @@ pub mod virtual_cluster_config {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum InfrastructureConfig {
-        /// Required. The configuration for running the Dataproc cluster on Kubernetes.
+        /// Required. The configuration for running the Dataproc cluster on
+        /// Kubernetes.
         #[prost(message, tag = "6")]
         KubernetesClusterConfig(super::KubernetesClusterConfig),
     }
@@ -2058,7 +760,8 @@ pub struct GceClusterConfig {
     /// Optional. Node Group Affinity for sole-tenant clusters.
     #[prost(message, optional, tag = "13")]
     pub node_group_affinity: ::core::option::Option<NodeGroupAffinity>,
-    /// Optional. Shielded Instance Config for clusters using [Compute Engine Shielded
+    /// Optional. Shielded Instance Config for clusters using [Compute Engine
+    /// Shielded
     /// VMs](<https://cloud.google.com/security/shielded-cloud/shielded-vm>).
     #[prost(message, optional, tag = "14")]
     pub shielded_instance_config: ::core::option::Option<ShieldedInstanceConfig>,
@@ -2088,7 +791,8 @@ pub mod gce_cluster_config {
     #[repr(i32)]
     pub enum PrivateIpv6GoogleAccess {
         /// If unspecified, Compute Engine default behavior will apply, which
-        /// is the same as \[INHERIT_FROM_SUBNETWORK][google.cloud.dataproc.v1.GceClusterConfig.PrivateIpv6GoogleAccess.INHERIT_FROM_SUBNETWORK\].
+        /// is the same as
+        /// \[INHERIT_FROM_SUBNETWORK][google.cloud.dataproc.v1.GceClusterConfig.PrivateIpv6GoogleAccess.INHERIT_FROM_SUBNETWORK\].
         Unspecified = 0,
         /// Private access to and from Google Services configuration
         /// inherited from the subnetwork configuration. This is the
@@ -2121,6 +825,8 @@ pub mod gce_cluster_config {
     }
 }
 /// Node Group Affinity for clusters using sole-tenant node groups.
+/// **The Dataproc `NodeGroupAffinity` resource is not related to the
+/// Dataproc \[NodeGroup][google.cloud.dataproc.v1.NodeGroup\] resource.**
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct NodeGroupAffinity {
@@ -2157,7 +863,8 @@ pub struct ShieldedInstanceConfig {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConfidentialInstanceConfig {
-    /// Optional. Defines whether the instance should have confidential compute enabled.
+    /// Optional. Defines whether the instance should have confidential compute
+    /// enabled.
     #[prost(bool, tag = "1")]
     pub enable_confidential_compute: bool,
 }
@@ -2246,10 +953,7 @@ pub struct InstanceGroupConfig {
 }
 /// Nested message and enum types in `InstanceGroupConfig`.
 pub mod instance_group_config {
-    /// Controls the use of
-    /// [preemptible instances]
-    /// (<https://cloud.google.com/compute/docs/instances/preemptible>)
-    /// within the group.
+    /// Controls the use of preemptible instances within the group.
     #[derive(
         Clone,
         Copy,
@@ -2271,9 +975,12 @@ pub mod instance_group_config {
         /// This option is allowed for all instance groups and is the only valid
         /// value for Master and Worker instance groups.
         NonPreemptible = 1,
-        /// Instances are preemptible.
+        /// Instances are \[preemptible\]
+        /// (<https://cloud.google.com/compute/docs/instances/preemptible>).
         ///
-        /// This option is allowed only for secondary worker groups.
+        /// This option is allowed only for [secondary worker]
+        /// (<https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms>)
+        /// groups.
         Preemptible = 2,
     }
     impl Preemptibility {
@@ -2344,7 +1051,7 @@ pub struct DiskConfig {
     /// Optional. Size in GB of the boot disk (default is 500GB).
     #[prost(int32, tag = "1")]
     pub boot_disk_size_gb: i32,
-    /// Optional. Number of attached SSDs, from 0 to 4 (default is 0).
+    /// Optional. Number of attached SSDs, from 0 to 8 (default is 0).
     /// If SSDs are not attached, the boot disk is used to store runtime logs and
     /// \[HDFS\](<https://hadoop.apache.org/docs/r1.2.1/hdfs_user_guide.html>) data.
     /// If one or more SSDs are attached, this runtime bulk
@@ -2359,6 +1066,85 @@ pub struct DiskConfig {
     /// performance](<https://cloud.google.com/compute/docs/disks/local-ssd#performance>).
     #[prost(string, tag = "4")]
     pub local_ssd_interface: ::prost::alloc::string::String,
+}
+/// Node group identification and configuration information.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuxiliaryNodeGroup {
+    /// Required. Node group configuration.
+    #[prost(message, optional, tag = "1")]
+    pub node_group: ::core::option::Option<NodeGroup>,
+    /// Optional. A node group ID. Generated if not specified.
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). Cannot begin or end with underscore
+    /// or hyphen. Must consist of from 3 to 33 characters.
+    #[prost(string, tag = "2")]
+    pub node_group_id: ::prost::alloc::string::String,
+}
+/// Dataproc Node Group.
+/// **The Dataproc `NodeGroup` resource is not related to the
+/// Dataproc \[NodeGroupAffinity][google.cloud.dataproc.v1.NodeGroupAffinity\]
+/// resource.**
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NodeGroup {
+    /// The Node group [resource name](<https://aip.dev/122>).
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Node group roles.
+    #[prost(enumeration = "node_group::Role", repeated, packed = "false", tag = "2")]
+    pub roles: ::prost::alloc::vec::Vec<i32>,
+    /// Optional. The node group instance group configuration.
+    #[prost(message, optional, tag = "3")]
+    pub node_group_config: ::core::option::Option<InstanceGroupConfig>,
+    /// Optional. Node group labels.
+    ///
+    /// * Label **keys** must consist of from 1 to 63 characters and conform to
+    ///    [RFC 1035](<https://www.ietf.org/rfc/rfc1035.txt>).
+    /// * Label **values** can be empty. If specified, they must consist of from
+    ///    1 to 63 characters and conform to [RFC 1035]
+    ///    (<https://www.ietf.org/rfc/rfc1035.txt>).
+    /// * The node group must have no more than 32 labels.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Nested message and enum types in `NodeGroup`.
+pub mod node_group {
+    /// Node group roles.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Role {
+        /// Required unspecified role.
+        Unspecified = 0,
+        /// Job drivers run on the node group.
+        Driver = 1,
+    }
+    impl Role {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Role::Unspecified => "ROLE_UNSPECIFIED",
+                Role::Driver => "DRIVER",
+            }
+        }
+    }
 }
 /// Specifies an executable to run on a fully configured node and a
 /// timeout period for executable completion.
@@ -2517,8 +1303,8 @@ pub struct SecurityConfig {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct KerberosConfig {
-    /// Optional. Flag to indicate whether to Kerberize the cluster (default: false). Set
-    /// this field to true to enable Kerberos on a cluster.
+    /// Optional. Flag to indicate whether to Kerberize the cluster (default:
+    /// false). Set this field to true to enable Kerberos on a cluster.
     #[prost(bool, tag = "1")]
     pub enable_kerberos: bool,
     /// Optional. The Cloud Storage URI of a KMS encrypted file containing the root
@@ -2666,7 +1452,8 @@ pub mod lifecycle_config {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Ttl {
-        /// Optional. The time when cluster will be auto-deleted (see JSON representation of
+        /// Optional. The time when cluster will be auto-deleted (see JSON
+        /// representation of
         /// \[Timestamp\](<https://developers.google.com/protocol-buffers/docs/proto3#json>)).
         #[prost(message, tag = "2")]
         AutoDeleteTime(::prost_types::Timestamp),
@@ -2828,11 +1615,12 @@ pub struct CreateClusterRequest {
     /// Required. The cluster to create.
     #[prost(message, optional, tag = "2")]
     pub cluster: ::core::option::Option<Cluster>,
-    /// Optional. A unique ID used to identify the request. If the server receives two
+    /// Optional. A unique ID used to identify the request. If the server receives
+    /// two
     /// \[CreateClusterRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateClusterRequest>)s
     /// with the same id, then the second request will be ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created and stored in the backend
-    /// is returned.
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
     ///
     /// It is recommended to always set this value to a
     /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
@@ -2930,8 +1718,8 @@ pub struct UpdateClusterRequest {
     /// receives two
     /// \[UpdateClusterRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.UpdateClusterRequest>)s
     /// with the same id, then the second request will be ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created and stored in the
-    /// backend is returned.
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
     ///
     /// It is recommended to always set this value to a
     /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
@@ -2963,8 +1751,8 @@ pub struct StopClusterRequest {
     /// receives two
     /// \[StopClusterRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.StopClusterRequest>)s
     /// with the same id, then the second request will be ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created and stored in the
-    /// backend is returned.
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
     ///
     /// Recommendation: Set this value to a
     /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
@@ -2996,8 +1784,8 @@ pub struct StartClusterRequest {
     /// receives two
     /// \[StartClusterRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.StartClusterRequest>)s
     /// with the same id, then the second request will be ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created and stored in the
-    /// backend is returned.
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
     ///
     /// Recommendation: Set this value to a
     /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
@@ -3029,8 +1817,8 @@ pub struct DeleteClusterRequest {
     /// receives two
     /// \[DeleteClusterRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.DeleteClusterRequest>)s
     /// with the same id, then the second request will be ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created and stored in the
-    /// backend is returned.
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
     ///
     /// It is recommended to always set this value to a
     /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
@@ -3274,7 +2062,8 @@ pub mod cluster_controller_client {
         /// Updates a cluster in a project. The returned
         /// [Operation.metadata][google.longrunning.Operation.metadata] will be
         /// [ClusterOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#clusteroperationmetadata).
-        /// The cluster must be in a [`RUNNING`][google.cloud.dataproc.v1.ClusterStatus.State] state or an error
+        /// The cluster must be in a
+        /// [`RUNNING`][google.cloud.dataproc.v1.ClusterStatus.State] state or an error
         /// is returned.
         pub async fn update_cluster(
             &mut self,
@@ -3435,6 +2224,1543 @@ pub mod cluster_controller_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.dataproc.v1.ClusterController/DiagnoseCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A request to create a node group.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateNodeGroupRequest {
+    /// Required. The parent resource where this node group will be created.
+    /// Format: `projects/{project}/regions/{region}/clusters/{cluster}`
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The node group to create.
+    #[prost(message, optional, tag = "2")]
+    pub node_group: ::core::option::Option<NodeGroup>,
+    /// Optional. An optional node group ID. Generated if not specified.
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). Cannot begin or end with underscore
+    /// or hyphen. Must consist of from 3 to 33 characters.
+    #[prost(string, tag = "4")]
+    pub node_group_id: ::prost::alloc::string::String,
+    /// Optional. A unique ID used to identify the request. If the server receives
+    /// two
+    /// \[CreateNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateNodeGroupRequests>)
+    /// with the same ID, the second request is ignored and the
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
+    ///
+    /// Recommendation: Set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// A request to resize a node group.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResizeNodeGroupRequest {
+    /// Required. The name of the node group to resize.
+    /// Format:
+    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The number of running instances for the node group to maintain.
+    /// The group adds or removes instances to maintain the number of instances
+    /// specified by this parameter.
+    #[prost(int32, tag = "2")]
+    pub size: i32,
+    /// Optional. A unique ID used to identify the request. If the server receives
+    /// two
+    /// \[ResizeNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.ResizeNodeGroupRequests>)
+    /// with the same ID, the second request is ignored and the
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
+    ///
+    /// Recommendation: Set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+    /// Optional. Timeout for graceful YARN decommissioning. [Graceful
+    /// decommissioning]
+    /// (<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/scaling-clusters#graceful_decommissioning>)
+    /// allows the removal of nodes from the Compute Engine node group
+    /// without interrupting jobs in progress. This timeout specifies how long to
+    /// wait for jobs in progress to finish before forcefully removing nodes (and
+    /// potentially interrupting jobs). Default timeout is 0 (for forceful
+    /// decommission), and the maximum allowed timeout is 1 day. (see JSON
+    /// representation of
+    /// \[Duration\](<https://developers.google.com/protocol-buffers/docs/proto3#json>)).
+    ///
+    /// Only supported on Dataproc image versions 1.2 and higher.
+    #[prost(message, optional, tag = "4")]
+    pub graceful_decommission_timeout: ::core::option::Option<::prost_types::Duration>,
+}
+/// A request to get a node group .
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNodeGroupRequest {
+    /// Required. The name of the node group to retrieve.
+    /// Format:
+    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod node_group_controller_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The `NodeGroupControllerService` provides methods to manage node groups
+    /// of Compute Engine managed instances.
+    #[derive(Debug, Clone)]
+    pub struct NodeGroupControllerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> NodeGroupControllerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> NodeGroupControllerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            NodeGroupControllerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a node group in a cluster. The returned
+        /// [Operation.metadata][google.longrunning.Operation.metadata] is
+        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
+        pub async fn create_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateNodeGroupRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/CreateNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Resizes a node group in a cluster. The returned
+        /// [Operation.metadata][google.longrunning.Operation.metadata] is
+        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
+        pub async fn resize_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ResizeNodeGroupRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/ResizeNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the resource representation for a node group in a
+        /// cluster.
+        pub async fn get_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetNodeGroupRequest>,
+        ) -> Result<tonic::Response<super::NodeGroup>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/GetNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// The runtime logging config of the job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LoggingConfig {
+    /// The per-package log levels for the driver. This may include
+    /// "root" package name to configure rootLogger.
+    /// Examples:
+    ///    'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
+    #[prost(btree_map = "string, enumeration(logging_config::Level)", tag = "2")]
+    pub driver_log_levels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        i32,
+    >,
+}
+/// Nested message and enum types in `LoggingConfig`.
+pub mod logging_config {
+    /// The Log4j level for job execution. When running an
+    /// [Apache Hive](<https://hive.apache.org/>) job, Cloud
+    /// Dataproc configures the Hive client to an equivalent verbosity level.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Level {
+        /// Level is unspecified. Use default level for log4j.
+        Unspecified = 0,
+        /// Use ALL level for log4j.
+        All = 1,
+        /// Use TRACE level for log4j.
+        Trace = 2,
+        /// Use DEBUG level for log4j.
+        Debug = 3,
+        /// Use INFO level for log4j.
+        Info = 4,
+        /// Use WARN level for log4j.
+        Warn = 5,
+        /// Use ERROR level for log4j.
+        Error = 6,
+        /// Use FATAL level for log4j.
+        Fatal = 7,
+        /// Turn off log4j.
+        Off = 8,
+    }
+    impl Level {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Level::Unspecified => "LEVEL_UNSPECIFIED",
+                Level::All => "ALL",
+                Level::Trace => "TRACE",
+                Level::Debug => "DEBUG",
+                Level::Info => "INFO",
+                Level::Warn => "WARN",
+                Level::Error => "ERROR",
+                Level::Fatal => "FATAL",
+                Level::Off => "OFF",
+            }
+        }
+    }
+}
+/// A Dataproc job for running
+/// [Apache Hadoop
+/// MapReduce](<https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html>)
+/// jobs on [Apache Hadoop
+/// YARN](<https://hadoop.apache.org/docs/r2.7.1/hadoop-yarn/hadoop-yarn-site/YARN.html>).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HadoopJob {
+    /// Optional. The arguments to pass to the driver. Do not
+    /// include arguments, such as `-libjars` or `-Dfoo=bar`, that can be set as
+    /// job properties, since a collision may occur that causes an incorrect job
+    /// submission.
+    #[prost(string, repeated, tag = "3")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Jar file URIs to add to the CLASSPATHs of the
+    /// Hadoop driver and tasks.
+    #[prost(string, repeated, tag = "4")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS (Hadoop Compatible Filesystem) URIs of files to be copied
+    /// to the working directory of Hadoop drivers and distributed tasks. Useful
+    /// for naively parallel tasks.
+    #[prost(string, repeated, tag = "5")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted in the working directory of
+    /// Hadoop drivers and tasks. Supported file types:
+    /// .jar, .tar, .tar.gz, .tgz, or .zip.
+    #[prost(string, repeated, tag = "6")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A mapping of property names to values, used to configure Hadoop.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site and
+    /// classes in user code.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "8")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+    /// Required. Indicates the location of the driver's main class. Specify
+    /// either the jar file that contains the main class or the main class name.
+    /// To specify both, add the jar file to `jar_file_uris`, and then specify
+    /// the main class name in this property.
+    #[prost(oneof = "hadoop_job::Driver", tags = "1, 2")]
+    pub driver: ::core::option::Option<hadoop_job::Driver>,
+}
+/// Nested message and enum types in `HadoopJob`.
+pub mod hadoop_job {
+    /// Required. Indicates the location of the driver's main class. Specify
+    /// either the jar file that contains the main class or the main class name.
+    /// To specify both, add the jar file to `jar_file_uris`, and then specify
+    /// the main class name in this property.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Driver {
+        /// The HCFS URI of the jar file containing the main class.
+        /// Examples:
+        ///      'gs://foo-bucket/analytics-binaries/extract-useful-metrics-mr.jar'
+        ///      'hdfs:/tmp/test-samples/custom-wordcount.jar'
+        ///      'file:///home/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar'
+        #[prost(string, tag = "1")]
+        MainJarFileUri(::prost::alloc::string::String),
+        /// The name of the driver's main class. The jar file containing the class
+        /// must be in the default CLASSPATH or specified in `jar_file_uris`.
+        #[prost(string, tag = "2")]
+        MainClass(::prost::alloc::string::String),
+    }
+}
+/// A Dataproc job for running [Apache Spark](<https://spark.apache.org/>)
+/// applications on YARN.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkJob {
+    /// Optional. The arguments to pass to the driver. Do not include arguments,
+    /// such as `--conf`, that can be set as job properties, since a collision may
+    /// occur that causes an incorrect job submission.
+    #[prost(string, repeated, tag = "3")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of jar files to add to the CLASSPATHs of the
+    /// Spark driver and tasks.
+    #[prost(string, repeated, tag = "4")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor. Useful for naively parallel tasks.
+    #[prost(string, repeated, tag = "5")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// .jar, .tar, .tar.gz, .tgz, and .zip.
+    #[prost(string, repeated, tag = "6")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A mapping of property names to values, used to configure Spark.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in
+    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "8")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+    /// Required. The specification of the main method to call to drive the job.
+    /// Specify either the jar file that contains the main class or the main class
+    /// name. To pass both a main jar and a main class in that jar, add the jar to
+    /// `CommonJob.jar_file_uris`, and then specify the main class name in
+    /// `main_class`.
+    #[prost(oneof = "spark_job::Driver", tags = "1, 2")]
+    pub driver: ::core::option::Option<spark_job::Driver>,
+}
+/// Nested message and enum types in `SparkJob`.
+pub mod spark_job {
+    /// Required. The specification of the main method to call to drive the job.
+    /// Specify either the jar file that contains the main class or the main class
+    /// name. To pass both a main jar and a main class in that jar, add the jar to
+    /// `CommonJob.jar_file_uris`, and then specify the main class name in
+    /// `main_class`.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Driver {
+        /// The HCFS URI of the jar file that contains the main class.
+        #[prost(string, tag = "1")]
+        MainJarFileUri(::prost::alloc::string::String),
+        /// The name of the driver's main class. The jar file that contains the class
+        /// must be in the default CLASSPATH or specified in `jar_file_uris`.
+        #[prost(string, tag = "2")]
+        MainClass(::prost::alloc::string::String),
+    }
+}
+/// A Dataproc job for running
+/// [Apache
+/// PySpark](<https://spark.apache.org/docs/0.9.0/python-programming-guide.html>)
+/// applications on YARN.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PySparkJob {
+    /// Required. The HCFS URI of the main Python file to use as the driver. Must
+    /// be a .py file.
+    #[prost(string, tag = "1")]
+    pub main_python_file_uri: ::prost::alloc::string::String,
+    /// Optional. The arguments to pass to the driver.  Do not include arguments,
+    /// such as `--conf`, that can be set as job properties, since a collision may
+    /// occur that causes an incorrect job submission.
+    #[prost(string, repeated, tag = "2")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS file URIs of Python files to pass to the PySpark
+    /// framework. Supported file types: .py, .egg, and .zip.
+    #[prost(string, repeated, tag = "3")]
+    pub python_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of jar files to add to the CLASSPATHs of the
+    /// Python driver and tasks.
+    #[prost(string, repeated, tag = "4")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor. Useful for naively parallel tasks.
+    #[prost(string, repeated, tag = "5")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// .jar, .tar, .tar.gz, .tgz, and .zip.
+    #[prost(string, repeated, tag = "6")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A mapping of property names to values, used to configure PySpark.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in
+    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "8")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+}
+/// A list of queries to run on a cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryList {
+    /// Required. The queries to execute. You do not need to end a query expression
+    /// with a semicolon. Multiple queries can be specified in one
+    /// string by separating each with a semicolon. Here is an example of a
+    /// Dataproc API snippet that uses a QueryList to specify a HiveJob:
+    ///
+    ///      "hiveJob": {
+    ///        "queryList": {
+    ///          "queries": [
+    ///            "query1",
+    ///            "query2",
+    ///            "query3;query4",
+    ///          ]
+    ///        }
+    ///      }
+    #[prost(string, repeated, tag = "1")]
+    pub queries: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A Dataproc job for running [Apache Hive](<https://hive.apache.org/>)
+/// queries on YARN.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HiveJob {
+    /// Optional. Whether to continue executing queries if a query fails.
+    /// The default value is `false`. Setting to `true` can be useful when
+    /// executing independent parallel queries.
+    #[prost(bool, tag = "3")]
+    pub continue_on_failure: bool,
+    /// Optional. Mapping of query variable names to values (equivalent to the
+    /// Hive command: `SET name="value";`).
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub script_variables: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. A mapping of property names and values, used to configure Hive.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site.xml,
+    /// /etc/hive/conf/hive-site.xml, and classes in user code.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. HCFS URIs of jar files to add to the CLASSPATH of the
+    /// Hive server and Hadoop MapReduce (MR) tasks. Can contain Hive SerDes
+    /// and UDFs.
+    #[prost(string, repeated, tag = "6")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. The sequence of Hive queries to execute, specified as either
+    /// an HCFS file URI or a list of queries.
+    #[prost(oneof = "hive_job::Queries", tags = "1, 2")]
+    pub queries: ::core::option::Option<hive_job::Queries>,
+}
+/// Nested message and enum types in `HiveJob`.
+pub mod hive_job {
+    /// Required. The sequence of Hive queries to execute, specified as either
+    /// an HCFS file URI or a list of queries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Queries {
+        /// The HCFS URI of the script that contains Hive queries.
+        #[prost(string, tag = "1")]
+        QueryFileUri(::prost::alloc::string::String),
+        /// A list of queries.
+        #[prost(message, tag = "2")]
+        QueryList(super::QueryList),
+    }
+}
+/// A Dataproc job for running [Apache Spark
+/// SQL](<https://spark.apache.org/sql/>) queries.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkSqlJob {
+    /// Optional. Mapping of query variable names to values (equivalent to the
+    /// Spark SQL command: SET `name="value";`).
+    #[prost(btree_map = "string, string", tag = "3")]
+    pub script_variables: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. A mapping of property names to values, used to configure
+    /// Spark SQL's SparkConf. Properties that conflict with values set by the
+    /// Dataproc API may be overwritten.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. HCFS URIs of jar files to be added to the Spark CLASSPATH.
+    #[prost(string, repeated, tag = "56")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "6")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+    /// Required. The sequence of Spark SQL queries to execute, specified as
+    /// either an HCFS file URI or as a list of queries.
+    #[prost(oneof = "spark_sql_job::Queries", tags = "1, 2")]
+    pub queries: ::core::option::Option<spark_sql_job::Queries>,
+}
+/// Nested message and enum types in `SparkSqlJob`.
+pub mod spark_sql_job {
+    /// Required. The sequence of Spark SQL queries to execute, specified as
+    /// either an HCFS file URI or as a list of queries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Queries {
+        /// The HCFS URI of the script that contains SQL queries.
+        #[prost(string, tag = "1")]
+        QueryFileUri(::prost::alloc::string::String),
+        /// A list of queries.
+        #[prost(message, tag = "2")]
+        QueryList(super::QueryList),
+    }
+}
+/// A Dataproc job for running [Apache Pig](<https://pig.apache.org/>)
+/// queries on YARN.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PigJob {
+    /// Optional. Whether to continue executing queries if a query fails.
+    /// The default value is `false`. Setting to `true` can be useful when
+    /// executing independent parallel queries.
+    #[prost(bool, tag = "3")]
+    pub continue_on_failure: bool,
+    /// Optional. Mapping of query variable names to values (equivalent to the Pig
+    /// command: `name=\[value\]`).
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub script_variables: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. A mapping of property names to values, used to configure Pig.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in /etc/hadoop/conf/*-site.xml,
+    /// /etc/pig/conf/pig.properties, and classes in user code.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. HCFS URIs of jar files to add to the CLASSPATH of
+    /// the Pig Client and Hadoop MapReduce (MR) tasks. Can contain Pig UDFs.
+    #[prost(string, repeated, tag = "6")]
+    pub jar_file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "7")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+    /// Required. The sequence of Pig queries to execute, specified as an HCFS
+    /// file URI or a list of queries.
+    #[prost(oneof = "pig_job::Queries", tags = "1, 2")]
+    pub queries: ::core::option::Option<pig_job::Queries>,
+}
+/// Nested message and enum types in `PigJob`.
+pub mod pig_job {
+    /// Required. The sequence of Pig queries to execute, specified as an HCFS
+    /// file URI or a list of queries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Queries {
+        /// The HCFS URI of the script that contains the Pig queries.
+        #[prost(string, tag = "1")]
+        QueryFileUri(::prost::alloc::string::String),
+        /// A list of queries.
+        #[prost(message, tag = "2")]
+        QueryList(super::QueryList),
+    }
+}
+/// A Dataproc job for running
+/// [Apache SparkR](<https://spark.apache.org/docs/latest/sparkr.html>)
+/// applications on YARN.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SparkRJob {
+    /// Required. The HCFS URI of the main R file to use as the driver.
+    /// Must be a .R file.
+    #[prost(string, tag = "1")]
+    pub main_r_file_uri: ::prost::alloc::string::String,
+    /// Optional. The arguments to pass to the driver.  Do not include arguments,
+    /// such as `--conf`, that can be set as job properties, since a collision may
+    /// occur that causes an incorrect job submission.
+    #[prost(string, repeated, tag = "2")]
+    pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of files to be placed in the working directory of
+    /// each executor. Useful for naively parallel tasks.
+    #[prost(string, repeated, tag = "3")]
+    pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. HCFS URIs of archives to be extracted into the working directory
+    /// of each executor. Supported file types:
+    /// .jar, .tar, .tar.gz, .tgz, and .zip.
+    #[prost(string, repeated, tag = "4")]
+    pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A mapping of property names to values, used to configure SparkR.
+    /// Properties that conflict with values set by the Dataproc API may be
+    /// overwritten. Can include properties set in
+    /// /etc/spark/conf/spark-defaults.conf and classes in user code.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "6")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+}
+/// A Dataproc job for running \[Presto\](<https://prestosql.io/>) queries.
+/// **IMPORTANT**: The [Dataproc Presto Optional
+/// Component](<https://cloud.google.com/dataproc/docs/concepts/components/presto>)
+/// must be enabled when the cluster is created to submit a Presto job to the
+/// cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PrestoJob {
+    /// Optional. Whether to continue executing queries if a query fails.
+    /// The default value is `false`. Setting to `true` can be useful when
+    /// executing independent parallel queries.
+    #[prost(bool, tag = "3")]
+    pub continue_on_failure: bool,
+    /// Optional. The format in which query output will be displayed. See the
+    /// Presto documentation for supported output formats
+    #[prost(string, tag = "4")]
+    pub output_format: ::prost::alloc::string::String,
+    /// Optional. Presto client tags to attach to this query
+    #[prost(string, repeated, tag = "5")]
+    pub client_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A mapping of property names to values. Used to set Presto
+    /// [session properties](<https://prestodb.io/docs/current/sql/set-session.html>)
+    /// Equivalent to using the --session flag in the Presto CLI
+    #[prost(btree_map = "string, string", tag = "6")]
+    pub properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. The runtime log config for job execution.
+    #[prost(message, optional, tag = "7")]
+    pub logging_config: ::core::option::Option<LoggingConfig>,
+    /// Required. The sequence of Presto queries to execute, specified as
+    /// either an HCFS file URI or as a list of queries.
+    #[prost(oneof = "presto_job::Queries", tags = "1, 2")]
+    pub queries: ::core::option::Option<presto_job::Queries>,
+}
+/// Nested message and enum types in `PrestoJob`.
+pub mod presto_job {
+    /// Required. The sequence of Presto queries to execute, specified as
+    /// either an HCFS file URI or as a list of queries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Queries {
+        /// The HCFS URI of the script that contains SQL queries.
+        #[prost(string, tag = "1")]
+        QueryFileUri(::prost::alloc::string::String),
+        /// A list of queries.
+        #[prost(message, tag = "2")]
+        QueryList(super::QueryList),
+    }
+}
+/// Dataproc job config.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobPlacement {
+    /// Required. The name of the cluster where the job will be submitted.
+    #[prost(string, tag = "1")]
+    pub cluster_name: ::prost::alloc::string::String,
+    /// Output only. A cluster UUID generated by the Dataproc service when
+    /// the job is submitted.
+    #[prost(string, tag = "2")]
+    pub cluster_uuid: ::prost::alloc::string::String,
+    /// Optional. Cluster labels to identify a cluster where the job will be
+    /// submitted.
+    #[prost(btree_map = "string, string", tag = "3")]
+    pub cluster_labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Dataproc job status.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobStatus {
+    /// Output only. A state message specifying the overall job state.
+    #[prost(enumeration = "job_status::State", tag = "1")]
+    pub state: i32,
+    /// Optional. Output only. Job state details, such as an error
+    /// description if the state is <code>ERROR</code>.
+    #[prost(string, tag = "2")]
+    pub details: ::prost::alloc::string::String,
+    /// Output only. The time when this state was entered.
+    #[prost(message, optional, tag = "6")]
+    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Additional state information, which includes
+    /// status reported by the agent.
+    #[prost(enumeration = "job_status::Substate", tag = "7")]
+    pub substate: i32,
+}
+/// Nested message and enum types in `JobStatus`.
+pub mod job_status {
+    /// The job state.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// The job state is unknown.
+        Unspecified = 0,
+        /// The job is pending; it has been submitted, but is not yet running.
+        Pending = 1,
+        /// Job has been received by the service and completed initial setup;
+        /// it will soon be submitted to the cluster.
+        SetupDone = 8,
+        /// The job is running on the cluster.
+        Running = 2,
+        /// A CancelJob request has been received, but is pending.
+        CancelPending = 3,
+        /// Transient in-flight resources have been canceled, and the request to
+        /// cancel the running job has been issued to the cluster.
+        CancelStarted = 7,
+        /// The job cancellation was successful.
+        Cancelled = 4,
+        /// The job has completed successfully.
+        Done = 5,
+        /// The job has completed, but encountered an error.
+        Error = 6,
+        /// Job attempt has failed. The detail field contains failure details for
+        /// this attempt.
+        ///
+        /// Applies to restartable jobs only.
+        AttemptFailure = 9,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Pending => "PENDING",
+                State::SetupDone => "SETUP_DONE",
+                State::Running => "RUNNING",
+                State::CancelPending => "CANCEL_PENDING",
+                State::CancelStarted => "CANCEL_STARTED",
+                State::Cancelled => "CANCELLED",
+                State::Done => "DONE",
+                State::Error => "ERROR",
+                State::AttemptFailure => "ATTEMPT_FAILURE",
+            }
+        }
+    }
+    /// The job substate.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Substate {
+        /// The job substate is unknown.
+        Unspecified = 0,
+        /// The Job is submitted to the agent.
+        ///
+        /// Applies to RUNNING state.
+        Submitted = 1,
+        /// The Job has been received and is awaiting execution (it may be waiting
+        /// for a condition to be met). See the "details" field for the reason for
+        /// the delay.
+        ///
+        /// Applies to RUNNING state.
+        Queued = 2,
+        /// The agent-reported status is out of date, which may be caused by a
+        /// loss of communication between the agent and Dataproc. If the
+        /// agent does not send a timely update, the job will fail.
+        ///
+        /// Applies to RUNNING state.
+        StaleStatus = 3,
+    }
+    impl Substate {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Substate::Unspecified => "UNSPECIFIED",
+                Substate::Submitted => "SUBMITTED",
+                Substate::Queued => "QUEUED",
+                Substate::StaleStatus => "STALE_STATUS",
+            }
+        }
+    }
+}
+/// Encapsulates the full scoping used to reference a job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobReference {
+    /// Optional. The ID of the Google Cloud Platform project that the job belongs
+    /// to. If specified, must match the request project ID.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Optional. The job ID, which must be unique within the project.
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), or hyphens (-). The maximum length is 100 characters.
+    ///
+    /// If not specified by the caller, the job ID will be provided by the server.
+    #[prost(string, tag = "2")]
+    pub job_id: ::prost::alloc::string::String,
+}
+/// A YARN application created by a job. Application information is a subset of
+/// <code>org.apache.hadoop.yarn.proto.YarnProtos.ApplicationReportProto</code>.
+///
+/// **Beta Feature**: This report is available for testing purposes only. It may
+/// be changed before final release.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct YarnApplication {
+    /// Required. The application name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The application state.
+    #[prost(enumeration = "yarn_application::State", tag = "2")]
+    pub state: i32,
+    /// Required. The numerical progress of the application, from 1 to 100.
+    #[prost(float, tag = "3")]
+    pub progress: f32,
+    /// Optional. The HTTP URL of the ApplicationMaster, HistoryServer, or
+    /// TimelineServer that provides application-specific information. The URL uses
+    /// the internal hostname, and requires a proxy server for resolution and,
+    /// possibly, access.
+    #[prost(string, tag = "4")]
+    pub tracking_url: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `YarnApplication`.
+pub mod yarn_application {
+    /// The application state, corresponding to
+    /// <code>YarnProtos.YarnApplicationStateProto</code>.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Status is unspecified.
+        Unspecified = 0,
+        /// Status is NEW.
+        New = 1,
+        /// Status is NEW_SAVING.
+        NewSaving = 2,
+        /// Status is SUBMITTED.
+        Submitted = 3,
+        /// Status is ACCEPTED.
+        Accepted = 4,
+        /// Status is RUNNING.
+        Running = 5,
+        /// Status is FINISHED.
+        Finished = 6,
+        /// Status is FAILED.
+        Failed = 7,
+        /// Status is KILLED.
+        Killed = 8,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::New => "NEW",
+                State::NewSaving => "NEW_SAVING",
+                State::Submitted => "SUBMITTED",
+                State::Accepted => "ACCEPTED",
+                State::Running => "RUNNING",
+                State::Finished => "FINISHED",
+                State::Failed => "FAILED",
+                State::Killed => "KILLED",
+            }
+        }
+    }
+}
+/// A Dataproc job resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Job {
+    /// Optional. The fully qualified reference to the job, which can be used to
+    /// obtain the equivalent REST path of the job resource. If this property
+    /// is not specified when a job is created, the server generates a
+    /// <code>job_id</code>.
+    #[prost(message, optional, tag = "1")]
+    pub reference: ::core::option::Option<JobReference>,
+    /// Required. Job information, including how, when, and where to
+    /// run the job.
+    #[prost(message, optional, tag = "2")]
+    pub placement: ::core::option::Option<JobPlacement>,
+    /// Output only. The job status. Additional application-specific
+    /// status information may be contained in the <code>type_job</code>
+    /// and <code>yarn_applications</code> fields.
+    #[prost(message, optional, tag = "8")]
+    pub status: ::core::option::Option<JobStatus>,
+    /// Output only. The previous job status.
+    #[prost(message, repeated, tag = "13")]
+    pub status_history: ::prost::alloc::vec::Vec<JobStatus>,
+    /// Output only. The collection of YARN applications spun up by this job.
+    ///
+    /// **Beta** Feature: This report is available for testing purposes only. It
+    /// may be changed before final release.
+    #[prost(message, repeated, tag = "9")]
+    pub yarn_applications: ::prost::alloc::vec::Vec<YarnApplication>,
+    /// Output only. A URI pointing to the location of the stdout of the job's
+    /// driver program.
+    #[prost(string, tag = "17")]
+    pub driver_output_resource_uri: ::prost::alloc::string::String,
+    /// Output only. If present, the location of miscellaneous control files
+    /// which may be used as part of job setup and handling. If not present,
+    /// control files may be placed in the same location as `driver_output_uri`.
+    #[prost(string, tag = "15")]
+    pub driver_control_files_uri: ::prost::alloc::string::String,
+    /// Optional. The labels to associate with this job.
+    /// Label **keys** must contain 1 to 63 characters, and must conform to
+    /// [RFC 1035](<https://www.ietf.org/rfc/rfc1035.txt>).
+    /// Label **values** may be empty, but, if present, must contain 1 to 63
+    /// characters, and must conform to [RFC
+    /// 1035](<https://www.ietf.org/rfc/rfc1035.txt>). No more than 32 labels can be
+    /// associated with a job.
+    #[prost(btree_map = "string, string", tag = "18")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. Job scheduling configuration.
+    #[prost(message, optional, tag = "20")]
+    pub scheduling: ::core::option::Option<JobScheduling>,
+    /// Output only. A UUID that uniquely identifies a job within the project
+    /// over time. This is in contrast to a user-settable reference.job_id that
+    /// may be reused over time.
+    #[prost(string, tag = "22")]
+    pub job_uuid: ::prost::alloc::string::String,
+    /// Output only. Indicates whether the job is completed. If the value is
+    /// `false`, the job is still in progress. If `true`, the job is completed, and
+    /// `status.state` field will indicate if it was successful, failed,
+    /// or cancelled.
+    #[prost(bool, tag = "24")]
+    pub done: bool,
+    /// Optional. Driver scheduling configuration.
+    #[prost(message, optional, tag = "27")]
+    pub driver_scheduling_config: ::core::option::Option<DriverSchedulingConfig>,
+    /// Required. The application/framework-specific portion of the job.
+    #[prost(oneof = "job::TypeJob", tags = "3, 4, 5, 6, 7, 21, 12, 23")]
+    pub type_job: ::core::option::Option<job::TypeJob>,
+}
+/// Nested message and enum types in `Job`.
+pub mod job {
+    /// Required. The application/framework-specific portion of the job.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TypeJob {
+        /// Optional. Job is a Hadoop job.
+        #[prost(message, tag = "3")]
+        HadoopJob(super::HadoopJob),
+        /// Optional. Job is a Spark job.
+        #[prost(message, tag = "4")]
+        SparkJob(super::SparkJob),
+        /// Optional. Job is a PySpark job.
+        #[prost(message, tag = "5")]
+        PysparkJob(super::PySparkJob),
+        /// Optional. Job is a Hive job.
+        #[prost(message, tag = "6")]
+        HiveJob(super::HiveJob),
+        /// Optional. Job is a Pig job.
+        #[prost(message, tag = "7")]
+        PigJob(super::PigJob),
+        /// Optional. Job is a SparkR job.
+        #[prost(message, tag = "21")]
+        SparkRJob(super::SparkRJob),
+        /// Optional. Job is a SparkSql job.
+        #[prost(message, tag = "12")]
+        SparkSqlJob(super::SparkSqlJob),
+        /// Optional. Job is a Presto job.
+        #[prost(message, tag = "23")]
+        PrestoJob(super::PrestoJob),
+    }
+}
+/// Driver scheduling configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DriverSchedulingConfig {
+    /// Required. The amount of memory in MB the driver is requesting.
+    #[prost(int32, tag = "1")]
+    pub memory_mb: i32,
+    /// Required. The number of vCPUs the driver is requesting.
+    #[prost(int32, tag = "2")]
+    pub vcores: i32,
+}
+/// Job scheduling options.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobScheduling {
+    /// Optional. Maximum number of times per hour a driver may be restarted as
+    /// a result of driver exiting with non-zero code before job is
+    /// reported failed.
+    ///
+    /// A job may be reported as thrashing if the driver exits with a non-zero code
+    /// four times within a 10-minute window.
+    ///
+    /// Maximum value is 10.
+    ///
+    /// **Note:** This restartable job option is not supported in Dataproc
+    /// [workflow templates]
+    /// (<https://cloud.google.com/dataproc/docs/concepts/workflows/using-workflows#adding_jobs_to_a_template>).
+    #[prost(int32, tag = "1")]
+    pub max_failures_per_hour: i32,
+    /// Optional. Maximum total number of times a driver may be restarted as a
+    /// result of the driver exiting with a non-zero code. After the maximum number
+    /// is reached, the job will be reported as failed.
+    ///
+    /// Maximum value is 240.
+    ///
+    /// **Note:** Currently, this restartable job option is
+    /// not supported in Dataproc
+    /// [workflow
+    /// templates](<https://cloud.google.com/dataproc/docs/concepts/workflows/using-workflows#adding_jobs_to_a_template>).
+    #[prost(int32, tag = "2")]
+    pub max_failures_total: i32,
+}
+/// A request to submit a job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SubmitJobRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "3")]
+    pub region: ::prost::alloc::string::String,
+    /// Required. The job resource.
+    #[prost(message, optional, tag = "2")]
+    pub job: ::core::option::Option<Job>,
+    /// Optional. A unique id used to identify the request. If the server
+    /// receives two
+    /// \[SubmitJobRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.SubmitJobRequest>)s
+    /// with the same id, then the second request will be ignored and the
+    /// first \[Job][google.cloud.dataproc.v1.Job\] created and stored in the backend
+    /// is returned.
+    ///
+    /// It is recommended to always set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The id must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Job Operation metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobMetadata {
+    /// Output only. The job id.
+    #[prost(string, tag = "1")]
+    pub job_id: ::prost::alloc::string::String,
+    /// Output only. Most recent job status.
+    #[prost(message, optional, tag = "2")]
+    pub status: ::core::option::Option<JobStatus>,
+    /// Output only. Operation type.
+    #[prost(string, tag = "3")]
+    pub operation_type: ::prost::alloc::string::String,
+    /// Output only. Job submission time.
+    #[prost(message, optional, tag = "4")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A request to get the resource representation for a job in a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetJobRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "3")]
+    pub region: ::prost::alloc::string::String,
+    /// Required. The job ID.
+    #[prost(string, tag = "2")]
+    pub job_id: ::prost::alloc::string::String,
+}
+/// A request to list jobs in a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListJobsRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "6")]
+    pub region: ::prost::alloc::string::String,
+    /// Optional. The number of results to return in each response.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. The page token, returned by a previous call, to request the
+    /// next page of results.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. If set, the returned jobs list includes only jobs that were
+    /// submitted to the named cluster.
+    #[prost(string, tag = "4")]
+    pub cluster_name: ::prost::alloc::string::String,
+    /// Optional. Specifies enumerated categories of jobs to list.
+    /// (default = match ALL jobs).
+    ///
+    /// If `filter` is provided, `jobStateMatcher` will be ignored.
+    #[prost(enumeration = "list_jobs_request::JobStateMatcher", tag = "5")]
+    pub job_state_matcher: i32,
+    /// Optional. A filter constraining the jobs to list. Filters are
+    /// case-sensitive and have the following syntax:
+    ///
+    /// [field = value] AND [field [= value]] ...
+    ///
+    /// where **field** is `status.state` or `labels.\[KEY\]`, and `\[KEY\]` is a label
+    /// key. **value** can be `*` to match all values.
+    /// `status.state` can be either `ACTIVE` or `NON_ACTIVE`.
+    /// Only the logical `AND` operator is supported; space-separated items are
+    /// treated as having an implicit `AND` operator.
+    ///
+    /// Example filter:
+    ///
+    /// status.state = ACTIVE AND labels.env = staging AND labels.starred = *
+    #[prost(string, tag = "7")]
+    pub filter: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ListJobsRequest`.
+pub mod list_jobs_request {
+    /// A matcher that specifies categories of job states.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum JobStateMatcher {
+        /// Match all jobs, regardless of state.
+        All = 0,
+        /// Only match jobs in non-terminal states: PENDING, RUNNING, or
+        /// CANCEL_PENDING.
+        Active = 1,
+        /// Only match jobs in terminal states: CANCELLED, DONE, or ERROR.
+        NonActive = 2,
+    }
+    impl JobStateMatcher {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                JobStateMatcher::All => "ALL",
+                JobStateMatcher::Active => "ACTIVE",
+                JobStateMatcher::NonActive => "NON_ACTIVE",
+            }
+        }
+    }
+}
+/// A request to update a job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateJobRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "2")]
+    pub region: ::prost::alloc::string::String,
+    /// Required. The job ID.
+    #[prost(string, tag = "3")]
+    pub job_id: ::prost::alloc::string::String,
+    /// Required. The changes to the job.
+    #[prost(message, optional, tag = "4")]
+    pub job: ::core::option::Option<Job>,
+    /// Required. Specifies the path, relative to <code>Job</code>, of
+    /// the field to update. For example, to update the labels of a Job the
+    /// <code>update_mask</code> parameter would be specified as
+    /// <code>labels</code>, and the `PATCH` request body would specify the new
+    /// value. <strong>Note:</strong> Currently, <code>labels</code> is the only
+    /// field that can be updated.
+    #[prost(message, optional, tag = "5")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// A list of jobs in a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListJobsResponse {
+    /// Output only. Jobs list.
+    #[prost(message, repeated, tag = "1")]
+    pub jobs: ::prost::alloc::vec::Vec<Job>,
+    /// Optional. This token is included in the response if there are more results
+    /// to fetch. To fetch additional results, provide this value as the
+    /// `page_token` in a subsequent <code>ListJobsRequest</code>.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A request to cancel a job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CancelJobRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "3")]
+    pub region: ::prost::alloc::string::String,
+    /// Required. The job ID.
+    #[prost(string, tag = "2")]
+    pub job_id: ::prost::alloc::string::String,
+}
+/// A request to delete a job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteJobRequest {
+    /// Required. The ID of the Google Cloud Platform project that the job
+    /// belongs to.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Required. The Dataproc region in which to handle the request.
+    #[prost(string, tag = "3")]
+    pub region: ::prost::alloc::string::String,
+    /// Required. The job ID.
+    #[prost(string, tag = "2")]
+    pub job_id: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod job_controller_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The JobController provides methods to manage jobs.
+    #[derive(Debug, Clone)]
+    pub struct JobControllerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> JobControllerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> JobControllerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            JobControllerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Submits a job to a cluster.
+        pub async fn submit_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SubmitJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/SubmitJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Submits job to a cluster.
+        pub async fn submit_job_as_operation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SubmitJobRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/SubmitJobAsOperation",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the resource representation for a job in a project.
+        pub async fn get_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/GetJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists regions/{region}/jobs in a project.
+        pub async fn list_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListJobsRequest>,
+        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/ListJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a job in a project.
+        pub async fn update_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/UpdateJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Starts a job cancellation request. To access the job resource
+        /// after cancellation, call
+        /// [regions/{region}/jobs.list](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs/list)
+        /// or
+        /// [regions/{region}/jobs.get](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs/get).
+        pub async fn cancel_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelJobRequest>,
+        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/CancelJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes the job from the project. If the job is active, the delete fails,
+        /// and the response returns `FAILED_PRECONDITION`.
+        pub async fn delete_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteJobRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.JobController/DeleteJob",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -4580,6 +4906,86 @@ pub struct ClusterOperationMetadata {
     /// Output only. Errors encountered during operation execution.
     #[prost(string, repeated, tag = "14")]
     pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Metadata describing the node group operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NodeGroupOperationMetadata {
+    /// Output only. Node group ID for the operation.
+    #[prost(string, tag = "1")]
+    pub node_group_id: ::prost::alloc::string::String,
+    /// Output only. Cluster UUID associated with the node group operation.
+    #[prost(string, tag = "2")]
+    pub cluster_uuid: ::prost::alloc::string::String,
+    /// Output only. Current operation status.
+    #[prost(message, optional, tag = "3")]
+    pub status: ::core::option::Option<ClusterOperationStatus>,
+    /// Output only. The previous operation status.
+    #[prost(message, repeated, tag = "4")]
+    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
+    /// The operation type.
+    #[prost(
+        enumeration = "node_group_operation_metadata::NodeGroupOperationType",
+        tag = "5"
+    )]
+    pub operation_type: i32,
+    /// Output only. Short description of operation.
+    #[prost(string, tag = "6")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Labels associated with the operation.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Errors encountered during operation execution.
+    #[prost(string, repeated, tag = "8")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `NodeGroupOperationMetadata`.
+pub mod node_group_operation_metadata {
+    /// Operation type for node group resources.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum NodeGroupOperationType {
+        /// Node group operation type is unknown.
+        Unspecified = 0,
+        /// Create node group operation type.
+        Create = 1,
+        /// Update node group operation type.
+        Update = 2,
+        /// Delete node group operation type.
+        Delete = 3,
+        /// Resize node group operation type.
+        Resize = 4,
+    }
+    impl NodeGroupOperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NodeGroupOperationType::Unspecified => {
+                    "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED"
+                }
+                NodeGroupOperationType::Create => "CREATE",
+                NodeGroupOperationType::Update => "UPDATE",
+                NodeGroupOperationType::Delete => "DELETE",
+                NodeGroupOperationType::Resize => "RESIZE",
+            }
+        }
+    }
 }
 /// A request to create a batch workload.
 #[allow(clippy::derive_partial_eq_without_eq)]

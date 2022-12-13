@@ -13,6 +13,9 @@ pub struct BuildStatus {
     /// Might not be available in some cases, e.g., a build timeout.
     #[prost(message, optional, tag = "4")]
     pub build_tool_exit_code: ::core::option::Option<i32>,
+    /// Human-readable error message. Do not use for programmatic purposes.
+    #[prost(string, tag = "5")]
+    pub error_message: ::prost::alloc::string::String,
     /// Fine-grained diagnostic information to complement the status.
     #[prost(message, optional, tag = "2")]
     pub details: ::core::option::Option<::prost_types::Any>,
@@ -77,7 +80,8 @@ pub mod build_status {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuildEvent {
-    /// The timestamp of this event.
+    /// This should be precisely the time when this event happened, and not when
+    /// the event proto was created or sent.
     #[prost(message, optional, tag = "1")]
     pub event_time: ::core::option::Option<::prost_types::Timestamp>,
     /// //////////////////////////////////////////////////////////////////////////
@@ -338,8 +342,8 @@ pub struct PublishLifecycleEventRequest {
     /// The interactivity of this build.
     #[prost(enumeration = "publish_lifecycle_event_request::ServiceLevel", tag = "1")]
     pub service_level: i32,
-    /// Required. The lifecycle build event. If this is a build tool event, the RPC
-    /// will fail with INVALID_REQUEST.
+    /// Required. The lifecycle build event. If this is a build tool event, the RPC will fail
+    /// with INVALID_REQUEST.
     #[prost(message, optional, tag = "2")]
     pub build_event: ::core::option::Option<OrderedBuildEvent>,
     /// If the next event for this build or invocation (depending on the event
@@ -542,7 +546,7 @@ pub mod publish_build_event_client {
         /// jobs immediately without batching.
         ///
         /// The commit status of the request is reported by the RPC's util_status()
-        /// function. The error code is the canoncial error code defined in
+        /// function. The error code is the canonical error code defined in
         /// //util/task/codes.proto.
         pub async fn publish_lifecycle_event(
             &mut self,
