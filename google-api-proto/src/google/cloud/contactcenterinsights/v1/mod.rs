@@ -250,6 +250,10 @@ pub struct Analysis {
     /// finishes.
     #[prost(message, optional, tag = "7")]
     pub analysis_result: ::core::option::Option<AnalysisResult>,
+    /// To select the annotators to run and the phrase matchers to use
+    /// (if any). If not specified, all annotators will be run.
+    #[prost(message, optional, tag = "8")]
+    pub annotator_selector: ::core::option::Option<AnnotatorSelector>,
 }
 /// The conversation source, which is a combination of transcript and audio.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -408,7 +412,7 @@ pub struct CallAnnotation {
     #[prost(message, optional, tag = "5")]
     pub annotation_end_boundary: ::core::option::Option<AnnotationBoundary>,
     /// The data in the annotation.
-    #[prost(oneof = "call_annotation::Data", tags = "10, 11, 12, 13, 15, 16, 17")]
+    #[prost(oneof = "call_annotation::Data", tags = "10, 11, 12, 13, 15, 16, 17, 18")]
     pub data: ::core::option::Option<call_annotation::Data>,
 }
 /// Nested message and enum types in `CallAnnotation`.
@@ -438,6 +442,9 @@ pub mod call_annotation {
         /// Data specifying a phrase match.
         #[prost(message, tag = "17")]
         PhraseMatchData(super::PhraseMatchData),
+        /// Data specifying an issue match.
+        #[prost(message, tag = "18")]
+        IssueMatchData(super::IssueMatchData),
     }
 }
 /// A point in a conversation that marks the start or the end of an annotation.
@@ -724,6 +731,14 @@ pub struct SentimentData {
     #[prost(float, tag = "2")]
     pub score: f32,
 }
+/// The data for an issue match annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IssueMatchData {
+    /// Information about the issue's assignment.
+    #[prost(message, optional, tag = "1")]
+    pub issue_assignment: ::core::option::Option<IssueAssignment>,
+}
 /// The issue model resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -835,6 +850,10 @@ pub struct Issue {
     /// Output only. The most recent time that this issue was updated.
     #[prost(message, optional, tag = "4")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource names of the sample representative utterances that match to this
+    /// issue.
+    #[prost(string, repeated, tag = "6")]
+    pub sample_utterances: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Aggregated statistics about an issue model.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1115,6 +1134,10 @@ pub mod settings {
         /// to analyze automatically, between [0, 100].
         #[prost(double, tag = "1")]
         pub runtime_integration_analysis_percentage: f64,
+        /// To select the annotators to run and the phrase matchers to use
+        /// (if any). If not specified, all annotators will be run.
+        #[prost(message, optional, tag = "5")]
+        pub annotator_selector: ::core::option::Option<super::AnnotatorSelector>,
     }
 }
 /// An annotation that was generated during the customer and agent interaction.
@@ -1445,6 +1468,47 @@ pub struct View {
     #[prost(string, tag = "5")]
     pub value: ::prost::alloc::string::String,
 }
+/// Selector of all available annotators and phrase matchers to run.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnnotatorSelector {
+    /// Whether to run the interruption annotator.
+    #[prost(bool, tag = "1")]
+    pub run_interruption_annotator: bool,
+    /// Whether to run the silence annotator.
+    #[prost(bool, tag = "2")]
+    pub run_silence_annotator: bool,
+    /// Whether to run the active phrase matcher annotator(s).
+    #[prost(bool, tag = "3")]
+    pub run_phrase_matcher_annotator: bool,
+    /// The list of phrase matchers to run. If not provided, all active phrase
+    /// matchers will be used. If inactive phrase matchers are provided, they will
+    /// not be used. Phrase matchers will be run only if
+    /// run_phrase_matcher_annotator is set to true. Format:
+    /// projects/{project}/locations/{location}/phraseMatchers/{phrase_matcher}
+    #[prost(string, repeated, tag = "4")]
+    pub phrase_matchers: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Whether to run the sentiment annotator.
+    #[prost(bool, tag = "5")]
+    pub run_sentiment_annotator: bool,
+    /// Whether to run the entity annotator.
+    #[prost(bool, tag = "6")]
+    pub run_entity_annotator: bool,
+    /// Whether to run the intent annotator.
+    #[prost(bool, tag = "7")]
+    pub run_intent_annotator: bool,
+    /// Whether to run the issue model annotator. A model should have already been
+    /// deployed for this to take effect.
+    #[prost(bool, tag = "8")]
+    pub run_issue_model_annotator: bool,
+    /// The issue model to run. If not provided, the most recently deployed topic
+    /// model will be used. The provided issue model will only be used for
+    /// inference if the issue model is deployed and if run_issue_model_annotator
+    /// is set to true. If more than one issue model is provided, only the first
+    /// provided issue model will be used for inference.
+    #[prost(string, repeated, tag = "10")]
+    pub issue_models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// The request for calculating conversation statistics.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1552,6 +1616,9 @@ pub struct CreateAnalysisOperationMetadata {
     /// Output only. The Conversation that this Analysis Operation belongs to.
     #[prost(string, tag = "3")]
     pub conversation: ::prost::alloc::string::String,
+    /// Output only. The annotator selector used for the analysis (if any).
+    #[prost(message, optional, tag = "4")]
+    pub annotator_selector: ::core::option::Option<AnnotatorSelector>,
 }
 /// Request to create a conversation.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1646,6 +1713,95 @@ pub struct DeleteConversationRequest {
     #[prost(bool, tag = "2")]
     pub force: bool,
 }
+/// The request to ingest conversations.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IngestConversationsRequest {
+    /// Required. The parent resource for new conversations.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Configuration that applies to all conversations.
+    #[prost(message, optional, tag = "4")]
+    pub conversation_config: ::core::option::Option<
+        ingest_conversations_request::ConversationConfig,
+    >,
+    /// Configuration for an external data store containing objects that will
+    /// be converted to conversations.
+    #[prost(oneof = "ingest_conversations_request::Source", tags = "2")]
+    pub source: ::core::option::Option<ingest_conversations_request::Source>,
+    /// Configuration for converting individual `source` objects to conversations.
+    #[prost(oneof = "ingest_conversations_request::ObjectConfig", tags = "3")]
+    pub object_config: ::core::option::Option<
+        ingest_conversations_request::ObjectConfig,
+    >,
+}
+/// Nested message and enum types in `IngestConversationsRequest`.
+pub mod ingest_conversations_request {
+    /// Configuration for Cloud Storage bucket sources.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GcsSource {
+        /// Required. The Cloud Storage bucket containing source objects.
+        #[prost(string, tag = "1")]
+        pub bucket_uri: ::prost::alloc::string::String,
+    }
+    /// Configuration for processing transcript objects.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TranscriptObjectConfig {
+        /// Required. The medium transcript objects represent.
+        #[prost(enumeration = "super::conversation::Medium", tag = "1")]
+        pub medium: i32,
+    }
+    /// Configuration that applies to all conversations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConversationConfig {
+        /// An opaque, user-specified string representing the human agent who handled
+        /// the conversations.
+        #[prost(string, tag = "1")]
+        pub agent_id: ::prost::alloc::string::String,
+    }
+    /// Configuration for an external data store containing objects that will
+    /// be converted to conversations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// A cloud storage bucket source.
+        #[prost(message, tag = "2")]
+        GcsSource(GcsSource),
+    }
+    /// Configuration for converting individual `source` objects to conversations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ObjectConfig {
+        /// Configuration for when `source` contains conversation transcripts.
+        #[prost(message, tag = "3")]
+        TranscriptObjectConfig(TranscriptObjectConfig),
+    }
+}
+/// The metadata for an IngestConversations operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IngestConversationsMetadata {
+    /// Output only. The time the operation was created.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the operation finished running.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The original request for ingest.
+    #[prost(message, optional, tag = "3")]
+    pub request: ::core::option::Option<IngestConversationsRequest>,
+    /// Output only. Partial errors during ingest operation that might cause the operation
+    /// output to be incomplete.
+    #[prost(message, repeated, tag = "4")]
+    pub partial_errors: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
+}
+/// The response to an IngestConversations operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IngestConversationsResponse {}
 /// The request to create an analysis.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1707,6 +1863,60 @@ pub struct DeleteAnalysisRequest {
     /// Required. The name of the analysis to delete.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
+}
+/// The request to analyze conversations in bulk.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BulkAnalyzeConversationsRequest {
+    /// Required. The parent resource to create analyses in.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Filter used to select the subset of conversations to analyze.
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Required. Percentage of selected conversation to analyze, between
+    /// [0, 100].
+    #[prost(float, tag = "3")]
+    pub analysis_percentage: f32,
+    /// To select the annotators to run and the phrase matchers to use
+    /// (if any). If not specified, all annotators will be run.
+    #[prost(message, optional, tag = "8")]
+    pub annotator_selector: ::core::option::Option<AnnotatorSelector>,
+}
+/// The metadata for a bulk analyze conversations operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BulkAnalyzeConversationsMetadata {
+    /// The time the operation was created.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time the operation finished running.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The original request for bulk analyze.
+    #[prost(message, optional, tag = "3")]
+    pub request: ::core::option::Option<BulkAnalyzeConversationsRequest>,
+    /// The number of requested analyses that have completed successfully so far.
+    #[prost(int32, tag = "4")]
+    pub completed_analyses_count: i32,
+    /// The number of requested analyses that have failed so far.
+    #[prost(int32, tag = "5")]
+    pub failed_analyses_count: i32,
+    /// Total number of analyses requested. Computed by the number of conversations
+    /// returned by `filter` multiplied by `analysis_percentage` in the request.
+    #[prost(int32, tag = "6")]
+    pub total_requested_analyses_count: i32,
+}
+/// The response for a bulk analyze conversations operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BulkAnalyzeConversationsResponse {
+    /// Count of successful analyses.
+    #[prost(int32, tag = "1")]
+    pub successful_analysis_count: i32,
+    /// Count of failed analyses.
+    #[prost(int32, tag = "2")]
+    pub failed_analysis_count: i32,
 }
 /// The request to export insights.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1987,6 +2197,14 @@ pub struct UpdateIssueRequest {
     /// The list of fields to be updated.
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// The request to delete an issue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteIssueRequest {
+    /// Required. The name of the issue to delete.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
 }
 /// Request to get statistics of an issue model.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2442,6 +2660,53 @@ pub mod contact_center_insights_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// Analyzes multiple conversations in a single request.
+        pub async fn bulk_analyze_conversations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BulkAnalyzeConversationsRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/BulkAnalyzeConversations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Imports conversations and processes them according to the user's
+        /// configuration.
+        pub async fn ingest_conversations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::IngestConversationsRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/IngestConversations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
         /// Export insights data to a destination defined in the request body.
         pub async fn export_insights_data(
             &mut self,
@@ -2676,6 +2941,26 @@ pub mod contact_center_insights_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateIssue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes an issue.
+        pub async fn delete_issue(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteIssueRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteIssue",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

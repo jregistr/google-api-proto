@@ -403,6 +403,10 @@ pub struct Route {
     /// and in the event of rerouting honor the original intention when Routes
     /// ComputeRoutes is called. Customers should treat this token as an
     /// opaque blob.
+    /// NOTE: `Route.route_token` is only available for requests that have set
+    /// `ComputeRoutesRequest.routing_preference` to `TRAFFIC_AWARE` or
+    /// `TRAFFIC_AWARE_OPTIMAL`. `Route.route_token` is also not supported for
+    /// requests that have Via waypoints.
     #[prost(string, tag = "12")]
     pub route_token: ::prost::alloc::string::String,
 }
@@ -947,6 +951,10 @@ pub struct RouteModifiers {
     pub toll_passes: ::prost::alloc::vec::Vec<i32>,
 }
 /// A set of values used to specify the mode of travel.
+/// NOTE: WALK, BICYCLE, and TWO_WHEELER routes are in beta and might sometimes
+/// be missing clear sidewalks, pedestrian paths, or bicycling paths.
+/// You must display this warning to the user for all walking, bicycling, and
+/// two-wheel routes that you display in your app.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum RouteTravelMode {
@@ -1115,10 +1123,8 @@ pub struct ComputeRoutesRequest {
     /// Optional. Specifies how to compute the route. The server
     /// attempts to use the selected routing preference to compute the route. If
     ///   the routing preference results in an error or an extra long latency, then
-    /// an error is returned. In the future, we might implement a fallback
-    /// mechanism to use a different option when the preferred option does not give
-    /// a valid result. You can specify this option only when the `travel_mode` is
-    /// `DRIVE` or `TWO_WHEELER`, otherwise the request fails.
+    /// an error is returned. You can specify this option only when the
+    /// `travel_mode` is `DRIVE` or `TWO_WHEELER`, otherwise the request fails.
     #[prost(enumeration = "RoutingPreference", tag = "5")]
     pub routing_preference: i32,
     /// Optional. Specifies your preference for the quality of the polyline.
@@ -1132,7 +1138,8 @@ pub struct ComputeRoutesRequest {
     /// time that has already occurred, then the request fails.
     #[prost(message, optional, tag = "7")]
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Specifies whether to calculate alternate routes in addition to the route.
+    /// Optional. Specifies whether to calculate alternate routes in addition to
+    /// the route.
     #[prost(bool, tag = "8")]
     pub compute_alternative_routes: bool,
     /// Optional. A set of conditions to satisfy that affect the way routes are
@@ -1154,12 +1161,11 @@ pub struct ComputeRoutesRequest {
     /// units are inferred from the location of the request.
     #[prost(enumeration = "Units", tag = "11")]
     pub units: i32,
-    /// Optional. Specifies what reference routes to calculate as part of the request in
-    /// addition to the default route.
-    /// A reference route is a route with a different route calculation objective
-    /// than the default route. For example an FUEL_EFFICIENT reference route
-    /// calculation takes into account various parameters that would generate an
-    /// optimal fuel efficient route.
+    /// Optional. Specifies what reference routes to calculate as part of the
+    /// request in addition to the default route. A reference route is a route with
+    /// a different route calculation objective than the default route. For example
+    /// an FUEL_EFFICIENT reference route calculation takes into account various
+    /// parameters that would generate an optimal fuel efficient route.
     #[prost(
         enumeration = "compute_routes_request::ReferenceRoute",
         repeated,
@@ -1225,8 +1231,8 @@ pub struct ComputeRoutesResponse {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ComputeRouteMatrixRequest {
-    /// Required. Array of origins, which determines the rows of the response matrix.
-    /// Several size restrictions apply to the cardinality of origins and
+    /// Required. Array of origins, which determines the rows of the response
+    /// matrix. Several size restrictions apply to the cardinality of origins and
     /// destinations:
     ///
     /// * The number of elements (origins × destinations) must be no greater than
@@ -1237,24 +1243,23 @@ pub struct ComputeRouteMatrixRequest {
     /// must be no greater than 50.
     #[prost(message, repeated, tag = "1")]
     pub origins: ::prost::alloc::vec::Vec<RouteMatrixOrigin>,
-    /// Required. Array of destinations, which determines the columns of the response matrix.
+    /// Required. Array of destinations, which determines the columns of the
+    /// response matrix.
     #[prost(message, repeated, tag = "2")]
     pub destinations: ::prost::alloc::vec::Vec<RouteMatrixDestination>,
     /// Optional. Specifies the mode of transportation.
     #[prost(enumeration = "RouteTravelMode", tag = "3")]
     pub travel_mode: i32,
-    /// Optional. Specifies how to compute the route. The server attempts to use the selected
-    /// routing preference to compute the route. If the routing preference results
-    /// in an error or an extra long latency, an error is returned. In the future,
-    /// we might implement a fallback mechanism to use a different option when the
-    /// preferred option does not give a valid result. You can specify this option
-    /// only when the `travel_mode` is `DRIVE` or `TWO_WHEELER`, otherwise the
-    /// request fails.
+    /// Optional. Specifies how to compute the route. The server attempts to use
+    /// the selected routing preference to compute the route. If the routing
+    /// preference results in an error or an extra long latency, an error is
+    /// returned. You can specify this option only when the `travel_mode` is
+    /// `DRIVE` or `TWO_WHEELER`, otherwise the request fails.
     #[prost(enumeration = "RoutingPreference", tag = "4")]
     pub routing_preference: i32,
-    /// Optional. The departure time. If you don't set this value, this defaults to the time
-    /// that you made the request. If you set this value to a time that has already
-    /// occurred, the request fails.
+    /// Optional. The departure time. If you don't set this value, this defaults to
+    /// the time that you made the request. If you set this value to a time that
+    /// has already occurred, the request fails.
     #[prost(message, optional, tag = "5")]
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
 }
