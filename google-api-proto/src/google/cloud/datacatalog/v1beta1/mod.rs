@@ -609,30 +609,37 @@ pub mod policy_tag_manager_client {
         }
     }
 }
-/// This enum describes all the possible systems that Data Catalog integrates
-/// with.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum IntegratedSystem {
-    /// Default unknown system.
-    Unspecified = 0,
-    /// BigQuery.
-    Bigquery = 1,
-    /// Cloud Pub/Sub.
-    CloudPubsub = 2,
+/// Represents a schema (e.g. BigQuery, GoogleSQL, Avro schema).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Schema {
+    /// Required. Schema of columns. A maximum of 10,000 columns and sub-columns can be
+    /// specified.
+    #[prost(message, repeated, tag = "2")]
+    pub columns: ::prost::alloc::vec::Vec<ColumnSchema>,
 }
-impl IntegratedSystem {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            IntegratedSystem::Unspecified => "INTEGRATED_SYSTEM_UNSPECIFIED",
-            IntegratedSystem::Bigquery => "BIGQUERY",
-            IntegratedSystem::CloudPubsub => "CLOUD_PUBSUB",
-        }
-    }
+/// Representation of a column within a schema. Columns could be nested inside
+/// other columns.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ColumnSchema {
+    /// Required. Name of the column.
+    #[prost(string, tag = "6")]
+    pub column: ::prost::alloc::string::String,
+    /// Required. Type of the column.
+    #[prost(string, tag = "1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Optional. Description of the column. Default value is an empty string.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. A column's mode indicates whether the values in this column are required,
+    /// nullable, etc. Only `NULLABLE`, `REQUIRED` and `REPEATED` are supported.
+    /// Default mode is `NULLABLE`.
+    #[prost(string, tag = "3")]
+    pub mode: ::prost::alloc::string::String,
+    /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
+    #[prost(message, repeated, tag = "7")]
+    pub subcolumns: ::prost::alloc::vec::Vec<ColumnSchema>,
 }
 /// Describes a Cloud Storage fileset entry.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -687,37 +694,251 @@ pub struct GcsFileSpec {
     #[prost(int64, tag = "4")]
     pub size_bytes: i64,
 }
-/// Represents a schema (e.g. BigQuery, GoogleSQL, Avro schema).
+/// Message capturing a taxonomy and its policy tag hierarchy as a nested proto.
+/// Used for taxonomy import/export and mutation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Schema {
-    /// Required. Schema of columns. A maximum of 10,000 columns and sub-columns can be
-    /// specified.
-    #[prost(message, repeated, tag = "2")]
-    pub columns: ::prost::alloc::vec::Vec<ColumnSchema>,
-}
-/// Representation of a column within a schema. Columns could be nested inside
-/// other columns.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ColumnSchema {
-    /// Required. Name of the column.
-    #[prost(string, tag = "6")]
-    pub column: ::prost::alloc::string::String,
-    /// Required. Type of the column.
+pub struct SerializedTaxonomy {
+    /// Required. Display name of the taxonomy. Max 200 bytes when encoded in UTF-8.
     #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// Optional. Description of the column. Default value is an empty string.
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the serialized taxonomy. The length of the
+    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
+    /// defaults to an empty description.
     #[prost(string, tag = "2")]
     pub description: ::prost::alloc::string::String,
-    /// Optional. A column's mode indicates whether the values in this column are required,
-    /// nullable, etc. Only `NULLABLE`, `REQUIRED` and `REPEATED` are supported.
-    /// Default mode is `NULLABLE`.
+    /// Top level policy tags associated with the taxonomy if any.
+    #[prost(message, repeated, tag = "3")]
+    pub policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
+}
+/// Message representing one policy tag when exported as a nested proto.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SerializedPolicyTag {
+    /// Required. Display name of the policy tag. Max 200 bytes when encoded in UTF-8.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the serialized policy tag. The length of the
+    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
+    /// defaults to an empty description.
     #[prost(string, tag = "3")]
-    pub mode: ::prost::alloc::string::String,
-    /// Optional. Schema of sub-columns. A column can have zero or more sub-columns.
-    #[prost(message, repeated, tag = "7")]
-    pub subcolumns: ::prost::alloc::vec::Vec<ColumnSchema>,
+    pub description: ::prost::alloc::string::String,
+    /// Children of the policy tag if any.
+    #[prost(message, repeated, tag = "4")]
+    pub child_policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
+}
+/// Request message for
+/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportTaxonomiesRequest {
+    /// Required. Resource name of project that the newly created taxonomies will
+    /// belong to.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Source taxonomies to be imported in a tree structure.
+    #[prost(oneof = "import_taxonomies_request::Source", tags = "2")]
+    pub source: ::core::option::Option<import_taxonomies_request::Source>,
+}
+/// Nested message and enum types in `ImportTaxonomiesRequest`.
+pub mod import_taxonomies_request {
+    /// Required. Source taxonomies to be imported in a tree structure.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// Inline source used for taxonomies import
+        #[prost(message, tag = "2")]
+        InlineSource(super::InlineSource),
+    }
+}
+/// Inline source used for taxonomies import.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InlineSource {
+    /// Required. Taxonomies to be imported.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
+}
+/// Response message for
+/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportTaxonomiesResponse {
+    /// Taxonomies that were imported.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
+}
+/// Request message for
+/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportTaxonomiesRequest {
+    /// Required. Resource name of the project that taxonomies to be exported
+    /// will share.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Resource names of the taxonomies to be exported.
+    #[prost(string, repeated, tag = "2")]
+    pub taxonomies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. Taxonomies export destination.
+    #[prost(oneof = "export_taxonomies_request::Destination", tags = "3")]
+    pub destination: ::core::option::Option<export_taxonomies_request::Destination>,
+}
+/// Nested message and enum types in `ExportTaxonomiesRequest`.
+pub mod export_taxonomies_request {
+    /// Required. Taxonomies export destination.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// Export taxonomies as serialized taxonomies.
+        #[prost(bool, tag = "3")]
+        SerializedTaxonomies(bool),
+    }
+}
+/// Response message for
+/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportTaxonomiesResponse {
+    /// List of taxonomies and policy tags in a tree structure.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
+}
+/// Generated client implementations.
+pub mod policy_tag_manager_serialization_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Policy tag manager serialization API service allows clients to manipulate
+    /// their taxonomies and policy tags data with serialized format.
+    #[derive(Debug, Clone)]
+    pub struct PolicyTagManagerSerializationClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> PolicyTagManagerSerializationClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PolicyTagManagerSerializationClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            PolicyTagManagerSerializationClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Imports all taxonomies and their policy tags to a project as new
+        /// taxonomies.
+        ///
+        /// This method provides a bulk taxonomy / policy tag creation using nested
+        /// proto structure.
+        pub async fn import_taxonomies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ImportTaxonomiesRequest>,
+        ) -> Result<tonic::Response<super::ImportTaxonomiesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ImportTaxonomies",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Exports all taxonomies and their policy tags in a project.
+        ///
+        /// This method generates SerializedTaxonomy protos with nested policy tags
+        /// that can be used as an input for future ImportTaxonomies calls.
+        pub async fn export_taxonomies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ExportTaxonomiesRequest>,
+        ) -> Result<tonic::Response<super::ExportTaxonomiesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ExportTaxonomies",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// This enum describes all the possible systems that Data Catalog integrates
+/// with.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum IntegratedSystem {
+    /// Default unknown system.
+    Unspecified = 0,
+    /// BigQuery.
+    Bigquery = 1,
+    /// Cloud Pub/Sub.
+    CloudPubsub = 2,
+}
+impl IntegratedSystem {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            IntegratedSystem::Unspecified => "INTEGRATED_SYSTEM_UNSPECIFIED",
+            IntegratedSystem::Bigquery => "BIGQUERY",
+            IntegratedSystem::CloudPubsub => "CLOUD_PUBSUB",
+        }
+    }
 }
 /// A result that appears in the response of a search request. Each result
 /// captures details of one entry that matches the search.
@@ -773,97 +994,6 @@ impl SearchResultType {
             SearchResultType::Entry => "ENTRY",
             SearchResultType::TagTemplate => "TAG_TEMPLATE",
             SearchResultType::EntryGroup => "ENTRY_GROUP",
-        }
-    }
-}
-/// Describes a BigQuery table.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryTableSpec {
-    /// Output only. The table source type.
-    #[prost(enumeration = "TableSourceType", tag = "1")]
-    pub table_source_type: i32,
-    /// Output only.
-    #[prost(oneof = "big_query_table_spec::TypeSpec", tags = "2, 3")]
-    pub type_spec: ::core::option::Option<big_query_table_spec::TypeSpec>,
-}
-/// Nested message and enum types in `BigQueryTableSpec`.
-pub mod big_query_table_spec {
-    /// Output only.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TypeSpec {
-        /// Table view specification. This field should only be populated if
-        /// `table_source_type` is `BIGQUERY_VIEW`.
-        #[prost(message, tag = "2")]
-        ViewSpec(super::ViewSpec),
-        /// Spec of a BigQuery table. This field should only be populated if
-        /// `table_source_type` is `BIGQUERY_TABLE`.
-        #[prost(message, tag = "3")]
-        TableSpec(super::TableSpec),
-    }
-}
-/// Table view specification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ViewSpec {
-    /// Output only. The query that defines the table view.
-    #[prost(string, tag = "1")]
-    pub view_query: ::prost::alloc::string::String,
-}
-/// Normal BigQuery table spec.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableSpec {
-    /// Output only. If the table is a dated shard, i.e., with name pattern `\[prefix\]YYYYMMDD`,
-    /// `grouped_entry` is the Data Catalog resource name of the date sharded
-    /// grouped entry, for example,
-    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
-    /// Otherwise, `grouped_entry` is empty.
-    #[prost(string, tag = "1")]
-    pub grouped_entry: ::prost::alloc::string::String,
-}
-/// Spec for a group of BigQuery tables with name pattern `\[prefix\]YYYYMMDD`.
-/// Context:
-/// <https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryDateShardedSpec {
-    /// Output only. The Data Catalog resource name of the dataset entry the current table
-    /// belongs to, for example,
-    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
-    #[prost(string, tag = "1")]
-    pub dataset: ::prost::alloc::string::String,
-    /// Output only. The table name prefix of the shards. The name of any given shard is
-    /// `\[table_prefix\]YYYYMMDD`, for example, for shard `MyTable20180101`, the
-    /// `table_prefix` is `MyTable`.
-    #[prost(string, tag = "2")]
-    pub table_prefix: ::prost::alloc::string::String,
-    /// Output only. Total number of shards.
-    #[prost(int64, tag = "3")]
-    pub shard_count: i64,
-}
-/// Table source type.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TableSourceType {
-    /// Default unknown type.
-    Unspecified = 0,
-    /// Table view.
-    BigqueryView = 2,
-    /// BigQuery native table.
-    BigqueryTable = 5,
-}
-impl TableSourceType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            TableSourceType::Unspecified => "TABLE_SOURCE_TYPE_UNSPECIFIED",
-            TableSourceType::BigqueryView => "BIGQUERY_VIEW",
-            TableSourceType::BigqueryTable => "BIGQUERY_TABLE",
         }
     }
 }
@@ -1124,6 +1254,97 @@ pub mod field_type {
         /// Represents an enum type.
         #[prost(message, tag = "2")]
         EnumType(EnumType),
+    }
+}
+/// Describes a BigQuery table.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryTableSpec {
+    /// Output only. The table source type.
+    #[prost(enumeration = "TableSourceType", tag = "1")]
+    pub table_source_type: i32,
+    /// Output only.
+    #[prost(oneof = "big_query_table_spec::TypeSpec", tags = "2, 3")]
+    pub type_spec: ::core::option::Option<big_query_table_spec::TypeSpec>,
+}
+/// Nested message and enum types in `BigQueryTableSpec`.
+pub mod big_query_table_spec {
+    /// Output only.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TypeSpec {
+        /// Table view specification. This field should only be populated if
+        /// `table_source_type` is `BIGQUERY_VIEW`.
+        #[prost(message, tag = "2")]
+        ViewSpec(super::ViewSpec),
+        /// Spec of a BigQuery table. This field should only be populated if
+        /// `table_source_type` is `BIGQUERY_TABLE`.
+        #[prost(message, tag = "3")]
+        TableSpec(super::TableSpec),
+    }
+}
+/// Table view specification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewSpec {
+    /// Output only. The query that defines the table view.
+    #[prost(string, tag = "1")]
+    pub view_query: ::prost::alloc::string::String,
+}
+/// Normal BigQuery table spec.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableSpec {
+    /// Output only. If the table is a dated shard, i.e., with name pattern `\[prefix\]YYYYMMDD`,
+    /// `grouped_entry` is the Data Catalog resource name of the date sharded
+    /// grouped entry, for example,
+    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
+    /// Otherwise, `grouped_entry` is empty.
+    #[prost(string, tag = "1")]
+    pub grouped_entry: ::prost::alloc::string::String,
+}
+/// Spec for a group of BigQuery tables with name pattern `\[prefix\]YYYYMMDD`.
+/// Context:
+/// <https://cloud.google.com/bigquery/docs/partitioned-tables#partitioning_versus_sharding>
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryDateShardedSpec {
+    /// Output only. The Data Catalog resource name of the dataset entry the current table
+    /// belongs to, for example,
+    /// `projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}`.
+    #[prost(string, tag = "1")]
+    pub dataset: ::prost::alloc::string::String,
+    /// Output only. The table name prefix of the shards. The name of any given shard is
+    /// `\[table_prefix\]YYYYMMDD`, for example, for shard `MyTable20180101`, the
+    /// `table_prefix` is `MyTable`.
+    #[prost(string, tag = "2")]
+    pub table_prefix: ::prost::alloc::string::String,
+    /// Output only. Total number of shards.
+    #[prost(int64, tag = "3")]
+    pub shard_count: i64,
+}
+/// Table source type.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TableSourceType {
+    /// Default unknown type.
+    Unspecified = 0,
+    /// Table view.
+    BigqueryView = 2,
+    /// BigQuery native table.
+    BigqueryTable = 5,
+}
+impl TableSourceType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TableSourceType::Unspecified => "TABLE_SOURCE_TYPE_UNSPECIFIED",
+            TableSourceType::BigqueryView => "BIGQUERY_VIEW",
+            TableSourceType::BigqueryTable => "BIGQUERY_TABLE",
+        }
     }
 }
 /// Request message for
@@ -2612,227 +2833,6 @@ pub mod data_catalog_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Message capturing a taxonomy and its policy tag hierarchy as a nested proto.
-/// Used for taxonomy import/export and mutation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SerializedTaxonomy {
-    /// Required. Display name of the taxonomy. Max 200 bytes when encoded in UTF-8.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the serialized taxonomy. The length of the
-    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
-    /// defaults to an empty description.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Top level policy tags associated with the taxonomy if any.
-    #[prost(message, repeated, tag = "3")]
-    pub policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
-}
-/// Message representing one policy tag when exported as a nested proto.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SerializedPolicyTag {
-    /// Required. Display name of the policy tag. Max 200 bytes when encoded in UTF-8.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the serialized policy tag. The length of the
-    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
-    /// defaults to an empty description.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Children of the policy tag if any.
-    #[prost(message, repeated, tag = "4")]
-    pub child_policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
-}
-/// Request message for
-/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportTaxonomiesRequest {
-    /// Required. Resource name of project that the newly created taxonomies will
-    /// belong to.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Source taxonomies to be imported in a tree structure.
-    #[prost(oneof = "import_taxonomies_request::Source", tags = "2")]
-    pub source: ::core::option::Option<import_taxonomies_request::Source>,
-}
-/// Nested message and enum types in `ImportTaxonomiesRequest`.
-pub mod import_taxonomies_request {
-    /// Required. Source taxonomies to be imported in a tree structure.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// Inline source used for taxonomies import
-        #[prost(message, tag = "2")]
-        InlineSource(super::InlineSource),
-    }
-}
-/// Inline source used for taxonomies import.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InlineSource {
-    /// Required. Taxonomies to be imported.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
-}
-/// Response message for
-/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportTaxonomiesResponse {
-    /// Taxonomies that were imported.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
-}
-/// Request message for
-/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportTaxonomiesRequest {
-    /// Required. Resource name of the project that taxonomies to be exported
-    /// will share.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Resource names of the taxonomies to be exported.
-    #[prost(string, repeated, tag = "2")]
-    pub taxonomies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. Taxonomies export destination.
-    #[prost(oneof = "export_taxonomies_request::Destination", tags = "3")]
-    pub destination: ::core::option::Option<export_taxonomies_request::Destination>,
-}
-/// Nested message and enum types in `ExportTaxonomiesRequest`.
-pub mod export_taxonomies_request {
-    /// Required. Taxonomies export destination.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// Export taxonomies as serialized taxonomies.
-        #[prost(bool, tag = "3")]
-        SerializedTaxonomies(bool),
-    }
-}
-/// Response message for
-/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportTaxonomiesResponse {
-    /// List of taxonomies and policy tags in a tree structure.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
-}
-/// Generated client implementations.
-pub mod policy_tag_manager_serialization_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Policy tag manager serialization API service allows clients to manipulate
-    /// their taxonomies and policy tags data with serialized format.
-    #[derive(Debug, Clone)]
-    pub struct PolicyTagManagerSerializationClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> PolicyTagManagerSerializationClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PolicyTagManagerSerializationClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            PolicyTagManagerSerializationClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Imports all taxonomies and their policy tags to a project as new
-        /// taxonomies.
-        ///
-        /// This method provides a bulk taxonomy / policy tag creation using nested
-        /// proto structure.
-        pub async fn import_taxonomies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ImportTaxonomiesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ImportTaxonomies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Exports all taxonomies and their policy tags in a project.
-        ///
-        /// This method generates SerializedTaxonomy protos with nested policy tags
-        /// that can be used as an input for future ImportTaxonomies calls.
-        pub async fn export_taxonomies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ExportTaxonomiesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ExportTaxonomies",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

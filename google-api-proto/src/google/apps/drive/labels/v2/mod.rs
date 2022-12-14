@@ -1,132 +1,3 @@
-/// Normalized internal-only message that identifies the exact exception that
-/// caused the error on the server.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExceptionDetail {
-    /// The type of exception that occurred.
-    /// required
-    #[prost(enumeration = "ExceptionType", tag = "1")]
-    pub error_type: i32,
-}
-/// Every ExceptionType maps to one and only one Exception class. This allows
-/// internal clients to identify the exact server exception that caused the
-/// error for debugging and logging purposes.
-/// Add new ExceptionTypes to EXCEPTION_TYPE_TO_ERROR_CODE_MAP in
-/// j/c/g/apps/boq/metadata/model/service/exceptions/CategoryExceptionHelper
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ExceptionType {
-    /// Unknown ExceptionType.
-    Unspecified = 0,
-    /// The required field is missing.
-    FieldRequired = 1,
-    /// Unable to create a metamodel with the given ID because it already exists.
-    MetamodelAlreadyExists = 2,
-    /// Metamodel was not found
-    MetamodelNotFound = 3,
-    /// Metamodel state transition isn't allowed.
-    IllegalMetamodelStateTransition = 4,
-    /// Metamodel deprecation policy is invalid.
-    InvalidMetamodelDeprecationPolicy = 5,
-    /// Cannot delete a metamodel due to the pending deprecation policy.
-    MetamodelDeletionDeniedUntil = 6,
-    /// A Field value is invalid.
-    InvalidField = 7,
-    /// Precondition failed when updating a metamodel
-    MetamodelPreconditionFailed = 8,
-    /// Multiple fields had the same key.
-    DuplicateFieldKey = 9,
-    /// Removing a field from a Metamodel (e.g. a published Metamodel) is not
-    /// permitted.
-    IllegalFieldRemoval = 10,
-    /// Cannot specify field options for a different field type.
-    IllegalFieldOptionsForField = 11,
-    /// Some changes are not supported
-    UnsupportedChangeToPublishedMetamodel = 12,
-    /// Cannot change the metamodel state in an update
-    IllegalMetamodelStateTransitionInUpdate = 13,
-    /// The page token is expired
-    PageTokenExpired = 14,
-    /// The user is not authorized to make the request.
-    NotAuthorized = 15,
-    /// Illegal field state transition
-    IllegalFieldStateTransition = 16,
-    /// Illegal choice set option state transition
-    IllegalChoiceSetOptionStateTransition = 17,
-    /// Invalid choice set options
-    InvalidChoiceSetOptions = 18,
-    /// Invalid field key
-    InvalidFieldKey = 19,
-    /// A specified property on a field is outside the allowed range.
-    InvalidFieldPropertyRange = 20,
-    /// A localized string wasn't valid. This may be because the locale is invalid,
-    /// its missing a default value, or the translation is empty for a set locale.
-    InvalidLocalizedString = 21,
-    /// cannot change a property on a published field
-    IllegalChangeToPublishedField = 22,
-    /// A field update is not inclusive of the previous value
-    InvalidFieldUpdateNotInclusive = 23,
-    /// A field update is not inclusive of the previous value
-    InvalidChoiceSetState = 24,
-    /// An unknown error occurred
-    InternalServerError = 500,
-}
-impl ExceptionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ExceptionType::Unspecified => "EXCEPTION_TYPE_UNSPECIFIED",
-            ExceptionType::FieldRequired => "FIELD_REQUIRED",
-            ExceptionType::MetamodelAlreadyExists => "METAMODEL_ALREADY_EXISTS",
-            ExceptionType::MetamodelNotFound => "METAMODEL_NOT_FOUND",
-            ExceptionType::IllegalMetamodelStateTransition => {
-                "ILLEGAL_METAMODEL_STATE_TRANSITION"
-            }
-            ExceptionType::InvalidMetamodelDeprecationPolicy => {
-                "INVALID_METAMODEL_DEPRECATION_POLICY"
-            }
-            ExceptionType::MetamodelDeletionDeniedUntil => {
-                "METAMODEL_DELETION_DENIED_UNTIL"
-            }
-            ExceptionType::InvalidField => "INVALID_FIELD",
-            ExceptionType::MetamodelPreconditionFailed => "METAMODEL_PRECONDITION_FAILED",
-            ExceptionType::DuplicateFieldKey => "DUPLICATE_FIELD_KEY",
-            ExceptionType::IllegalFieldRemoval => "ILLEGAL_FIELD_REMOVAL",
-            ExceptionType::IllegalFieldOptionsForField => {
-                "ILLEGAL_FIELD_OPTIONS_FOR_FIELD"
-            }
-            ExceptionType::UnsupportedChangeToPublishedMetamodel => {
-                "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL"
-            }
-            ExceptionType::IllegalMetamodelStateTransitionInUpdate => {
-                "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE"
-            }
-            ExceptionType::PageTokenExpired => "PAGE_TOKEN_EXPIRED",
-            ExceptionType::NotAuthorized => "NOT_AUTHORIZED",
-            ExceptionType::IllegalFieldStateTransition => {
-                "ILLEGAL_FIELD_STATE_TRANSITION"
-            }
-            ExceptionType::IllegalChoiceSetOptionStateTransition => {
-                "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION"
-            }
-            ExceptionType::InvalidChoiceSetOptions => "INVALID_CHOICE_SET_OPTIONS",
-            ExceptionType::InvalidFieldKey => "INVALID_FIELD_KEY",
-            ExceptionType::InvalidFieldPropertyRange => "INVALID_FIELD_PROPERTY_RANGE",
-            ExceptionType::InvalidLocalizedString => "INVALID_LOCALIZED_STRING",
-            ExceptionType::IllegalChangeToPublishedField => {
-                "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD"
-            }
-            ExceptionType::InvalidFieldUpdateNotInclusive => {
-                "INVALID_FIELD_UPDATE_NOT_INCLUSIVE"
-            }
-            ExceptionType::InvalidChoiceSetState => "INVALID_CHOICE_SET_STATE",
-            ExceptionType::InternalServerError => "INTERNAL_SERVER_ERROR",
-        }
-    }
-}
 /// The lifecycle state of an object, such as label, field, or choice. The
 /// lifecycle enforces the following transitions:
 ///
@@ -1111,113 +982,132 @@ impl LabelView {
         }
     }
 }
-/// Generated client implementations.
-pub mod label_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Manage metadata taxonomies based on Labels and Fields that may be used within
-    /// Google Drive to organize and find files using custom metadata.
-    #[derive(Debug, Clone)]
-    pub struct LabelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> LabelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> LabelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            LabelServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// List labels.
-        pub async fn list_labels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListLabelsRequest>,
-        ) -> Result<tonic::Response<super::ListLabelsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.apps.drive.labels.v2.LabelService/ListLabels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a label by its resource name.
-        /// Resource name may be any of:
-        ///
-        /// * `labels/{id}` - See `labels/{id}@latest`
-        /// * `labels/{id}@latest` - Gets the latest revision of the label.
-        /// * `labels/{id}@published` - Gets the current published revision of the
-        ///   label.
-        /// * `labels/{id}@{revision_id}` - Gets the label at the specified revision
-        ///   ID.
-        pub async fn get_label(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.apps.drive.labels.v2.LabelService/GetLabel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+/// Normalized internal-only message that identifies the exact exception that
+/// caused the error on the server.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExceptionDetail {
+    /// The type of exception that occurred.
+    /// required
+    #[prost(enumeration = "ExceptionType", tag = "1")]
+    pub error_type: i32,
+}
+/// Every ExceptionType maps to one and only one Exception class. This allows
+/// internal clients to identify the exact server exception that caused the
+/// error for debugging and logging purposes.
+/// Add new ExceptionTypes to EXCEPTION_TYPE_TO_ERROR_CODE_MAP in
+/// j/c/g/apps/boq/metadata/model/service/exceptions/CategoryExceptionHelper
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExceptionType {
+    /// Unknown ExceptionType.
+    Unspecified = 0,
+    /// The required field is missing.
+    FieldRequired = 1,
+    /// Unable to create a metamodel with the given ID because it already exists.
+    MetamodelAlreadyExists = 2,
+    /// Metamodel was not found
+    MetamodelNotFound = 3,
+    /// Metamodel state transition isn't allowed.
+    IllegalMetamodelStateTransition = 4,
+    /// Metamodel deprecation policy is invalid.
+    InvalidMetamodelDeprecationPolicy = 5,
+    /// Cannot delete a metamodel due to the pending deprecation policy.
+    MetamodelDeletionDeniedUntil = 6,
+    /// A Field value is invalid.
+    InvalidField = 7,
+    /// Precondition failed when updating a metamodel
+    MetamodelPreconditionFailed = 8,
+    /// Multiple fields had the same key.
+    DuplicateFieldKey = 9,
+    /// Removing a field from a Metamodel (e.g. a published Metamodel) is not
+    /// permitted.
+    IllegalFieldRemoval = 10,
+    /// Cannot specify field options for a different field type.
+    IllegalFieldOptionsForField = 11,
+    /// Some changes are not supported
+    UnsupportedChangeToPublishedMetamodel = 12,
+    /// Cannot change the metamodel state in an update
+    IllegalMetamodelStateTransitionInUpdate = 13,
+    /// The page token is expired
+    PageTokenExpired = 14,
+    /// The user is not authorized to make the request.
+    NotAuthorized = 15,
+    /// Illegal field state transition
+    IllegalFieldStateTransition = 16,
+    /// Illegal choice set option state transition
+    IllegalChoiceSetOptionStateTransition = 17,
+    /// Invalid choice set options
+    InvalidChoiceSetOptions = 18,
+    /// Invalid field key
+    InvalidFieldKey = 19,
+    /// A specified property on a field is outside the allowed range.
+    InvalidFieldPropertyRange = 20,
+    /// A localized string wasn't valid. This may be because the locale is invalid,
+    /// its missing a default value, or the translation is empty for a set locale.
+    InvalidLocalizedString = 21,
+    /// cannot change a property on a published field
+    IllegalChangeToPublishedField = 22,
+    /// A field update is not inclusive of the previous value
+    InvalidFieldUpdateNotInclusive = 23,
+    /// A field update is not inclusive of the previous value
+    InvalidChoiceSetState = 24,
+    /// An unknown error occurred
+    InternalServerError = 500,
+}
+impl ExceptionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ExceptionType::Unspecified => "EXCEPTION_TYPE_UNSPECIFIED",
+            ExceptionType::FieldRequired => "FIELD_REQUIRED",
+            ExceptionType::MetamodelAlreadyExists => "METAMODEL_ALREADY_EXISTS",
+            ExceptionType::MetamodelNotFound => "METAMODEL_NOT_FOUND",
+            ExceptionType::IllegalMetamodelStateTransition => {
+                "ILLEGAL_METAMODEL_STATE_TRANSITION"
+            }
+            ExceptionType::InvalidMetamodelDeprecationPolicy => {
+                "INVALID_METAMODEL_DEPRECATION_POLICY"
+            }
+            ExceptionType::MetamodelDeletionDeniedUntil => {
+                "METAMODEL_DELETION_DENIED_UNTIL"
+            }
+            ExceptionType::InvalidField => "INVALID_FIELD",
+            ExceptionType::MetamodelPreconditionFailed => "METAMODEL_PRECONDITION_FAILED",
+            ExceptionType::DuplicateFieldKey => "DUPLICATE_FIELD_KEY",
+            ExceptionType::IllegalFieldRemoval => "ILLEGAL_FIELD_REMOVAL",
+            ExceptionType::IllegalFieldOptionsForField => {
+                "ILLEGAL_FIELD_OPTIONS_FOR_FIELD"
+            }
+            ExceptionType::UnsupportedChangeToPublishedMetamodel => {
+                "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL"
+            }
+            ExceptionType::IllegalMetamodelStateTransitionInUpdate => {
+                "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE"
+            }
+            ExceptionType::PageTokenExpired => "PAGE_TOKEN_EXPIRED",
+            ExceptionType::NotAuthorized => "NOT_AUTHORIZED",
+            ExceptionType::IllegalFieldStateTransition => {
+                "ILLEGAL_FIELD_STATE_TRANSITION"
+            }
+            ExceptionType::IllegalChoiceSetOptionStateTransition => {
+                "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION"
+            }
+            ExceptionType::InvalidChoiceSetOptions => "INVALID_CHOICE_SET_OPTIONS",
+            ExceptionType::InvalidFieldKey => "INVALID_FIELD_KEY",
+            ExceptionType::InvalidFieldPropertyRange => "INVALID_FIELD_PROPERTY_RANGE",
+            ExceptionType::InvalidLocalizedString => "INVALID_LOCALIZED_STRING",
+            ExceptionType::IllegalChangeToPublishedField => {
+                "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD"
+            }
+            ExceptionType::InvalidFieldUpdateNotInclusive => {
+                "INVALID_FIELD_UPDATE_NOT_INCLUSIVE"
+            }
+            ExceptionType::InvalidChoiceSetState => "INVALID_CHOICE_SET_STATE",
+            ExceptionType::InternalServerError => "INTERNAL_SERVER_ERROR",
         }
     }
 }
@@ -1402,6 +1292,116 @@ pub mod precondition_failure {
                     }
                 }
             }
+        }
+    }
+}
+/// Generated client implementations.
+pub mod label_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Manage metadata taxonomies based on Labels and Fields that may be used within
+    /// Google Drive to organize and find files using custom metadata.
+    #[derive(Debug, Clone)]
+    pub struct LabelServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> LabelServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> LabelServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            LabelServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// List labels.
+        pub async fn list_labels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListLabelsRequest>,
+        ) -> Result<tonic::Response<super::ListLabelsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.apps.drive.labels.v2.LabelService/ListLabels",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a label by its resource name.
+        /// Resource name may be any of:
+        ///
+        /// * `labels/{id}` - See `labels/{id}@latest`
+        /// * `labels/{id}@latest` - Gets the latest revision of the label.
+        /// * `labels/{id}@published` - Gets the current published revision of the
+        ///   label.
+        /// * `labels/{id}@{revision_id}` - Gets the label at the specified revision
+        ///   ID.
+        pub async fn get_label(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLabelRequest>,
+        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.apps.drive.labels.v2.LabelService/GetLabel",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }

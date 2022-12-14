@@ -1,3 +1,38 @@
+/// Detailed information related to the interstitial of a VOD session.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VodStitchDetail {
+    /// The name of the stitch detail in the specified VOD session, in the form of
+    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodStitchDetails/{id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A list of ad processing details for the fetched ad playlist.
+    #[prost(message, repeated, tag = "3")]
+    pub ad_stitch_details: ::prost::alloc::vec::Vec<AdStitchDetail>,
+}
+/// Metadata for a stitched ad.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdStitchDetail {
+    /// Required. The ad break ID of the processed ad.
+    #[prost(string, tag = "1")]
+    pub ad_break_id: ::prost::alloc::string::String,
+    /// Required. The ad ID of the processed ad.
+    #[prost(string, tag = "2")]
+    pub ad_id: ::prost::alloc::string::String,
+    /// Required. The time offset of the processed ad.
+    #[prost(message, optional, tag = "3")]
+    pub ad_time_offset: ::core::option::Option<::prost_types::Duration>,
+    /// Optional. Indicates the reason why the ad has been skipped.
+    #[prost(string, tag = "4")]
+    pub skip_reason: ::prost::alloc::string::String,
+    /// Optional. The metadata of the chosen media file for the ad.
+    #[prost(btree_map = "string, message", tag = "5")]
+    pub media: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::Value,
+    >,
+}
 /// Container for a live session's ad tag detail.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -697,41 +732,6 @@ pub struct Slate {
     /// MP4 video with at least one audio track.
     #[prost(string, tag = "2")]
     pub uri: ::prost::alloc::string::String,
-}
-/// Detailed information related to the interstitial of a VOD session.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VodStitchDetail {
-    /// The name of the stitch detail in the specified VOD session, in the form of
-    /// `projects/{project}/locations/{location}/vodSessions/{vod_session_id}/vodStitchDetails/{id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A list of ad processing details for the fetched ad playlist.
-    #[prost(message, repeated, tag = "3")]
-    pub ad_stitch_details: ::prost::alloc::vec::Vec<AdStitchDetail>,
-}
-/// Metadata for a stitched ad.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdStitchDetail {
-    /// Required. The ad break ID of the processed ad.
-    #[prost(string, tag = "1")]
-    pub ad_break_id: ::prost::alloc::string::String,
-    /// Required. The ad ID of the processed ad.
-    #[prost(string, tag = "2")]
-    pub ad_id: ::prost::alloc::string::String,
-    /// Required. The time offset of the processed ad.
-    #[prost(message, optional, tag = "3")]
-    pub ad_time_offset: ::core::option::Option<::prost_types::Duration>,
-    /// Optional. Indicates the reason why the ad has been skipped.
-    #[prost(string, tag = "4")]
-    pub skip_reason: ::prost::alloc::string::String,
-    /// Optional. The metadata of the chosen media file for the ad.
-    #[prost(btree_map = "string, message", tag = "5")]
-    pub media: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::Value,
-    >,
 }
 /// Request message for VideoStitcherService.createCdnKey.
 #[allow(clippy::derive_partial_eq_without_eq)]

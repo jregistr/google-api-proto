@@ -1,3 +1,30 @@
+/// Assessment task config.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssessmentTaskDetails {
+    /// Required. The Cloud Storage path for assessment input files.
+    #[prost(string, tag = "1")]
+    pub input_path: ::prost::alloc::string::String,
+    /// Required. The BigQuery dataset for output.
+    #[prost(string, tag = "2")]
+    pub output_dataset: ::prost::alloc::string::String,
+    /// Optional. An optional Cloud Storage path to write the query logs (which is
+    /// then used as an input path on the translation task)
+    #[prost(string, tag = "3")]
+    pub querylogs_path: ::prost::alloc::string::String,
+    /// Required. The data source or data warehouse type (eg: TERADATA/REDSHIFT)
+    /// from which the input data is extracted.
+    #[prost(string, tag = "4")]
+    pub data_source: ::prost::alloc::string::String,
+}
+/// Details for an assessment task orchestration result.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AssessmentOrchestrationResultDetails {
+    /// Optional. The version used for the output table schemas.
+    #[prost(string, tag = "1")]
+    pub output_tables_schema_version: ::prost::alloc::string::String,
+}
 /// Mapping between an input and output file to be translated in a subtask.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -305,33 +332,6 @@ pub struct DatasetReference {
     /// The ID of the project containing this dataset.
     #[prost(string, tag = "2")]
     pub project_id: ::prost::alloc::string::String,
-}
-/// Assessment task config.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssessmentTaskDetails {
-    /// Required. The Cloud Storage path for assessment input files.
-    #[prost(string, tag = "1")]
-    pub input_path: ::prost::alloc::string::String,
-    /// Required. The BigQuery dataset for output.
-    #[prost(string, tag = "2")]
-    pub output_dataset: ::prost::alloc::string::String,
-    /// Optional. An optional Cloud Storage path to write the query logs (which is
-    /// then used as an input path on the translation task)
-    #[prost(string, tag = "3")]
-    pub querylogs_path: ::prost::alloc::string::String,
-    /// Required. The data source or data warehouse type (eg: TERADATA/REDSHIFT)
-    /// from which the input data is extracted.
-    #[prost(string, tag = "4")]
-    pub data_source: ::prost::alloc::string::String,
-}
-/// Details for an assessment task orchestration result.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AssessmentOrchestrationResultDetails {
-    /// Optional. The version used for the output table schemas.
-    #[prost(string, tag = "1")]
-    pub output_tables_schema_version: ::prost::alloc::string::String,
 }
 /// Provides details for errors and the corresponding resources.
 #[allow(clippy::derive_partial_eq_without_eq)]
