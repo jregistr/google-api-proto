@@ -1,474 +1,3 @@
-/// The payload associated with Discovery data processing.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DiscoveryEvent {
-    /// The log message.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The id of the associated lake.
-    #[prost(string, tag = "2")]
-    pub lake_id: ::prost::alloc::string::String,
-    /// The id of the associated zone.
-    #[prost(string, tag = "3")]
-    pub zone_id: ::prost::alloc::string::String,
-    /// The id of the associated asset.
-    #[prost(string, tag = "4")]
-    pub asset_id: ::prost::alloc::string::String,
-    /// The data location associated with the event.
-    #[prost(string, tag = "5")]
-    pub data_location: ::prost::alloc::string::String,
-    /// The type of the event being logged.
-    #[prost(enumeration = "discovery_event::EventType", tag = "10")]
-    pub r#type: i32,
-    /// Additional details about the event.
-    #[prost(oneof = "discovery_event::Details", tags = "20, 21, 22, 23")]
-    pub details: ::core::option::Option<discovery_event::Details>,
-}
-/// Nested message and enum types in `DiscoveryEvent`.
-pub mod discovery_event {
-    /// Details about configuration events.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfigDetails {
-        /// A list of discovery configuration parameters in effect.
-        /// The keys are the field paths within DiscoverySpec.
-        /// Eg. includePatterns, excludePatterns, csvOptions.disableTypeInference,
-        /// etc.
-        #[prost(btree_map = "string, string", tag = "1")]
-        pub parameters: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-    }
-    /// Details about the entity.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntityDetails {
-        /// The name of the entity resource.
-        /// The name is the fully-qualified resource name.
-        #[prost(string, tag = "1")]
-        pub entity: ::prost::alloc::string::String,
-        /// The type of the entity resource.
-        #[prost(enumeration = "EntityType", tag = "2")]
-        pub r#type: i32,
-    }
-    /// Details about the partition.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PartitionDetails {
-        /// The name to the partition resource.
-        /// The name is the fully-qualified resource name.
-        #[prost(string, tag = "1")]
-        pub partition: ::prost::alloc::string::String,
-        /// The name to the containing entity resource.
-        /// The name is the fully-qualified resource name.
-        #[prost(string, tag = "2")]
-        pub entity: ::prost::alloc::string::String,
-        /// The type of the containing entity resource.
-        #[prost(enumeration = "EntityType", tag = "3")]
-        pub r#type: i32,
-        /// The locations of the data items (e.g., a Cloud Storage objects) sampled
-        /// for metadata inference.
-        #[prost(string, repeated, tag = "4")]
-        pub sampled_data_locations: ::prost::alloc::vec::Vec<
-            ::prost::alloc::string::String,
-        >,
-    }
-    /// Details about the action.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ActionDetails {
-        /// The type of action.
-        /// Eg. IncompatibleDataSchema, InvalidDataFormat
-        #[prost(string, tag = "1")]
-        pub r#type: ::prost::alloc::string::String,
-    }
-    /// The type of the event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EventType {
-        /// An unspecified event type.
-        Unspecified = 0,
-        /// An event representing discovery configuration in effect.
-        Config = 1,
-        /// An event representing a metadata entity being created.
-        EntityCreated = 2,
-        /// An event representing a metadata entity being updated.
-        EntityUpdated = 3,
-        /// An event representing a metadata entity being deleted.
-        EntityDeleted = 4,
-        /// An event representing a partition being created.
-        PartitionCreated = 5,
-        /// An event representing a partition being updated.
-        PartitionUpdated = 6,
-        /// An event representing a partition being deleted.
-        PartitionDeleted = 7,
-    }
-    impl EventType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
-                EventType::Config => "CONFIG",
-                EventType::EntityCreated => "ENTITY_CREATED",
-                EventType::EntityUpdated => "ENTITY_UPDATED",
-                EventType::EntityDeleted => "ENTITY_DELETED",
-                EventType::PartitionCreated => "PARTITION_CREATED",
-                EventType::PartitionUpdated => "PARTITION_UPDATED",
-                EventType::PartitionDeleted => "PARTITION_DELETED",
-            }
-        }
-    }
-    /// The type of the entity.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EntityType {
-        /// An unspecified event type.
-        Unspecified = 0,
-        /// Entities representing structured data.
-        Table = 1,
-        /// Entities representing unstructured data.
-        Fileset = 2,
-    }
-    impl EntityType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EntityType::Unspecified => "ENTITY_TYPE_UNSPECIFIED",
-                EntityType::Table => "TABLE",
-                EntityType::Fileset => "FILESET",
-            }
-        }
-    }
-    /// Additional details about the event.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Details {
-        /// Details about discovery configuration in effect.
-        #[prost(message, tag = "20")]
-        Config(ConfigDetails),
-        /// Details about the entity associated with the event.
-        #[prost(message, tag = "21")]
-        Entity(EntityDetails),
-        /// Details about the partition associated with the event.
-        #[prost(message, tag = "22")]
-        Partition(PartitionDetails),
-        /// Details about the action associated with the event.
-        #[prost(message, tag = "23")]
-        Action(ActionDetails),
-    }
-}
-/// The payload associated with Job logs that contains events describing jobs
-/// that have run within a Lake.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobEvent {
-    /// The log message.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The unique id identifying the job.
-    #[prost(string, tag = "2")]
-    pub job_id: ::prost::alloc::string::String,
-    /// The time when the job started running.
-    #[prost(message, optional, tag = "3")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time when the job ended running.
-    #[prost(message, optional, tag = "4")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The job state on completion.
-    #[prost(enumeration = "job_event::State", tag = "5")]
-    pub state: i32,
-    /// The number of retries.
-    #[prost(int32, tag = "6")]
-    pub retries: i32,
-    /// The type of the job.
-    #[prost(enumeration = "job_event::Type", tag = "7")]
-    pub r#type: i32,
-    /// The service used to execute the job.
-    #[prost(enumeration = "job_event::Service", tag = "8")]
-    pub service: i32,
-    /// The reference to the job within the service.
-    #[prost(string, tag = "9")]
-    pub service_job: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `JobEvent`.
-pub mod job_event {
-    /// The type of the job.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Unspecified job type.
-        Unspecified = 0,
-        /// Spark jobs.
-        Spark = 1,
-        /// Notebook jobs.
-        Notebook = 2,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::Spark => "SPARK",
-                Type::Notebook => "NOTEBOOK",
-            }
-        }
-    }
-    /// The completion status of the job.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified job state.
-        Unspecified = 0,
-        /// Job successfully completed.
-        Succeeded = 1,
-        /// Job was unsuccessful.
-        Failed = 2,
-        /// Job was cancelled by the user.
-        Cancelled = 3,
-        /// Job was cancelled or aborted via the service executing the job.
-        Aborted = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Succeeded => "SUCCEEDED",
-                State::Failed => "FAILED",
-                State::Cancelled => "CANCELLED",
-                State::Aborted => "ABORTED",
-            }
-        }
-    }
-    /// The service used to execute the job.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Service {
-        /// Unspecified service.
-        Unspecified = 0,
-        /// Cloud Dataproc.
-        Dataproc = 1,
-    }
-    impl Service {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Service::Unspecified => "SERVICE_UNSPECIFIED",
-                Service::Dataproc => "DATAPROC",
-            }
-        }
-    }
-}
-/// These messages contain information about sessions within an environment.
-/// The monitored resource is 'Environment'.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SessionEvent {
-    /// The log message.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The information about the user that created the session. It will be the
-    /// email address of the user.
-    #[prost(string, tag = "2")]
-    pub user_id: ::prost::alloc::string::String,
-    /// Unique identifier for the session.
-    #[prost(string, tag = "3")]
-    pub session_id: ::prost::alloc::string::String,
-    /// The type of the event.
-    #[prost(enumeration = "session_event::EventType", tag = "4")]
-    pub r#type: i32,
-    /// The status of the event.
-    #[prost(bool, tag = "6")]
-    pub event_succeeded: bool,
-    /// If the session is associated with an Environment with fast startup enabled,
-    /// and was pre-created before being assigned to a user.
-    #[prost(bool, tag = "7")]
-    pub fast_startup_enabled: bool,
-    /// The idle duration of a warm pooled session before it is assigned to user.
-    #[prost(message, optional, tag = "8")]
-    pub unassigned_duration: ::core::option::Option<::prost_types::Duration>,
-    /// Additional information about the Query metadata.
-    #[prost(oneof = "session_event::Detail", tags = "5")]
-    pub detail: ::core::option::Option<session_event::Detail>,
-}
-/// Nested message and enum types in `SessionEvent`.
-pub mod session_event {
-    /// Execution details of the query.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QueryDetail {
-        /// The unique Query id identifying the query.
-        #[prost(string, tag = "1")]
-        pub query_id: ::prost::alloc::string::String,
-        /// The query text executed.
-        #[prost(string, tag = "2")]
-        pub query_text: ::prost::alloc::string::String,
-        /// Query Execution engine.
-        #[prost(enumeration = "query_detail::Engine", tag = "3")]
-        pub engine: i32,
-        /// Time taken for execution of the query.
-        #[prost(message, optional, tag = "4")]
-        pub duration: ::core::option::Option<::prost_types::Duration>,
-        /// The size of results the query produced.
-        #[prost(int64, tag = "5")]
-        pub result_size_bytes: i64,
-        /// The data processed by the query.
-        #[prost(int64, tag = "6")]
-        pub data_processed_bytes: i64,
-    }
-    /// Nested message and enum types in `QueryDetail`.
-    pub mod query_detail {
-        /// Query Execution engine.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum Engine {
-            /// An unspecified Engine type.
-            Unspecified = 0,
-            /// Spark-sql engine is specified in Query.
-            SparkSql = 1,
-            /// BigQuery engine is specified in Query.
-            Bigquery = 2,
-        }
-        impl Engine {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Engine::Unspecified => "ENGINE_UNSPECIFIED",
-                    Engine::SparkSql => "SPARK_SQL",
-                    Engine::Bigquery => "BIGQUERY",
-                }
-            }
-        }
-    }
-    /// The type of the event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EventType {
-        /// An unspecified event type.
-        Unspecified = 0,
-        /// Event when the session is assigned to a user.
-        Start = 1,
-        /// Event for stop of a session.
-        Stop = 2,
-        /// Query events in the session.
-        Query = 3,
-        /// Event for creation of a cluster. It is not yet assigned to a user.
-        /// This comes before START in the sequence
-        Create = 4,
-    }
-    impl EventType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
-                EventType::Start => "START",
-                EventType::Stop => "STOP",
-                EventType::Query => "QUERY",
-                EventType::Create => "CREATE",
-            }
-        }
-    }
-    /// Additional information about the Query metadata.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Detail {
-        /// The execution details of the query.
-        #[prost(message, tag = "5")]
-        Query(QueryDetail),
-    }
-}
 /// A lake is a centralized repository for managing enterprise data across the
 /// organization distributed across many cloud projects, and stored in a variety
 /// of storage services such as Google Cloud Storage and BigQuery. The resources
@@ -1836,6 +1365,1363 @@ pub struct Session {
     #[prost(enumeration = "State", tag = "4")]
     pub state: i32,
 }
+/// The payload associated with Discovery data processing.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DiscoveryEvent {
+    /// The log message.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The id of the associated lake.
+    #[prost(string, tag = "2")]
+    pub lake_id: ::prost::alloc::string::String,
+    /// The id of the associated zone.
+    #[prost(string, tag = "3")]
+    pub zone_id: ::prost::alloc::string::String,
+    /// The id of the associated asset.
+    #[prost(string, tag = "4")]
+    pub asset_id: ::prost::alloc::string::String,
+    /// The data location associated with the event.
+    #[prost(string, tag = "5")]
+    pub data_location: ::prost::alloc::string::String,
+    /// The type of the event being logged.
+    #[prost(enumeration = "discovery_event::EventType", tag = "10")]
+    pub r#type: i32,
+    /// Additional details about the event.
+    #[prost(oneof = "discovery_event::Details", tags = "20, 21, 22, 23")]
+    pub details: ::core::option::Option<discovery_event::Details>,
+}
+/// Nested message and enum types in `DiscoveryEvent`.
+pub mod discovery_event {
+    /// Details about configuration events.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfigDetails {
+        /// A list of discovery configuration parameters in effect.
+        /// The keys are the field paths within DiscoverySpec.
+        /// Eg. includePatterns, excludePatterns, csvOptions.disableTypeInference,
+        /// etc.
+        #[prost(btree_map = "string, string", tag = "1")]
+        pub parameters: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
+    }
+    /// Details about the entity.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntityDetails {
+        /// The name of the entity resource.
+        /// The name is the fully-qualified resource name.
+        #[prost(string, tag = "1")]
+        pub entity: ::prost::alloc::string::String,
+        /// The type of the entity resource.
+        #[prost(enumeration = "EntityType", tag = "2")]
+        pub r#type: i32,
+    }
+    /// Details about the partition.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct PartitionDetails {
+        /// The name to the partition resource.
+        /// The name is the fully-qualified resource name.
+        #[prost(string, tag = "1")]
+        pub partition: ::prost::alloc::string::String,
+        /// The name to the containing entity resource.
+        /// The name is the fully-qualified resource name.
+        #[prost(string, tag = "2")]
+        pub entity: ::prost::alloc::string::String,
+        /// The type of the containing entity resource.
+        #[prost(enumeration = "EntityType", tag = "3")]
+        pub r#type: i32,
+        /// The locations of the data items (e.g., a Cloud Storage objects) sampled
+        /// for metadata inference.
+        #[prost(string, repeated, tag = "4")]
+        pub sampled_data_locations: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
+    }
+    /// Details about the action.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ActionDetails {
+        /// The type of action.
+        /// Eg. IncompatibleDataSchema, InvalidDataFormat
+        #[prost(string, tag = "1")]
+        pub r#type: ::prost::alloc::string::String,
+    }
+    /// The type of the event.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EventType {
+        /// An unspecified event type.
+        Unspecified = 0,
+        /// An event representing discovery configuration in effect.
+        Config = 1,
+        /// An event representing a metadata entity being created.
+        EntityCreated = 2,
+        /// An event representing a metadata entity being updated.
+        EntityUpdated = 3,
+        /// An event representing a metadata entity being deleted.
+        EntityDeleted = 4,
+        /// An event representing a partition being created.
+        PartitionCreated = 5,
+        /// An event representing a partition being updated.
+        PartitionUpdated = 6,
+        /// An event representing a partition being deleted.
+        PartitionDeleted = 7,
+    }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::Config => "CONFIG",
+                EventType::EntityCreated => "ENTITY_CREATED",
+                EventType::EntityUpdated => "ENTITY_UPDATED",
+                EventType::EntityDeleted => "ENTITY_DELETED",
+                EventType::PartitionCreated => "PARTITION_CREATED",
+                EventType::PartitionUpdated => "PARTITION_UPDATED",
+                EventType::PartitionDeleted => "PARTITION_DELETED",
+            }
+        }
+    }
+    /// The type of the entity.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EntityType {
+        /// An unspecified event type.
+        Unspecified = 0,
+        /// Entities representing structured data.
+        Table = 1,
+        /// Entities representing unstructured data.
+        Fileset = 2,
+    }
+    impl EntityType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EntityType::Unspecified => "ENTITY_TYPE_UNSPECIFIED",
+                EntityType::Table => "TABLE",
+                EntityType::Fileset => "FILESET",
+            }
+        }
+    }
+    /// Additional details about the event.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Details {
+        /// Details about discovery configuration in effect.
+        #[prost(message, tag = "20")]
+        Config(ConfigDetails),
+        /// Details about the entity associated with the event.
+        #[prost(message, tag = "21")]
+        Entity(EntityDetails),
+        /// Details about the partition associated with the event.
+        #[prost(message, tag = "22")]
+        Partition(PartitionDetails),
+        /// Details about the action associated with the event.
+        #[prost(message, tag = "23")]
+        Action(ActionDetails),
+    }
+}
+/// The payload associated with Job logs that contains events describing jobs
+/// that have run within a Lake.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobEvent {
+    /// The log message.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The unique id identifying the job.
+    #[prost(string, tag = "2")]
+    pub job_id: ::prost::alloc::string::String,
+    /// The time when the job started running.
+    #[prost(message, optional, tag = "3")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time when the job ended running.
+    #[prost(message, optional, tag = "4")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The job state on completion.
+    #[prost(enumeration = "job_event::State", tag = "5")]
+    pub state: i32,
+    /// The number of retries.
+    #[prost(int32, tag = "6")]
+    pub retries: i32,
+    /// The type of the job.
+    #[prost(enumeration = "job_event::Type", tag = "7")]
+    pub r#type: i32,
+    /// The service used to execute the job.
+    #[prost(enumeration = "job_event::Service", tag = "8")]
+    pub service: i32,
+    /// The reference to the job within the service.
+    #[prost(string, tag = "9")]
+    pub service_job: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `JobEvent`.
+pub mod job_event {
+    /// The type of the job.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Unspecified job type.
+        Unspecified = 0,
+        /// Spark jobs.
+        Spark = 1,
+        /// Notebook jobs.
+        Notebook = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Spark => "SPARK",
+                Type::Notebook => "NOTEBOOK",
+            }
+        }
+    }
+    /// The completion status of the job.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified job state.
+        Unspecified = 0,
+        /// Job successfully completed.
+        Succeeded = 1,
+        /// Job was unsuccessful.
+        Failed = 2,
+        /// Job was cancelled by the user.
+        Cancelled = 3,
+        /// Job was cancelled or aborted via the service executing the job.
+        Aborted = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+                State::Aborted => "ABORTED",
+            }
+        }
+    }
+    /// The service used to execute the job.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Service {
+        /// Unspecified service.
+        Unspecified = 0,
+        /// Cloud Dataproc.
+        Dataproc = 1,
+    }
+    impl Service {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Service::Unspecified => "SERVICE_UNSPECIFIED",
+                Service::Dataproc => "DATAPROC",
+            }
+        }
+    }
+}
+/// These messages contain information about sessions within an environment.
+/// The monitored resource is 'Environment'.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SessionEvent {
+    /// The log message.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The information about the user that created the session. It will be the
+    /// email address of the user.
+    #[prost(string, tag = "2")]
+    pub user_id: ::prost::alloc::string::String,
+    /// Unique identifier for the session.
+    #[prost(string, tag = "3")]
+    pub session_id: ::prost::alloc::string::String,
+    /// The type of the event.
+    #[prost(enumeration = "session_event::EventType", tag = "4")]
+    pub r#type: i32,
+    /// The status of the event.
+    #[prost(bool, tag = "6")]
+    pub event_succeeded: bool,
+    /// If the session is associated with an Environment with fast startup enabled,
+    /// and was pre-created before being assigned to a user.
+    #[prost(bool, tag = "7")]
+    pub fast_startup_enabled: bool,
+    /// The idle duration of a warm pooled session before it is assigned to user.
+    #[prost(message, optional, tag = "8")]
+    pub unassigned_duration: ::core::option::Option<::prost_types::Duration>,
+    /// Additional information about the Query metadata.
+    #[prost(oneof = "session_event::Detail", tags = "5")]
+    pub detail: ::core::option::Option<session_event::Detail>,
+}
+/// Nested message and enum types in `SessionEvent`.
+pub mod session_event {
+    /// Execution details of the query.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QueryDetail {
+        /// The unique Query id identifying the query.
+        #[prost(string, tag = "1")]
+        pub query_id: ::prost::alloc::string::String,
+        /// The query text executed.
+        #[prost(string, tag = "2")]
+        pub query_text: ::prost::alloc::string::String,
+        /// Query Execution engine.
+        #[prost(enumeration = "query_detail::Engine", tag = "3")]
+        pub engine: i32,
+        /// Time taken for execution of the query.
+        #[prost(message, optional, tag = "4")]
+        pub duration: ::core::option::Option<::prost_types::Duration>,
+        /// The size of results the query produced.
+        #[prost(int64, tag = "5")]
+        pub result_size_bytes: i64,
+        /// The data processed by the query.
+        #[prost(int64, tag = "6")]
+        pub data_processed_bytes: i64,
+    }
+    /// Nested message and enum types in `QueryDetail`.
+    pub mod query_detail {
+        /// Query Execution engine.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum Engine {
+            /// An unspecified Engine type.
+            Unspecified = 0,
+            /// Spark-sql engine is specified in Query.
+            SparkSql = 1,
+            /// BigQuery engine is specified in Query.
+            Bigquery = 2,
+        }
+        impl Engine {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Engine::Unspecified => "ENGINE_UNSPECIFIED",
+                    Engine::SparkSql => "SPARK_SQL",
+                    Engine::Bigquery => "BIGQUERY",
+                }
+            }
+        }
+    }
+    /// The type of the event.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EventType {
+        /// An unspecified event type.
+        Unspecified = 0,
+        /// Event when the session is assigned to a user.
+        Start = 1,
+        /// Event for stop of a session.
+        Stop = 2,
+        /// Query events in the session.
+        Query = 3,
+        /// Event for creation of a cluster. It is not yet assigned to a user.
+        /// This comes before START in the sequence
+        Create = 4,
+    }
+    impl EventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EventType::Unspecified => "EVENT_TYPE_UNSPECIFIED",
+                EventType::Start => "START",
+                EventType::Stop => "STOP",
+                EventType::Query => "QUERY",
+                EventType::Create => "CREATE",
+            }
+        }
+    }
+    /// Additional information about the Query metadata.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Detail {
+        /// The execution details of the query.
+        #[prost(message, tag = "5")]
+        Query(QueryDetail),
+    }
+}
+/// Create content request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateContentRequest {
+    /// Required. The resource name of the parent lake:
+    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Content resource.
+    #[prost(message, optional, tag = "2")]
+    pub content: ::core::option::Option<Content>,
+    /// Optional. Only validate the request, but do not perform mutations.
+    /// The default is false.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
+}
+/// Update content request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateContentRequest {
+    /// Required. Mask of fields to update.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Update description.
+    /// Only fields specified in `update_mask` are updated.
+    #[prost(message, optional, tag = "2")]
+    pub content: ::core::option::Option<Content>,
+    /// Optional. Only validate the request, but do not perform mutations.
+    /// The default is false.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
+}
+/// Delete content request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteContentRequest {
+    /// Required. The resource name of the content:
+    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}/content/{content_id}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// List content request. Returns the BASIC Content view.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListContentRequest {
+    /// Required. The resource name of the parent lake:
+    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. Maximum number of content to return. The service may return fewer
+    /// than this value. If unspecified, at most 10 content will be returned. The
+    /// maximum value is 1000; values above 1000 will be coerced to 1000.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. Page token received from a previous `ListContent` call. Provide
+    /// this to retrieve the subsequent page. When paginating, all other parameters
+    /// provided to `ListContent` must match the call that provided the page
+    /// token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. Filter request. Filters are case-sensitive.
+    /// The following formats are supported:
+    ///
+    /// labels.key1 = "value1"
+    /// labels:key1
+    /// type = "NOTEBOOK"
+    /// type = "SQL_SCRIPT"
+    ///
+    /// These restrictions can be coinjoined with AND, OR and NOT conjunctions.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+}
+/// List content response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListContentResponse {
+    /// Content under the given parent lake.
+    #[prost(message, repeated, tag = "1")]
+    pub content: ::prost::alloc::vec::Vec<Content>,
+    /// Token to retrieve the next page of results, or empty if there are no more
+    /// results in the list.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Get content request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetContentRequest {
+    /// Required. The resource name of the content:
+    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}/content/{content_id}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Specify content view to make a partial request.
+    #[prost(enumeration = "get_content_request::ContentView", tag = "2")]
+    pub view: i32,
+}
+/// Nested message and enum types in `GetContentRequest`.
+pub mod get_content_request {
+    /// Specifies whether the request should return the full or the partial
+    /// representation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ContentView {
+        /// Content view not specified. Defaults to BASIC.
+        /// The API will default to the BASIC view.
+        Unspecified = 0,
+        /// Will not return the `data_text` field.
+        Basic = 1,
+        /// Returns the complete proto.
+        Full = 2,
+    }
+    impl ContentView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ContentView::Unspecified => "CONTENT_VIEW_UNSPECIFIED",
+                ContentView::Basic => "BASIC",
+                ContentView::Full => "FULL",
+            }
+        }
+    }
+}
+/// Generated client implementations.
+pub mod content_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// ContentService manages Notebook and SQL Scripts for Dataplex.
+    #[derive(Debug, Clone)]
+    pub struct ContentServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ContentServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ContentServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ContentServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Create a content.
+        pub async fn create_content(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateContentRequest>,
+        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/CreateContent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Update a content. Only supports full resource update.
+        pub async fn update_content(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateContentRequest>,
+        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/UpdateContent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Delete a content.
+        pub async fn delete_content(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteContentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/DeleteContent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a content resource.
+        pub async fn get_content(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetContentRequest>,
+        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/GetContent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the access control policy for a contentitem resource. A `NOT_FOUND`
+        /// error is returned if the resource does not exist. An empty policy is
+        /// returned if the resource exists but does not have a policy set on it.
+        ///
+        /// Caller must have Google IAM `dataplex.content.getIamPolicy` permission
+        /// on the resource.
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the access control policy on the specified contentitem resource.
+        /// Replaces any existing policy.
+        ///
+        /// Caller must have Google IAM `dataplex.content.setIamPolicy` permission
+        /// on the resource.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the caller's permissions on a resource.
+        /// If the resource does not exist, an empty set of
+        /// permissions is returned (a `NOT_FOUND` error is not returned).
+        ///
+        /// A caller is not required to have Google IAM permission to make this
+        /// request.
+        ///
+        /// Note: This operation is designed to be used for building permission-aware
+        /// UIs and command-line tools, not for authorization checking. This operation
+        /// may "fail open" without warning.
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::super::super::super::iam::v1::TestIamPermissionsResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// List content.
+        pub async fn list_content(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListContentRequest>,
+        ) -> Result<tonic::Response<super::ListContentResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.ContentService/ListContent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A task represents a user-visible job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Task {
+    /// Output only. The relative resource name of the task, of the form:
+    /// projects/{project_number}/locations/{location_id}/lakes/{lake_id}/
+    /// tasks/{task_id}.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. System generated globally unique ID for the task. This ID will
+    /// be different if the task is deleted and re-created with the same name.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. The time when the task was created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time when the task was last updated.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Description of the task.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. User friendly display name.
+    #[prost(string, tag = "6")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Current state of the task.
+    #[prost(enumeration = "State", tag = "7")]
+    pub state: i32,
+    /// Optional. User-defined labels for the task.
+    #[prost(btree_map = "string, string", tag = "8")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Required. Spec related to how often and when a task should be triggered.
+    #[prost(message, optional, tag = "100")]
+    pub trigger_spec: ::core::option::Option<task::TriggerSpec>,
+    /// Required. Spec related to how a task is executed.
+    #[prost(message, optional, tag = "101")]
+    pub execution_spec: ::core::option::Option<task::ExecutionSpec>,
+    /// Output only. Status of the latest task executions.
+    #[prost(message, optional, tag = "201")]
+    pub execution_status: ::core::option::Option<task::ExecutionStatus>,
+    /// Task template specific user-specified config.
+    #[prost(oneof = "task::Config", tags = "300, 302")]
+    pub config: ::core::option::Option<task::Config>,
+}
+/// Nested message and enum types in `Task`.
+pub mod task {
+    /// Configuration for the underlying infrastructure used to run workloads.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InfrastructureSpec {
+        /// Hardware config.
+        #[prost(oneof = "infrastructure_spec::Resources", tags = "52")]
+        pub resources: ::core::option::Option<infrastructure_spec::Resources>,
+        /// Software config.
+        #[prost(oneof = "infrastructure_spec::Runtime", tags = "101")]
+        pub runtime: ::core::option::Option<infrastructure_spec::Runtime>,
+        /// Networking config.
+        #[prost(oneof = "infrastructure_spec::Network", tags = "150")]
+        pub network: ::core::option::Option<infrastructure_spec::Network>,
+    }
+    /// Nested message and enum types in `InfrastructureSpec`.
+    pub mod infrastructure_spec {
+        /// Batch compute resources associated with the task.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct BatchComputeResources {
+            /// Optional. Total number of job executors.
+            /// Executor Count should be between 2 and 100. \[Default=2\]
+            #[prost(int32, tag = "1")]
+            pub executors_count: i32,
+            /// Optional. Max configurable executors.
+            /// If max_executors_count > executors_count, then auto-scaling is enabled.
+            /// Max Executor Count should be between 2 and 1000. \[Default=1000\]
+            #[prost(int32, tag = "2")]
+            pub max_executors_count: i32,
+        }
+        /// Container Image Runtime Configuration used with Batch execution.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ContainerImageRuntime {
+            /// Optional. Container image to use.
+            #[prost(string, tag = "1")]
+            pub image: ::prost::alloc::string::String,
+            /// Optional. A list of Java JARS to add to the classpath.
+            /// Valid input includes Cloud Storage URIs to Jar binaries.
+            /// For example, gs://bucket-name/my/path/to/file.jar
+            #[prost(string, repeated, tag = "2")]
+            pub java_jars: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            /// Optional. A list of python packages to be installed.
+            /// Valid formats include Cloud Storage URI to a PIP installable library.
+            /// For example, gs://bucket-name/my/path/to/lib.tar.gz
+            #[prost(string, repeated, tag = "3")]
+            pub python_packages: ::prost::alloc::vec::Vec<
+                ::prost::alloc::string::String,
+            >,
+            /// Optional. Override to common configuration of open source components
+            /// installed on the Dataproc cluster. The properties to set on daemon
+            /// config files. Property keys are specified in `prefix:property` format,
+            /// for example `core:hadoop.tmp.dir`. For more information, see [Cluster
+            /// properties](<https://cloud.google.com/dataproc/docs/concepts/cluster-properties>).
+            #[prost(btree_map = "string, string", tag = "4")]
+            pub properties: ::prost::alloc::collections::BTreeMap<
+                ::prost::alloc::string::String,
+                ::prost::alloc::string::String,
+            >,
+        }
+        /// Cloud VPC Network used to run the infrastructure.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct VpcNetwork {
+            /// Optional. List of network tags to apply to the job.
+            #[prost(string, repeated, tag = "3")]
+            pub network_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            /// The Cloud VPC network identifier.
+            #[prost(oneof = "vpc_network::NetworkName", tags = "1, 2")]
+            pub network_name: ::core::option::Option<vpc_network::NetworkName>,
+        }
+        /// Nested message and enum types in `VpcNetwork`.
+        pub mod vpc_network {
+            /// The Cloud VPC network identifier.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum NetworkName {
+                /// Optional. The Cloud VPC network in which the job is run. By default,
+                /// the Cloud VPC network named Default within the project is used.
+                #[prost(string, tag = "1")]
+                Network(::prost::alloc::string::String),
+                /// Optional. The Cloud VPC sub-network in which the job is run.
+                #[prost(string, tag = "2")]
+                SubNetwork(::prost::alloc::string::String),
+            }
+        }
+        /// Hardware config.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Resources {
+            /// Compute resources needed for a Task when using Dataproc Serverless.
+            #[prost(message, tag = "52")]
+            Batch(BatchComputeResources),
+        }
+        /// Software config.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Runtime {
+            /// Container Image Runtime Configuration.
+            #[prost(message, tag = "101")]
+            ContainerImage(ContainerImageRuntime),
+        }
+        /// Networking config.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Network {
+            /// Vpc network.
+            #[prost(message, tag = "150")]
+            VpcNetwork(VpcNetwork),
+        }
+    }
+    /// Task scheduling and trigger settings.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TriggerSpec {
+        /// Required. Immutable. Trigger type of the user-specified Task.
+        #[prost(enumeration = "trigger_spec::Type", tag = "5")]
+        pub r#type: i32,
+        /// Optional. The first run of the task will be after this time.
+        /// If not specified, the task will run shortly after being submitted if
+        /// ON_DEMAND and based on the schedule if RECURRING.
+        #[prost(message, optional, tag = "6")]
+        pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Optional. Prevent the task from executing.
+        /// This does not cancel already running tasks. It is intended to temporarily
+        /// disable RECURRING tasks.
+        #[prost(bool, tag = "4")]
+        pub disabled: bool,
+        /// Optional. Number of retry attempts before aborting.
+        /// Set to zero to never attempt to retry a failed task.
+        #[prost(int32, tag = "7")]
+        pub max_retries: i32,
+        /// Trigger only applies for RECURRING tasks.
+        #[prost(oneof = "trigger_spec::Trigger", tags = "100")]
+        pub trigger: ::core::option::Option<trigger_spec::Trigger>,
+    }
+    /// Nested message and enum types in `TriggerSpec`.
+    pub mod trigger_spec {
+        /// Determines how often and when the job will run.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum Type {
+            /// Unspecified trigger type.
+            Unspecified = 0,
+            /// The task runs one-time shortly after Task Creation.
+            OnDemand = 1,
+            /// The task is scheduled to run periodically.
+            Recurring = 2,
+        }
+        impl Type {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Type::Unspecified => "TYPE_UNSPECIFIED",
+                    Type::OnDemand => "ON_DEMAND",
+                    Type::Recurring => "RECURRING",
+                }
+            }
+        }
+        /// Trigger only applies for RECURRING tasks.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Trigger {
+            /// Optional. Cron schedule (<https://en.wikipedia.org/wiki/Cron>) for
+            /// running tasks periodically. To explicitly set a timezone to the cron
+            /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
+            /// "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
+            /// string from IANA time zone database. For example,
+            /// "CRON_TZ=America/New_York 1 * * * *", or "TZ=America/New_York 1 * * *
+            /// *". This field is required for RECURRING tasks.
+            #[prost(string, tag = "100")]
+            Schedule(::prost::alloc::string::String),
+        }
+    }
+    /// Execution related settings, like retry and service_account.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExecutionSpec {
+        /// Optional. The arguments to pass to the task.
+        /// The args can use placeholders of the format ${placeholder} as
+        /// part of key/value string. These will be interpolated before passing the
+        /// args to the driver. Currently supported placeholders:
+        /// - ${task_id}
+        /// - ${job_time}
+        /// To pass positional args, set the key as TASK_ARGS. The value should be a
+        /// comma-separated string of all the positional arguments. To use a
+        /// delimiter other than comma, refer to
+        /// <https://cloud.google.com/sdk/gcloud/reference/topic/escaping.> In case of
+        /// other keys being present in the args, then TASK_ARGS will be passed as
+        /// the last argument.
+        #[prost(btree_map = "string, string", tag = "4")]
+        pub args: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
+        /// Required. Service account to use to execute a task.
+        /// If not provided, the default Compute service account for the project is
+        /// used.
+        #[prost(string, tag = "5")]
+        pub service_account: ::prost::alloc::string::String,
+        /// Optional. The project in which jobs are run. By default, the project
+        /// containing the Lake is used. If a project is provided, the
+        /// \[ExecutionSpec.service_account][google.cloud.dataplex.v1.Task.ExecutionSpec.service_account\]
+        /// must belong to this project.
+        #[prost(string, tag = "7")]
+        pub project: ::prost::alloc::string::String,
+        /// Optional. The maximum duration after which the job execution is expired.
+        #[prost(message, optional, tag = "8")]
+        pub max_job_execution_lifetime: ::core::option::Option<::prost_types::Duration>,
+        /// Optional. The Cloud KMS key to use for encryption, of the form:
+        /// `projects/{project_number}/locations/{location_id}/keyRings/{key-ring-name}/cryptoKeys/{key-name}`.
+        #[prost(string, tag = "9")]
+        pub kms_key: ::prost::alloc::string::String,
+    }
+    /// User-specified config for running a Spark task.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SparkTaskConfig {
+        /// Optional. Cloud Storage URIs of files to be placed in the working
+        /// directory of each executor.
+        #[prost(string, repeated, tag = "3")]
+        pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. Cloud Storage URIs of archives to be extracted into the working
+        /// directory of each executor. Supported file types: .jar, .tar, .tar.gz,
+        /// .tgz, and .zip.
+        #[prost(string, repeated, tag = "4")]
+        pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. Infrastructure specification for the execution.
+        #[prost(message, optional, tag = "6")]
+        pub infrastructure_spec: ::core::option::Option<InfrastructureSpec>,
+        /// Required. The specification of the main method to call to drive the
+        /// job. Specify either the jar file that contains the main class or the
+        /// main class name.
+        #[prost(oneof = "spark_task_config::Driver", tags = "100, 101, 102, 104, 105")]
+        pub driver: ::core::option::Option<spark_task_config::Driver>,
+    }
+    /// Nested message and enum types in `SparkTaskConfig`.
+    pub mod spark_task_config {
+        /// Required. The specification of the main method to call to drive the
+        /// job. Specify either the jar file that contains the main class or the
+        /// main class name.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Driver {
+            /// The Cloud Storage URI of the jar file that contains the main class.
+            /// The execution args are passed in as a sequence of named process
+            /// arguments (`--key=value`).
+            #[prost(string, tag = "100")]
+            MainJarFileUri(::prost::alloc::string::String),
+            /// The name of the driver's main class. The jar file that contains the
+            /// class must be in the default CLASSPATH or specified in
+            /// `jar_file_uris`.
+            /// The execution args are passed in as a sequence of named process
+            /// arguments (`--key=value`).
+            #[prost(string, tag = "101")]
+            MainClass(::prost::alloc::string::String),
+            /// The Gcloud Storage URI of the main Python file to use as the driver.
+            /// Must be a .py file. The execution args are passed in as a sequence of
+            /// named process arguments (`--key=value`).
+            #[prost(string, tag = "102")]
+            PythonScriptFile(::prost::alloc::string::String),
+            /// A reference to a query file. This can be the Cloud Storage URI of the
+            /// query file or it can the path to a SqlScript Content. The execution
+            /// args are used to declare a set of script variables
+            /// (`set key="value";`).
+            #[prost(string, tag = "104")]
+            SqlScriptFile(::prost::alloc::string::String),
+            /// The query text.
+            /// The execution args are used to declare a set of script variables
+            /// (`set key="value";`).
+            #[prost(string, tag = "105")]
+            SqlScript(::prost::alloc::string::String),
+        }
+    }
+    /// Config for running scheduled notebooks.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct NotebookTaskConfig {
+        /// Required. Path to input notebook. This can be the Cloud Storage URI of
+        /// the notebook file or the path to a Notebook Content. The execution args
+        /// are accessible as environment variables
+        /// (`TASK_key=value`).
+        #[prost(string, tag = "4")]
+        pub notebook: ::prost::alloc::string::String,
+        /// Optional. Infrastructure specification for the execution.
+        #[prost(message, optional, tag = "3")]
+        pub infrastructure_spec: ::core::option::Option<InfrastructureSpec>,
+        /// Optional. Cloud Storage URIs of files to be placed in the working
+        /// directory of each executor.
+        #[prost(string, repeated, tag = "5")]
+        pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. Cloud Storage URIs of archives to be extracted into the working
+        /// directory of each executor. Supported file types: .jar, .tar, .tar.gz,
+        /// .tgz, and .zip.
+        #[prost(string, repeated, tag = "6")]
+        pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// Status of the task execution (e.g. Jobs).
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExecutionStatus {
+        /// Output only. Last update time of the status.
+        #[prost(message, optional, tag = "3")]
+        pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Output only. latest job execution
+        #[prost(message, optional, tag = "9")]
+        pub latest_job: ::core::option::Option<super::Job>,
+    }
+    /// Task template specific user-specified config.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Config {
+        /// Config related to running custom Spark tasks.
+        #[prost(message, tag = "300")]
+        Spark(SparkTaskConfig),
+        /// Config related to running scheduled Notebooks.
+        #[prost(message, tag = "302")]
+        Notebook(NotebookTaskConfig),
+    }
+}
+/// A job represents an instance of a task.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Job {
+    /// Output only. The relative resource name of the job, of the form:
+    /// `projects/{project_number}/locations/{location_id}/lakes/{lake_id}/tasks/{task_id}/jobs/{job_id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. System generated globally unique ID for the job.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. The time when the job was started.
+    #[prost(message, optional, tag = "3")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time when the job ended.
+    #[prost(message, optional, tag = "4")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Execution state for the job.
+    #[prost(enumeration = "job::State", tag = "5")]
+    pub state: i32,
+    /// Output only. The number of times the job has been retried (excluding the
+    /// initial attempt).
+    #[prost(uint32, tag = "6")]
+    pub retry_count: u32,
+    /// Output only. The underlying service running a job.
+    #[prost(enumeration = "job::Service", tag = "7")]
+    pub service: i32,
+    /// Output only. The full resource name for the job run under a particular
+    /// service.
+    #[prost(string, tag = "8")]
+    pub service_job: ::prost::alloc::string::String,
+    /// Output only. Additional information about the current state.
+    #[prost(string, tag = "9")]
+    pub message: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Job`.
+pub mod job {
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Service {
+        /// Service used to run the job is unspecified.
+        Unspecified = 0,
+        /// Dataproc service is used to run this job.
+        Dataproc = 1,
+    }
+    impl Service {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Service::Unspecified => "SERVICE_UNSPECIFIED",
+                Service::Dataproc => "DATAPROC",
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// The job state is unknown.
+        Unspecified = 0,
+        /// The job is running.
+        Running = 1,
+        /// The job is cancelling.
+        Cancelling = 2,
+        /// The job cancellation was successful.
+        Cancelled = 3,
+        /// The job completed successfully.
+        Succeeded = 4,
+        /// The job is no longer running due to an error.
+        Failed = 5,
+        /// The job was cancelled outside of Dataplex.
+        Aborted = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Cancelled => "CANCELLED",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Aborted => "ABORTED",
+            }
+        }
+    }
+}
 /// Create a metadata entity request.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2930,501 +3816,6 @@ pub mod metadata_service_client {
                 "/google.cloud.dataplex.v1.MetadataService/ListPartitions",
             );
             self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A task represents a user-visible job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Task {
-    /// Output only. The relative resource name of the task, of the form:
-    /// projects/{project_number}/locations/{location_id}/lakes/{lake_id}/
-    /// tasks/{task_id}.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. System generated globally unique ID for the task. This ID will
-    /// be different if the task is deleted and re-created with the same name.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. The time when the task was created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time when the task was last updated.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Description of the task.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. User friendly display name.
-    #[prost(string, tag = "6")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Current state of the task.
-    #[prost(enumeration = "State", tag = "7")]
-    pub state: i32,
-    /// Optional. User-defined labels for the task.
-    #[prost(btree_map = "string, string", tag = "8")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Required. Spec related to how often and when a task should be triggered.
-    #[prost(message, optional, tag = "100")]
-    pub trigger_spec: ::core::option::Option<task::TriggerSpec>,
-    /// Required. Spec related to how a task is executed.
-    #[prost(message, optional, tag = "101")]
-    pub execution_spec: ::core::option::Option<task::ExecutionSpec>,
-    /// Output only. Status of the latest task executions.
-    #[prost(message, optional, tag = "201")]
-    pub execution_status: ::core::option::Option<task::ExecutionStatus>,
-    /// Task template specific user-specified config.
-    #[prost(oneof = "task::Config", tags = "300, 302")]
-    pub config: ::core::option::Option<task::Config>,
-}
-/// Nested message and enum types in `Task`.
-pub mod task {
-    /// Configuration for the underlying infrastructure used to run workloads.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InfrastructureSpec {
-        /// Hardware config.
-        #[prost(oneof = "infrastructure_spec::Resources", tags = "52")]
-        pub resources: ::core::option::Option<infrastructure_spec::Resources>,
-        /// Software config.
-        #[prost(oneof = "infrastructure_spec::Runtime", tags = "101")]
-        pub runtime: ::core::option::Option<infrastructure_spec::Runtime>,
-        /// Networking config.
-        #[prost(oneof = "infrastructure_spec::Network", tags = "150")]
-        pub network: ::core::option::Option<infrastructure_spec::Network>,
-    }
-    /// Nested message and enum types in `InfrastructureSpec`.
-    pub mod infrastructure_spec {
-        /// Batch compute resources associated with the task.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct BatchComputeResources {
-            /// Optional. Total number of job executors.
-            /// Executor Count should be between 2 and 100. \[Default=2\]
-            #[prost(int32, tag = "1")]
-            pub executors_count: i32,
-            /// Optional. Max configurable executors.
-            /// If max_executors_count > executors_count, then auto-scaling is enabled.
-            /// Max Executor Count should be between 2 and 1000. \[Default=1000\]
-            #[prost(int32, tag = "2")]
-            pub max_executors_count: i32,
-        }
-        /// Container Image Runtime Configuration used with Batch execution.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ContainerImageRuntime {
-            /// Optional. Container image to use.
-            #[prost(string, tag = "1")]
-            pub image: ::prost::alloc::string::String,
-            /// Optional. A list of Java JARS to add to the classpath.
-            /// Valid input includes Cloud Storage URIs to Jar binaries.
-            /// For example, gs://bucket-name/my/path/to/file.jar
-            #[prost(string, repeated, tag = "2")]
-            pub java_jars: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            /// Optional. A list of python packages to be installed.
-            /// Valid formats include Cloud Storage URI to a PIP installable library.
-            /// For example, gs://bucket-name/my/path/to/lib.tar.gz
-            #[prost(string, repeated, tag = "3")]
-            pub python_packages: ::prost::alloc::vec::Vec<
-                ::prost::alloc::string::String,
-            >,
-            /// Optional. Override to common configuration of open source components
-            /// installed on the Dataproc cluster. The properties to set on daemon
-            /// config files. Property keys are specified in `prefix:property` format,
-            /// for example `core:hadoop.tmp.dir`. For more information, see [Cluster
-            /// properties](<https://cloud.google.com/dataproc/docs/concepts/cluster-properties>).
-            #[prost(btree_map = "string, string", tag = "4")]
-            pub properties: ::prost::alloc::collections::BTreeMap<
-                ::prost::alloc::string::String,
-                ::prost::alloc::string::String,
-            >,
-        }
-        /// Cloud VPC Network used to run the infrastructure.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct VpcNetwork {
-            /// Optional. List of network tags to apply to the job.
-            #[prost(string, repeated, tag = "3")]
-            pub network_tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            /// The Cloud VPC network identifier.
-            #[prost(oneof = "vpc_network::NetworkName", tags = "1, 2")]
-            pub network_name: ::core::option::Option<vpc_network::NetworkName>,
-        }
-        /// Nested message and enum types in `VpcNetwork`.
-        pub mod vpc_network {
-            /// The Cloud VPC network identifier.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum NetworkName {
-                /// Optional. The Cloud VPC network in which the job is run. By default,
-                /// the Cloud VPC network named Default within the project is used.
-                #[prost(string, tag = "1")]
-                Network(::prost::alloc::string::String),
-                /// Optional. The Cloud VPC sub-network in which the job is run.
-                #[prost(string, tag = "2")]
-                SubNetwork(::prost::alloc::string::String),
-            }
-        }
-        /// Hardware config.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Resources {
-            /// Compute resources needed for a Task when using Dataproc Serverless.
-            #[prost(message, tag = "52")]
-            Batch(BatchComputeResources),
-        }
-        /// Software config.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Runtime {
-            /// Container Image Runtime Configuration.
-            #[prost(message, tag = "101")]
-            ContainerImage(ContainerImageRuntime),
-        }
-        /// Networking config.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Network {
-            /// Vpc network.
-            #[prost(message, tag = "150")]
-            VpcNetwork(VpcNetwork),
-        }
-    }
-    /// Task scheduling and trigger settings.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TriggerSpec {
-        /// Required. Immutable. Trigger type of the user-specified Task.
-        #[prost(enumeration = "trigger_spec::Type", tag = "5")]
-        pub r#type: i32,
-        /// Optional. The first run of the task will be after this time.
-        /// If not specified, the task will run shortly after being submitted if
-        /// ON_DEMAND and based on the schedule if RECURRING.
-        #[prost(message, optional, tag = "6")]
-        pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Optional. Prevent the task from executing.
-        /// This does not cancel already running tasks. It is intended to temporarily
-        /// disable RECURRING tasks.
-        #[prost(bool, tag = "4")]
-        pub disabled: bool,
-        /// Optional. Number of retry attempts before aborting.
-        /// Set to zero to never attempt to retry a failed task.
-        #[prost(int32, tag = "7")]
-        pub max_retries: i32,
-        /// Trigger only applies for RECURRING tasks.
-        #[prost(oneof = "trigger_spec::Trigger", tags = "100")]
-        pub trigger: ::core::option::Option<trigger_spec::Trigger>,
-    }
-    /// Nested message and enum types in `TriggerSpec`.
-    pub mod trigger_spec {
-        /// Determines how often and when the job will run.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum Type {
-            /// Unspecified trigger type.
-            Unspecified = 0,
-            /// The task runs one-time shortly after Task Creation.
-            OnDemand = 1,
-            /// The task is scheduled to run periodically.
-            Recurring = 2,
-        }
-        impl Type {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Type::Unspecified => "TYPE_UNSPECIFIED",
-                    Type::OnDemand => "ON_DEMAND",
-                    Type::Recurring => "RECURRING",
-                }
-            }
-        }
-        /// Trigger only applies for RECURRING tasks.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Trigger {
-            /// Optional. Cron schedule (<https://en.wikipedia.org/wiki/Cron>) for
-            /// running tasks periodically. To explicitly set a timezone to the cron
-            /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
-            /// "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
-            /// string from IANA time zone database. For example,
-            /// "CRON_TZ=America/New_York 1 * * * *", or "TZ=America/New_York 1 * * *
-            /// *". This field is required for RECURRING tasks.
-            #[prost(string, tag = "100")]
-            Schedule(::prost::alloc::string::String),
-        }
-    }
-    /// Execution related settings, like retry and service_account.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExecutionSpec {
-        /// Optional. The arguments to pass to the task.
-        /// The args can use placeholders of the format ${placeholder} as
-        /// part of key/value string. These will be interpolated before passing the
-        /// args to the driver. Currently supported placeholders:
-        /// - ${task_id}
-        /// - ${job_time}
-        /// To pass positional args, set the key as TASK_ARGS. The value should be a
-        /// comma-separated string of all the positional arguments. To use a
-        /// delimiter other than comma, refer to
-        /// <https://cloud.google.com/sdk/gcloud/reference/topic/escaping.> In case of
-        /// other keys being present in the args, then TASK_ARGS will be passed as
-        /// the last argument.
-        #[prost(btree_map = "string, string", tag = "4")]
-        pub args: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-        /// Required. Service account to use to execute a task.
-        /// If not provided, the default Compute service account for the project is
-        /// used.
-        #[prost(string, tag = "5")]
-        pub service_account: ::prost::alloc::string::String,
-        /// Optional. The project in which jobs are run. By default, the project
-        /// containing the Lake is used. If a project is provided, the
-        /// \[ExecutionSpec.service_account][google.cloud.dataplex.v1.Task.ExecutionSpec.service_account\]
-        /// must belong to this project.
-        #[prost(string, tag = "7")]
-        pub project: ::prost::alloc::string::String,
-        /// Optional. The maximum duration after which the job execution is expired.
-        #[prost(message, optional, tag = "8")]
-        pub max_job_execution_lifetime: ::core::option::Option<::prost_types::Duration>,
-        /// Optional. The Cloud KMS key to use for encryption, of the form:
-        /// `projects/{project_number}/locations/{location_id}/keyRings/{key-ring-name}/cryptoKeys/{key-name}`.
-        #[prost(string, tag = "9")]
-        pub kms_key: ::prost::alloc::string::String,
-    }
-    /// User-specified config for running a Spark task.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SparkTaskConfig {
-        /// Optional. Cloud Storage URIs of files to be placed in the working
-        /// directory of each executor.
-        #[prost(string, repeated, tag = "3")]
-        pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. Cloud Storage URIs of archives to be extracted into the working
-        /// directory of each executor. Supported file types: .jar, .tar, .tar.gz,
-        /// .tgz, and .zip.
-        #[prost(string, repeated, tag = "4")]
-        pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. Infrastructure specification for the execution.
-        #[prost(message, optional, tag = "6")]
-        pub infrastructure_spec: ::core::option::Option<InfrastructureSpec>,
-        /// Required. The specification of the main method to call to drive the
-        /// job. Specify either the jar file that contains the main class or the
-        /// main class name.
-        #[prost(oneof = "spark_task_config::Driver", tags = "100, 101, 102, 104, 105")]
-        pub driver: ::core::option::Option<spark_task_config::Driver>,
-    }
-    /// Nested message and enum types in `SparkTaskConfig`.
-    pub mod spark_task_config {
-        /// Required. The specification of the main method to call to drive the
-        /// job. Specify either the jar file that contains the main class or the
-        /// main class name.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Driver {
-            /// The Cloud Storage URI of the jar file that contains the main class.
-            /// The execution args are passed in as a sequence of named process
-            /// arguments (`--key=value`).
-            #[prost(string, tag = "100")]
-            MainJarFileUri(::prost::alloc::string::String),
-            /// The name of the driver's main class. The jar file that contains the
-            /// class must be in the default CLASSPATH or specified in
-            /// `jar_file_uris`.
-            /// The execution args are passed in as a sequence of named process
-            /// arguments (`--key=value`).
-            #[prost(string, tag = "101")]
-            MainClass(::prost::alloc::string::String),
-            /// The Gcloud Storage URI of the main Python file to use as the driver.
-            /// Must be a .py file. The execution args are passed in as a sequence of
-            /// named process arguments (`--key=value`).
-            #[prost(string, tag = "102")]
-            PythonScriptFile(::prost::alloc::string::String),
-            /// A reference to a query file. This can be the Cloud Storage URI of the
-            /// query file or it can the path to a SqlScript Content. The execution
-            /// args are used to declare a set of script variables
-            /// (`set key="value";`).
-            #[prost(string, tag = "104")]
-            SqlScriptFile(::prost::alloc::string::String),
-            /// The query text.
-            /// The execution args are used to declare a set of script variables
-            /// (`set key="value";`).
-            #[prost(string, tag = "105")]
-            SqlScript(::prost::alloc::string::String),
-        }
-    }
-    /// Config for running scheduled notebooks.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct NotebookTaskConfig {
-        /// Required. Path to input notebook. This can be the Cloud Storage URI of
-        /// the notebook file or the path to a Notebook Content. The execution args
-        /// are accessible as environment variables
-        /// (`TASK_key=value`).
-        #[prost(string, tag = "4")]
-        pub notebook: ::prost::alloc::string::String,
-        /// Optional. Infrastructure specification for the execution.
-        #[prost(message, optional, tag = "3")]
-        pub infrastructure_spec: ::core::option::Option<InfrastructureSpec>,
-        /// Optional. Cloud Storage URIs of files to be placed in the working
-        /// directory of each executor.
-        #[prost(string, repeated, tag = "5")]
-        pub file_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. Cloud Storage URIs of archives to be extracted into the working
-        /// directory of each executor. Supported file types: .jar, .tar, .tar.gz,
-        /// .tgz, and .zip.
-        #[prost(string, repeated, tag = "6")]
-        pub archive_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// Status of the task execution (e.g. Jobs).
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExecutionStatus {
-        /// Output only. Last update time of the status.
-        #[prost(message, optional, tag = "3")]
-        pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Output only. latest job execution
-        #[prost(message, optional, tag = "9")]
-        pub latest_job: ::core::option::Option<super::Job>,
-    }
-    /// Task template specific user-specified config.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Config {
-        /// Config related to running custom Spark tasks.
-        #[prost(message, tag = "300")]
-        Spark(SparkTaskConfig),
-        /// Config related to running scheduled Notebooks.
-        #[prost(message, tag = "302")]
-        Notebook(NotebookTaskConfig),
-    }
-}
-/// A job represents an instance of a task.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Job {
-    /// Output only. The relative resource name of the job, of the form:
-    /// `projects/{project_number}/locations/{location_id}/lakes/{lake_id}/tasks/{task_id}/jobs/{job_id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. System generated globally unique ID for the job.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. The time when the job was started.
-    #[prost(message, optional, tag = "3")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time when the job ended.
-    #[prost(message, optional, tag = "4")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Execution state for the job.
-    #[prost(enumeration = "job::State", tag = "5")]
-    pub state: i32,
-    /// Output only. The number of times the job has been retried (excluding the
-    /// initial attempt).
-    #[prost(uint32, tag = "6")]
-    pub retry_count: u32,
-    /// Output only. The underlying service running a job.
-    #[prost(enumeration = "job::Service", tag = "7")]
-    pub service: i32,
-    /// Output only. The full resource name for the job run under a particular
-    /// service.
-    #[prost(string, tag = "8")]
-    pub service_job: ::prost::alloc::string::String,
-    /// Output only. Additional information about the current state.
-    #[prost(string, tag = "9")]
-    pub message: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Job`.
-pub mod job {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Service {
-        /// Service used to run the job is unspecified.
-        Unspecified = 0,
-        /// Dataproc service is used to run this job.
-        Dataproc = 1,
-    }
-    impl Service {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Service::Unspecified => "SERVICE_UNSPECIFIED",
-                Service::Dataproc => "DATAPROC",
-            }
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// The job state is unknown.
-        Unspecified = 0,
-        /// The job is running.
-        Running = 1,
-        /// The job is cancelling.
-        Cancelling = 2,
-        /// The job cancellation was successful.
-        Cancelled = 3,
-        /// The job completed successfully.
-        Succeeded = 4,
-        /// The job is no longer running due to an error.
-        Failed = 5,
-        /// The job was cancelled outside of Dataplex.
-        Aborted = 6,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Running => "RUNNING",
-                State::Cancelling => "CANCELLING",
-                State::Cancelled => "CANCELLED",
-                State::Succeeded => "SUCCEEDED",
-                State::Failed => "FAILED",
-                State::Aborted => "ABORTED",
-            }
         }
     }
 }
@@ -4860,397 +5251,6 @@ pub mod dataplex_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.dataplex.v1.DataplexService/ListSessions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Create content request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateContentRequest {
-    /// Required. The resource name of the parent lake:
-    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Content resource.
-    #[prost(message, optional, tag = "2")]
-    pub content: ::core::option::Option<Content>,
-    /// Optional. Only validate the request, but do not perform mutations.
-    /// The default is false.
-    #[prost(bool, tag = "3")]
-    pub validate_only: bool,
-}
-/// Update content request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateContentRequest {
-    /// Required. Mask of fields to update.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Update description.
-    /// Only fields specified in `update_mask` are updated.
-    #[prost(message, optional, tag = "2")]
-    pub content: ::core::option::Option<Content>,
-    /// Optional. Only validate the request, but do not perform mutations.
-    /// The default is false.
-    #[prost(bool, tag = "3")]
-    pub validate_only: bool,
-}
-/// Delete content request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteContentRequest {
-    /// Required. The resource name of the content:
-    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}/content/{content_id}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// List content request. Returns the BASIC Content view.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListContentRequest {
-    /// Required. The resource name of the parent lake:
-    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. Maximum number of content to return. The service may return fewer
-    /// than this value. If unspecified, at most 10 content will be returned. The
-    /// maximum value is 1000; values above 1000 will be coerced to 1000.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. Page token received from a previous `ListContent` call. Provide
-    /// this to retrieve the subsequent page. When paginating, all other parameters
-    /// provided to `ListContent` must match the call that provided the page
-    /// token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. Filter request. Filters are case-sensitive.
-    /// The following formats are supported:
-    ///
-    /// labels.key1 = "value1"
-    /// labels:key1
-    /// type = "NOTEBOOK"
-    /// type = "SQL_SCRIPT"
-    ///
-    /// These restrictions can be coinjoined with AND, OR and NOT conjunctions.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// List content response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListContentResponse {
-    /// Content under the given parent lake.
-    #[prost(message, repeated, tag = "1")]
-    pub content: ::prost::alloc::vec::Vec<Content>,
-    /// Token to retrieve the next page of results, or empty if there are no more
-    /// results in the list.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Get content request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetContentRequest {
-    /// Required. The resource name of the content:
-    /// projects/{project_id}/locations/{location_id}/lakes/{lake_id}/content/{content_id}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Specify content view to make a partial request.
-    #[prost(enumeration = "get_content_request::ContentView", tag = "2")]
-    pub view: i32,
-}
-/// Nested message and enum types in `GetContentRequest`.
-pub mod get_content_request {
-    /// Specifies whether the request should return the full or the partial
-    /// representation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ContentView {
-        /// Content view not specified. Defaults to BASIC.
-        /// The API will default to the BASIC view.
-        Unspecified = 0,
-        /// Will not return the `data_text` field.
-        Basic = 1,
-        /// Returns the complete proto.
-        Full = 2,
-    }
-    impl ContentView {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ContentView::Unspecified => "CONTENT_VIEW_UNSPECIFIED",
-                ContentView::Basic => "BASIC",
-                ContentView::Full => "FULL",
-            }
-        }
-    }
-}
-/// Generated client implementations.
-pub mod content_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// ContentService manages Notebook and SQL Scripts for Dataplex.
-    #[derive(Debug, Clone)]
-    pub struct ContentServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ContentServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ContentServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ContentServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Create a content.
-        pub async fn create_content(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateContentRequest>,
-        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/CreateContent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Update a content. Only supports full resource update.
-        pub async fn update_content(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateContentRequest>,
-        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/UpdateContent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Delete a content.
-        pub async fn delete_content(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteContentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/DeleteContent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a content resource.
-        pub async fn get_content(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetContentRequest>,
-        ) -> Result<tonic::Response<super::Content>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/GetContent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for a contentitem resource. A `NOT_FOUND`
-        /// error is returned if the resource does not exist. An empty policy is
-        /// returned if the resource exists but does not have a policy set on it.
-        ///
-        /// Caller must have Google IAM `dataplex.content.getIamPolicy` permission
-        /// on the resource.
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on the specified contentitem resource.
-        /// Replaces any existing policy.
-        ///
-        /// Caller must have Google IAM `dataplex.content.setIamPolicy` permission
-        /// on the resource.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the caller's permissions on a resource.
-        /// If the resource does not exist, an empty set of
-        /// permissions is returned (a `NOT_FOUND` error is not returned).
-        ///
-        /// A caller is not required to have Google IAM permission to make this
-        /// request.
-        ///
-        /// Note: This operation is designed to be used for building permission-aware
-        /// UIs and command-line tools, not for authorization checking. This operation
-        /// may "fail open" without warning.
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<
-                super::super::super::super::iam::v1::TestIamPermissionsResponse,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List content.
-        pub async fn list_content(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListContentRequest>,
-        ) -> Result<tonic::Response<super::ListContentResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataplex.v1.ContentService/ListContent",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
