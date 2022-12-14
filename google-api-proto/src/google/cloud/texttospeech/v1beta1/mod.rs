@@ -470,7 +470,7 @@ pub mod text_to_speech_client {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SynthesizeLongAudioRequest {
     /// The resource states of the request in the form of
-    /// projects/*/locations/*/voices/*.
+    /// `projects/*/locations/*/voices/*`.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Required. The Synthesizer requires either plain text or SSML as input.

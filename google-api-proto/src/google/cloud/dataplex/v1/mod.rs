@@ -788,8 +788,9 @@ pub mod zone {
             /// discovery every 60 minutes. To explicitly set a timezone to the cron
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid string
-            /// from IANA time zone database. For example, "CRON_TZ=America/New_York 1
-            /// * * * *", or "TZ=America/New_York 1 * * * *".
+            /// from IANA time zone database. For example,
+            /// `CRON_TZ=America/New_York 1 * * * *`,
+            /// or `TZ=America/New_York 1 * * * *`.
             #[prost(string, tag = "10")]
             Schedule(::prost::alloc::string::String),
         }
@@ -1291,8 +1292,9 @@ pub mod asset {
             /// discovery every 60 minutes. To explicitly set a timezone to the cron
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid string
-            /// from IANA time zone database. For example, "CRON_TZ=America/New_York 1
-            /// * * * *", or "TZ=America/New_York 1 * * * *".
+            /// from IANA time zone database. For example,
+            /// `CRON_TZ=America/New_York 1 * * * *`,
+            /// or `TZ=America/New_York 1 * * * *`.
             #[prost(string, tag = "10")]
             Schedule(::prost::alloc::string::String),
         }
@@ -3163,8 +3165,9 @@ pub mod task {
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
             /// string from IANA time zone database. For example,
-            /// "CRON_TZ=America/New_York 1 * * * *", or "TZ=America/New_York 1 * * *
-            /// *". This field is required for RECURRING tasks.
+            /// `CRON_TZ=America/New_York 1 * * * *`,
+            /// or `TZ=America/New_York 1 * * * *`.
+            /// This field is required for RECURRING tasks.
             #[prost(string, tag = "100")]
             Schedule(::prost::alloc::string::String),
         }
