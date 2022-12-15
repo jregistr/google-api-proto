@@ -447,65 +447,6 @@ pub mod restore_config {
         SelectedApplications(super::NamespacedNames),
     }
 }
-/// The configuration of a potential series of Restore operations to be performed
-/// against Backups belong to a particular BackupPlan.
-/// Next id: 11
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RestorePlan {
-    /// Output only. The full name of the RestorePlan resource.
-    /// Format: projects/*/locations/*/restorePlans/*.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server generated global unique identifier of
-    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>) format.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. The timestamp when this RestorePlan resource was
-    /// created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when this RestorePlan resource was last
-    /// updated.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// User specified descriptive string for this RestorePlan.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Immutable. A reference to the \[BackupPlan][google.cloud.gkebackup.v1.BackupPlan\] from which Backups may be used as the
-    /// source for Restores created via this RestorePlan.
-    /// Format: projects/*/locations/*/backupPlans/*.
-    #[prost(string, tag = "6")]
-    pub backup_plan: ::prost::alloc::string::String,
-    /// Required. Immutable. The target cluster into which Restores created via this RestorePlan
-    /// will restore data. NOTE: the cluster's region must be the same as the
-    /// RestorePlan.
-    /// Valid formats:
-    ///
-    ///    - projects/*/locations/*/clusters/*
-    ///    - projects/*/zones/*/clusters/*
-    #[prost(string, tag = "7")]
-    pub cluster: ::prost::alloc::string::String,
-    /// Required. Configuration of Restores created via this RestorePlan.
-    #[prost(message, optional, tag = "8")]
-    pub restore_config: ::core::option::Option<RestoreConfig>,
-    /// A set of custom labels supplied by user.
-    #[prost(btree_map = "string, string", tag = "9")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. `etag` is used for optimistic concurrency control as a way to help
-    /// prevent simultaneous updates of a restore from overwriting each other.
-    /// It is strongly suggested that systems make use of the `etag` in the
-    /// read-modify-write cycle to perform restore updates in order to avoid
-    /// race conditions: An `etag` is returned in the response to `GetRestorePlan`,
-    /// and systems are expected to put that etag in the request to
-    /// `UpdateRestorePlan` or `DeleteRestorePlan` to ensure that their change
-    /// will be applied to the same version of the resource.
-    #[prost(string, tag = "10")]
-    pub etag: ::prost::alloc::string::String,
-}
 /// Represents a request to perform a single point-in-time capture of
 /// some portion of the state of a GKE cluster, the record of the backup
 /// operation itself, and an anchor for the underlying artifacts that
@@ -917,6 +858,65 @@ pub mod backup_plan {
             SelectedApplications(super::super::NamespacedNames),
         }
     }
+}
+/// The configuration of a potential series of Restore operations to be performed
+/// against Backups belong to a particular BackupPlan.
+/// Next id: 11
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RestorePlan {
+    /// Output only. The full name of the RestorePlan resource.
+    /// Format: projects/*/locations/*/restorePlans/*.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server generated global unique identifier of
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>) format.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. The timestamp when this RestorePlan resource was
+    /// created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when this RestorePlan resource was last
+    /// updated.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// User specified descriptive string for this RestorePlan.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Immutable. A reference to the \[BackupPlan][google.cloud.gkebackup.v1.BackupPlan\] from which Backups may be used as the
+    /// source for Restores created via this RestorePlan.
+    /// Format: projects/*/locations/*/backupPlans/*.
+    #[prost(string, tag = "6")]
+    pub backup_plan: ::prost::alloc::string::String,
+    /// Required. Immutable. The target cluster into which Restores created via this RestorePlan
+    /// will restore data. NOTE: the cluster's region must be the same as the
+    /// RestorePlan.
+    /// Valid formats:
+    ///
+    ///    - projects/*/locations/*/clusters/*
+    ///    - projects/*/zones/*/clusters/*
+    #[prost(string, tag = "7")]
+    pub cluster: ::prost::alloc::string::String,
+    /// Required. Configuration of Restores created via this RestorePlan.
+    #[prost(message, optional, tag = "8")]
+    pub restore_config: ::core::option::Option<RestoreConfig>,
+    /// A set of custom labels supplied by user.
+    #[prost(btree_map = "string, string", tag = "9")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. `etag` is used for optimistic concurrency control as a way to help
+    /// prevent simultaneous updates of a restore from overwriting each other.
+    /// It is strongly suggested that systems make use of the `etag` in the
+    /// read-modify-write cycle to perform restore updates in order to avoid
+    /// race conditions: An `etag` is returned in the response to `GetRestorePlan`,
+    /// and systems are expected to put that etag in the request to
+    /// `UpdateRestorePlan` or `DeleteRestorePlan` to ensure that their change
+    /// will be applied to the same version of the resource.
+    #[prost(string, tag = "10")]
+    pub etag: ::prost::alloc::string::String,
 }
 /// Represents the backup of a specific persistent volume as a component of a
 /// Backup - both the record of the operation and a pointer to the underlying

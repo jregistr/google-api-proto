@@ -1,3 +1,33 @@
+/// The response for \[Commit][google.spanner.v1.Spanner.Commit\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommitResponse {
+    /// The Cloud Spanner timestamp at which the transaction committed.
+    #[prost(message, optional, tag = "1")]
+    pub commit_timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// The statistics about this Commit. Not returned by default.
+    /// For more information, see
+    /// \[CommitRequest.return_commit_stats][google.spanner.v1.CommitRequest.return_commit_stats\].
+    #[prost(message, optional, tag = "2")]
+    pub commit_stats: ::core::option::Option<commit_response::CommitStats>,
+}
+/// Nested message and enum types in `CommitResponse`.
+pub mod commit_response {
+    /// Additional statistics about a commit.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CommitStats {
+        /// The total number of mutations for the transaction. Knowing the
+        /// `mutation_count` value can help you maximize the number of mutations
+        /// in a transaction and minimize the number of API round trips. You can
+        /// also monitor this value to prevent transactions from exceeding the system
+        /// \[limit\](<https://cloud.google.com/spanner/quotas#limits_for_creating_reading_updating_and_deleting_data>).
+        /// If the number of mutations exceeds the limit, the server returns
+        /// \[INVALID_ARGUMENT\](<https://cloud.google.com/spanner/docs/reference/rest/v1/Code#ENUM_VALUES.INVALID_ARGUMENT>).
+        #[prost(int64, tag = "1")]
+        pub mutation_count: i64,
+    }
+}
 /// KeyRange represents a range of rows in a table or index.
 ///
 /// A range has a start key and an end key. These keys can be open or
@@ -242,6 +272,143 @@ pub mod mutation {
         #[prost(message, tag = "5")]
         Delete(Delete),
     }
+}
+/// Node information for nodes appearing in a \[QueryPlan.plan_nodes][google.spanner.v1.QueryPlan.plan_nodes\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlanNode {
+    /// The `PlanNode`'s index in [node list]\[google.spanner.v1.QueryPlan.plan_nodes\].
+    #[prost(int32, tag = "1")]
+    pub index: i32,
+    /// Used to determine the type of node. May be needed for visualizing
+    /// different kinds of nodes differently. For example, If the node is a
+    /// \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] node, it will have a condensed representation
+    /// which can be used to directly embed a description of the node in its
+    /// parent.
+    #[prost(enumeration = "plan_node::Kind", tag = "2")]
+    pub kind: i32,
+    /// The display name for the node.
+    #[prost(string, tag = "3")]
+    pub display_name: ::prost::alloc::string::String,
+    /// List of child node `index`es and their relationship to this parent.
+    #[prost(message, repeated, tag = "4")]
+    pub child_links: ::prost::alloc::vec::Vec<plan_node::ChildLink>,
+    /// Condensed representation for \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] nodes.
+    #[prost(message, optional, tag = "5")]
+    pub short_representation: ::core::option::Option<plan_node::ShortRepresentation>,
+    /// Attributes relevant to the node contained in a group of key-value pairs.
+    /// For example, a Parameter Reference node could have the following
+    /// information in its metadata:
+    ///
+    ///      {
+    ///        "parameter_reference": "param1",
+    ///        "parameter_type": "array"
+    ///      }
+    #[prost(message, optional, tag = "6")]
+    pub metadata: ::core::option::Option<::prost_types::Struct>,
+    /// The execution statistics associated with the node, contained in a group of
+    /// key-value pairs. Only present if the plan was returned as a result of a
+    /// profile query. For example, number of executions, number of rows/time per
+    /// execution etc.
+    #[prost(message, optional, tag = "7")]
+    pub execution_stats: ::core::option::Option<::prost_types::Struct>,
+}
+/// Nested message and enum types in `PlanNode`.
+pub mod plan_node {
+    /// Metadata associated with a parent-child relationship appearing in a
+    /// \[PlanNode][google.spanner.v1.PlanNode\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ChildLink {
+        /// The node to which the link points.
+        #[prost(int32, tag = "1")]
+        pub child_index: i32,
+        /// The type of the link. For example, in Hash Joins this could be used to
+        /// distinguish between the build child and the probe child, or in the case
+        /// of the child being an output variable, to represent the tag associated
+        /// with the output variable.
+        #[prost(string, tag = "2")]
+        pub r#type: ::prost::alloc::string::String,
+        /// Only present if the child node is \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] and corresponds
+        /// to an output variable of the parent node. The field carries the name of
+        /// the output variable.
+        /// For example, a `TableScan` operator that reads rows from a table will
+        /// have child links to the `SCALAR` nodes representing the output variables
+        /// created for each column that is read by the operator. The corresponding
+        /// `variable` fields will be set to the variable names assigned to the
+        /// columns.
+        #[prost(string, tag = "3")]
+        pub variable: ::prost::alloc::string::String,
+    }
+    /// Condensed representation of a node and its subtree. Only present for
+    /// `SCALAR` \[PlanNode(s)][google.spanner.v1.PlanNode\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ShortRepresentation {
+        /// A string representation of the expression subtree rooted at this node.
+        #[prost(string, tag = "1")]
+        pub description: ::prost::alloc::string::String,
+        /// A mapping of (subquery variable name) -> (subquery node id) for cases
+        /// where the `description` string of this node references a `SCALAR`
+        /// subquery contained in the expression subtree rooted at this node. The
+        /// referenced `SCALAR` subquery may not necessarily be a direct child of
+        /// this node.
+        #[prost(btree_map = "string, int32", tag = "2")]
+        pub subqueries: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            i32,
+        >,
+    }
+    /// The kind of \[PlanNode][google.spanner.v1.PlanNode\]. Distinguishes between the two different kinds of
+    /// nodes that can appear in a query plan.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Kind {
+        /// Not specified.
+        Unspecified = 0,
+        /// Denotes a Relational operator node in the expression tree. Relational
+        /// operators represent iterative processing of rows during query execution.
+        /// For example, a `TableScan` operation that reads rows from a table.
+        Relational = 1,
+        /// Denotes a Scalar node in the expression tree. Scalar nodes represent
+        /// non-iterable entities in the query plan. For example, constants or
+        /// arithmetic operators appearing inside predicate expressions or references
+        /// to column names.
+        Scalar = 2,
+    }
+    impl Kind {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Kind::Unspecified => "KIND_UNSPECIFIED",
+                Kind::Relational => "RELATIONAL",
+                Kind::Scalar => "SCALAR",
+            }
+        }
+    }
+}
+/// Contains an ordered list of nodes appearing in the query plan.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryPlan {
+    /// The nodes in the query plan. Plan nodes are returned in pre-order starting
+    /// with the plan root. Each \[PlanNode][google.spanner.v1.PlanNode\]'s `id` corresponds to its index in
+    /// `plan_nodes`.
+    #[prost(message, repeated, tag = "1")]
+    pub plan_nodes: ::prost::alloc::vec::Vec<PlanNode>,
 }
 /// Transactions:
 ///
@@ -801,143 +968,6 @@ pub mod transaction_selector {
         Begin(super::TransactionOptions),
     }
 }
-/// Node information for nodes appearing in a \[QueryPlan.plan_nodes][google.spanner.v1.QueryPlan.plan_nodes\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlanNode {
-    /// The `PlanNode`'s index in [node list]\[google.spanner.v1.QueryPlan.plan_nodes\].
-    #[prost(int32, tag = "1")]
-    pub index: i32,
-    /// Used to determine the type of node. May be needed for visualizing
-    /// different kinds of nodes differently. For example, If the node is a
-    /// \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] node, it will have a condensed representation
-    /// which can be used to directly embed a description of the node in its
-    /// parent.
-    #[prost(enumeration = "plan_node::Kind", tag = "2")]
-    pub kind: i32,
-    /// The display name for the node.
-    #[prost(string, tag = "3")]
-    pub display_name: ::prost::alloc::string::String,
-    /// List of child node `index`es and their relationship to this parent.
-    #[prost(message, repeated, tag = "4")]
-    pub child_links: ::prost::alloc::vec::Vec<plan_node::ChildLink>,
-    /// Condensed representation for \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] nodes.
-    #[prost(message, optional, tag = "5")]
-    pub short_representation: ::core::option::Option<plan_node::ShortRepresentation>,
-    /// Attributes relevant to the node contained in a group of key-value pairs.
-    /// For example, a Parameter Reference node could have the following
-    /// information in its metadata:
-    ///
-    ///      {
-    ///        "parameter_reference": "param1",
-    ///        "parameter_type": "array"
-    ///      }
-    #[prost(message, optional, tag = "6")]
-    pub metadata: ::core::option::Option<::prost_types::Struct>,
-    /// The execution statistics associated with the node, contained in a group of
-    /// key-value pairs. Only present if the plan was returned as a result of a
-    /// profile query. For example, number of executions, number of rows/time per
-    /// execution etc.
-    #[prost(message, optional, tag = "7")]
-    pub execution_stats: ::core::option::Option<::prost_types::Struct>,
-}
-/// Nested message and enum types in `PlanNode`.
-pub mod plan_node {
-    /// Metadata associated with a parent-child relationship appearing in a
-    /// \[PlanNode][google.spanner.v1.PlanNode\].
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ChildLink {
-        /// The node to which the link points.
-        #[prost(int32, tag = "1")]
-        pub child_index: i32,
-        /// The type of the link. For example, in Hash Joins this could be used to
-        /// distinguish between the build child and the probe child, or in the case
-        /// of the child being an output variable, to represent the tag associated
-        /// with the output variable.
-        #[prost(string, tag = "2")]
-        pub r#type: ::prost::alloc::string::String,
-        /// Only present if the child node is \[SCALAR][google.spanner.v1.PlanNode.Kind.SCALAR\] and corresponds
-        /// to an output variable of the parent node. The field carries the name of
-        /// the output variable.
-        /// For example, a `TableScan` operator that reads rows from a table will
-        /// have child links to the `SCALAR` nodes representing the output variables
-        /// created for each column that is read by the operator. The corresponding
-        /// `variable` fields will be set to the variable names assigned to the
-        /// columns.
-        #[prost(string, tag = "3")]
-        pub variable: ::prost::alloc::string::String,
-    }
-    /// Condensed representation of a node and its subtree. Only present for
-    /// `SCALAR` \[PlanNode(s)][google.spanner.v1.PlanNode\].
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ShortRepresentation {
-        /// A string representation of the expression subtree rooted at this node.
-        #[prost(string, tag = "1")]
-        pub description: ::prost::alloc::string::String,
-        /// A mapping of (subquery variable name) -> (subquery node id) for cases
-        /// where the `description` string of this node references a `SCALAR`
-        /// subquery contained in the expression subtree rooted at this node. The
-        /// referenced `SCALAR` subquery may not necessarily be a direct child of
-        /// this node.
-        #[prost(btree_map = "string, int32", tag = "2")]
-        pub subqueries: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            i32,
-        >,
-    }
-    /// The kind of \[PlanNode][google.spanner.v1.PlanNode\]. Distinguishes between the two different kinds of
-    /// nodes that can appear in a query plan.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Kind {
-        /// Not specified.
-        Unspecified = 0,
-        /// Denotes a Relational operator node in the expression tree. Relational
-        /// operators represent iterative processing of rows during query execution.
-        /// For example, a `TableScan` operation that reads rows from a table.
-        Relational = 1,
-        /// Denotes a Scalar node in the expression tree. Scalar nodes represent
-        /// non-iterable entities in the query plan. For example, constants or
-        /// arithmetic operators appearing inside predicate expressions or references
-        /// to column names.
-        Scalar = 2,
-    }
-    impl Kind {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Kind::Unspecified => "KIND_UNSPECIFIED",
-                Kind::Relational => "RELATIONAL",
-                Kind::Scalar => "SCALAR",
-            }
-        }
-    }
-}
-/// Contains an ordered list of nodes appearing in the query plan.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryPlan {
-    /// The nodes in the query plan. Plan nodes are returned in pre-order starting
-    /// with the plan root. Each \[PlanNode][google.spanner.v1.PlanNode\]'s `id` corresponds to its index in
-    /// `plan_nodes`.
-    #[prost(message, repeated, tag = "1")]
-    pub plan_nodes: ::prost::alloc::vec::Vec<PlanNode>,
-}
 /// `Type` indicates the type of a Cloud Spanner value, as might be stored in a
 /// table cell or returned from an SQL query.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1317,36 +1347,6 @@ pub mod result_set_stats {
         /// returns a lower bound of the rows modified.
         #[prost(int64, tag = "4")]
         RowCountLowerBound(i64),
-    }
-}
-/// The response for \[Commit][google.spanner.v1.Spanner.Commit\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommitResponse {
-    /// The Cloud Spanner timestamp at which the transaction committed.
-    #[prost(message, optional, tag = "1")]
-    pub commit_timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// The statistics about this Commit. Not returned by default.
-    /// For more information, see
-    /// \[CommitRequest.return_commit_stats][google.spanner.v1.CommitRequest.return_commit_stats\].
-    #[prost(message, optional, tag = "2")]
-    pub commit_stats: ::core::option::Option<commit_response::CommitStats>,
-}
-/// Nested message and enum types in `CommitResponse`.
-pub mod commit_response {
-    /// Additional statistics about a commit.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CommitStats {
-        /// The total number of mutations for the transaction. Knowing the
-        /// `mutation_count` value can help you maximize the number of mutations
-        /// in a transaction and minimize the number of API round trips. You can
-        /// also monitor this value to prevent transactions from exceeding the system
-        /// \[limit\](<https://cloud.google.com/spanner/quotas#limits_for_creating_reading_updating_and_deleting_data>).
-        /// If the number of mutations exceeds the limit, the server returns
-        /// \[INVALID_ARGUMENT\](<https://cloud.google.com/spanner/docs/reference/rest/v1/Code#ENUM_VALUES.INVALID_ARGUMENT>).
-        #[prost(int64, tag = "1")]
-        pub mutation_count: i64,
     }
 }
 /// The request for \[CreateSession][google.spanner.v1.Spanner.CreateSession\].

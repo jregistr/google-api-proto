@@ -1,67 +1,95 @@
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+/// Code and application artifacts used to deploy a version to App Engine.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadataV1 {
-    /// API method that initiated this operation. Example:
-    /// `google.appengine.v1.Versions.CreateVersion`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub method: ::prost::alloc::string::String,
-    /// Time that this operation was created.
-    ///
-    /// @OutputOnly
+pub struct Deployment {
+    /// Manifest of the files stored in Google Cloud Storage that are included
+    /// as part of this version. All files must be readable using the
+    /// credentials supplied with this call.
+    #[prost(btree_map = "string, message", tag = "1")]
+    pub files: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        FileInfo,
+    >,
+    /// The Docker image for the container that runs the version.
+    /// Only applicable for instances running in the App Engine flexible environment.
     #[prost(message, optional, tag = "2")]
-    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Time that this operation completed.
-    ///
-    /// @OutputOnly
+    pub container: ::core::option::Option<ContainerInfo>,
+    /// The zip file for this deployment, if this is a zip deployment.
     #[prost(message, optional, tag = "3")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// User who requested this operation.
+    pub zip: ::core::option::Option<ZipInfo>,
+    /// Options for any Google Cloud Build builds created as a part of this
+    /// deployment.
     ///
-    /// @OutputOnly
-    #[prost(string, tag = "4")]
-    pub user: ::prost::alloc::string::String,
-    /// Name of the resource that this operation is acting on. Example:
-    /// `apps/myapp/services/default`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "5")]
-    pub target: ::prost::alloc::string::String,
-    /// Ephemeral message that may change every time the operation is polled.
-    /// @OutputOnly
-    #[prost(string, tag = "6")]
-    pub ephemeral_message: ::prost::alloc::string::String,
-    /// Durable messages that persist on every operation poll.
-    /// @OutputOnly
-    #[prost(string, repeated, tag = "7")]
-    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
-    #[prost(oneof = "operation_metadata_v1::MethodMetadata", tags = "8")]
-    pub method_metadata: ::core::option::Option<operation_metadata_v1::MethodMetadata>,
+    /// These options will only be used if a new build is created, such as when
+    /// deploying to the App Engine flexible environment using files or zip.
+    #[prost(message, optional, tag = "6")]
+    pub cloud_build_options: ::core::option::Option<CloudBuildOptions>,
 }
-/// Nested message and enum types in `OperationMetadataV1`.
-pub mod operation_metadata_v1 {
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MethodMetadata {
-        #[prost(message, tag = "8")]
-        CreateVersionMetadata(super::CreateVersionMetadataV1),
-    }
-}
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
-/// \[google.appengine.v1.CreateVersionRequest][google.appengine.v1.CreateVersionRequest\].
+/// Single source file that is part of the version to be deployed. Each source
+/// file that is deployed must be specified separately.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionMetadataV1 {
-    /// The Cloud Build ID if one was created as part of the version create.
-    /// @OutputOnly
+pub struct FileInfo {
+    /// URL source to use to fetch this file. Must be a URL to a resource in
+    /// Google Cloud Storage in the form
+    /// 'http(s)://storage.googleapis.com/\<bucket\>/\<object\>'.
     #[prost(string, tag = "1")]
-    pub cloud_build_id: ::prost::alloc::string::String,
+    pub source_url: ::prost::alloc::string::String,
+    /// The SHA1 hash of the file, in hex.
+    #[prost(string, tag = "2")]
+    pub sha1_sum: ::prost::alloc::string::String,
+    /// The MIME type of the file.
+    ///
+    /// Defaults to the value from Google Cloud Storage.
+    #[prost(string, tag = "3")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Docker image that is used to create a container and start a VM instance for
+/// the version that you deploy. Only applicable for instances running in the App
+/// Engine flexible environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ContainerInfo {
+    /// URI to the hosted container image in Google Container Registry. The URI
+    /// must be fully qualified and include a tag or digest.
+    /// Examples: "gcr.io/my-project/image:tag" or "gcr.io/my-project/image@digest"
+    #[prost(string, tag = "1")]
+    pub image: ::prost::alloc::string::String,
+}
+/// Options for the build operations performed as a part of the version
+/// deployment. Only applicable for App Engine flexible environment when creating
+/// a version using source code directly.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CloudBuildOptions {
+    /// Path to the yaml file used in deployment, used to determine runtime
+    /// configuration details.
+    ///
+    /// Required for flexible environment builds.
+    ///
+    /// See <https://cloud.google.com/appengine/docs/standard/python/config/appref>
+    /// for more details.
+    #[prost(string, tag = "1")]
+    pub app_yaml_path: ::prost::alloc::string::String,
+    /// The Cloud Build timeout used as part of any dependent builds performed by
+    /// version creation. Defaults to 10 minutes.
+    #[prost(message, optional, tag = "2")]
+    pub cloud_build_timeout: ::core::option::Option<::prost_types::Duration>,
+}
+/// The zip file information for a zip deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ZipInfo {
+    /// URL of the zip file to deploy from. Must be a URL to a resource in
+    /// Google Cloud Storage in the form
+    /// 'http(s)://storage.googleapis.com/\<bucket\>/\<object\>'.
+    #[prost(string, tag = "3")]
+    pub source_url: ::prost::alloc::string::String,
+    /// An estimate of the number of files in a zip for a zip deployment.
+    /// If set, must be greater than or equal to the actual number of files.
+    /// Used for optimizing performance; if not provided, deployment may be slow.
+    #[prost(int32, tag = "4")]
+    pub files_count: i32,
 }
 /// [Google Cloud Endpoints](<https://cloud.google.com/appengine/docs/python/endpoints/>)
 /// configuration for API handlers.
@@ -495,99 +523,6 @@ impl SecurityLevel {
             SecurityLevel::SecureAlways => "SECURE_ALWAYS",
         }
     }
-}
-/// Code and application artifacts used to deploy a version to App Engine.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Deployment {
-    /// Manifest of the files stored in Google Cloud Storage that are included
-    /// as part of this version. All files must be readable using the
-    /// credentials supplied with this call.
-    #[prost(btree_map = "string, message", tag = "1")]
-    pub files: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        FileInfo,
-    >,
-    /// The Docker image for the container that runs the version.
-    /// Only applicable for instances running in the App Engine flexible environment.
-    #[prost(message, optional, tag = "2")]
-    pub container: ::core::option::Option<ContainerInfo>,
-    /// The zip file for this deployment, if this is a zip deployment.
-    #[prost(message, optional, tag = "3")]
-    pub zip: ::core::option::Option<ZipInfo>,
-    /// Options for any Google Cloud Build builds created as a part of this
-    /// deployment.
-    ///
-    /// These options will only be used if a new build is created, such as when
-    /// deploying to the App Engine flexible environment using files or zip.
-    #[prost(message, optional, tag = "6")]
-    pub cloud_build_options: ::core::option::Option<CloudBuildOptions>,
-}
-/// Single source file that is part of the version to be deployed. Each source
-/// file that is deployed must be specified separately.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FileInfo {
-    /// URL source to use to fetch this file. Must be a URL to a resource in
-    /// Google Cloud Storage in the form
-    /// 'http(s)://storage.googleapis.com/\<bucket\>/\<object\>'.
-    #[prost(string, tag = "1")]
-    pub source_url: ::prost::alloc::string::String,
-    /// The SHA1 hash of the file, in hex.
-    #[prost(string, tag = "2")]
-    pub sha1_sum: ::prost::alloc::string::String,
-    /// The MIME type of the file.
-    ///
-    /// Defaults to the value from Google Cloud Storage.
-    #[prost(string, tag = "3")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Docker image that is used to create a container and start a VM instance for
-/// the version that you deploy. Only applicable for instances running in the App
-/// Engine flexible environment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContainerInfo {
-    /// URI to the hosted container image in Google Container Registry. The URI
-    /// must be fully qualified and include a tag or digest.
-    /// Examples: "gcr.io/my-project/image:tag" or "gcr.io/my-project/image@digest"
-    #[prost(string, tag = "1")]
-    pub image: ::prost::alloc::string::String,
-}
-/// Options for the build operations performed as a part of the version
-/// deployment. Only applicable for App Engine flexible environment when creating
-/// a version using source code directly.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CloudBuildOptions {
-    /// Path to the yaml file used in deployment, used to determine runtime
-    /// configuration details.
-    ///
-    /// Required for flexible environment builds.
-    ///
-    /// See <https://cloud.google.com/appengine/docs/standard/python/config/appref>
-    /// for more details.
-    #[prost(string, tag = "1")]
-    pub app_yaml_path: ::prost::alloc::string::String,
-    /// The Cloud Build timeout used as part of any dependent builds performed by
-    /// version creation. Defaults to 10 minutes.
-    #[prost(message, optional, tag = "2")]
-    pub cloud_build_timeout: ::core::option::Option<::prost_types::Duration>,
-}
-/// The zip file information for a zip deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ZipInfo {
-    /// URL of the zip file to deploy from. Must be a URL to a resource in
-    /// Google Cloud Storage in the form
-    /// 'http(s)://storage.googleapis.com/\<bucket\>/\<object\>'.
-    #[prost(string, tag = "3")]
-    pub source_url: ::prost::alloc::string::String,
-    /// An estimate of the number of files in a zip for a zip deployment.
-    /// If set, must be greater than or equal to the actual number of files.
-    /// Used for optimizing performance; if not provided, deployment may be slow.
-    #[prost(int32, tag = "4")]
-    pub files_count: i32,
 }
 /// A Version resource is a specific set of source code and configuration files
 /// that are deployed into a service.
@@ -1296,6 +1231,303 @@ impl ServingStatus {
         }
     }
 }
+/// An Instance resource is the computing unit that App Engine uses to
+/// automatically scale an application.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Instance {
+    /// Output only. Full path to the Instance resource in the API.
+    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Relative name of the instance within the version.
+    /// Example: `instance-1`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+    /// Output only. App Engine release this instance is running on.
+    #[prost(string, tag = "3")]
+    pub app_engine_release: ::prost::alloc::string::String,
+    /// Output only. Availability of the instance.
+    #[prost(enumeration = "instance::Availability", tag = "4")]
+    pub availability: i32,
+    /// Output only. Name of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
+    #[prost(string, tag = "5")]
+    pub vm_name: ::prost::alloc::string::String,
+    /// Output only. Zone where the virtual machine is located. Only applicable for instances
+    /// in App Engine flexible environment.
+    #[prost(string, tag = "6")]
+    pub vm_zone_name: ::prost::alloc::string::String,
+    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(string, tag = "7")]
+    pub vm_id: ::prost::alloc::string::String,
+    /// Output only. Time that this instance was started.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "8")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Number of requests since this instance was started.
+    #[prost(int32, tag = "9")]
+    pub requests: i32,
+    /// Output only. Number of errors since this instance was started.
+    #[prost(int32, tag = "10")]
+    pub errors: i32,
+    /// Output only. Average queries per second (QPS) over the last minute.
+    #[prost(float, tag = "11")]
+    pub qps: f32,
+    /// Output only. Average latency (ms) over the last minute.
+    #[prost(int32, tag = "12")]
+    pub average_latency: i32,
+    /// Output only. Total memory in use (bytes).
+    #[prost(int64, tag = "13")]
+    pub memory_usage: i64,
+    /// Output only. Status of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
+    #[prost(string, tag = "14")]
+    pub vm_status: ::prost::alloc::string::String,
+    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(bool, tag = "15")]
+    pub vm_debug_enabled: bool,
+    /// Output only. The IP address of this instance. Only applicable for instances in App
+    /// Engine flexible environment.
+    #[prost(string, tag = "16")]
+    pub vm_ip: ::prost::alloc::string::String,
+    /// Output only. The liveness health check of this instance. Only applicable for instances
+    /// in App Engine flexible environment.
+    #[prost(enumeration = "instance::liveness::LivenessState", tag = "17")]
+    pub vm_liveness: i32,
+}
+/// Nested message and enum types in `Instance`.
+pub mod instance {
+    /// Wrapper for LivenessState enum.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Liveness {}
+    /// Nested message and enum types in `Liveness`.
+    pub mod liveness {
+        /// Liveness health check status for Flex instances.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum LivenessState {
+            /// There is no liveness health check for the instance. Only applicable for
+            /// instances in App Engine standard environment.
+            Unspecified = 0,
+            /// The health checking system is aware of the instance but its health is
+            /// not known at the moment.
+            Unknown = 1,
+            /// The instance is reachable i.e. a connection to the application health
+            /// checking endpoint can be established, and conforms to the requirements
+            /// defined by the health check.
+            Healthy = 2,
+            /// The instance is reachable, but does not conform to the requirements
+            /// defined by the health check.
+            Unhealthy = 3,
+            /// The instance is being drained. The existing connections to the instance
+            /// have time to complete, but the new ones are being refused.
+            Draining = 4,
+            /// The instance is unreachable i.e. a connection to the application health
+            /// checking endpoint cannot be established, or the server does not respond
+            /// within the specified timeout.
+            Timeout = 5,
+        }
+        impl LivenessState {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    LivenessState::Unspecified => "LIVENESS_STATE_UNSPECIFIED",
+                    LivenessState::Unknown => "UNKNOWN",
+                    LivenessState::Healthy => "HEALTHY",
+                    LivenessState::Unhealthy => "UNHEALTHY",
+                    LivenessState::Draining => "DRAINING",
+                    LivenessState::Timeout => "TIMEOUT",
+                }
+            }
+        }
+    }
+    /// Availability of the instance.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Availability {
+        Unspecified = 0,
+        Resident = 1,
+        Dynamic = 2,
+    }
+    impl Availability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Availability::Unspecified => "UNSPECIFIED",
+                Availability::Resident => "RESIDENT",
+                Availability::Dynamic => "DYNAMIC",
+            }
+        }
+    }
+}
+/// A domain that a user has been authorized to administer. To authorize use
+/// of a domain, verify ownership via
+/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuthorizedDomain {
+    /// Full path to the `AuthorizedDomain` resource in the API. Example:
+    /// `apps/myapp/authorizedDomains/example.com`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Fully qualified domain name of the domain authorized for use. Example:
+    /// `example.com`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+}
+/// A NetworkSettings resource is a container for ingress settings for a version
+/// or service.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkSettings {
+    /// The ingress settings for version or service.
+    #[prost(enumeration = "network_settings::IngressTrafficAllowed", tag = "1")]
+    pub ingress_traffic_allowed: i32,
+}
+/// Nested message and enum types in `NetworkSettings`.
+pub mod network_settings {
+    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum IngressTrafficAllowed {
+        /// Unspecified
+        Unspecified = 0,
+        /// Allow HTTP traffic from public and private sources.
+        All = 1,
+        /// Allow HTTP traffic from only private VPC sources.
+        InternalOnly = 2,
+        /// Allow HTTP traffic from private VPC sources and through load balancers.
+        InternalAndLb = 3,
+    }
+    impl IngressTrafficAllowed {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                IngressTrafficAllowed::Unspecified => {
+                    "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED"
+                }
+                IngressTrafficAllowed::All => "INGRESS_TRAFFIC_ALLOWED_ALL",
+                IngressTrafficAllowed::InternalOnly => {
+                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY"
+                }
+                IngressTrafficAllowed::InternalAndLb => {
+                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB"
+                }
+            }
+        }
+    }
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadataV1 {
+    /// API method that initiated this operation. Example:
+    /// `google.appengine.v1.Versions.CreateVersion`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub method: ::prost::alloc::string::String,
+    /// Time that this operation was created.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "2")]
+    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Time that this operation completed.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "3")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// User who requested this operation.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "4")]
+    pub user: ::prost::alloc::string::String,
+    /// Name of the resource that this operation is acting on. Example:
+    /// `apps/myapp/services/default`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "5")]
+    pub target: ::prost::alloc::string::String,
+    /// Ephemeral message that may change every time the operation is polled.
+    /// @OutputOnly
+    #[prost(string, tag = "6")]
+    pub ephemeral_message: ::prost::alloc::string::String,
+    /// Durable messages that persist on every operation poll.
+    /// @OutputOnly
+    #[prost(string, repeated, tag = "7")]
+    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[prost(oneof = "operation_metadata_v1::MethodMetadata", tags = "8")]
+    pub method_metadata: ::core::option::Option<operation_metadata_v1::MethodMetadata>,
+}
+/// Nested message and enum types in `OperationMetadataV1`.
+pub mod operation_metadata_v1 {
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MethodMetadata {
+        #[prost(message, tag = "8")]
+        CreateVersionMetadata(super::CreateVersionMetadataV1),
+    }
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
+/// \[google.appengine.v1.CreateVersionRequest][google.appengine.v1.CreateVersionRequest\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionMetadataV1 {
+    /// The Cloud Build ID if one was created as part of the version create.
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub cloud_build_id: ::prost::alloc::string::String,
+}
 /// An Application resource contains the top-level configuration of an App
 /// Engine application.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1524,6 +1756,76 @@ pub struct UrlDispatchRule {
     #[prost(string, tag = "3")]
     pub service: ::prost::alloc::string::String,
 }
+/// A single firewall rule that is evaluated against incoming traffic
+/// and provides an action to take on matched requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FirewallRule {
+    /// A positive integer between [1, Int32.MaxValue-1] that defines the order of
+    /// rule evaluation. Rules with the lowest priority are evaluated first.
+    ///
+    /// A default rule at priority Int32.MaxValue matches all IPv4 and IPv6 traffic
+    /// when no previous rule matches. Only the action of this rule can be modified
+    /// by the user.
+    #[prost(int32, tag = "1")]
+    pub priority: i32,
+    /// The action to take on matched requests.
+    #[prost(enumeration = "firewall_rule::Action", tag = "2")]
+    pub action: i32,
+    /// IP address or range, defined using CIDR notation, of requests that this
+    /// rule applies to. You can use the wildcard character "*" to match all IPs
+    /// equivalent to "0/0" and "::/0" together.
+    /// Examples: `192.168.1.1` or `192.168.0.0/16` or `2001:db8::/32`
+    ///            or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
+    ///
+    ///
+    /// <p>Truncation will be silently performed on addresses which are not
+    /// properly truncated. For example, `1.2.3.4/24` is accepted as the same
+    /// address as `1.2.3.0/24`. Similarly, for IPv6, `2001:db8::1/32` is accepted
+    /// as the same address as `2001:db8::/32`.
+    #[prost(string, tag = "3")]
+    pub source_range: ::prost::alloc::string::String,
+    /// An optional string description of this rule.
+    /// This field has a maximum length of 100 characters.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `FirewallRule`.
+pub mod firewall_rule {
+    /// Available actions to take on matching requests.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Action {
+        UnspecifiedAction = 0,
+        /// Matching requests are allowed.
+        Allow = 1,
+        /// Matching requests are denied.
+        Deny = 2,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::UnspecifiedAction => "UNSPECIFIED_ACTION",
+                Action::Allow => "ALLOW",
+                Action::Deny => "DENY",
+            }
+        }
+    }
+}
 /// An SSL certificate that a user has been authorized to administer. A user
 /// is authorized to administer any certificate that applies to one of their
 /// authorized domains.
@@ -1691,23 +1993,6 @@ impl ManagementStatus {
         }
     }
 }
-/// A domain that a user has been authorized to administer. To authorize use
-/// of a domain, verify ownership via
-/// [Webmaster Central](<https://www.google.com/webmasters/verification/home>).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthorizedDomain {
-    /// Full path to the `AuthorizedDomain` resource in the API. Example:
-    /// `apps/myapp/authorizedDomains/example.com`.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Fully qualified domain name of the domain authorized for use. Example:
-    /// `example.com`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-}
 /// A domain serving an App Engine application.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1858,291 +2143,6 @@ pub mod resource_record {
                 RecordType::A => "A",
                 RecordType::Aaaa => "AAAA",
                 RecordType::Cname => "CNAME",
-            }
-        }
-    }
-}
-/// A single firewall rule that is evaluated against incoming traffic
-/// and provides an action to take on matched requests.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FirewallRule {
-    /// A positive integer between [1, Int32.MaxValue-1] that defines the order of
-    /// rule evaluation. Rules with the lowest priority are evaluated first.
-    ///
-    /// A default rule at priority Int32.MaxValue matches all IPv4 and IPv6 traffic
-    /// when no previous rule matches. Only the action of this rule can be modified
-    /// by the user.
-    #[prost(int32, tag = "1")]
-    pub priority: i32,
-    /// The action to take on matched requests.
-    #[prost(enumeration = "firewall_rule::Action", tag = "2")]
-    pub action: i32,
-    /// IP address or range, defined using CIDR notation, of requests that this
-    /// rule applies to. You can use the wildcard character "*" to match all IPs
-    /// equivalent to "0/0" and "::/0" together.
-    /// Examples: `192.168.1.1` or `192.168.0.0/16` or `2001:db8::/32`
-    ///            or `2001:0db8:0000:0042:0000:8a2e:0370:7334`.
-    ///
-    ///
-    /// <p>Truncation will be silently performed on addresses which are not
-    /// properly truncated. For example, `1.2.3.4/24` is accepted as the same
-    /// address as `1.2.3.0/24`. Similarly, for IPv6, `2001:db8::1/32` is accepted
-    /// as the same address as `2001:db8::/32`.
-    #[prost(string, tag = "3")]
-    pub source_range: ::prost::alloc::string::String,
-    /// An optional string description of this rule.
-    /// This field has a maximum length of 100 characters.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `FirewallRule`.
-pub mod firewall_rule {
-    /// Available actions to take on matching requests.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Action {
-        UnspecifiedAction = 0,
-        /// Matching requests are allowed.
-        Allow = 1,
-        /// Matching requests are denied.
-        Deny = 2,
-    }
-    impl Action {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Action::UnspecifiedAction => "UNSPECIFIED_ACTION",
-                Action::Allow => "ALLOW",
-                Action::Deny => "DENY",
-            }
-        }
-    }
-}
-/// An Instance resource is the computing unit that App Engine uses to
-/// automatically scale an application.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Instance {
-    /// Output only. Full path to the Instance resource in the API.
-    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Relative name of the instance within the version.
-    /// Example: `instance-1`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-    /// Output only. App Engine release this instance is running on.
-    #[prost(string, tag = "3")]
-    pub app_engine_release: ::prost::alloc::string::String,
-    /// Output only. Availability of the instance.
-    #[prost(enumeration = "instance::Availability", tag = "4")]
-    pub availability: i32,
-    /// Output only. Name of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag = "5")]
-    pub vm_name: ::prost::alloc::string::String,
-    /// Output only. Zone where the virtual machine is located. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(string, tag = "6")]
-    pub vm_zone_name: ::prost::alloc::string::String,
-    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(string, tag = "7")]
-    pub vm_id: ::prost::alloc::string::String,
-    /// Output only. Time that this instance was started.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "8")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Number of requests since this instance was started.
-    #[prost(int32, tag = "9")]
-    pub requests: i32,
-    /// Output only. Number of errors since this instance was started.
-    #[prost(int32, tag = "10")]
-    pub errors: i32,
-    /// Output only. Average queries per second (QPS) over the last minute.
-    #[prost(float, tag = "11")]
-    pub qps: f32,
-    /// Output only. Average latency (ms) over the last minute.
-    #[prost(int32, tag = "12")]
-    pub average_latency: i32,
-    /// Output only. Total memory in use (bytes).
-    #[prost(int64, tag = "13")]
-    pub memory_usage: i64,
-    /// Output only. Status of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag = "14")]
-    pub vm_status: ::prost::alloc::string::String,
-    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(bool, tag = "15")]
-    pub vm_debug_enabled: bool,
-    /// Output only. The IP address of this instance. Only applicable for instances in App
-    /// Engine flexible environment.
-    #[prost(string, tag = "16")]
-    pub vm_ip: ::prost::alloc::string::String,
-    /// Output only. The liveness health check of this instance. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(enumeration = "instance::liveness::LivenessState", tag = "17")]
-    pub vm_liveness: i32,
-}
-/// Nested message and enum types in `Instance`.
-pub mod instance {
-    /// Wrapper for LivenessState enum.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Liveness {}
-    /// Nested message and enum types in `Liveness`.
-    pub mod liveness {
-        /// Liveness health check status for Flex instances.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum LivenessState {
-            /// There is no liveness health check for the instance. Only applicable for
-            /// instances in App Engine standard environment.
-            Unspecified = 0,
-            /// The health checking system is aware of the instance but its health is
-            /// not known at the moment.
-            Unknown = 1,
-            /// The instance is reachable i.e. a connection to the application health
-            /// checking endpoint can be established, and conforms to the requirements
-            /// defined by the health check.
-            Healthy = 2,
-            /// The instance is reachable, but does not conform to the requirements
-            /// defined by the health check.
-            Unhealthy = 3,
-            /// The instance is being drained. The existing connections to the instance
-            /// have time to complete, but the new ones are being refused.
-            Draining = 4,
-            /// The instance is unreachable i.e. a connection to the application health
-            /// checking endpoint cannot be established, or the server does not respond
-            /// within the specified timeout.
-            Timeout = 5,
-        }
-        impl LivenessState {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    LivenessState::Unspecified => "LIVENESS_STATE_UNSPECIFIED",
-                    LivenessState::Unknown => "UNKNOWN",
-                    LivenessState::Healthy => "HEALTHY",
-                    LivenessState::Unhealthy => "UNHEALTHY",
-                    LivenessState::Draining => "DRAINING",
-                    LivenessState::Timeout => "TIMEOUT",
-                }
-            }
-        }
-    }
-    /// Availability of the instance.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Availability {
-        Unspecified = 0,
-        Resident = 1,
-        Dynamic = 2,
-    }
-    impl Availability {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Availability::Unspecified => "UNSPECIFIED",
-                Availability::Resident => "RESIDENT",
-                Availability::Dynamic => "DYNAMIC",
-            }
-        }
-    }
-}
-/// A NetworkSettings resource is a container for ingress settings for a version
-/// or service.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkSettings {
-    /// The ingress settings for version or service.
-    #[prost(enumeration = "network_settings::IngressTrafficAllowed", tag = "1")]
-    pub ingress_traffic_allowed: i32,
-}
-/// Nested message and enum types in `NetworkSettings`.
-pub mod network_settings {
-    /// If unspecified, INGRESS_TRAFFIC_ALLOWED_ALL will be used.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum IngressTrafficAllowed {
-        /// Unspecified
-        Unspecified = 0,
-        /// Allow HTTP traffic from public and private sources.
-        All = 1,
-        /// Allow HTTP traffic from only private VPC sources.
-        InternalOnly = 2,
-        /// Allow HTTP traffic from private VPC sources and through load balancers.
-        InternalAndLb = 3,
-    }
-    impl IngressTrafficAllowed {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                IngressTrafficAllowed::Unspecified => {
-                    "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED"
-                }
-                IngressTrafficAllowed::All => "INGRESS_TRAFFIC_ALLOWED_ALL",
-                IngressTrafficAllowed::InternalOnly => {
-                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY"
-                }
-                IngressTrafficAllowed::InternalAndLb => {
-                    "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB"
-                }
             }
         }
     }

@@ -1,74 +1,3 @@
-/// Information related to how and why a fallback result was used. If this field
-/// is set, then it means the server used a different routing mode from your
-/// preferred mode as fallback.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FallbackInfo {
-    /// Routing mode used for the response. If fallback was triggered, the mode
-    /// may be different from routing preference set in the original client
-    /// request.
-    #[prost(enumeration = "FallbackRoutingMode", tag = "1")]
-    pub routing_mode: i32,
-    /// The reason why fallback response was used instead of the original response.
-    /// This field is only populated when the fallback mode is triggered and the
-    /// fallback response is returned.
-    #[prost(enumeration = "FallbackReason", tag = "2")]
-    pub reason: i32,
-}
-/// Reasons for using fallback response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum FallbackReason {
-    /// No fallback reason specified.
-    Unspecified = 0,
-    /// A server error happened while calculating routes with your preferred
-    /// routing mode, but we were able to return a result calculated by an
-    /// alternative mode.
-    ServerError = 1,
-    /// We were not able to finish the calculation with your preferred routing mode
-    /// on time, but we were able to return a result calculated by an alternative
-    /// mode.
-    LatencyExceeded = 2,
-}
-impl FallbackReason {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            FallbackReason::Unspecified => "FALLBACK_REASON_UNSPECIFIED",
-            FallbackReason::ServerError => "SERVER_ERROR",
-            FallbackReason::LatencyExceeded => "LATENCY_EXCEEDED",
-        }
-    }
-}
-/// Actual routing mode used for returned fallback response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum FallbackRoutingMode {
-    /// Not used.
-    Unspecified = 0,
-    /// Indicates the "TRAFFIC_UNAWARE" routing mode was used to compute the
-    /// response.
-    FallbackTrafficUnaware = 1,
-    /// Indicates the "TRAFFIC_AWARE" routing mode was used to compute the
-    /// response.
-    FallbackTrafficAware = 2,
-}
-impl FallbackRoutingMode {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            FallbackRoutingMode::Unspecified => "FALLBACK_ROUTING_MODE_UNSPECIFIED",
-            FallbackRoutingMode::FallbackTrafficUnaware => "FALLBACK_TRAFFIC_UNAWARE",
-            FallbackRoutingMode::FallbackTrafficAware => "FALLBACK_TRAFFIC_AWARE",
-        }
-    }
-}
 /// Encapsulates an encoded polyline.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -147,21 +76,6 @@ impl PolylineEncoding {
             PolylineEncoding::GeoJsonLinestring => "GEO_JSON_LINESTRING",
         }
     }
-}
-/// Encapsulates a location (a geographic point, and an optional heading).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Location {
-    /// The waypoint's geographic coordinates.
-    #[prost(message, optional, tag = "1")]
-    pub lat_lng: ::core::option::Option<super::super::super::r#type::LatLng>,
-    /// The compass heading associated with the direction of the flow of traffic.
-    /// This value is used to specify the side of the road to use for pickup and
-    /// drop-off. Heading values can be from 0 to 360, where 0 specifies a heading
-    /// of due North, 90 specifies a heading of due East, etc. You can use this
-    /// field only for `DRIVE` and `TWO_WHEELER` travel modes.
-    #[prost(message, optional, tag = "2")]
-    pub heading: ::core::option::Option<i32>,
 }
 /// A set of values that specify the navigation action to take for the current
 /// step (e.g., turn left, merge, straight, etc.).
@@ -248,6 +162,21 @@ pub struct NavigationInstruction {
     /// Instructions for navigating this step.
     #[prost(string, tag = "2")]
     pub instructions: ::prost::alloc::string::String,
+}
+/// Encapsulates a location (a geographic point, and an optional heading).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Location {
+    /// The waypoint's geographic coordinates.
+    #[prost(message, optional, tag = "1")]
+    pub lat_lng: ::core::option::Option<super::super::super::r#type::LatLng>,
+    /// The compass heading associated with the direction of the flow of traffic.
+    /// This value is used to specify the side of the road to use for pickup and
+    /// drop-off. Heading values can be from 0 to 360, where 0 specifies a heading
+    /// of due North, 90 specifies a heading of due East, etc. You can use this
+    /// field only for `DRIVE` and `TWO_WHEELER` travel modes.
+    #[prost(message, optional, tag = "2")]
+    pub heading: ::core::option::Option<i32>,
 }
 /// Labels for the `Route` that are useful to identify specific properties
 /// of the route to compare against others.
@@ -552,6 +481,66 @@ pub struct RouteLegStep {
     /// about, such as possible traffic zone restriction on a leg step.
     #[prost(message, optional, tag = "7")]
     pub travel_advisory: ::core::option::Option<RouteLegStepTravelAdvisory>,
+}
+/// A set of values used to specify the mode of travel.
+/// NOTE: WALK, BICYCLE, and TWO_WHEELER routes are in beta and might sometimes
+/// be missing clear sidewalks, pedestrian paths, or bicycling paths.
+/// You must display this warning to the user for all walking, bicycling, and
+/// two-wheel routes that you display in your app.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RouteTravelMode {
+    /// No travel mode specified. Defaults to `DRIVE`.
+    TravelModeUnspecified = 0,
+    /// Travel by passenger car.
+    Drive = 1,
+    /// Travel by bicycle.
+    Bicycle = 2,
+    /// Travel by walking.
+    Walk = 3,
+    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
+    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
+    TwoWheeler = 4,
+}
+impl RouteTravelMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RouteTravelMode::TravelModeUnspecified => "TRAVEL_MODE_UNSPECIFIED",
+            RouteTravelMode::Drive => "DRIVE",
+            RouteTravelMode::Bicycle => "BICYCLE",
+            RouteTravelMode::Walk => "WALK",
+            RouteTravelMode::TwoWheeler => "TWO_WHEELER",
+        }
+    }
+}
+/// A set of values that specify the unit of measure used in the display.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Units {
+    /// Units of measure not specified. Defaults to the unit of measure inferred
+    /// from the request.
+    Unspecified = 0,
+    /// Metric units of measure.
+    Metric = 1,
+    /// Imperial (English) units of measure.
+    Imperial = 2,
+}
+impl Units {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Units::Unspecified => "UNITS_UNSPECIFIED",
+            Units::Metric => "METRIC",
+            Units::Imperial => "IMPERIAL",
+        }
+    }
 }
 /// List of toll passes around the world that we support.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -914,6 +903,77 @@ pub struct VehicleInfo {
     #[prost(enumeration = "VehicleEmissionType", tag = "2")]
     pub emission_type: i32,
 }
+/// Information related to how and why a fallback result was used. If this field
+/// is set, then it means the server used a different routing mode from your
+/// preferred mode as fallback.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FallbackInfo {
+    /// Routing mode used for the response. If fallback was triggered, the mode
+    /// may be different from routing preference set in the original client
+    /// request.
+    #[prost(enumeration = "FallbackRoutingMode", tag = "1")]
+    pub routing_mode: i32,
+    /// The reason why fallback response was used instead of the original response.
+    /// This field is only populated when the fallback mode is triggered and the
+    /// fallback response is returned.
+    #[prost(enumeration = "FallbackReason", tag = "2")]
+    pub reason: i32,
+}
+/// Reasons for using fallback response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FallbackReason {
+    /// No fallback reason specified.
+    Unspecified = 0,
+    /// A server error happened while calculating routes with your preferred
+    /// routing mode, but we were able to return a result calculated by an
+    /// alternative mode.
+    ServerError = 1,
+    /// We were not able to finish the calculation with your preferred routing mode
+    /// on time, but we were able to return a result calculated by an alternative
+    /// mode.
+    LatencyExceeded = 2,
+}
+impl FallbackReason {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FallbackReason::Unspecified => "FALLBACK_REASON_UNSPECIFIED",
+            FallbackReason::ServerError => "SERVER_ERROR",
+            FallbackReason::LatencyExceeded => "LATENCY_EXCEEDED",
+        }
+    }
+}
+/// Actual routing mode used for returned fallback response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum FallbackRoutingMode {
+    /// Not used.
+    Unspecified = 0,
+    /// Indicates the "TRAFFIC_UNAWARE" routing mode was used to compute the
+    /// response.
+    FallbackTrafficUnaware = 1,
+    /// Indicates the "TRAFFIC_AWARE" routing mode was used to compute the
+    /// response.
+    FallbackTrafficAware = 2,
+}
+impl FallbackRoutingMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            FallbackRoutingMode::Unspecified => "FALLBACK_ROUTING_MODE_UNSPECIFIED",
+            FallbackRoutingMode::FallbackTrafficUnaware => "FALLBACK_TRAFFIC_UNAWARE",
+            FallbackRoutingMode::FallbackTrafficAware => "FALLBACK_TRAFFIC_AWARE",
+        }
+    }
+}
 /// Encapsulates a set of optional conditions to satisfy when calculating the
 /// routes.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -949,41 +1009,6 @@ pub struct RouteModifiers {
     /// Applies only to the DRIVE and TWO_WHEELER travel modes.
     #[prost(enumeration = "TollPass", repeated, tag = "6")]
     pub toll_passes: ::prost::alloc::vec::Vec<i32>,
-}
-/// A set of values used to specify the mode of travel.
-/// NOTE: WALK, BICYCLE, and TWO_WHEELER routes are in beta and might sometimes
-/// be missing clear sidewalks, pedestrian paths, or bicycling paths.
-/// You must display this warning to the user for all walking, bicycling, and
-/// two-wheel routes that you display in your app.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RouteTravelMode {
-    /// No travel mode specified. Defaults to `DRIVE`.
-    TravelModeUnspecified = 0,
-    /// Travel by passenger car.
-    Drive = 1,
-    /// Travel by bicycle.
-    Bicycle = 2,
-    /// Travel by walking.
-    Walk = 3,
-    /// Two-wheeled, motorized vehicle. For example, motorcycle. Note that this
-    /// differs from the `BICYCLE` travel mode which covers human-powered mode.
-    TwoWheeler = 4,
-}
-impl RouteTravelMode {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            RouteTravelMode::TravelModeUnspecified => "TRAVEL_MODE_UNSPECIFIED",
-            RouteTravelMode::Drive => "DRIVE",
-            RouteTravelMode::Bicycle => "BICYCLE",
-            RouteTravelMode::Walk => "WALK",
-            RouteTravelMode::TwoWheeler => "TWO_WHEELER",
-        }
-    }
 }
 /// A set of values that specify factors to take into consideration when
 /// calculating the route.
@@ -1022,31 +1047,6 @@ impl RoutingPreference {
             RoutingPreference::TrafficUnaware => "TRAFFIC_UNAWARE",
             RoutingPreference::TrafficAware => "TRAFFIC_AWARE",
             RoutingPreference::TrafficAwareOptimal => "TRAFFIC_AWARE_OPTIMAL",
-        }
-    }
-}
-/// A set of values that specify the unit of measure used in the display.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Units {
-    /// Units of measure not specified. Defaults to the unit of measure inferred
-    /// from the request.
-    Unspecified = 0,
-    /// Metric units of measure.
-    Metric = 1,
-    /// Imperial (English) units of measure.
-    Imperial = 2,
-}
-impl Units {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Units::Unspecified => "UNITS_UNSPECIFIED",
-            Units::Metric => "METRIC",
-            Units::Imperial => "IMPERIAL",
         }
     }
 }

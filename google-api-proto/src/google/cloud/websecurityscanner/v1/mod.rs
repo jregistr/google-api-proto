@@ -476,17 +476,51 @@ pub mod scan_run {
         }
     }
 }
-/// A FindingTypeStats resource represents stats regarding a specific FindingType
-/// of Findings under a given ScanRun.
+/// A ScanRunLog is an output-only proto used for Stackdriver customer logging.
+/// It is used for logs covering the start and end of scan pipelines.
+/// Other than an added summary, this is a subset of the ScanRun.
+/// Representation in logs is either a proto Struct, or converted to JSON.
+/// Next id: 9
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FindingTypeStats {
-    /// Output only. The finding type associated with the stats.
+pub struct ScanRunLog {
+    /// Human friendly message about the event.
     #[prost(string, tag = "1")]
-    pub finding_type: ::prost::alloc::string::String,
-    /// Output only. The count of findings belonging to this finding type.
-    #[prost(int32, tag = "2")]
-    pub finding_count: i32,
+    pub summary: ::prost::alloc::string::String,
+    /// The resource name of the ScanRun being logged.
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// The execution state of the ScanRun.
+    #[prost(enumeration = "scan_run::ExecutionState", tag = "3")]
+    pub execution_state: i32,
+    /// The result state of the ScanRun.
+    #[prost(enumeration = "scan_run::ResultState", tag = "4")]
+    pub result_state: i32,
+    #[prost(int64, tag = "5")]
+    pub urls_crawled_count: i64,
+    #[prost(int64, tag = "6")]
+    pub urls_tested_count: i64,
+    #[prost(bool, tag = "7")]
+    pub has_findings: bool,
+    #[prost(message, optional, tag = "8")]
+    pub error_trace: ::core::option::Option<ScanRunErrorTrace>,
+}
+/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
+/// Security Scanner Service crawls the web applications, following all links
+/// within the scope of sites, to find the URLs to test against.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CrawledUrl {
+    /// Output only. The http method of the request that was used to visit the URL, in
+    /// uppercase.
+    #[prost(string, tag = "1")]
+    pub http_method: ::prost::alloc::string::String,
+    /// Output only. The URL that was crawled.
+    #[prost(string, tag = "2")]
+    pub url: ::prost::alloc::string::String,
+    /// Output only. The body of the request that was used to visit the URL.
+    #[prost(string, tag = "3")]
+    pub body: ::prost::alloc::string::String,
 }
 /// ! Information about a vulnerability with an HTML.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -813,22 +847,17 @@ pub mod finding {
         }
     }
 }
-/// A CrawledUrl resource represents a URL that was crawled during a ScanRun. Web
-/// Security Scanner Service crawls the web applications, following all links
-/// within the scope of sites, to find the URLs to test against.
+/// A FindingTypeStats resource represents stats regarding a specific FindingType
+/// of Findings under a given ScanRun.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CrawledUrl {
-    /// Output only. The http method of the request that was used to visit the URL, in
-    /// uppercase.
+pub struct FindingTypeStats {
+    /// Output only. The finding type associated with the stats.
     #[prost(string, tag = "1")]
-    pub http_method: ::prost::alloc::string::String,
-    /// Output only. The URL that was crawled.
-    #[prost(string, tag = "2")]
-    pub url: ::prost::alloc::string::String,
-    /// Output only. The body of the request that was used to visit the URL.
-    #[prost(string, tag = "3")]
-    pub body: ::prost::alloc::string::String,
+    pub finding_type: ::prost::alloc::string::String,
+    /// Output only. The count of findings belonging to this finding type.
+    #[prost(int32, tag = "2")]
+    pub finding_count: i32,
 }
 /// A ScanConfig resource contains the configurations to launch a scan.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1655,33 +1684,4 @@ pub mod web_security_scanner_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
-}
-/// A ScanRunLog is an output-only proto used for Stackdriver customer logging.
-/// It is used for logs covering the start and end of scan pipelines.
-/// Other than an added summary, this is a subset of the ScanRun.
-/// Representation in logs is either a proto Struct, or converted to JSON.
-/// Next id: 9
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ScanRunLog {
-    /// Human friendly message about the event.
-    #[prost(string, tag = "1")]
-    pub summary: ::prost::alloc::string::String,
-    /// The resource name of the ScanRun being logged.
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// The execution state of the ScanRun.
-    #[prost(enumeration = "scan_run::ExecutionState", tag = "3")]
-    pub execution_state: i32,
-    /// The result state of the ScanRun.
-    #[prost(enumeration = "scan_run::ResultState", tag = "4")]
-    pub result_state: i32,
-    #[prost(int64, tag = "5")]
-    pub urls_crawled_count: i64,
-    #[prost(int64, tag = "6")]
-    pub urls_tested_count: i64,
-    #[prost(bool, tag = "7")]
-    pub has_findings: bool,
-    #[prost(message, optional, tag = "8")]
-    pub error_trace: ::core::option::Option<ScanRunErrorTrace>,
 }

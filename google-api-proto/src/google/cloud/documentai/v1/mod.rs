@@ -1,68 +1,149 @@
-/// The common metadata for long running operations.
+/// Payload message of raw document content (bytes).
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommonOperationMetadata {
-    /// The state of the operation.
-    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
-    pub state: i32,
-    /// A message providing more details about the current state of processing.
+pub struct RawDocument {
+    /// Inline document content.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub content: ::prost::bytes::Bytes,
+    /// An IANA MIME type (RFC6838) indicating the nature and format of the
+    /// \[content][google.cloud.documentai.v1.RawDocument.content\].
     #[prost(string, tag = "2")]
-    pub state_message: ::prost::alloc::string::String,
-    /// A related resource to this operation.
-    #[prost(string, tag = "5")]
-    pub resource: ::prost::alloc::string::String,
-    /// The creation time of the operation.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last update time of the operation.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub mime_type: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `CommonOperationMetadata`.
-pub mod common_operation_metadata {
-    /// State of the longrunning operation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// Operation is still running.
-        Running = 1,
-        /// Operation is being cancelled.
-        Cancelling = 2,
-        /// Operation succeeded.
-        Succeeded = 3,
-        /// Operation failed.
-        Failed = 4,
-        /// Operation is cancelled.
-        Cancelled = 5,
+/// Specifies a document stored on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocument {
+    /// The Cloud Storage object uri.
+    #[prost(string, tag = "1")]
+    pub gcs_uri: ::prost::alloc::string::String,
+    /// An IANA MIME type (RFC6838) of the content.
+    #[prost(string, tag = "2")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Specifies a set of documents on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocuments {
+    /// The list of documents.
+    #[prost(message, repeated, tag = "1")]
+    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
+}
+/// Specifies all documents on Cloud Storage with a common prefix.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsPrefix {
+    /// The URI prefix.
+    #[prost(string, tag = "1")]
+    pub gcs_uri_prefix: ::prost::alloc::string::String,
+}
+/// The common config to specify a set of documents used as input.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchDocumentsInputConfig {
+    /// The source.
+    #[prost(oneof = "batch_documents_input_config::Source", tags = "1, 2")]
+    pub source: ::core::option::Option<batch_documents_input_config::Source>,
+}
+/// Nested message and enum types in `BatchDocumentsInputConfig`.
+pub mod batch_documents_input_config {
+    /// The source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
+        #[prost(message, tag = "1")]
+        GcsPrefix(super::GcsPrefix),
+        /// The set of documents individually specified on Cloud Storage.
+        #[prost(message, tag = "2")]
+        GcsDocuments(super::GcsDocuments),
     }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Running => "RUNNING",
-                State::Cancelling => "CANCELLING",
-                State::Succeeded => "SUCCEEDED",
-                State::Failed => "FAILED",
-                State::Cancelled => "CANCELLED",
-            }
+}
+/// Config that controls the output of documents. All documents will be written
+/// as a JSON file.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentOutputConfig {
+    /// The destination of the results.
+    #[prost(oneof = "document_output_config::Destination", tags = "1")]
+    pub destination: ::core::option::Option<document_output_config::Destination>,
+}
+/// Nested message and enum types in `DocumentOutputConfig`.
+pub mod document_output_config {
+    /// The configuration used when outputting documents.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GcsOutputConfig {
+        /// The Cloud Storage uri (a directory) of the output.
+        #[prost(string, tag = "1")]
+        pub gcs_uri: ::prost::alloc::string::String,
+        /// Specifies which fields to include in the output documents.
+        /// Only supports top level document and pages field so it must be in the
+        /// form of `{document_field_name}` or `pages.{page_field_name}`.
+        #[prost(message, optional, tag = "2")]
+        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
+        /// Specifies the sharding config for the output document.
+        #[prost(message, optional, tag = "3")]
+        pub sharding_config: ::core::option::Option<gcs_output_config::ShardingConfig>,
+    }
+    /// Nested message and enum types in `GcsOutputConfig`.
+    pub mod gcs_output_config {
+        /// The sharding config for the output document.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ShardingConfig {
+            /// The number of pages per shard.
+            #[prost(int32, tag = "1")]
+            pub pages_per_shard: i32,
+            /// The number of overlapping pages between consecutive shards.
+            #[prost(int32, tag = "2")]
+            pub pages_overlap: i32,
         }
     }
+    /// The destination of the results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// Output config to write the results to Cloud Storage.
+        #[prost(message, tag = "1")]
+        GcsOutputConfig(GcsOutputConfig),
+    }
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the vertex coordinates are in the same scale as the original image.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Vertex {
+    /// X coordinate.
+    #[prost(int32, tag = "1")]
+    pub x: i32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(int32, tag = "2")]
+    pub y: i32,
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the normalized vertex coordinates are relative to the original image
+/// and range from 0 to 1.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// X coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(float, tag = "2")]
+    pub y: f32,
+}
+/// A bounding polygon for the detected image annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// The bounding polygon vertices.
+    #[prost(message, repeated, tag = "1")]
+    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
+    /// The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag = "2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
 }
 /// Encodes the detailed information of a barcode.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -109,42 +190,6 @@ pub struct Barcode {
     /// For example: `'MEBKM:TITLE:Google;URL:<https://www.google.com;;'`.>
     #[prost(string, tag = "3")]
     pub raw_value: ::prost::alloc::string::String,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the vertex coordinates are in the same scale as the original image.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vertex {
-    /// X coordinate.
-    #[prost(int32, tag = "1")]
-    pub x: i32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(int32, tag = "2")]
-    pub y: i32,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the normalized vertex coordinates are relative to the original image
-/// and range from 0 to 1.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// X coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(float, tag = "2")]
-    pub y: f32,
-}
-/// A bounding polygon for the detected image annotation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// The bounding polygon vertices.
-    #[prost(message, repeated, tag = "1")]
-    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
-    /// The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag = "2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
 }
 /// Document represents the canonical document resource in Document AI. It is an
 /// interchange format that provides insights into documents and allows for
@@ -1236,117 +1281,6 @@ pub mod document {
         Content(::prost::bytes::Bytes),
     }
 }
-/// Payload message of raw document content (bytes).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RawDocument {
-    /// Inline document content.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub content: ::prost::bytes::Bytes,
-    /// An IANA MIME type (RFC6838) indicating the nature and format of the
-    /// \[content][google.cloud.documentai.v1.RawDocument.content\].
-    #[prost(string, tag = "2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a document stored on Cloud Storage.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocument {
-    /// The Cloud Storage object uri.
-    #[prost(string, tag = "1")]
-    pub gcs_uri: ::prost::alloc::string::String,
-    /// An IANA MIME type (RFC6838) of the content.
-    #[prost(string, tag = "2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a set of documents on Cloud Storage.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocuments {
-    /// The list of documents.
-    #[prost(message, repeated, tag = "1")]
-    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
-}
-/// Specifies all documents on Cloud Storage with a common prefix.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsPrefix {
-    /// The URI prefix.
-    #[prost(string, tag = "1")]
-    pub gcs_uri_prefix: ::prost::alloc::string::String,
-}
-/// The common config to specify a set of documents used as input.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchDocumentsInputConfig {
-    /// The source.
-    #[prost(oneof = "batch_documents_input_config::Source", tags = "1, 2")]
-    pub source: ::core::option::Option<batch_documents_input_config::Source>,
-}
-/// Nested message and enum types in `BatchDocumentsInputConfig`.
-pub mod batch_documents_input_config {
-    /// The source.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
-        #[prost(message, tag = "1")]
-        GcsPrefix(super::GcsPrefix),
-        /// The set of documents individually specified on Cloud Storage.
-        #[prost(message, tag = "2")]
-        GcsDocuments(super::GcsDocuments),
-    }
-}
-/// Config that controls the output of documents. All documents will be written
-/// as a JSON file.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentOutputConfig {
-    /// The destination of the results.
-    #[prost(oneof = "document_output_config::Destination", tags = "1")]
-    pub destination: ::core::option::Option<document_output_config::Destination>,
-}
-/// Nested message and enum types in `DocumentOutputConfig`.
-pub mod document_output_config {
-    /// The configuration used when outputting documents.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GcsOutputConfig {
-        /// The Cloud Storage uri (a directory) of the output.
-        #[prost(string, tag = "1")]
-        pub gcs_uri: ::prost::alloc::string::String,
-        /// Specifies which fields to include in the output documents.
-        /// Only supports top level document and pages field so it must be in the
-        /// form of `{document_field_name}` or `pages.{page_field_name}`.
-        #[prost(message, optional, tag = "2")]
-        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
-        /// Specifies the sharding config for the output document.
-        #[prost(message, optional, tag = "3")]
-        pub sharding_config: ::core::option::Option<gcs_output_config::ShardingConfig>,
-    }
-    /// Nested message and enum types in `GcsOutputConfig`.
-    pub mod gcs_output_config {
-        /// The sharding config for the output document.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ShardingConfig {
-            /// The number of pages per shard.
-            #[prost(int32, tag = "1")]
-            pub pages_per_shard: i32,
-            /// The number of overlapping pages between consecutive shards.
-            #[prost(int32, tag = "2")]
-            pub pages_overlap: i32,
-        }
-    }
-    /// The destination of the results.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// Output config to write the results to Cloud Storage.
-        #[prost(message, tag = "1")]
-        GcsOutputConfig(GcsOutputConfig),
-    }
-}
 /// The schema defines the output of the processed document by a processor.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1506,6 +1440,72 @@ pub mod document_schema {
         /// `DocumentSchema.EntityType.Property.name` will not be checked.
         #[prost(bool, tag = "7")]
         pub skip_naming_validation: bool,
+    }
+}
+/// The common metadata for long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommonOperationMetadata {
+    /// The state of the operation.
+    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
+    pub state: i32,
+    /// A message providing more details about the current state of processing.
+    #[prost(string, tag = "2")]
+    pub state_message: ::prost::alloc::string::String,
+    /// A related resource to this operation.
+    #[prost(string, tag = "5")]
+    pub resource: ::prost::alloc::string::String,
+    /// The creation time of the operation.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last update time of the operation.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `CommonOperationMetadata`.
+pub mod common_operation_metadata {
+    /// State of the longrunning operation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// Operation is still running.
+        Running = 1,
+        /// Operation is being cancelled.
+        Cancelling = 2,
+        /// Operation succeeded.
+        Succeeded = 3,
+        /// Operation failed.
+        Failed = 4,
+        /// Operation is cancelled.
+        Cancelled = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
     }
 }
 /// A processor version is an implementation of a processor. Each processor

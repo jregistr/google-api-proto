@@ -355,6 +355,49 @@ pub struct LocationGroupInfo {
     #[prost(string, repeated, tag = "8")]
     pub feed_item_sets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// Segment only fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Segments {
+    /// Resource name of the conversion action.
+    #[prost(string, optional, tag = "146")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// Conversion action category.
+    #[prost(
+        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
+        tag = "53"
+    )]
+    pub conversion_action_category: i32,
+    /// Conversion action name.
+    #[prost(string, optional, tag = "114")]
+    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Date to which metrics apply.
+    /// yyyy-MM-dd format, for example, 2018-04-17.
+    #[prost(string, optional, tag = "79")]
+    pub date: ::core::option::Option<::prost::alloc::string::String>,
+    /// Day of the week, for example, MONDAY.
+    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
+    pub day_of_week: i32,
+    /// Device to which metrics apply.
+    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
+    pub device: i32,
+    /// Month as represented by the date of the first day of a month. Formatted as
+    /// yyyy-MM-dd.
+    #[prost(string, optional, tag = "90")]
+    pub month: ::core::option::Option<::prost::alloc::string::String>,
+    /// Quarter as represented by the date of the first day of a quarter.
+    /// Uses the calendar year for quarters, for example, the second quarter of
+    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "128")]
+    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
+    /// Week as defined as Monday through Sunday, and represented by the date of
+    /// Monday. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "130")]
+    pub week: ::core::option::Option<::prost::alloc::string::String>,
+    /// Year, formatted as yyyy.
+    #[prost(int32, optional, tag = "131")]
+    pub year: ::core::option::Option<i32>,
+}
 /// Metrics data.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -694,49 +737,6 @@ pub struct Metrics {
     /// clicking on) another ad.
     #[prost(int64, optional, tag = "155")]
     pub client_account_view_through_conversions: ::core::option::Option<i64>,
-}
-/// Segment only fields.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Segments {
-    /// Resource name of the conversion action.
-    #[prost(string, optional, tag = "146")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// Conversion action category.
-    #[prost(
-        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
-        tag = "53"
-    )]
-    pub conversion_action_category: i32,
-    /// Conversion action name.
-    #[prost(string, optional, tag = "114")]
-    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Date to which metrics apply.
-    /// yyyy-MM-dd format, for example, 2018-04-17.
-    #[prost(string, optional, tag = "79")]
-    pub date: ::core::option::Option<::prost::alloc::string::String>,
-    /// Day of the week, for example, MONDAY.
-    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
-    pub day_of_week: i32,
-    /// Device to which metrics apply.
-    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
-    pub device: i32,
-    /// Month as represented by the date of the first day of a month. Formatted as
-    /// yyyy-MM-dd.
-    #[prost(string, optional, tag = "90")]
-    pub month: ::core::option::Option<::prost::alloc::string::String>,
-    /// Quarter as represented by the date of the first day of a quarter.
-    /// Uses the calendar year for quarters, for example, the second quarter of
-    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "128")]
-    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
-    /// Week as defined as Monday through Sunday, and represented by the date of
-    /// Monday. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "130")]
-    pub week: ::core::option::Option<::prost::alloc::string::String>,
-    /// Year, formatted as yyyy.
-    #[prost(int32, optional, tag = "131")]
-    pub year: ::core::option::Option<i32>,
 }
 /// A generic data container.
 #[allow(clippy::derive_partial_eq_without_eq)]
