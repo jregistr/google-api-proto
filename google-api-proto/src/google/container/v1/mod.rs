@@ -1833,6 +1833,11 @@ pub struct ClusterUpdate {
     /// The desired node pool logging configuration defaults for the cluster.
     #[prost(message, optional, tag = "116")]
     pub desired_node_pool_logging_config: ::core::option::Option<NodePoolLoggingConfig>,
+    /// The desired stack type of the cluster.
+    /// If a stack type is provided and does not match the current stack type of
+    /// the cluster, update will attempt to change the stack type to the new type.
+    #[prost(enumeration = "StackType", tag = "119")]
+    pub desired_stack_type: i32,
 }
 /// This operation resource represents operations that may have happened or are
 /// happening on the cluster. All fields are output only.

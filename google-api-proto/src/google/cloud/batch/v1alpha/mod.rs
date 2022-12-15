@@ -352,8 +352,7 @@ pub struct TaskSpec {
     /// If task ends with non-zero exit code, retry the task with max_retry_count.
     #[prost(message, repeated, tag = "9")]
     pub lifecycle_policies: ::prost::alloc::vec::Vec<LifecyclePolicy>,
-    /// Environment variables to set before running the Task.
-    /// You can set up to 100 environments.
+    /// Deprecated: please use environment(non-plural) instead.
     #[prost(btree_map = "string, string", tag = "6")]
     pub environments: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
@@ -1044,6 +1043,10 @@ pub mod allocation_policy {
         /// The accelerators attached to each VM instance.
         #[prost(message, repeated, tag = "5")]
         pub accelerators: ::prost::alloc::vec::Vec<Accelerator>,
+        /// Book disk to be created and attached to each VM by this InstancePolicy.
+        /// Boot disk will be deleted when the VM is deleted.
+        #[prost(message, optional, tag = "8")]
+        pub boot_disk: ::core::option::Option<Disk>,
         /// Non-boot disks to be attached for each VM created by this InstancePolicy.
         /// New disks will be deleted when the VM is deleted.
         #[prost(message, repeated, tag = "6")]
@@ -1267,7 +1270,6 @@ pub struct ServiceAccount {
     pub email: ::prost::alloc::string::String,
     /// List of scopes to be enabled for this service account on the VM, in
     /// addition to the cloud-platform API scope that will be added by default.
-    #[deprecated]
     #[prost(string, repeated, tag = "2")]
     pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }

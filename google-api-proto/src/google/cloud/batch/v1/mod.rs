@@ -320,8 +320,7 @@ pub struct TaskSpec {
     /// If task ends with non-zero exit code, retry the task with max_retry_count.
     #[prost(message, repeated, tag = "9")]
     pub lifecycle_policies: ::prost::alloc::vec::Vec<LifecyclePolicy>,
-    /// Environment variables to set before running the Task.
-    /// You can set up to 100 environments.
+    /// Deprecated: please use environment(non-plural) instead.
     #[prost(btree_map = "string, string", tag = "6")]
     pub environments: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
