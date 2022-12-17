@@ -2251,6 +2251,11 @@ pub struct ClusterUpdate {
     /// The desired node pool logging configuration defaults for the cluster.
     #[prost(message, optional, tag = "116")]
     pub desired_node_pool_logging_config: ::core::option::Option<NodePoolLoggingConfig>,
+    /// The desired stack type of the cluster.
+    /// If a stack type is provided and does not match the current stack type of
+    /// the cluster, update will attempt to change the stack type to the new type.
+    #[prost(enumeration = "StackType", tag = "119")]
+    pub desired_stack_type: i32,
 }
 /// This operation resource represents operations that may have happened or are
 /// happening on the cluster. All fields are output only.
@@ -6075,6 +6080,30 @@ impl DatapathProvider {
             DatapathProvider::Unspecified => "DATAPATH_PROVIDER_UNSPECIFIED",
             DatapathProvider::LegacyDatapath => "LEGACY_DATAPATH",
             DatapathProvider::AdvancedDatapath => "ADVANCED_DATAPATH",
+        }
+    }
+}
+/// Possible values for IP stack type
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum StackType {
+    /// By default, the clusters will be IPV4 only
+    Unspecified = 0,
+    /// The value used if the cluster is a IPV4 only
+    Ipv4 = 1,
+    /// The value used if the cluster is a dual stack cluster
+    Ipv4Ipv6 = 2,
+}
+impl StackType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            StackType::Unspecified => "STACK_TYPE_UNSPECIFIED",
+            StackType::Ipv4 => "IPV4",
+            StackType::Ipv4Ipv6 => "IPV4_IPV6",
         }
     }
 }
