@@ -1089,10 +1089,20 @@ pub mod allocation_policy {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct NetworkInterface {
-        /// The URL of the network resource.
+        /// The URL of an existing network resource.
+        /// You can specify the network as a full or partial URL.
+        /// For example, the following are all valid URLs:
+        /// <https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}>
+        /// projects/{project}/global/networks/{network}
+        /// global/networks/{network}
         #[prost(string, tag = "1")]
         pub network: ::prost::alloc::string::String,
-        /// The URL of the Subnetwork resource.
+        /// The URL of an existing subnetwork resource in the network.
+        /// You can specify the subnetwork as a full or partial URL.
+        /// For example, the following are all valid URLs:
+        /// <https://www.googleapis.com/compute/v1/projects/{project}/regions/{region}/subnetworks/{subnetwork}>
+        /// projects/{project}/regions/{region}/subnetworks/{subnetwork}
+        /// regions/{region}/subnetworks/{subnetwork}
         #[prost(string, tag = "2")]
         pub subnetwork: ::prost::alloc::string::String,
         /// Default is false (with an external IP address). Required if
