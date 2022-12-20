@@ -76,6 +76,17 @@ pub mod cluster {
                 State::Error => "ERROR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "RUNNING" => Some(Self::Running),
+                "STOPPING" => Some(Self::Stopping),
+                "ERROR" => Some(Self::Error),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents the metadata of the long-running operation.
@@ -223,6 +234,15 @@ pub mod event {
                 Clock::Unspecified => "CLOCK_UNSPECIFIED",
                 Clock::Capture => "CAPTURE",
                 Clock::Ingest => "INGEST",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CLOCK_UNSPECIFIED" => Some(Self::Unspecified),
+                "CAPTURE" => Some(Self::Capture),
+                "INGEST" => Some(Self::Ingest),
+                _ => None,
             }
         }
     }
@@ -2191,6 +2211,15 @@ impl StreamAnnotationType {
             StreamAnnotationType::CrossingLine => "STREAM_ANNOTATION_TYPE_CROSSING_LINE",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STREAM_ANNOTATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "STREAM_ANNOTATION_TYPE_ACTIVE_ZONE" => Some(Self::ActiveZone),
+            "STREAM_ANNOTATION_TYPE_CROSSING_LINE" => Some(Self::CrossingLine),
+            _ => None,
+        }
+    }
 }
 /// Represents an actual value of an operator attribute.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2665,6 +2694,15 @@ pub mod data_schema_details {
                     SearchStrategyType::SmartSearch => "SMART_SEARCH",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "NO_SEARCH" => Some(Self::NoSearch),
+                    "EXACT_SEARCH" => Some(Self::ExactSearch),
+                    "SMART_SEARCH" => Some(Self::SmartSearch),
+                    _ => None,
+                }
+            }
         }
     }
     /// Data type of the annotation.
@@ -2765,6 +2803,20 @@ pub mod data_schema_details {
                 DataType::Boolean => "BOOLEAN",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATA_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "INTEGER" => Some(Self::Integer),
+                "FLOAT" => Some(Self::Float),
+                "STRING" => Some(Self::String),
+                "DATETIME" => Some(Self::Datetime),
+                "GEO_COORDINATE" => Some(Self::GeoCoordinate),
+                "PROTO_ANY" => Some(Self::ProtoAny),
+                "BOOLEAN" => Some(Self::Boolean),
+                _ => None,
+            }
+        }
     }
     /// The granularity of annotations under this DataSchema.
     #[derive(
@@ -2797,6 +2849,15 @@ pub mod data_schema_details {
                 Granularity::Unspecified => "GRANULARITY_UNSPECIFIED",
                 Granularity::AssetLevel => "GRANULARITY_ASSET_LEVEL",
                 Granularity::PartitionLevel => "GRANULARITY_PARTITION_LEVEL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "GRANULARITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "GRANULARITY_ASSET_LEVEL" => Some(Self::AssetLevel),
+                "GRANULARITY_PARTITION_LEVEL" => Some(Self::PartitionLevel),
+                _ => None,
             }
         }
     }
@@ -3275,6 +3336,16 @@ pub mod facet_property {
                     Granularity::Day => "DAY",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "GRANULARITY_UNSPECIFIED" => Some(Self::Unspecified),
+                    "YEAR" => Some(Self::Year),
+                    "MONTH" => Some(Self::Month),
+                    "DAY" => Some(Self::Day),
+                    _ => None,
+                }
+            }
         }
     }
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -3471,6 +3542,14 @@ pub mod ingest_asset_request {
                     match self {
                         ContainerFormat::Unspecified => "CONTAINER_FORMAT_UNSPECIFIED",
                         ContainerFormat::Mp4 => "CONTAINER_FORMAT_MP4",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "CONTAINER_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                        "CONTAINER_FORMAT_MP4" => Some(Self::Mp4),
+                        _ => None,
                     }
                 }
             }
@@ -3892,6 +3971,17 @@ impl FacetBucketType {
             FacetBucketType::Datetime => "FACET_BUCKET_TYPE_DATETIME",
             FacetBucketType::FixedRange => "FACET_BUCKET_TYPE_FIXED_RANGE",
             FacetBucketType::CustomRange => "FACET_BUCKET_TYPE_CUSTOM_RANGE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FACET_BUCKET_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "FACET_BUCKET_TYPE_VALUE" => Some(Self::Value),
+            "FACET_BUCKET_TYPE_DATETIME" => Some(Self::Datetime),
+            "FACET_BUCKET_TYPE_FIXED_RANGE" => Some(Self::FixedRange),
+            "FACET_BUCKET_TYPE_CUSTOM_RANGE" => Some(Self::CustomRange),
+            _ => None,
         }
     }
 }
@@ -5201,6 +5291,15 @@ impl LeaseType {
             LeaseType::Writer => "LEASE_TYPE_WRITER",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LEASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "LEASE_TYPE_READER" => Some(Self::Reader),
+            "LEASE_TYPE_WRITER" => Some(Self::Writer),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod streaming_service_client {
@@ -6293,6 +6392,23 @@ pub mod application {
                 State::Fixing => "FIXING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATED" => Some(Self::Created),
+                "DEPLOYING" => Some(Self::Deploying),
+                "DEPLOYED" => Some(Self::Deployed),
+                "UNDEPLOYING" => Some(Self::Undeploying),
+                "DELETED" => Some(Self::Deleted),
+                "ERROR" => Some(Self::Error),
+                "CREATING" => Some(Self::Creating),
+                "UPDATING" => Some(Self::Updating),
+                "DELETING" => Some(Self::Deleting),
+                "FIXING" => Some(Self::Fixing),
+                _ => None,
+            }
+        }
     }
 }
 /// Message storing the graph of the application.
@@ -6588,6 +6704,23 @@ pub mod instance {
                 State::Fixing => "FIXING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "CREATED" => Some(Self::Created),
+                "DEPLOYING" => Some(Self::Deploying),
+                "DEPLOYED" => Some(Self::Deployed),
+                "UNDEPLOYING" => Some(Self::Undeploying),
+                "DELETED" => Some(Self::Deleted),
+                "ERROR" => Some(Self::Error),
+                "UPDATING" => Some(Self::Updating),
+                "DELETING" => Some(Self::Deleting),
+                "FIXING" => Some(Self::Fixing),
+                _ => None,
+            }
+        }
     }
 }
 /// Message for creating a Instance.
@@ -6707,6 +6840,16 @@ pub mod processor {
                 ProcessorType::Connector => "CONNECTOR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROCESSOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRETRAINED" => Some(Self::Pretrained),
+                "CUSTOM" => Some(Self::Custom),
+                "CONNECTOR" => Some(Self::Connector),
+                _ => None,
+            }
+        }
     }
     #[derive(
         Clone,
@@ -6744,6 +6887,17 @@ pub mod processor {
                 ProcessorState::Active => "ACTIVE",
                 ProcessorState::Deleting => "DELETING",
                 ProcessorState::Failed => "FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROCESSOR_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "ACTIVE" => Some(Self::Active),
+                "DELETING" => Some(Self::Deleting),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
             }
         }
     }
@@ -6902,6 +7056,15 @@ pub mod processor_io_spec {
                 DataType::Proto => "PROTO",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATA_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VIDEO" => Some(Self::Video),
+                "PROTO" => Some(Self::Proto),
+                _ => None,
+            }
+        }
     }
 }
 /// Describes the source info for a custom processor.
@@ -6982,6 +7145,15 @@ pub mod custom_processor_source_info {
                 SourceType::Unspecified => "SOURCE_TYPE_UNSPECIFIED",
                 SourceType::VertexAutoml => "VERTEX_AUTOML",
                 SourceType::VertexCustom => "VERTEX_CUSTOM",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SOURCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VERTEX_AUTOML" => Some(Self::VertexAutoml),
+                "VERTEX_CUSTOM" => Some(Self::VertexCustom),
+                _ => None,
             }
         }
     }
@@ -7197,6 +7369,15 @@ pub mod person_blur_config {
                 PersonBlurType::Unspecified => "PERSON_BLUR_TYPE_UNSPECIFIED",
                 PersonBlurType::FullOcculusion => "FULL_OCCULUSION",
                 PersonBlurType::BlurFilter => "BLUR_FILTER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PERSON_BLUR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "FULL_OCCULUSION" => Some(Self::FullOcculusion),
+                "BLUR_FILTER" => Some(Self::BlurFilter),
+                _ => None,
             }
         }
     }
@@ -7517,6 +7698,21 @@ impl ModelType {
             ModelType::VertexCustom => "VERTEX_CUSTOM",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MODEL_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "IMAGE_CLASSIFICATION" => Some(Self::ImageClassification),
+            "OBJECT_DETECTION" => Some(Self::ObjectDetection),
+            "VIDEO_CLASSIFICATION" => Some(Self::VideoClassification),
+            "VIDEO_OBJECT_TRACKING" => Some(Self::VideoObjectTracking),
+            "VIDEO_ACTION_RECOGNITION" => Some(Self::VideoActionRecognition),
+            "OCCUPANCY_COUNTING" => Some(Self::OccupancyCounting),
+            "PERSON_BLUR" => Some(Self::PersonBlur),
+            "VERTEX_CUSTOM" => Some(Self::VertexCustom),
+            _ => None,
+        }
+    }
 }
 /// Represents a hardware accelerator type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -7557,6 +7753,21 @@ impl AcceleratorType {
             AcceleratorType::NvidiaTeslaA100 => "NVIDIA_TESLA_A100",
             AcceleratorType::TpuV2 => "TPU_V2",
             AcceleratorType::TpuV3 => "TPU_V3",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ACCELERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "NVIDIA_TESLA_K80" => Some(Self::NvidiaTeslaK80),
+            "NVIDIA_TESLA_P100" => Some(Self::NvidiaTeslaP100),
+            "NVIDIA_TESLA_V100" => Some(Self::NvidiaTeslaV100),
+            "NVIDIA_TESLA_P4" => Some(Self::NvidiaTeslaP4),
+            "NVIDIA_TESLA_T4" => Some(Self::NvidiaTeslaT4),
+            "NVIDIA_TESLA_A100" => Some(Self::NvidiaTeslaA100),
+            "TPU_V2" => Some(Self::TpuV2),
+            "TPU_V3" => Some(Self::TpuV3),
+            _ => None,
         }
     }
 }

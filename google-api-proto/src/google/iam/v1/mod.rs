@@ -353,6 +353,16 @@ pub mod audit_log_config {
                 LogType::DataRead => "DATA_READ",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LOG_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ADMIN_READ" => Some(Self::AdminRead),
+                "DATA_WRITE" => Some(Self::DataWrite),
+                "DATA_READ" => Some(Self::DataRead),
+                _ => None,
+            }
+        }
     }
 }
 /// The difference delta between two policies.
@@ -424,6 +434,15 @@ pub mod binding_delta {
                 Action::Remove => "REMOVE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "ADD" => Some(Self::Add),
+                "REMOVE" => Some(Self::Remove),
+                _ => None,
+            }
+        }
     }
 }
 /// One delta entry for AuditConfig. Each individual change (only one
@@ -485,6 +504,15 @@ pub mod audit_config_delta {
                 Action::Unspecified => "ACTION_UNSPECIFIED",
                 Action::Add => "ADD",
                 Action::Remove => "REMOVE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "ADD" => Some(Self::Add),
+                "REMOVE" => Some(Self::Remove),
+                _ => None,
             }
         }
     }

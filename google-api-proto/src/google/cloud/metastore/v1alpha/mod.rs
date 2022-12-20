@@ -140,6 +140,20 @@ pub mod service {
                 State::Error => "ERROR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "ACTIVE" => Some(Self::Active),
+                "SUSPENDING" => Some(Self::Suspending),
+                "SUSPENDED" => Some(Self::Suspended),
+                "UPDATING" => Some(Self::Updating),
+                "DELETING" => Some(Self::Deleting),
+                "ERROR" => Some(Self::Error),
+                _ => None,
+            }
+        }
     }
     /// Available service tiers.
     #[derive(
@@ -174,6 +188,15 @@ pub mod service {
                 Tier::Unspecified => "TIER_UNSPECIFIED",
                 Tier::Developer => "DEVELOPER",
                 Tier::Enterprise => "ENTERPRISE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TIER_UNSPECIFIED" => Some(Self::Unspecified),
+                "DEVELOPER" => Some(Self::Developer),
+                "ENTERPRISE" => Some(Self::Enterprise),
+                _ => None,
             }
         }
     }
@@ -215,6 +238,15 @@ pub mod service {
                 ReleaseChannel::Stable => "STABLE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "RELEASE_CHANNEL_UNSPECIFIED" => Some(Self::Unspecified),
+                "CANARY" => Some(Self::Canary),
+                "STABLE" => Some(Self::Stable),
+                _ => None,
+            }
+        }
     }
     /// The backend database type for the metastore service.
     #[derive(
@@ -247,6 +279,15 @@ pub mod service {
                 DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
                 DatabaseType::Mysql => "MYSQL",
                 DatabaseType::Spanner => "SPANNER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATABASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "MYSQL" => Some(Self::Mysql),
+                "SPANNER" => Some(Self::Spanner),
+                _ => None,
             }
         }
     }
@@ -394,6 +435,15 @@ pub mod hive_metastore_config {
                 EndpointProtocol::Unspecified => "ENDPOINT_PROTOCOL_UNSPECIFIED",
                 EndpointProtocol::Thrift => "THRIFT",
                 EndpointProtocol::Grpc => "GRPC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENDPOINT_PROTOCOL_UNSPECIFIED" => Some(Self::Unspecified),
+                "THRIFT" => Some(Self::Thrift),
+                "GRPC" => Some(Self::Grpc),
+                _ => None,
             }
         }
     }
@@ -553,6 +603,15 @@ pub mod telemetry_config {
                 LogFormat::Json => "JSON",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LOG_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "LEGACY" => Some(Self::Legacy),
+                "JSON" => Some(Self::Json),
+                _ => None,
+            }
+        }
     }
 }
 /// The metadata management activities of the metastore service.
@@ -650,6 +709,14 @@ pub mod metadata_import {
                     DatabaseType::Mysql => "MYSQL",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "DATABASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "MYSQL" => Some(Self::Mysql),
+                    _ => None,
+                }
+            }
         }
     }
     /// The current state of the metadata import.
@@ -690,6 +757,17 @@ pub mod metadata_import {
                 State::Succeeded => "SUCCEEDED",
                 State::Updating => "UPDATING",
                 State::Failed => "FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "UPDATING" => Some(Self::Updating),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
             }
         }
     }
@@ -760,6 +838,17 @@ pub mod metadata_export {
                 State::Succeeded => "SUCCEEDED",
                 State::Failed => "FAILED",
                 State::Cancelled => "CANCELLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
+                _ => None,
             }
         }
     }
@@ -846,6 +935,18 @@ pub mod backup {
                 State::Restoring => "RESTORING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "DELETING" => Some(Self::Deleting),
+                "ACTIVE" => Some(Self::Active),
+                "FAILED" => Some(Self::Failed),
+                "RESTORING" => Some(Self::Restoring),
+                _ => None,
+            }
+        }
     }
 }
 /// The details of a metadata restore operation.
@@ -916,6 +1017,17 @@ pub mod restore {
                 State::Cancelled => "CANCELLED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
+                _ => None,
+            }
+        }
     }
     /// The type of restore. If unspecified, defaults to `METADATA_ONLY`.
     #[derive(
@@ -948,6 +1060,15 @@ pub mod restore {
                 RestoreType::Unspecified => "RESTORE_TYPE_UNSPECIFIED",
                 RestoreType::Full => "FULL",
                 RestoreType::MetadataOnly => "METADATA_ONLY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "RESTORE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "FULL" => Some(Self::Full),
+                "METADATA_ONLY" => Some(Self::MetadataOnly),
+                _ => None,
             }
         }
     }
@@ -1553,6 +1674,15 @@ pub mod database_dump_spec {
                 Type::Unspecified => "TYPE_UNSPECIFIED",
                 Type::Mysql => "MYSQL",
                 Type::Avro => "AVRO",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "MYSQL" => Some(Self::Mysql),
+                "AVRO" => Some(Self::Avro),
+                _ => None,
             }
         }
     }
@@ -2258,6 +2388,18 @@ pub mod federation {
                 State::Error => "ERROR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "ACTIVE" => Some(Self::Active),
+                "UPDATING" => Some(Self::Updating),
+                "DELETING" => Some(Self::Deleting),
+                "ERROR" => Some(Self::Error),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents a backend metastore for the federation.
@@ -2313,6 +2455,15 @@ pub mod backend_metastore {
                 MetastoreType::Unspecified => "METASTORE_TYPE_UNSPECIFIED",
                 MetastoreType::Bigquery => "BIGQUERY",
                 MetastoreType::DataprocMetastore => "DATAPROC_METASTORE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "METASTORE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BIGQUERY" => Some(Self::Bigquery),
+                "DATAPROC_METASTORE" => Some(Self::DataprocMetastore),
+                _ => None,
             }
         }
     }

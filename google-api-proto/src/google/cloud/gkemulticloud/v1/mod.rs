@@ -99,6 +99,16 @@ pub mod node_taint {
                 Effect::NoExecute => "NO_EXECUTE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EFFECT_UNSPECIFIED" => Some(Self::Unspecified),
+                "NO_SCHEDULE" => Some(Self::NoSchedule),
+                "PREFER_NO_SCHEDULE" => Some(Self::PreferNoSchedule),
+                "NO_EXECUTE" => Some(Self::NoExecute),
+                _ => None,
+            }
+        }
     }
 }
 /// Fleet related configuration.
@@ -175,6 +185,15 @@ pub mod logging_component_config {
                 Component::Unspecified => "COMPONENT_UNSPECIFIED",
                 Component::SystemComponents => "SYSTEM_COMPONENTS",
                 Component::Workloads => "WORKLOADS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMPONENT_UNSPECIFIED" => Some(Self::Unspecified),
+                "SYSTEM_COMPONENTS" => Some(Self::SystemComponents),
+                "WORKLOADS" => Some(Self::Workloads),
+                _ => None,
             }
         }
     }
@@ -335,6 +354,19 @@ pub mod azure_cluster {
                 State::Stopping => "STOPPING",
                 State::Error => "ERROR",
                 State::Degraded => "DEGRADED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "RUNNING" => Some(Self::Running),
+                "RECONCILING" => Some(Self::Reconciling),
+                "STOPPING" => Some(Self::Stopping),
+                "ERROR" => Some(Self::Error),
+                "DEGRADED" => Some(Self::Degraded),
+                _ => None,
             }
         }
     }
@@ -739,6 +771,19 @@ pub mod azure_node_pool {
                 State::Stopping => "STOPPING",
                 State::Error => "ERROR",
                 State::Degraded => "DEGRADED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "RUNNING" => Some(Self::Running),
+                "RECONCILING" => Some(Self::Reconciling),
+                "STOPPING" => Some(Self::Stopping),
+                "ERROR" => Some(Self::Error),
+                "DEGRADED" => Some(Self::Degraded),
+                _ => None,
             }
         }
     }
@@ -1883,6 +1928,19 @@ pub mod aws_cluster {
                 State::Degraded => "DEGRADED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "RUNNING" => Some(Self::Running),
+                "RECONCILING" => Some(Self::Reconciling),
+                "STOPPING" => Some(Self::Stopping),
+                "ERROR" => Some(Self::Error),
+                "DEGRADED" => Some(Self::Degraded),
+                _ => None,
+            }
+        }
     }
 }
 /// ControlPlane defines common parameters between control plane nodes.
@@ -2075,6 +2133,15 @@ pub mod aws_volume_template {
                 VolumeType::Gp3 => "GP3",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "VOLUME_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "GP2" => Some(Self::Gp2),
+                "GP3" => Some(Self::Gp3),
+                _ => None,
+            }
+        }
     }
 }
 /// ClusterNetworking defines cluster-wide networking configuration.
@@ -2224,6 +2291,19 @@ pub mod aws_node_pool {
                 State::Stopping => "STOPPING",
                 State::Error => "ERROR",
                 State::Degraded => "DEGRADED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "RUNNING" => Some(Self::Running),
+                "RECONCILING" => Some(Self::Reconciling),
+                "STOPPING" => Some(Self::Stopping),
+                "ERROR" => Some(Self::Error),
+                "DEGRADED" => Some(Self::Degraded),
+                _ => None,
             }
         }
     }
@@ -2406,6 +2486,16 @@ pub mod aws_instance_placement {
                 Tenancy::Default => "DEFAULT",
                 Tenancy::Dedicated => "DEDICATED",
                 Tenancy::Host => "HOST",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TENANCY_UNSPECIFIED" => Some(Self::Unspecified),
+                "DEFAULT" => Some(Self::Default),
+                "DEDICATED" => Some(Self::Dedicated),
+                "HOST" => Some(Self::Host),
+                _ => None,
             }
         }
     }

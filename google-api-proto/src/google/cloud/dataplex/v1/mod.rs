@@ -125,6 +125,17 @@ pub mod lake {
                     State::Error => "ERROR",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "NONE" => Some(Self::None),
+                    "READY" => Some(Self::Ready),
+                    "UPDATING" => Some(Self::Updating),
+                    "ERROR" => Some(Self::Error),
+                    _ => None,
+                }
+            }
         }
     }
 }
@@ -238,6 +249,15 @@ pub mod zone {
                     LocationType::Unspecified => "LOCATION_TYPE_UNSPECIFIED",
                     LocationType::SingleRegion => "SINGLE_REGION",
                     LocationType::MultiRegion => "MULTI_REGION",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "LOCATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "SINGLE_REGION" => Some(Self::SingleRegion),
+                    "MULTI_REGION" => Some(Self::MultiRegion),
+                    _ => None,
                 }
             }
         }
@@ -359,6 +379,15 @@ pub mod zone {
                 Type::Unspecified => "TYPE_UNSPECIFIED",
                 Type::Raw => "RAW",
                 Type::Curated => "CURATED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RAW" => Some(Self::Raw),
+                "CURATED" => Some(Self::Curated),
+                _ => None,
             }
         }
     }
@@ -507,6 +536,15 @@ pub mod action {
                     SchemaChange::Modified => "MODIFIED",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "SCHEMA_CHANGE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "INCOMPATIBLE" => Some(Self::Incompatible),
+                    "MODIFIED" => Some(Self::Modified),
+                    _ => None,
+                }
+            }
         }
     }
     /// Action details for invalid or unsupported partitions detected by discovery.
@@ -550,6 +588,15 @@ pub mod action {
                     PartitionStructure::Unspecified => "PARTITION_STRUCTURE_UNSPECIFIED",
                     PartitionStructure::ConsistentKeys => "CONSISTENT_KEYS",
                     PartitionStructure::HiveStyleKeys => "HIVE_STYLE_KEYS",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "PARTITION_STRUCTURE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "CONSISTENT_KEYS" => Some(Self::ConsistentKeys),
+                    "HIVE_STYLE_KEYS" => Some(Self::HiveStyleKeys),
+                    _ => None,
                 }
             }
         }
@@ -596,6 +643,16 @@ pub mod action {
                 Category::ResourceManagement => "RESOURCE_MANAGEMENT",
                 Category::SecurityPolicy => "SECURITY_POLICY",
                 Category::DataDiscovery => "DATA_DISCOVERY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CATEGORY_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESOURCE_MANAGEMENT" => Some(Self::ResourceManagement),
+                "SECURITY_POLICY" => Some(Self::SecurityPolicy),
+                "DATA_DISCOVERY" => Some(Self::DataDiscovery),
+                _ => None,
             }
         }
     }
@@ -744,6 +801,16 @@ pub mod asset {
                     State::Error => "ERROR",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "READY" => Some(Self::Ready),
+                    "APPLYING" => Some(Self::Applying),
+                    "ERROR" => Some(Self::Error),
+                    _ => None,
+                }
+            }
         }
     }
     /// Settings to manage the metadata discovery and publishing for an asset.
@@ -877,6 +944,15 @@ pub mod asset {
                     Type::BigqueryDataset => "BIGQUERY_DATASET",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "STORAGE_BUCKET" => Some(Self::StorageBucket),
+                    "BIGQUERY_DATASET" => Some(Self::BigqueryDataset),
+                    _ => None,
+                }
+            }
         }
     }
     /// Status of the resource referenced by an asset.
@@ -926,6 +1002,15 @@ pub mod asset {
                     State::Unspecified => "STATE_UNSPECIFIED",
                     State::Ready => "READY",
                     State::Error => "ERROR",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "READY" => Some(Self::Ready),
+                    "ERROR" => Some(Self::Error),
+                    _ => None,
                 }
             }
         }
@@ -1012,6 +1097,17 @@ pub mod asset {
                     State::Disabled => "DISABLED",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "SCHEDULED" => Some(Self::Scheduled),
+                    "IN_PROGRESS" => Some(Self::InProgress),
+                    "PAUSED" => Some(Self::Paused),
+                    "DISABLED" => Some(Self::Disabled),
+                    _ => None,
+                }
+            }
         }
     }
 }
@@ -1042,6 +1138,17 @@ impl State {
             State::Creating => "CREATING",
             State::Deleting => "DELETING",
             State::ActionRequired => "ACTION_REQUIRED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACTIVE" => Some(Self::Active),
+            "CREATING" => Some(Self::Creating),
+            "DELETING" => Some(Self::Deleting),
+            "ACTION_REQUIRED" => Some(Self::ActionRequired),
+            _ => None,
         }
     }
 }
@@ -1287,6 +1394,14 @@ pub mod content {
                     QueryEngine::Spark => "SPARK",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "QUERY_ENGINE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "SPARK" => Some(Self::Spark),
+                    _ => None,
+                }
+            }
         }
     }
     /// Configuration for Notebook content.
@@ -1327,6 +1442,14 @@ pub mod content {
                 match self {
                     KernelType::Unspecified => "KERNEL_TYPE_UNSPECIFIED",
                     KernelType::Python3 => "PYTHON3",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "KERNEL_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "PYTHON3" => Some(Self::Python3),
+                    _ => None,
                 }
             }
         }
@@ -1500,6 +1623,20 @@ pub mod discovery_event {
                 EventType::PartitionDeleted => "PARTITION_DELETED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EVENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONFIG" => Some(Self::Config),
+                "ENTITY_CREATED" => Some(Self::EntityCreated),
+                "ENTITY_UPDATED" => Some(Self::EntityUpdated),
+                "ENTITY_DELETED" => Some(Self::EntityDeleted),
+                "PARTITION_CREATED" => Some(Self::PartitionCreated),
+                "PARTITION_UPDATED" => Some(Self::PartitionUpdated),
+                "PARTITION_DELETED" => Some(Self::PartitionDeleted),
+                _ => None,
+            }
+        }
     }
     /// The type of the entity.
     #[derive(
@@ -1532,6 +1669,15 @@ pub mod discovery_event {
                 EntityType::Unspecified => "ENTITY_TYPE_UNSPECIFIED",
                 EntityType::Table => "TABLE",
                 EntityType::Fileset => "FILESET",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENTITY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TABLE" => Some(Self::Table),
+                "FILESET" => Some(Self::Fileset),
+                _ => None,
             }
         }
     }
@@ -1621,6 +1767,15 @@ pub mod job_event {
                 Type::Notebook => "NOTEBOOK",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SPARK" => Some(Self::Spark),
+                "NOTEBOOK" => Some(Self::Notebook),
+                _ => None,
+            }
+        }
     }
     /// The completion status of the job.
     #[derive(
@@ -1661,6 +1816,17 @@ pub mod job_event {
                 State::Aborted => "ABORTED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
+                "ABORTED" => Some(Self::Aborted),
+                _ => None,
+            }
+        }
     }
     /// The service used to execute the job.
     #[derive(
@@ -1690,6 +1856,14 @@ pub mod job_event {
             match self {
                 Service::Unspecified => "SERVICE_UNSPECIFIED",
                 Service::Dataproc => "DATAPROC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SERVICE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DATAPROC" => Some(Self::Dataproc),
+                _ => None,
             }
         }
     }
@@ -1786,6 +1960,15 @@ pub mod session_event {
                     Engine::Bigquery => "BIGQUERY",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "ENGINE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "SPARK_SQL" => Some(Self::SparkSql),
+                    "BIGQUERY" => Some(Self::Bigquery),
+                    _ => None,
+                }
+            }
         }
     }
     /// The type of the event.
@@ -1826,6 +2009,17 @@ pub mod session_event {
                 EventType::Stop => "STOP",
                 EventType::Query => "QUERY",
                 EventType::Create => "CREATE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EVENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "START" => Some(Self::Start),
+                "STOP" => Some(Self::Stop),
+                "QUERY" => Some(Self::Query),
+                "CREATE" => Some(Self::Create),
+                _ => None,
             }
         }
     }
@@ -1940,6 +2134,15 @@ pub mod data_scan_event {
                 ScanType::DataQuality => "DATA_QUALITY",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCAN_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DATA_PROFILE" => Some(Self::DataProfile),
+                "DATA_QUALITY" => Some(Self::DataQuality),
+                _ => None,
+            }
+        }
     }
     /// The job state of the data scan.
     #[derive(
@@ -1980,6 +2183,17 @@ pub mod data_scan_event {
                 State::Cancelled => "CANCELLED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STARTED" => Some(Self::Started),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
+                _ => None,
+            }
+        }
     }
     /// The trigger type for the data scan.
     #[derive(
@@ -2014,6 +2228,15 @@ pub mod data_scan_event {
                 Trigger::Schedule => "SCHEDULE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TRIGGER_UNSPECIFIED" => Some(Self::Unspecified),
+                "ON_DEMAND" => Some(Self::OnDemand),
+                "SCHEDULE" => Some(Self::Schedule),
+                _ => None,
+            }
+        }
     }
     /// The scope of job for the data scan.
     #[derive(
@@ -2046,6 +2269,15 @@ pub mod data_scan_event {
                 Scope::Unspecified => "SCOPE_UNSPECIFIED",
                 Scope::Full => "FULL",
                 Scope::Incremental => "INCREMENTAL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "FULL" => Some(Self::Full),
+                "INCREMENTAL" => Some(Self::Incremental),
+                _ => None,
             }
         }
     }
@@ -2192,6 +2424,15 @@ pub mod get_content_request {
                 ContentView::Unspecified => "CONTENT_VIEW_UNSPECIFIED",
                 ContentView::Basic => "BASIC",
                 ContentView::Full => "FULL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CONTENT_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+                "BASIC" => Some(Self::Basic),
+                "FULL" => Some(Self::Full),
+                _ => None,
             }
         }
     }
@@ -2672,6 +2913,15 @@ pub mod task {
                     Type::Recurring => "RECURRING",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "ON_DEMAND" => Some(Self::OnDemand),
+                    "RECURRING" => Some(Self::Recurring),
+                    _ => None,
+                }
+            }
         }
         /// Trigger only applies for RECURRING tasks.
         #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2901,6 +3151,14 @@ pub mod job {
                 Service::Dataproc => "DATAPROC",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SERVICE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DATAPROC" => Some(Self::Dataproc),
+                _ => None,
+            }
+        }
     }
     #[derive(
         Clone,
@@ -2944,6 +3202,19 @@ pub mod job {
                 State::Succeeded => "SUCCEEDED",
                 State::Failed => "FAILED",
                 State::Aborted => "ABORTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "CANCELLING" => Some(Self::Cancelling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "ABORTED" => Some(Self::Aborted),
+                _ => None,
             }
         }
     }
@@ -3482,6 +3753,16 @@ pub mod data_quality_rule {
                     ColumnStatistic::Max => "MAX",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATISTIC_UNDEFINED" => Some(Self::StatisticUndefined),
+                    "MEAN" => Some(Self::Mean),
+                    "MIN" => Some(Self::Min),
+                    "MAX" => Some(Self::Max),
+                    _ => None,
+                }
+            }
         }
     }
     /// Evaluates whether each row passes the specified condition.
@@ -3633,6 +3914,15 @@ pub mod get_data_scan_request {
                 DataScanView::Full => "FULL",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATA_SCAN_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+                "BASIC" => Some(Self::Basic),
+                "FULL" => Some(Self::Full),
+                _ => None,
+            }
+        }
     }
 }
 /// List dataScans request.
@@ -3746,6 +4036,15 @@ pub mod get_data_scan_job_request {
                 DataScanJobView::Unspecified => "DATA_SCAN_JOB_VIEW_UNSPECIFIED",
                 DataScanJobView::Basic => "BASIC",
                 DataScanJobView::Full => "FULL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATA_SCAN_JOB_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+                "BASIC" => Some(Self::Basic),
+                "FULL" => Some(Self::Full),
+                _ => None,
             }
         }
     }
@@ -4000,6 +4299,19 @@ pub mod data_scan_job {
                 State::Pending => "PENDING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "CANCELING" => Some(Self::Canceling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "PENDING" => Some(Self::Pending),
+                _ => None,
+            }
+        }
     }
     /// Data Scan related setting.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -4045,6 +4357,15 @@ impl DataScanType {
             DataScanType::Unspecified => "DATA_SCAN_TYPE_UNSPECIFIED",
             DataScanType::DataQuality => "DATA_QUALITY",
             DataScanType::DataProfile => "DATA_PROFILE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "DATA_SCAN_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "DATA_QUALITY" => Some(Self::DataQuality),
+            "DATA_PROFILE" => Some(Self::DataProfile),
+            _ => None,
         }
     }
 }
@@ -4391,6 +4712,15 @@ pub mod list_entities_request {
                 EntityView::Filesets => "FILESETS",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENTITY_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+                "TABLES" => Some(Self::Tables),
+                "FILESETS" => Some(Self::Filesets),
+                _ => None,
+            }
+        }
     }
 }
 /// List metadata entities response.
@@ -4454,6 +4784,16 @@ pub mod get_entity_request {
                 EntityView::Basic => "BASIC",
                 EntityView::Schema => "SCHEMA",
                 EntityView::Full => "FULL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENTITY_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+                "BASIC" => Some(Self::Basic),
+                "SCHEMA" => Some(Self::Schema),
+                "FULL" => Some(Self::Full),
+                _ => None,
             }
         }
     }
@@ -4689,6 +5029,15 @@ pub mod entity {
                 Type::Fileset => "FILESET",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TABLE" => Some(Self::Table),
+                "FILESET" => Some(Self::Fileset),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents partition metadata contained within entity instances.
@@ -4862,6 +5211,28 @@ pub mod schema {
                 Type::Null => "NULL",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BOOLEAN" => Some(Self::Boolean),
+                "BYTE" => Some(Self::Byte),
+                "INT16" => Some(Self::Int16),
+                "INT32" => Some(Self::Int32),
+                "INT64" => Some(Self::Int64),
+                "FLOAT" => Some(Self::Float),
+                "DOUBLE" => Some(Self::Double),
+                "DECIMAL" => Some(Self::Decimal),
+                "STRING" => Some(Self::String),
+                "BINARY" => Some(Self::Binary),
+                "TIMESTAMP" => Some(Self::Timestamp),
+                "DATE" => Some(Self::Date),
+                "TIME" => Some(Self::Time),
+                "RECORD" => Some(Self::Record),
+                "NULL" => Some(Self::Null),
+                _ => None,
+            }
+        }
     }
     /// Additional qualifiers to define field semantics.
     #[derive(
@@ -4899,6 +5270,16 @@ pub mod schema {
                 Mode::Repeated => "REPEATED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "REQUIRED" => Some(Self::Required),
+                "NULLABLE" => Some(Self::Nullable),
+                "REPEATED" => Some(Self::Repeated),
+                _ => None,
+            }
+        }
     }
     /// The structure of paths within the entity, which represent partitions.
     #[derive(
@@ -4930,6 +5311,14 @@ pub mod schema {
             match self {
                 PartitionStyle::Unspecified => "PARTITION_STYLE_UNSPECIFIED",
                 PartitionStyle::HiveCompatible => "HIVE_COMPATIBLE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PARTITION_STYLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "HIVE_COMPATIBLE" => Some(Self::HiveCompatible),
+                _ => None,
             }
         }
     }
@@ -5073,6 +5462,25 @@ pub mod storage_format {
                 Format::Unknown => "UNKNOWN",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "PARQUET" => Some(Self::Parquet),
+                "AVRO" => Some(Self::Avro),
+                "ORC" => Some(Self::Orc),
+                "CSV" => Some(Self::Csv),
+                "JSON" => Some(Self::Json),
+                "IMAGE" => Some(Self::Image),
+                "AUDIO" => Some(Self::Audio),
+                "VIDEO" => Some(Self::Video),
+                "TEXT" => Some(Self::Text),
+                "TFRECORD" => Some(Self::Tfrecord),
+                "OTHER" => Some(Self::Other),
+                "UNKNOWN" => Some(Self::Unknown),
+                _ => None,
+            }
+        }
     }
     /// The specific compressed file format of the data.
     #[derive(
@@ -5105,6 +5513,15 @@ pub mod storage_format {
                 CompressionFormat::Unspecified => "COMPRESSION_FORMAT_UNSPECIFIED",
                 CompressionFormat::Gzip => "GZIP",
                 CompressionFormat::Bzip2 => "BZIP2",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMPRESSION_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "GZIP" => Some(Self::Gzip),
+                "BZIP2" => Some(Self::Bzip2),
+                _ => None,
             }
         }
     }
@@ -5144,6 +5561,15 @@ impl StorageSystem {
             StorageSystem::Unspecified => "STORAGE_SYSTEM_UNSPECIFIED",
             StorageSystem::CloudStorage => "CLOUD_STORAGE",
             StorageSystem::Bigquery => "BIGQUERY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "STORAGE_SYSTEM_UNSPECIFIED" => Some(Self::Unspecified),
+            "CLOUD_STORAGE" => Some(Self::CloudStorage),
+            "BIGQUERY" => Some(Self::Bigquery),
+            _ => None,
         }
     }
 }

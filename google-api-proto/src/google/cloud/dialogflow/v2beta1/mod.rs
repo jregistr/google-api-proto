@@ -313,6 +313,20 @@ impl AudioEncoding {
             AudioEncoding::SpeexWithHeaderByte => "AUDIO_ENCODING_SPEEX_WITH_HEADER_BYTE",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUDIO_ENCODING_UNSPECIFIED" => Some(Self::Unspecified),
+            "AUDIO_ENCODING_LINEAR_16" => Some(Self::Linear16),
+            "AUDIO_ENCODING_FLAC" => Some(Self::Flac),
+            "AUDIO_ENCODING_MULAW" => Some(Self::Mulaw),
+            "AUDIO_ENCODING_AMR" => Some(Self::Amr),
+            "AUDIO_ENCODING_AMR_WB" => Some(Self::AmrWb),
+            "AUDIO_ENCODING_OGG_OPUS" => Some(Self::OggOpus),
+            "AUDIO_ENCODING_SPEEX_WITH_HEADER_BYTE" => Some(Self::SpeexWithHeaderByte),
+            _ => None,
+        }
+    }
 }
 /// Variant of the specified [Speech
 /// model]\[google.cloud.dialogflow.v2beta1.InputAudioConfig.model\] to use.
@@ -369,6 +383,16 @@ impl SpeechModelVariant {
             SpeechModelVariant::UseEnhanced => "USE_ENHANCED",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SPEECH_MODEL_VARIANT_UNSPECIFIED" => Some(Self::Unspecified),
+            "USE_BEST_AVAILABLE" => Some(Self::UseBestAvailable),
+            "USE_STANDARD" => Some(Self::UseStandard),
+            "USE_ENHANCED" => Some(Self::UseEnhanced),
+            _ => None,
+        }
+    }
 }
 /// Gender of the voice as described in
 /// [SSML voice element](<https://www.w3.org/TR/speech-synthesis11/#edef_voice>).
@@ -396,6 +420,16 @@ impl SsmlVoiceGender {
             SsmlVoiceGender::Male => "SSML_VOICE_GENDER_MALE",
             SsmlVoiceGender::Female => "SSML_VOICE_GENDER_FEMALE",
             SsmlVoiceGender::Neutral => "SSML_VOICE_GENDER_NEUTRAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SSML_VOICE_GENDER_UNSPECIFIED" => Some(Self::Unspecified),
+            "SSML_VOICE_GENDER_MALE" => Some(Self::Male),
+            "SSML_VOICE_GENDER_FEMALE" => Some(Self::Female),
+            "SSML_VOICE_GENDER_NEUTRAL" => Some(Self::Neutral),
+            _ => None,
         }
     }
 }
@@ -433,6 +467,18 @@ impl OutputAudioEncoding {
             OutputAudioEncoding::Mp364Kbps => "OUTPUT_AUDIO_ENCODING_MP3_64_KBPS",
             OutputAudioEncoding::OggOpus => "OUTPUT_AUDIO_ENCODING_OGG_OPUS",
             OutputAudioEncoding::Mulaw => "OUTPUT_AUDIO_ENCODING_MULAW",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OUTPUT_AUDIO_ENCODING_UNSPECIFIED" => Some(Self::Unspecified),
+            "OUTPUT_AUDIO_ENCODING_LINEAR_16" => Some(Self::Linear16),
+            "OUTPUT_AUDIO_ENCODING_MP3" => Some(Self::Mp3),
+            "OUTPUT_AUDIO_ENCODING_MP3_64_KBPS" => Some(Self::Mp364Kbps),
+            "OUTPUT_AUDIO_ENCODING_OGG_OPUS" => Some(Self::OggOpus),
+            "OUTPUT_AUDIO_ENCODING_MULAW" => Some(Self::Mulaw),
+            _ => None,
         }
     }
 }
@@ -502,6 +548,29 @@ impl TelephonyDtmf {
             TelephonyDtmf::DtmfPound => "DTMF_POUND",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TELEPHONY_DTMF_UNSPECIFIED" => Some(Self::Unspecified),
+            "DTMF_ONE" => Some(Self::DtmfOne),
+            "DTMF_TWO" => Some(Self::DtmfTwo),
+            "DTMF_THREE" => Some(Self::DtmfThree),
+            "DTMF_FOUR" => Some(Self::DtmfFour),
+            "DTMF_FIVE" => Some(Self::DtmfFive),
+            "DTMF_SIX" => Some(Self::DtmfSix),
+            "DTMF_SEVEN" => Some(Self::DtmfSeven),
+            "DTMF_EIGHT" => Some(Self::DtmfEight),
+            "DTMF_NINE" => Some(Self::DtmfNine),
+            "DTMF_ZERO" => Some(Self::DtmfZero),
+            "DTMF_A" => Some(Self::DtmfA),
+            "DTMF_B" => Some(Self::DtmfB),
+            "DTMF_C" => Some(Self::DtmfC),
+            "DTMF_D" => Some(Self::DtmfD),
+            "DTMF_STAR" => Some(Self::DtmfStar),
+            "DTMF_POUND" => Some(Self::DtmfPound),
+            _ => None,
+        }
+    }
 }
 /// Represents a single validation error.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -569,6 +638,17 @@ pub mod validation_error {
                 Severity::Warning => "WARNING",
                 Severity::Error => "ERROR",
                 Severity::Critical => "CRITICAL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "INFO" => Some(Self::Info),
+                "WARNING" => Some(Self::Warning),
+                "ERROR" => Some(Self::Error),
+                "CRITICAL" => Some(Self::Critical),
+                _ => None,
             }
         }
     }
@@ -694,6 +774,15 @@ pub mod agent {
                 MatchMode::MlOnly => "MATCH_MODE_ML_ONLY",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MATCH_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "MATCH_MODE_HYBRID" => Some(Self::Hybrid),
+                "MATCH_MODE_ML_ONLY" => Some(Self::MlOnly),
+                _ => None,
+            }
+        }
     }
     /// API version for the agent.
     #[derive(
@@ -729,6 +818,16 @@ pub mod agent {
                 ApiVersion::V1 => "API_VERSION_V1",
                 ApiVersion::V2 => "API_VERSION_V2",
                 ApiVersion::V2Beta1 => "API_VERSION_V2_BETA_1",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "API_VERSION_UNSPECIFIED" => Some(Self::Unspecified),
+                "API_VERSION_V1" => Some(Self::V1),
+                "API_VERSION_V2" => Some(Self::V2),
+                "API_VERSION_V2_BETA_1" => Some(Self::V2Beta1),
+                _ => None,
             }
         }
     }
@@ -767,6 +866,16 @@ pub mod agent {
                 Tier::Standard => "TIER_STANDARD",
                 Tier::Enterprise => "TIER_ENTERPRISE",
                 Tier::EnterprisePlus => "TIER_ENTERPRISE_PLUS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TIER_UNSPECIFIED" => Some(Self::Unspecified),
+                "TIER_STANDARD" => Some(Self::Standard),
+                "TIER_ENTERPRISE" => Some(Self::Enterprise),
+                "TIER_ENTERPRISE_PLUS" => Some(Self::EnterprisePlus),
+                _ => None,
             }
         }
     }
@@ -1953,6 +2062,15 @@ pub mod intent {
                     Type::Template => "TEMPLATE",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "EXAMPLE" => Some(Self::Example),
+                    "TEMPLATE" => Some(Self::Template),
+                    _ => None,
+                }
+            }
         }
     }
     /// Represents intent parameters.
@@ -2379,6 +2497,15 @@ pub mod intent {
                         CardWidth::Medium => "MEDIUM",
                     }
                 }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "CARD_WIDTH_UNSPECIFIED" => Some(Self::Unspecified),
+                        "SMALL" => Some(Self::Small),
+                        "MEDIUM" => Some(Self::Medium),
+                        _ => None,
+                    }
+                }
             }
         }
         /// Standalone Rich Business Messaging (RBM) rich card.
@@ -2440,6 +2567,15 @@ pub mod intent {
                         CardOrientation::Vertical => "VERTICAL",
                     }
                 }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "CARD_ORIENTATION_UNSPECIFIED" => Some(Self::Unspecified),
+                        "HORIZONTAL" => Some(Self::Horizontal),
+                        "VERTICAL" => Some(Self::Vertical),
+                        _ => None,
+                    }
+                }
             }
             /// Thumbnail preview alignment for standalone cards with horizontal
             /// layout.
@@ -2475,6 +2611,17 @@ pub mod intent {
                         }
                         ThumbnailImageAlignment::Left => "LEFT",
                         ThumbnailImageAlignment::Right => "RIGHT",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "THUMBNAIL_IMAGE_ALIGNMENT_UNSPECIFIED" => {
+                            Some(Self::Unspecified)
+                        }
+                        "LEFT" => Some(Self::Left),
+                        "RIGHT" => Some(Self::Right),
+                        _ => None,
                     }
                 }
             }
@@ -2581,6 +2728,16 @@ pub mod intent {
                             Height::Short => "SHORT",
                             Height::Medium => "MEDIUM",
                             Height::Tall => "TALL",
+                        }
+                    }
+                    /// Creates an enum from field names used in the ProtoBuf definition.
+                    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                        match value {
+                            "HEIGHT_UNSPECIFIED" => Some(Self::Unspecified),
+                            "SHORT" => Some(Self::Short),
+                            "MEDIUM" => Some(Self::Medium),
+                            "TALL" => Some(Self::Tall),
+                            _ => None,
                         }
                     }
                 }
@@ -2764,6 +2921,14 @@ pub mod intent {
                         ResponseMediaType::Audio => "AUDIO",
                     }
                 }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "RESPONSE_MEDIA_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                        "AUDIO" => Some(Self::Audio),
+                        _ => None,
+                    }
+                }
             }
         }
         /// Browse Carousel Card for Actions on Google.
@@ -2861,6 +3026,17 @@ pub mod intent {
                                 UrlTypeHint::AmpContent => "AMP_CONTENT",
                             }
                         }
+                        /// Creates an enum from field names used in the ProtoBuf definition.
+                        pub fn from_str_name(
+                            value: &str,
+                        ) -> ::core::option::Option<Self> {
+                            match value {
+                                "URL_TYPE_HINT_UNSPECIFIED" => Some(Self::Unspecified),
+                                "AMP_ACTION" => Some(Self::AmpAction),
+                                "AMP_CONTENT" => Some(Self::AmpContent),
+                                _ => None,
+                            }
+                        }
                     }
                 }
             }
@@ -2914,6 +3090,17 @@ pub mod intent {
                         ImageDisplayOptions::White => "WHITE",
                         ImageDisplayOptions::Cropped => "CROPPED",
                         ImageDisplayOptions::BlurredBackground => "BLURRED_BACKGROUND",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "IMAGE_DISPLAY_OPTIONS_UNSPECIFIED" => Some(Self::Unspecified),
+                        "GRAY" => Some(Self::Gray),
+                        "WHITE" => Some(Self::White),
+                        "CROPPED" => Some(Self::Cropped),
+                        "BLURRED_BACKGROUND" => Some(Self::BlurredBackground),
+                        _ => None,
                     }
                 }
             }
@@ -2990,6 +3177,16 @@ pub mod intent {
                         HorizontalAlignment::Leading => "LEADING",
                         HorizontalAlignment::Center => "CENTER",
                         HorizontalAlignment::Trailing => "TRAILING",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "HORIZONTAL_ALIGNMENT_UNSPECIFIED" => Some(Self::Unspecified),
+                        "LEADING" => Some(Self::Leading),
+                        "CENTER" => Some(Self::Center),
+                        "TRAILING" => Some(Self::Trailing),
+                        _ => None,
                     }
                 }
             }
@@ -3070,6 +3267,23 @@ pub mod intent {
                     Platform::ActionsOnGoogle => "ACTIONS_ON_GOOGLE",
                     Platform::Telephony => "TELEPHONY",
                     Platform::GoogleHangouts => "GOOGLE_HANGOUTS",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "PLATFORM_UNSPECIFIED" => Some(Self::Unspecified),
+                    "FACEBOOK" => Some(Self::Facebook),
+                    "SLACK" => Some(Self::Slack),
+                    "TELEGRAM" => Some(Self::Telegram),
+                    "KIK" => Some(Self::Kik),
+                    "SKYPE" => Some(Self::Skype),
+                    "LINE" => Some(Self::Line),
+                    "VIBER" => Some(Self::Viber),
+                    "ACTIONS_ON_GOOGLE" => Some(Self::ActionsOnGoogle),
+                    "TELEPHONY" => Some(Self::Telephony),
+                    "GOOGLE_HANGOUTS" => Some(Self::GoogleHangouts),
+                    _ => None,
                 }
             }
         }
@@ -3189,6 +3403,17 @@ pub mod intent {
                 WebhookState::EnabledForSlotFilling => {
                     "WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING"
                 }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "WEBHOOK_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "WEBHOOK_STATE_ENABLED" => Some(Self::Enabled),
+                "WEBHOOK_STATE_ENABLED_FOR_SLOT_FILLING" => {
+                    Some(Self::EnabledForSlotFilling)
+                }
+                _ => None,
             }
         }
     }
@@ -3428,6 +3653,14 @@ impl IntentView {
         match self {
             IntentView::Unspecified => "INTENT_VIEW_UNSPECIFIED",
             IntentView::Full => "INTENT_VIEW_FULL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "INTENT_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+            "INTENT_VIEW_FULL" => Some(Self::Full),
+            _ => None,
         }
     }
 }
@@ -3786,6 +4019,16 @@ pub mod entity_type {
                 Kind::Regexp => "KIND_REGEXP",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KIND_UNSPECIFIED" => Some(Self::Unspecified),
+                "KIND_MAP" => Some(Self::Map),
+                "KIND_LIST" => Some(Self::List),
+                "KIND_REGEXP" => Some(Self::Regexp),
+                _ => None,
+            }
+        }
     }
     /// Represents different entity type expansion modes. Automated expansion
     /// allows an agent to recognize values that have not been explicitly listed in
@@ -3818,6 +4061,14 @@ pub mod entity_type {
             match self {
                 AutoExpansionMode::Unspecified => "AUTO_EXPANSION_MODE_UNSPECIFIED",
                 AutoExpansionMode::Default => "AUTO_EXPANSION_MODE_DEFAULT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "AUTO_EXPANSION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "AUTO_EXPANSION_MODE_DEFAULT" => Some(Self::Default),
+                _ => None,
             }
         }
     }
@@ -4520,6 +4771,15 @@ pub mod session_entity_type {
                 EntityOverrideMode::Unspecified => "ENTITY_OVERRIDE_MODE_UNSPECIFIED",
                 EntityOverrideMode::Override => "ENTITY_OVERRIDE_MODE_OVERRIDE",
                 EntityOverrideMode::Supplement => "ENTITY_OVERRIDE_MODE_SUPPLEMENT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENTITY_OVERRIDE_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ENTITY_OVERRIDE_MODE_OVERRIDE" => Some(Self::Override),
+                "ENTITY_OVERRIDE_MODE_SUPPLEMENT" => Some(Self::Supplement),
+                _ => None,
             }
         }
     }
@@ -5240,6 +5500,16 @@ pub mod knowledge_answers {
                     MatchConfidenceLevel::High => "HIGH",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "MATCH_CONFIDENCE_LEVEL_UNSPECIFIED" => Some(Self::Unspecified),
+                    "LOW" => Some(Self::Low),
+                    "MEDIUM" => Some(Self::Medium),
+                    "HIGH" => Some(Self::High),
+                    _ => None,
+                }
+            }
         }
     }
 }
@@ -5545,6 +5815,17 @@ pub mod streaming_recognition_result {
                 MessageType::DtmfDigits => "DTMF_DIGITS",
                 MessageType::EndOfSingleUtterance => "END_OF_SINGLE_UTTERANCE",
                 MessageType::PartialDtmfDigits => "PARTIAL_DTMF_DIGITS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MESSAGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TRANSCRIPT" => Some(Self::Transcript),
+                "DTMF_DIGITS" => Some(Self::DtmfDigits),
+                "END_OF_SINGLE_UTTERANCE" => Some(Self::EndOfSingleUtterance),
+                "PARTIAL_DTMF_DIGITS" => Some(Self::PartialDtmfDigits),
+                _ => None,
             }
         }
     }
@@ -5890,6 +6171,16 @@ pub mod participant {
                 Role::EndUser => "END_USER",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ROLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "HUMAN_AGENT" => Some(Self::HumanAgent),
+                "AUTOMATED_AGENT" => Some(Self::AutomatedAgent),
+                "END_USER" => Some(Self::EndUser),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents a message posted into a conversation.
@@ -6101,6 +6392,15 @@ pub mod automated_agent_reply {
                 AutomatedAgentReplyType::Final => "FINAL",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "AUTOMATED_AGENT_REPLY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PARTIAL" => Some(Self::Partial),
+                "FINAL" => Some(Self::Final),
+                _ => None,
+            }
+        }
     }
     /// Required.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6175,6 +6475,17 @@ pub mod suggestion_feature {
                 Type::Faq => "FAQ",
                 Type::SmartReply => "SMART_REPLY",
                 Type::ConversationSummarization => "CONVERSATION_SUMMARIZATION",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ARTICLE_SUGGESTION" => Some(Self::ArticleSuggestion),
+                "FAQ" => Some(Self::Faq),
+                "SMART_REPLY" => Some(Self::SmartReply),
+                "CONVERSATION_SUMMARIZATION" => Some(Self::ConversationSummarization),
+                _ => None,
             }
         }
     }
@@ -7590,6 +7901,15 @@ pub mod conversation {
                 LifecycleState::Completed => "COMPLETED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LIFECYCLE_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "IN_PROGRESS" => Some(Self::InProgress),
+                "COMPLETED" => Some(Self::Completed),
+                _ => None,
+            }
+        }
     }
     /// Enumeration of the different conversation stages a conversation can be in.
     /// Reference:
@@ -7627,6 +7947,15 @@ pub mod conversation {
                 ConversationStage::Unspecified => "CONVERSATION_STAGE_UNSPECIFIED",
                 ConversationStage::VirtualAgentStage => "VIRTUAL_AGENT_STAGE",
                 ConversationStage::HumanAssistStage => "HUMAN_ASSIST_STAGE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CONVERSATION_STAGE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VIRTUAL_AGENT_STAGE" => Some(Self::VirtualAgentStage),
+                "HUMAN_ASSIST_STAGE" => Some(Self::HumanAssistStage),
+                _ => None,
             }
         }
     }
@@ -8189,6 +8518,16 @@ pub mod version {
                 VersionStatus::Failed => "FAILED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "VERSION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+                "IN_PROGRESS" => Some(Self::InProgress),
+                "READY" => Some(Self::Ready),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
     }
 }
 /// The request message for \[Versions.ListVersions][google.cloud.dialogflow.v2beta1.Versions.ListVersions\].
@@ -8583,6 +8922,16 @@ pub mod answer_feedback {
                 CorrectnessLevel::FullyCorrect => "FULLY_CORRECT",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CORRECTNESS_LEVEL_UNSPECIFIED" => Some(Self::Unspecified),
+                "NOT_CORRECT" => Some(Self::NotCorrect),
+                "PARTIALLY_CORRECT" => Some(Self::PartiallyCorrect),
+                "FULLY_CORRECT" => Some(Self::FullyCorrect),
+                _ => None,
+            }
+        }
     }
     /// Normally, detail feedback is provided when answer is not fully correct.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -8679,6 +9028,15 @@ pub mod agent_assistant_feedback {
                 AnswerRelevance::Relevant => "RELEVANT",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ANSWER_RELEVANCE_UNSPECIFIED" => Some(Self::Unspecified),
+                "IRRELEVANT" => Some(Self::Irrelevant),
+                "RELEVANT" => Some(Self::Relevant),
+                _ => None,
+            }
+        }
     }
     /// Correctness of document.
     #[derive(
@@ -8713,6 +9071,15 @@ pub mod agent_assistant_feedback {
                 DocumentCorrectness::Correct => "CORRECT",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DOCUMENT_CORRECTNESS_UNSPECIFIED" => Some(Self::Unspecified),
+                "INCORRECT" => Some(Self::Incorrect),
+                "CORRECT" => Some(Self::Correct),
+                _ => None,
+            }
+        }
     }
     /// Efficiency of document.
     #[derive(
@@ -8745,6 +9112,15 @@ pub mod agent_assistant_feedback {
                 DocumentEfficiency::Unspecified => "DOCUMENT_EFFICIENCY_UNSPECIFIED",
                 DocumentEfficiency::Inefficient => "INEFFICIENT",
                 DocumentEfficiency::Efficient => "EFFICIENT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DOCUMENT_EFFICIENCY_UNSPECIFIED" => Some(Self::Unspecified),
+                "INEFFICIENT" => Some(Self::Inefficient),
+                "EFFICIENT" => Some(Self::Efficient),
+                _ => None,
             }
         }
     }
@@ -9709,6 +10085,15 @@ pub mod notification_config {
                 MessageFormat::Json => "JSON",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MESSAGE_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROTO" => Some(Self::Proto),
+                "JSON" => Some(Self::Json),
+                _ => None,
+            }
+        }
     }
 }
 /// Defines logging behavior for conversation lifecycle events.
@@ -10196,6 +10581,18 @@ pub mod conversation_event {
                 Type::UnrecoverableError => "UNRECOVERABLE_ERROR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONVERSATION_STARTED" => Some(Self::ConversationStarted),
+                "CONVERSATION_FINISHED" => Some(Self::ConversationFinished),
+                "HUMAN_INTERVENTION_NEEDED" => Some(Self::HumanInterventionNeeded),
+                "NEW_MESSAGE" => Some(Self::NewMessage),
+                "UNRECOVERABLE_ERROR" => Some(Self::UnrecoverableError),
+                _ => None,
+            }
+        }
     }
     /// Payload of conversation event.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -10538,6 +10935,17 @@ pub mod document {
                 KnowledgeType::AgentFacingSmartReply => "AGENT_FACING_SMART_REPLY",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "KNOWLEDGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "FAQ" => Some(Self::Faq),
+                "EXTRACTIVE_QA" => Some(Self::ExtractiveQa),
+                "ARTICLE_SUGGESTION" => Some(Self::ArticleSuggestion),
+                "AGENT_FACING_SMART_REPLY" => Some(Self::AgentFacingSmartReply),
+                _ => None,
+            }
+        }
     }
     /// Possible states of the document
     #[derive(
@@ -10579,6 +10987,18 @@ pub mod document {
                 State::Updating => "UPDATING",
                 State::Reloading => "RELOADING",
                 State::Deleting => "DELETING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATING" => Some(Self::Creating),
+                "ACTIVE" => Some(Self::Active),
+                "UPDATING" => Some(Self::Updating),
+                "RELOADING" => Some(Self::Reloading),
+                "DELETING" => Some(Self::Deleting),
+                _ => None,
             }
         }
     }
@@ -10854,6 +11274,16 @@ pub mod knowledge_operation_metadata {
                 State::Pending => "PENDING",
                 State::Running => "RUNNING",
                 State::Done => "DONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PENDING" => Some(Self::Pending),
+                "RUNNING" => Some(Self::Running),
+                "DONE" => Some(Self::Done),
+                _ => None,
             }
         }
     }
@@ -11292,6 +11722,14 @@ pub mod fulfillment {
                     Type::Smalltalk => "SMALLTALK",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "SMALLTALK" => Some(Self::Smalltalk),
+                    _ => None,
+                }
+            }
         }
     }
     /// Required. The fulfillment configuration.
@@ -11522,6 +11960,16 @@ pub mod environment {
                 State::Stopped => "STOPPED",
                 State::Loading => "LOADING",
                 State::Running => "RUNNING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STOPPED" => Some(Self::Stopped),
+                "LOADING" => Some(Self::Loading),
+                "RUNNING" => Some(Self::Running),
+                _ => None,
             }
         }
     }

@@ -48,6 +48,16 @@ pub mod run_asset_discovery_response {
                 State::Terminated => "TERMINATED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "COMPLETED" => Some(Self::Completed),
+                "SUPERSEDED" => Some(Self::Superseded),
+                "TERMINATED" => Some(Self::Terminated),
+                _ => None,
+            }
+        }
     }
 }
 /// User specified security marks that are attached to the parent Security
@@ -181,6 +191,15 @@ pub mod finding {
                 State::Unspecified => "STATE_UNSPECIFIED",
                 State::Active => "ACTIVE",
                 State::Inactive => "INACTIVE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "INACTIVE" => Some(Self::Inactive),
+                _ => None,
             }
         }
     }
@@ -365,6 +384,15 @@ pub mod organization_settings {
                     InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
                     InclusionMode::IncludeOnly => "INCLUDE_ONLY",
                     InclusionMode::Exclude => "EXCLUDE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "INCLUSION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "INCLUDE_ONLY" => Some(Self::IncludeOnly),
+                    "EXCLUDE" => Some(Self::Exclude),
+                    _ => None,
                 }
             }
         }
@@ -825,6 +853,17 @@ pub mod list_assets_response {
                     State::Added => "ADDED",
                     State::Removed => "REMOVED",
                     State::Active => "ACTIVE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "UNUSED" => Some(Self::Unused),
+                    "ADDED" => Some(Self::Added),
+                    "REMOVED" => Some(Self::Removed),
+                    "ACTIVE" => Some(Self::Active),
+                    _ => None,
                 }
             }
         }

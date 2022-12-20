@@ -67,6 +67,21 @@ pub mod logging_config {
                 Level::Off => "OFF",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LEVEL_UNSPECIFIED" => Some(Self::Unspecified),
+                "ALL" => Some(Self::All),
+                "TRACE" => Some(Self::Trace),
+                "DEBUG" => Some(Self::Debug),
+                "INFO" => Some(Self::Info),
+                "WARN" => Some(Self::Warn),
+                "ERROR" => Some(Self::Error),
+                "FATAL" => Some(Self::Fatal),
+                "OFF" => Some(Self::Off),
+                _ => None,
+            }
+        }
     }
 }
 /// A Dataproc job for running
@@ -604,6 +619,22 @@ pub mod job_status {
                 State::AttemptFailure => "ATTEMPT_FAILURE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PENDING" => Some(Self::Pending),
+                "SETUP_DONE" => Some(Self::SetupDone),
+                "RUNNING" => Some(Self::Running),
+                "CANCEL_PENDING" => Some(Self::CancelPending),
+                "CANCEL_STARTED" => Some(Self::CancelStarted),
+                "CANCELLED" => Some(Self::Cancelled),
+                "DONE" => Some(Self::Done),
+                "ERROR" => Some(Self::Error),
+                "ATTEMPT_FAILURE" => Some(Self::AttemptFailure),
+                _ => None,
+            }
+        }
     }
     /// The job substate.
     #[derive(
@@ -649,6 +680,16 @@ pub mod job_status {
                 Substate::Submitted => "SUBMITTED",
                 Substate::Queued => "QUEUED",
                 Substate::StaleStatus => "STALE_STATUS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "SUBMITTED" => Some(Self::Submitted),
+                "QUEUED" => Some(Self::Queued),
+                "STALE_STATUS" => Some(Self::StaleStatus),
+                _ => None,
             }
         }
     }
@@ -746,6 +787,21 @@ pub mod yarn_application {
                 State::Finished => "FINISHED",
                 State::Failed => "FAILED",
                 State::Killed => "KILLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NEW" => Some(Self::New),
+                "NEW_SAVING" => Some(Self::NewSaving),
+                "SUBMITTED" => Some(Self::Submitted),
+                "ACCEPTED" => Some(Self::Accepted),
+                "RUNNING" => Some(Self::Running),
+                "FINISHED" => Some(Self::Finished),
+                "FAILED" => Some(Self::Failed),
+                "KILLED" => Some(Self::Killed),
+                _ => None,
             }
         }
     }
@@ -1034,6 +1090,15 @@ pub mod list_jobs_request {
                 JobStateMatcher::All => "ALL",
                 JobStateMatcher::Active => "ACTIVE",
                 JobStateMatcher::NonActive => "NON_ACTIVE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ALL" => Some(Self::All),
+                "ACTIVE" => Some(Self::Active),
+                "NON_ACTIVE" => Some(Self::NonActive),
+                _ => None,
             }
         }
     }
@@ -1570,6 +1635,17 @@ pub mod gke_node_pool_target {
                 Role::SparkExecutor => "SPARK_EXECUTOR",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ROLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DEFAULT" => Some(Self::Default),
+                "CONTROLLER" => Some(Self::Controller),
+                "SPARK_DRIVER" => Some(Self::SparkDriver),
+                "SPARK_EXECUTOR" => Some(Self::SparkExecutor),
+                _ => None,
+            }
+        }
     }
 }
 /// The configuration of a GKE NodePool used by a [Dataproc-on-GKE
@@ -1713,6 +1789,25 @@ impl Component {
             Component::Zookeeper => "ZOOKEEPER",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "COMPONENT_UNSPECIFIED" => Some(Self::Unspecified),
+            "ANACONDA" => Some(Self::Anaconda),
+            "DOCKER" => Some(Self::Docker),
+            "DRUID" => Some(Self::Druid),
+            "FLINK" => Some(Self::Flink),
+            "HBASE" => Some(Self::Hbase),
+            "HIVE_WEBHCAT" => Some(Self::HiveWebhcat),
+            "JUPYTER" => Some(Self::Jupyter),
+            "PRESTO" => Some(Self::Presto),
+            "RANGER" => Some(Self::Ranger),
+            "SOLR" => Some(Self::Solr),
+            "ZEPPELIN" => Some(Self::Zeppelin),
+            "ZOOKEEPER" => Some(Self::Zookeeper),
+            _ => None,
+        }
+    }
 }
 /// Actions in response to failure of a resource associated with a cluster.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1736,6 +1831,15 @@ impl FailureAction {
             FailureAction::Unspecified => "FAILURE_ACTION_UNSPECIFIED",
             FailureAction::NoAction => "NO_ACTION",
             FailureAction::Delete => "DELETE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FAILURE_ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+            "NO_ACTION" => Some(Self::NoAction),
+            "DELETE" => Some(Self::Delete),
+            _ => None,
         }
     }
 }
@@ -2140,6 +2244,16 @@ pub mod gce_cluster_config {
                 PrivateIpv6GoogleAccess::Bidirectional => "BIDIRECTIONAL",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED" => Some(Self::Unspecified),
+                "INHERIT_FROM_SUBNETWORK" => Some(Self::InheritFromSubnetwork),
+                "OUTBOUND" => Some(Self::Outbound),
+                "BIDIRECTIONAL" => Some(Self::Bidirectional),
+                _ => None,
+            }
+        }
     }
 }
 /// Node Group Affinity for clusters using sole-tenant node groups.
@@ -2313,6 +2427,15 @@ pub mod instance_group_config {
                 Preemptibility::Preemptible => "PREEMPTIBLE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PREEMPTIBILITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "NON_PREEMPTIBLE" => Some(Self::NonPreemptible),
+                "PREEMPTIBLE" => Some(Self::Preemptible),
+                _ => None,
+            }
+        }
     }
 }
 /// Specifies the resources used to actively manage an instance group.
@@ -2462,6 +2585,14 @@ pub mod node_group {
                 Role::Driver => "DRIVER",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ROLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DRIVER" => Some(Self::Driver),
+                _ => None,
+            }
+        }
     }
 }
 /// Specifies an executable to run on a fully configured node and a
@@ -2562,6 +2693,22 @@ pub mod cluster_status {
                 State::Starting => "STARTING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNKNOWN" => Some(Self::Unknown),
+                "CREATING" => Some(Self::Creating),
+                "RUNNING" => Some(Self::Running),
+                "ERROR" => Some(Self::Error),
+                "ERROR_DUE_TO_UPDATE" => Some(Self::ErrorDueToUpdate),
+                "DELETING" => Some(Self::Deleting),
+                "UPDATING" => Some(Self::Updating),
+                "STOPPING" => Some(Self::Stopping),
+                "STOPPED" => Some(Self::Stopped),
+                "STARTING" => Some(Self::Starting),
+                _ => None,
+            }
+        }
     }
     /// The cluster substate.
     #[derive(
@@ -2601,6 +2748,15 @@ pub mod cluster_status {
                 Substate::Unspecified => "UNSPECIFIED",
                 Substate::Unhealthy => "UNHEALTHY",
                 Substate::StaleStatus => "STALE_STATUS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNHEALTHY" => Some(Self::Unhealthy),
+                "STALE_STATUS" => Some(Self::StaleStatus),
+                _ => None,
             }
         }
     }
@@ -2895,6 +3051,19 @@ pub mod dataproc_metric_config {
                 MetricSource::Yarn => "YARN",
                 MetricSource::SparkHistoryServer => "SPARK_HISTORY_SERVER",
                 MetricSource::Hiveserver2 => "HIVESERVER2",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "METRIC_SOURCE_UNSPECIFIED" => Some(Self::Unspecified),
+                "MONITORING_AGENT_DEFAULTS" => Some(Self::MonitoringAgentDefaults),
+                "HDFS" => Some(Self::Hdfs),
+                "SPARK" => Some(Self::Spark),
+                "YARN" => Some(Self::Yarn),
+                "SPARK_HISTORY_SERVER" => Some(Self::SparkHistoryServer),
+                "HIVESERVER2" => Some(Self::Hiveserver2),
+                _ => None,
             }
         }
     }
@@ -3288,6 +3457,16 @@ pub mod reservation_affinity {
                 Type::NoReservation => "NO_RESERVATION",
                 Type::AnyReservation => "ANY_RESERVATION",
                 Type::SpecificReservation => "SPECIFIC_RESERVATION",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NO_RESERVATION" => Some(Self::NoReservation),
+                "ANY_RESERVATION" => Some(Self::AnyReservation),
+                "SPECIFIC_RESERVATION" => Some(Self::SpecificReservation),
+                _ => None,
             }
         }
     }
@@ -4660,6 +4839,16 @@ pub mod workflow_metadata {
                 State::Done => "DONE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNKNOWN" => Some(Self::Unknown),
+                "PENDING" => Some(Self::Pending),
+                "RUNNING" => Some(Self::Running),
+                "DONE" => Some(Self::Done),
+                _ => None,
+            }
+        }
     }
 }
 /// The cluster operation triggered by a workflow.
@@ -4747,6 +4936,18 @@ pub mod workflow_node {
                 NodeState::Running => "RUNNING",
                 NodeState::Completed => "COMPLETED",
                 NodeState::Failed => "FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "NODE_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BLOCKED" => Some(Self::Blocked),
+                "RUNNABLE" => Some(Self::Runnable),
+                "RUNNING" => Some(Self::Running),
+                "COMPLETED" => Some(Self::Completed),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
             }
         }
     }
@@ -5395,6 +5596,19 @@ pub mod batch {
                 State::Failed => "FAILED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PENDING" => Some(Self::Pending),
+                "RUNNING" => Some(Self::Running),
+                "CANCELLING" => Some(Self::Cancelling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
     }
     /// The application/framework-specific portion of the batch configuration.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -5751,6 +5965,14 @@ pub mod batch_operation_metadata {
                 BatchOperationType::Batch => "BATCH",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "BATCH_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BATCH" => Some(Self::Batch),
+                _ => None,
+            }
+        }
     }
 }
 /// The status of the operation.
@@ -5806,6 +6028,16 @@ pub mod cluster_operation_status {
                 State::Pending => "PENDING",
                 State::Running => "RUNNING",
                 State::Done => "DONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNKNOWN" => Some(Self::Unknown),
+                "PENDING" => Some(Self::Pending),
+                "RUNNING" => Some(Self::Running),
+                "DONE" => Some(Self::Done),
+                _ => None,
             }
         }
     }
@@ -5918,6 +6150,17 @@ pub mod node_group_operation_metadata {
                 NodeGroupOperationType::Update => "UPDATE",
                 NodeGroupOperationType::Delete => "DELETE",
                 NodeGroupOperationType::Resize => "RESIZE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATE" => Some(Self::Create),
+                "UPDATE" => Some(Self::Update),
+                "DELETE" => Some(Self::Delete),
+                "RESIZE" => Some(Self::Resize),
+                _ => None,
             }
         }
     }

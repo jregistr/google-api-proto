@@ -184,6 +184,18 @@ pub mod task_status {
                 State::Succeeded => "SUCCEEDED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PENDING" => Some(Self::Pending),
+                "ASSIGNED" => Some(Self::Assigned),
+                "RUNNING" => Some(Self::Running),
+                "FAILED" => Some(Self::Failed),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                _ => None,
+            }
+        }
     }
 }
 /// Runnable describes instructions for executing a specific script or container
@@ -423,6 +435,15 @@ pub mod lifecycle_policy {
                 Action::FailTask => "FAIL_TASK",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "RETRY_TASK" => Some(Self::RetryTask),
+                "FAIL_TASK" => Some(Self::FailTask),
+                _ => None,
+            }
+        }
     }
 }
 /// A Cloud Batch task.
@@ -577,6 +598,14 @@ pub mod job {
                 SchedulingPolicy::AsSoonAsPossible => "AS_SOON_AS_POSSIBLE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCHEDULING_POLICY_UNSPECIFIED" => Some(Self::Unspecified),
+                "AS_SOON_AS_POSSIBLE" => Some(Self::AsSoonAsPossible),
+                _ => None,
+            }
+        }
     }
 }
 /// LogsPolicy describes how outputs from a Job's Tasks (stdout/stderr) will be
@@ -626,6 +655,15 @@ pub mod logs_policy {
                 Destination::Unspecified => "DESTINATION_UNSPECIFIED",
                 Destination::CloudLogging => "CLOUD_LOGGING",
                 Destination::Path => "PATH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DESTINATION_UNSPECIFIED" => Some(Self::Unspecified),
+                "CLOUD_LOGGING" => Some(Self::CloudLogging),
+                "PATH" => Some(Self::Path),
+                _ => None,
             }
         }
     }
@@ -683,6 +721,16 @@ pub mod job_dependency {
                 Type::Succeeded => "SUCCEEDED",
                 Type::Failed => "FAILED",
                 Type::Finished => "FINISHED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "FINISHED" => Some(Self::Finished),
+                _ => None,
             }
         }
     }
@@ -787,6 +835,19 @@ pub mod job_status {
                 State::DeletionInProgress => "DELETION_IN_PROGRESS",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "QUEUED" => Some(Self::Queued),
+                "SCHEDULED" => Some(Self::Scheduled),
+                "RUNNING" => Some(Self::Running),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "DELETION_IN_PROGRESS" => Some(Self::DeletionInProgress),
+                _ => None,
+            }
+        }
     }
 }
 /// Notification configurations.
@@ -854,6 +915,15 @@ pub mod job_notification {
                 Type::Unspecified => "TYPE_UNSPECIFIED",
                 Type::JobStateChanged => "JOB_STATE_CHANGED",
                 Type::TaskStateChanged => "TASK_STATE_CHANGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "JOB_STATE_CHANGED" => Some(Self::JobStateChanged),
+                "TASK_STATE_CHANGED" => Some(Self::TaskStateChanged),
+                _ => None,
             }
         }
     }
@@ -1164,6 +1234,16 @@ pub mod allocation_policy {
                 ProvisioningModel::Preemptible => "PREEMPTIBLE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROVISIONING_MODEL_UNSPECIFIED" => Some(Self::Unspecified),
+                "STANDARD" => Some(Self::Standard),
+                "SPOT" => Some(Self::Spot),
+                "PREEMPTIBLE" => Some(Self::Preemptible),
+                _ => None,
+            }
+        }
     }
 }
 /// A TaskGroup contains one or multiple Tasks that share the same
@@ -1264,6 +1344,14 @@ pub mod task_group {
             match self {
                 SchedulingPolicy::Unspecified => "SCHEDULING_POLICY_UNSPECIFIED",
                 SchedulingPolicy::AsSoonAsPossible => "AS_SOON_AS_POSSIBLE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCHEDULING_POLICY_UNSPECIFIED" => Some(Self::Unspecified),
+                "AS_SOON_AS_POSSIBLE" => Some(Self::AsSoonAsPossible),
+                _ => None,
             }
         }
     }

@@ -135,6 +135,16 @@ pub mod reservation_affinity {
                 Type::SpecificReservation => "SPECIFIC_RESERVATION",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NO_RESERVATION" => Some(Self::NoReservation),
+                "ANY_RESERVATION" => Some(Self::AnyReservation),
+                "SPECIFIC_RESERVATION" => Some(Self::SpecificReservation),
+                _ => None,
+            }
+        }
     }
 }
 /// The definition of a notebook instance.
@@ -522,6 +532,16 @@ pub mod instance {
                     State::Failed => "FAILED",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "STARTED" => Some(Self::Started),
+                    "SUCCEEDED" => Some(Self::Succeeded),
+                    "FAILED" => Some(Self::Failed),
+                    _ => None,
+                }
+            }
         }
         /// The definition of operations of this upgrade history entry.
         #[derive(
@@ -554,6 +574,15 @@ pub mod instance {
                     Action::Unspecified => "ACTION_UNSPECIFIED",
                     Action::Upgrade => "UPGRADE",
                     Action::Rollback => "ROLLBACK",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                    "UPGRADE" => Some(Self::Upgrade),
+                    "ROLLBACK" => Some(Self::Rollback),
+                    _ => None,
                 }
             }
         }
@@ -619,6 +648,24 @@ pub mod instance {
                 AcceleratorType::TpuV3 => "TPU_V3",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACCELERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NVIDIA_TESLA_K80" => Some(Self::NvidiaTeslaK80),
+                "NVIDIA_TESLA_P100" => Some(Self::NvidiaTeslaP100),
+                "NVIDIA_TESLA_V100" => Some(Self::NvidiaTeslaV100),
+                "NVIDIA_TESLA_P4" => Some(Self::NvidiaTeslaP4),
+                "NVIDIA_TESLA_T4" => Some(Self::NvidiaTeslaT4),
+                "NVIDIA_TESLA_A100" => Some(Self::NvidiaTeslaA100),
+                "NVIDIA_TESLA_T4_VWS" => Some(Self::NvidiaTeslaT4Vws),
+                "NVIDIA_TESLA_P100_VWS" => Some(Self::NvidiaTeslaP100Vws),
+                "NVIDIA_TESLA_P4_VWS" => Some(Self::NvidiaTeslaP4Vws),
+                "TPU_V2" => Some(Self::TpuV2),
+                "TPU_V3" => Some(Self::TpuV3),
+                _ => None,
+            }
+        }
     }
     /// The definition of the states of this instance.
     #[derive(
@@ -681,6 +728,24 @@ pub mod instance {
                 State::Suspended => "SUSPENDED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STARTING" => Some(Self::Starting),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "ACTIVE" => Some(Self::Active),
+                "STOPPING" => Some(Self::Stopping),
+                "STOPPED" => Some(Self::Stopped),
+                "DELETED" => Some(Self::Deleted),
+                "UPGRADING" => Some(Self::Upgrading),
+                "INITIALIZING" => Some(Self::Initializing),
+                "REGISTERING" => Some(Self::Registering),
+                "SUSPENDING" => Some(Self::Suspending),
+                "SUSPENDED" => Some(Self::Suspended),
+                _ => None,
+            }
+        }
     }
     /// Possible disk types for notebook instances.
     #[derive(
@@ -721,6 +786,17 @@ pub mod instance {
                 DiskType::PdExtreme => "PD_EXTREME",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DISK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PD_STANDARD" => Some(Self::PdStandard),
+                "PD_SSD" => Some(Self::PdSsd),
+                "PD_BALANCED" => Some(Self::PdBalanced),
+                "PD_EXTREME" => Some(Self::PdExtreme),
+                _ => None,
+            }
+        }
     }
     /// Definition of the disk encryption options.
     #[derive(
@@ -753,6 +829,15 @@ pub mod instance {
                 DiskEncryption::Unspecified => "DISK_ENCRYPTION_UNSPECIFIED",
                 DiskEncryption::Gmek => "GMEK",
                 DiskEncryption::Cmek => "CMEK",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DISK_ENCRYPTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "GMEK" => Some(Self::Gmek),
+                "CMEK" => Some(Self::Cmek),
+                _ => None,
             }
         }
     }
@@ -788,6 +873,15 @@ pub mod instance {
                 NicType::UnspecifiedNicType => "UNSPECIFIED_NIC_TYPE",
                 NicType::VirtioNet => "VIRTIO_NET",
                 NicType::Gvnic => "GVNIC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED_NIC_TYPE" => Some(Self::UnspecifiedNicType),
+                "VIRTIO_NET" => Some(Self::VirtioNet),
+                "GVNIC" => Some(Self::Gvnic),
+                _ => None,
             }
         }
     }
@@ -929,6 +1023,21 @@ pub mod runtime {
                 State::Initializing => "INITIALIZING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STARTING" => Some(Self::Starting),
+                "PROVISIONING" => Some(Self::Provisioning),
+                "ACTIVE" => Some(Self::Active),
+                "STOPPING" => Some(Self::Stopping),
+                "STOPPED" => Some(Self::Stopped),
+                "DELETING" => Some(Self::Deleting),
+                "UPGRADING" => Some(Self::Upgrading),
+                "INITIALIZING" => Some(Self::Initializing),
+                _ => None,
+            }
+        }
     }
     /// The runtime substate.
     #[derive(
@@ -973,6 +1082,17 @@ pub mod runtime {
                 HealthState::Unhealthy => "UNHEALTHY",
                 HealthState::AgentNotInstalled => "AGENT_NOT_INSTALLED",
                 HealthState::AgentNotRunning => "AGENT_NOT_RUNNING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "HEALTH_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "HEALTHY" => Some(Self::Healthy),
+                "UNHEALTHY" => Some(Self::Unhealthy),
+                "AGENT_NOT_INSTALLED" => Some(Self::AgentNotInstalled),
+                "AGENT_NOT_RUNNING" => Some(Self::AgentNotRunning),
+                _ => None,
             }
         }
     }
@@ -1067,6 +1187,24 @@ pub mod runtime_accelerator_config {
                 AcceleratorType::NvidiaTeslaT4Vws => "NVIDIA_TESLA_T4_VWS",
                 AcceleratorType::NvidiaTeslaP100Vws => "NVIDIA_TESLA_P100_VWS",
                 AcceleratorType::NvidiaTeslaP4Vws => "NVIDIA_TESLA_P4_VWS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACCELERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NVIDIA_TESLA_K80" => Some(Self::NvidiaTeslaK80),
+                "NVIDIA_TESLA_P100" => Some(Self::NvidiaTeslaP100),
+                "NVIDIA_TESLA_V100" => Some(Self::NvidiaTeslaV100),
+                "NVIDIA_TESLA_P4" => Some(Self::NvidiaTeslaP4),
+                "NVIDIA_TESLA_T4" => Some(Self::NvidiaTeslaT4),
+                "NVIDIA_TESLA_A100" => Some(Self::NvidiaTeslaA100),
+                "TPU_V2" => Some(Self::TpuV2),
+                "TPU_V3" => Some(Self::TpuV3),
+                "NVIDIA_TESLA_T4_VWS" => Some(Self::NvidiaTeslaT4Vws),
+                "NVIDIA_TESLA_P100_VWS" => Some(Self::NvidiaTeslaP100Vws),
+                "NVIDIA_TESLA_P4_VWS" => Some(Self::NvidiaTeslaP4Vws),
+                _ => None,
             }
         }
     }
@@ -1263,6 +1401,17 @@ pub mod local_disk_initialize_params {
                 DiskType::PdExtreme => "PD_EXTREME",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DISK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PD_STANDARD" => Some(Self::PdStandard),
+                "PD_SSD" => Some(Self::PdSsd),
+                "PD_BALANCED" => Some(Self::PdBalanced),
+                "PD_EXTREME" => Some(Self::PdExtreme),
+                _ => None,
+            }
+        }
     }
 }
 /// Specifies the login configuration for Runtime
@@ -1317,6 +1466,15 @@ pub mod runtime_access_config {
                 RuntimeAccessType::Unspecified => "RUNTIME_ACCESS_TYPE_UNSPECIFIED",
                 RuntimeAccessType::SingleUser => "SINGLE_USER",
                 RuntimeAccessType::ServiceAccount => "SERVICE_ACCOUNT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "RUNTIME_ACCESS_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SINGLE_USER" => Some(Self::SingleUser),
+                "SERVICE_ACCOUNT" => Some(Self::ServiceAccount),
+                _ => None,
             }
         }
     }
@@ -1416,6 +1574,15 @@ pub mod runtime_software_config {
                 PostStartupScriptBehavior::DownloadAndRunEveryStart => {
                     "DOWNLOAD_AND_RUN_EVERY_START"
                 }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "POST_STARTUP_SCRIPT_BEHAVIOR_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUN_EVERY_START" => Some(Self::RunEveryStart),
+                "DOWNLOAD_AND_RUN_EVERY_START" => Some(Self::DownloadAndRunEveryStart),
+                _ => None,
             }
         }
     }
@@ -1638,6 +1805,15 @@ pub mod virtual_machine_config {
                 NicType::Gvnic => "GVNIC",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED_NIC_TYPE" => Some(Self::UnspecifiedNicType),
+                "VIRTIO_NET" => Some(Self::VirtioNet),
+                "GVNIC" => Some(Self::Gvnic),
+                _ => None,
+            }
+        }
     }
 }
 /// The definition of an Event for a managed / semi-managed notebook instance.
@@ -1702,6 +1878,17 @@ pub mod event {
                 EventType::Heartbeat => "HEARTBEAT",
                 EventType::Health => "HEALTH",
                 EventType::Maintenance => "MAINTENANCE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EVENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "IDLE" => Some(Self::Idle),
+                "HEARTBEAT" => Some(Self::Heartbeat),
+                "HEALTH" => Some(Self::Health),
+                "MAINTENANCE" => Some(Self::Maintenance),
+                _ => None,
             }
         }
     }
@@ -2530,6 +2717,19 @@ pub mod execution_template {
                 ScaleTier::Custom => "CUSTOM",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCALE_TIER_UNSPECIFIED" => Some(Self::Unspecified),
+                "BASIC" => Some(Self::Basic),
+                "STANDARD_1" => Some(Self::Standard1),
+                "PREMIUM_1" => Some(Self::Premium1),
+                "BASIC_GPU" => Some(Self::BasicGpu),
+                "BASIC_TPU" => Some(Self::BasicTpu),
+                "CUSTOM" => Some(Self::Custom),
+                _ => None,
+            }
+        }
     }
     /// Hardware accelerator types for AI Platform Training jobs.
     #[derive(
@@ -2584,6 +2784,21 @@ pub mod execution_template {
                 SchedulerAcceleratorType::TpuV3 => "TPU_V3",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCHEDULER_ACCELERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "NVIDIA_TESLA_K80" => Some(Self::NvidiaTeslaK80),
+                "NVIDIA_TESLA_P100" => Some(Self::NvidiaTeslaP100),
+                "NVIDIA_TESLA_V100" => Some(Self::NvidiaTeslaV100),
+                "NVIDIA_TESLA_P4" => Some(Self::NvidiaTeslaP4),
+                "NVIDIA_TESLA_T4" => Some(Self::NvidiaTeslaT4),
+                "NVIDIA_TESLA_A100" => Some(Self::NvidiaTeslaA100),
+                "TPU_V2" => Some(Self::TpuV2),
+                "TPU_V3" => Some(Self::TpuV3),
+                _ => None,
+            }
+        }
     }
     /// The backend used for this execution.
     #[derive(
@@ -2618,6 +2833,15 @@ pub mod execution_template {
                 JobType::Unspecified => "JOB_TYPE_UNSPECIFIED",
                 JobType::VertexAi => "VERTEX_AI",
                 JobType::Dataproc => "DATAPROC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "JOB_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VERTEX_AI" => Some(Self::VertexAi),
+                "DATAPROC" => Some(Self::Dataproc),
+                _ => None,
             }
         }
     }
@@ -2726,6 +2950,22 @@ pub mod execution {
                 State::Cancelled => "CANCELLED",
                 State::Expired => "EXPIRED",
                 State::Initializing => "INITIALIZING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "QUEUED" => Some(Self::Queued),
+                "PREPARING" => Some(Self::Preparing),
+                "RUNNING" => Some(Self::Running),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLING" => Some(Self::Cancelling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "EXPIRED" => Some(Self::Expired),
+                "INITIALIZING" => Some(Self::Initializing),
+                _ => None,
             }
         }
     }
@@ -2840,6 +3080,19 @@ pub mod schedule {
                 State::UpdateFailed => "UPDATE_FAILED",
                 State::Initializing => "INITIALIZING",
                 State::Deleting => "DELETING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ENABLED" => Some(Self::Enabled),
+                "PAUSED" => Some(Self::Paused),
+                "DISABLED" => Some(Self::Disabled),
+                "UPDATE_FAILED" => Some(Self::UpdateFailed),
+                "INITIALIZING" => Some(Self::Initializing),
+                "DELETING" => Some(Self::Deleting),
+                _ => None,
             }
         }
     }
@@ -3215,6 +3468,17 @@ pub mod get_instance_health_response {
                 HealthState::AgentNotRunning => "AGENT_NOT_RUNNING",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "HEALTH_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "HEALTHY" => Some(Self::Healthy),
+                "UNHEALTHY" => Some(Self::Unhealthy),
+                "AGENT_NOT_INSTALLED" => Some(Self::AgentNotInstalled),
+                "AGENT_NOT_RUNNING" => Some(Self::AgentNotRunning),
+                _ => None,
+            }
+        }
     }
 }
 /// Request for upgrading a notebook instance
@@ -3522,6 +3786,17 @@ impl UpgradeType {
             UpgradeType::UpgradeOs => "UPGRADE_OS",
             UpgradeType::UpgradeCuda => "UPGRADE_CUDA",
             UpgradeType::UpgradeAll => "UPGRADE_ALL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "UPGRADE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "UPGRADE_FRAMEWORK" => Some(Self::UpgradeFramework),
+            "UPGRADE_OS" => Some(Self::UpgradeOs),
+            "UPGRADE_CUDA" => Some(Self::UpgradeCuda),
+            "UPGRADE_ALL" => Some(Self::UpgradeAll),
+            _ => None,
         }
     }
 }

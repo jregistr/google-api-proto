@@ -47,6 +47,15 @@ pub mod edu_data {
                 InstituteType::University => "UNIVERSITY",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "INSTITUTE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "K12" => Some(Self::K12),
+                "UNIVERSITY" => Some(Self::University),
+                _ => None,
+            }
+        }
     }
     /// Number of students and staff the institute has.
     #[derive(
@@ -94,6 +103,20 @@ pub mod edu_data {
                 InstituteSize::Size20015000 => "SIZE_2001_5000",
                 InstituteSize::Size500110000 => "SIZE_5001_10000",
                 InstituteSize::Size10001OrMore => "SIZE_10001_OR_MORE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "INSTITUTE_SIZE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SIZE_1_100" => Some(Self::Size1100),
+                "SIZE_101_500" => Some(Self::Size101500),
+                "SIZE_501_1000" => Some(Self::Size5011000),
+                "SIZE_1001_2000" => Some(Self::Size10012000),
+                "SIZE_2001_5000" => Some(Self::Size20015000),
+                "SIZE_5001_10000" => Some(Self::Size500110000),
+                "SIZE_10001_OR_MORE" => Some(Self::Size10001OrMore),
+                _ => None,
             }
         }
     }
@@ -164,6 +187,15 @@ pub mod cloud_identity_info {
                 CustomerType::Unspecified => "CUSTOMER_TYPE_UNSPECIFIED",
                 CustomerType::Domain => "DOMAIN",
                 CustomerType::Team => "TEAM",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CUSTOMER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DOMAIN" => Some(Self::Domain),
+                "TEAM" => Some(Self::Team),
+                _ => None,
             }
         }
     }
@@ -292,6 +324,14 @@ impl MediaType {
             MediaType::Image => "MEDIA_TYPE_IMAGE",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MEDIA_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "MEDIA_TYPE_IMAGE" => Some(Self::Image),
+            _ => None,
+        }
+    }
 }
 /// Represents an offer made to resellers for purchase.
 /// An offer is associated with a \[Sku][google.cloud.channel.v1.Sku\], has a plan
@@ -398,6 +438,16 @@ pub mod parameter_definition {
                 ParameterType::Int64 => "INT64",
                 ParameterType::String => "STRING",
                 ParameterType::Double => "DOUBLE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PARAMETER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "INT64" => Some(Self::Int64),
+                "STRING" => Some(Self::String),
+                "DOUBLE" => Some(Self::Double),
+                _ => None,
             }
         }
     }
@@ -565,6 +615,16 @@ impl PromotionalOrderType {
             PromotionalOrderType::PromotionSwitch => "PROMOTION_SWITCH",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PROMOTIONAL_TYPE_UNSPECIFIED" => Some(Self::PromotionalTypeUnspecified),
+            "NEW_UPGRADE" => Some(Self::NewUpgrade),
+            "TRANSFER" => Some(Self::Transfer),
+            "PROMOTION_SWITCH" => Some(Self::PromotionSwitch),
+            _ => None,
+        }
+    }
 }
 /// Describes how the reseller will be billed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -598,6 +658,18 @@ impl PaymentPlan {
             PaymentPlan::Offline => "OFFLINE",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PAYMENT_PLAN_UNSPECIFIED" => Some(Self::Unspecified),
+            "COMMITMENT" => Some(Self::Commitment),
+            "FLEXIBLE" => Some(Self::Flexible),
+            "FREE" => Some(Self::Free),
+            "TRIAL" => Some(Self::Trial),
+            "OFFLINE" => Some(Self::Offline),
+            _ => None,
+        }
+    }
 }
 /// Specifies when the payment needs to happen.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -620,6 +692,15 @@ impl PaymentType {
             PaymentType::Unspecified => "PAYMENT_TYPE_UNSPECIFIED",
             PaymentType::Prepay => "PREPAY",
             PaymentType::Postpay => "POSTPAY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PAYMENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "PREPAY" => Some(Self::Prepay),
+            "POSTPAY" => Some(Self::Postpay),
+            _ => None,
         }
     }
 }
@@ -667,6 +748,20 @@ impl ResourceType {
             ResourceType::Subscription => "SUBSCRIPTION",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "RESOURCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "SEAT" => Some(Self::Seat),
+            "MAU" => Some(Self::Mau),
+            "GB" => Some(Self::Gb),
+            "LICENSED_USER" => Some(Self::LicensedUser),
+            "MINUTES" => Some(Self::Minutes),
+            "IAAS_USAGE" => Some(Self::IaasUsage),
+            "SUBSCRIPTION" => Some(Self::Subscription),
+            _ => None,
+        }
+    }
 }
 /// Period Type.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -692,6 +787,16 @@ impl PeriodType {
             PeriodType::Day => "DAY",
             PeriodType::Month => "MONTH",
             PeriodType::Year => "YEAR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PERIOD_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "DAY" => Some(Self::Day),
+            "MONTH" => Some(Self::Month),
+            "YEAR" => Some(Self::Year),
+            _ => None,
         }
     }
 }
@@ -899,6 +1004,15 @@ impl RebillingBasis {
             RebillingBasis::Unspecified => "REBILLING_BASIS_UNSPECIFIED",
             RebillingBasis::CostAtList => "COST_AT_LIST",
             RebillingBasis::DirectCustomerCost => "DIRECT_CUSTOMER_COST",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REBILLING_BASIS_UNSPECIFIED" => Some(Self::Unspecified),
+            "COST_AT_LIST" => Some(Self::CostAtList),
+            "DIRECT_CUSTOMER_COST" => Some(Self::DirectCustomerCost),
+            _ => None,
         }
     }
 }
@@ -1150,6 +1264,19 @@ pub mod column {
                 DataType::DateTime => "DATE_TIME",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATA_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STRING" => Some(Self::String),
+                "INT" => Some(Self::Int),
+                "DECIMAL" => Some(Self::Decimal),
+                "MONEY" => Some(Self::Money),
+                "DATE" => Some(Self::Date),
+                "DATE_TIME" => Some(Self::DateTime),
+                _ => None,
+            }
+        }
     }
 }
 /// A representation of usage or invoice date ranges.
@@ -1288,6 +1415,17 @@ pub mod report_status {
                 State::Writing => "WRITING",
                 State::Available => "AVAILABLE",
                 State::Failed => "FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "STARTED" => Some(Self::Started),
+                "WRITING" => Some(Self::Writing),
+                "AVAILABLE" => Some(Self::Available),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
             }
         }
     }
@@ -1571,6 +1709,15 @@ pub mod entitlement {
                 ProvisioningState::Suspended => "SUSPENDED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROVISIONING_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "SUSPENDED" => Some(Self::Suspended),
+                _ => None,
+            }
+        }
     }
     /// Suspension reason for an entitlement if
     /// \[provisioning_state][google.cloud.channel.v1.Entitlement.provisioning_state\]
@@ -1615,6 +1762,18 @@ pub mod entitlement {
                 SuspensionReason::RenewalWithTypeCancel => "RENEWAL_WITH_TYPE_CANCEL",
                 SuspensionReason::PendingTosAcceptance => "PENDING_TOS_ACCEPTANCE",
                 SuspensionReason::Other => "OTHER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SUSPENSION_REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESELLER_INITIATED" => Some(Self::ResellerInitiated),
+                "TRIAL_ENDED" => Some(Self::TrialEnded),
+                "RENEWAL_WITH_TYPE_CANCEL" => Some(Self::RenewalWithTypeCancel),
+                "PENDING_TOS_ACCEPTANCE" => Some(Self::PendingTosAcceptance),
+                "OTHER" => Some(Self::Other),
+                _ => None,
             }
         }
     }
@@ -1779,6 +1938,16 @@ pub mod transfer_eligibility {
                 Reason::SkuSuspended => "SKU_SUSPENDED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                "PENDING_TOS_ACCEPTANCE" => Some(Self::PendingTosAcceptance),
+                "SKU_NOT_ELIGIBLE" => Some(Self::SkuNotEligible),
+                "SKU_SUSPENDED" => Some(Self::SkuSuspended),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents Pub/Sub message content describing customer update.
@@ -1826,6 +1995,15 @@ pub mod customer_event {
                 Type::Unspecified => "TYPE_UNSPECIFIED",
                 Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
                 Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRIMARY_DOMAIN_CHANGED" => Some(Self::PrimaryDomainChanged),
+                "PRIMARY_DOMAIN_VERIFIED" => Some(Self::PrimaryDomainVerified),
+                _ => None,
             }
         }
     }
@@ -1908,6 +2086,25 @@ pub mod entitlement_event {
                 Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
                 Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
                 Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATED" => Some(Self::Created),
+                "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
+                "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
+                "RENEWED" => Some(Self::Renewed),
+                "SUSPENDED" => Some(Self::Suspended),
+                "ACTIVATED" => Some(Self::Activated),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SKU_CHANGED" => Some(Self::SkuChanged),
+                "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
+                "PAID_SERVICE_STARTED" => Some(Self::PaidServiceStarted),
+                "LICENSE_ASSIGNMENT_CHANGED" => Some(Self::LicenseAssignmentChanged),
+                "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
+                _ => None,
             }
         }
     }
@@ -1996,6 +2193,15 @@ impl ChannelPartnerLinkView {
             ChannelPartnerLinkView::Full => "FULL",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "UNSPECIFIED" => Some(Self::Unspecified),
+            "BASIC" => Some(Self::Basic),
+            "FULL" => Some(Self::Full),
+            _ => None,
+        }
+    }
 }
 /// ChannelPartnerLinkState represents state of a channel partner link.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2027,6 +2233,17 @@ impl ChannelPartnerLinkState {
             ChannelPartnerLinkState::Active => "ACTIVE",
             ChannelPartnerLinkState::Revoked => "REVOKED",
             ChannelPartnerLinkState::Suspended => "SUSPENDED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CHANNEL_PARTNER_LINK_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "INVITED" => Some(Self::Invited),
+            "ACTIVE" => Some(Self::Active),
+            "REVOKED" => Some(Self::Revoked),
+            "SUSPENDED" => Some(Self::Suspended),
+            _ => None,
         }
     }
 }
@@ -2184,6 +2401,26 @@ pub mod operation_metadata {
                 OperationType::ChangeOffer => "CHANGE_OFFER",
                 OperationType::ChangeParameters => "CHANGE_PARAMETERS",
                 OperationType::ProvisionCloudIdentity => "PROVISION_CLOUD_IDENTITY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATE_ENTITLEMENT" => Some(Self::CreateEntitlement),
+                "CHANGE_RENEWAL_SETTINGS" => Some(Self::ChangeRenewalSettings),
+                "START_PAID_SERVICE" => Some(Self::StartPaidService),
+                "ACTIVATE_ENTITLEMENT" => Some(Self::ActivateEntitlement),
+                "SUSPEND_ENTITLEMENT" => Some(Self::SuspendEntitlement),
+                "CANCEL_ENTITLEMENT" => Some(Self::CancelEntitlement),
+                "TRANSFER_ENTITLEMENTS" => Some(Self::TransferEntitlements),
+                "TRANSFER_ENTITLEMENTS_TO_GOOGLE" => {
+                    Some(Self::TransferEntitlementsToGoogle)
+                }
+                "CHANGE_OFFER" => Some(Self::ChangeOffer),
+                "CHANGE_PARAMETERS" => Some(Self::ChangeParameters),
+                "PROVISION_CLOUD_IDENTITY" => Some(Self::ProvisionCloudIdentity),
+                _ => None,
             }
         }
     }
@@ -3408,6 +3645,15 @@ pub mod list_purchasable_skus_request {
                     ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
                     ChangeType::Upgrade => "UPGRADE",
                     ChangeType::Downgrade => "DOWNGRADE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "UPGRADE" => Some(Self::Upgrade),
+                    "DOWNGRADE" => Some(Self::Downgrade),
+                    _ => None,
                 }
             }
         }

@@ -180,6 +180,16 @@ pub mod error_handler {
                 ErrorCode::Timeout => "ERROR_CODE_TIMEOUT",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ERROR_CODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ERROR_CODE_OVER_QUOTA" => Some(Self::OverQuota),
+                "ERROR_CODE_DOS_API_DENIAL" => Some(Self::DosApiDenial),
+                "ERROR_CODE_TIMEOUT" => Some(Self::Timeout),
+                _ => None,
+            }
+        }
     }
 }
 /// URL pattern and description of how the URL should be handled. App Engine can
@@ -262,6 +272,25 @@ pub mod url_map {
                 RedirectHttpResponseCode::RedirectHttpResponseCode307 => {
                     "REDIRECT_HTTP_RESPONSE_CODE_307"
                 }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "REDIRECT_HTTP_RESPONSE_CODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "REDIRECT_HTTP_RESPONSE_CODE_301" => {
+                    Some(Self::RedirectHttpResponseCode301)
+                }
+                "REDIRECT_HTTP_RESPONSE_CODE_302" => {
+                    Some(Self::RedirectHttpResponseCode302)
+                }
+                "REDIRECT_HTTP_RESPONSE_CODE_303" => {
+                    Some(Self::RedirectHttpResponseCode303)
+                }
+                "REDIRECT_HTTP_RESPONSE_CODE_307" => {
+                    Some(Self::RedirectHttpResponseCode307)
+                }
+                _ => None,
             }
         }
     }
@@ -472,6 +501,15 @@ impl AuthFailAction {
             AuthFailAction::Unauthorized => "AUTH_FAIL_ACTION_UNAUTHORIZED",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUTH_FAIL_ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+            "AUTH_FAIL_ACTION_REDIRECT" => Some(Self::Redirect),
+            "AUTH_FAIL_ACTION_UNAUTHORIZED" => Some(Self::Unauthorized),
+            _ => None,
+        }
+    }
 }
 /// Methods to restrict access to a URL based on login status.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -504,6 +542,16 @@ impl LoginRequirement {
             LoginRequirement::LoginRequired => "LOGIN_REQUIRED",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LOGIN_UNSPECIFIED" => Some(Self::LoginUnspecified),
+            "LOGIN_OPTIONAL" => Some(Self::LoginOptional),
+            "LOGIN_ADMIN" => Some(Self::LoginAdmin),
+            "LOGIN_REQUIRED" => Some(Self::LoginRequired),
+            _ => None,
+        }
+    }
 }
 /// Methods to enforce security (HTTPS) on a URL.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -534,6 +582,16 @@ impl SecurityLevel {
             SecurityLevel::SecureNever => "SECURE_NEVER",
             SecurityLevel::SecureOptional => "SECURE_OPTIONAL",
             SecurityLevel::SecureAlways => "SECURE_ALWAYS",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SECURE_UNSPECIFIED" => Some(Self::SecureUnspecified),
+            "SECURE_NEVER" => Some(Self::SecureNever),
+            "SECURE_OPTIONAL" => Some(Self::SecureOptional),
+            "SECURE_ALWAYS" => Some(Self::SecureAlways),
+            _ => None,
         }
     }
 }
@@ -588,6 +646,16 @@ pub mod network_settings {
                 IngressTrafficAllowed::InternalAndLb => {
                     "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB"
                 }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "INGRESS_TRAFFIC_ALLOWED_UNSPECIFIED" => Some(Self::Unspecified),
+                "INGRESS_TRAFFIC_ALLOWED_ALL" => Some(Self::All),
+                "INGRESS_TRAFFIC_ALLOWED_INTERNAL_ONLY" => Some(Self::InternalOnly),
+                "INGRESS_TRAFFIC_ALLOWED_INTERNAL_AND_LB" => Some(Self::InternalAndLb),
+                _ => None,
             }
         }
     }
@@ -898,6 +966,15 @@ pub mod endpoints_api_service {
                 }
                 RolloutStrategy::Fixed => "FIXED",
                 RolloutStrategy::Managed => "MANAGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED_ROLLOUT_STRATEGY" => Some(Self::UnspecifiedRolloutStrategy),
+                "FIXED" => Some(Self::Fixed),
+                "MANAGED" => Some(Self::Managed),
+                _ => None,
             }
         }
     }
@@ -1268,6 +1345,23 @@ impl InboundServiceType {
             InboundServiceType::InboundServiceWarmup => "INBOUND_SERVICE_WARMUP",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "INBOUND_SERVICE_UNSPECIFIED" => Some(Self::InboundServiceUnspecified),
+            "INBOUND_SERVICE_MAIL" => Some(Self::InboundServiceMail),
+            "INBOUND_SERVICE_MAIL_BOUNCE" => Some(Self::InboundServiceMailBounce),
+            "INBOUND_SERVICE_XMPP_ERROR" => Some(Self::InboundServiceXmppError),
+            "INBOUND_SERVICE_XMPP_MESSAGE" => Some(Self::InboundServiceXmppMessage),
+            "INBOUND_SERVICE_XMPP_SUBSCRIBE" => Some(Self::InboundServiceXmppSubscribe),
+            "INBOUND_SERVICE_XMPP_PRESENCE" => Some(Self::InboundServiceXmppPresence),
+            "INBOUND_SERVICE_CHANNEL_PRESENCE" => {
+                Some(Self::InboundServiceChannelPresence)
+            }
+            "INBOUND_SERVICE_WARMUP" => Some(Self::InboundServiceWarmup),
+            _ => None,
+        }
+    }
 }
 /// Run states of a version.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1293,6 +1387,15 @@ impl ServingStatus {
             ServingStatus::Unspecified => "SERVING_STATUS_UNSPECIFIED",
             ServingStatus::Serving => "SERVING",
             ServingStatus::Stopped => "STOPPED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SERVING_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "SERVING" => Some(Self::Serving),
+            "STOPPED" => Some(Self::Stopped),
+            _ => None,
         }
     }
 }
@@ -1422,6 +1525,18 @@ pub mod instance {
                     LivenessState::Timeout => "TIMEOUT",
                 }
             }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "LIVENESS_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "UNKNOWN" => Some(Self::Unknown),
+                    "HEALTHY" => Some(Self::Healthy),
+                    "UNHEALTHY" => Some(Self::Unhealthy),
+                    "DRAINING" => Some(Self::Draining),
+                    "TIMEOUT" => Some(Self::Timeout),
+                    _ => None,
+                }
+            }
         }
     }
     /// Availability of the instance.
@@ -1452,6 +1567,15 @@ pub mod instance {
                 Availability::Unspecified => "UNSPECIFIED",
                 Availability::Resident => "RESIDENT",
                 Availability::Dynamic => "DYNAMIC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "RESIDENT" => Some(Self::Resident),
+                "DYNAMIC" => Some(Self::Dynamic),
+                _ => None,
             }
         }
     }
@@ -1700,6 +1824,16 @@ pub mod application {
                 ServingStatus::SystemDisabled => "SYSTEM_DISABLED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "SERVING" => Some(Self::Serving),
+                "USER_DISABLED" => Some(Self::UserDisabled),
+                "SYSTEM_DISABLED" => Some(Self::SystemDisabled),
+                _ => None,
+            }
+        }
     }
     #[derive(
         Clone,
@@ -1736,6 +1870,18 @@ pub mod application {
                 DatabaseType::CloudDatastoreCompatibility => {
                     "CLOUD_DATASTORE_COMPATIBILITY"
                 }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATABASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CLOUD_DATASTORE" => Some(Self::CloudDatastore),
+                "CLOUD_FIRESTORE" => Some(Self::CloudFirestore),
+                "CLOUD_DATASTORE_COMPATIBILITY" => {
+                    Some(Self::CloudDatastoreCompatibility)
+                }
+                _ => None,
             }
         }
     }
@@ -1829,6 +1975,15 @@ pub mod firewall_rule {
                 Action::UnspecifiedAction => "UNSPECIFIED_ACTION",
                 Action::Allow => "ALLOW",
                 Action::Deny => "DENY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED_ACTION" => Some(Self::UnspecifiedAction),
+                "ALLOW" => Some(Self::Allow),
+                "DENY" => Some(Self::Deny),
+                _ => None,
             }
         }
     }
@@ -1999,6 +2154,19 @@ impl ManagementStatus {
             ManagementStatus::FailedRetryingCaaChecking => "FAILED_RETRYING_CAA_CHECKING",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "MANAGEMENT_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "OK" => Some(Self::Ok),
+            "PENDING" => Some(Self::Pending),
+            "FAILED_RETRYING_NOT_VISIBLE" => Some(Self::FailedRetryingNotVisible),
+            "FAILED_PERMANENT" => Some(Self::FailedPermanent),
+            "FAILED_RETRYING_CAA_FORBIDDEN" => Some(Self::FailedRetryingCaaForbidden),
+            "FAILED_RETRYING_CAA_CHECKING" => Some(Self::FailedRetryingCaaChecking),
+            _ => None,
+        }
+    }
 }
 /// A domain serving an App Engine application.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2093,6 +2261,14 @@ pub mod ssl_settings {
                 SslManagementType::Manual => "MANUAL",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "AUTOMATIC" => Some(Self::Automatic),
+                "MANUAL" => Some(Self::Manual),
+                _ => None,
+            }
+        }
     }
 }
 /// A DNS resource record.
@@ -2144,6 +2320,15 @@ pub mod resource_record {
                 RecordType::A => "A",
                 RecordType::Aaaa => "AAAA",
                 RecordType::Cname => "CNAME",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "A" => Some(Self::A),
+                "AAAA" => Some(Self::Aaaa),
+                "CNAME" => Some(Self::Cname),
+                _ => None,
             }
         }
     }
@@ -2242,6 +2427,16 @@ pub mod traffic_split {
                 ShardBy::Cookie => "COOKIE",
                 ShardBy::Ip => "IP",
                 ShardBy::Random => "RANDOM",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "COOKIE" => Some(Self::Cookie),
+                "IP" => Some(Self::Ip),
+                "RANDOM" => Some(Self::Random),
+                _ => None,
             }
         }
     }
@@ -2799,6 +2994,14 @@ impl VersionView {
             VersionView::Full => "FULL",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BASIC" => Some(Self::Basic),
+            "FULL" => Some(Self::Full),
+            _ => None,
+        }
+    }
 }
 /// Fields that should be returned when an AuthorizedCertificate resource is
 /// retrieved.
@@ -2821,6 +3024,14 @@ impl AuthorizedCertificateView {
         match self {
             AuthorizedCertificateView::BasicCertificate => "BASIC_CERTIFICATE",
             AuthorizedCertificateView::FullCertificate => "FULL_CERTIFICATE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "BASIC_CERTIFICATE" => Some(Self::BasicCertificate),
+            "FULL_CERTIFICATE" => Some(Self::FullCertificate),
+            _ => None,
         }
     }
 }
@@ -2852,6 +3063,17 @@ impl DomainOverrideStrategy {
             }
             DomainOverrideStrategy::Strict => "STRICT",
             DomainOverrideStrategy::Override => "OVERRIDE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "UNSPECIFIED_DOMAIN_OVERRIDE_STRATEGY" => {
+                Some(Self::UnspecifiedDomainOverrideStrategy)
+            }
+            "STRICT" => Some(Self::Strict),
+            "OVERRIDE" => Some(Self::Override),
+            _ => None,
         }
     }
 }

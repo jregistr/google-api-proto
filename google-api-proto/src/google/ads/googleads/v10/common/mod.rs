@@ -335,6 +335,16 @@ pub mod target_restriction_operation {
                 Operator::Remove => "REMOVE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "ADD" => Some(Self::Add),
+                "REMOVE" => Some(Self::Remove),
+                _ => None,
+            }
+        }
     }
 }
 /// Represents a filter on locations in a feed item set.

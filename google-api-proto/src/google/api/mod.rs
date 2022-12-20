@@ -451,6 +451,20 @@ impl FieldBehavior {
             FieldBehavior::NonEmptyDefault => "NON_EMPTY_DEFAULT",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "FIELD_BEHAVIOR_UNSPECIFIED" => Some(Self::Unspecified),
+            "OPTIONAL" => Some(Self::Optional),
+            "REQUIRED" => Some(Self::Required),
+            "OUTPUT_ONLY" => Some(Self::OutputOnly),
+            "INPUT_ONLY" => Some(Self::InputOnly),
+            "IMMUTABLE" => Some(Self::Immutable),
+            "UNORDERED_LIST" => Some(Self::UnorderedList),
+            "NON_EMPTY_DEFAULT" => Some(Self::NonEmptyDefault),
+            _ => None,
+        }
+    }
 }
 /// A simple descriptor of a resource type.
 ///
@@ -616,6 +630,15 @@ pub mod resource_descriptor {
                 History::FutureMultiPattern => "FUTURE_MULTI_PATTERN",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "HISTORY_UNSPECIFIED" => Some(Self::Unspecified),
+                "ORIGINALLY_SINGLE_PATTERN" => Some(Self::OriginallySinglePattern),
+                "FUTURE_MULTI_PATTERN" => Some(Self::FutureMultiPattern),
+                _ => None,
+            }
+        }
     }
     /// A flag representing a specific style that a resource claims to conform to.
     #[derive(
@@ -652,6 +675,14 @@ pub mod resource_descriptor {
             match self {
                 Style::Unspecified => "STYLE_UNSPECIFIED",
                 Style::DeclarativeFriendly => "DECLARATIVE_FRIENDLY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STYLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DECLARATIVE_FRIENDLY" => Some(Self::DeclarativeFriendly),
+                _ => None,
             }
         }
     }
@@ -755,6 +786,20 @@ impl LaunchStage {
             LaunchStage::Beta => "BETA",
             LaunchStage::Ga => "GA",
             LaunchStage::Deprecated => "DEPRECATED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LAUNCH_STAGE_UNSPECIFIED" => Some(Self::Unspecified),
+            "UNIMPLEMENTED" => Some(Self::Unimplemented),
+            "PRELAUNCH" => Some(Self::Prelaunch),
+            "EARLY_ACCESS" => Some(Self::EarlyAccess),
+            "ALPHA" => Some(Self::Alpha),
+            "BETA" => Some(Self::Beta),
+            "GA" => Some(Self::Ga),
+            "DEPRECATED" => Some(Self::Deprecated),
+            _ => None,
         }
     }
 }
@@ -1038,6 +1083,17 @@ impl ClientLibraryOrganization {
             ClientLibraryOrganization::StreetView => "STREET_VIEW",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CLIENT_LIBRARY_ORGANIZATION_UNSPECIFIED" => Some(Self::Unspecified),
+            "CLOUD" => Some(Self::Cloud),
+            "ADS" => Some(Self::Ads),
+            "PHOTOS" => Some(Self::Photos),
+            "STREET_VIEW" => Some(Self::StreetView),
+            _ => None,
+        }
+    }
 }
 /// To where should client libraries be published?
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -1064,6 +1120,15 @@ impl ClientLibraryDestination {
             }
             ClientLibraryDestination::Github => "GITHUB",
             ClientLibraryDestination::PackageManager => "PACKAGE_MANAGER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CLIENT_LIBRARY_DESTINATION_UNSPECIFIED" => Some(Self::Unspecified),
+            "GITHUB" => Some(Self::Github),
+            "PACKAGE_MANAGER" => Some(Self::PackageManager),
+            _ => None,
         }
     }
 }
@@ -1549,6 +1614,15 @@ pub mod label_descriptor {
                 ValueType::String => "STRING",
                 ValueType::Bool => "BOOL",
                 ValueType::Int64 => "INT64",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STRING" => Some(Self::String),
+                "BOOL" => Some(Self::Bool),
+                "INT64" => Some(Self::Int64),
+                _ => None,
             }
         }
     }
@@ -2101,6 +2175,16 @@ pub mod metric_descriptor {
                 MetricKind::Cumulative => "CUMULATIVE",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "METRIC_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+                "GAUGE" => Some(Self::Gauge),
+                "DELTA" => Some(Self::Delta),
+                "CUMULATIVE" => Some(Self::Cumulative),
+                _ => None,
+            }
+        }
     }
     /// The value type of a metric.
     #[derive(
@@ -2147,6 +2231,19 @@ pub mod metric_descriptor {
                 ValueType::String => "STRING",
                 ValueType::Distribution => "DISTRIBUTION",
                 ValueType::Money => "MONEY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "VALUE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BOOL" => Some(Self::Bool),
+                "INT64" => Some(Self::Int64),
+                "DOUBLE" => Some(Self::Double),
+                "STRING" => Some(Self::String),
+                "DISTRIBUTION" => Some(Self::Distribution),
+                "MONEY" => Some(Self::Money),
+                _ => None,
             }
         }
     }
@@ -2763,6 +2860,16 @@ impl ChangeType {
             ChangeType::Modified => "MODIFIED",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "ADDED" => Some(Self::Added),
+            "REMOVED" => Some(Self::Removed),
+            "MODIFIED" => Some(Self::Modified),
+            _ => None,
+        }
+    }
 }
 /// `Authentication` defines the authentication configuration for API methods
 /// provided by an API service.
@@ -3169,6 +3276,15 @@ pub mod backend_rule {
                 PathTranslation::Unspecified => "PATH_TRANSLATION_UNSPECIFIED",
                 PathTranslation::ConstantAddress => "CONSTANT_ADDRESS",
                 PathTranslation::AppendPathToAddress => "APPEND_PATH_TO_ADDRESS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PATH_TRANSLATION_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONSTANT_ADDRESS" => Some(Self::ConstantAddress),
+                "APPEND_PATH_TO_ADDRESS" => Some(Self::AppendPathToAddress),
+                _ => None,
             }
         }
     }
@@ -4349,6 +4465,42 @@ impl ErrorReason {
             ErrorReason::OrgRestrictionHeaderInvalid => "ORG_RESTRICTION_HEADER_INVALID",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ERROR_REASON_UNSPECIFIED" => Some(Self::Unspecified),
+            "SERVICE_DISABLED" => Some(Self::ServiceDisabled),
+            "BILLING_DISABLED" => Some(Self::BillingDisabled),
+            "API_KEY_INVALID" => Some(Self::ApiKeyInvalid),
+            "API_KEY_SERVICE_BLOCKED" => Some(Self::ApiKeyServiceBlocked),
+            "API_KEY_HTTP_REFERRER_BLOCKED" => Some(Self::ApiKeyHttpReferrerBlocked),
+            "API_KEY_IP_ADDRESS_BLOCKED" => Some(Self::ApiKeyIpAddressBlocked),
+            "API_KEY_ANDROID_APP_BLOCKED" => Some(Self::ApiKeyAndroidAppBlocked),
+            "API_KEY_IOS_APP_BLOCKED" => Some(Self::ApiKeyIosAppBlocked),
+            "RATE_LIMIT_EXCEEDED" => Some(Self::RateLimitExceeded),
+            "RESOURCE_QUOTA_EXCEEDED" => Some(Self::ResourceQuotaExceeded),
+            "LOCATION_TAX_POLICY_VIOLATED" => Some(Self::LocationTaxPolicyViolated),
+            "USER_PROJECT_DENIED" => Some(Self::UserProjectDenied),
+            "CONSUMER_SUSPENDED" => Some(Self::ConsumerSuspended),
+            "CONSUMER_INVALID" => Some(Self::ConsumerInvalid),
+            "SECURITY_POLICY_VIOLATED" => Some(Self::SecurityPolicyViolated),
+            "ACCESS_TOKEN_EXPIRED" => Some(Self::AccessTokenExpired),
+            "ACCESS_TOKEN_SCOPE_INSUFFICIENT" => Some(Self::AccessTokenScopeInsufficient),
+            "ACCOUNT_STATE_INVALID" => Some(Self::AccountStateInvalid),
+            "ACCESS_TOKEN_TYPE_UNSUPPORTED" => Some(Self::AccessTokenTypeUnsupported),
+            "CREDENTIALS_MISSING" => Some(Self::CredentialsMissing),
+            "RESOURCE_PROJECT_INVALID" => Some(Self::ResourceProjectInvalid),
+            "SESSION_COOKIE_INVALID" => Some(Self::SessionCookieInvalid),
+            "USER_BLOCKED_BY_ADMIN" => Some(Self::UserBlockedByAdmin),
+            "RESOURCE_USAGE_RESTRICTION_VIOLATED" => {
+                Some(Self::ResourceUsageRestrictionViolated)
+            }
+            "SYSTEM_PARAMETER_UNSUPPORTED" => Some(Self::SystemParameterUnsupported),
+            "ORG_RESTRICTION_VIOLATION" => Some(Self::OrgRestrictionViolation),
+            "ORG_RESTRICTION_HEADER_INVALID" => Some(Self::OrgRestrictionHeaderInvalid),
+            _ => None,
+        }
+    }
 }
 /// A descriptor for defining project properties for a service. One service may
 /// have many consumer projects, and the service may want to behave differently
@@ -4435,6 +4587,17 @@ pub mod property {
                 PropertyType::Bool => "BOOL",
                 PropertyType::String => "STRING",
                 PropertyType::Double => "DOUBLE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "INT64" => Some(Self::Int64),
+                "BOOL" => Some(Self::Bool),
+                "STRING" => Some(Self::String),
+                "DOUBLE" => Some(Self::Double),
+                _ => None,
             }
         }
     }

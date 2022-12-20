@@ -59,6 +59,16 @@ impl OperationType {
             OperationType::DeleteFunction => "DELETE_FUNCTION",
         }
     }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OPERATION_UNSPECIFIED" => Some(Self::OperationUnspecified),
+            "CREATE_FUNCTION" => Some(Self::CreateFunction),
+            "UPDATE_FUNCTION" => Some(Self::UpdateFunction),
+            "DELETE_FUNCTION" => Some(Self::DeleteFunction),
+            _ => None,
+        }
+    }
 }
 /// Describes a Cloud Function that contains user computation executed in
 /// response to an event. It encapsulate function and triggers configurations.
@@ -316,6 +326,15 @@ pub mod cloud_function {
                 VpcConnectorEgressSettings::AllTraffic => "ALL_TRAFFIC",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "VPC_CONNECTOR_EGRESS_SETTINGS_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRIVATE_RANGES_ONLY" => Some(Self::PrivateRangesOnly),
+                "ALL_TRAFFIC" => Some(Self::AllTraffic),
+                _ => None,
+            }
+        }
     }
     /// Available ingress settings.
     ///
@@ -357,6 +376,16 @@ pub mod cloud_function {
                 IngressSettings::AllowInternalAndGclb => "ALLOW_INTERNAL_AND_GCLB",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "INGRESS_SETTINGS_UNSPECIFIED" => Some(Self::Unspecified),
+                "ALLOW_ALL" => Some(Self::AllowAll),
+                "ALLOW_INTERNAL_ONLY" => Some(Self::AllowInternalOnly),
+                "ALLOW_INTERNAL_AND_GCLB" => Some(Self::AllowInternalAndGclb),
+                _ => None,
+            }
+        }
     }
     /// Docker Registry to use for storing function Docker images.
     #[derive(
@@ -394,6 +423,15 @@ pub mod cloud_function {
                 DockerRegistry::Unspecified => "DOCKER_REGISTRY_UNSPECIFIED",
                 DockerRegistry::ContainerRegistry => "CONTAINER_REGISTRY",
                 DockerRegistry::ArtifactRegistry => "ARTIFACT_REGISTRY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DOCKER_REGISTRY_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONTAINER_REGISTRY" => Some(Self::ContainerRegistry),
+                "ARTIFACT_REGISTRY" => Some(Self::ArtifactRegistry),
+                _ => None,
             }
         }
     }
@@ -509,6 +547,15 @@ pub mod https_trigger {
                 SecurityLevel::Unspecified => "SECURITY_LEVEL_UNSPECIFIED",
                 SecurityLevel::SecureAlways => "SECURE_ALWAYS",
                 SecurityLevel::SecureOptional => "SECURE_OPTIONAL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SECURITY_LEVEL_UNSPECIFIED" => Some(Self::Unspecified),
+                "SECURE_ALWAYS" => Some(Self::SecureAlways),
+                "SECURE_OPTIONAL" => Some(Self::SecureOptional),
+                _ => None,
             }
         }
     }
@@ -866,6 +913,18 @@ impl CloudFunctionStatus {
             CloudFunctionStatus::DeployInProgress => "DEPLOY_IN_PROGRESS",
             CloudFunctionStatus::DeleteInProgress => "DELETE_IN_PROGRESS",
             CloudFunctionStatus::Unknown => "UNKNOWN",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CLOUD_FUNCTION_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "ACTIVE" => Some(Self::Active),
+            "OFFLINE" => Some(Self::Offline),
+            "DEPLOY_IN_PROGRESS" => Some(Self::DeployInProgress),
+            "DELETE_IN_PROGRESS" => Some(Self::DeleteInProgress),
+            "UNKNOWN" => Some(Self::Unknown),
+            _ => None,
         }
     }
 }

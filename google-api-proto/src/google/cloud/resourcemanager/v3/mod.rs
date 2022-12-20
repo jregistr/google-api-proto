@@ -108,6 +108,15 @@ pub mod project {
                 State::DeleteRequested => "DELETE_REQUESTED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
+                _ => None,
+            }
+        }
     }
 }
 /// The request sent to the
@@ -884,6 +893,15 @@ pub mod folder {
                 State::DeleteRequested => "DELETE_REQUESTED",
             }
         }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
+                _ => None,
+            }
+        }
     }
 }
 /// The GetFolder request message.
@@ -1583,6 +1601,15 @@ pub mod organization {
                 State::Unspecified => "STATE_UNSPECIFIED",
                 State::Active => "ACTIVE",
                 State::DeleteRequested => "DELETE_REQUESTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
+                _ => None,
             }
         }
     }
