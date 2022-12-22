@@ -176,6 +176,7 @@ google-cloud-dataplex-v1 = ["google-api", "google-cloud", "google-iam-v1", "goog
 google-cloud-dataproc-logging = ["google-cloud"]
 google-cloud-dataproc-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-dataqna-v1alpha = ["google-api", "google-cloud", "google-rpc"]
+google-cloud-datastream-logging-v1 = ["google-cloud"]
 google-cloud-datastream-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-datastream-v1alpha1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-deploy-v1 = ["google-api", "google-cloud", "google-longrunning", "google-type"]

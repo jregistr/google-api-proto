@@ -161,6 +161,7 @@ pub mod dataproc;
 pub mod dataqna;
 #[cfg(
     any(
+        feature = "google-cloud-datastream-logging-v1",
         feature = "google-cloud-datastream-v1",
         feature = "google-cloud-datastream-v1alpha1",
     )
