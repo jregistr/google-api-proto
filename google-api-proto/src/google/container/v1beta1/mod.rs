@@ -76,6 +76,62 @@ pub mod linux_node_config {
         }
     }
 }
+/// Parameters that can be configured on Windows nodes.
+/// Windows Node Config that define the parameters that will be used to
+/// configure the Windows node pool settings
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WindowsNodeConfig {
+    /// OSVersion specifies the Windows node config to be used on the node
+    #[prost(enumeration = "windows_node_config::OsVersion", tag = "1")]
+    pub os_version: i32,
+}
+/// Nested message and enum types in `WindowsNodeConfig`.
+pub mod windows_node_config {
+    /// Possible OS version that can be used.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum OsVersion {
+        /// When OSVersion is not specified
+        Unspecified = 0,
+        /// LTSC2019 specifies to use LTSC2019 as the Windows Servercore Base Image
+        Ltsc2019 = 1,
+        /// LTSC2022 specifies to use LTSC2022 as the Windows Servercore Base Image
+        Ltsc2022 = 2,
+    }
+    impl OsVersion {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OsVersion::Unspecified => "OS_VERSION_UNSPECIFIED",
+                OsVersion::Ltsc2019 => "OS_VERSION_LTSC2019",
+                OsVersion::Ltsc2022 => "OS_VERSION_LTSC2022",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OS_VERSION_UNSPECIFIED" => Some(Self::Unspecified),
+                "OS_VERSION_LTSC2019" => Some(Self::Ltsc2019),
+                "OS_VERSION_LTSC2022" => Some(Self::Ltsc2022),
+                _ => None,
+            }
+        }
+    }
+}
 /// Node kubelet configs.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -333,6 +389,19 @@ pub struct NodeConfig {
     /// Logging configuration.
     #[prost(message, optional, tag = "38")]
     pub logging_config: ::core::option::Option<NodePoolLoggingConfig>,
+    /// Parameters that can be configured on Windows nodes.
+    #[prost(message, optional, tag = "39")]
+    pub windows_node_config: ::core::option::Option<WindowsNodeConfig>,
+    /// Parameters for using raw-block Local NVMe SSDs.
+    #[prost(message, optional, tag = "40")]
+    pub local_nvme_ssd_block_config: ::core::option::Option<LocalNvmeSsdBlockConfig>,
+    /// Parameters for the node ephemeral storage using Local SSDs.
+    /// If unspecified, ephemeral storage is backed by the boot disk.
+    /// This field is functionally equivalent to the ephemeral_storage_config
+    #[prost(message, optional, tag = "41")]
+    pub ephemeral_storage_local_ssd_config: ::core::option::Option<
+        EphemeralStorageLocalSsdConfig,
+    >,
 }
 /// Specifies options for controlling advanced machine features.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -539,6 +608,36 @@ pub struct EphemeralStorageConfig {
     /// Number of local SSDs to use to back ephemeral storage. Uses NVMe
     /// interfaces. Each local SSD is 375 GB in size.
     /// If zero, it means to disable using local SSDs as ephemeral storage.
+    #[prost(int32, tag = "1")]
+    pub local_ssd_count: i32,
+}
+/// LocalNvmeSsdBlockConfig contains configuration for using raw-block local
+/// NVMe SSDs
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocalNvmeSsdBlockConfig {
+    /// The number of raw-block local NVMe SSD disks to be attached to the node.
+    /// Each local SSD is 375 GB in size. If zero, it means no raw-block local NVMe
+    /// SSD disks to be attached to the node.
+    /// The limit for this value is dependent upon the maximum number of
+    /// disks available on a machine per zone. See:
+    /// <https://cloud.google.com/compute/docs/disks/local-ssd>
+    /// for more information.
+    #[prost(int32, tag = "1")]
+    pub local_ssd_count: i32,
+}
+/// EphemeralStorageLocalSsdConfig contains configuration for the node ephemeral
+/// storage using Local SSDs.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EphemeralStorageLocalSsdConfig {
+    /// Number of local SSDs to use to back ephemeral storage. Uses NVMe
+    /// interfaces. Each local SSD is 375 GB in size.
+    /// If zero, it means to disable using local SSDs as ephemeral storage.
+    /// The limit for this value is dependent upon the maximum number of
+    /// disks available on a machine per zone. See:
+    /// <https://cloud.google.com/compute/docs/disks/local-ssd>
+    /// for more information.
     #[prost(int32, tag = "1")]
     pub local_ssd_count: i32,
 }
@@ -2861,6 +2960,9 @@ pub struct UpdateNodePoolRequest {
     /// Google Compute Engine resources.
     #[prost(message, optional, tag = "33")]
     pub resource_labels: ::core::option::Option<ResourceLabels>,
+    /// Parameters that can be configured on Windows nodes.
+    #[prost(message, optional, tag = "34")]
+    pub windows_node_config: ::core::option::Option<WindowsNodeConfig>,
 }
 /// SetNodePoolAutoscalingRequest sets the autoscaler settings of a node pool.
 #[allow(clippy::derive_partial_eq_without_eq)]
