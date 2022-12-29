@@ -130,6 +130,7 @@ pub mod contactcenterinsights;
 pub mod contentwarehouse;
 #[cfg(
     any(
+        feature = "google-cloud-datacatalog-lineage-v1",
         feature = "google-cloud-datacatalog-v1",
         feature = "google-cloud-datacatalog-v1beta1",
     )
