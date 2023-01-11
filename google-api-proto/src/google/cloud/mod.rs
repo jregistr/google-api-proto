@@ -614,6 +614,8 @@ pub mod websecurityscanner;
     )
 )]
 pub mod workflows;
+#[cfg(any(feature = "google-cloud-workstations-v1beta"))]
+pub mod workstations;
 /// An enum to be used to mark the essential (for polling) fields in an
 /// API-specific Operation object. A custom Operation object may contain many
 /// different fields, but only few of them are essential to conduct a successful
