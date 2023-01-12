@@ -1,3 +1,171 @@
+/// The lifecycle state of an object, such as label, field, or choice. The
+/// lifecycle enforces the following transitions:
+///
+/// * `UNPUBLISHED_DRAFT` (starting state)
+/// * `UNPUBLISHED_DRAFT` -> `PUBLISHED`
+/// * `UNPUBLISHED_DRAFT` -> (Deleted)
+/// * `PUBLISHED` -> `DISABLED`
+/// * `DISABLED` -> `PUBLISHED`
+/// * `DISABLED` -> (Deleted)
+///
+/// The published and disabled states have some distinct characteristics:
+///
+/// * Published—Some kinds of changes might be made to an object in this state,
+///    in which case `has_unpublished_changes` will be true. Also, some kinds of
+///    changes are not permitted. Generally, any change that would invalidate or
+///    cause new restrictions on existing metadata related to the label are
+///    rejected.
+/// * Disabled—When disabled, the configured `DisabledPolicy` takes effect.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Lifecycle {
+    /// Output only. The state of the object associated with this lifecycle.
+    #[prost(enumeration = "lifecycle::State", tag = "1")]
+    pub state: i32,
+    /// Output only. Whether the object associated with this lifecycle has
+    /// unpublished changes.
+    #[prost(bool, tag = "2")]
+    pub has_unpublished_changes: bool,
+    /// The policy that governs how to show a disabled label, field, or selection
+    /// choice.
+    #[prost(message, optional, tag = "3")]
+    pub disabled_policy: ::core::option::Option<lifecycle::DisabledPolicy>,
+}
+/// Nested message and enum types in `Lifecycle`.
+pub mod lifecycle {
+    /// The policy that governs how to treat a disabled label, field, or selection
+    /// choice in different contexts.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DisabledPolicy {
+        /// Whether to hide this disabled object in the search menu for Drive items.
+        ///
+        /// * When `false`, the object is generally shown in the UI as disabled but
+        /// it appears in the search results when searching for Drive items.
+        /// * When `true`, the object is generally hidden in the UI when
+        ///    searching for Drive items.
+        #[prost(bool, tag = "1")]
+        pub hide_in_search: bool,
+        /// Whether to show this disabled object in the apply menu on Drive items.
+        ///
+        /// * When `true`, the object is generally shown in the UI as disabled
+        ///    and is unselectable.
+        /// * When `false`, the object is generally hidden in the UI.
+        #[prost(bool, tag = "2")]
+        pub show_in_apply: bool,
+    }
+    /// The state of the object associated with this lifecycle.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unknown State.
+        Unspecified = 0,
+        /// The initial state of an object. Once published, the object can never
+        /// return to this state. Once an object is published, certain kinds of
+        /// changes are no longer permitted.
+        UnpublishedDraft = 1,
+        /// The object has been published. The object might have unpublished draft
+        /// changes as indicated by `has_unpublished_changes`.
+        Published = 2,
+        /// The object has been published and has since been disabled. The object
+        /// might have unpublished draft changes as indicated by
+        /// `has_unpublished_changes`.
+        Disabled = 3,
+        /// The object has been deleted.
+        Deleted = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::UnpublishedDraft => "UNPUBLISHED_DRAFT",
+                State::Published => "PUBLISHED",
+                State::Disabled => "DISABLED",
+                State::Deleted => "DELETED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "UNPUBLISHED_DRAFT" => Some(Self::UnpublishedDraft),
+                "PUBLISHED" => Some(Self::Published),
+                "DISABLED" => Some(Self::Disabled),
+                "DELETED" => Some(Self::Deleted),
+                _ => None,
+            }
+        }
+    }
+}
+/// Information about a user.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserInfo {
+    /// The identifier for this user that can be used with the People API to get
+    /// more information.
+    /// For example, people/12345678.
+    #[prost(string, tag = "1")]
+    pub person: ::prost::alloc::string::String,
+}
+/// Badge status of the label.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BadgeConfig {
+    /// The color of the badge. When not specified, no badge is rendered.
+    /// The background, foreground, and solo (light and dark mode) colors set here
+    /// are changed in the Drive UI into the closest recommended supported color.
+    #[prost(message, optional, tag = "1")]
+    pub color: ::core::option::Option<super::super::super::super::r#type::Color>,
+    /// Override the default global priority of this badge.
+    /// When set to 0, the default priority heuristic is used.
+    #[prost(int64, tag = "2")]
+    pub priority_override: i64,
+}
+/// The color derived from BadgeConfig and changed to the closest recommended
+/// supported color.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BadgeColors {
+    /// Output only. Badge background that pairs with the foreground.
+    #[prost(message, optional, tag = "1")]
+    pub background_color: ::core::option::Option<
+        super::super::super::super::r#type::Color,
+    >,
+    /// Output only. Badge foreground that pairs with the background.
+    #[prost(message, optional, tag = "2")]
+    pub foreground_color: ::core::option::Option<
+        super::super::super::super::r#type::Color,
+    >,
+    /// Output only. Color that can be used for text without a background.
+    #[prost(message, optional, tag = "3")]
+    pub solo_color: ::core::option::Option<super::super::super::super::r#type::Color>,
+}
+/// Contains information about whether a label component should be considered
+/// locked.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LockStatus {
+    /// Output only. Indicates whether this label component is the (direct) target
+    /// of a LabelLock.  A label component can be implicitly locked even if it's
+    /// not the direct target of a LabelLock, in which case this field is set to
+    /// false.
+    #[prost(bool, tag = "1")]
+    pub locked: bool,
+}
 /// Normalized internal-only message that identifies the exact exception that
 /// caused the error on the server.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -172,174 +340,6 @@ impl ExceptionType {
             _ => None,
         }
     }
-}
-/// The lifecycle state of an object, such as label, field, or choice. The
-/// lifecycle enforces the following transitions:
-///
-/// * `UNPUBLISHED_DRAFT` (starting state)
-/// * `UNPUBLISHED_DRAFT` -> `PUBLISHED`
-/// * `UNPUBLISHED_DRAFT` -> (Deleted)
-/// * `PUBLISHED` -> `DISABLED`
-/// * `DISABLED` -> `PUBLISHED`
-/// * `DISABLED` -> (Deleted)
-///
-/// The published and disabled states have some distinct characteristics:
-///
-/// * Published—Some kinds of changes might be made to an object in this state,
-///    in which case `has_unpublished_changes` will be true. Also, some kinds of
-///    changes are not permitted. Generally, any change that would invalidate or
-///    cause new restrictions on existing metadata related to the label are
-///    rejected.
-/// * Disabled—When disabled, the configured `DisabledPolicy` takes effect.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Lifecycle {
-    /// Output only. The state of the object associated with this lifecycle.
-    #[prost(enumeration = "lifecycle::State", tag = "1")]
-    pub state: i32,
-    /// Output only. Whether the object associated with this lifecycle has
-    /// unpublished changes.
-    #[prost(bool, tag = "2")]
-    pub has_unpublished_changes: bool,
-    /// The policy that governs how to show a disabled label, field, or selection
-    /// choice.
-    #[prost(message, optional, tag = "3")]
-    pub disabled_policy: ::core::option::Option<lifecycle::DisabledPolicy>,
-}
-/// Nested message and enum types in `Lifecycle`.
-pub mod lifecycle {
-    /// The policy that governs how to treat a disabled label, field, or selection
-    /// choice in different contexts.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DisabledPolicy {
-        /// Whether to hide this disabled object in the search menu for Drive items.
-        ///
-        /// * When `false`, the object is generally shown in the UI as disabled but
-        /// it appears in the search results when searching for Drive items.
-        /// * When `true`, the object is generally hidden in the UI when
-        ///    searching for Drive items.
-        #[prost(bool, tag = "1")]
-        pub hide_in_search: bool,
-        /// Whether to show this disabled object in the apply menu on Drive items.
-        ///
-        /// * When `true`, the object is generally shown in the UI as disabled
-        ///    and is unselectable.
-        /// * When `false`, the object is generally hidden in the UI.
-        #[prost(bool, tag = "2")]
-        pub show_in_apply: bool,
-    }
-    /// The state of the object associated with this lifecycle.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unknown State.
-        Unspecified = 0,
-        /// The initial state of an object. Once published, the object can never
-        /// return to this state. Once an object is published, certain kinds of
-        /// changes are no longer permitted.
-        UnpublishedDraft = 1,
-        /// The object has been published. The object might have unpublished draft
-        /// changes as indicated by `has_unpublished_changes`.
-        Published = 2,
-        /// The object has been published and has since been disabled. The object
-        /// might have unpublished draft changes as indicated by
-        /// `has_unpublished_changes`.
-        Disabled = 3,
-        /// The object has been deleted.
-        Deleted = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::UnpublishedDraft => "UNPUBLISHED_DRAFT",
-                State::Published => "PUBLISHED",
-                State::Disabled => "DISABLED",
-                State::Deleted => "DELETED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "UNPUBLISHED_DRAFT" => Some(Self::UnpublishedDraft),
-                "PUBLISHED" => Some(Self::Published),
-                "DISABLED" => Some(Self::Disabled),
-                "DELETED" => Some(Self::Deleted),
-                _ => None,
-            }
-        }
-    }
-}
-/// Information about a user.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserInfo {
-    /// The identifier for this user that can be used with the People API to get
-    /// more information.
-    /// For example, people/12345678.
-    #[prost(string, tag = "1")]
-    pub person: ::prost::alloc::string::String,
-}
-/// Badge status of the label.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BadgeConfig {
-    /// The color of the badge. When not specified, no badge is rendered.
-    /// The background, foreground, and solo (light and dark mode) colors set here
-    /// are changed in the Drive UI into the closest recommended supported color.
-    #[prost(message, optional, tag = "1")]
-    pub color: ::core::option::Option<super::super::super::super::r#type::Color>,
-    /// Override the default global priority of this badge.
-    /// When set to 0, the default priority heuristic is used.
-    #[prost(int64, tag = "2")]
-    pub priority_override: i64,
-}
-/// The color derived from BadgeConfig and changed to the closest recommended
-/// supported color.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BadgeColors {
-    /// Output only. Badge background that pairs with the foreground.
-    #[prost(message, optional, tag = "1")]
-    pub background_color: ::core::option::Option<
-        super::super::super::super::r#type::Color,
-    >,
-    /// Output only. Badge foreground that pairs with the background.
-    #[prost(message, optional, tag = "2")]
-    pub foreground_color: ::core::option::Option<
-        super::super::super::super::r#type::Color,
-    >,
-    /// Output only. Color that can be used for text without a background.
-    #[prost(message, optional, tag = "3")]
-    pub solo_color: ::core::option::Option<super::super::super::super::r#type::Color>,
-}
-/// Contains information about whether a label component should be considered
-/// locked.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LockStatus {
-    /// Output only. Indicates whether this label component is the (direct) target
-    /// of a LabelLock.  A label component can be implicitly locked even if it's
-    /// not the direct target of a LabelLock, in which case this field is set to
-    /// false.
-    #[prost(bool, tag = "1")]
-    pub locked: bool,
 }
 /// Defines a field that has a display name, data type, and other
 /// configuration options. This field defines the kind of metadata that may be

@@ -75,90 +75,6 @@ pub struct GlobalIntentEvent {
     #[prost(message, optional, tag = "2")]
     pub handler: ::core::option::Option<EventHandler>,
 }
-/// Intents map open-ended user input to structured objects. Spoken
-/// phrases are matched to intents with Google's Natural Language Understanding
-/// (NLU). Intent matches can trigger events in your conversation design to
-/// progress the user's conversation.
-/// The intent name is specified in the name of the file.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Intent {
-    /// The list of parameters within the training phrases. All parameters must be
-    /// defined here to be used in the training phrase.
-    #[prost(message, repeated, tag = "1")]
-    pub parameters: ::prost::alloc::vec::Vec<intent::IntentParameter>,
-    /// Training phrases allow Google’s NLU to automatically match intents with
-    /// user input. The more unique phrases that are provided, the better chance
-    /// this intent will be matched.
-    /// The following is the format of training phrase part which are annotated.
-    /// Note that `auto` field is optional and the default behavior when `auto` is
-    /// not specified is equivalent to `auto=false`.
-    /// `($<paramName> '<sample text>' auto=<true or false>)`
-    /// `auto = true` means the part was auto annotated by NLU.
-    /// `auto = false` means the part was annotated by the user. This is the
-    ///      default when auto is not specified.
-    /// Example:
-    /// "Book a flight from ($source 'San Francisco' auto=false) to ($dest
-    /// 'Vancouver')"
-    #[prost(string, repeated, tag = "2")]
-    pub training_phrases: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `Intent`.
-pub mod intent {
-    /// Definition of a parameter which can be used inside training phrases.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IntentParameter {
-        /// Required. Unique name of the intent parameter. Can be used in conditions and
-        /// responses to reference intent parameters extracted by NLU with
-        /// $intent.params.\[name\].resolved
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-        /// The type of the intent parameter.
-        #[prost(oneof = "intent_parameter::ParameterType", tags = "2, 3")]
-        pub parameter_type: ::core::option::Option<intent_parameter::ParameterType>,
-    }
-    /// Nested message and enum types in `IntentParameter`.
-    pub mod intent_parameter {
-        /// Entity set references for an intent parameter.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EntitySetReferences {
-            /// Required. Entity set references for an intent parameter.
-            #[prost(message, repeated, tag = "1")]
-            pub entity_set_references: ::prost::alloc::vec::Vec<
-                entity_set_references::EntitySetReference,
-            >,
-        }
-        /// Nested message and enum types in `EntitySetReferences`.
-        pub mod entity_set_references {
-            /// A reference to the set of allowed entities for this intent parameter.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct EntitySetReference {
-                /// Required. Identifies the specific collection of entities to be considered for a
-                /// given parameter. The corresponding entity set definition should be
-                /// present in the custom/entitySets/ directory.
-                #[prost(string, tag = "1")]
-                pub entity_set: ::prost::alloc::string::String,
-            }
-        }
-        /// The type of the intent parameter.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ParameterType {
-            /// Optional. Declares the data type of this parameter.
-            /// This should not be set for built-in intents.
-            #[prost(message, tag = "2")]
-            Type(super::super::r#type::ClassReference),
-            /// Optional. References to the sets of allowed entities for this intent parameter.
-            /// Only valid for parameters of a built-in intent. These
-            /// references point to entity sets in the 'custom/entitySets' directory.
-            #[prost(message, tag = "3")]
-            EntitySetReferences(EntitySetReferences),
-        }
-    }
-}
 /// Registers events that trigger as the result of a true condition.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -359,4 +275,88 @@ pub struct Scene {
     /// invalidated, the scene invalidated or other changes to scene state.
     #[prost(message, optional, tag = "5")]
     pub on_slot_updated: ::core::option::Option<EventHandler>,
+}
+/// Intents map open-ended user input to structured objects. Spoken
+/// phrases are matched to intents with Google's Natural Language Understanding
+/// (NLU). Intent matches can trigger events in your conversation design to
+/// progress the user's conversation.
+/// The intent name is specified in the name of the file.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Intent {
+    /// The list of parameters within the training phrases. All parameters must be
+    /// defined here to be used in the training phrase.
+    #[prost(message, repeated, tag = "1")]
+    pub parameters: ::prost::alloc::vec::Vec<intent::IntentParameter>,
+    /// Training phrases allow Google’s NLU to automatically match intents with
+    /// user input. The more unique phrases that are provided, the better chance
+    /// this intent will be matched.
+    /// The following is the format of training phrase part which are annotated.
+    /// Note that `auto` field is optional and the default behavior when `auto` is
+    /// not specified is equivalent to `auto=false`.
+    /// `($<paramName> '<sample text>' auto=<true or false>)`
+    /// `auto = true` means the part was auto annotated by NLU.
+    /// `auto = false` means the part was annotated by the user. This is the
+    ///      default when auto is not specified.
+    /// Example:
+    /// "Book a flight from ($source 'San Francisco' auto=false) to ($dest
+    /// 'Vancouver')"
+    #[prost(string, repeated, tag = "2")]
+    pub training_phrases: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `Intent`.
+pub mod intent {
+    /// Definition of a parameter which can be used inside training phrases.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IntentParameter {
+        /// Required. Unique name of the intent parameter. Can be used in conditions and
+        /// responses to reference intent parameters extracted by NLU with
+        /// $intent.params.\[name\].resolved
+        #[prost(string, tag = "1")]
+        pub name: ::prost::alloc::string::String,
+        /// The type of the intent parameter.
+        #[prost(oneof = "intent_parameter::ParameterType", tags = "2, 3")]
+        pub parameter_type: ::core::option::Option<intent_parameter::ParameterType>,
+    }
+    /// Nested message and enum types in `IntentParameter`.
+    pub mod intent_parameter {
+        /// Entity set references for an intent parameter.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EntitySetReferences {
+            /// Required. Entity set references for an intent parameter.
+            #[prost(message, repeated, tag = "1")]
+            pub entity_set_references: ::prost::alloc::vec::Vec<
+                entity_set_references::EntitySetReference,
+            >,
+        }
+        /// Nested message and enum types in `EntitySetReferences`.
+        pub mod entity_set_references {
+            /// A reference to the set of allowed entities for this intent parameter.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct EntitySetReference {
+                /// Required. Identifies the specific collection of entities to be considered for a
+                /// given parameter. The corresponding entity set definition should be
+                /// present in the custom/entitySets/ directory.
+                #[prost(string, tag = "1")]
+                pub entity_set: ::prost::alloc::string::String,
+            }
+        }
+        /// The type of the intent parameter.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ParameterType {
+            /// Optional. Declares the data type of this parameter.
+            /// This should not be set for built-in intents.
+            #[prost(message, tag = "2")]
+            Type(super::super::r#type::ClassReference),
+            /// Optional. References to the sets of allowed entities for this intent parameter.
+            /// Only valid for parameters of a built-in intent. These
+            /// references point to entity sets in the 'custom/entitySets' directory.
+            #[prost(message, tag = "3")]
+            EntitySetReferences(EntitySetReferences),
+        }
+    }
 }

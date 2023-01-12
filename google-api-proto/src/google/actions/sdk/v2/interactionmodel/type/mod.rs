@@ -1,17 +1,3 @@
-/// A reference to a class which is used to declare the type of a field or return
-/// value. Enums are also a type of class that can be referenced using
-/// ClassReference.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassReference {
-    /// Required. Name of a built-in type or custom type of the parameter. Examples:
-    /// `PizzaToppings`, `actions.type.Number`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Indicates whether the data type represents a list of values.
-    #[prost(bool, tag = "2")]
-    pub list: bool,
-}
 /// Elements that will be displayed on the canvas once a particular type's entity
 /// is extracted from a query. Only relevant for canvas enabled apps.
 /// **This message is localizable.**
@@ -181,4 +167,18 @@ pub mod r#type {
         #[prost(message, tag = "3")]
         FreeText(super::FreeTextType),
     }
+}
+/// A reference to a class which is used to declare the type of a field or return
+/// value. Enums are also a type of class that can be referenced using
+/// ClassReference.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassReference {
+    /// Required. Name of a built-in type or custom type of the parameter. Examples:
+    /// `PizzaToppings`, `actions.type.Number`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Indicates whether the data type represents a list of values.
+    #[prost(bool, tag = "2")]
+    pub list: bool,
 }

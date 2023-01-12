@@ -1,3 +1,14 @@
+/// Represents a suggestion chip, a UI element shown to the user for convenience.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Suggestion {
+    /// Required. The text shown in the suggestion chip. When tapped, this text will be
+    /// posted back to the conversation verbatim as if the user had typed it.
+    /// Each title must be unique among the set of suggestion chips.
+    /// Max 25 chars
+    #[prost(string, tag = "1")]
+    pub title: ::prost::alloc::string::String,
+}
 /// Represents a Interactive Canvas response to be sent to the user.
 /// This can be used in conjunction with the `first_simple` field in the
 /// containing prompt to speak to the user in addition to displaying a
@@ -680,17 +691,6 @@ pub mod static_simple_prompt {
         #[prost(string, tag = "2")]
         pub text: ::prost::alloc::string::String,
     }
-}
-/// Represents a suggestion chip, a UI element shown to the user for convenience.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Suggestion {
-    /// Required. The text shown in the suggestion chip. When tapped, this text will be
-    /// posted back to the conversation verbatim as if the user had typed it.
-    /// Each title must be unique among the set of suggestion chips.
-    /// Max 25 chars
-    #[prost(string, tag = "1")]
-    pub title: ::prost::alloc::string::String,
 }
 /// Represents the surface the user is using to make a request to the Action.
 #[allow(clippy::derive_partial_eq_without_eq)]

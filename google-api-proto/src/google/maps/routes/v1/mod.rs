@@ -726,6 +726,23 @@ pub struct ComputeRoutesResponse {
     #[prost(message, optional, tag = "2")]
     pub fallback_info: ::core::option::Option<FallbackInfo>,
 }
+/// Encapsulates a custom route computed based on the route objective specified
+/// by the customer. CustomRoute contains a route and a route token, which can be
+/// passed to NavSDK to reconstruct the custom route for turn by turn navigation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomRoute {
+    /// The route considered 'best' for the input route objective.
+    #[prost(message, optional, tag = "11")]
+    pub route: ::core::option::Option<Route>,
+    /// Web-safe base64 encoded route token that can be passed to NavSDK, which
+    /// allows NavSDK to reconstruct the route during navigation, and in the event
+    /// of rerouting honor the original intention when RoutesPreferred
+    /// ComputeCustomRoutes is called. Customers should treat this token as an
+    /// opaque blob.
+    #[prost(string, tag = "12")]
+    pub token: ::prost::alloc::string::String,
+}
 /// List of toll passes around the world that we support.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -1419,6 +1436,62 @@ impl Units {
         }
     }
 }
+/// ComputeRouteMatrix request message
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ComputeRouteMatrixRequest {
+    /// Required. Array of origins, which determines the rows of the response matrix.
+    /// Several size restrictions apply to the cardinality of origins and
+    /// destinations:
+    ///
+    /// * The number of elements (origins × destinations) must be no greater than
+    /// 625 in any case.
+    /// * The number of elements (origins × destinations) must be no greater than
+    /// 100 if routing_preference is set to `TRAFFIC_AWARE_OPTIMAL`.
+    /// * The number of waypoints (origins + destinations) specified as `place_id`
+    /// must be no greater than 50.
+    #[prost(message, repeated, tag = "1")]
+    pub origins: ::prost::alloc::vec::Vec<RouteMatrixOrigin>,
+    /// Required. Array of destinations, which determines the columns of the response matrix.
+    #[prost(message, repeated, tag = "2")]
+    pub destinations: ::prost::alloc::vec::Vec<RouteMatrixDestination>,
+    /// Optional. Specifies the mode of transportation.
+    #[prost(enumeration = "RouteTravelMode", tag = "3")]
+    pub travel_mode: i32,
+    /// Optional. Specifies how to compute the route. The server attempts to use the selected
+    /// routing preference to compute the route. If the routing preference results
+    /// in an error or an extra long latency, an error is returned. In the future,
+    /// we might implement a fallback mechanism to use a different option when the
+    /// preferred option does not give a valid result. You can specify this option
+    /// only when the `travel_mode` is `DRIVE` or `TWO_WHEELER`, otherwise the
+    /// request fails.
+    #[prost(enumeration = "RoutingPreference", tag = "4")]
+    pub routing_preference: i32,
+    /// Optional. The departure time. If you don't set this value, this defaults to the time
+    /// that you made the request. If you set this value to a time that has already
+    /// occurred, the request fails.
+    #[prost(message, optional, tag = "5")]
+    pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A single origin for ComputeRouteMatrixRequest
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RouteMatrixOrigin {
+    /// Required. Origin waypoint
+    #[prost(message, optional, tag = "1")]
+    pub waypoint: ::core::option::Option<Waypoint>,
+    /// Optional. Modifiers for every route that takes this as the origin
+    #[prost(message, optional, tag = "2")]
+    pub route_modifiers: ::core::option::Option<RouteModifiers>,
+}
+/// A single destination for ComputeRouteMatrixRequest
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RouteMatrixDestination {
+    /// Required. Destination waypoint
+    #[prost(message, optional, tag = "1")]
+    pub waypoint: ::core::option::Option<Waypoint>,
+}
 /// ComputeCustomRoutes request message.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1554,103 +1627,6 @@ pub mod route_objective {
         RateCard(RateCard),
     }
 }
-/// Encapsulates route information computed for an origin/destination pair in the
-/// ComputeRouteMatrix API. This proto can be streamed to the client.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RouteMatrixElement {
-    /// Zero-based index of the origin in the request.
-    #[prost(int32, tag = "1")]
-    pub origin_index: i32,
-    /// Zero-based index of the destination in the request.
-    #[prost(int32, tag = "2")]
-    pub destination_index: i32,
-    /// Error status code for this element.
-    #[prost(message, optional, tag = "3")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-    /// Indicates whether the route was found or not. Independent of status.
-    #[prost(enumeration = "RouteMatrixElementCondition", tag = "9")]
-    pub condition: i32,
-    /// The travel distance of the route, in meters.
-    #[prost(int32, tag = "4")]
-    pub distance_meters: i32,
-    /// The length of time needed to navigate the route. If you set the
-    /// `routing_preference` to `TRAFFIC_UNAWARE`, then this value is the same as
-    /// `static_duration`. If you set the `routing_preference` to either
-    /// `TRAFFIC_AWARE` or `TRAFFIC_AWARE_OPTIMAL`, then this value is calculated
-    /// taking traffic conditions into account.
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-    /// The duration of traveling through the route without taking traffic
-    /// conditions into consideration.
-    #[prost(message, optional, tag = "6")]
-    pub static_duration: ::core::option::Option<::prost_types::Duration>,
-    /// Additional information about the route. For example: restriction
-    /// information and toll information
-    #[prost(message, optional, tag = "7")]
-    pub travel_advisory: ::core::option::Option<RouteTravelAdvisory>,
-    /// In some cases when the server is not able to compute the route with the
-    /// given preferences for this particular origin/destination pair, it may
-    /// fall back to using a different mode of computation. When fallback mode is
-    /// used, this field contains detailed information about the fallback response.
-    /// Otherwise this field is unset.
-    #[prost(message, optional, tag = "8")]
-    pub fallback_info: ::core::option::Option<FallbackInfo>,
-}
-/// The condition of the route being returned.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RouteMatrixElementCondition {
-    /// Only used when the `status` of the element is not OK.
-    Unspecified = 0,
-    /// A route was found, and the corresponding information was filled out for the
-    /// element.
-    RouteExists = 1,
-    /// No route could be found. Fields containing route information, such as
-    /// `distance_meters` or `duration`, will not be filled out in the element.
-    RouteNotFound = 2,
-}
-impl RouteMatrixElementCondition {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            RouteMatrixElementCondition::Unspecified => {
-                "ROUTE_MATRIX_ELEMENT_CONDITION_UNSPECIFIED"
-            }
-            RouteMatrixElementCondition::RouteExists => "ROUTE_EXISTS",
-            RouteMatrixElementCondition::RouteNotFound => "ROUTE_NOT_FOUND",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ROUTE_MATRIX_ELEMENT_CONDITION_UNSPECIFIED" => Some(Self::Unspecified),
-            "ROUTE_EXISTS" => Some(Self::RouteExists),
-            "ROUTE_NOT_FOUND" => Some(Self::RouteNotFound),
-            _ => None,
-        }
-    }
-}
-/// Encapsulates a custom route computed based on the route objective specified
-/// by the customer. CustomRoute contains a route and a route token, which can be
-/// passed to NavSDK to reconstruct the custom route for turn by turn navigation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomRoute {
-    /// The route considered 'best' for the input route objective.
-    #[prost(message, optional, tag = "11")]
-    pub route: ::core::option::Option<Route>,
-    /// Web-safe base64 encoded route token that can be passed to NavSDK, which
-    /// allows NavSDK to reconstruct the route during navigation, and in the event
-    /// of rerouting honor the original intention when RoutesPreferred
-    /// ComputeCustomRoutes is called. Customers should treat this token as an
-    /// opaque blob.
-    #[prost(string, tag = "12")]
-    pub token: ::prost::alloc::string::String,
-}
 /// ComputeCustomRoutes response message.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1756,61 +1732,85 @@ pub mod compute_custom_routes_response {
         }
     }
 }
-/// ComputeRouteMatrix request message
+/// Encapsulates route information computed for an origin/destination pair in the
+/// ComputeRouteMatrix API. This proto can be streamed to the client.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ComputeRouteMatrixRequest {
-    /// Required. Array of origins, which determines the rows of the response matrix.
-    /// Several size restrictions apply to the cardinality of origins and
-    /// destinations:
-    ///
-    /// * The number of elements (origins × destinations) must be no greater than
-    /// 625 in any case.
-    /// * The number of elements (origins × destinations) must be no greater than
-    /// 100 if routing_preference is set to `TRAFFIC_AWARE_OPTIMAL`.
-    /// * The number of waypoints (origins + destinations) specified as `place_id`
-    /// must be no greater than 50.
-    #[prost(message, repeated, tag = "1")]
-    pub origins: ::prost::alloc::vec::Vec<RouteMatrixOrigin>,
-    /// Required. Array of destinations, which determines the columns of the response matrix.
-    #[prost(message, repeated, tag = "2")]
-    pub destinations: ::prost::alloc::vec::Vec<RouteMatrixDestination>,
-    /// Optional. Specifies the mode of transportation.
-    #[prost(enumeration = "RouteTravelMode", tag = "3")]
-    pub travel_mode: i32,
-    /// Optional. Specifies how to compute the route. The server attempts to use the selected
-    /// routing preference to compute the route. If the routing preference results
-    /// in an error or an extra long latency, an error is returned. In the future,
-    /// we might implement a fallback mechanism to use a different option when the
-    /// preferred option does not give a valid result. You can specify this option
-    /// only when the `travel_mode` is `DRIVE` or `TWO_WHEELER`, otherwise the
-    /// request fails.
-    #[prost(enumeration = "RoutingPreference", tag = "4")]
-    pub routing_preference: i32,
-    /// Optional. The departure time. If you don't set this value, this defaults to the time
-    /// that you made the request. If you set this value to a time that has already
-    /// occurred, the request fails.
+pub struct RouteMatrixElement {
+    /// Zero-based index of the origin in the request.
+    #[prost(int32, tag = "1")]
+    pub origin_index: i32,
+    /// Zero-based index of the destination in the request.
+    #[prost(int32, tag = "2")]
+    pub destination_index: i32,
+    /// Error status code for this element.
+    #[prost(message, optional, tag = "3")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+    /// Indicates whether the route was found or not. Independent of status.
+    #[prost(enumeration = "RouteMatrixElementCondition", tag = "9")]
+    pub condition: i32,
+    /// The travel distance of the route, in meters.
+    #[prost(int32, tag = "4")]
+    pub distance_meters: i32,
+    /// The length of time needed to navigate the route. If you set the
+    /// `routing_preference` to `TRAFFIC_UNAWARE`, then this value is the same as
+    /// `static_duration`. If you set the `routing_preference` to either
+    /// `TRAFFIC_AWARE` or `TRAFFIC_AWARE_OPTIMAL`, then this value is calculated
+    /// taking traffic conditions into account.
     #[prost(message, optional, tag = "5")]
-    pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+    /// The duration of traveling through the route without taking traffic
+    /// conditions into consideration.
+    #[prost(message, optional, tag = "6")]
+    pub static_duration: ::core::option::Option<::prost_types::Duration>,
+    /// Additional information about the route. For example: restriction
+    /// information and toll information
+    #[prost(message, optional, tag = "7")]
+    pub travel_advisory: ::core::option::Option<RouteTravelAdvisory>,
+    /// In some cases when the server is not able to compute the route with the
+    /// given preferences for this particular origin/destination pair, it may
+    /// fall back to using a different mode of computation. When fallback mode is
+    /// used, this field contains detailed information about the fallback response.
+    /// Otherwise this field is unset.
+    #[prost(message, optional, tag = "8")]
+    pub fallback_info: ::core::option::Option<FallbackInfo>,
 }
-/// A single origin for ComputeRouteMatrixRequest
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RouteMatrixOrigin {
-    /// Required. Origin waypoint
-    #[prost(message, optional, tag = "1")]
-    pub waypoint: ::core::option::Option<Waypoint>,
-    /// Optional. Modifiers for every route that takes this as the origin
-    #[prost(message, optional, tag = "2")]
-    pub route_modifiers: ::core::option::Option<RouteModifiers>,
+/// The condition of the route being returned.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RouteMatrixElementCondition {
+    /// Only used when the `status` of the element is not OK.
+    Unspecified = 0,
+    /// A route was found, and the corresponding information was filled out for the
+    /// element.
+    RouteExists = 1,
+    /// No route could be found. Fields containing route information, such as
+    /// `distance_meters` or `duration`, will not be filled out in the element.
+    RouteNotFound = 2,
 }
-/// A single destination for ComputeRouteMatrixRequest
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RouteMatrixDestination {
-    /// Required. Destination waypoint
-    #[prost(message, optional, tag = "1")]
-    pub waypoint: ::core::option::Option<Waypoint>,
+impl RouteMatrixElementCondition {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RouteMatrixElementCondition::Unspecified => {
+                "ROUTE_MATRIX_ELEMENT_CONDITION_UNSPECIFIED"
+            }
+            RouteMatrixElementCondition::RouteExists => "ROUTE_EXISTS",
+            RouteMatrixElementCondition::RouteNotFound => "ROUTE_NOT_FOUND",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ROUTE_MATRIX_ELEMENT_CONDITION_UNSPECIFIED" => Some(Self::Unspecified),
+            "ROUTE_EXISTS" => Some(Self::RouteExists),
+            "ROUTE_NOT_FOUND" => Some(Self::RouteNotFound),
+            _ => None,
+        }
+    }
 }
 /// Generated client implementations.
 pub mod routes_preferred_client {
