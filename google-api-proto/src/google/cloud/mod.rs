@@ -152,6 +152,8 @@ pub mod dataform;
 pub mod datafusion;
 #[cfg(any(feature = "google-cloud-datalabeling-v1beta1"))]
 pub mod datalabeling;
+#[cfg(any(feature = "google-cloud-datapipelines-logging-v1"))]
+pub mod datapipelines;
 #[cfg(any(feature = "google-cloud-dataplex-v1"))]
 pub mod dataplex;
 #[cfg(

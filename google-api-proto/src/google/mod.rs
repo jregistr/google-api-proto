@@ -185,6 +185,7 @@ pub mod chromeos;
         feature = "google-cloud-datafusion-v1",
         feature = "google-cloud-datafusion-v1beta1",
         feature = "google-cloud-datalabeling-v1beta1",
+        feature = "google-cloud-datapipelines-logging-v1",
         feature = "google-cloud-dataplex-v1",
         feature = "google-cloud-dataproc-logging",
         feature = "google-cloud-dataproc-v1",
