@@ -1,46 +1,3 @@
-/// Segment only fields.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Segments {
-    /// Resource name of the conversion action.
-    #[prost(string, optional, tag = "146")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// Conversion action category.
-    #[prost(
-        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
-        tag = "53"
-    )]
-    pub conversion_action_category: i32,
-    /// Conversion action name.
-    #[prost(string, optional, tag = "114")]
-    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Date to which metrics apply.
-    /// yyyy-MM-dd format, for example, 2018-04-17.
-    #[prost(string, optional, tag = "79")]
-    pub date: ::core::option::Option<::prost::alloc::string::String>,
-    /// Day of the week, for example, MONDAY.
-    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
-    pub day_of_week: i32,
-    /// Device to which metrics apply.
-    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
-    pub device: i32,
-    /// Month as represented by the date of the first day of a month. Formatted as
-    /// yyyy-MM-dd.
-    #[prost(string, optional, tag = "90")]
-    pub month: ::core::option::Option<::prost::alloc::string::String>,
-    /// Quarter as represented by the date of the first day of a quarter.
-    /// Uses the calendar year for quarters, for example, the second quarter of
-    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "128")]
-    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
-    /// Week as defined as Monday through Sunday, and represented by the date of
-    /// Monday. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "130")]
-    pub week: ::core::option::Option<::prost::alloc::string::String>,
-    /// Year, formatted as yyyy.
-    #[prost(int32, optional, tag = "131")]
-    pub year: ::core::option::Option<i32>,
-}
 /// Metrics data.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -381,6 +338,11 @@ pub struct Metrics {
     #[prost(int64, optional, tag = "155")]
     pub client_account_view_through_conversions: ::core::option::Option<i64>,
 }
+/// A rule specifying the maximum number of times an ad (or some set of ads) can
+/// be shown to a user over a particular time period.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FrequencyCapEntry {}
 /// A mapping that can be used by custom parameter tags in a
 /// `tracking_url_template`, `final_urls`, or `mobile_final_urls`.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -392,6 +354,58 @@ pub struct CustomParameter {
     /// The value to be substituted.
     #[prost(string, optional, tag = "4")]
     pub value: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Segment only fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Segments {
+    /// Resource name of the conversion action.
+    #[prost(string, optional, tag = "146")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// Conversion action category.
+    #[prost(
+        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
+        tag = "53"
+    )]
+    pub conversion_action_category: i32,
+    /// Conversion action name.
+    #[prost(string, optional, tag = "114")]
+    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Date to which metrics apply.
+    /// yyyy-MM-dd format, for example, 2018-04-17.
+    #[prost(string, optional, tag = "79")]
+    pub date: ::core::option::Option<::prost::alloc::string::String>,
+    /// Day of the week, for example, MONDAY.
+    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
+    pub day_of_week: i32,
+    /// Device to which metrics apply.
+    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
+    pub device: i32,
+    /// Month as represented by the date of the first day of a month. Formatted as
+    /// yyyy-MM-dd.
+    #[prost(string, optional, tag = "90")]
+    pub month: ::core::option::Option<::prost::alloc::string::String>,
+    /// Quarter as represented by the date of the first day of a quarter.
+    /// Uses the calendar year for quarters, for example, the second quarter of
+    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "128")]
+    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
+    /// Week as defined as Monday through Sunday, and represented by the date of
+    /// Monday. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "130")]
+    pub week: ::core::option::Option<::prost::alloc::string::String>,
+    /// Year, formatted as yyyy.
+    #[prost(int32, optional, tag = "131")]
+    pub year: ::core::option::Option<i32>,
+}
+/// Settings for Real-Time Bidding, a feature only available for campaigns
+/// targeting the Ad Exchange network.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RealTimeBiddingSetting {
+    /// Whether the campaign is opted in to real-time bidding.
+    #[prost(bool, optional, tag = "2")]
+    pub opt_in: ::core::option::Option<bool>,
 }
 /// A keyword criterion.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -534,11 +548,6 @@ pub struct LocationGroupInfo {
     #[prost(string, repeated, tag = "8")]
     pub feed_item_sets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
-/// A rule specifying the maximum number of times an ad (or some set of ads) can
-/// be shown to a user over a particular time period.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FrequencyCapEntry {}
 /// An automated bidding strategy that raises bids for clicks
 /// that seem more likely to lead to a conversion and lowers
 /// them for clicks where they seem less likely.
@@ -728,15 +737,6 @@ pub struct PercentCpc {
     /// not.
     #[prost(bool, optional, tag = "4")]
     pub enhanced_cpc_enabled: ::core::option::Option<bool>,
-}
-/// Settings for Real-Time Bidding, a feature only available for campaigns
-/// targeting the Ad Exchange network.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RealTimeBiddingSetting {
-    /// Whether the campaign is opted in to real-time bidding.
-    #[prost(bool, optional, tag = "2")]
-    pub opt_in: ::core::option::Option<bool>,
 }
 /// A generic data container.
 #[allow(clippy::derive_partial_eq_without_eq)]

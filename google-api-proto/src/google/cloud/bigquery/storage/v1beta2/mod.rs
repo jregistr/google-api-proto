@@ -73,6 +73,23 @@ pub mod arrow_serialization_options {
         }
     }
 }
+/// Avro schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag = "1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+}
 /// ProtoSchema describes the schema of the serialized protocol buffer data rows.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -92,23 +109,6 @@ pub struct ProtoRows {
     /// information on deserializing this field.
     #[prost(bytes = "bytes", repeated, tag = "1")]
     pub serialized_rows: ::prost::alloc::vec::Vec<::prost::bytes::Bytes>,
-}
-/// Avro schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag = "1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
 }
 /// Schema of a table
 #[allow(clippy::derive_partial_eq_without_eq)]

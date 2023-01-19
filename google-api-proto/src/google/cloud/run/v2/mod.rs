@@ -1,3 +1,83 @@
+/// Holds a single traffic routing entry for the Service. Allocations can be done
+/// to a specific Revision name, or pointing to the latest Ready Revision.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTarget {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
+    pub r#type: i32,
+    /// Revision to which to send this portion of traffic, if traffic allocation is
+    /// by revision.
+    #[prost(string, tag = "2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    /// This defaults to zero if unspecified.
+    #[prost(int32, tag = "3")]
+    pub percent: i32,
+    /// Indicates a string to be part of the URI to exclusively reference this
+    /// target.
+    #[prost(string, tag = "4")]
+    pub tag: ::prost::alloc::string::String,
+}
+/// Represents the observed state of a single `TrafficTarget` entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTargetStatus {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
+    pub r#type: i32,
+    /// Revision to which this traffic is sent.
+    #[prost(string, tag = "2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    #[prost(int32, tag = "3")]
+    pub percent: i32,
+    /// Indicates the string used in the URI to exclusively reference this target.
+    #[prost(string, tag = "4")]
+    pub tag: ::prost::alloc::string::String,
+    /// Displays the target URI.
+    #[prost(string, tag = "5")]
+    pub uri: ::prost::alloc::string::String,
+}
+/// The type of instance allocation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrafficTargetAllocationType {
+    /// Unspecified instance allocation type.
+    Unspecified = 0,
+    /// Allocates instances to the Service's latest ready Revision.
+    Latest = 1,
+    /// Allocates instances to a Revision by name.
+    Revision = 2,
+}
+impl TrafficTargetAllocationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TrafficTargetAllocationType::Unspecified => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED"
+            }
+            TrafficTargetAllocationType::Latest => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+            }
+            TrafficTargetAllocationType::Revision => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST" => Some(Self::Latest),
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION" => Some(Self::Revision),
+            _ => None,
+        }
+    }
+}
 /// Defines a status condition for a resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -944,725 +1024,6 @@ impl ExecutionEnvironment {
         }
     }
 }
-/// Request message for obtaining a Task by its full name.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTaskRequest {
-    /// Required. The full name of the Task.
-    /// Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}/tasks/{task}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for retrieving a list of Tasks.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTasksRequest {
-    /// Required. The Execution from which the Tasks should be listed.
-    /// To list all Tasks across Executions of a Job, use "-" instead of Execution
-    /// name. To list all Tasks across Jobs, use "-" instead of Job name. Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Tasks to return in this call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token received from a previous call to ListTasks.
-    /// All other parameters must match.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// If true, returns deleted (but unexpired) resources along with active ones.
-    #[prost(bool, tag = "4")]
-    pub show_deleted: bool,
-}
-/// Response message containing a list of Tasks.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTasksResponse {
-    /// The resulting list of Tasks.
-    #[prost(message, repeated, tag = "1")]
-    pub tasks: ::prost::alloc::vec::Vec<Task>,
-    /// A token indicating there are more items than page_size. Use it in the next
-    /// ListTasks request to continue.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Task represents a single run of a container to completion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Task {
-    /// Output only. The unique name of this Task.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server assigned unique identifier for the Task. The value is a UUID4
-    /// string and guaranteed to remain unchanged until the resource is deleted.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. A number that monotonically increases every time the user
-    /// modifies the desired state.
-    #[prost(int64, tag = "3")]
-    pub generation: i64,
-    /// KRM-style labels for the resource.
-    /// User-provided labels are shared with Google's billing system, so they can
-    /// be used to filter, or break down billing charges by team, component,
-    /// environment, state, etc. For more information, visit
-    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
-    /// <https://cloud.google.com/run/docs/configuring/labels>
-    /// Cloud Run will populate some labels with 'run.googleapis.com' or
-    /// 'serving.knative.dev' namespaces. Those labels are read-only, and user
-    /// changes will not be preserved.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// KRM-style annotations for the resource.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Represents time when the task was created by the job controller.
-    /// It is not guaranteed to be set in happens-before order across separate
-    /// operations.
-    #[prost(message, optional, tag = "6")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the task started to run.
-    /// It is not guaranteed to be set in happens-before order across separate
-    /// operations.
-    #[prost(message, optional, tag = "27")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the Task was completed. It is not guaranteed to
-    /// be set in happens-before order across separate operations.
-    #[prost(message, optional, tag = "7")]
-    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last-modified time.
-    #[prost(message, optional, tag = "8")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the deletion time. It is only
-    /// populated as a response to a Delete request.
-    #[prost(message, optional, tag = "9")]
-    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the time after which it will be
-    /// permamently deleted. It is only populated as a response to a Delete
-    /// request.
-    #[prost(message, optional, tag = "10")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The name of the parent Job.
-    #[prost(string, tag = "12")]
-    pub job: ::prost::alloc::string::String,
-    /// Output only. The name of the parent Execution.
-    #[prost(string, tag = "13")]
-    pub execution: ::prost::alloc::string::String,
-    /// Holds the single container that defines the unit of execution for this
-    /// task.
-    #[prost(message, repeated, tag = "14")]
-    pub containers: ::prost::alloc::vec::Vec<Container>,
-    /// A list of Volumes to make available to containers.
-    #[prost(message, repeated, tag = "15")]
-    pub volumes: ::prost::alloc::vec::Vec<Volume>,
-    /// Number of retries allowed per Task, before marking this Task failed.
-    #[prost(int32, tag = "16")]
-    pub max_retries: i32,
-    /// Max allowed time duration the Task may be active before the system will
-    /// actively try to mark it failed and kill associated containers. This applies
-    /// per attempt of a task, meaning each retry can run for the full timeout.
-    #[prost(message, optional, tag = "17")]
-    pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Email address of the IAM service account associated with the Task of a
-    /// Job. The service account represents the identity of the
-    /// running task, and determines what permissions the task has. If
-    /// not provided, the task will use the project's default service account.
-    #[prost(string, tag = "18")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The execution environment being used to host this Task.
-    #[prost(enumeration = "ExecutionEnvironment", tag = "20")]
-    pub execution_environment: i32,
-    /// Output only. Indicates whether the resource's reconciliation is still in progress.
-    /// See comments in `Job.reconciling` for additional information on
-    /// reconciliation process in Cloud Run.
-    #[prost(bool, tag = "21")]
-    pub reconciling: bool,
-    /// Output only. The Condition of this Task, containing its readiness status, and
-    /// detailed error information in case it did not reach the desired state.
-    #[prost(message, repeated, tag = "22")]
-    pub conditions: ::prost::alloc::vec::Vec<Condition>,
-    /// Output only. The generation of this Task. See comments in `Job.reconciling`
-    /// for additional information on reconciliation process in Cloud Run.
-    #[prost(int64, tag = "23")]
-    pub observed_generation: i64,
-    /// Output only. Index of the Task, unique per execution, and beginning at 0.
-    #[prost(int32, tag = "24")]
-    pub index: i32,
-    /// Output only. The number of times this Task was retried.
-    /// Tasks are retried when they fail up to the maxRetries limit.
-    #[prost(int32, tag = "25")]
-    pub retried: i32,
-    /// Output only. Result of the last attempt of this Task.
-    #[prost(message, optional, tag = "26")]
-    pub last_attempt_result: ::core::option::Option<TaskAttemptResult>,
-    /// Output only. A reference to a customer managed encryption key (CMEK) to use to encrypt
-    /// this container image. For more information, go to
-    /// <https://cloud.google.com/run/docs/securing/using-cmek>
-    #[prost(string, tag = "28")]
-    pub encryption_key: ::prost::alloc::string::String,
-    /// Output only. VPC Access configuration to use for this Task. For more information,
-    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
-    #[prost(message, optional, tag = "29")]
-    pub vpc_access: ::core::option::Option<VpcAccess>,
-    /// Output only. A system-generated fingerprint for this version of the
-    /// resource. May be used to detect modification conflict during updates.
-    #[prost(string, tag = "99")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// Result of a task attempt.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TaskAttemptResult {
-    /// Output only. The status of this attempt.
-    /// If the status code is OK, then the attempt succeeded.
-    #[prost(message, optional, tag = "1")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-    /// Output only. The exit code of this attempt.
-    /// This may be unset if the container was unable to exit cleanly with a code
-    /// due to some other failure.
-    /// See status field for possible failure details.
-    #[prost(int32, tag = "2")]
-    pub exit_code: i32,
-}
-/// Generated client implementations.
-pub mod tasks_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Cloud Run Task Control Plane API.
-    #[derive(Debug, Clone)]
-    pub struct TasksClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TasksClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TasksClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TasksClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Gets information about a Task.
-        pub async fn get_task(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Tasks/GetTask",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Tasks from an Execution of a Job.
-        pub async fn list_tasks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTasksRequest>,
-        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Tasks/ListTasks",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Holds a single traffic routing entry for the Service. Allocations can be done
-/// to a specific Revision name, or pointing to the latest Ready Revision.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTarget {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
-    pub r#type: i32,
-    /// Revision to which to send this portion of traffic, if traffic allocation is
-    /// by revision.
-    #[prost(string, tag = "2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    /// This defaults to zero if unspecified.
-    #[prost(int32, tag = "3")]
-    pub percent: i32,
-    /// Indicates a string to be part of the URI to exclusively reference this
-    /// target.
-    #[prost(string, tag = "4")]
-    pub tag: ::prost::alloc::string::String,
-}
-/// Represents the observed state of a single `TrafficTarget` entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTargetStatus {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
-    pub r#type: i32,
-    /// Revision to which this traffic is sent.
-    #[prost(string, tag = "2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    #[prost(int32, tag = "3")]
-    pub percent: i32,
-    /// Indicates the string used in the URI to exclusively reference this target.
-    #[prost(string, tag = "4")]
-    pub tag: ::prost::alloc::string::String,
-    /// Displays the target URI.
-    #[prost(string, tag = "5")]
-    pub uri: ::prost::alloc::string::String,
-}
-/// The type of instance allocation.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TrafficTargetAllocationType {
-    /// Unspecified instance allocation type.
-    Unspecified = 0,
-    /// Allocates instances to the Service's latest ready Revision.
-    Latest = 1,
-    /// Allocates instances to a Revision by name.
-    Revision = 2,
-}
-impl TrafficTargetAllocationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            TrafficTargetAllocationType::Unspecified => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED"
-            }
-            TrafficTargetAllocationType::Latest => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
-            }
-            TrafficTargetAllocationType::Revision => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION"
-            }
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST" => Some(Self::Latest),
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION" => Some(Self::Revision),
-            _ => None,
-        }
-    }
-}
-/// TaskTemplate describes the data a task should have when created
-/// from a template.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TaskTemplate {
-    /// Holds the single container that defines the unit of execution for this
-    /// task.
-    #[prost(message, repeated, tag = "1")]
-    pub containers: ::prost::alloc::vec::Vec<Container>,
-    /// A list of Volumes to make available to containers.
-    #[prost(message, repeated, tag = "2")]
-    pub volumes: ::prost::alloc::vec::Vec<Volume>,
-    /// Max allowed time duration the Task may be active before the system will
-    /// actively try to mark it failed and kill associated containers. This applies
-    /// per attempt of a task, meaning each retry can run for the full timeout.
-    #[prost(message, optional, tag = "4")]
-    pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Email address of the IAM service account associated with the Task of a
-    /// Job. The service account represents the identity of the
-    /// running task, and determines what permissions the task has. If
-    /// not provided, the task will use the project's default service account.
-    #[prost(string, tag = "5")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The execution environment being used to host this Task.
-    #[prost(enumeration = "ExecutionEnvironment", tag = "6")]
-    pub execution_environment: i32,
-    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
-    /// this container image. For more information, go to
-    /// <https://cloud.google.com/run/docs/securing/using-cmek>
-    #[prost(string, tag = "7")]
-    pub encryption_key: ::prost::alloc::string::String,
-    /// VPC Access configuration to use for this Task. For more information,
-    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
-    #[prost(message, optional, tag = "8")]
-    pub vpc_access: ::core::option::Option<VpcAccess>,
-    #[prost(oneof = "task_template::Retries", tags = "3")]
-    pub retries: ::core::option::Option<task_template::Retries>,
-}
-/// Nested message and enum types in `TaskTemplate`.
-pub mod task_template {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Retries {
-        /// Number of retries allowed per Task, before marking this Task failed.
-        #[prost(int32, tag = "3")]
-        MaxRetries(i32),
-    }
-}
-/// Request message for obtaining a Execution by its full name.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetExecutionRequest {
-    /// Required. The full name of the Execution.
-    /// Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution},
-    /// where {project} can be project id or number.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for retrieving a list of Executions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListExecutionsRequest {
-    /// Required. The Execution from which the Executions should be listed.
-    /// To list all Executions across Jobs, use "-" instead of Job name.
-    /// Format: projects/{project}/locations/{location}/jobs/{job}, where {project}
-    /// can be project id or number.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Executions to return in this call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token received from a previous call to ListExecutions.
-    /// All other parameters must match.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// If true, returns deleted (but unexpired) resources along with active ones.
-    #[prost(bool, tag = "4")]
-    pub show_deleted: bool,
-}
-/// Response message containing a list of Executions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListExecutionsResponse {
-    /// The resulting list of Executions.
-    #[prost(message, repeated, tag = "1")]
-    pub executions: ::prost::alloc::vec::Vec<Execution>,
-    /// A token indicating there are more items than page_size. Use it in the next
-    /// ListExecutions request to continue.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for deleting an Execution.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteExecutionRequest {
-    /// Required. The name of the Execution to delete.
-    /// Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution},
-    /// where {project} can be project id or number.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Indicates that the request should be validated without actually
-    /// deleting any resources.
-    #[prost(bool, tag = "2")]
-    pub validate_only: bool,
-    /// A system-generated fingerprint for this version of the resource.
-    /// This may be used to detect modification conflict during updates.
-    #[prost(string, tag = "3")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// Execution represents the configuration of a single execution. A execution an
-/// immutable resource that references a container image which is run to
-/// completion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Execution {
-    /// Output only. The unique name of this Execution.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server assigned unique identifier for the Execution. The value is a UUID4
-    /// string and guaranteed to remain unchanged until the resource is deleted.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. A number that monotonically increases every time the user
-    /// modifies the desired state.
-    #[prost(int64, tag = "3")]
-    pub generation: i64,
-    /// KRM-style labels for the resource.
-    /// User-provided labels are shared with Google's billing system, so they can
-    /// be used to filter, or break down billing charges by team, component,
-    /// environment, state, etc. For more information, visit
-    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
-    /// <https://cloud.google.com/run/docs/configuring/labels>
-    /// Cloud Run will populate some labels with 'run.googleapis.com' or
-    /// 'serving.knative.dev' namespaces. Those labels are read-only, and user
-    /// changes will not be preserved.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// KRM-style annotations for the resource.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Represents time when the execution was acknowledged by the execution
-    /// controller. It is not guaranteed to be set in happens-before order across
-    /// separate operations.
-    #[prost(message, optional, tag = "6")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the execution started to run.
-    /// It is not guaranteed to be set in happens-before order across separate
-    /// operations.
-    #[prost(message, optional, tag = "22")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the execution was completed. It is not guaranteed to
-    /// be set in happens-before order across separate operations.
-    #[prost(message, optional, tag = "7")]
-    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last-modified time.
-    #[prost(message, optional, tag = "8")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the deletion time. It is only
-    /// populated as a response to a Delete request.
-    #[prost(message, optional, tag = "9")]
-    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the time after which it will be
-    /// permamently deleted. It is only populated as a response to a Delete
-    /// request.
-    #[prost(message, optional, tag = "10")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Set the launch stage to a preview stage on write to allow use of preview
-    /// features in that stage. On read, describes whether the resource uses
-    /// preview features. Launch Stages are defined at [Google Cloud Platform
-    /// Launch Stages](<https://cloud.google.com/terms/launch-stages>).
-    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "11")]
-    pub launch_stage: i32,
-    /// Output only. The name of the parent Job.
-    #[prost(string, tag = "12")]
-    pub job: ::prost::alloc::string::String,
-    /// Output only. Specifies the maximum desired number of tasks the execution should
-    /// run at any given time. Must be <= task_count. The actual number of
-    /// tasks running in steady state will be less than this number when
-    /// ((.spec.task_count - .status.successful) < .spec.parallelism), i.e. when
-    /// the work left to do is less than max parallelism. More info:
-    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
-    #[prost(int32, tag = "13")]
-    pub parallelism: i32,
-    /// Output only. Specifies the desired number of tasks the execution should run.
-    /// Setting to 1 means that parallelism is limited to 1 and the success of
-    /// that task signals the success of the execution.
-    /// More info:
-    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
-    #[prost(int32, tag = "14")]
-    pub task_count: i32,
-    /// Output only. The template used to create tasks for this execution.
-    #[prost(message, optional, tag = "15")]
-    pub template: ::core::option::Option<TaskTemplate>,
-    /// Output only. Indicates whether the resource's reconciliation is still in progress.
-    /// See comments in `Job.reconciling` for additional information on
-    /// reconciliation process in Cloud Run.
-    #[prost(bool, tag = "16")]
-    pub reconciling: bool,
-    /// Output only. The Condition of this Execution, containing its readiness status, and
-    /// detailed error information in case it did not reach the desired state.
-    #[prost(message, repeated, tag = "17")]
-    pub conditions: ::prost::alloc::vec::Vec<Condition>,
-    /// Output only. The generation of this Execution. See comments in `reconciling` for
-    /// additional information on reconciliation process in Cloud Run.
-    #[prost(int64, tag = "18")]
-    pub observed_generation: i64,
-    /// Output only. The number of actively running tasks.
-    #[prost(int32, tag = "19")]
-    pub running_count: i32,
-    /// Output only. The number of tasks which reached phase Succeeded.
-    #[prost(int32, tag = "20")]
-    pub succeeded_count: i32,
-    /// Output only. The number of tasks which reached phase Failed.
-    #[prost(int32, tag = "21")]
-    pub failed_count: i32,
-    /// Output only. A system-generated fingerprint for this version of the
-    /// resource. May be used to detect modification conflict during updates.
-    #[prost(string, tag = "99")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod executions_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Cloud Run Execution Control Plane API.
-    #[derive(Debug, Clone)]
-    pub struct ExecutionsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ExecutionsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ExecutionsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ExecutionsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Gets information about an Execution.
-        pub async fn get_execution(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetExecutionRequest>,
-        ) -> Result<tonic::Response<super::Execution>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Executions/GetExecution",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Executions from a Job.
-        pub async fn list_executions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListExecutionsRequest>,
-        ) -> Result<tonic::Response<super::ListExecutionsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Executions/ListExecutions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes an Execution.
-        pub async fn delete_execution(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteExecutionRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Executions/DeleteExecution",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// RevisionTemplate describes the data a revision should have when created from
 /// a template.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1718,43 +1079,6 @@ pub struct RevisionTemplate {
     /// Sets the maximum number of requests that each serving instance can receive.
     #[prost(int32, tag = "15")]
     pub max_instance_request_concurrency: i32,
-}
-/// ExecutionTemplate describes the data an execution should have when created
-/// from a template.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExecutionTemplate {
-    /// KRM-style labels for the resource.
-    #[prost(btree_map = "string, string", tag = "1")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// KRM-style annotations for the resource.
-    #[prost(btree_map = "string, string", tag = "2")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Specifies the maximum desired number of tasks the execution should run at
-    /// given time. Must be <= task_count.
-    /// When the job is run, if this field is 0 or unset, the maximum possible
-    /// value will be used for that execution.
-    /// The actual number of tasks running in steady state will be less than this
-    /// number when there are fewer tasks waiting to be completed remaining,
-    /// i.e. when the work left to do is less than max parallelism.
-    #[prost(int32, tag = "3")]
-    pub parallelism: i32,
-    /// Specifies the desired number of tasks the execution should run.
-    /// Setting to 1 means that parallelism is limited to 1 and the success of
-    /// that task signals the success of the execution.
-    /// More info:
-    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
-    #[prost(int32, tag = "4")]
-    pub task_count: i32,
-    /// Required. Describes the task(s) that will be created when executing an execution.
-    #[prost(message, optional, tag = "5")]
-    pub template: ::core::option::Option<TaskTemplate>,
 }
 /// Request message for creating a Service.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2276,6 +1600,682 @@ pub mod services_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+}
+/// TaskTemplate describes the data a task should have when created
+/// from a template.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TaskTemplate {
+    /// Holds the single container that defines the unit of execution for this
+    /// task.
+    #[prost(message, repeated, tag = "1")]
+    pub containers: ::prost::alloc::vec::Vec<Container>,
+    /// A list of Volumes to make available to containers.
+    #[prost(message, repeated, tag = "2")]
+    pub volumes: ::prost::alloc::vec::Vec<Volume>,
+    /// Max allowed time duration the Task may be active before the system will
+    /// actively try to mark it failed and kill associated containers. This applies
+    /// per attempt of a task, meaning each retry can run for the full timeout.
+    #[prost(message, optional, tag = "4")]
+    pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Email address of the IAM service account associated with the Task of a
+    /// Job. The service account represents the identity of the
+    /// running task, and determines what permissions the task has. If
+    /// not provided, the task will use the project's default service account.
+    #[prost(string, tag = "5")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The execution environment being used to host this Task.
+    #[prost(enumeration = "ExecutionEnvironment", tag = "6")]
+    pub execution_environment: i32,
+    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
+    /// this container image. For more information, go to
+    /// <https://cloud.google.com/run/docs/securing/using-cmek>
+    #[prost(string, tag = "7")]
+    pub encryption_key: ::prost::alloc::string::String,
+    /// VPC Access configuration to use for this Task. For more information,
+    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
+    #[prost(message, optional, tag = "8")]
+    pub vpc_access: ::core::option::Option<VpcAccess>,
+    #[prost(oneof = "task_template::Retries", tags = "3")]
+    pub retries: ::core::option::Option<task_template::Retries>,
+}
+/// Nested message and enum types in `TaskTemplate`.
+pub mod task_template {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Retries {
+        /// Number of retries allowed per Task, before marking this Task failed.
+        #[prost(int32, tag = "3")]
+        MaxRetries(i32),
+    }
+}
+/// Request message for obtaining a Execution by its full name.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetExecutionRequest {
+    /// Required. The full name of the Execution.
+    /// Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution},
+    /// where {project} can be project id or number.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for retrieving a list of Executions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListExecutionsRequest {
+    /// Required. The Execution from which the Executions should be listed.
+    /// To list all Executions across Jobs, use "-" instead of Job name.
+    /// Format: projects/{project}/locations/{location}/jobs/{job}, where {project}
+    /// can be project id or number.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Executions to return in this call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token received from a previous call to ListExecutions.
+    /// All other parameters must match.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// If true, returns deleted (but unexpired) resources along with active ones.
+    #[prost(bool, tag = "4")]
+    pub show_deleted: bool,
+}
+/// Response message containing a list of Executions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListExecutionsResponse {
+    /// The resulting list of Executions.
+    #[prost(message, repeated, tag = "1")]
+    pub executions: ::prost::alloc::vec::Vec<Execution>,
+    /// A token indicating there are more items than page_size. Use it in the next
+    /// ListExecutions request to continue.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for deleting an Execution.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteExecutionRequest {
+    /// Required. The name of the Execution to delete.
+    /// Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution},
+    /// where {project} can be project id or number.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Indicates that the request should be validated without actually
+    /// deleting any resources.
+    #[prost(bool, tag = "2")]
+    pub validate_only: bool,
+    /// A system-generated fingerprint for this version of the resource.
+    /// This may be used to detect modification conflict during updates.
+    #[prost(string, tag = "3")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Execution represents the configuration of a single execution. A execution an
+/// immutable resource that references a container image which is run to
+/// completion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Execution {
+    /// Output only. The unique name of this Execution.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server assigned unique identifier for the Execution. The value is a UUID4
+    /// string and guaranteed to remain unchanged until the resource is deleted.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. A number that monotonically increases every time the user
+    /// modifies the desired state.
+    #[prost(int64, tag = "3")]
+    pub generation: i64,
+    /// KRM-style labels for the resource.
+    /// User-provided labels are shared with Google's billing system, so they can
+    /// be used to filter, or break down billing charges by team, component,
+    /// environment, state, etc. For more information, visit
+    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
+    /// <https://cloud.google.com/run/docs/configuring/labels>
+    /// Cloud Run will populate some labels with 'run.googleapis.com' or
+    /// 'serving.knative.dev' namespaces. Those labels are read-only, and user
+    /// changes will not be preserved.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// KRM-style annotations for the resource.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Represents time when the execution was acknowledged by the execution
+    /// controller. It is not guaranteed to be set in happens-before order across
+    /// separate operations.
+    #[prost(message, optional, tag = "6")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the execution started to run.
+    /// It is not guaranteed to be set in happens-before order across separate
+    /// operations.
+    #[prost(message, optional, tag = "22")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the execution was completed. It is not guaranteed to
+    /// be set in happens-before order across separate operations.
+    #[prost(message, optional, tag = "7")]
+    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last-modified time.
+    #[prost(message, optional, tag = "8")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the deletion time. It is only
+    /// populated as a response to a Delete request.
+    #[prost(message, optional, tag = "9")]
+    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the time after which it will be
+    /// permamently deleted. It is only populated as a response to a Delete
+    /// request.
+    #[prost(message, optional, tag = "10")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Set the launch stage to a preview stage on write to allow use of preview
+    /// features in that stage. On read, describes whether the resource uses
+    /// preview features. Launch Stages are defined at [Google Cloud Platform
+    /// Launch Stages](<https://cloud.google.com/terms/launch-stages>).
+    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "11")]
+    pub launch_stage: i32,
+    /// Output only. The name of the parent Job.
+    #[prost(string, tag = "12")]
+    pub job: ::prost::alloc::string::String,
+    /// Output only. Specifies the maximum desired number of tasks the execution should
+    /// run at any given time. Must be <= task_count. The actual number of
+    /// tasks running in steady state will be less than this number when
+    /// ((.spec.task_count - .status.successful) < .spec.parallelism), i.e. when
+    /// the work left to do is less than max parallelism. More info:
+    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
+    #[prost(int32, tag = "13")]
+    pub parallelism: i32,
+    /// Output only. Specifies the desired number of tasks the execution should run.
+    /// Setting to 1 means that parallelism is limited to 1 and the success of
+    /// that task signals the success of the execution.
+    /// More info:
+    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
+    #[prost(int32, tag = "14")]
+    pub task_count: i32,
+    /// Output only. The template used to create tasks for this execution.
+    #[prost(message, optional, tag = "15")]
+    pub template: ::core::option::Option<TaskTemplate>,
+    /// Output only. Indicates whether the resource's reconciliation is still in progress.
+    /// See comments in `Job.reconciling` for additional information on
+    /// reconciliation process in Cloud Run.
+    #[prost(bool, tag = "16")]
+    pub reconciling: bool,
+    /// Output only. The Condition of this Execution, containing its readiness status, and
+    /// detailed error information in case it did not reach the desired state.
+    #[prost(message, repeated, tag = "17")]
+    pub conditions: ::prost::alloc::vec::Vec<Condition>,
+    /// Output only. The generation of this Execution. See comments in `reconciling` for
+    /// additional information on reconciliation process in Cloud Run.
+    #[prost(int64, tag = "18")]
+    pub observed_generation: i64,
+    /// Output only. The number of actively running tasks.
+    #[prost(int32, tag = "19")]
+    pub running_count: i32,
+    /// Output only. The number of tasks which reached phase Succeeded.
+    #[prost(int32, tag = "20")]
+    pub succeeded_count: i32,
+    /// Output only. The number of tasks which reached phase Failed.
+    #[prost(int32, tag = "21")]
+    pub failed_count: i32,
+    /// Output only. A system-generated fingerprint for this version of the
+    /// resource. May be used to detect modification conflict during updates.
+    #[prost(string, tag = "99")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod executions_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Cloud Run Execution Control Plane API.
+    #[derive(Debug, Clone)]
+    pub struct ExecutionsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ExecutionsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ExecutionsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ExecutionsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets information about an Execution.
+        pub async fn get_execution(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetExecutionRequest>,
+        ) -> Result<tonic::Response<super::Execution>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Executions/GetExecution",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Executions from a Job.
+        pub async fn list_executions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListExecutionsRequest>,
+        ) -> Result<tonic::Response<super::ListExecutionsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Executions/ListExecutions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes an Execution.
+        pub async fn delete_execution(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteExecutionRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Executions/DeleteExecution",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for obtaining a Task by its full name.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTaskRequest {
+    /// Required. The full name of the Task.
+    /// Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}/tasks/{task}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for retrieving a list of Tasks.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTasksRequest {
+    /// Required. The Execution from which the Tasks should be listed.
+    /// To list all Tasks across Executions of a Job, use "-" instead of Execution
+    /// name. To list all Tasks across Jobs, use "-" instead of Job name. Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Tasks to return in this call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token received from a previous call to ListTasks.
+    /// All other parameters must match.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// If true, returns deleted (but unexpired) resources along with active ones.
+    #[prost(bool, tag = "4")]
+    pub show_deleted: bool,
+}
+/// Response message containing a list of Tasks.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTasksResponse {
+    /// The resulting list of Tasks.
+    #[prost(message, repeated, tag = "1")]
+    pub tasks: ::prost::alloc::vec::Vec<Task>,
+    /// A token indicating there are more items than page_size. Use it in the next
+    /// ListTasks request to continue.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Task represents a single run of a container to completion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Task {
+    /// Output only. The unique name of this Task.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server assigned unique identifier for the Task. The value is a UUID4
+    /// string and guaranteed to remain unchanged until the resource is deleted.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. A number that monotonically increases every time the user
+    /// modifies the desired state.
+    #[prost(int64, tag = "3")]
+    pub generation: i64,
+    /// KRM-style labels for the resource.
+    /// User-provided labels are shared with Google's billing system, so they can
+    /// be used to filter, or break down billing charges by team, component,
+    /// environment, state, etc. For more information, visit
+    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
+    /// <https://cloud.google.com/run/docs/configuring/labels>
+    /// Cloud Run will populate some labels with 'run.googleapis.com' or
+    /// 'serving.knative.dev' namespaces. Those labels are read-only, and user
+    /// changes will not be preserved.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// KRM-style annotations for the resource.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Represents time when the task was created by the job controller.
+    /// It is not guaranteed to be set in happens-before order across separate
+    /// operations.
+    #[prost(message, optional, tag = "6")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the task started to run.
+    /// It is not guaranteed to be set in happens-before order across separate
+    /// operations.
+    #[prost(message, optional, tag = "27")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the Task was completed. It is not guaranteed to
+    /// be set in happens-before order across separate operations.
+    #[prost(message, optional, tag = "7")]
+    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last-modified time.
+    #[prost(message, optional, tag = "8")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the deletion time. It is only
+    /// populated as a response to a Delete request.
+    #[prost(message, optional, tag = "9")]
+    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the time after which it will be
+    /// permamently deleted. It is only populated as a response to a Delete
+    /// request.
+    #[prost(message, optional, tag = "10")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The name of the parent Job.
+    #[prost(string, tag = "12")]
+    pub job: ::prost::alloc::string::String,
+    /// Output only. The name of the parent Execution.
+    #[prost(string, tag = "13")]
+    pub execution: ::prost::alloc::string::String,
+    /// Holds the single container that defines the unit of execution for this
+    /// task.
+    #[prost(message, repeated, tag = "14")]
+    pub containers: ::prost::alloc::vec::Vec<Container>,
+    /// A list of Volumes to make available to containers.
+    #[prost(message, repeated, tag = "15")]
+    pub volumes: ::prost::alloc::vec::Vec<Volume>,
+    /// Number of retries allowed per Task, before marking this Task failed.
+    #[prost(int32, tag = "16")]
+    pub max_retries: i32,
+    /// Max allowed time duration the Task may be active before the system will
+    /// actively try to mark it failed and kill associated containers. This applies
+    /// per attempt of a task, meaning each retry can run for the full timeout.
+    #[prost(message, optional, tag = "17")]
+    pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Email address of the IAM service account associated with the Task of a
+    /// Job. The service account represents the identity of the
+    /// running task, and determines what permissions the task has. If
+    /// not provided, the task will use the project's default service account.
+    #[prost(string, tag = "18")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The execution environment being used to host this Task.
+    #[prost(enumeration = "ExecutionEnvironment", tag = "20")]
+    pub execution_environment: i32,
+    /// Output only. Indicates whether the resource's reconciliation is still in progress.
+    /// See comments in `Job.reconciling` for additional information on
+    /// reconciliation process in Cloud Run.
+    #[prost(bool, tag = "21")]
+    pub reconciling: bool,
+    /// Output only. The Condition of this Task, containing its readiness status, and
+    /// detailed error information in case it did not reach the desired state.
+    #[prost(message, repeated, tag = "22")]
+    pub conditions: ::prost::alloc::vec::Vec<Condition>,
+    /// Output only. The generation of this Task. See comments in `Job.reconciling`
+    /// for additional information on reconciliation process in Cloud Run.
+    #[prost(int64, tag = "23")]
+    pub observed_generation: i64,
+    /// Output only. Index of the Task, unique per execution, and beginning at 0.
+    #[prost(int32, tag = "24")]
+    pub index: i32,
+    /// Output only. The number of times this Task was retried.
+    /// Tasks are retried when they fail up to the maxRetries limit.
+    #[prost(int32, tag = "25")]
+    pub retried: i32,
+    /// Output only. Result of the last attempt of this Task.
+    #[prost(message, optional, tag = "26")]
+    pub last_attempt_result: ::core::option::Option<TaskAttemptResult>,
+    /// Output only. A reference to a customer managed encryption key (CMEK) to use to encrypt
+    /// this container image. For more information, go to
+    /// <https://cloud.google.com/run/docs/securing/using-cmek>
+    #[prost(string, tag = "28")]
+    pub encryption_key: ::prost::alloc::string::String,
+    /// Output only. VPC Access configuration to use for this Task. For more information,
+    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
+    #[prost(message, optional, tag = "29")]
+    pub vpc_access: ::core::option::Option<VpcAccess>,
+    /// Output only. A system-generated fingerprint for this version of the
+    /// resource. May be used to detect modification conflict during updates.
+    #[prost(string, tag = "99")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Result of a task attempt.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TaskAttemptResult {
+    /// Output only. The status of this attempt.
+    /// If the status code is OK, then the attempt succeeded.
+    #[prost(message, optional, tag = "1")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+    /// Output only. The exit code of this attempt.
+    /// This may be unset if the container was unable to exit cleanly with a code
+    /// due to some other failure.
+    /// See status field for possible failure details.
+    #[prost(int32, tag = "2")]
+    pub exit_code: i32,
+}
+/// Generated client implementations.
+pub mod tasks_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Cloud Run Task Control Plane API.
+    #[derive(Debug, Clone)]
+    pub struct TasksClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TasksClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TasksClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TasksClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets information about a Task.
+        pub async fn get_task(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTaskRequest>,
+        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Tasks/GetTask",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Tasks from an Execution of a Job.
+        pub async fn list_tasks(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTasksRequest>,
+        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Tasks/ListTasks",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// ExecutionTemplate describes the data an execution should have when created
+/// from a template.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecutionTemplate {
+    /// KRM-style labels for the resource.
+    #[prost(btree_map = "string, string", tag = "1")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// KRM-style annotations for the resource.
+    #[prost(btree_map = "string, string", tag = "2")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Specifies the maximum desired number of tasks the execution should run at
+    /// given time. Must be <= task_count.
+    /// When the job is run, if this field is 0 or unset, the maximum possible
+    /// value will be used for that execution.
+    /// The actual number of tasks running in steady state will be less than this
+    /// number when there are fewer tasks waiting to be completed remaining,
+    /// i.e. when the work left to do is less than max parallelism.
+    #[prost(int32, tag = "3")]
+    pub parallelism: i32,
+    /// Specifies the desired number of tasks the execution should run.
+    /// Setting to 1 means that parallelism is limited to 1 and the success of
+    /// that task signals the success of the execution.
+    /// More info:
+    /// <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>
+    #[prost(int32, tag = "4")]
+    pub task_count: i32,
+    /// Required. Describes the task(s) that will be created when executing an execution.
+    #[prost(message, optional, tag = "5")]
+    pub template: ::core::option::Option<TaskTemplate>,
 }
 /// Request message for creating a Job.
 #[allow(clippy::derive_partial_eq_without_eq)]

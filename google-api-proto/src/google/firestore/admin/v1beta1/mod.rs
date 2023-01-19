@@ -1,3 +1,7 @@
+/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationMetadata {}
 /// A field of an index.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -704,7 +708,3 @@ pub mod firestore_admin_client {
         }
     }
 }
-/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationMetadata {}

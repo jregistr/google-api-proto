@@ -354,6 +354,98 @@ pub struct DeleteEndpointPolicyRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
+/// ServiceBinding is the resource that defines a Service Directory Service to
+/// be used in a BackendService resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServiceBinding {
+    /// Required. Name of the ServiceBinding resource. It matches pattern
+    /// `projects/*/locations/global/serviceBindings/service_binding_name>`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. The full service directory service name of the format
+    /// /projects/*/locations/*/namespaces/*/services/*
+    #[prost(string, tag = "5")]
+    pub service: ::prost::alloc::string::String,
+    /// Optional. Set of label tags associated with the ServiceBinding resource.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Request used with the ListServiceBindings method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListServiceBindingsRequest {
+    /// Required. The project and location from which the ServiceBindings should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of ServiceBindings to return per call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListServiceBindingsResponse`
+    /// Indicates that this is a continuation of a prior `ListRouters` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListServiceBindings method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListServiceBindingsResponse {
+    /// List of ServiceBinding resources.
+    #[prost(message, repeated, tag = "1")]
+    pub service_bindings: ::prost::alloc::vec::Vec<ServiceBinding>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetServiceBindingRequest {
+    /// Required. A name of the ServiceBinding to get. Must be in the format
+    /// `projects/*/locations/global/serviceBindings/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the ServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateServiceBindingRequest {
+    /// Required. The parent resource of the ServiceBinding. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the ServiceBinding resource to be created.
+    #[prost(string, tag = "2")]
+    pub service_binding_id: ::prost::alloc::string::String,
+    /// Required. ServiceBinding resource to be created.
+    #[prost(message, optional, tag = "3")]
+    pub service_binding: ::core::option::Option<ServiceBinding>,
+}
+/// Request used by the DeleteServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteServiceBindingRequest {
+    /// Required. A name of the ServiceBinding to delete. Must be in the format
+    /// `projects/*/locations/global/serviceBindings/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// Gateway represents the configuration for a proxy, typically a load balancer.
 /// It captures the ip:port over which the services are exposed by the proxy,
 /// along with any policy configurations. Routes have reference to to Gateways to
@@ -1777,98 +1869,6 @@ pub struct UpdateMeshRequest {
 pub struct DeleteMeshRequest {
     /// Required. A name of the Mesh to delete. Must be in the format
     /// `projects/*/locations/global/meshes/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// ServiceBinding is the resource that defines a Service Directory Service to
-/// be used in a BackendService resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ServiceBinding {
-    /// Required. Name of the ServiceBinding resource. It matches pattern
-    /// `projects/*/locations/global/serviceBindings/service_binding_name>`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. The full service directory service name of the format
-    /// /projects/*/locations/*/namespaces/*/services/*
-    #[prost(string, tag = "5")]
-    pub service: ::prost::alloc::string::String,
-    /// Optional. Set of label tags associated with the ServiceBinding resource.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Request used with the ListServiceBindings method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListServiceBindingsRequest {
-    /// Required. The project and location from which the ServiceBindings should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of ServiceBindings to return per call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListServiceBindingsResponse`
-    /// Indicates that this is a continuation of a prior `ListRouters` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListServiceBindings method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListServiceBindingsResponse {
-    /// List of ServiceBinding resources.
-    #[prost(message, repeated, tag = "1")]
-    pub service_bindings: ::prost::alloc::vec::Vec<ServiceBinding>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetServiceBindingRequest {
-    /// Required. A name of the ServiceBinding to get. Must be in the format
-    /// `projects/*/locations/global/serviceBindings/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the ServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateServiceBindingRequest {
-    /// Required. The parent resource of the ServiceBinding. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the ServiceBinding resource to be created.
-    #[prost(string, tag = "2")]
-    pub service_binding_id: ::prost::alloc::string::String,
-    /// Required. ServiceBinding resource to be created.
-    #[prost(message, optional, tag = "3")]
-    pub service_binding: ::core::option::Option<ServiceBinding>,
-}
-/// Request used by the DeleteServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteServiceBindingRequest {
-    /// Required. A name of the ServiceBinding to delete. Must be in the format
-    /// `projects/*/locations/global/serviceBindings/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }

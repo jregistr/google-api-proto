@@ -142,6 +142,78 @@ pub mod finding {
         }
     }
 }
+/// Security Command Center representation of a Google Cloud
+/// resource.
+///
+/// The Asset is a Security Command Center resource that captures information
+/// about a single Google Cloud resource. All modifications to an Asset are only
+/// within the context of Security Command Center and don't affect the referenced
+/// Google Cloud resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Asset {
+    /// The relative resource name of this asset. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/assets/{asset_id}".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[prost(message, optional, tag = "2")]
+    pub security_center_properties: ::core::option::Option<
+        asset::SecurityCenterProperties,
+    >,
+    /// Resource managed properties. These properties are managed and defined by
+    /// the Google Cloud resource and cannot be modified by the user.
+    #[prost(btree_map = "string, message", tag = "7")]
+    pub resource_properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::Value,
+    >,
+    /// User specified security marks. These marks are entirely managed by the user
+    /// and come from the SecurityMarks resource that belongs to the asset.
+    #[prost(message, optional, tag = "8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the asset was created in Security Command Center.
+    #[prost(message, optional, tag = "9")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the asset was last updated, added, or deleted in Security
+    /// Command Center.
+    #[prost(message, optional, tag = "10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SecurityCenterProperties {
+        /// Immutable. The full resource name of the Google Cloud resource this asset
+        /// represents. This field is immutable after create time. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "1")]
+        pub resource_name: ::prost::alloc::string::String,
+        /// The type of the Google Cloud resource. Examples include: APPLICATION,
+        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
+        /// Security Command Center and/or the producer of the resource and is
+        /// immutable after create time.
+        #[prost(string, tag = "2")]
+        pub resource_type: ::prost::alloc::string::String,
+        /// The full resource name of the immediate parent of the resource. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "3")]
+        pub resource_parent: ::prost::alloc::string::String,
+        /// The full resource name of the project the resource belongs to. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "4")]
+        pub resource_project: ::prost::alloc::string::String,
+        /// Owners of the Google Cloud resource.
+        #[prost(string, repeated, tag = "5")]
+        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
 /// Response of asset discovery run
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -295,78 +367,6 @@ pub mod organization_settings {
                 }
             }
         }
-    }
-}
-/// Security Command Center representation of a Google Cloud
-/// resource.
-///
-/// The Asset is a Security Command Center resource that captures information
-/// about a single Google Cloud resource. All modifications to an Asset are only
-/// within the context of Security Command Center and don't affect the referenced
-/// Google Cloud resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// The relative resource name of this asset. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/assets/{asset_id}".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[prost(message, optional, tag = "2")]
-    pub security_center_properties: ::core::option::Option<
-        asset::SecurityCenterProperties,
-    >,
-    /// Resource managed properties. These properties are managed and defined by
-    /// the Google Cloud resource and cannot be modified by the user.
-    #[prost(btree_map = "string, message", tag = "7")]
-    pub resource_properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::Value,
-    >,
-    /// User specified security marks. These marks are entirely managed by the user
-    /// and come from the SecurityMarks resource that belongs to the asset.
-    #[prost(message, optional, tag = "8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the asset was created in Security Command Center.
-    #[prost(message, optional, tag = "9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the asset was last updated, added, or deleted in Security
-    /// Command Center.
-    #[prost(message, optional, tag = "10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SecurityCenterProperties {
-        /// Immutable. The full resource name of the Google Cloud resource this asset
-        /// represents. This field is immutable after create time. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "1")]
-        pub resource_name: ::prost::alloc::string::String,
-        /// The type of the Google Cloud resource. Examples include: APPLICATION,
-        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
-        /// Security Command Center and/or the producer of the resource and is
-        /// immutable after create time.
-        #[prost(string, tag = "2")]
-        pub resource_type: ::prost::alloc::string::String,
-        /// The full resource name of the immediate parent of the resource. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "3")]
-        pub resource_parent: ::prost::alloc::string::String,
-        /// The full resource name of the project the resource belongs to. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "4")]
-        pub resource_project: ::prost::alloc::string::String,
-        /// Owners of the Google Cloud resource.
-        #[prost(string, repeated, tag = "5")]
-        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
 }
 /// Security Command Center finding source. A finding source

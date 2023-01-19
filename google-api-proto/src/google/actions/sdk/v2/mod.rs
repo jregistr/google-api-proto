@@ -8,278 +8,6 @@ pub mod conversation;
     )
 )]
 pub mod interactionmodel;
-/// Definition of release channel resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseChannel {
-    /// The unique name of the release channel in the following format.
-    /// `projects/{project}/releaseChannels/{release_channel}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Version currently deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag = "2")]
-    pub current_version: ::prost::alloc::string::String,
-    /// Version to be deployed to this release channel in the following format:
-    /// `projects/{project}/versions/{version}`.
-    #[prost(string, tag = "3")]
-    pub pending_version: ::prost::alloc::string::String,
-}
-/// AccountLinking allows Google to guide the user to sign-in to the App's web
-/// services.
-///
-/// For Google Sign In and OAuth + Google Sign In linking types, Google generates
-/// a client ID identifying your App to Google ("Client ID issued by Google to
-/// your Actions" on Console UI). This field is read-only and can be checked by
-/// navigating to the Console UI's Account Linking page.
-/// See: <https://developers.google.com/assistant/identity/google-sign-in>
-///
-/// Note: For all account linking setting types (except for Google Sign In), you
-/// must provide a username and password for a test account in
-/// Settings.testing_instructions for the review team to review the app (they
-/// will not be visible to users).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AccountLinking {
-    /// Required. If `true`, users are allowed to sign up for new accounts via voice.
-    /// If `false`, account creation is only allowed on your website. Select this
-    /// option if you want to display your terms of service or obtain user consents
-    /// during sign-up.
-    /// linking_type cannot be GOOGLE_SIGN_IN when this is `false`.
-    /// linking_type cannot be OAUTH when this is `true`.
-    #[prost(bool, tag = "1")]
-    pub enable_account_creation: bool,
-    /// Required. The linking type to use.
-    /// See <https://developers.google.com/assistant/identity> for further details on
-    /// the linking types.
-    #[prost(enumeration = "account_linking::LinkingType", tag = "2")]
-    pub linking_type: i32,
-    /// Optional. Indicates the type of authentication for OAUTH linking_type.
-    #[prost(enumeration = "account_linking::AuthGrantType", tag = "3")]
-    pub auth_grant_type: i32,
-    /// Optional. Client ID issued by your App to Google.
-    /// This is the OAuth2 Client ID identifying Google to your service.
-    /// Only set when using OAuth.
-    #[prost(string, tag = "4")]
-    pub app_client_id: ::prost::alloc::string::String,
-    /// Optional. Endpoint for your sign-in web page that supports OAuth2 code or
-    /// implicit flows.
-    /// URL must use HTTPS.
-    /// Only set when using OAuth.
-    #[prost(string, tag = "5")]
-    pub authorization_url: ::prost::alloc::string::String,
-    /// Optional. OAuth2 endpoint for token exchange.
-    /// URL must use HTTPS.
-    /// This is not set when only using OAuth with IMPLICIT grant as the
-    /// linking type.
-    /// Only set when using OAuth.
-    #[prost(string, tag = "6")]
-    pub token_url: ::prost::alloc::string::String,
-    /// Optional. List of permissions the user must consent to in order to use
-    /// your service.
-    /// Only set when using OAuth.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(string, repeated, tag = "7")]
-    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. This is the web page on your service which describes the
-    /// permissions the user is granting to Google.
-    /// Only set if using OAuth and Google Sign In.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(string, tag = "8")]
-    pub learn_more_url: ::prost::alloc::string::String,
-    /// Optional. If true, allow Google to transmit client ID and secret via HTTP
-    /// basic auth header. Otherwise, Google uses the client ID and secret inside
-    /// the post body.
-    /// Only set when using OAuth.
-    /// Make sure to provide a Terms of Service in the directory information in
-    /// LocalizedSettings.terms_of_service_url section if specifying this field.
-    #[prost(bool, tag = "9")]
-    pub use_basic_auth_header: bool,
-}
-/// Nested message and enum types in `AccountLinking`.
-pub mod account_linking {
-    /// The type of Account Linking to perform.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum LinkingType {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Google Sign In linking type.
-        /// If using this linking type, no OAuth-related fields need to be set below.
-        GoogleSignIn = 1,
-        /// OAuth and Google Sign In linking type.
-        OauthAndGoogleSignIn = 2,
-        /// OAuth linking type.
-        Oauth = 3,
-    }
-    impl LinkingType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                LinkingType::Unspecified => "LINKING_TYPE_UNSPECIFIED",
-                LinkingType::GoogleSignIn => "GOOGLE_SIGN_IN",
-                LinkingType::OauthAndGoogleSignIn => "OAUTH_AND_GOOGLE_SIGN_IN",
-                LinkingType::Oauth => "OAUTH",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "LINKING_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "GOOGLE_SIGN_IN" => Some(Self::GoogleSignIn),
-                "OAUTH_AND_GOOGLE_SIGN_IN" => Some(Self::OauthAndGoogleSignIn),
-                "OAUTH" => Some(Self::Oauth),
-                _ => None,
-            }
-        }
-    }
-    /// The OAuth2 grant type Google uses to guide the user to sign in to your
-    /// App's web service.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AuthGrantType {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Authorization code grant. Requires you to provide both
-        /// authentication URL and access token URL.
-        AuthCode = 1,
-        /// Implicit code grant. Only requires you to provide authentication
-        /// URL.
-        Implicit = 2,
-    }
-    impl AuthGrantType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AuthGrantType::Unspecified => "AUTH_GRANT_TYPE_UNSPECIFIED",
-                AuthGrantType::AuthCode => "AUTH_CODE",
-                AuthGrantType::Implicit => "IMPLICIT",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "AUTH_GRANT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "AUTH_CODE" => Some(Self::AuthCode),
-                "IMPLICIT" => Some(Self::Implicit),
-                _ => None,
-            }
-        }
-    }
-}
-/// Contains a set of requirements that the client surface must support to invoke
-/// Actions in your project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SurfaceRequirements {
-    /// The minimum set of capabilities needed to invoke the Actions in your
-    /// project. If the surface is missing any of these, the Action will not be
-    /// triggered.
-    #[prost(message, repeated, tag = "1")]
-    pub minimum_requirements: ::prost::alloc::vec::Vec<CapabilityRequirement>,
-}
-/// Represents a requirement about the availability of a given capability.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CapabilityRequirement {
-    /// The type of capability.
-    #[prost(enumeration = "capability_requirement::SurfaceCapability", tag = "1")]
-    pub capability: i32,
-}
-/// Nested message and enum types in `CapabilityRequirement`.
-pub mod capability_requirement {
-    /// Possible set of surface capabilities.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SurfaceCapability {
-        /// Unknown / Unspecified.
-        Unspecified = 0,
-        /// Surface supports audio output.
-        AudioOutput = 1,
-        /// Surface supports screen/visual output.
-        ScreenOutput = 2,
-        /// Surface supports media response audio.
-        MediaResponseAudio = 3,
-        /// Surface supports web browsers.
-        WebBrowser = 4,
-        /// Surface supports account linking.
-        AccountLinking = 7,
-        /// Surface supports Interactive Canvas.
-        InteractiveCanvas = 8,
-        /// Surface supports home storage.
-        HomeStorage = 9,
-    }
-    impl SurfaceCapability {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
-                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
-                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
-                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
-                SurfaceCapability::WebBrowser => "WEB_BROWSER",
-                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
-                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
-                SurfaceCapability::HomeStorage => "HOME_STORAGE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SURFACE_CAPABILITY_UNSPECIFIED" => Some(Self::Unspecified),
-                "AUDIO_OUTPUT" => Some(Self::AudioOutput),
-                "SCREEN_OUTPUT" => Some(Self::ScreenOutput),
-                "MEDIA_RESPONSE_AUDIO" => Some(Self::MediaResponseAudio),
-                "WEB_BROWSER" => Some(Self::WebBrowser),
-                "ACCOUNT_LINKING" => Some(Self::AccountLinking),
-                "INTERACTIVE_CANVAS" => Some(Self::InteractiveCanvas),
-                "HOME_STORAGE" => Some(Self::HomeStorage),
-                _ => None,
-            }
-        }
-    }
-}
 /// Contains information about execution event which happened during processing
 /// Actions Builder conversation request. For an overview of the stages involved
 /// in a conversation request, see
@@ -541,6 +269,728 @@ pub struct WaitingForUserInput {}
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct EndConversation {}
+/// Contains information that's "transportable" i.e. not specific to any given
+/// project and can be moved between projects.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Manifest {
+    /// Version of the file format. The current file format version is 1.0
+    /// Example: "1.0"
+    #[prost(string, tag = "1")]
+    pub version: ::prost::alloc::string::String,
+}
+/// AccountLinking allows Google to guide the user to sign-in to the App's web
+/// services.
+///
+/// For Google Sign In and OAuth + Google Sign In linking types, Google generates
+/// a client ID identifying your App to Google ("Client ID issued by Google to
+/// your Actions" on Console UI). This field is read-only and can be checked by
+/// navigating to the Console UI's Account Linking page.
+/// See: <https://developers.google.com/assistant/identity/google-sign-in>
+///
+/// Note: For all account linking setting types (except for Google Sign In), you
+/// must provide a username and password for a test account in
+/// Settings.testing_instructions for the review team to review the app (they
+/// will not be visible to users).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AccountLinking {
+    /// Required. If `true`, users are allowed to sign up for new accounts via voice.
+    /// If `false`, account creation is only allowed on your website. Select this
+    /// option if you want to display your terms of service or obtain user consents
+    /// during sign-up.
+    /// linking_type cannot be GOOGLE_SIGN_IN when this is `false`.
+    /// linking_type cannot be OAUTH when this is `true`.
+    #[prost(bool, tag = "1")]
+    pub enable_account_creation: bool,
+    /// Required. The linking type to use.
+    /// See <https://developers.google.com/assistant/identity> for further details on
+    /// the linking types.
+    #[prost(enumeration = "account_linking::LinkingType", tag = "2")]
+    pub linking_type: i32,
+    /// Optional. Indicates the type of authentication for OAUTH linking_type.
+    #[prost(enumeration = "account_linking::AuthGrantType", tag = "3")]
+    pub auth_grant_type: i32,
+    /// Optional. Client ID issued by your App to Google.
+    /// This is the OAuth2 Client ID identifying Google to your service.
+    /// Only set when using OAuth.
+    #[prost(string, tag = "4")]
+    pub app_client_id: ::prost::alloc::string::String,
+    /// Optional. Endpoint for your sign-in web page that supports OAuth2 code or
+    /// implicit flows.
+    /// URL must use HTTPS.
+    /// Only set when using OAuth.
+    #[prost(string, tag = "5")]
+    pub authorization_url: ::prost::alloc::string::String,
+    /// Optional. OAuth2 endpoint for token exchange.
+    /// URL must use HTTPS.
+    /// This is not set when only using OAuth with IMPLICIT grant as the
+    /// linking type.
+    /// Only set when using OAuth.
+    #[prost(string, tag = "6")]
+    pub token_url: ::prost::alloc::string::String,
+    /// Optional. List of permissions the user must consent to in order to use
+    /// your service.
+    /// Only set when using OAuth.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(string, repeated, tag = "7")]
+    pub scopes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. This is the web page on your service which describes the
+    /// permissions the user is granting to Google.
+    /// Only set if using OAuth and Google Sign In.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(string, tag = "8")]
+    pub learn_more_url: ::prost::alloc::string::String,
+    /// Optional. If true, allow Google to transmit client ID and secret via HTTP
+    /// basic auth header. Otherwise, Google uses the client ID and secret inside
+    /// the post body.
+    /// Only set when using OAuth.
+    /// Make sure to provide a Terms of Service in the directory information in
+    /// LocalizedSettings.terms_of_service_url section if specifying this field.
+    #[prost(bool, tag = "9")]
+    pub use_basic_auth_header: bool,
+}
+/// Nested message and enum types in `AccountLinking`.
+pub mod account_linking {
+    /// The type of Account Linking to perform.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum LinkingType {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Google Sign In linking type.
+        /// If using this linking type, no OAuth-related fields need to be set below.
+        GoogleSignIn = 1,
+        /// OAuth and Google Sign In linking type.
+        OauthAndGoogleSignIn = 2,
+        /// OAuth linking type.
+        Oauth = 3,
+    }
+    impl LinkingType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LinkingType::Unspecified => "LINKING_TYPE_UNSPECIFIED",
+                LinkingType::GoogleSignIn => "GOOGLE_SIGN_IN",
+                LinkingType::OauthAndGoogleSignIn => "OAUTH_AND_GOOGLE_SIGN_IN",
+                LinkingType::Oauth => "OAUTH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LINKING_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "GOOGLE_SIGN_IN" => Some(Self::GoogleSignIn),
+                "OAUTH_AND_GOOGLE_SIGN_IN" => Some(Self::OauthAndGoogleSignIn),
+                "OAUTH" => Some(Self::Oauth),
+                _ => None,
+            }
+        }
+    }
+    /// The OAuth2 grant type Google uses to guide the user to sign in to your
+    /// App's web service.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AuthGrantType {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Authorization code grant. Requires you to provide both
+        /// authentication URL and access token URL.
+        AuthCode = 1,
+        /// Implicit code grant. Only requires you to provide authentication
+        /// URL.
+        Implicit = 2,
+    }
+    impl AuthGrantType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AuthGrantType::Unspecified => "AUTH_GRANT_TYPE_UNSPECIFIED",
+                AuthGrantType::AuthCode => "AUTH_CODE",
+                AuthGrantType::Implicit => "IMPLICIT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "AUTH_GRANT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "AUTH_CODE" => Some(Self::AuthCode),
+                "IMPLICIT" => Some(Self::Implicit),
+                _ => None,
+            }
+        }
+    }
+}
+/// Styles applied to cards that are presented to users
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ThemeCustomization {
+    /// Background color of cards. Acts as a fallback if `background_image` is
+    /// not provided by developers or `background_image` doesn't fit for certain
+    /// surfaces.
+    /// Example usage: #FAFAFA
+    #[prost(string, tag = "1")]
+    pub background_color: ::prost::alloc::string::String,
+    /// Primary theme color of the Action will be used to set text color of title,
+    /// action item background color for Actions on Google cards.
+    /// Example usage: #FAFAFA
+    #[prost(string, tag = "2")]
+    pub primary_color: ::prost::alloc::string::String,
+    /// The font family that will be used for title of cards.
+    /// Supported fonts:
+    /// - Sans Serif
+    /// - Sans Serif Medium
+    /// - Sans Serif Bold
+    /// - Sans Serif Black
+    /// - Sans Serif Condensed
+    /// - Sans Serif Condensed Medium
+    /// - Serif
+    /// - Serif Bold
+    /// - Monospace
+    /// - Cursive
+    /// - Sans Serif Smallcaps
+    #[prost(string, tag = "3")]
+    pub font_family: ::prost::alloc::string::String,
+    /// Border style of foreground image of cards. For example, can be applied on
+    /// the foreground image of a basic card or carousel card.
+    #[prost(enumeration = "theme_customization::ImageCornerStyle", tag = "4")]
+    pub image_corner_style: i32,
+    /// Landscape mode (minimum 1920x1200 pixels).
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. Eg: `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console the Google managed url pulled
+    /// could be used.
+    #[prost(string, tag = "5")]
+    pub landscape_background_image: ::prost::alloc::string::String,
+    /// Portrait mode (minimum 1200x1920 pixels).
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. Eg: `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console the Google managed url pulled
+    /// could be used.
+    #[prost(string, tag = "6")]
+    pub portrait_background_image: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ThemeCustomization`.
+pub mod theme_customization {
+    /// Describes how the borders of images should be rendered.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ImageCornerStyle {
+        /// Undefined / Unspecified.
+        Unspecified = 0,
+        /// Round corner for image.
+        Curved = 1,
+        /// Rectangular corner for image.
+        Angled = 2,
+    }
+    impl ImageCornerStyle {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ImageCornerStyle::Unspecified => "IMAGE_CORNER_STYLE_UNSPECIFIED",
+                ImageCornerStyle::Curved => "CURVED",
+                ImageCornerStyle::Angled => "ANGLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "IMAGE_CORNER_STYLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CURVED" => Some(Self::Curved),
+                "ANGLED" => Some(Self::Angled),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents settings of an Actions project that are specific to a user locale.
+/// In this instance, user means the end user who invokes your Actions.
+/// **This message is localizable.**
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocalizedSettings {
+    /// Required. The default display name for this Actions project (if there is no
+    /// translation available)
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The pronunciation of the display name to invoke it within a voice
+    /// (spoken) context.
+    #[prost(string, tag = "2")]
+    pub pronunciation: ::prost::alloc::string::String,
+    /// Required. The default short description for the Actions project (if there is no
+    /// translation available). 80 character limit.
+    #[prost(string, tag = "3")]
+    pub short_description: ::prost::alloc::string::String,
+    /// Required. The default long description for the Actions project (if there is no
+    /// translation available). 4000 character limit.
+    #[prost(string, tag = "4")]
+    pub full_description: ::prost::alloc::string::String,
+    /// Required. Small square image, 192 x 192 px.
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console, the Google-managed URL
+    /// pulled could be used. URLs from external sources are not allowed.
+    #[prost(string, tag = "5")]
+    pub small_logo_image: ::prost::alloc::string::String,
+    /// Optional. Large landscape image, 1920 x 1080 px.
+    /// This should be specified as a reference to the corresponding image in the
+    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
+    /// extension) for image in `resources/images/foo.jpg`
+    /// When working on a project pulled from Console, the Google-managed URL
+    /// pulled could be used. URLs from external sources are not allowed.
+    #[prost(string, tag = "6")]
+    pub large_banner_image: ::prost::alloc::string::String,
+    /// Required. The name of the developer to be displayed to users.
+    #[prost(string, tag = "7")]
+    pub developer_name: ::prost::alloc::string::String,
+    /// Required. The contact email address for the developer.
+    #[prost(string, tag = "8")]
+    pub developer_email: ::prost::alloc::string::String,
+    /// Optional. The terms of service URL.
+    #[prost(string, tag = "9")]
+    pub terms_of_service_url: ::prost::alloc::string::String,
+    /// Required. The Google Assistant voice type that users hear when they interact with
+    /// your Actions. The supported values are "male_1", "male_2", "female_1", and
+    /// "female_2".
+    #[prost(string, tag = "10")]
+    pub voice: ::prost::alloc::string::String,
+    /// Optional. The locale for the specified voice. If not specified, this resolves
+    /// to the user's Assistant locale. If specified, the voice locale must have
+    /// the same root language as the locale specified in LocalizedSettings.
+    #[prost(string, tag = "14")]
+    pub voice_locale: ::prost::alloc::string::String,
+    /// Required. The privacy policy URL.
+    #[prost(string, tag = "11")]
+    pub privacy_policy_url: ::prost::alloc::string::String,
+    /// Optional. Sample invocation phrases displayed as part of your Actions project's
+    /// description in the Assistant directory. This will help users learn how to
+    /// use it.
+    #[prost(string, repeated, tag = "12")]
+    pub sample_invocations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Theme customizations for visual components of your Actions.
+    #[prost(message, optional, tag = "13")]
+    pub theme_customization: ::core::option::Option<ThemeCustomization>,
+}
+/// Contains a set of requirements that the client surface must support to invoke
+/// Actions in your project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SurfaceRequirements {
+    /// The minimum set of capabilities needed to invoke the Actions in your
+    /// project. If the surface is missing any of these, the Action will not be
+    /// triggered.
+    #[prost(message, repeated, tag = "1")]
+    pub minimum_requirements: ::prost::alloc::vec::Vec<CapabilityRequirement>,
+}
+/// Represents a requirement about the availability of a given capability.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CapabilityRequirement {
+    /// The type of capability.
+    #[prost(enumeration = "capability_requirement::SurfaceCapability", tag = "1")]
+    pub capability: i32,
+}
+/// Nested message and enum types in `CapabilityRequirement`.
+pub mod capability_requirement {
+    /// Possible set of surface capabilities.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SurfaceCapability {
+        /// Unknown / Unspecified.
+        Unspecified = 0,
+        /// Surface supports audio output.
+        AudioOutput = 1,
+        /// Surface supports screen/visual output.
+        ScreenOutput = 2,
+        /// Surface supports media response audio.
+        MediaResponseAudio = 3,
+        /// Surface supports web browsers.
+        WebBrowser = 4,
+        /// Surface supports account linking.
+        AccountLinking = 7,
+        /// Surface supports Interactive Canvas.
+        InteractiveCanvas = 8,
+        /// Surface supports home storage.
+        HomeStorage = 9,
+    }
+    impl SurfaceCapability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SurfaceCapability::Unspecified => "SURFACE_CAPABILITY_UNSPECIFIED",
+                SurfaceCapability::AudioOutput => "AUDIO_OUTPUT",
+                SurfaceCapability::ScreenOutput => "SCREEN_OUTPUT",
+                SurfaceCapability::MediaResponseAudio => "MEDIA_RESPONSE_AUDIO",
+                SurfaceCapability::WebBrowser => "WEB_BROWSER",
+                SurfaceCapability::AccountLinking => "ACCOUNT_LINKING",
+                SurfaceCapability::InteractiveCanvas => "INTERACTIVE_CANVAS",
+                SurfaceCapability::HomeStorage => "HOME_STORAGE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SURFACE_CAPABILITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "AUDIO_OUTPUT" => Some(Self::AudioOutput),
+                "SCREEN_OUTPUT" => Some(Self::ScreenOutput),
+                "MEDIA_RESPONSE_AUDIO" => Some(Self::MediaResponseAudio),
+                "WEB_BROWSER" => Some(Self::WebBrowser),
+                "ACCOUNT_LINKING" => Some(Self::AccountLinking),
+                "INTERACTIVE_CANVAS" => Some(Self::InteractiveCanvas),
+                "HOME_STORAGE" => Some(Self::HomeStorage),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents settings of an Actions project that are not locale specific.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Settings {
+    /// Actions project id.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// Locale which is default for the project. For all files except under
+    /// `resources/` with no locale in the path, the localized data is attributed
+    /// to this `default_locale`. For files under `resources/` no locale means that
+    /// the resource is applicable to all locales.
+    #[prost(string, tag = "2")]
+    pub default_locale: ::prost::alloc::string::String,
+    /// Represents the regions where users can invoke your Actions, which is
+    /// based on the user's location of presence. Cannot be set if
+    /// `disabled_regions` is set. If both `enabled_regions` and `disabled_regions`
+    /// are not specified, users can invoke your Actions in all regions. Each
+    /// region is represented using the Canonical Name of Adwords geotargets. See
+    /// <https://developers.google.com/adwords/api/docs/appendix/geotargeting>
+    /// Examples include:
+    /// - "Germany"
+    /// - "Ghana"
+    /// - "Greece"
+    /// - "Grenada"
+    /// - "United Kingdom"
+    /// - "United States"
+    /// - "United States Minor Outlying Islands"
+    /// - "Uruguay"
+    #[prost(string, repeated, tag = "3")]
+    pub enabled_regions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Represents the regions where your Actions are blocked, based on the user's
+    /// location of presence. Cannot be set if `enabled_regions` is set.
+    /// Each region is represented using the Canonical Name of Adwords geotargets.
+    /// See <https://developers.google.com/adwords/api/docs/appendix/geotargeting>
+    /// Examples include:
+    /// - "Germany"
+    /// - "Ghana"
+    /// - "Greece"
+    /// - "Grenada"
+    /// - "United Kingdom"
+    /// - "United States"
+    /// - "United States Minor Outlying Islands"
+    /// - "Uruguay"
+    #[prost(string, repeated, tag = "4")]
+    pub disabled_regions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The category for this Actions project.
+    #[prost(enumeration = "settings::Category", tag = "5")]
+    pub category: i32,
+    /// Whether Actions can use transactions (for example, making
+    /// reservations, taking orders, etc.). If false, then attempts to use the
+    /// Transactions APIs fail.
+    #[prost(bool, tag = "6")]
+    pub uses_transactions_api: bool,
+    /// Whether Actions can perform transactions for digital goods.
+    #[prost(bool, tag = "7")]
+    pub uses_digital_purchase_api: bool,
+    /// Whether Actions use Interactive Canvas.
+    #[prost(bool, tag = "8")]
+    pub uses_interactive_canvas: bool,
+    /// Whether Actions use the home storage feature.
+    #[prost(bool, tag = "17")]
+    pub uses_home_storage: bool,
+    /// Whether Actions content is designed for family (DFF).
+    #[prost(bool, tag = "9")]
+    pub designed_for_family: bool,
+    /// Whether Actions contains alcohol or tobacco related content.
+    #[prost(bool, tag = "11")]
+    pub contains_alcohol_or_tobacco_content: bool,
+    /// Whether Actions may leave mic open without an explicit prompt during
+    /// conversation.
+    #[prost(bool, tag = "12")]
+    pub keeps_mic_open: bool,
+    /// The surface requirements that a client surface must support to invoke
+    /// Actions in this project.
+    #[prost(message, optional, tag = "13")]
+    pub surface_requirements: ::core::option::Option<SurfaceRequirements>,
+    /// Free-form testing instructions for Actions reviewer (for example, account
+    /// linking instructions).
+    #[prost(string, tag = "14")]
+    pub testing_instructions: ::prost::alloc::string::String,
+    /// Localized settings for the project's default locale. Every additional
+    /// locale should have its own settings file in its own directory.
+    #[prost(message, optional, tag = "15")]
+    pub localized_settings: ::core::option::Option<LocalizedSettings>,
+    /// Allow users to create or link accounts through Google sign-in and/or your
+    /// own OAuth service.
+    #[prost(message, optional, tag = "16")]
+    pub account_linking: ::core::option::Option<AccountLinking>,
+    /// Android apps selected to acccess Google Play purchases for transactions.
+    /// This is a selection from the Android apps connected to the actions project
+    /// to verify brand ownership and enable additional features. See
+    /// <https://developers.google.com/assistant/console/brand-verification> for more
+    /// information.
+    #[prost(string, repeated, tag = "20")]
+    pub selected_android_apps: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `Settings`.
+pub mod settings {
+    /// The category choices for an Actions project.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Category {
+        /// Unknown / Unspecified.
+        Unspecified = 0,
+        /// Business and Finance category.
+        BusinessAndFinance = 2,
+        /// Education and Reference category.
+        EducationAndReference = 3,
+        /// Food and Drink category.
+        FoodAndDrink = 4,
+        /// Games and Trivia category.
+        GamesAndTrivia = 5,
+        /// Health and Fitness category.
+        HealthAndFitness = 6,
+        /// Kids and Family category.
+        KidsAndFamily = 20,
+        /// Lifestyle category.
+        Lifestyle = 7,
+        /// Local category.
+        Local = 8,
+        /// Movies and TV category.
+        MoviesAndTv = 9,
+        /// Music and Audio category.
+        MusicAndAudio = 10,
+        /// News category,
+        News = 1,
+        /// Novelty and Humor category.
+        NoveltyAndHumor = 11,
+        /// Productivity category.
+        Productivity = 12,
+        /// Shopping category.
+        Shopping = 13,
+        /// Social category.
+        Social = 14,
+        /// Sports category.
+        Sports = 15,
+        /// Travel and Transportation category.
+        TravelAndTransportation = 16,
+        /// Utilities category.
+        Utilities = 17,
+        /// Weather category.
+        Weather = 18,
+        /// Home Control category.
+        HomeControl = 19,
+    }
+    impl Category {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Category::Unspecified => "CATEGORY_UNSPECIFIED",
+                Category::BusinessAndFinance => "BUSINESS_AND_FINANCE",
+                Category::EducationAndReference => "EDUCATION_AND_REFERENCE",
+                Category::FoodAndDrink => "FOOD_AND_DRINK",
+                Category::GamesAndTrivia => "GAMES_AND_TRIVIA",
+                Category::HealthAndFitness => "HEALTH_AND_FITNESS",
+                Category::KidsAndFamily => "KIDS_AND_FAMILY",
+                Category::Lifestyle => "LIFESTYLE",
+                Category::Local => "LOCAL",
+                Category::MoviesAndTv => "MOVIES_AND_TV",
+                Category::MusicAndAudio => "MUSIC_AND_AUDIO",
+                Category::News => "NEWS",
+                Category::NoveltyAndHumor => "NOVELTY_AND_HUMOR",
+                Category::Productivity => "PRODUCTIVITY",
+                Category::Shopping => "SHOPPING",
+                Category::Social => "SOCIAL",
+                Category::Sports => "SPORTS",
+                Category::TravelAndTransportation => "TRAVEL_AND_TRANSPORTATION",
+                Category::Utilities => "UTILITIES",
+                Category::Weather => "WEATHER",
+                Category::HomeControl => "HOME_CONTROL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CATEGORY_UNSPECIFIED" => Some(Self::Unspecified),
+                "BUSINESS_AND_FINANCE" => Some(Self::BusinessAndFinance),
+                "EDUCATION_AND_REFERENCE" => Some(Self::EducationAndReference),
+                "FOOD_AND_DRINK" => Some(Self::FoodAndDrink),
+                "GAMES_AND_TRIVIA" => Some(Self::GamesAndTrivia),
+                "HEALTH_AND_FITNESS" => Some(Self::HealthAndFitness),
+                "KIDS_AND_FAMILY" => Some(Self::KidsAndFamily),
+                "LIFESTYLE" => Some(Self::Lifestyle),
+                "LOCAL" => Some(Self::Local),
+                "MOVIES_AND_TV" => Some(Self::MoviesAndTv),
+                "MUSIC_AND_AUDIO" => Some(Self::MusicAndAudio),
+                "NEWS" => Some(Self::News),
+                "NOVELTY_AND_HUMOR" => Some(Self::NoveltyAndHumor),
+                "PRODUCTIVITY" => Some(Self::Productivity),
+                "SHOPPING" => Some(Self::Shopping),
+                "SOCIAL" => Some(Self::Social),
+                "SPORTS" => Some(Self::Sports),
+                "TRAVEL_AND_TRANSPORTATION" => Some(Self::TravelAndTransportation),
+                "UTILITIES" => Some(Self::Utilities),
+                "WEATHER" => Some(Self::Weather),
+                "HOME_CONTROL" => Some(Self::HomeControl),
+                _ => None,
+            }
+        }
+    }
+}
+/// Metadata for different types of webhooks. If you're using
+/// `inlineCloudFunction`, your source code must be in a directory with the same
+/// name as the value for the `executeFunction` key.
+/// For example, a value of `my_webhook` for the`executeFunction` key would have
+/// a code structure like this:
+///   - `/webhooks/my_webhook.yaml`
+///   - `/webhooks/my_webhook/index.js`
+///   - `/webhooks/my_webhook/package.json`
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Webhook {
+    /// List of handlers for this webhook.
+    #[prost(message, repeated, tag = "1")]
+    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
+    /// Only one webhook type is supported.
+    #[prost(oneof = "webhook::WebhookType", tags = "2, 3")]
+    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
+}
+/// Nested message and enum types in `Webhook`.
+pub mod webhook {
+    /// Declares the name of the webhoook handler. A webhook can have
+    /// multiple handlers registered. These handlers can be called from multiple
+    /// places in your Actions project.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Handler {
+        /// Required. Name of the handler. Must be unique across all handlers the Actions
+        /// project. You can check the name of this handler to invoke the correct
+        /// function in your fulfillment source code.
+        #[prost(string, tag = "1")]
+        pub name: ::prost::alloc::string::String,
+    }
+    /// REST endpoint to notify if you're not using the inline editor.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct HttpsEndpoint {
+        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
+        /// Handler names are appended to the base URL path after a colon
+        /// (following the style guide in
+        /// <https://cloud.google.com/apis/design/custom_methods>).
+        /// For example a base URL of '<https://gactions.service.com/api'> would
+        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
+        #[prost(string, tag = "1")]
+        pub base_url: ::prost::alloc::string::String,
+        /// Map of HTTP parameters to be included in the POST request.
+        #[prost(btree_map = "string, string", tag = "2")]
+        pub http_headers: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
+        /// Version of the protocol used by the endpoint. This is the protocol shared
+        /// by all fulfillment types and not specific to Google fulfillment type.
+        #[prost(int32, tag = "3")]
+        pub endpoint_api_version: i32,
+    }
+    /// Holds the metadata of an inline Cloud Function deployed from the
+    /// webhooks folder.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InlineCloudFunction {
+        /// The name of the Cloud Function entry point. The value of this field
+        /// should match the name of the method exported from the source code.
+        #[prost(string, tag = "1")]
+        pub execute_function: ::prost::alloc::string::String,
+    }
+    /// Only one webhook type is supported.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum WebhookType {
+        /// Custom webhook HTTPS endpoint.
+        #[prost(message, tag = "2")]
+        HttpsEndpoint(HttpsEndpoint),
+        /// Metadata for cloud function deployed from code in the webhooks folder.
+        #[prost(message, tag = "3")]
+        InlineCloudFunction(InlineCloudFunction),
+    }
+}
 /// Request for playing a round of the conversation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -948,215 +1398,6 @@ pub mod actions_testing_client {
         }
     }
 }
-/// Contains information that's "transportable" i.e. not specific to any given
-/// project and can be moved between projects.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Manifest {
-    /// Version of the file format. The current file format version is 1.0
-    /// Example: "1.0"
-    #[prost(string, tag = "1")]
-    pub version: ::prost::alloc::string::String,
-}
-/// Wrapper for repeated validation result.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResults {
-    /// Multiple validation results.
-    #[prost(message, repeated, tag = "1")]
-    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
-}
-/// Represents a validation result associated with the app content.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationResult {
-    /// Holds the validation message.
-    #[prost(string, tag = "1")]
-    pub validation_message: ::prost::alloc::string::String,
-    /// Context to identify the resource the validation message relates to.
-    #[prost(message, optional, tag = "2")]
-    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
-}
-/// Nested message and enum types in `ValidationResult`.
-pub mod validation_result {
-    /// Context to identify the resource the validation message relates to.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValidationContext {
-        /// Language code of the lozalized resource.
-        /// Empty if the error is for non-localized resource.
-        /// See the list of supported languages in
-        /// <https://developers.google.com/assistant/console/languages-locales>
-        #[prost(string, tag = "1")]
-        pub language_code: ::prost::alloc::string::String,
-    }
-}
-/// Styles applied to cards that are presented to users
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ThemeCustomization {
-    /// Background color of cards. Acts as a fallback if `background_image` is
-    /// not provided by developers or `background_image` doesn't fit for certain
-    /// surfaces.
-    /// Example usage: #FAFAFA
-    #[prost(string, tag = "1")]
-    pub background_color: ::prost::alloc::string::String,
-    /// Primary theme color of the Action will be used to set text color of title,
-    /// action item background color for Actions on Google cards.
-    /// Example usage: #FAFAFA
-    #[prost(string, tag = "2")]
-    pub primary_color: ::prost::alloc::string::String,
-    /// The font family that will be used for title of cards.
-    /// Supported fonts:
-    /// - Sans Serif
-    /// - Sans Serif Medium
-    /// - Sans Serif Bold
-    /// - Sans Serif Black
-    /// - Sans Serif Condensed
-    /// - Sans Serif Condensed Medium
-    /// - Serif
-    /// - Serif Bold
-    /// - Monospace
-    /// - Cursive
-    /// - Sans Serif Smallcaps
-    #[prost(string, tag = "3")]
-    pub font_family: ::prost::alloc::string::String,
-    /// Border style of foreground image of cards. For example, can be applied on
-    /// the foreground image of a basic card or carousel card.
-    #[prost(enumeration = "theme_customization::ImageCornerStyle", tag = "4")]
-    pub image_corner_style: i32,
-    /// Landscape mode (minimum 1920x1200 pixels).
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. Eg: `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console the Google managed url pulled
-    /// could be used.
-    #[prost(string, tag = "5")]
-    pub landscape_background_image: ::prost::alloc::string::String,
-    /// Portrait mode (minimum 1200x1920 pixels).
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. Eg: `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console the Google managed url pulled
-    /// could be used.
-    #[prost(string, tag = "6")]
-    pub portrait_background_image: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ThemeCustomization`.
-pub mod theme_customization {
-    /// Describes how the borders of images should be rendered.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ImageCornerStyle {
-        /// Undefined / Unspecified.
-        Unspecified = 0,
-        /// Round corner for image.
-        Curved = 1,
-        /// Rectangular corner for image.
-        Angled = 2,
-    }
-    impl ImageCornerStyle {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ImageCornerStyle::Unspecified => "IMAGE_CORNER_STYLE_UNSPECIFIED",
-                ImageCornerStyle::Curved => "CURVED",
-                ImageCornerStyle::Angled => "ANGLED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "IMAGE_CORNER_STYLE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CURVED" => Some(Self::Curved),
-                "ANGLED" => Some(Self::Angled),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represents settings of an Actions project that are specific to a user locale.
-/// In this instance, user means the end user who invokes your Actions.
-/// **This message is localizable.**
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocalizedSettings {
-    /// Required. The default display name for this Actions project (if there is no
-    /// translation available)
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The pronunciation of the display name to invoke it within a voice
-    /// (spoken) context.
-    #[prost(string, tag = "2")]
-    pub pronunciation: ::prost::alloc::string::String,
-    /// Required. The default short description for the Actions project (if there is no
-    /// translation available). 80 character limit.
-    #[prost(string, tag = "3")]
-    pub short_description: ::prost::alloc::string::String,
-    /// Required. The default long description for the Actions project (if there is no
-    /// translation available). 4000 character limit.
-    #[prost(string, tag = "4")]
-    pub full_description: ::prost::alloc::string::String,
-    /// Required. Small square image, 192 x 192 px.
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console, the Google-managed URL
-    /// pulled could be used. URLs from external sources are not allowed.
-    #[prost(string, tag = "5")]
-    pub small_logo_image: ::prost::alloc::string::String,
-    /// Optional. Large landscape image, 1920 x 1080 px.
-    /// This should be specified as a reference to the corresponding image in the
-    /// `resources/images/` directory. For example, `$resources.images.foo` (without the
-    /// extension) for image in `resources/images/foo.jpg`
-    /// When working on a project pulled from Console, the Google-managed URL
-    /// pulled could be used. URLs from external sources are not allowed.
-    #[prost(string, tag = "6")]
-    pub large_banner_image: ::prost::alloc::string::String,
-    /// Required. The name of the developer to be displayed to users.
-    #[prost(string, tag = "7")]
-    pub developer_name: ::prost::alloc::string::String,
-    /// Required. The contact email address for the developer.
-    #[prost(string, tag = "8")]
-    pub developer_email: ::prost::alloc::string::String,
-    /// Optional. The terms of service URL.
-    #[prost(string, tag = "9")]
-    pub terms_of_service_url: ::prost::alloc::string::String,
-    /// Required. The Google Assistant voice type that users hear when they interact with
-    /// your Actions. The supported values are "male_1", "male_2", "female_1", and
-    /// "female_2".
-    #[prost(string, tag = "10")]
-    pub voice: ::prost::alloc::string::String,
-    /// Optional. The locale for the specified voice. If not specified, this resolves
-    /// to the user's Assistant locale. If specified, the voice locale must have
-    /// the same root language as the locale specified in LocalizedSettings.
-    #[prost(string, tag = "14")]
-    pub voice_locale: ::prost::alloc::string::String,
-    /// Required. The privacy policy URL.
-    #[prost(string, tag = "11")]
-    pub privacy_policy_url: ::prost::alloc::string::String,
-    /// Optional. Sample invocation phrases displayed as part of your Actions project's
-    /// description in the Assistant directory. This will help users learn how to
-    /// use it.
-    #[prost(string, repeated, tag = "12")]
-    pub sample_invocations: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Theme customizations for visual components of your Actions.
-    #[prost(message, optional, tag = "13")]
-    pub theme_customization: ::core::option::Option<ThemeCustomization>,
-}
 /// Definition of version resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1264,297 +1505,6 @@ pub mod version {
                 }
             }
         }
-    }
-}
-/// Represents settings of an Actions project that are not locale specific.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Settings {
-    /// Actions project id.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// Locale which is default for the project. For all files except under
-    /// `resources/` with no locale in the path, the localized data is attributed
-    /// to this `default_locale`. For files under `resources/` no locale means that
-    /// the resource is applicable to all locales.
-    #[prost(string, tag = "2")]
-    pub default_locale: ::prost::alloc::string::String,
-    /// Represents the regions where users can invoke your Actions, which is
-    /// based on the user's location of presence. Cannot be set if
-    /// `disabled_regions` is set. If both `enabled_regions` and `disabled_regions`
-    /// are not specified, users can invoke your Actions in all regions. Each
-    /// region is represented using the Canonical Name of Adwords geotargets. See
-    /// <https://developers.google.com/adwords/api/docs/appendix/geotargeting>
-    /// Examples include:
-    /// - "Germany"
-    /// - "Ghana"
-    /// - "Greece"
-    /// - "Grenada"
-    /// - "United Kingdom"
-    /// - "United States"
-    /// - "United States Minor Outlying Islands"
-    /// - "Uruguay"
-    #[prost(string, repeated, tag = "3")]
-    pub enabled_regions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Represents the regions where your Actions are blocked, based on the user's
-    /// location of presence. Cannot be set if `enabled_regions` is set.
-    /// Each region is represented using the Canonical Name of Adwords geotargets.
-    /// See <https://developers.google.com/adwords/api/docs/appendix/geotargeting>
-    /// Examples include:
-    /// - "Germany"
-    /// - "Ghana"
-    /// - "Greece"
-    /// - "Grenada"
-    /// - "United Kingdom"
-    /// - "United States"
-    /// - "United States Minor Outlying Islands"
-    /// - "Uruguay"
-    #[prost(string, repeated, tag = "4")]
-    pub disabled_regions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The category for this Actions project.
-    #[prost(enumeration = "settings::Category", tag = "5")]
-    pub category: i32,
-    /// Whether Actions can use transactions (for example, making
-    /// reservations, taking orders, etc.). If false, then attempts to use the
-    /// Transactions APIs fail.
-    #[prost(bool, tag = "6")]
-    pub uses_transactions_api: bool,
-    /// Whether Actions can perform transactions for digital goods.
-    #[prost(bool, tag = "7")]
-    pub uses_digital_purchase_api: bool,
-    /// Whether Actions use Interactive Canvas.
-    #[prost(bool, tag = "8")]
-    pub uses_interactive_canvas: bool,
-    /// Whether Actions use the home storage feature.
-    #[prost(bool, tag = "17")]
-    pub uses_home_storage: bool,
-    /// Whether Actions content is designed for family (DFF).
-    #[prost(bool, tag = "9")]
-    pub designed_for_family: bool,
-    /// Whether Actions contains alcohol or tobacco related content.
-    #[prost(bool, tag = "11")]
-    pub contains_alcohol_or_tobacco_content: bool,
-    /// Whether Actions may leave mic open without an explicit prompt during
-    /// conversation.
-    #[prost(bool, tag = "12")]
-    pub keeps_mic_open: bool,
-    /// The surface requirements that a client surface must support to invoke
-    /// Actions in this project.
-    #[prost(message, optional, tag = "13")]
-    pub surface_requirements: ::core::option::Option<SurfaceRequirements>,
-    /// Free-form testing instructions for Actions reviewer (for example, account
-    /// linking instructions).
-    #[prost(string, tag = "14")]
-    pub testing_instructions: ::prost::alloc::string::String,
-    /// Localized settings for the project's default locale. Every additional
-    /// locale should have its own settings file in its own directory.
-    #[prost(message, optional, tag = "15")]
-    pub localized_settings: ::core::option::Option<LocalizedSettings>,
-    /// Allow users to create or link accounts through Google sign-in and/or your
-    /// own OAuth service.
-    #[prost(message, optional, tag = "16")]
-    pub account_linking: ::core::option::Option<AccountLinking>,
-    /// Android apps selected to acccess Google Play purchases for transactions.
-    /// This is a selection from the Android apps connected to the actions project
-    /// to verify brand ownership and enable additional features. See
-    /// <https://developers.google.com/assistant/console/brand-verification> for more
-    /// information.
-    #[prost(string, repeated, tag = "20")]
-    pub selected_android_apps: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `Settings`.
-pub mod settings {
-    /// The category choices for an Actions project.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Category {
-        /// Unknown / Unspecified.
-        Unspecified = 0,
-        /// Business and Finance category.
-        BusinessAndFinance = 2,
-        /// Education and Reference category.
-        EducationAndReference = 3,
-        /// Food and Drink category.
-        FoodAndDrink = 4,
-        /// Games and Trivia category.
-        GamesAndTrivia = 5,
-        /// Health and Fitness category.
-        HealthAndFitness = 6,
-        /// Kids and Family category.
-        KidsAndFamily = 20,
-        /// Lifestyle category.
-        Lifestyle = 7,
-        /// Local category.
-        Local = 8,
-        /// Movies and TV category.
-        MoviesAndTv = 9,
-        /// Music and Audio category.
-        MusicAndAudio = 10,
-        /// News category,
-        News = 1,
-        /// Novelty and Humor category.
-        NoveltyAndHumor = 11,
-        /// Productivity category.
-        Productivity = 12,
-        /// Shopping category.
-        Shopping = 13,
-        /// Social category.
-        Social = 14,
-        /// Sports category.
-        Sports = 15,
-        /// Travel and Transportation category.
-        TravelAndTransportation = 16,
-        /// Utilities category.
-        Utilities = 17,
-        /// Weather category.
-        Weather = 18,
-        /// Home Control category.
-        HomeControl = 19,
-    }
-    impl Category {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Category::Unspecified => "CATEGORY_UNSPECIFIED",
-                Category::BusinessAndFinance => "BUSINESS_AND_FINANCE",
-                Category::EducationAndReference => "EDUCATION_AND_REFERENCE",
-                Category::FoodAndDrink => "FOOD_AND_DRINK",
-                Category::GamesAndTrivia => "GAMES_AND_TRIVIA",
-                Category::HealthAndFitness => "HEALTH_AND_FITNESS",
-                Category::KidsAndFamily => "KIDS_AND_FAMILY",
-                Category::Lifestyle => "LIFESTYLE",
-                Category::Local => "LOCAL",
-                Category::MoviesAndTv => "MOVIES_AND_TV",
-                Category::MusicAndAudio => "MUSIC_AND_AUDIO",
-                Category::News => "NEWS",
-                Category::NoveltyAndHumor => "NOVELTY_AND_HUMOR",
-                Category::Productivity => "PRODUCTIVITY",
-                Category::Shopping => "SHOPPING",
-                Category::Social => "SOCIAL",
-                Category::Sports => "SPORTS",
-                Category::TravelAndTransportation => "TRAVEL_AND_TRANSPORTATION",
-                Category::Utilities => "UTILITIES",
-                Category::Weather => "WEATHER",
-                Category::HomeControl => "HOME_CONTROL",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "CATEGORY_UNSPECIFIED" => Some(Self::Unspecified),
-                "BUSINESS_AND_FINANCE" => Some(Self::BusinessAndFinance),
-                "EDUCATION_AND_REFERENCE" => Some(Self::EducationAndReference),
-                "FOOD_AND_DRINK" => Some(Self::FoodAndDrink),
-                "GAMES_AND_TRIVIA" => Some(Self::GamesAndTrivia),
-                "HEALTH_AND_FITNESS" => Some(Self::HealthAndFitness),
-                "KIDS_AND_FAMILY" => Some(Self::KidsAndFamily),
-                "LIFESTYLE" => Some(Self::Lifestyle),
-                "LOCAL" => Some(Self::Local),
-                "MOVIES_AND_TV" => Some(Self::MoviesAndTv),
-                "MUSIC_AND_AUDIO" => Some(Self::MusicAndAudio),
-                "NEWS" => Some(Self::News),
-                "NOVELTY_AND_HUMOR" => Some(Self::NoveltyAndHumor),
-                "PRODUCTIVITY" => Some(Self::Productivity),
-                "SHOPPING" => Some(Self::Shopping),
-                "SOCIAL" => Some(Self::Social),
-                "SPORTS" => Some(Self::Sports),
-                "TRAVEL_AND_TRANSPORTATION" => Some(Self::TravelAndTransportation),
-                "UTILITIES" => Some(Self::Utilities),
-                "WEATHER" => Some(Self::Weather),
-                "HOME_CONTROL" => Some(Self::HomeControl),
-                _ => None,
-            }
-        }
-    }
-}
-/// Metadata for different types of webhooks. If you're using
-/// `inlineCloudFunction`, your source code must be in a directory with the same
-/// name as the value for the `executeFunction` key.
-/// For example, a value of `my_webhook` for the`executeFunction` key would have
-/// a code structure like this:
-///   - `/webhooks/my_webhook.yaml`
-///   - `/webhooks/my_webhook/index.js`
-///   - `/webhooks/my_webhook/package.json`
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Webhook {
-    /// List of handlers for this webhook.
-    #[prost(message, repeated, tag = "1")]
-    pub handlers: ::prost::alloc::vec::Vec<webhook::Handler>,
-    /// Only one webhook type is supported.
-    #[prost(oneof = "webhook::WebhookType", tags = "2, 3")]
-    pub webhook_type: ::core::option::Option<webhook::WebhookType>,
-}
-/// Nested message and enum types in `Webhook`.
-pub mod webhook {
-    /// Declares the name of the webhoook handler. A webhook can have
-    /// multiple handlers registered. These handlers can be called from multiple
-    /// places in your Actions project.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Handler {
-        /// Required. Name of the handler. Must be unique across all handlers the Actions
-        /// project. You can check the name of this handler to invoke the correct
-        /// function in your fulfillment source code.
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-    }
-    /// REST endpoint to notify if you're not using the inline editor.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct HttpsEndpoint {
-        /// The HTTPS base URL for your fulfillment endpoint (HTTP is not supported).
-        /// Handler names are appended to the base URL path after a colon
-        /// (following the style guide in
-        /// <https://cloud.google.com/apis/design/custom_methods>).
-        /// For example a base URL of '<https://gactions.service.com/api'> would
-        /// receive requests with URL '<https://gactions.service.com/api:{method}'.>
-        #[prost(string, tag = "1")]
-        pub base_url: ::prost::alloc::string::String,
-        /// Map of HTTP parameters to be included in the POST request.
-        #[prost(btree_map = "string, string", tag = "2")]
-        pub http_headers: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-        /// Version of the protocol used by the endpoint. This is the protocol shared
-        /// by all fulfillment types and not specific to Google fulfillment type.
-        #[prost(int32, tag = "3")]
-        pub endpoint_api_version: i32,
-    }
-    /// Holds the metadata of an inline Cloud Function deployed from the
-    /// webhooks folder.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InlineCloudFunction {
-        /// The name of the Cloud Function entry point. The value of this field
-        /// should match the name of the method exported from the source code.
-        #[prost(string, tag = "1")]
-        pub execute_function: ::prost::alloc::string::String,
-    }
-    /// Only one webhook type is supported.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum WebhookType {
-        /// Custom webhook HTTPS endpoint.
-        #[prost(message, tag = "2")]
-        HttpsEndpoint(HttpsEndpoint),
-        /// Metadata for cloud function deployed from code in the webhooks folder.
-        #[prost(message, tag = "3")]
-        InlineCloudFunction(InlineCloudFunction),
     }
 }
 /// Information about the encrypted OAuth client secret used in account linking
@@ -1831,6 +1781,56 @@ pub mod files {
         /// source code.
         #[prost(message, tag = "2")]
         DataFiles(super::DataFiles),
+    }
+}
+/// Definition of release channel resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseChannel {
+    /// The unique name of the release channel in the following format.
+    /// `projects/{project}/releaseChannels/{release_channel}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Version currently deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag = "2")]
+    pub current_version: ::prost::alloc::string::String,
+    /// Version to be deployed to this release channel in the following format:
+    /// `projects/{project}/versions/{version}`.
+    #[prost(string, tag = "3")]
+    pub pending_version: ::prost::alloc::string::String,
+}
+/// Wrapper for repeated validation result.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResults {
+    /// Multiple validation results.
+    #[prost(message, repeated, tag = "1")]
+    pub results: ::prost::alloc::vec::Vec<ValidationResult>,
+}
+/// Represents a validation result associated with the app content.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationResult {
+    /// Holds the validation message.
+    #[prost(string, tag = "1")]
+    pub validation_message: ::prost::alloc::string::String,
+    /// Context to identify the resource the validation message relates to.
+    #[prost(message, optional, tag = "2")]
+    pub validation_context: ::core::option::Option<validation_result::ValidationContext>,
+}
+/// Nested message and enum types in `ValidationResult`.
+pub mod validation_result {
+    /// Context to identify the resource the validation message relates to.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValidationContext {
+        /// Language code of the lozalized resource.
+        /// Empty if the error is for non-localized resource.
+        /// See the list of supported languages in
+        /// <https://developers.google.com/assistant/console/languages-locales>
+        #[prost(string, tag = "1")]
+        pub language_code: ::prost::alloc::string::String,
     }
 }
 /// Streaming RPC request for WriteDraft.

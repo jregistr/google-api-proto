@@ -1,3 +1,150 @@
+/// A RequestHeader contains fields common to all Delivery RPC requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeliveryRequestHeader {
+    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
+    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
+    /// is specified, the response may be in any language, with a preference for
+    /// English if such a name exists. Field value example: `en-US`.
+    #[prost(string, tag = "1")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Required. CLDR region code of the region where the request originates.
+    /// Field value example: `US`.
+    #[prost(string, tag = "2")]
+    pub region_code: ::prost::alloc::string::String,
+    /// Version of the calling SDK, if applicable.
+    /// The version format is "major.minor.patch", example: `1.1.2`.
+    #[prost(string, tag = "3")]
+    pub sdk_version: ::prost::alloc::string::String,
+    /// Version of the operating system on which the calling SDK is running.
+    /// Field value examples: `4.4.1`, `12.1`.
+    #[prost(string, tag = "4")]
+    pub os_version: ::prost::alloc::string::String,
+    /// Model of the device on which the calling SDK is running.
+    /// Field value examples: `iPhone12,1`, `SM-G920F`.
+    #[prost(string, tag = "5")]
+    pub device_model: ::prost::alloc::string::String,
+    /// The type of SDK sending the request.
+    #[prost(enumeration = "delivery_request_header::SdkType", tag = "6")]
+    pub sdk_type: i32,
+    /// Version of the MapSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `5.2.1`.
+    #[prost(string, tag = "7")]
+    pub maps_sdk_version: ::prost::alloc::string::String,
+    /// Version of the NavSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `2.1.0`.
+    #[prost(string, tag = "8")]
+    pub nav_sdk_version: ::prost::alloc::string::String,
+    /// Platform of the calling SDK.
+    #[prost(enumeration = "delivery_request_header::Platform", tag = "9")]
+    pub platform: i32,
+    /// Manufacturer of the Android device from the calling SDK, only applicable
+    /// for the Android SDKs.
+    /// Field value example: `Samsung`.
+    #[prost(string, tag = "10")]
+    pub manufacturer: ::prost::alloc::string::String,
+    /// Android API level of the calling SDK, only applicable for the Android SDKs.
+    /// Field value example: `23`.
+    #[prost(int32, tag = "11")]
+    pub android_api_level: i32,
+}
+/// Nested message and enum types in `DeliveryRequestHeader`.
+pub mod delivery_request_header {
+    /// Possible types of SDK.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SdkType {
+        /// The default value. This value is used if the `sdk_type` is omitted.
+        Unspecified = 0,
+        /// The calling SDK is Consumer.
+        Consumer = 1,
+        /// The calling SDK is Driver.
+        Driver = 2,
+        /// The calling SDK is JavaScript.
+        Javascript = 3,
+    }
+    impl SdkType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
+                SdkType::Consumer => "CONSUMER",
+                SdkType::Driver => "DRIVER",
+                SdkType::Javascript => "JAVASCRIPT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SDK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONSUMER" => Some(Self::Consumer),
+                "DRIVER" => Some(Self::Driver),
+                "JAVASCRIPT" => Some(Self::Javascript),
+                _ => None,
+            }
+        }
+    }
+    /// The platform of the calling SDK.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Platform {
+        /// The default value. This value is used if the platform is omitted.
+        Unspecified = 0,
+        /// The request is coming from Android.
+        Android = 1,
+        /// The request is coming from iOS.
+        Ios = 2,
+        /// The request is coming from the web.
+        Web = 3,
+    }
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Android => "ANDROID",
+                Platform::Ios => "IOS",
+                Platform::Web => "WEB",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PLATFORM_UNSPECIFIED" => Some(Self::Unspecified),
+                "ANDROID" => Some(Self::Android),
+                "IOS" => Some(Self::Ios),
+                "WEB" => Some(Self::Web),
+                _ => None,
+            }
+        }
+    }
+}
 /// Describes a vehicle attribute as a key-value pair. The "key:value" string
 /// length cannot exceed 256 characters.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -75,16 +222,17 @@ pub struct DeliveryVehicleLocation {
     /// Whether `location` is snapped to a road.
     #[prost(message, optional, tag = "27")]
     pub is_road_snapped: ::core::option::Option<bool>,
-    /// Input only. Indicates whether the GPS sensor is enabled on the mobile device.
+    /// Input only. Indicates whether the GPS sensor is enabled on the mobile
+    /// device.
     #[prost(message, optional, tag = "12")]
     pub is_gps_sensor_enabled: ::core::option::Option<bool>,
-    /// Input only. Time (in seconds) since this location was first sent to the server.
-    /// This will be zero for the first update. If the time is unknown
-    /// (for example, when the app restarts), this value resets to zero.
+    /// Input only. Time (in seconds) since this location was first sent to the
+    /// server. This will be zero for the first update. If the time is unknown (for
+    /// example, when the app restarts), this value resets to zero.
     #[prost(message, optional, tag = "14")]
     pub time_since_update: ::core::option::Option<i32>,
-    /// Input only. Number of additional attempts to send this location to the server.
-    /// If this value is zero, then it is not stale.
+    /// Input only. Number of additional attempts to send this location to the
+    /// server. If this value is zero, then it is not stale.
     #[prost(message, optional, tag = "15")]
     pub num_stale_updates: ::core::option::Option<i32>,
     /// Raw vehicle location (unprocessed by road-snapper).
@@ -288,7 +436,8 @@ pub struct DeliveryVehicle {
     /// This value is usually updated by the driver app because it is considered to
     /// have more accurate information about the current route than Fleet Engine.
     /// However, it might be populated by Fleet Engine. For more information, see
-    /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\]. This field is returned in
+    /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\].
+    /// This field is returned in
     /// `Task.remaining_vehicle_journey_segments\[0\].driving_distance_meters` (gRPC)
     /// or `Task.remainingVehicleJourneySegments\[0\].drivingDistanceMeters` (REST)
     /// for all active Tasks assigned to the Delivery Vehicle.
@@ -301,10 +450,11 @@ pub struct DeliveryVehicle {
     /// This value is usually updated by the driver app because it is considered to
     /// have more accurate information about the current route than Fleet Engine.
     /// However, it might be populated by Fleet Engine. For more information, see
-    /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\]. This field is
-    /// returned in `Task.remaining_vehicle_journey_segments\[0\].driving_duration`
-    /// (gRPC) or `Task.remainingVehicleJourneySegments\[0\].drivingDuration` (REST)
-    /// for all active tasks assigned to the Delivery Vehicle.
+    /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\].
+    /// This field is returned in
+    /// `Task.remaining_vehicle_journey_segments\[0\].driving_duration` (gRPC) or
+    /// `Task.remainingVehicleJourneySegments\[0\].drivingDuration` (REST) for all
+    /// active tasks assigned to the Delivery Vehicle.
     ///
     /// This field is ignored in `UpdateDeliveryVehicle` calls if the
     /// `current_route_segment` field is empty.
@@ -364,11 +514,11 @@ pub struct VehicleJourneySegment {
     /// known location rather than the driving time from the previous stop.
     #[prost(message, optional, tag = "3")]
     pub driving_duration: ::core::option::Option<::prost_types::Duration>,
-    /// Output only. The path from the previous stop to this stop. If the current stop is the
-    /// first stop in the list of journey segments, then this is the path from the
-    /// vehicle's current location to this stop at the time that the stop was
-    /// added to the list. This field might not be present if this journey segment
-    /// is part of `JourneySharingInfo`.
+    /// Output only. The path from the previous stop to this stop. If the current
+    /// stop is the first stop in the list of journey segments, then this is the
+    /// path from the vehicle's current location to this stop at the time that the
+    /// stop was added to the list. This field might not be present if this journey
+    /// segment is part of `JourneySharingInfo`.
     ///
     /// If this field is defined in the path
     /// `Task.journey_sharing_info.remaining_vehicle_journey_segments\[0\].path`
@@ -387,10 +537,10 @@ pub struct VehicleJourneySegment {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VehicleStop {
-    /// Required. The location of the stop. Note that the locations in the Tasks might not
-    /// exactly match this location, but will be within a short distance of it.
-    /// This field won't be populated in the response of either a `GetTask`, or a
-    /// `SearchTasks` call.
+    /// Required. The location of the stop. Note that the locations in the Tasks
+    /// might not exactly match this location, but will be within a short distance
+    /// of it. This field won't be populated in the response of either a `GetTask`,
+    /// or a `SearchTasks` call.
     #[prost(message, optional, tag = "1")]
     pub planned_location: ::core::option::Option<LocationInfo>,
     /// The list of Tasks to be performed at this stop. This field won't be
@@ -492,7 +642,8 @@ pub struct Task {
     /// Must be in the format `providers/{provider}/tasks/{task}`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. Immutable. Defines the type of the Task. For example, a break or shipment.
+    /// Required. Immutable. Defines the type of the Task. For example, a break or
+    /// shipment.
     #[prost(enumeration = "task::Type", tag = "2")]
     pub r#type: i32,
     /// Required. The current execution state of the Task.
@@ -514,8 +665,8 @@ pub struct Task {
     /// Indicates where the value of the `task_outcome_location` came from.
     #[prost(enumeration = "task::TaskOutcomeLocationSource", tag = "12")]
     pub task_outcome_location_source: i32,
-    /// Immutable. This field facilitates the storing of an ID so you can avoid using a
-    /// complicated mapping. You cannot set `tracking_id` for Tasks of type
+    /// Immutable. This field facilitates the storing of an ID so you can avoid
+    /// using a complicated mapping. You cannot set `tracking_id` for Tasks of type
     /// `UNAVAILABLE` and `SCHEDULED_STOP`. These IDs are subject to the
     /// following restrictions:
     ///
@@ -527,8 +678,8 @@ pub struct Task {
     /// ',', or '#'.
     #[prost(string, tag = "4")]
     pub tracking_id: ::prost::alloc::string::String,
-    /// Output only. The ID of the vehicle that is executing this Task. Delivery Vehicle IDs are
-    /// subject to the following restrictions:
+    /// Output only. The ID of the vehicle that is executing this Task. Delivery
+    /// Vehicle IDs are subject to the following restrictions:
     ///
     /// * Must be a valid Unicode string.
     /// * Limited to a maximum length of 64 characters.
@@ -545,7 +696,8 @@ pub struct Task {
     /// Required. Immutable. The time needed to execute a Task at this location.
     #[prost(message, optional, tag = "7")]
     pub task_duration: ::core::option::Option<::prost_types::Duration>,
-    /// Output only. Journey sharing-specific fields. Not populated when state is `CLOSED`.
+    /// Output only. Journey sharing-specific fields. Not populated when state is
+    /// `CLOSED`.
     #[prost(message, optional, tag = "8")]
     pub journey_sharing_info: ::core::option::Option<task::JourneySharingInfo>,
 }
@@ -565,7 +717,8 @@ pub mod task {
         /// contains route information from the driver's last known location to the
         /// upcoming `VehicleStop`. Current route information usually comes from the
         /// driver app, except for some cases noted in the documentation for
-        /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\]. The other segments in
+        /// \[DeliveryVehicle.current_route_segment][maps.fleetengine.delivery.v1.DeliveryVehicle.current_route_segment\].
+        /// The other segments in
         /// `Task.journey_sharing_info.remaining_vehicle_journey_segments` (gRPC) or
         /// `Task.journeySharingInfo.remainingVehicleJourneySegments` (REST) are
         /// populated by Fleet Engine. They provide route information between the
@@ -779,153 +932,6 @@ pub mod task {
         }
     }
 }
-/// A RequestHeader contains fields common to all Delivery RPC requests.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeliveryRequestHeader {
-    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
-    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
-    /// is specified, the response may be in any language, with a preference for
-    /// English if such a name exists. Field value example: `en-US`.
-    #[prost(string, tag = "1")]
-    pub language_code: ::prost::alloc::string::String,
-    /// Required. CLDR region code of the region where the request originates.
-    /// Field value example: `US`.
-    #[prost(string, tag = "2")]
-    pub region_code: ::prost::alloc::string::String,
-    /// Version of the calling SDK, if applicable.
-    /// The version format is "major.minor.patch", example: `1.1.2`.
-    #[prost(string, tag = "3")]
-    pub sdk_version: ::prost::alloc::string::String,
-    /// Version of the operating system on which the calling SDK is running.
-    /// Field value examples: `4.4.1`, `12.1`.
-    #[prost(string, tag = "4")]
-    pub os_version: ::prost::alloc::string::String,
-    /// Model of the device on which the calling SDK is running.
-    /// Field value examples: `iPhone12,1`, `SM-G920F`.
-    #[prost(string, tag = "5")]
-    pub device_model: ::prost::alloc::string::String,
-    /// The type of SDK sending the request.
-    #[prost(enumeration = "delivery_request_header::SdkType", tag = "6")]
-    pub sdk_type: i32,
-    /// Version of the MapSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `5.2.1`.
-    #[prost(string, tag = "7")]
-    pub maps_sdk_version: ::prost::alloc::string::String,
-    /// Version of the NavSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `2.1.0`.
-    #[prost(string, tag = "8")]
-    pub nav_sdk_version: ::prost::alloc::string::String,
-    /// Platform of the calling SDK.
-    #[prost(enumeration = "delivery_request_header::Platform", tag = "9")]
-    pub platform: i32,
-    /// Manufacturer of the Android device from the calling SDK, only applicable
-    /// for the Android SDKs.
-    /// Field value example: `Samsung`.
-    #[prost(string, tag = "10")]
-    pub manufacturer: ::prost::alloc::string::String,
-    /// Android API level of the calling SDK, only applicable for the Android SDKs.
-    /// Field value example: `23`.
-    #[prost(int32, tag = "11")]
-    pub android_api_level: i32,
-}
-/// Nested message and enum types in `DeliveryRequestHeader`.
-pub mod delivery_request_header {
-    /// Possible types of SDK.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SdkType {
-        /// The default value. This value is used if the `sdk_type` is omitted.
-        Unspecified = 0,
-        /// The calling SDK is Consumer.
-        Consumer = 1,
-        /// The calling SDK is Driver.
-        Driver = 2,
-        /// The calling SDK is JavaScript.
-        Javascript = 3,
-    }
-    impl SdkType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
-                SdkType::Consumer => "CONSUMER",
-                SdkType::Driver => "DRIVER",
-                SdkType::Javascript => "JAVASCRIPT",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SDK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CONSUMER" => Some(Self::Consumer),
-                "DRIVER" => Some(Self::Driver),
-                "JAVASCRIPT" => Some(Self::Javascript),
-                _ => None,
-            }
-        }
-    }
-    /// The platform of the calling SDK.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Platform {
-        /// The default value. This value is used if the platform is omitted.
-        Unspecified = 0,
-        /// The request is coming from Android.
-        Android = 1,
-        /// The request is coming from iOS.
-        Ios = 2,
-        /// The request is coming from the web.
-        Web = 3,
-    }
-    impl Platform {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
-                Platform::Android => "ANDROID",
-                Platform::Ios => "IOS",
-                Platform::Web => "WEB",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PLATFORM_UNSPECIFIED" => Some(Self::Unspecified),
-                "ANDROID" => Some(Self::Android),
-                "IOS" => Some(Self::Ios),
-                "WEB" => Some(Self::Web),
-                _ => None,
-            }
-        }
-    }
-}
 /// The `CreateDeliveryVehicle` request message.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -933,12 +939,12 @@ pub struct CreateDeliveryVehicleRequest {
     /// Optional. The standard Delivery API request header.
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<DeliveryRequestHeader>,
-    /// Required. Must be in the format `providers/{provider}`. The provider must be the
-    /// Google Cloud Project ID. For example, `sample-cloud-project`.
+    /// Required. Must be in the format `providers/{provider}`. The provider must
+    /// be the Google Cloud Project ID. For example, `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. The Delivery Vehicle ID must be unique and subject to the following
-    /// restrictions:
+    /// Required. The Delivery Vehicle ID must be unique and subject to the
+    /// following restrictions:
     ///
     /// * Must be a valid Unicode string.
     /// * Limited to a maximum length of 64 characters.
@@ -948,8 +954,8 @@ pub struct CreateDeliveryVehicleRequest {
     /// ',', or '#'.
     #[prost(string, tag = "4")]
     pub delivery_vehicle_id: ::prost::alloc::string::String,
-    /// Required. The `DeliveryVehicle` entity to create. When creating a new delivery
-    /// vehicle, you may set the following optional fields:
+    /// Required. The `DeliveryVehicle` entity to create. When creating a new
+    /// delivery vehicle, you may set the following optional fields:
     ///
     /// * last_location
     /// * attributes
@@ -986,13 +992,13 @@ pub struct ListDeliveryVehiclesRequest {
     /// For example, `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of vehicles to return. The service may return fewer than
-    /// this number. If you don't specify this number, then the server determines
-    /// the number of results to return.
+    /// Optional. The maximum number of vehicles to return. The service may return
+    /// fewer than this number. If you don't specify this number, then the server
+    /// determines the number of results to return.
     #[prost(int32, tag = "4")]
     pub page_size: i32,
-    /// Optional. A page token, received from a previous `ListDeliveryVehicles` call. You
-    /// must provide this in order to retrieve the subsequent page.
+    /// Optional. A page token, received from a previous `ListDeliveryVehicles`
+    /// call. You must provide this in order to retrieve the subsequent page.
     ///
     /// When paginating, all other parameters provided to `ListDeliveryVehicles`
     /// must match the call that provided the page token.
@@ -1018,8 +1024,8 @@ pub struct ListDeliveryVehiclesRequest {
     /// is 1 restriction.
     #[prost(string, tag = "6")]
     pub filter: ::prost::alloc::string::String,
-    /// Optional. A filter that limits the search area to a rectangle defined by the
-    /// northeast and southwest corner points.
+    /// Optional. A filter that limits the search area to a rectangle defined by
+    /// the northeast and southwest corner points.
     ///
     /// When defined, only vehicles located within the search area are returned.
     #[prost(message, optional, tag = "7")]
@@ -1076,9 +1082,9 @@ pub struct BatchCreateTasksRequest {
     /// field.
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<DeliveryRequestHeader>,
-    /// Required. The parent resource shared by all tasks. This value must be in the format
-    /// `providers/{provider}`. The `provider` must be the Google Cloud Project ID.
-    /// For example, `sample-cloud-project`. The parent field in the
+    /// Required. The parent resource shared by all tasks. This value must be in
+    /// the format `providers/{provider}`. The `provider` must be the Google Cloud
+    /// Project ID. For example, `sample-cloud-project`. The parent field in the
     /// `CreateTaskRequest` messages must either  be empty, or it must match this
     /// field.
     #[prost(string, tag = "3")]
@@ -1103,14 +1109,14 @@ pub struct CreateTaskRequest {
     /// Optional. The standard Delivery API request header.
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<DeliveryRequestHeader>,
-    /// Required. Must be in the format `providers/{provider}`. The `provider` must be the
-    /// Google Cloud Project ID. For example, `sample-cloud-project`.
+    /// Required. Must be in the format `providers/{provider}`. The `provider` must
+    /// be the Google Cloud Project ID. For example, `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. The Task ID must be unique, but it should be not a shipment tracking ID. To
-    /// store a shipment tracking ID, use the `tracking_id` field. Note that
-    /// multiple tasks can have the same `tracking_id`. Task IDs are subject to the
-    /// following restrictions:
+    /// Required. The Task ID must be unique, but it should be not a shipment
+    /// tracking ID. To store a shipment tracking ID, use the `tracking_id` field.
+    /// Note that multiple tasks can have the same `tracking_id`. Task IDs are
+    /// subject to the following restrictions:
     ///
     /// * Must be a valid Unicode string.
     /// * Limited to a maximum length of 64 characters.
@@ -1142,8 +1148,9 @@ pub struct GetTaskRequest {
     /// Optional. The standard Delivery API request header.
     #[prost(message, optional, tag = "1")]
     pub header: ::core::option::Option<DeliveryRequestHeader>,
-    /// Required. Must be in the format `providers/{provider}/tasks/{task}`. The `provider`
-    /// must be the Google Cloud Project ID. For example, `sample-cloud-project`.
+    /// Required. Must be in the format `providers/{provider}/tasks/{task}`. The
+    /// `provider` must be the Google Cloud Project ID. For example,
+    /// `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1159,8 +1166,8 @@ pub struct SearchTasksRequest {
     /// `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. The identifier of the set of related Tasks being requested. Tracking IDs
-    /// are subject to the following restrictions:
+    /// Required. The identifier of the set of related Tasks being requested.
+    /// Tracking IDs are subject to the following restrictions:
     ///
     /// * Must be a valid Unicode string.
     /// * Limited to a maximum length of 64 characters.
@@ -1170,13 +1177,13 @@ pub struct SearchTasksRequest {
     /// ',', or '#'.
     #[prost(string, tag = "4")]
     pub tracking_id: ::prost::alloc::string::String,
-    /// Optional. The maximum number of Tasks to return. The service may return fewer than
-    /// this value. If you don't specify this value, then the server determines the
-    /// number of results to return.
+    /// Optional. The maximum number of Tasks to return. The service may return
+    /// fewer than this value. If you don't specify this value, then the server
+    /// determines the number of results to return.
     #[prost(int32, tag = "5")]
     pub page_size: i32,
-    /// Optional. A page token, received from a previous `SearchTasks` call. You must
-    /// provide this value to retrieve the subsequent page.
+    /// Optional. A page token, received from a previous `SearchTasks` call. You
+    /// must provide this value to retrieve the subsequent page.
     ///
     /// When paginating, all other parameters provided to `SearchTasks` must match
     /// the call that provided the page token.
@@ -1244,9 +1251,9 @@ pub struct ListTasksRequest {
     /// `sample-cloud-project`.
     #[prost(string, tag = "3")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of Tasks to return. The service may return fewer than
-    /// this value. If you don't specify this value, then the server determines the
-    /// number of results to return.
+    /// Optional. The maximum number of Tasks to return. The service may return
+    /// fewer than this value. If you don't specify this value, then the server
+    /// determines the number of results to return.
     #[prost(int32, tag = "4")]
     pub page_size: i32,
     /// Optional. A page token received from a previous `ListTasks` call.
@@ -1256,11 +1263,10 @@ pub struct ListTasksRequest {
     /// the call that provided the page token.
     #[prost(string, tag = "5")]
     pub page_token: ::prost::alloc::string::String,
-    /// Optional. A filter query to apply when listing Tasks. See <http://aip.dev/160> for
-    /// examples of filter syntax. If you don't specify a value, or if you filter
-    /// on an empty string, then all Tasks are returned. For information about the
-    /// Task properties that you can filter on, see
-    /// [Task
+    /// Optional. A filter query to apply when listing Tasks. See
+    /// <http://aip.dev/160> for examples of filter syntax. If you don't specify a
+    /// value, or if you filter on an empty string, then all Tasks are returned.
+    /// For information about the Task properties that you can filter on, see [Task
     /// list](/maps/documentation/transportation-logistics/last-mile-fleet-solution/fleet-performance/fleet-engine/deliveries_api#list_tasks).
     #[prost(string, tag = "6")]
     pub filter: ::prost::alloc::string::String,

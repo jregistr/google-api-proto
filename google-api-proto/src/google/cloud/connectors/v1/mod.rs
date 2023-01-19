@@ -1,37 +1,3 @@
-/// Define the Connectors target endpoint.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DestinationConfig {
-    /// The key is the destination identifier that is supported by the Connector.
-    #[prost(string, tag = "1")]
-    pub key: ::prost::alloc::string::String,
-    /// The destinations for the key.
-    #[prost(message, repeated, tag = "2")]
-    pub destinations: ::prost::alloc::vec::Vec<Destination>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Destination {
-    /// The port is the target port number that is accepted by the destination.
-    #[prost(int32, tag = "3")]
-    pub port: i32,
-    #[prost(oneof = "destination::Destination", tags = "1, 2")]
-    pub destination: ::core::option::Option<destination::Destination>,
-}
-/// Nested message and enum types in `Destination`.
-pub mod destination {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// PSC service attachments.
-        /// Format: projects/*/regions/*/serviceAttachments/*
-        #[prost(string, tag = "1")]
-        ServiceAttachment(::prost::alloc::string::String),
-        /// For publicly routable host.
-        #[prost(string, tag = "2")]
-        Host(::prost::alloc::string::String),
-    }
-}
 /// Represents the metadata of the long-running operation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -453,6 +419,88 @@ impl LaunchStage {
         }
     }
 }
+/// Provider indicates the owner who provides the connectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Provider {
+    /// Output only. Resource name of the Provider.
+    /// Format: projects/{project}/locations/{location}/providers/{provider}
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag = "6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag = "7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag = "8")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag = "9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag = "10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration = "LaunchStage", tag = "11")]
+    pub launch_stage: i32,
+}
+/// Request message for Connectors.GetProvider.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProviderRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProvidersRequest {
+    /// Required. Parent resource of the API, of the form:
+    /// `projects/*/locations/*`
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProvidersResponse {
+    /// A list of providers.
+    #[prost(message, repeated, tag = "1")]
+    pub providers: ::prost::alloc::vec::Vec<Provider>,
+    /// Next page token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -529,88 +577,6 @@ pub struct ListConnectorsResponse {
     /// A list of connectors.
     #[prost(message, repeated, tag = "1")]
     pub connectors: ::prost::alloc::vec::Vec<Connector>,
-    /// Next page token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Provider indicates the owner who provides the connectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Provider {
-    /// Output only. Resource name of the Provider.
-    /// Format: projects/{project}/locations/{location}/providers/{provider}
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag = "6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag = "7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag = "8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag = "9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag = "10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration = "LaunchStage", tag = "11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetProvider.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetProviderRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListProviders.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProvidersRequest {
-    /// Required. Parent resource of the API, of the form:
-    /// `projects/*/locations/*`
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListProviders.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProvidersResponse {
-    /// A list of providers.
-    #[prost(message, repeated, tag = "1")]
-    pub providers: ::prost::alloc::vec::Vec<Provider>,
     /// Next page token.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
@@ -780,6 +746,40 @@ impl AuthType {
             "SSH_PUBLIC_KEY" => Some(Self::SshPublicKey),
             _ => None,
         }
+    }
+}
+/// Define the Connectors target endpoint.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DestinationConfig {
+    /// The key is the destination identifier that is supported by the Connector.
+    #[prost(string, tag = "1")]
+    pub key: ::prost::alloc::string::String,
+    /// The destinations for the key.
+    #[prost(message, repeated, tag = "2")]
+    pub destinations: ::prost::alloc::vec::Vec<Destination>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Destination {
+    /// The port is the target port number that is accepted by the destination.
+    #[prost(int32, tag = "3")]
+    pub port: i32,
+    #[prost(oneof = "destination::Destination", tags = "1, 2")]
+    pub destination: ::core::option::Option<destination::Destination>,
+}
+/// Nested message and enum types in `Destination`.
+pub mod destination {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// PSC service attachments.
+        /// Format: projects/*/regions/*/serviceAttachments/*
+        #[prost(string, tag = "1")]
+        ServiceAttachment(::prost::alloc::string::String),
+        /// For publicly routable host.
+        #[prost(string, tag = "2")]
+        Host(::prost::alloc::string::String),
     }
 }
 /// Connection represents an instance of connector.
