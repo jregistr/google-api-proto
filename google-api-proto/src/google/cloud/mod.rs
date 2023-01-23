@@ -1,5 +1,7 @@
 #[cfg(any(feature = "google-cloud-accessapproval-v1"))]
 pub mod accessapproval;
+#[cfg(any(feature = "google-cloud-advisorynotifications-v1"))]
+pub mod advisorynotifications;
 #[cfg(
     any(
         feature = "google-cloud-aiplatform-logging",

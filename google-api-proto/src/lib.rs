@@ -70,6 +70,7 @@ pub mod cloud;
         feature = "google-chromeos-uidetection-v1",
         feature = "google-cloud",
         feature = "google-cloud-accessapproval-v1",
+        feature = "google-cloud-advisorynotifications-v1",
         feature = "google-cloud-aiplatform-logging",
         feature = "google-cloud-aiplatform-v1",
         feature = "google-cloud-aiplatform-v1-schema-predict-instance",
