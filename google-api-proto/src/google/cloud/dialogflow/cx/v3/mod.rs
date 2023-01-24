@@ -9943,6 +9943,8 @@ pub mod export_agent_request {
         Unspecified = 0,
         /// Agent content will be exported as raw bytes.
         Blob = 1,
+        /// Agent content will be exported in JSON Package format.
+        JsonPackage = 4,
     }
     impl DataFormat {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -9953,6 +9955,7 @@ pub mod export_agent_request {
             match self {
                 DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
                 DataFormat::Blob => "BLOB",
+                DataFormat::JsonPackage => "JSON_PACKAGE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -9960,6 +9963,7 @@ pub mod export_agent_request {
             match value {
                 "DATA_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
                 "BLOB" => Some(Self::Blob),
+                "JSON_PACKAGE" => Some(Self::JsonPackage),
                 _ => None,
             }
         }
