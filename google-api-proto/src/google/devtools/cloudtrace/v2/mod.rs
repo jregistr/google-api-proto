@@ -4,7 +4,7 @@
 /// its sub-operations.
 ///
 /// A trace can also contain multiple root spans, or none at all.
-/// Spans do not need to be contiguous&mdash;there might be
+/// Spans do not need to be contiguous. There might be
 /// gaps or overlaps between spans in a trace.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
