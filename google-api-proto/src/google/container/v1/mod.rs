@@ -257,7 +257,9 @@ pub struct NodeConfig {
         ::prost::alloc::string::String,
     >,
     /// The image type to use for this node. Note that for a given image type,
-    /// the latest version of it will be used.
+    /// the latest version of it will be used. Please see
+    /// <https://cloud.google.com/kubernetes-engine/docs/concepts/node-images> for
+    /// available image types.
     #[prost(string, tag = "5")]
     pub image_type: ::prost::alloc::string::String,
     /// The map of Kubernetes labels (key/value pairs) to be applied to each node.
@@ -2407,7 +2409,9 @@ pub struct UpdateNodePoolRequest {
     /// - "-": picks the Kubernetes master version
     #[prost(string, tag = "5")]
     pub node_version: ::prost::alloc::string::String,
-    /// Required. The desired image type for the node pool.
+    /// Required. The desired image type for the node pool. Please see
+    /// <https://cloud.google.com/kubernetes-engine/docs/concepts/node-images> for
+    /// available image types.
     #[prost(string, tag = "6")]
     pub image_type: ::prost::alloc::string::String,
     /// The name (project, location, cluster, node pool) of the node pool to
@@ -4048,7 +4052,9 @@ pub struct AutoprovisioningNodePoolDefaults {
     /// <https://cloud.google.com/compute/docs/disks/customer-managed-encryption>
     #[prost(string, tag = "9")]
     pub boot_disk_kms_key: ::prost::alloc::string::String,
-    /// The image type to use for NAP created node.
+    /// The image type to use for NAP created node. Please see
+    /// <https://cloud.google.com/kubernetes-engine/docs/concepts/node-images> for
+    /// available image types.
     #[prost(string, tag = "10")]
     pub image_type: ::prost::alloc::string::String,
 }
@@ -5866,7 +5872,8 @@ impl DatapathProvider {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum NodePoolUpdateStrategy {
-    /// Default value.
+    /// Default value if unset. GKE internally defaults the update strategy to
+    /// SURGE for unspecified strategies.
     Unspecified = 0,
     /// blue-green upgrade.
     BlueGreen = 2,
