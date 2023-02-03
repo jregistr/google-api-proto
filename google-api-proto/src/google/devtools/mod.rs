@@ -7,7 +7,12 @@
 pub mod artifactregistry;
 #[cfg(any(feature = "google-devtools-build-v1"))]
 pub mod build;
-#[cfg(any(feature = "google-devtools-cloudbuild-v1"))]
+#[cfg(
+    any(
+        feature = "google-devtools-cloudbuild-v1",
+        feature = "google-devtools-cloudbuild-v2",
+    )
+)]
 pub mod cloudbuild;
 #[cfg(any(feature = "google-devtools-clouddebugger-v2"))]
 pub mod clouddebugger;

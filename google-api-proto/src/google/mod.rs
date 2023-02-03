@@ -410,6 +410,7 @@ pub mod datastore;
         feature = "google-devtools-artifactregistry-v1beta2",
         feature = "google-devtools-build-v1",
         feature = "google-devtools-cloudbuild-v1",
+        feature = "google-devtools-cloudbuild-v2",
         feature = "google-devtools-clouddebugger-v2",
         feature = "google-devtools-clouderrorreporting-v1beta1",
         feature = "google-devtools-cloudprofiler-v2",
