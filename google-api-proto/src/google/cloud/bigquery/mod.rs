@@ -1,5 +1,7 @@
 #[cfg(any(feature = "google-cloud-bigquery-analyticshub-v1"))]
 pub mod analyticshub;
+#[cfg(any(feature = "google-cloud-bigquery-biglake-v1alpha1"))]
+pub mod biglake;
 #[cfg(
     any(
         feature = "google-cloud-bigquery-connection-v1",
