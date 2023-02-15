@@ -209,6 +209,7 @@ pub mod cloud;
         feature = "google-cloud-ids-v1",
         feature = "google-cloud-integrations-v1alpha",
         feature = "google-cloud-iot-v1",
+        feature = "google-cloud-kms-logging-v1",
         feature = "google-cloud-kms-v1",
         feature = "google-cloud-language-v1",
         feature = "google-cloud-language-v1beta1",

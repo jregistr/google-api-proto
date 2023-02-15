@@ -295,7 +295,7 @@ pub mod ids;
 pub mod integrations;
 #[cfg(any(feature = "google-cloud-iot-v1"))]
 pub mod iot;
-#[cfg(any(feature = "google-cloud-kms-v1"))]
+#[cfg(any(feature = "google-cloud-kms-logging-v1", feature = "google-cloud-kms-v1"))]
 pub mod kms;
 #[cfg(
     any(
