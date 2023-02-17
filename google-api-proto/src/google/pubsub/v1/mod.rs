@@ -1645,6 +1645,11 @@ pub mod streaming_pull_response {
         /// deadline has expired.
         #[prost(string, repeated, tag = "2")]
         pub invalid_ack_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// List of acknowledgement IDs that failed processing with temporary issues.
+        #[prost(string, repeated, tag = "3")]
+        pub temporary_failed_ack_ids: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
     }
     /// Subscription properties sent as part of the response.
     #[allow(clippy::derive_partial_eq_without_eq)]

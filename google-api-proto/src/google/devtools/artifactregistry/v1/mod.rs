@@ -240,21 +240,6 @@ pub struct DeleteRepositoryRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// A detailed representation of a KFP artifact.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KfpArtifact {
-    /// Output only. Resource name of the KFP artifact. Since users don't directly
-    /// interact with this resource, the name will be derived from the associated
-    /// version. For example, when version = ".../versions/sha256:abcdef...", the
-    /// name will be ".../kfpArtifacts/sha256:abcdef...".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The version associated with the KFP artifact. Must follow the Semantic
-    /// Versioning standard.
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
-}
 /// A detailed representation of an Apt artifact. Information in the record
 /// is derived from the archive's control file.
 /// See <https://www.debian.org/doc/debian-policy/ch-controlfields.html>

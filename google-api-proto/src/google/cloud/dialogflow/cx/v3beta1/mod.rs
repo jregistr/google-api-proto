@@ -2852,6 +2852,19 @@ pub mod experiments_client {
         }
     }
 }
+/// Google Cloud Storage location for a Dialogflow operation that writes or
+/// exports objects (e.g. exported agent or transcripts) outside of Dialogflow.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDestination {
+    /// Required. The Google Cloud Storage URI for the exported objects. A URI is
+    /// of the form:
+    ///    gs://bucket/object-name-or-prefix
+    /// Whether a full object name, or just a prefix, its usage depends on the
+    /// Dialogflow operation.
+    #[prost(string, tag = "1")]
+    pub uri: ::prost::alloc::string::String,
+}
 /// Hierarchical advanced settings for agent/flow/page/fulfillment/parameter.
 /// Settings exposed at lower level overrides the settings exposed at higher
 /// level. Overriding occurs at the sub-setting level. For example, the
@@ -2866,6 +2879,13 @@ pub mod experiments_client {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AdvancedSettings {
+    /// If present, incoming audio is exported by Dialogflow to the configured
+    /// Google Cloud Storage destination.
+    /// Exposed at the following levels:
+    /// - Agent level
+    /// - Flow level
+    #[prost(message, optional, tag = "2")]
+    pub audio_export_gcs_destination: ::core::option::Option<GcsDestination>,
     /// Settings for logging.
     /// Settings for Dialogflow History, Contact Center messages, StackDriver logs,
     /// and speech logging.
@@ -3728,6 +3748,19 @@ pub struct OutputAudioConfig {
     /// Optional. Configuration of how speech should be synthesized.
     #[prost(message, optional, tag = "3")]
     pub synthesize_speech_config: ::core::option::Option<SynthesizeSpeechConfig>,
+}
+/// Settings related to speech generating.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextToSpeechSettings {
+    /// Configuration of how speech should be synthesized, mapping from
+    /// language (<https://dialogflow.com/docs/reference/language>) to
+    /// SynthesizeSpeechConfig.
+    #[prost(btree_map = "string, message", tag = "1")]
+    pub synthesize_speech_configs: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        SynthesizeSpeechConfig,
+    >,
 }
 /// Audio encoding of the audio content sent in the conversational query request.
 /// Refer to the
@@ -9833,6 +9866,10 @@ pub struct Agent {
     /// lower level overrides the settings exposed at the higher level.
     #[prost(message, optional, tag = "22")]
     pub advanced_settings: ::core::option::Option<AdvancedSettings>,
+    /// Settings on instructing the speech synthesizer on how to generate the
+    /// output audio content.
+    #[prost(message, optional, tag = "31")]
+    pub text_to_speech_settings: ::core::option::Option<TextToSpeechSettings>,
 }
 /// The request message for
 /// \[Agents.ListAgents][google.cloud.dialogflow.cx.v3beta1.Agents.ListAgents\].
@@ -10445,8 +10482,8 @@ pub struct Environment {
     /// 500 characters. If exceeded, the request is rejected.
     #[prost(string, tag = "3")]
     pub description: ::prost::alloc::string::String,
-    /// Required. A list of configurations for flow versions. You should include
-    /// version configs for all flows that are reachable from [`Start
+    /// A list of configurations for flow versions. You should include version
+    /// configs for all flows that are reachable from [`Start
     /// Flow`]\[Agent.start_flow\] in the agent. Otherwise, an error will be
     /// returned.
     #[prost(message, repeated, tag = "6")]
