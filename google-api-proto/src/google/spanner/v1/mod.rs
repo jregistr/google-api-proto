@@ -1,3 +1,156 @@
+/// KeyRange represents a range of rows in a table or index.
+///
+/// A range has a start key and an end key. These keys can be open or
+/// closed, indicating if the range includes rows with that key.
+///
+/// Keys are represented by lists, where the ith value in the list
+/// corresponds to the ith component of the table or index primary key.
+/// Individual values are encoded as described
+/// \[here][google.spanner.v1.TypeCode\].
+///
+/// For example, consider the following table definition:
+///
+///      CREATE TABLE UserEvents (
+///        UserName STRING(MAX),
+///        EventDate STRING(10)
+///      ) PRIMARY KEY(UserName, EventDate);
+///
+/// The following keys name rows in this table:
+///
+///      ["Bob", "2014-09-23"]
+///      ["Alfred", "2015-06-12"]
+///
+/// Since the `UserEvents` table's `PRIMARY KEY` clause names two
+/// columns, each `UserEvents` key has two elements; the first is the
+/// `UserName`, and the second is the `EventDate`.
+///
+/// Key ranges with multiple components are interpreted
+/// lexicographically by component using the table or index key's declared
+/// sort order. For example, the following range returns all events for
+/// user `"Bob"` that occurred in the year 2015:
+///
+///      "start_closed": ["Bob", "2015-01-01"]
+///      "end_closed": ["Bob", "2015-12-31"]
+///
+/// Start and end keys can omit trailing key components. This affects the
+/// inclusion and exclusion of rows that exactly match the provided key
+/// components: if the key is closed, then rows that exactly match the
+/// provided components are included; if the key is open, then rows
+/// that exactly match are not included.
+///
+/// For example, the following range includes all events for `"Bob"` that
+/// occurred during and after the year 2000:
+///
+///      "start_closed": ["Bob", "2000-01-01"]
+///      "end_closed": \["Bob"\]
+///
+/// The next example retrieves all events for `"Bob"`:
+///
+///      "start_closed": \["Bob"\]
+///      "end_closed": \["Bob"\]
+///
+/// To retrieve events before the year 2000:
+///
+///      "start_closed": \["Bob"\]
+///      "end_open": ["Bob", "2000-01-01"]
+///
+/// The following range includes all rows in the table:
+///
+///      "start_closed": []
+///      "end_closed": []
+///
+/// This range returns all users whose `UserName` begins with any
+/// character from A to C:
+///
+///      "start_closed": \["A"\]
+///      "end_open": \["D"\]
+///
+/// This range returns all users whose `UserName` begins with B:
+///
+///      "start_closed": \["B"\]
+///      "end_open": \["C"\]
+///
+/// Key ranges honor column sort order. For example, suppose a table is
+/// defined as follows:
+///
+///      CREATE TABLE DescendingSortedTable {
+///        Key INT64,
+///        ...
+///      ) PRIMARY KEY(Key DESC);
+///
+/// The following range retrieves all rows with key values between 1
+/// and 100 inclusive:
+///
+///      "start_closed": \["100"\]
+///      "end_closed": \["1"\]
+///
+/// Note that 100 is passed as the start, and 1 is passed as the end,
+/// because `Key` is a descending column in the schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeyRange {
+    /// The start key must be provided. It can be either closed or open.
+    #[prost(oneof = "key_range::StartKeyType", tags = "1, 2")]
+    pub start_key_type: ::core::option::Option<key_range::StartKeyType>,
+    /// The end key must be provided. It can be either closed or open.
+    #[prost(oneof = "key_range::EndKeyType", tags = "3, 4")]
+    pub end_key_type: ::core::option::Option<key_range::EndKeyType>,
+}
+/// Nested message and enum types in `KeyRange`.
+pub mod key_range {
+    /// The start key must be provided. It can be either closed or open.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum StartKeyType {
+        /// If the start is closed, then the range includes all rows whose
+        /// first `len(start_closed)` key columns exactly match `start_closed`.
+        #[prost(message, tag = "1")]
+        StartClosed(::prost_types::ListValue),
+        /// If the start is open, then the range excludes rows whose first
+        /// `len(start_open)` key columns exactly match `start_open`.
+        #[prost(message, tag = "2")]
+        StartOpen(::prost_types::ListValue),
+    }
+    /// The end key must be provided. It can be either closed or open.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum EndKeyType {
+        /// If the end is closed, then the range includes all rows whose
+        /// first `len(end_closed)` key columns exactly match `end_closed`.
+        #[prost(message, tag = "3")]
+        EndClosed(::prost_types::ListValue),
+        /// If the end is open, then the range excludes rows whose first
+        /// `len(end_open)` key columns exactly match `end_open`.
+        #[prost(message, tag = "4")]
+        EndOpen(::prost_types::ListValue),
+    }
+}
+/// `KeySet` defines a collection of Cloud Spanner keys and/or key ranges. All
+/// the keys are expected to be in the same table or index. The keys need
+/// not be sorted in any particular way.
+///
+/// If the same key is specified multiple times in the set (for example
+/// if two ranges, two keys, or a key and a range overlap), Cloud Spanner
+/// behaves as if the key were only specified once.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KeySet {
+    /// A list of specific keys. Entries in `keys` should have exactly as
+    /// many elements as there are columns in the primary or index key
+    /// with which this `KeySet` is used.  Individual key values are
+    /// encoded as described \[here][google.spanner.v1.TypeCode\].
+    #[prost(message, repeated, tag = "1")]
+    pub keys: ::prost::alloc::vec::Vec<::prost_types::ListValue>,
+    /// A list of key ranges. See \[KeyRange][google.spanner.v1.KeyRange\] for more information about
+    /// key range specifications.
+    #[prost(message, repeated, tag = "2")]
+    pub ranges: ::prost::alloc::vec::Vec<KeyRange>,
+    /// For convenience `all` can be set to `true` to indicate that this
+    /// `KeySet` matches all keys in the table or index. Note that any keys
+    /// specified in `keys` or `ranges` are only yielded once.
+    #[prost(bool, tag = "3")]
+    pub all: bool,
+}
 /// Node information for nodes appearing in a \[QueryPlan.plan_nodes][google.spanner.v1.QueryPlan.plan_nodes\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1148,159 +1301,6 @@ pub mod commit_response {
         #[prost(int64, tag = "1")]
         pub mutation_count: i64,
     }
-}
-/// KeyRange represents a range of rows in a table or index.
-///
-/// A range has a start key and an end key. These keys can be open or
-/// closed, indicating if the range includes rows with that key.
-///
-/// Keys are represented by lists, where the ith value in the list
-/// corresponds to the ith component of the table or index primary key.
-/// Individual values are encoded as described
-/// \[here][google.spanner.v1.TypeCode\].
-///
-/// For example, consider the following table definition:
-///
-///      CREATE TABLE UserEvents (
-///        UserName STRING(MAX),
-///        EventDate STRING(10)
-///      ) PRIMARY KEY(UserName, EventDate);
-///
-/// The following keys name rows in this table:
-///
-///      ["Bob", "2014-09-23"]
-///      ["Alfred", "2015-06-12"]
-///
-/// Since the `UserEvents` table's `PRIMARY KEY` clause names two
-/// columns, each `UserEvents` key has two elements; the first is the
-/// `UserName`, and the second is the `EventDate`.
-///
-/// Key ranges with multiple components are interpreted
-/// lexicographically by component using the table or index key's declared
-/// sort order. For example, the following range returns all events for
-/// user `"Bob"` that occurred in the year 2015:
-///
-///      "start_closed": ["Bob", "2015-01-01"]
-///      "end_closed": ["Bob", "2015-12-31"]
-///
-/// Start and end keys can omit trailing key components. This affects the
-/// inclusion and exclusion of rows that exactly match the provided key
-/// components: if the key is closed, then rows that exactly match the
-/// provided components are included; if the key is open, then rows
-/// that exactly match are not included.
-///
-/// For example, the following range includes all events for `"Bob"` that
-/// occurred during and after the year 2000:
-///
-///      "start_closed": ["Bob", "2000-01-01"]
-///      "end_closed": \["Bob"\]
-///
-/// The next example retrieves all events for `"Bob"`:
-///
-///      "start_closed": \["Bob"\]
-///      "end_closed": \["Bob"\]
-///
-/// To retrieve events before the year 2000:
-///
-///      "start_closed": \["Bob"\]
-///      "end_open": ["Bob", "2000-01-01"]
-///
-/// The following range includes all rows in the table:
-///
-///      "start_closed": []
-///      "end_closed": []
-///
-/// This range returns all users whose `UserName` begins with any
-/// character from A to C:
-///
-///      "start_closed": \["A"\]
-///      "end_open": \["D"\]
-///
-/// This range returns all users whose `UserName` begins with B:
-///
-///      "start_closed": \["B"\]
-///      "end_open": \["C"\]
-///
-/// Key ranges honor column sort order. For example, suppose a table is
-/// defined as follows:
-///
-///      CREATE TABLE DescendingSortedTable {
-///        Key INT64,
-///        ...
-///      ) PRIMARY KEY(Key DESC);
-///
-/// The following range retrieves all rows with key values between 1
-/// and 100 inclusive:
-///
-///      "start_closed": \["100"\]
-///      "end_closed": \["1"\]
-///
-/// Note that 100 is passed as the start, and 1 is passed as the end,
-/// because `Key` is a descending column in the schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeyRange {
-    /// The start key must be provided. It can be either closed or open.
-    #[prost(oneof = "key_range::StartKeyType", tags = "1, 2")]
-    pub start_key_type: ::core::option::Option<key_range::StartKeyType>,
-    /// The end key must be provided. It can be either closed or open.
-    #[prost(oneof = "key_range::EndKeyType", tags = "3, 4")]
-    pub end_key_type: ::core::option::Option<key_range::EndKeyType>,
-}
-/// Nested message and enum types in `KeyRange`.
-pub mod key_range {
-    /// The start key must be provided. It can be either closed or open.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum StartKeyType {
-        /// If the start is closed, then the range includes all rows whose
-        /// first `len(start_closed)` key columns exactly match `start_closed`.
-        #[prost(message, tag = "1")]
-        StartClosed(::prost_types::ListValue),
-        /// If the start is open, then the range excludes rows whose first
-        /// `len(start_open)` key columns exactly match `start_open`.
-        #[prost(message, tag = "2")]
-        StartOpen(::prost_types::ListValue),
-    }
-    /// The end key must be provided. It can be either closed or open.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum EndKeyType {
-        /// If the end is closed, then the range includes all rows whose
-        /// first `len(end_closed)` key columns exactly match `end_closed`.
-        #[prost(message, tag = "3")]
-        EndClosed(::prost_types::ListValue),
-        /// If the end is open, then the range excludes rows whose first
-        /// `len(end_open)` key columns exactly match `end_open`.
-        #[prost(message, tag = "4")]
-        EndOpen(::prost_types::ListValue),
-    }
-}
-/// `KeySet` defines a collection of Cloud Spanner keys and/or key ranges. All
-/// the keys are expected to be in the same table or index. The keys need
-/// not be sorted in any particular way.
-///
-/// If the same key is specified multiple times in the set (for example
-/// if two ranges, two keys, or a key and a range overlap), Cloud Spanner
-/// behaves as if the key were only specified once.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeySet {
-    /// A list of specific keys. Entries in `keys` should have exactly as
-    /// many elements as there are columns in the primary or index key
-    /// with which this `KeySet` is used.  Individual key values are
-    /// encoded as described \[here][google.spanner.v1.TypeCode\].
-    #[prost(message, repeated, tag = "1")]
-    pub keys: ::prost::alloc::vec::Vec<::prost_types::ListValue>,
-    /// A list of key ranges. See \[KeyRange][google.spanner.v1.KeyRange\] for more information about
-    /// key range specifications.
-    #[prost(message, repeated, tag = "2")]
-    pub ranges: ::prost::alloc::vec::Vec<KeyRange>,
-    /// For convenience `all` can be set to `true` to indicate that this
-    /// `KeySet` matches all keys in the table or index. Note that any keys
-    /// specified in `keys` or `ranges` are only yielded once.
-    #[prost(bool, tag = "3")]
-    pub all: bool,
 }
 /// A modification to one or more Cloud Spanner rows.  Mutations can be
 /// applied to a Cloud Spanner database by sending them in a

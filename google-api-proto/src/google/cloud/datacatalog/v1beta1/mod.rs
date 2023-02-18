@@ -617,227 +617,6 @@ pub mod policy_tag_manager_client {
         }
     }
 }
-/// Message capturing a taxonomy and its policy tag hierarchy as a nested proto.
-/// Used for taxonomy import/export and mutation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SerializedTaxonomy {
-    /// Required. Display name of the taxonomy. Max 200 bytes when encoded in UTF-8.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the serialized taxonomy. The length of the
-    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
-    /// defaults to an empty description.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Top level policy tags associated with the taxonomy if any.
-    #[prost(message, repeated, tag = "3")]
-    pub policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
-}
-/// Message representing one policy tag when exported as a nested proto.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SerializedPolicyTag {
-    /// Required. Display name of the policy tag. Max 200 bytes when encoded in UTF-8.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the serialized policy tag. The length of the
-    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
-    /// defaults to an empty description.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Children of the policy tag if any.
-    #[prost(message, repeated, tag = "4")]
-    pub child_policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
-}
-/// Request message for
-/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportTaxonomiesRequest {
-    /// Required. Resource name of project that the newly created taxonomies will
-    /// belong to.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Source taxonomies to be imported in a tree structure.
-    #[prost(oneof = "import_taxonomies_request::Source", tags = "2")]
-    pub source: ::core::option::Option<import_taxonomies_request::Source>,
-}
-/// Nested message and enum types in `ImportTaxonomiesRequest`.
-pub mod import_taxonomies_request {
-    /// Required. Source taxonomies to be imported in a tree structure.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// Inline source used for taxonomies import
-        #[prost(message, tag = "2")]
-        InlineSource(super::InlineSource),
-    }
-}
-/// Inline source used for taxonomies import.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InlineSource {
-    /// Required. Taxonomies to be imported.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
-}
-/// Response message for
-/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportTaxonomiesResponse {
-    /// Taxonomies that were imported.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
-}
-/// Request message for
-/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportTaxonomiesRequest {
-    /// Required. Resource name of the project that taxonomies to be exported
-    /// will share.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Resource names of the taxonomies to be exported.
-    #[prost(string, repeated, tag = "2")]
-    pub taxonomies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. Taxonomies export destination.
-    #[prost(oneof = "export_taxonomies_request::Destination", tags = "3")]
-    pub destination: ::core::option::Option<export_taxonomies_request::Destination>,
-}
-/// Nested message and enum types in `ExportTaxonomiesRequest`.
-pub mod export_taxonomies_request {
-    /// Required. Taxonomies export destination.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// Export taxonomies as serialized taxonomies.
-        #[prost(bool, tag = "3")]
-        SerializedTaxonomies(bool),
-    }
-}
-/// Response message for
-/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportTaxonomiesResponse {
-    /// List of taxonomies and policy tags in a tree structure.
-    #[prost(message, repeated, tag = "1")]
-    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
-}
-/// Generated client implementations.
-pub mod policy_tag_manager_serialization_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Policy tag manager serialization API service allows clients to manipulate
-    /// their taxonomies and policy tags data with serialized format.
-    #[derive(Debug, Clone)]
-    pub struct PolicyTagManagerSerializationClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> PolicyTagManagerSerializationClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PolicyTagManagerSerializationClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            PolicyTagManagerSerializationClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Imports all taxonomies and their policy tags to a project as new
-        /// taxonomies.
-        ///
-        /// This method provides a bulk taxonomy / policy tag creation using nested
-        /// proto structure.
-        pub async fn import_taxonomies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ImportTaxonomiesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ImportTaxonomies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Exports all taxonomies and their policy tags in a project.
-        ///
-        /// This method generates SerializedTaxonomy protos with nested policy tags
-        /// that can be used as an input for future ImportTaxonomies calls.
-        pub async fn export_taxonomies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ExportTaxonomiesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ExportTaxonomies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// This enum describes all the possible systems that Data Catalog integrates
 /// with.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -2891,6 +2670,227 @@ pub mod data_catalog_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Message capturing a taxonomy and its policy tag hierarchy as a nested proto.
+/// Used for taxonomy import/export and mutation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SerializedTaxonomy {
+    /// Required. Display name of the taxonomy. Max 200 bytes when encoded in UTF-8.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the serialized taxonomy. The length of the
+    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
+    /// defaults to an empty description.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Top level policy tags associated with the taxonomy if any.
+    #[prost(message, repeated, tag = "3")]
+    pub policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
+}
+/// Message representing one policy tag when exported as a nested proto.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SerializedPolicyTag {
+    /// Required. Display name of the policy tag. Max 200 bytes when encoded in UTF-8.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the serialized policy tag. The length of the
+    /// description is limited to 2000 bytes when encoded in UTF-8. If not set,
+    /// defaults to an empty description.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Children of the policy tag if any.
+    #[prost(message, repeated, tag = "4")]
+    pub child_policy_tags: ::prost::alloc::vec::Vec<SerializedPolicyTag>,
+}
+/// Request message for
+/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportTaxonomiesRequest {
+    /// Required. Resource name of project that the newly created taxonomies will
+    /// belong to.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Source taxonomies to be imported in a tree structure.
+    #[prost(oneof = "import_taxonomies_request::Source", tags = "2")]
+    pub source: ::core::option::Option<import_taxonomies_request::Source>,
+}
+/// Nested message and enum types in `ImportTaxonomiesRequest`.
+pub mod import_taxonomies_request {
+    /// Required. Source taxonomies to be imported in a tree structure.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// Inline source used for taxonomies import
+        #[prost(message, tag = "2")]
+        InlineSource(super::InlineSource),
+    }
+}
+/// Inline source used for taxonomies import.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InlineSource {
+    /// Required. Taxonomies to be imported.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
+}
+/// Response message for
+/// \[ImportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ImportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportTaxonomiesResponse {
+    /// Taxonomies that were imported.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<Taxonomy>,
+}
+/// Request message for
+/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportTaxonomiesRequest {
+    /// Required. Resource name of the project that taxonomies to be exported
+    /// will share.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Resource names of the taxonomies to be exported.
+    #[prost(string, repeated, tag = "2")]
+    pub taxonomies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. Taxonomies export destination.
+    #[prost(oneof = "export_taxonomies_request::Destination", tags = "3")]
+    pub destination: ::core::option::Option<export_taxonomies_request::Destination>,
+}
+/// Nested message and enum types in `ExportTaxonomiesRequest`.
+pub mod export_taxonomies_request {
+    /// Required. Taxonomies export destination.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// Export taxonomies as serialized taxonomies.
+        #[prost(bool, tag = "3")]
+        SerializedTaxonomies(bool),
+    }
+}
+/// Response message for
+/// \[ExportTaxonomies][google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization.ExportTaxonomies\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportTaxonomiesResponse {
+    /// List of taxonomies and policy tags in a tree structure.
+    #[prost(message, repeated, tag = "1")]
+    pub taxonomies: ::prost::alloc::vec::Vec<SerializedTaxonomy>,
+}
+/// Generated client implementations.
+pub mod policy_tag_manager_serialization_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Policy tag manager serialization API service allows clients to manipulate
+    /// their taxonomies and policy tags data with serialized format.
+    #[derive(Debug, Clone)]
+    pub struct PolicyTagManagerSerializationClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> PolicyTagManagerSerializationClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PolicyTagManagerSerializationClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            PolicyTagManagerSerializationClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Imports all taxonomies and their policy tags to a project as new
+        /// taxonomies.
+        ///
+        /// This method provides a bulk taxonomy / policy tag creation using nested
+        /// proto structure.
+        pub async fn import_taxonomies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ImportTaxonomiesRequest>,
+        ) -> Result<tonic::Response<super::ImportTaxonomiesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ImportTaxonomies",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Exports all taxonomies and their policy tags in a project.
+        ///
+        /// This method generates SerializedTaxonomy protos with nested policy tags
+        /// that can be used as an input for future ImportTaxonomies calls.
+        pub async fn export_taxonomies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ExportTaxonomiesRequest>,
+        ) -> Result<tonic::Response<super::ExportTaxonomiesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ExportTaxonomies",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

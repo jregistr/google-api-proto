@@ -1,3 +1,88 @@
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag = "1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag = "3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
+                "METRIC_LABEL" => Some(Self::MetricLabel),
+                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
+                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
+                "GROUP" => Some(Self::Group),
+                _ => None,
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag = "4")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
 /// series in the set is _aligned_ to the same time interval boundaries, then the
@@ -942,125 +1027,6 @@ impl SparkChartType {
         }
     }
 }
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag = "1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag = "3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    impl FilterType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
-                FilterType::ResourceLabel => "RESOURCE_LABEL",
-                FilterType::MetricLabel => "METRIC_LABEL",
-                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
-                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
-                FilterType::Group => "GROUP",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
-                "METRIC_LABEL" => Some(Self::MetricLabel),
-                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
-                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
-                "GROUP" => Some(Self::Group),
-                _ => None,
-            }
-        }
-    }
-    /// The default value used in the filter comparison
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag = "4")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// A chart that displays alert policy data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AlertChart {
-    /// Required. The resource name of the alert policy. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A widget that groups the other widgets. All widgets that are within
-/// the area spanned by the grouping widget are considered member widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollapsibleGroup {
-    /// The collapsed state of the widget on first page load.
-    #[prost(bool, tag = "1")]
-    pub collapsed: bool,
-}
-/// A widget that displays a stream of log.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogsPanel {
-    /// A filter that chooses which log entries to return.  See [Advanced Logs
-    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries.
-    #[prost(string, tag = "1")]
-    pub filter: ::prost::alloc::string::String,
-    /// The names of logging resources to collect logs for. Currently only projects
-    /// are supported. If empty, the widget will default to the host project.
-    #[prost(string, repeated, tag = "2")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// A widget showing the latest value of a metric, and how this value relates to
 /// one or more thresholds.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1162,6 +1128,40 @@ pub mod scorecard {
         #[prost(message, tag = "5")]
         SparkChartView(SparkChartView),
     }
+}
+/// A chart that displays alert policy data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AlertChart {
+    /// Required. The resource name of the alert policy. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A widget that groups the other widgets. All widgets that are within
+/// the area spanned by the grouping widget are considered member widgets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CollapsibleGroup {
+    /// The collapsed state of the widget on first page load.
+    #[prost(bool, tag = "1")]
+    pub collapsed: bool,
+}
+/// A widget that displays a stream of log.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogsPanel {
+    /// A filter that chooses which log entries to return.  See [Advanced Logs
+    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries.
+    #[prost(string, tag = "1")]
+    pub filter: ::prost::alloc::string::String,
+    /// The names of logging resources to collect logs for. Currently only projects
+    /// are supported. If empty, the widget will default to the host project.
+    #[prost(string, repeated, tag = "2")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Table display options that can be reused.
 #[allow(clippy::derive_partial_eq_without_eq)]

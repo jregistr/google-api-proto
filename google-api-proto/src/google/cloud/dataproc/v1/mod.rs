@@ -2479,225 +2479,6 @@ pub mod cluster_controller_client {
         }
     }
 }
-/// A request to create a node group.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateNodeGroupRequest {
-    /// Required. The parent resource where this node group will be created.
-    /// Format: `projects/{project}/regions/{region}/clusters/{cluster}`
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The node group to create.
-    #[prost(message, optional, tag = "2")]
-    pub node_group: ::core::option::Option<NodeGroup>,
-    /// Optional. An optional node group ID. Generated if not specified.
-    ///
-    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), and hyphens (-). Cannot begin or end with underscore
-    /// or hyphen. Must consist of from 3 to 33 characters.
-    #[prost(string, tag = "4")]
-    pub node_group_id: ::prost::alloc::string::String,
-    /// Optional. A unique ID used to identify the request. If the server receives
-    /// two
-    /// \[CreateNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateNodeGroupRequests>)
-    /// with the same ID, the second request is ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
-    /// and stored in the backend is returned.
-    ///
-    /// Recommendation: Set this value to a
-    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
-    ///
-    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// A request to resize a node group.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResizeNodeGroupRequest {
-    /// Required. The name of the node group to resize.
-    /// Format:
-    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The number of running instances for the node group to maintain.
-    /// The group adds or removes instances to maintain the number of instances
-    /// specified by this parameter.
-    #[prost(int32, tag = "2")]
-    pub size: i32,
-    /// Optional. A unique ID used to identify the request. If the server receives
-    /// two
-    /// \[ResizeNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.ResizeNodeGroupRequests>)
-    /// with the same ID, the second request is ignored and the
-    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
-    /// and stored in the backend is returned.
-    ///
-    /// Recommendation: Set this value to a
-    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
-    ///
-    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
-    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-    /// Optional. Timeout for graceful YARN decomissioning. [Graceful
-    /// decommissioning]
-    /// (<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/scaling-clusters#graceful_decommissioning>)
-    /// allows the removal of nodes from the Compute Engine node group
-    /// without interrupting jobs in progress. This timeout specifies how long to
-    /// wait for jobs in progress to finish before forcefully removing nodes (and
-    /// potentially interrupting jobs). Default timeout is 0 (for forceful
-    /// decommission), and the maximum allowed timeout is 1 day. (see JSON
-    /// representation of
-    /// \[Duration\](<https://developers.google.com/protocol-buffers/docs/proto3#json>)).
-    ///
-    /// Only supported on Dataproc image versions 1.2 and higher.
-    #[prost(message, optional, tag = "4")]
-    pub graceful_decommission_timeout: ::core::option::Option<::prost_types::Duration>,
-}
-/// A request to get a node group .
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNodeGroupRequest {
-    /// Required. The name of the node group to retrieve.
-    /// Format:
-    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod node_group_controller_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The `NodeGroupControllerService` provides methods to manage node groups
-    /// of Compute Engine managed instances.
-    #[derive(Debug, Clone)]
-    pub struct NodeGroupControllerClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> NodeGroupControllerClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> NodeGroupControllerClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            NodeGroupControllerClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a node group in a cluster. The returned
-        /// [Operation.metadata][google.longrunning.Operation.metadata] is
-        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
-        pub async fn create_node_group(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateNodeGroupRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.NodeGroupController/CreateNodeGroup",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Resizes a node group in a cluster. The returned
-        /// [Operation.metadata][google.longrunning.Operation.metadata] is
-        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
-        pub async fn resize_node_group(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ResizeNodeGroupRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.NodeGroupController/ResizeNodeGroup",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the resource representation for a node group in a
-        /// cluster.
-        pub async fn get_node_group(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetNodeGroupRequest>,
-        ) -> Result<tonic::Response<super::NodeGroup>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.dataproc.v1.NodeGroupController/GetNodeGroup",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// The runtime logging config of the job.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5595,270 +5376,222 @@ pub mod autoscaling_policy_service_client {
         }
     }
 }
-/// Metadata describing the Batch operation.
+/// A request to create a node group.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchOperationMetadata {
-    /// Name of the batch for the operation.
+pub struct CreateNodeGroupRequest {
+    /// Required. The parent resource where this node group will be created.
+    /// Format: `projects/{project}/regions/{region}/clusters/{cluster}`
     #[prost(string, tag = "1")]
-    pub batch: ::prost::alloc::string::String,
-    /// Batch UUID for the operation.
-    #[prost(string, tag = "2")]
-    pub batch_uuid: ::prost::alloc::string::String,
-    /// The time when the operation was created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time when the operation finished.
-    #[prost(message, optional, tag = "4")]
-    pub done_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The operation type.
-    #[prost(enumeration = "batch_operation_metadata::BatchOperationType", tag = "6")]
-    pub operation_type: i32,
-    /// Short description of the operation.
-    #[prost(string, tag = "7")]
-    pub description: ::prost::alloc::string::String,
-    /// Labels associated with the operation.
-    #[prost(btree_map = "string, string", tag = "8")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Warnings encountered during operation execution.
-    #[prost(string, repeated, tag = "9")]
-    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `BatchOperationMetadata`.
-pub mod batch_operation_metadata {
-    /// Operation type for Batch resources
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum BatchOperationType {
-        /// Batch operation type is unknown.
-        Unspecified = 0,
-        /// Batch operation type.
-        Batch = 1,
-    }
-    impl BatchOperationType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                BatchOperationType::Unspecified => "BATCH_OPERATION_TYPE_UNSPECIFIED",
-                BatchOperationType::Batch => "BATCH",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "BATCH_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "BATCH" => Some(Self::Batch),
-                _ => None,
-            }
-        }
-    }
-}
-/// The status of the operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClusterOperationStatus {
-    /// Output only. A message containing the operation state.
-    #[prost(enumeration = "cluster_operation_status::State", tag = "1")]
-    pub state: i32,
-    /// Output only. A message containing the detailed operation state.
-    #[prost(string, tag = "2")]
-    pub inner_state: ::prost::alloc::string::String,
-    /// Output only. A message containing any operation metadata details.
-    #[prost(string, tag = "3")]
-    pub details: ::prost::alloc::string::String,
-    /// Output only. The time this state was entered.
-    #[prost(message, optional, tag = "4")]
-    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `ClusterOperationStatus`.
-pub mod cluster_operation_status {
-    /// The operation state.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unused.
-        Unknown = 0,
-        /// The operation has been created.
-        Pending = 1,
-        /// The operation is running.
-        Running = 2,
-        /// The operation is done; either cancelled or completed.
-        Done = 3,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unknown => "UNKNOWN",
-                State::Pending => "PENDING",
-                State::Running => "RUNNING",
-                State::Done => "DONE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNKNOWN" => Some(Self::Unknown),
-                "PENDING" => Some(Self::Pending),
-                "RUNNING" => Some(Self::Running),
-                "DONE" => Some(Self::Done),
-                _ => None,
-            }
-        }
-    }
-}
-/// Metadata describing the operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClusterOperationMetadata {
-    /// Output only. Name of the cluster for the operation.
-    #[prost(string, tag = "7")]
-    pub cluster_name: ::prost::alloc::string::String,
-    /// Output only. Cluster UUID for the operation.
-    #[prost(string, tag = "8")]
-    pub cluster_uuid: ::prost::alloc::string::String,
-    /// Output only. Current operation status.
-    #[prost(message, optional, tag = "9")]
-    pub status: ::core::option::Option<ClusterOperationStatus>,
-    /// Output only. The previous operation status.
-    #[prost(message, repeated, tag = "10")]
-    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
-    /// Output only. The operation type.
-    #[prost(string, tag = "11")]
-    pub operation_type: ::prost::alloc::string::String,
-    /// Output only. Short description of operation.
-    #[prost(string, tag = "12")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Labels associated with the operation
-    #[prost(btree_map = "string, string", tag = "13")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Errors encountered during operation execution.
-    #[prost(string, repeated, tag = "14")]
-    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Output only. Child operation ids
-    #[prost(string, repeated, tag = "15")]
-    pub child_operation_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Metadata describing the node group operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NodeGroupOperationMetadata {
-    /// Output only. Node group ID for the operation.
-    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The node group to create.
+    #[prost(message, optional, tag = "2")]
+    pub node_group: ::core::option::Option<NodeGroup>,
+    /// Optional. An optional node group ID. Generated if not specified.
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). Cannot begin or end with underscore
+    /// or hyphen. Must consist of from 3 to 33 characters.
+    #[prost(string, tag = "4")]
     pub node_group_id: ::prost::alloc::string::String,
-    /// Output only. Cluster UUID associated with the node group operation.
-    #[prost(string, tag = "2")]
-    pub cluster_uuid: ::prost::alloc::string::String,
-    /// Output only. Current operation status.
-    #[prost(message, optional, tag = "3")]
-    pub status: ::core::option::Option<ClusterOperationStatus>,
-    /// Output only. The previous operation status.
-    #[prost(message, repeated, tag = "4")]
-    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
-    /// The operation type.
-    #[prost(
-        enumeration = "node_group_operation_metadata::NodeGroupOperationType",
-        tag = "5"
-    )]
-    pub operation_type: i32,
-    /// Output only. Short description of operation.
-    #[prost(string, tag = "6")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Labels associated with the operation.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Errors encountered during operation execution.
-    #[prost(string, repeated, tag = "8")]
-    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. A unique ID used to identify the request. If the server receives
+    /// two
+    /// \[CreateNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.CreateNodeGroupRequests>)
+    /// with the same ID, the second request is ignored and the
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
+    ///
+    /// Recommendation: Set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `NodeGroupOperationMetadata`.
-pub mod node_group_operation_metadata {
-    /// Operation type for node group resources.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum NodeGroupOperationType {
-        /// Node group operation type is unknown.
-        Unspecified = 0,
-        /// Create node group operation type.
-        Create = 1,
-        /// Update node group operation type.
-        Update = 2,
-        /// Delete node group operation type.
-        Delete = 3,
-        /// Resize node group operation type.
-        Resize = 4,
+/// A request to resize a node group.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResizeNodeGroupRequest {
+    /// Required. The name of the node group to resize.
+    /// Format:
+    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The number of running instances for the node group to maintain.
+    /// The group adds or removes instances to maintain the number of instances
+    /// specified by this parameter.
+    #[prost(int32, tag = "2")]
+    pub size: i32,
+    /// Optional. A unique ID used to identify the request. If the server receives
+    /// two
+    /// \[ResizeNodeGroupRequest\](<https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#google.cloud.dataproc.v1.ResizeNodeGroupRequests>)
+    /// with the same ID, the second request is ignored and the
+    /// first \[google.longrunning.Operation][google.longrunning.Operation\] created
+    /// and stored in the backend is returned.
+    ///
+    /// Recommendation: Set this value to a
+    /// \[UUID\](<https://en.wikipedia.org/wiki/Universally_unique_identifier>).
+    ///
+    /// The ID must contain only letters (a-z, A-Z), numbers (0-9),
+    /// underscores (_), and hyphens (-). The maximum length is 40 characters.
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+    /// Optional. Timeout for graceful YARN decomissioning. [Graceful
+    /// decommissioning]
+    /// (<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/scaling-clusters#graceful_decommissioning>)
+    /// allows the removal of nodes from the Compute Engine node group
+    /// without interrupting jobs in progress. This timeout specifies how long to
+    /// wait for jobs in progress to finish before forcefully removing nodes (and
+    /// potentially interrupting jobs). Default timeout is 0 (for forceful
+    /// decommission), and the maximum allowed timeout is 1 day. (see JSON
+    /// representation of
+    /// \[Duration\](<https://developers.google.com/protocol-buffers/docs/proto3#json>)).
+    ///
+    /// Only supported on Dataproc image versions 1.2 and higher.
+    #[prost(message, optional, tag = "4")]
+    pub graceful_decommission_timeout: ::core::option::Option<::prost_types::Duration>,
+}
+/// A request to get a node group .
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNodeGroupRequest {
+    /// Required. The name of the node group to retrieve.
+    /// Format:
+    /// `projects/{project}/regions/{region}/clusters/{cluster}/nodeGroups/{nodeGroup}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod node_group_controller_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The `NodeGroupControllerService` provides methods to manage node groups
+    /// of Compute Engine managed instances.
+    #[derive(Debug, Clone)]
+    pub struct NodeGroupControllerClient<T> {
+        inner: tonic::client::Grpc<T>,
     }
-    impl NodeGroupOperationType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                NodeGroupOperationType::Unspecified => {
-                    "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED"
-                }
-                NodeGroupOperationType::Create => "CREATE",
-                NodeGroupOperationType::Update => "UPDATE",
-                NodeGroupOperationType::Delete => "DELETE",
-                NodeGroupOperationType::Resize => "RESIZE",
-            }
+    impl<T> NodeGroupControllerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
         }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CREATE" => Some(Self::Create),
-                "UPDATE" => Some(Self::Update),
-                "DELETE" => Some(Self::Delete),
-                "RESIZE" => Some(Self::Resize),
-                _ => None,
-            }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> NodeGroupControllerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            NodeGroupControllerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a node group in a cluster. The returned
+        /// [Operation.metadata][google.longrunning.Operation.metadata] is
+        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
+        pub async fn create_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateNodeGroupRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/CreateNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Resizes a node group in a cluster. The returned
+        /// [Operation.metadata][google.longrunning.Operation.metadata] is
+        /// [NodeGroupOperationMetadata](https://cloud.google.com/dataproc/docs/reference/rpc/google.cloud.dataproc.v1#nodegroupoperationmetadata).
+        pub async fn resize_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ResizeNodeGroupRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/ResizeNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the resource representation for a node group in a
+        /// cluster.
+        pub async fn get_node_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetNodeGroupRequest>,
+        ) -> Result<tonic::Response<super::NodeGroup>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataproc.v1.NodeGroupController/GetNodeGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
@@ -6387,6 +6120,273 @@ pub mod batch_controller_client {
                 "/google.cloud.dataproc.v1.BatchController/DeleteBatch",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Metadata describing the Batch operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchOperationMetadata {
+    /// Name of the batch for the operation.
+    #[prost(string, tag = "1")]
+    pub batch: ::prost::alloc::string::String,
+    /// Batch UUID for the operation.
+    #[prost(string, tag = "2")]
+    pub batch_uuid: ::prost::alloc::string::String,
+    /// The time when the operation was created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time when the operation finished.
+    #[prost(message, optional, tag = "4")]
+    pub done_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The operation type.
+    #[prost(enumeration = "batch_operation_metadata::BatchOperationType", tag = "6")]
+    pub operation_type: i32,
+    /// Short description of the operation.
+    #[prost(string, tag = "7")]
+    pub description: ::prost::alloc::string::String,
+    /// Labels associated with the operation.
+    #[prost(btree_map = "string, string", tag = "8")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Warnings encountered during operation execution.
+    #[prost(string, repeated, tag = "9")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `BatchOperationMetadata`.
+pub mod batch_operation_metadata {
+    /// Operation type for Batch resources
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum BatchOperationType {
+        /// Batch operation type is unknown.
+        Unspecified = 0,
+        /// Batch operation type.
+        Batch = 1,
+    }
+    impl BatchOperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                BatchOperationType::Unspecified => "BATCH_OPERATION_TYPE_UNSPECIFIED",
+                BatchOperationType::Batch => "BATCH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "BATCH_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "BATCH" => Some(Self::Batch),
+                _ => None,
+            }
+        }
+    }
+}
+/// The status of the operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClusterOperationStatus {
+    /// Output only. A message containing the operation state.
+    #[prost(enumeration = "cluster_operation_status::State", tag = "1")]
+    pub state: i32,
+    /// Output only. A message containing the detailed operation state.
+    #[prost(string, tag = "2")]
+    pub inner_state: ::prost::alloc::string::String,
+    /// Output only. A message containing any operation metadata details.
+    #[prost(string, tag = "3")]
+    pub details: ::prost::alloc::string::String,
+    /// Output only. The time this state was entered.
+    #[prost(message, optional, tag = "4")]
+    pub state_start_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `ClusterOperationStatus`.
+pub mod cluster_operation_status {
+    /// The operation state.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unused.
+        Unknown = 0,
+        /// The operation has been created.
+        Pending = 1,
+        /// The operation is running.
+        Running = 2,
+        /// The operation is done; either cancelled or completed.
+        Done = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unknown => "UNKNOWN",
+                State::Pending => "PENDING",
+                State::Running => "RUNNING",
+                State::Done => "DONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNKNOWN" => Some(Self::Unknown),
+                "PENDING" => Some(Self::Pending),
+                "RUNNING" => Some(Self::Running),
+                "DONE" => Some(Self::Done),
+                _ => None,
+            }
+        }
+    }
+}
+/// Metadata describing the operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClusterOperationMetadata {
+    /// Output only. Name of the cluster for the operation.
+    #[prost(string, tag = "7")]
+    pub cluster_name: ::prost::alloc::string::String,
+    /// Output only. Cluster UUID for the operation.
+    #[prost(string, tag = "8")]
+    pub cluster_uuid: ::prost::alloc::string::String,
+    /// Output only. Current operation status.
+    #[prost(message, optional, tag = "9")]
+    pub status: ::core::option::Option<ClusterOperationStatus>,
+    /// Output only. The previous operation status.
+    #[prost(message, repeated, tag = "10")]
+    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
+    /// Output only. The operation type.
+    #[prost(string, tag = "11")]
+    pub operation_type: ::prost::alloc::string::String,
+    /// Output only. Short description of operation.
+    #[prost(string, tag = "12")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Labels associated with the operation
+    #[prost(btree_map = "string, string", tag = "13")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Errors encountered during operation execution.
+    #[prost(string, repeated, tag = "14")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Output only. Child operation ids
+    #[prost(string, repeated, tag = "15")]
+    pub child_operation_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Metadata describing the node group operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NodeGroupOperationMetadata {
+    /// Output only. Node group ID for the operation.
+    #[prost(string, tag = "1")]
+    pub node_group_id: ::prost::alloc::string::String,
+    /// Output only. Cluster UUID associated with the node group operation.
+    #[prost(string, tag = "2")]
+    pub cluster_uuid: ::prost::alloc::string::String,
+    /// Output only. Current operation status.
+    #[prost(message, optional, tag = "3")]
+    pub status: ::core::option::Option<ClusterOperationStatus>,
+    /// Output only. The previous operation status.
+    #[prost(message, repeated, tag = "4")]
+    pub status_history: ::prost::alloc::vec::Vec<ClusterOperationStatus>,
+    /// The operation type.
+    #[prost(
+        enumeration = "node_group_operation_metadata::NodeGroupOperationType",
+        tag = "5"
+    )]
+    pub operation_type: i32,
+    /// Output only. Short description of operation.
+    #[prost(string, tag = "6")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Labels associated with the operation.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Errors encountered during operation execution.
+    #[prost(string, repeated, tag = "8")]
+    pub warnings: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `NodeGroupOperationMetadata`.
+pub mod node_group_operation_metadata {
+    /// Operation type for node group resources.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum NodeGroupOperationType {
+        /// Node group operation type is unknown.
+        Unspecified = 0,
+        /// Create node group operation type.
+        Create = 1,
+        /// Update node group operation type.
+        Update = 2,
+        /// Delete node group operation type.
+        Delete = 3,
+        /// Resize node group operation type.
+        Resize = 4,
+    }
+    impl NodeGroupOperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                NodeGroupOperationType::Unspecified => {
+                    "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED"
+                }
+                NodeGroupOperationType::Create => "CREATE",
+                NodeGroupOperationType::Update => "UPDATE",
+                NodeGroupOperationType::Delete => "DELETE",
+                NodeGroupOperationType::Resize => "RESIZE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "NODE_GROUP_OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATE" => Some(Self::Create),
+                "UPDATE" => Some(Self::Update),
+                "DELETE" => Some(Self::Delete),
+                "RESIZE" => Some(Self::Resize),
+                _ => None,
+            }
         }
     }
 }

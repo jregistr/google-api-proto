@@ -1,3 +1,786 @@
+/// An OS policy defines the desired state configuration for a VM.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OsPolicy {
+    /// Required. The id of the OS policy with the following restrictions:
+    ///
+    /// * Must contain only lowercase letters, numbers, and hyphens.
+    /// * Must start with a letter.
+    /// * Must be between 1-63 characters.
+    /// * Must end with a number or a letter.
+    /// * Must be unique within the assignment.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Policy description.
+    /// Length of the description is limited to 1024 characters.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Policy mode
+    #[prost(enumeration = "os_policy::Mode", tag = "3")]
+    pub mode: i32,
+    /// Required. List of resource groups for the policy.
+    /// For a particular VM, resource groups are evaluated in the order specified
+    /// and the first resource group that is applicable is selected and the rest
+    /// are ignored.
+    ///
+    /// If none of the resource groups are applicable for a VM, the VM is
+    /// considered to be non-compliant w.r.t this policy. This behavior can be
+    /// toggled by the flag `allow_no_resource_group_match`
+    #[prost(message, repeated, tag = "4")]
+    pub resource_groups: ::prost::alloc::vec::Vec<os_policy::ResourceGroup>,
+    /// This flag determines the OS policy compliance status when none of the
+    /// resource groups within the policy are applicable for a VM. Set this value
+    /// to `true` if the policy needs to be reported as compliant even if the
+    /// policy has nothing to validate or enforce.
+    #[prost(bool, tag = "5")]
+    pub allow_no_resource_group_match: bool,
+}
+/// Nested message and enum types in `OSPolicy`.
+pub mod os_policy {
+    /// Filtering criteria to select VMs based on inventory details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InventoryFilter {
+        /// Required. The OS short name
+        #[prost(string, tag = "1")]
+        pub os_short_name: ::prost::alloc::string::String,
+        /// The OS version
+        ///
+        /// Prefix matches are supported if asterisk(*) is provided as the
+        /// last character. For example, to match all versions with a major
+        /// version of `7`, specify the following value for this field `7.*`
+        ///
+        /// An empty string matches all OS versions.
+        #[prost(string, tag = "2")]
+        pub os_version: ::prost::alloc::string::String,
+    }
+    /// An OS policy resource is used to define the desired state configuration
+    /// and provides a specific functionality like installing/removing packages,
+    /// executing a script etc.
+    ///
+    /// The system ensures that resources are always in their desired state by
+    /// taking necessary actions if they have drifted from their desired state.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Resource {
+        /// Required. The id of the resource with the following restrictions:
+        ///
+        /// * Must contain only lowercase letters, numbers, and hyphens.
+        /// * Must start with a letter.
+        /// * Must be between 1-63 characters.
+        /// * Must end with a number or a letter.
+        /// * Must be unique within the OS policy.
+        #[prost(string, tag = "1")]
+        pub id: ::prost::alloc::string::String,
+        /// Resource type.
+        #[prost(oneof = "resource::ResourceType", tags = "2, 3, 4, 5")]
+        pub resource_type: ::core::option::Option<resource::ResourceType>,
+    }
+    /// Nested message and enum types in `Resource`.
+    pub mod resource {
+        /// A remote or local file.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct File {
+            /// Defaults to false. When false, files are subject to validations
+            /// based on the file type:
+            ///
+            /// Remote: A checksum must be specified.
+            /// Cloud Storage: An object generation number must be specified.
+            #[prost(bool, tag = "4")]
+            pub allow_insecure: bool,
+            /// A specific type of file.
+            #[prost(oneof = "file::Type", tags = "1, 2, 3")]
+            pub r#type: ::core::option::Option<file::Type>,
+        }
+        /// Nested message and enum types in `File`.
+        pub mod file {
+            /// Specifies a file available via some URI.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Remote {
+                /// Required. URI from which to fetch the object. It should contain both
+                /// the protocol and path following the format `{protocol}://{location}`.
+                #[prost(string, tag = "1")]
+                pub uri: ::prost::alloc::string::String,
+                /// SHA256 checksum of the remote file.
+                #[prost(string, tag = "2")]
+                pub sha256_checksum: ::prost::alloc::string::String,
+            }
+            /// Specifies a file available as a Cloud Storage Object.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Gcs {
+                /// Required. Bucket of the Cloud Storage object.
+                #[prost(string, tag = "1")]
+                pub bucket: ::prost::alloc::string::String,
+                /// Required. Name of the Cloud Storage object.
+                #[prost(string, tag = "2")]
+                pub object: ::prost::alloc::string::String,
+                /// Generation number of the Cloud Storage object.
+                #[prost(int64, tag = "3")]
+                pub generation: i64,
+            }
+            /// A specific type of file.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Type {
+                /// A generic remote file.
+                #[prost(message, tag = "1")]
+                Remote(Remote),
+                /// A Cloud Storage object.
+                #[prost(message, tag = "2")]
+                Gcs(Gcs),
+                /// A local path within the VM to use.
+                #[prost(string, tag = "3")]
+                LocalPath(::prost::alloc::string::String),
+            }
+        }
+        /// A resource that manages a system package.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct PackageResource {
+            /// Required. The desired state the agent should maintain for this package.
+            #[prost(enumeration = "package_resource::DesiredState", tag = "1")]
+            pub desired_state: i32,
+            /// A system package.
+            #[prost(
+                oneof = "package_resource::SystemPackage",
+                tags = "2, 3, 4, 5, 6, 7, 8"
+            )]
+            pub system_package: ::core::option::Option<package_resource::SystemPackage>,
+        }
+        /// Nested message and enum types in `PackageResource`.
+        pub mod package_resource {
+            /// A deb package file. dpkg packages only support INSTALLED state.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Deb {
+                /// Required. A deb package.
+                #[prost(message, optional, tag = "1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Whether dependencies should also be installed.
+                /// - install when false: `dpkg -i package`
+                /// - install when true: `apt-get update && apt-get -y install
+                /// package.deb`
+                #[prost(bool, tag = "2")]
+                pub pull_deps: bool,
+            }
+            /// A package managed by APT.
+            /// - install: `apt-get update && apt-get -y install \[name\]`
+            /// - remove: `apt-get -y remove \[name\]`
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Apt {
+                /// Required. Package name.
+                #[prost(string, tag = "1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// An RPM package file. RPM packages only support INSTALLED state.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Rpm {
+                /// Required. An rpm package.
+                #[prost(message, optional, tag = "1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Whether dependencies should also be installed.
+                /// - install when false: `rpm --upgrade --replacepkgs package.rpm`
+                /// - install when true: `yum -y install package.rpm` or
+                /// `zypper -y install package.rpm`
+                #[prost(bool, tag = "2")]
+                pub pull_deps: bool,
+            }
+            /// A package managed by YUM.
+            /// - install: `yum -y install package`
+            /// - remove: `yum -y remove package`
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Yum {
+                /// Required. Package name.
+                #[prost(string, tag = "1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// A package managed by Zypper.
+            /// - install: `zypper -y install package`
+            /// - remove: `zypper -y rm package`
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Zypper {
+                /// Required. Package name.
+                #[prost(string, tag = "1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// A package managed by GooGet.
+            /// - install: `googet -noconfirm install package`
+            /// - remove: `googet -noconfirm remove package`
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct GooGet {
+                /// Required. Package name.
+                #[prost(string, tag = "1")]
+                pub name: ::prost::alloc::string::String,
+            }
+            /// An MSI package. MSI packages only support INSTALLED state.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Msi {
+                /// Required. The MSI package.
+                #[prost(message, optional, tag = "1")]
+                pub source: ::core::option::Option<super::File>,
+                /// Additional properties to use during installation.
+                /// This should be in the format of Property=Setting.
+                /// Appended to the defaults of `ACTION=INSTALL
+                /// REBOOT=ReallySuppress`.
+                #[prost(string, repeated, tag = "2")]
+                pub properties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// The desired state that the OS Config agent maintains on the VM.
+            #[derive(
+                Clone,
+                Copy,
+                Debug,
+                PartialEq,
+                Eq,
+                Hash,
+                PartialOrd,
+                Ord,
+                ::prost::Enumeration
+            )]
+            #[repr(i32)]
+            pub enum DesiredState {
+                /// Unspecified is invalid.
+                Unspecified = 0,
+                /// Ensure that the package is installed.
+                Installed = 1,
+                /// The agent ensures that the package is not installed and
+                /// uninstalls it if detected.
+                Removed = 2,
+            }
+            impl DesiredState {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
+                        DesiredState::Installed => "INSTALLED",
+                        DesiredState::Removed => "REMOVED",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "DESIRED_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                        "INSTALLED" => Some(Self::Installed),
+                        "REMOVED" => Some(Self::Removed),
+                        _ => None,
+                    }
+                }
+            }
+            /// A system package.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum SystemPackage {
+                /// A package managed by Apt.
+                #[prost(message, tag = "2")]
+                Apt(Apt),
+                /// A deb package file.
+                #[prost(message, tag = "3")]
+                Deb(Deb),
+                /// A package managed by YUM.
+                #[prost(message, tag = "4")]
+                Yum(Yum),
+                /// A package managed by Zypper.
+                #[prost(message, tag = "5")]
+                Zypper(Zypper),
+                /// An rpm package file.
+                #[prost(message, tag = "6")]
+                Rpm(Rpm),
+                /// A package managed by GooGet.
+                #[prost(message, tag = "7")]
+                Googet(GooGet),
+                /// An MSI package.
+                #[prost(message, tag = "8")]
+                Msi(Msi),
+            }
+        }
+        /// A resource that manages a package repository.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct RepositoryResource {
+            /// A specific type of repository.
+            #[prost(oneof = "repository_resource::Repository", tags = "1, 2, 3, 4")]
+            pub repository: ::core::option::Option<repository_resource::Repository>,
+        }
+        /// Nested message and enum types in `RepositoryResource`.
+        pub mod repository_resource {
+            /// Represents a single apt package repository. These will be added to
+            /// a repo file that will be managed at
+            /// `/etc/apt/sources.list.d/google_osconfig.list`.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct AptRepository {
+                /// Required. Type of archive files in this repository.
+                #[prost(enumeration = "apt_repository::ArchiveType", tag = "1")]
+                pub archive_type: i32,
+                /// Required. URI for this repository.
+                #[prost(string, tag = "2")]
+                pub uri: ::prost::alloc::string::String,
+                /// Required. Distribution of this repository.
+                #[prost(string, tag = "3")]
+                pub distribution: ::prost::alloc::string::String,
+                /// Required. List of components for this repository. Must contain at
+                /// least one item.
+                #[prost(string, repeated, tag = "4")]
+                pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+                /// URI of the key file for this repository. The agent maintains a
+                /// keyring at `/etc/apt/trusted.gpg.d/osconfig_agent_managed.gpg`.
+                #[prost(string, tag = "5")]
+                pub gpg_key: ::prost::alloc::string::String,
+            }
+            /// Nested message and enum types in `AptRepository`.
+            pub mod apt_repository {
+                /// Type of archive.
+                #[derive(
+                    Clone,
+                    Copy,
+                    Debug,
+                    PartialEq,
+                    Eq,
+                    Hash,
+                    PartialOrd,
+                    Ord,
+                    ::prost::Enumeration
+                )]
+                #[repr(i32)]
+                pub enum ArchiveType {
+                    /// Unspecified is invalid.
+                    Unspecified = 0,
+                    /// Deb indicates that the archive contains binary files.
+                    Deb = 1,
+                    /// Deb-src indicates that the archive contains source files.
+                    DebSrc = 2,
+                }
+                impl ArchiveType {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            ArchiveType::Unspecified => "ARCHIVE_TYPE_UNSPECIFIED",
+                            ArchiveType::Deb => "DEB",
+                            ArchiveType::DebSrc => "DEB_SRC",
+                        }
+                    }
+                    /// Creates an enum from field names used in the ProtoBuf definition.
+                    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                        match value {
+                            "ARCHIVE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                            "DEB" => Some(Self::Deb),
+                            "DEB_SRC" => Some(Self::DebSrc),
+                            _ => None,
+                        }
+                    }
+                }
+            }
+            /// Represents a single yum package repository. These are added to a
+            /// repo file that is managed at
+            /// `/etc/yum.repos.d/google_osconfig.repo`.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct YumRepository {
+                /// Required. A one word, unique name for this repository. This is  the
+                /// `repo id` in the yum config file and also the `display_name` if
+                /// `display_name` is omitted. This id is also used as the unique
+                /// identifier when checking for resource conflicts.
+                #[prost(string, tag = "1")]
+                pub id: ::prost::alloc::string::String,
+                /// The display name of the repository.
+                #[prost(string, tag = "2")]
+                pub display_name: ::prost::alloc::string::String,
+                /// Required. The location of the repository directory.
+                #[prost(string, tag = "3")]
+                pub base_url: ::prost::alloc::string::String,
+                /// URIs of GPG keys.
+                #[prost(string, repeated, tag = "4")]
+                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// Represents a single zypper package repository. These are added to a
+            /// repo file that is managed at
+            /// `/etc/zypp/repos.d/google_osconfig.repo`.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct ZypperRepository {
+                /// Required. A one word, unique name for this repository. This is the
+                /// `repo id` in the zypper config file and also the `display_name` if
+                /// `display_name` is omitted. This id is also used as the unique
+                /// identifier when checking for GuestPolicy conflicts.
+                #[prost(string, tag = "1")]
+                pub id: ::prost::alloc::string::String,
+                /// The display name of the repository.
+                #[prost(string, tag = "2")]
+                pub display_name: ::prost::alloc::string::String,
+                /// Required. The location of the repository directory.
+                #[prost(string, tag = "3")]
+                pub base_url: ::prost::alloc::string::String,
+                /// URIs of GPG keys.
+                #[prost(string, repeated, tag = "4")]
+                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+            }
+            /// Represents a Goo package repository. These are added to a repo file
+            /// that is managed at
+            /// `C:/ProgramData/GooGet/repos/google_osconfig.repo`.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct GooRepository {
+                /// Required. The name of the repository.
+                #[prost(string, tag = "1")]
+                pub name: ::prost::alloc::string::String,
+                /// Required. The url of the repository.
+                #[prost(string, tag = "2")]
+                pub url: ::prost::alloc::string::String,
+            }
+            /// A specific type of repository.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Repository {
+                /// An Apt Repository.
+                #[prost(message, tag = "1")]
+                Apt(AptRepository),
+                /// A Yum Repository.
+                #[prost(message, tag = "2")]
+                Yum(YumRepository),
+                /// A Zypper Repository.
+                #[prost(message, tag = "3")]
+                Zypper(ZypperRepository),
+                /// A Goo Repository.
+                #[prost(message, tag = "4")]
+                Goo(GooRepository),
+            }
+        }
+        /// A resource that allows executing scripts on the VM.
+        ///
+        /// The `ExecResource` has 2 stages: `validate` and `enforce` and both stages
+        /// accept a script as an argument to execute.
+        ///
+        /// When the `ExecResource` is applied by the agent, it first executes the
+        /// script in the `validate` stage. The `validate` stage can signal that the
+        /// `ExecResource` is already in the desired state by returning an exit code
+        /// of `100`. If the `ExecResource` is not in the desired state, it should
+        /// return an exit code of `101`. Any other exit code returned by this stage
+        /// is considered an error.
+        ///
+        /// If the `ExecResource` is not in the desired state based on the exit code
+        /// from the `validate` stage, the agent proceeds to execute the script from
+        /// the `enforce` stage. If the `ExecResource` is already in the desired
+        /// state, the `enforce` stage will not be run.
+        /// Similar to `validate` stage, the `enforce` stage should return an exit
+        /// code of `100` to indicate that the resource in now in its desired state.
+        /// Any other exit code is considered an error.
+        ///
+        /// NOTE: An exit code of `100` was chosen over `0` (and `101` vs `1`) to
+        /// have an explicit indicator of `in desired state`, `not in desired state`
+        /// and errors. Because, for example, Powershell will always return an exit
+        /// code of `0` unless an `exit` statement is provided in the script. So, for
+        /// reasons of consistency and being explicit, exit codes `100` and `101`
+        /// were chosen.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ExecResource {
+            /// Required. What to run to validate this resource is in the desired
+            /// state. An exit code of 100 indicates "in desired state", and exit code
+            /// of 101 indicates "not in desired state". Any other exit code indicates
+            /// a failure running validate.
+            #[prost(message, optional, tag = "1")]
+            pub validate: ::core::option::Option<exec_resource::Exec>,
+            /// What to run to bring this resource into the desired state.
+            /// An exit code of 100 indicates "success", any other exit code indicates
+            /// a failure running enforce.
+            #[prost(message, optional, tag = "2")]
+            pub enforce: ::core::option::Option<exec_resource::Exec>,
+        }
+        /// Nested message and enum types in `ExecResource`.
+        pub mod exec_resource {
+            /// A file or script to execute.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Exec {
+                /// Optional arguments to pass to the source during execution.
+                #[prost(string, repeated, tag = "3")]
+                pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+                /// Required. The script interpreter to use.
+                #[prost(enumeration = "exec::Interpreter", tag = "4")]
+                pub interpreter: i32,
+                /// Only recorded for enforce Exec.
+                /// Path to an output file (that is created by this Exec) whose
+                /// content will be recorded in OSPolicyResourceCompliance after a
+                /// successful run. Absence or failure to read this file will result in
+                /// this ExecResource being non-compliant. Output file size is limited to
+                /// 100K bytes.
+                #[prost(string, tag = "5")]
+                pub output_file_path: ::prost::alloc::string::String,
+                /// What to execute.
+                #[prost(oneof = "exec::Source", tags = "1, 2")]
+                pub source: ::core::option::Option<exec::Source>,
+            }
+            /// Nested message and enum types in `Exec`.
+            pub mod exec {
+                /// The interpreter to use.
+                #[derive(
+                    Clone,
+                    Copy,
+                    Debug,
+                    PartialEq,
+                    Eq,
+                    Hash,
+                    PartialOrd,
+                    Ord,
+                    ::prost::Enumeration
+                )]
+                #[repr(i32)]
+                pub enum Interpreter {
+                    /// Invalid value, the request will return validation error.
+                    Unspecified = 0,
+                    /// If an interpreter is not specified, the
+                    /// source is executed directly. This execution, without an
+                    /// interpreter, only succeeds for executables and scripts that have <a
+                    /// href="<https://en.wikipedia.org/wiki/Shebang_(Unix>)"
+                    /// class="external">shebang lines</a>.
+                    None = 1,
+                    /// Indicates that the script runs with `/bin/sh` on Linux and
+                    /// `cmd.exe` on Windows.
+                    Shell = 2,
+                    /// Indicates that the script runs with PowerShell.
+                    Powershell = 3,
+                }
+                impl Interpreter {
+                    /// String value of the enum field names used in the ProtoBuf definition.
+                    ///
+                    /// The values are not transformed in any way and thus are considered stable
+                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                    pub fn as_str_name(&self) -> &'static str {
+                        match self {
+                            Interpreter::Unspecified => "INTERPRETER_UNSPECIFIED",
+                            Interpreter::None => "NONE",
+                            Interpreter::Shell => "SHELL",
+                            Interpreter::Powershell => "POWERSHELL",
+                        }
+                    }
+                    /// Creates an enum from field names used in the ProtoBuf definition.
+                    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                        match value {
+                            "INTERPRETER_UNSPECIFIED" => Some(Self::Unspecified),
+                            "NONE" => Some(Self::None),
+                            "SHELL" => Some(Self::Shell),
+                            "POWERSHELL" => Some(Self::Powershell),
+                            _ => None,
+                        }
+                    }
+                }
+                /// What to execute.
+                #[allow(clippy::derive_partial_eq_without_eq)]
+                #[derive(Clone, PartialEq, ::prost::Oneof)]
+                pub enum Source {
+                    /// A remote or local file.
+                    #[prost(message, tag = "1")]
+                    File(super::super::File),
+                    /// An inline script.
+                    /// The size of the script is limited to 1024 characters.
+                    #[prost(string, tag = "2")]
+                    Script(::prost::alloc::string::String),
+                }
+            }
+        }
+        /// A resource that manages the state of a file.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct FileResource {
+            /// Required. The absolute path of the file within the VM.
+            #[prost(string, tag = "3")]
+            pub path: ::prost::alloc::string::String,
+            /// Required. Desired state of the file.
+            #[prost(enumeration = "file_resource::DesiredState", tag = "4")]
+            pub state: i32,
+            /// Consists of three octal digits which represent, in
+            /// order, the permissions of the owner, group, and other users for the
+            /// file (similarly to the numeric mode used in the linux chmod
+            /// utility). Each digit represents a three bit number with the 4 bit
+            /// corresponding to the read permissions, the 2 bit corresponds to the
+            /// write bit, and the one bit corresponds to the execute permission.
+            /// Default behavior is 755.
+            ///
+            /// Below are some examples of permissions and their associated values:
+            /// read, write, and execute: 7
+            /// read and execute: 5
+            /// read and write: 6
+            /// read only: 4
+            #[prost(string, tag = "5")]
+            pub permissions: ::prost::alloc::string::String,
+            /// The source for the contents of the file.
+            #[prost(oneof = "file_resource::Source", tags = "1, 2")]
+            pub source: ::core::option::Option<file_resource::Source>,
+        }
+        /// Nested message and enum types in `FileResource`.
+        pub mod file_resource {
+            /// Desired state of the file.
+            #[derive(
+                Clone,
+                Copy,
+                Debug,
+                PartialEq,
+                Eq,
+                Hash,
+                PartialOrd,
+                Ord,
+                ::prost::Enumeration
+            )]
+            #[repr(i32)]
+            pub enum DesiredState {
+                /// Unspecified is invalid.
+                Unspecified = 0,
+                /// Ensure file at path is present.
+                Present = 1,
+                /// Ensure file at path is absent.
+                Absent = 2,
+                /// Ensure the contents of the file at path matches. If the file does
+                /// not exist it will be created.
+                ContentsMatch = 3,
+            }
+            impl DesiredState {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
+                        DesiredState::Present => "PRESENT",
+                        DesiredState::Absent => "ABSENT",
+                        DesiredState::ContentsMatch => "CONTENTS_MATCH",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "DESIRED_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                        "PRESENT" => Some(Self::Present),
+                        "ABSENT" => Some(Self::Absent),
+                        "CONTENTS_MATCH" => Some(Self::ContentsMatch),
+                        _ => None,
+                    }
+                }
+            }
+            /// The source for the contents of the file.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Source {
+                /// A remote or local source.
+                #[prost(message, tag = "1")]
+                File(super::File),
+                /// A a file with this content.
+                /// The size of the content is limited to 1024 characters.
+                #[prost(string, tag = "2")]
+                Content(::prost::alloc::string::String),
+            }
+        }
+        /// Resource type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ResourceType {
+            /// Package resource
+            #[prost(message, tag = "2")]
+            Pkg(PackageResource),
+            /// Package repository resource
+            #[prost(message, tag = "3")]
+            Repository(RepositoryResource),
+            /// Exec resource
+            #[prost(message, tag = "4")]
+            Exec(ExecResource),
+            /// File resource
+            #[prost(message, tag = "5")]
+            File(FileResource),
+        }
+    }
+    /// Resource groups provide a mechanism to group OS policy resources.
+    ///
+    /// Resource groups enable OS policy authors to create a single OS policy
+    /// to be applied to VMs running different operating Systems.
+    ///
+    /// When the OS policy is applied to a target VM, the appropriate resource
+    /// group within the OS policy is selected based on the `OSFilter` specified
+    /// within the resource group.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ResourceGroup {
+        /// List of inventory filters for the resource group.
+        ///
+        /// The resources in this resource group are applied to the target VM if it
+        /// satisfies at least one of the following inventory filters.
+        ///
+        /// For example, to apply this resource group to VMs running either `RHEL` or
+        /// `CentOS` operating systems, specify 2 items for the list with following
+        /// values:
+        /// inventory_filters\[0\].os_short_name='rhel' and
+        /// inventory_filters\[1\].os_short_name='centos'
+        ///
+        /// If the list is empty, this resource group will be applied to the target
+        /// VM unconditionally.
+        #[prost(message, repeated, tag = "1")]
+        pub inventory_filters: ::prost::alloc::vec::Vec<InventoryFilter>,
+        /// Required. List of resources configured for this resource group.
+        /// The resources are executed in the exact order specified here.
+        #[prost(message, repeated, tag = "2")]
+        pub resources: ::prost::alloc::vec::Vec<Resource>,
+    }
+    /// Policy mode
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Mode {
+        /// Invalid mode
+        Unspecified = 0,
+        /// This mode checks if the configuration resources in the policy are in
+        /// their desired state. No actions are performed if they are not in the
+        /// desired state. This mode is used for reporting purposes.
+        Validation = 1,
+        /// This mode checks if the configuration resources in the policy are in
+        /// their desired state, and if not, enforces the desired state.
+        Enforcement = 2,
+    }
+    impl Mode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Mode::Unspecified => "MODE_UNSPECIFIED",
+                Mode::Validation => "VALIDATION",
+                Mode::Enforcement => "ENFORCEMENT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VALIDATION" => Some(Self::Validation),
+                "ENFORCEMENT" => Some(Self::Enforcement),
+                _ => None,
+            }
+        }
+    }
+}
 /// This API resource represents the available inventory data for a
 /// Compute Engine virtual machine (VM) instance at a given point in time.
 ///
@@ -1495,1426 +2278,251 @@ pub mod patch_rollout {
         }
     }
 }
-/// Patch deployments are configurations that individual patch jobs use to
-/// complete a patch. These configurations include instance filter, package
-/// repository settings, and a schedule. For more information about creating and
-/// managing patch deployments, see [Scheduling patch
-/// jobs](<https://cloud.google.com/compute/docs/os-patch-management/schedule-patch-jobs>).
+/// This API resource represents the vulnerability report for a specified
+/// Compute Engine virtual machine (VM) instance at a given point in time.
+///
+/// For more information, see [Vulnerability
+/// reports](<https://cloud.google.com/compute/docs/instances/os-inventory-management#vulnerability-reports>).
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PatchDeployment {
-    /// Unique name for the patch deployment resource in a project. The patch
-    /// deployment name is in the form:
-    /// `projects/{project_id}/patchDeployments/{patch_deployment_id}`.
-    /// This field is ignored when you create a new patch deployment.
+pub struct VulnerabilityReport {
+    /// Output only. The `vulnerabilityReport` API resource name.
+    ///
+    /// Format:
+    /// `projects/{project_number}/locations/{location}/instances/{instance_id}/vulnerabilityReport`
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. Description of the patch deployment. Length of the description is
-    /// limited to 1024 characters.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. VM instances to patch.
+    /// Output only. List of vulnerabilities affecting the VM.
+    #[prost(message, repeated, tag = "2")]
+    pub vulnerabilities: ::prost::alloc::vec::Vec<vulnerability_report::Vulnerability>,
+    /// Output only. The timestamp for when the last vulnerability report was generated for the
+    /// VM.
     #[prost(message, optional, tag = "3")]
-    pub instance_filter: ::core::option::Option<PatchInstanceFilter>,
-    /// Optional. Patch configuration that is applied.
-    #[prost(message, optional, tag = "4")]
-    pub patch_config: ::core::option::Option<PatchConfig>,
-    /// Optional. Duration of the patch. After the duration ends, the patch times
-    /// out.
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-    /// Output only. Time the patch deployment was created. Timestamp is in
-    /// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
-    #[prost(message, optional, tag = "8")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Time the patch deployment was last updated. Timestamp is in
-    /// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
-    #[prost(message, optional, tag = "9")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last time a patch job was started by this deployment.
-    /// Timestamp is in \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text
-    /// format.
-    #[prost(message, optional, tag = "10")]
-    pub last_execute_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Rollout strategy of the patch job.
-    #[prost(message, optional, tag = "11")]
-    pub rollout: ::core::option::Option<PatchRollout>,
-    /// Output only. Current state of the patch deployment.
-    #[prost(enumeration = "patch_deployment::State", tag = "12")]
-    pub state: i32,
-    /// Schedule for the patch.
-    #[prost(oneof = "patch_deployment::Schedule", tags = "6, 7")]
-    pub schedule: ::core::option::Option<patch_deployment::Schedule>,
 }
-/// Nested message and enum types in `PatchDeployment`.
-pub mod patch_deployment {
-    /// Represents state of patch peployment.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// The default value. This value is used if the state is omitted.
-        Unspecified = 0,
-        /// Active value means that patch deployment generates Patch Jobs.
-        Active = 1,
-        /// Paused value means that patch deployment does not generate
-        /// Patch jobs. Requires user action to move in and out from this state.
-        Paused = 2,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Active => "ACTIVE",
-                State::Paused => "PAUSED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ACTIVE" => Some(Self::Active),
-                "PAUSED" => Some(Self::Paused),
-                _ => None,
-            }
-        }
-    }
-    /// Schedule for the patch.
+/// Nested message and enum types in `VulnerabilityReport`.
+pub mod vulnerability_report {
+    /// A vulnerability affecting the VM instance.
     #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Schedule {
-        /// Required. Schedule a one-time execution.
-        #[prost(message, tag = "6")]
-        OneTimeSchedule(super::OneTimeSchedule),
-        /// Required. Schedule recurring executions.
-        #[prost(message, tag = "7")]
-        RecurringSchedule(super::RecurringSchedule),
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Vulnerability {
+        /// Contains metadata as per the upstream feed of the operating system and
+        /// NVD.
+        #[prost(message, optional, tag = "1")]
+        pub details: ::core::option::Option<vulnerability::Details>,
+        /// Corresponds to the `INSTALLED_PACKAGE` inventory item on the VM.
+        /// This field displays the inventory items affected by this vulnerability.
+        /// If the vulnerability report was not updated after the VM inventory
+        /// update, these values might not display in VM inventory. For some distros,
+        /// this field may be empty.
+        #[deprecated]
+        #[prost(string, repeated, tag = "2")]
+        pub installed_inventory_item_ids: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
+        /// Corresponds to the `AVAILABLE_PACKAGE` inventory item on the VM.
+        /// If the vulnerability report was not updated after the VM inventory
+        /// update, these values might not display in VM inventory. If there is no
+        /// available fix, the field is empty. The `inventory_item` value specifies
+        /// the latest `SoftwarePackage` available to the VM that fixes the
+        /// vulnerability.
+        #[deprecated]
+        #[prost(string, repeated, tag = "3")]
+        pub available_inventory_item_ids: ::prost::alloc::vec::Vec<
+            ::prost::alloc::string::String,
+        >,
+        /// The timestamp for when the vulnerability was first detected.
+        #[prost(message, optional, tag = "4")]
+        pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// The timestamp for when the vulnerability was last modified.
+        #[prost(message, optional, tag = "5")]
+        pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// List of items affected by the vulnerability.
+        #[prost(message, repeated, tag = "6")]
+        pub items: ::prost::alloc::vec::Vec<vulnerability::Item>,
     }
-}
-/// Sets the time for a one time patch deployment. Timestamp is in
-/// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OneTimeSchedule {
-    /// Required. The desired patch job execution time.
-    #[prost(message, optional, tag = "1")]
-    pub execute_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Sets the time for recurring patch deployments.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RecurringSchedule {
-    /// Required. Defines the time zone that `time_of_day` is relative to.
-    /// The rules for daylight saving time are determined by the chosen time zone.
-    #[prost(message, optional, tag = "1")]
-    pub time_zone: ::core::option::Option<super::super::super::r#type::TimeZone>,
-    /// Optional. The time that the recurring schedule becomes effective.
-    /// Defaults to `create_time` of the patch deployment.
-    #[prost(message, optional, tag = "2")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. The end time at which a recurring patch deployment schedule is no
-    /// longer active.
-    #[prost(message, optional, tag = "3")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. Time of the day to run a recurring deployment.
-    #[prost(message, optional, tag = "4")]
-    pub time_of_day: ::core::option::Option<super::super::super::r#type::TimeOfDay>,
-    /// Required. The frequency unit of this recurring schedule.
-    #[prost(enumeration = "recurring_schedule::Frequency", tag = "5")]
-    pub frequency: i32,
-    /// Output only. The time the last patch job ran successfully.
-    #[prost(message, optional, tag = "9")]
-    pub last_execute_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time the next patch job is scheduled to run.
-    #[prost(message, optional, tag = "10")]
-    pub next_execute_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Configurations for this recurring schedule.
-    /// Configurations must match frequency.
-    #[prost(oneof = "recurring_schedule::ScheduleConfig", tags = "6, 7")]
-    pub schedule_config: ::core::option::Option<recurring_schedule::ScheduleConfig>,
-}
-/// Nested message and enum types in `RecurringSchedule`.
-pub mod recurring_schedule {
-    /// Specifies the frequency of the recurring patch deployments.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Frequency {
-        /// Invalid. A frequency must be specified.
-        Unspecified = 0,
-        /// Indicates that the frequency of recurrence should be expressed in terms
-        /// of weeks.
-        Weekly = 1,
-        /// Indicates that the frequency of recurrence should be expressed in terms
-        /// of months.
-        Monthly = 2,
-        /// Indicates that the frequency of recurrence should be expressed in terms
-        /// of days.
-        Daily = 3,
-    }
-    impl Frequency {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Frequency::Unspecified => "FREQUENCY_UNSPECIFIED",
-                Frequency::Weekly => "WEEKLY",
-                Frequency::Monthly => "MONTHLY",
-                Frequency::Daily => "DAILY",
+    /// Nested message and enum types in `Vulnerability`.
+    pub mod vulnerability {
+        /// Contains metadata information for the vulnerability. This information is
+        /// collected from the upstream feed of the operating system.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Details {
+            /// The CVE of the vulnerability. CVE cannot be
+            /// empty and the combination of <cve, classification> should be unique
+            /// across vulnerabilities for a VM.
+            #[prost(string, tag = "1")]
+            pub cve: ::prost::alloc::string::String,
+            /// The CVSS V2 score of this vulnerability. CVSS V2 score is on a scale of
+            /// 0 - 10 where 0 indicates low severity and 10 indicates high severity.
+            #[prost(float, tag = "2")]
+            pub cvss_v2_score: f32,
+            /// The full description of the CVSSv3 for this vulnerability from NVD.
+            #[prost(message, optional, tag = "3")]
+            pub cvss_v3: ::core::option::Option<super::super::CvsSv3>,
+            /// Assigned severity/impact ranking from the distro.
+            #[prost(string, tag = "4")]
+            pub severity: ::prost::alloc::string::String,
+            /// The note or description describing the vulnerability from the distro.
+            #[prost(string, tag = "5")]
+            pub description: ::prost::alloc::string::String,
+            /// Corresponds to the references attached to the `VulnerabilityDetails`.
+            #[prost(message, repeated, tag = "6")]
+            pub references: ::prost::alloc::vec::Vec<details::Reference>,
+        }
+        /// Nested message and enum types in `Details`.
+        pub mod details {
+            /// A reference for this vulnerability.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Message)]
+            pub struct Reference {
+                /// The url of the reference.
+                #[prost(string, tag = "1")]
+                pub url: ::prost::alloc::string::String,
+                /// The source of the reference e.g. NVD.
+                #[prost(string, tag = "2")]
+                pub source: ::prost::alloc::string::String,
             }
         }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FREQUENCY_UNSPECIFIED" => Some(Self::Unspecified),
-                "WEEKLY" => Some(Self::Weekly),
-                "MONTHLY" => Some(Self::Monthly),
-                "DAILY" => Some(Self::Daily),
-                _ => None,
-            }
+        /// OS inventory item that is affected by a vulnerability or fixed as a
+        /// result of a vulnerability.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Item {
+            /// Corresponds to the `INSTALLED_PACKAGE` inventory item on the VM.
+            /// This field displays the inventory items affected by this vulnerability.
+            /// If the vulnerability report was not updated after the VM inventory
+            /// update, these values might not display in VM inventory. For some
+            /// operating systems, this field might be empty.
+            #[prost(string, tag = "1")]
+            pub installed_inventory_item_id: ::prost::alloc::string::String,
+            /// Corresponds to the `AVAILABLE_PACKAGE` inventory item on the VM.
+            /// If the vulnerability report was not updated after the VM inventory
+            /// update, these values might not display in VM inventory. If there is no
+            /// available fix, the field is empty. The `inventory_item` value specifies
+            /// the latest `SoftwarePackage` available to the VM that fixes the
+            /// vulnerability.
+            #[prost(string, tag = "2")]
+            pub available_inventory_item_id: ::prost::alloc::string::String,
+            /// The recommended [CPE URI](<https://cpe.mitre.org/specification/>) update
+            /// that contains a fix for this vulnerability.
+            #[prost(string, tag = "3")]
+            pub fixed_cpe_uri: ::prost::alloc::string::String,
+            /// The upstream OS patch, packages or KB that fixes the vulnerability.
+            #[prost(string, tag = "4")]
+            pub upstream_fix: ::prost::alloc::string::String,
         }
     }
-    /// Configurations for this recurring schedule.
-    /// Configurations must match frequency.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ScheduleConfig {
-        /// Required. Schedule with weekly executions.
-        #[prost(message, tag = "6")]
-        Weekly(super::WeeklySchedule),
-        /// Required. Schedule with monthly executions.
-        #[prost(message, tag = "7")]
-        Monthly(super::MonthlySchedule),
-    }
 }
-/// Represents a weekly schedule.
+/// A request message for getting the vulnerability report for the specified VM.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WeeklySchedule {
-    /// Required. Day of the week.
-    #[prost(enumeration = "super::super::super::r#type::DayOfWeek", tag = "1")]
-    pub day_of_week: i32,
-}
-/// Represents a monthly schedule. An example of a valid monthly schedule is
-/// "on the third Tuesday of the month" or "on the 15th of the month".
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MonthlySchedule {
-    /// One day in a month.
-    #[prost(oneof = "monthly_schedule::DayOfMonth", tags = "1, 2")]
-    pub day_of_month: ::core::option::Option<monthly_schedule::DayOfMonth>,
-}
-/// Nested message and enum types in `MonthlySchedule`.
-pub mod monthly_schedule {
-    /// One day in a month.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DayOfMonth {
-        /// Required. Week day in a month.
-        #[prost(message, tag = "1")]
-        WeekDayOfMonth(super::WeekDayOfMonth),
-        /// Required. One day of the month. 1-31 indicates the 1st to the 31st day.
-        /// -1 indicates the last day of the month. Months without the target day
-        /// will be skipped. For example, a schedule to run "every month on the 31st"
-        /// will not run in February, April, June, etc.
-        #[prost(int32, tag = "2")]
-        MonthDay(i32),
-    }
-}
-/// Represents one week day in a month. An example is "the 4th Sunday".
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WeekDayOfMonth {
-    /// Required. Week number in a month. 1-4 indicates the 1st to 4th week of the
-    /// month. -1 indicates the last week of the month.
-    #[prost(int32, tag = "1")]
-    pub week_ordinal: i32,
-    /// Required. A day of the week.
-    #[prost(enumeration = "super::super::super::r#type::DayOfWeek", tag = "2")]
-    pub day_of_week: i32,
-    /// Optional. Represents the number of days before or after the given week day
-    /// of month that the patch deployment is scheduled for. For example if
-    /// `week_ordinal` and `day_of_week` values point to the second day of the
-    /// month and this `day_offset` value is set to `3`, the patch deployment takes
-    /// place three days after the second Tuesday of the month. If this value is
-    /// negative, for example -5, the patches are deployed five days before before
-    /// the second Tuesday of the month. Allowed values are in range [-30, 30].
-    #[prost(int32, tag = "3")]
-    pub day_offset: i32,
-}
-/// A request message for creating a patch deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreatePatchDeploymentRequest {
-    /// Required. The project to apply this patch deployment to in the form
-    /// `projects/*`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. A name for the patch deployment in the project. When creating a
-    /// name the following rules apply:
-    /// * Must contain only lowercase letters, numbers, and hyphens.
-    /// * Must start with a letter.
-    /// * Must be between 1-63 characters.
-    /// * Must end with a number or a letter.
-    /// * Must be unique within the project.
-    #[prost(string, tag = "2")]
-    pub patch_deployment_id: ::prost::alloc::string::String,
-    /// Required. The patch deployment to create.
-    #[prost(message, optional, tag = "3")]
-    pub patch_deployment: ::core::option::Option<PatchDeployment>,
-}
-/// A request message for retrieving a patch deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetPatchDeploymentRequest {
-    /// Required. The resource name of the patch deployment in the form
-    /// `projects/*/patchDeployments/*`.
+pub struct GetVulnerabilityReportRequest {
+    /// Required. API resource name for vulnerability resource.
+    ///
+    /// Format:
+    /// `projects/{project}/locations/{location}/instances/{instance}/vulnerabilityReport`
+    ///
+    /// For `{project}`, either `project-number` or `project-id` can be provided.
+    /// For `{instance}`, either Compute Engine `instance-id` or `instance-name`
+    /// can be provided.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// A request message for listing patch deployments.
+/// A request message for listing vulnerability reports for all VM instances in
+/// the specified location.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPatchDeploymentsRequest {
-    /// Required. The resource name of the parent in the form `projects/*`.
+pub struct ListVulnerabilityReportsRequest {
+    /// Required. The parent resource name.
+    ///
+    /// Format: `projects/{project}/locations/{location}/instances/-`
+    ///
+    /// For `{project}`, either `project-number` or `project-id` can be provided.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of patch deployments to return. Default is
-    /// 100.
+    /// The maximum number of results to return.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// ListPatchDeployments that indicates where this listing should continue
-    /// from.
+    /// A pagination token returned from a previous call to
+    /// `ListVulnerabilityReports` that indicates where this listing
+    /// should continue from.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
+    /// If provided, this field specifies the criteria that must be met by a
+    /// `vulnerabilityReport` API resource to be included in the response.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
 }
-/// A response message for listing patch deployments.
+/// A response message for listing vulnerability reports for all VM instances in
+/// the specified location.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPatchDeploymentsResponse {
-    /// The list of patch deployments.
+pub struct ListVulnerabilityReportsResponse {
+    /// List of vulnerabilityReport objects.
     #[prost(message, repeated, tag = "1")]
-    pub patch_deployments: ::prost::alloc::vec::Vec<PatchDeployment>,
-    /// A pagination token that can be used to get the next page of patch
-    /// deployments.
+    pub vulnerability_reports: ::prost::alloc::vec::Vec<VulnerabilityReport>,
+    /// The pagination token to retrieve the next page of vulnerabilityReports
+    /// object.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// A request message for deleting a patch deployment.
+/// Common Vulnerability Scoring System version 3.
+/// For details, see <https://www.first.org/cvss/specification-document>
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeletePatchDeploymentRequest {
-    /// Required. The resource name of the patch deployment in the form
-    /// `projects/*/patchDeployments/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
+pub struct CvsSv3 {
+    /// The base score is a function of the base metric scores.
+    /// <https://www.first.org/cvss/specification-document#Base-Metrics>
+    #[prost(float, tag = "1")]
+    pub base_score: f32,
+    /// The Exploitability sub-score equation is derived from the Base
+    /// Exploitability metrics.
+    /// <https://www.first.org/cvss/specification-document#2-1-Exploitability-Metrics>
+    #[prost(float, tag = "2")]
+    pub exploitability_score: f32,
+    /// The Impact sub-score equation is derived from the Base Impact metrics.
+    #[prost(float, tag = "3")]
+    pub impact_score: f32,
+    /// This metric reflects the context by which vulnerability exploitation is
+    /// possible.
+    #[prost(enumeration = "cvs_sv3::AttackVector", tag = "5")]
+    pub attack_vector: i32,
+    /// This metric describes the conditions beyond the attacker's control that
+    /// must exist in order to exploit the vulnerability.
+    #[prost(enumeration = "cvs_sv3::AttackComplexity", tag = "6")]
+    pub attack_complexity: i32,
+    /// This metric describes the level of privileges an attacker must possess
+    /// before successfully exploiting the vulnerability.
+    #[prost(enumeration = "cvs_sv3::PrivilegesRequired", tag = "7")]
+    pub privileges_required: i32,
+    /// This metric captures the requirement for a human user, other than the
+    /// attacker, to participate in the successful compromise of the vulnerable
+    /// component.
+    #[prost(enumeration = "cvs_sv3::UserInteraction", tag = "8")]
+    pub user_interaction: i32,
+    /// The Scope metric captures whether a vulnerability in one vulnerable
+    /// component impacts resources in components beyond its security scope.
+    #[prost(enumeration = "cvs_sv3::Scope", tag = "9")]
+    pub scope: i32,
+    /// This metric measures the impact to the confidentiality of the information
+    /// resources managed by a software component due to a successfully exploited
+    /// vulnerability.
+    #[prost(enumeration = "cvs_sv3::Impact", tag = "10")]
+    pub confidentiality_impact: i32,
+    /// This metric measures the impact to integrity of a successfully exploited
+    /// vulnerability.
+    #[prost(enumeration = "cvs_sv3::Impact", tag = "11")]
+    pub integrity_impact: i32,
+    /// This metric measures the impact to the availability of the impacted
+    /// component resulting from a successfully exploited vulnerability.
+    #[prost(enumeration = "cvs_sv3::Impact", tag = "12")]
+    pub availability_impact: i32,
 }
-/// A request message for updating a patch deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdatePatchDeploymentRequest {
-    /// Required. The patch deployment to Update.
-    #[prost(message, optional, tag = "1")]
-    pub patch_deployment: ::core::option::Option<PatchDeployment>,
-    /// Optional. Field mask that controls which fields of the patch deployment
-    /// should be updated.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// A request message for pausing a patch deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PausePatchDeploymentRequest {
-    /// Required. The resource name of the patch deployment in the form
-    /// `projects/*/patchDeployments/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A request message for resuming a patch deployment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResumePatchDeploymentRequest {
-    /// Required. The resource name of the patch deployment in the form
-    /// `projects/*/patchDeployments/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod os_config_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// OS Config API
-    ///
-    /// The OS Config service is a server-side component that you can use to
-    /// manage package installations and patch jobs for virtual machine instances.
-    #[derive(Debug, Clone)]
-    pub struct OsConfigServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> OsConfigServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> OsConfigServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            OsConfigServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Patch VM instances by creating and running a patch job.
-        pub async fn execute_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExecutePatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ExecutePatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get the patch job. This can be used to track the progress of an
-        /// ongoing patch job or review the details of completed jobs.
-        pub async fn get_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/GetPatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Cancel a patch job. The patch job must be active. Canceled patch jobs
-        /// cannot be restarted.
-        pub async fn cancel_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CancelPatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/CancelPatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a list of patch jobs.
-        pub async fn list_patch_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchJobsRequest>,
-        ) -> Result<tonic::Response<super::ListPatchJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a list of instance details for a given patch job.
-        pub async fn list_patch_job_instance_details(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchJobInstanceDetailsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListPatchJobInstanceDetailsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobInstanceDetails",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Create an OS Config patch deployment.
-        pub async fn create_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreatePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/CreatePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get an OS Config patch deployment.
-        pub async fn get_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/GetPatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a page of OS Config patch deployments.
-        pub async fn list_patch_deployments(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchDeploymentsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListPatchDeploymentsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchDeployments",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Delete an OS Config patch deployment.
-        pub async fn delete_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeletePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/DeletePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Update an OS Config patch deployment.
-        pub async fn update_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdatePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/UpdatePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Change state of patch deployment to "PAUSED".
-        /// Patch deployment in paused state doesn't generate patch jobs.
-        pub async fn pause_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PausePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/PausePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Change state of patch deployment back to "ACTIVE".
-        /// Patch deployment in active state continues to generate patch jobs.
-        pub async fn resume_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ResumePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ResumePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// An OS policy defines the desired state configuration for a VM.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicy {
-    /// Required. The id of the OS policy with the following restrictions:
-    ///
-    /// * Must contain only lowercase letters, numbers, and hyphens.
-    /// * Must start with a letter.
-    /// * Must be between 1-63 characters.
-    /// * Must end with a number or a letter.
-    /// * Must be unique within the assignment.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// Policy description.
-    /// Length of the description is limited to 1024 characters.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Policy mode
-    #[prost(enumeration = "os_policy::Mode", tag = "3")]
-    pub mode: i32,
-    /// Required. List of resource groups for the policy.
-    /// For a particular VM, resource groups are evaluated in the order specified
-    /// and the first resource group that is applicable is selected and the rest
-    /// are ignored.
-    ///
-    /// If none of the resource groups are applicable for a VM, the VM is
-    /// considered to be non-compliant w.r.t this policy. This behavior can be
-    /// toggled by the flag `allow_no_resource_group_match`
-    #[prost(message, repeated, tag = "4")]
-    pub resource_groups: ::prost::alloc::vec::Vec<os_policy::ResourceGroup>,
-    /// This flag determines the OS policy compliance status when none of the
-    /// resource groups within the policy are applicable for a VM. Set this value
-    /// to `true` if the policy needs to be reported as compliant even if the
-    /// policy has nothing to validate or enforce.
-    #[prost(bool, tag = "5")]
-    pub allow_no_resource_group_match: bool,
-}
-/// Nested message and enum types in `OSPolicy`.
-pub mod os_policy {
-    /// Filtering criteria to select VMs based on inventory details.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InventoryFilter {
-        /// Required. The OS short name
-        #[prost(string, tag = "1")]
-        pub os_short_name: ::prost::alloc::string::String,
-        /// The OS version
-        ///
-        /// Prefix matches are supported if asterisk(*) is provided as the
-        /// last character. For example, to match all versions with a major
-        /// version of `7`, specify the following value for this field `7.*`
-        ///
-        /// An empty string matches all OS versions.
-        #[prost(string, tag = "2")]
-        pub os_version: ::prost::alloc::string::String,
-    }
-    /// An OS policy resource is used to define the desired state configuration
-    /// and provides a specific functionality like installing/removing packages,
-    /// executing a script etc.
-    ///
-    /// The system ensures that resources are always in their desired state by
-    /// taking necessary actions if they have drifted from their desired state.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Resource {
-        /// Required. The id of the resource with the following restrictions:
-        ///
-        /// * Must contain only lowercase letters, numbers, and hyphens.
-        /// * Must start with a letter.
-        /// * Must be between 1-63 characters.
-        /// * Must end with a number or a letter.
-        /// * Must be unique within the OS policy.
-        #[prost(string, tag = "1")]
-        pub id: ::prost::alloc::string::String,
-        /// Resource type.
-        #[prost(oneof = "resource::ResourceType", tags = "2, 3, 4, 5")]
-        pub resource_type: ::core::option::Option<resource::ResourceType>,
-    }
-    /// Nested message and enum types in `Resource`.
-    pub mod resource {
-        /// A remote or local file.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct File {
-            /// Defaults to false. When false, files are subject to validations
-            /// based on the file type:
-            ///
-            /// Remote: A checksum must be specified.
-            /// Cloud Storage: An object generation number must be specified.
-            #[prost(bool, tag = "4")]
-            pub allow_insecure: bool,
-            /// A specific type of file.
-            #[prost(oneof = "file::Type", tags = "1, 2, 3")]
-            pub r#type: ::core::option::Option<file::Type>,
-        }
-        /// Nested message and enum types in `File`.
-        pub mod file {
-            /// Specifies a file available via some URI.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Remote {
-                /// Required. URI from which to fetch the object. It should contain both
-                /// the protocol and path following the format `{protocol}://{location}`.
-                #[prost(string, tag = "1")]
-                pub uri: ::prost::alloc::string::String,
-                /// SHA256 checksum of the remote file.
-                #[prost(string, tag = "2")]
-                pub sha256_checksum: ::prost::alloc::string::String,
-            }
-            /// Specifies a file available as a Cloud Storage Object.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Gcs {
-                /// Required. Bucket of the Cloud Storage object.
-                #[prost(string, tag = "1")]
-                pub bucket: ::prost::alloc::string::String,
-                /// Required. Name of the Cloud Storage object.
-                #[prost(string, tag = "2")]
-                pub object: ::prost::alloc::string::String,
-                /// Generation number of the Cloud Storage object.
-                #[prost(int64, tag = "3")]
-                pub generation: i64,
-            }
-            /// A specific type of file.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Type {
-                /// A generic remote file.
-                #[prost(message, tag = "1")]
-                Remote(Remote),
-                /// A Cloud Storage object.
-                #[prost(message, tag = "2")]
-                Gcs(Gcs),
-                /// A local path within the VM to use.
-                #[prost(string, tag = "3")]
-                LocalPath(::prost::alloc::string::String),
-            }
-        }
-        /// A resource that manages a system package.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct PackageResource {
-            /// Required. The desired state the agent should maintain for this package.
-            #[prost(enumeration = "package_resource::DesiredState", tag = "1")]
-            pub desired_state: i32,
-            /// A system package.
-            #[prost(
-                oneof = "package_resource::SystemPackage",
-                tags = "2, 3, 4, 5, 6, 7, 8"
-            )]
-            pub system_package: ::core::option::Option<package_resource::SystemPackage>,
-        }
-        /// Nested message and enum types in `PackageResource`.
-        pub mod package_resource {
-            /// A deb package file. dpkg packages only support INSTALLED state.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Deb {
-                /// Required. A deb package.
-                #[prost(message, optional, tag = "1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Whether dependencies should also be installed.
-                /// - install when false: `dpkg -i package`
-                /// - install when true: `apt-get update && apt-get -y install
-                /// package.deb`
-                #[prost(bool, tag = "2")]
-                pub pull_deps: bool,
-            }
-            /// A package managed by APT.
-            /// - install: `apt-get update && apt-get -y install \[name\]`
-            /// - remove: `apt-get -y remove \[name\]`
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Apt {
-                /// Required. Package name.
-                #[prost(string, tag = "1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// An RPM package file. RPM packages only support INSTALLED state.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Rpm {
-                /// Required. An rpm package.
-                #[prost(message, optional, tag = "1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Whether dependencies should also be installed.
-                /// - install when false: `rpm --upgrade --replacepkgs package.rpm`
-                /// - install when true: `yum -y install package.rpm` or
-                /// `zypper -y install package.rpm`
-                #[prost(bool, tag = "2")]
-                pub pull_deps: bool,
-            }
-            /// A package managed by YUM.
-            /// - install: `yum -y install package`
-            /// - remove: `yum -y remove package`
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Yum {
-                /// Required. Package name.
-                #[prost(string, tag = "1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// A package managed by Zypper.
-            /// - install: `zypper -y install package`
-            /// - remove: `zypper -y rm package`
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Zypper {
-                /// Required. Package name.
-                #[prost(string, tag = "1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// A package managed by GooGet.
-            /// - install: `googet -noconfirm install package`
-            /// - remove: `googet -noconfirm remove package`
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct GooGet {
-                /// Required. Package name.
-                #[prost(string, tag = "1")]
-                pub name: ::prost::alloc::string::String,
-            }
-            /// An MSI package. MSI packages only support INSTALLED state.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Msi {
-                /// Required. The MSI package.
-                #[prost(message, optional, tag = "1")]
-                pub source: ::core::option::Option<super::File>,
-                /// Additional properties to use during installation.
-                /// This should be in the format of Property=Setting.
-                /// Appended to the defaults of `ACTION=INSTALL
-                /// REBOOT=ReallySuppress`.
-                #[prost(string, repeated, tag = "2")]
-                pub properties: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// The desired state that the OS Config agent maintains on the VM.
-            #[derive(
-                Clone,
-                Copy,
-                Debug,
-                PartialEq,
-                Eq,
-                Hash,
-                PartialOrd,
-                Ord,
-                ::prost::Enumeration
-            )]
-            #[repr(i32)]
-            pub enum DesiredState {
-                /// Unspecified is invalid.
-                Unspecified = 0,
-                /// Ensure that the package is installed.
-                Installed = 1,
-                /// The agent ensures that the package is not installed and
-                /// uninstalls it if detected.
-                Removed = 2,
-            }
-            impl DesiredState {
-                /// String value of the enum field names used in the ProtoBuf definition.
-                ///
-                /// The values are not transformed in any way and thus are considered stable
-                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                pub fn as_str_name(&self) -> &'static str {
-                    match self {
-                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
-                        DesiredState::Installed => "INSTALLED",
-                        DesiredState::Removed => "REMOVED",
-                    }
-                }
-                /// Creates an enum from field names used in the ProtoBuf definition.
-                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                    match value {
-                        "DESIRED_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                        "INSTALLED" => Some(Self::Installed),
-                        "REMOVED" => Some(Self::Removed),
-                        _ => None,
-                    }
-                }
-            }
-            /// A system package.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum SystemPackage {
-                /// A package managed by Apt.
-                #[prost(message, tag = "2")]
-                Apt(Apt),
-                /// A deb package file.
-                #[prost(message, tag = "3")]
-                Deb(Deb),
-                /// A package managed by YUM.
-                #[prost(message, tag = "4")]
-                Yum(Yum),
-                /// A package managed by Zypper.
-                #[prost(message, tag = "5")]
-                Zypper(Zypper),
-                /// An rpm package file.
-                #[prost(message, tag = "6")]
-                Rpm(Rpm),
-                /// A package managed by GooGet.
-                #[prost(message, tag = "7")]
-                Googet(GooGet),
-                /// An MSI package.
-                #[prost(message, tag = "8")]
-                Msi(Msi),
-            }
-        }
-        /// A resource that manages a package repository.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct RepositoryResource {
-            /// A specific type of repository.
-            #[prost(oneof = "repository_resource::Repository", tags = "1, 2, 3, 4")]
-            pub repository: ::core::option::Option<repository_resource::Repository>,
-        }
-        /// Nested message and enum types in `RepositoryResource`.
-        pub mod repository_resource {
-            /// Represents a single apt package repository. These will be added to
-            /// a repo file that will be managed at
-            /// `/etc/apt/sources.list.d/google_osconfig.list`.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct AptRepository {
-                /// Required. Type of archive files in this repository.
-                #[prost(enumeration = "apt_repository::ArchiveType", tag = "1")]
-                pub archive_type: i32,
-                /// Required. URI for this repository.
-                #[prost(string, tag = "2")]
-                pub uri: ::prost::alloc::string::String,
-                /// Required. Distribution of this repository.
-                #[prost(string, tag = "3")]
-                pub distribution: ::prost::alloc::string::String,
-                /// Required. List of components for this repository. Must contain at
-                /// least one item.
-                #[prost(string, repeated, tag = "4")]
-                pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-                /// URI of the key file for this repository. The agent maintains a
-                /// keyring at `/etc/apt/trusted.gpg.d/osconfig_agent_managed.gpg`.
-                #[prost(string, tag = "5")]
-                pub gpg_key: ::prost::alloc::string::String,
-            }
-            /// Nested message and enum types in `AptRepository`.
-            pub mod apt_repository {
-                /// Type of archive.
-                #[derive(
-                    Clone,
-                    Copy,
-                    Debug,
-                    PartialEq,
-                    Eq,
-                    Hash,
-                    PartialOrd,
-                    Ord,
-                    ::prost::Enumeration
-                )]
-                #[repr(i32)]
-                pub enum ArchiveType {
-                    /// Unspecified is invalid.
-                    Unspecified = 0,
-                    /// Deb indicates that the archive contains binary files.
-                    Deb = 1,
-                    /// Deb-src indicates that the archive contains source files.
-                    DebSrc = 2,
-                }
-                impl ArchiveType {
-                    /// String value of the enum field names used in the ProtoBuf definition.
-                    ///
-                    /// The values are not transformed in any way and thus are considered stable
-                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                    pub fn as_str_name(&self) -> &'static str {
-                        match self {
-                            ArchiveType::Unspecified => "ARCHIVE_TYPE_UNSPECIFIED",
-                            ArchiveType::Deb => "DEB",
-                            ArchiveType::DebSrc => "DEB_SRC",
-                        }
-                    }
-                    /// Creates an enum from field names used in the ProtoBuf definition.
-                    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                        match value {
-                            "ARCHIVE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                            "DEB" => Some(Self::Deb),
-                            "DEB_SRC" => Some(Self::DebSrc),
-                            _ => None,
-                        }
-                    }
-                }
-            }
-            /// Represents a single yum package repository. These are added to a
-            /// repo file that is managed at
-            /// `/etc/yum.repos.d/google_osconfig.repo`.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct YumRepository {
-                /// Required. A one word, unique name for this repository. This is  the
-                /// `repo id` in the yum config file and also the `display_name` if
-                /// `display_name` is omitted. This id is also used as the unique
-                /// identifier when checking for resource conflicts.
-                #[prost(string, tag = "1")]
-                pub id: ::prost::alloc::string::String,
-                /// The display name of the repository.
-                #[prost(string, tag = "2")]
-                pub display_name: ::prost::alloc::string::String,
-                /// Required. The location of the repository directory.
-                #[prost(string, tag = "3")]
-                pub base_url: ::prost::alloc::string::String,
-                /// URIs of GPG keys.
-                #[prost(string, repeated, tag = "4")]
-                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// Represents a single zypper package repository. These are added to a
-            /// repo file that is managed at
-            /// `/etc/zypp/repos.d/google_osconfig.repo`.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct ZypperRepository {
-                /// Required. A one word, unique name for this repository. This is the
-                /// `repo id` in the zypper config file and also the `display_name` if
-                /// `display_name` is omitted. This id is also used as the unique
-                /// identifier when checking for GuestPolicy conflicts.
-                #[prost(string, tag = "1")]
-                pub id: ::prost::alloc::string::String,
-                /// The display name of the repository.
-                #[prost(string, tag = "2")]
-                pub display_name: ::prost::alloc::string::String,
-                /// Required. The location of the repository directory.
-                #[prost(string, tag = "3")]
-                pub base_url: ::prost::alloc::string::String,
-                /// URIs of GPG keys.
-                #[prost(string, repeated, tag = "4")]
-                pub gpg_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-            }
-            /// Represents a Goo package repository. These are added to a repo file
-            /// that is managed at
-            /// `C:/ProgramData/GooGet/repos/google_osconfig.repo`.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct GooRepository {
-                /// Required. The name of the repository.
-                #[prost(string, tag = "1")]
-                pub name: ::prost::alloc::string::String,
-                /// Required. The url of the repository.
-                #[prost(string, tag = "2")]
-                pub url: ::prost::alloc::string::String,
-            }
-            /// A specific type of repository.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Repository {
-                /// An Apt Repository.
-                #[prost(message, tag = "1")]
-                Apt(AptRepository),
-                /// A Yum Repository.
-                #[prost(message, tag = "2")]
-                Yum(YumRepository),
-                /// A Zypper Repository.
-                #[prost(message, tag = "3")]
-                Zypper(ZypperRepository),
-                /// A Goo Repository.
-                #[prost(message, tag = "4")]
-                Goo(GooRepository),
-            }
-        }
-        /// A resource that allows executing scripts on the VM.
-        ///
-        /// The `ExecResource` has 2 stages: `validate` and `enforce` and both stages
-        /// accept a script as an argument to execute.
-        ///
-        /// When the `ExecResource` is applied by the agent, it first executes the
-        /// script in the `validate` stage. The `validate` stage can signal that the
-        /// `ExecResource` is already in the desired state by returning an exit code
-        /// of `100`. If the `ExecResource` is not in the desired state, it should
-        /// return an exit code of `101`. Any other exit code returned by this stage
-        /// is considered an error.
-        ///
-        /// If the `ExecResource` is not in the desired state based on the exit code
-        /// from the `validate` stage, the agent proceeds to execute the script from
-        /// the `enforce` stage. If the `ExecResource` is already in the desired
-        /// state, the `enforce` stage will not be run.
-        /// Similar to `validate` stage, the `enforce` stage should return an exit
-        /// code of `100` to indicate that the resource in now in its desired state.
-        /// Any other exit code is considered an error.
-        ///
-        /// NOTE: An exit code of `100` was chosen over `0` (and `101` vs `1`) to
-        /// have an explicit indicator of `in desired state`, `not in desired state`
-        /// and errors. Because, for example, Powershell will always return an exit
-        /// code of `0` unless an `exit` statement is provided in the script. So, for
-        /// reasons of consistency and being explicit, exit codes `100` and `101`
-        /// were chosen.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ExecResource {
-            /// Required. What to run to validate this resource is in the desired
-            /// state. An exit code of 100 indicates "in desired state", and exit code
-            /// of 101 indicates "not in desired state". Any other exit code indicates
-            /// a failure running validate.
-            #[prost(message, optional, tag = "1")]
-            pub validate: ::core::option::Option<exec_resource::Exec>,
-            /// What to run to bring this resource into the desired state.
-            /// An exit code of 100 indicates "success", any other exit code indicates
-            /// a failure running enforce.
-            #[prost(message, optional, tag = "2")]
-            pub enforce: ::core::option::Option<exec_resource::Exec>,
-        }
-        /// Nested message and enum types in `ExecResource`.
-        pub mod exec_resource {
-            /// A file or script to execute.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Exec {
-                /// Optional arguments to pass to the source during execution.
-                #[prost(string, repeated, tag = "3")]
-                pub args: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-                /// Required. The script interpreter to use.
-                #[prost(enumeration = "exec::Interpreter", tag = "4")]
-                pub interpreter: i32,
-                /// Only recorded for enforce Exec.
-                /// Path to an output file (that is created by this Exec) whose
-                /// content will be recorded in OSPolicyResourceCompliance after a
-                /// successful run. Absence or failure to read this file will result in
-                /// this ExecResource being non-compliant. Output file size is limited to
-                /// 100K bytes.
-                #[prost(string, tag = "5")]
-                pub output_file_path: ::prost::alloc::string::String,
-                /// What to execute.
-                #[prost(oneof = "exec::Source", tags = "1, 2")]
-                pub source: ::core::option::Option<exec::Source>,
-            }
-            /// Nested message and enum types in `Exec`.
-            pub mod exec {
-                /// The interpreter to use.
-                #[derive(
-                    Clone,
-                    Copy,
-                    Debug,
-                    PartialEq,
-                    Eq,
-                    Hash,
-                    PartialOrd,
-                    Ord,
-                    ::prost::Enumeration
-                )]
-                #[repr(i32)]
-                pub enum Interpreter {
-                    /// Invalid value, the request will return validation error.
-                    Unspecified = 0,
-                    /// If an interpreter is not specified, the
-                    /// source is executed directly. This execution, without an
-                    /// interpreter, only succeeds for executables and scripts that have <a
-                    /// href="<https://en.wikipedia.org/wiki/Shebang_(Unix>)"
-                    /// class="external">shebang lines</a>.
-                    None = 1,
-                    /// Indicates that the script runs with `/bin/sh` on Linux and
-                    /// `cmd.exe` on Windows.
-                    Shell = 2,
-                    /// Indicates that the script runs with PowerShell.
-                    Powershell = 3,
-                }
-                impl Interpreter {
-                    /// String value of the enum field names used in the ProtoBuf definition.
-                    ///
-                    /// The values are not transformed in any way and thus are considered stable
-                    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                    pub fn as_str_name(&self) -> &'static str {
-                        match self {
-                            Interpreter::Unspecified => "INTERPRETER_UNSPECIFIED",
-                            Interpreter::None => "NONE",
-                            Interpreter::Shell => "SHELL",
-                            Interpreter::Powershell => "POWERSHELL",
-                        }
-                    }
-                    /// Creates an enum from field names used in the ProtoBuf definition.
-                    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                        match value {
-                            "INTERPRETER_UNSPECIFIED" => Some(Self::Unspecified),
-                            "NONE" => Some(Self::None),
-                            "SHELL" => Some(Self::Shell),
-                            "POWERSHELL" => Some(Self::Powershell),
-                            _ => None,
-                        }
-                    }
-                }
-                /// What to execute.
-                #[allow(clippy::derive_partial_eq_without_eq)]
-                #[derive(Clone, PartialEq, ::prost::Oneof)]
-                pub enum Source {
-                    /// A remote or local file.
-                    #[prost(message, tag = "1")]
-                    File(super::super::File),
-                    /// An inline script.
-                    /// The size of the script is limited to 1024 characters.
-                    #[prost(string, tag = "2")]
-                    Script(::prost::alloc::string::String),
-                }
-            }
-        }
-        /// A resource that manages the state of a file.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct FileResource {
-            /// Required. The absolute path of the file within the VM.
-            #[prost(string, tag = "3")]
-            pub path: ::prost::alloc::string::String,
-            /// Required. Desired state of the file.
-            #[prost(enumeration = "file_resource::DesiredState", tag = "4")]
-            pub state: i32,
-            /// Consists of three octal digits which represent, in
-            /// order, the permissions of the owner, group, and other users for the
-            /// file (similarly to the numeric mode used in the linux chmod
-            /// utility). Each digit represents a three bit number with the 4 bit
-            /// corresponding to the read permissions, the 2 bit corresponds to the
-            /// write bit, and the one bit corresponds to the execute permission.
-            /// Default behavior is 755.
-            ///
-            /// Below are some examples of permissions and their associated values:
-            /// read, write, and execute: 7
-            /// read and execute: 5
-            /// read and write: 6
-            /// read only: 4
-            #[prost(string, tag = "5")]
-            pub permissions: ::prost::alloc::string::String,
-            /// The source for the contents of the file.
-            #[prost(oneof = "file_resource::Source", tags = "1, 2")]
-            pub source: ::core::option::Option<file_resource::Source>,
-        }
-        /// Nested message and enum types in `FileResource`.
-        pub mod file_resource {
-            /// Desired state of the file.
-            #[derive(
-                Clone,
-                Copy,
-                Debug,
-                PartialEq,
-                Eq,
-                Hash,
-                PartialOrd,
-                Ord,
-                ::prost::Enumeration
-            )]
-            #[repr(i32)]
-            pub enum DesiredState {
-                /// Unspecified is invalid.
-                Unspecified = 0,
-                /// Ensure file at path is present.
-                Present = 1,
-                /// Ensure file at path is absent.
-                Absent = 2,
-                /// Ensure the contents of the file at path matches. If the file does
-                /// not exist it will be created.
-                ContentsMatch = 3,
-            }
-            impl DesiredState {
-                /// String value of the enum field names used in the ProtoBuf definition.
-                ///
-                /// The values are not transformed in any way and thus are considered stable
-                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                pub fn as_str_name(&self) -> &'static str {
-                    match self {
-                        DesiredState::Unspecified => "DESIRED_STATE_UNSPECIFIED",
-                        DesiredState::Present => "PRESENT",
-                        DesiredState::Absent => "ABSENT",
-                        DesiredState::ContentsMatch => "CONTENTS_MATCH",
-                    }
-                }
-                /// Creates an enum from field names used in the ProtoBuf definition.
-                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                    match value {
-                        "DESIRED_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                        "PRESENT" => Some(Self::Present),
-                        "ABSENT" => Some(Self::Absent),
-                        "CONTENTS_MATCH" => Some(Self::ContentsMatch),
-                        _ => None,
-                    }
-                }
-            }
-            /// The source for the contents of the file.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Source {
-                /// A remote or local source.
-                #[prost(message, tag = "1")]
-                File(super::File),
-                /// A a file with this content.
-                /// The size of the content is limited to 1024 characters.
-                #[prost(string, tag = "2")]
-                Content(::prost::alloc::string::String),
-            }
-        }
-        /// Resource type.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ResourceType {
-            /// Package resource
-            #[prost(message, tag = "2")]
-            Pkg(PackageResource),
-            /// Package repository resource
-            #[prost(message, tag = "3")]
-            Repository(RepositoryResource),
-            /// Exec resource
-            #[prost(message, tag = "4")]
-            Exec(ExecResource),
-            /// File resource
-            #[prost(message, tag = "5")]
-            File(FileResource),
-        }
-    }
-    /// Resource groups provide a mechanism to group OS policy resources.
-    ///
-    /// Resource groups enable OS policy authors to create a single OS policy
-    /// to be applied to VMs running different operating Systems.
-    ///
-    /// When the OS policy is applied to a target VM, the appropriate resource
-    /// group within the OS policy is selected based on the `OSFilter` specified
-    /// within the resource group.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ResourceGroup {
-        /// List of inventory filters for the resource group.
-        ///
-        /// The resources in this resource group are applied to the target VM if it
-        /// satisfies at least one of the following inventory filters.
-        ///
-        /// For example, to apply this resource group to VMs running either `RHEL` or
-        /// `CentOS` operating systems, specify 2 items for the list with following
-        /// values:
-        /// inventory_filters\[0\].os_short_name='rhel' and
-        /// inventory_filters\[1\].os_short_name='centos'
-        ///
-        /// If the list is empty, this resource group will be applied to the target
-        /// VM unconditionally.
-        #[prost(message, repeated, tag = "1")]
-        pub inventory_filters: ::prost::alloc::vec::Vec<InventoryFilter>,
-        /// Required. List of resources configured for this resource group.
-        /// The resources are executed in the exact order specified here.
-        #[prost(message, repeated, tag = "2")]
-        pub resources: ::prost::alloc::vec::Vec<Resource>,
-    }
-    /// Policy mode
+/// Nested message and enum types in `CVSSv3`.
+pub mod cvs_sv3 {
+    /// This metric reflects the context by which vulnerability exploitation is
+    /// possible.
     #[derive(
         Clone,
         Copy,
@@ -2927,35 +2535,291 @@ pub mod os_policy {
         ::prost::Enumeration
     )]
     #[repr(i32)]
-    pub enum Mode {
-        /// Invalid mode
+    pub enum AttackVector {
+        /// Invalid value.
         Unspecified = 0,
-        /// This mode checks if the configuration resources in the policy are in
-        /// their desired state. No actions are performed if they are not in the
-        /// desired state. This mode is used for reporting purposes.
-        Validation = 1,
-        /// This mode checks if the configuration resources in the policy are in
-        /// their desired state, and if not, enforces the desired state.
-        Enforcement = 2,
+        /// The vulnerable component is bound to the network stack and the set of
+        /// possible attackers extends beyond the other options listed below, up to
+        /// and including the entire Internet.
+        Network = 1,
+        /// The vulnerable component is bound to the network stack, but the attack is
+        /// limited at the protocol level to a logically adjacent topology.
+        Adjacent = 2,
+        /// The vulnerable component is not bound to the network stack and the
+        /// attacker's path is via read/write/execute capabilities.
+        Local = 3,
+        /// The attack requires the attacker to physically touch or manipulate the
+        /// vulnerable component.
+        Physical = 4,
     }
-    impl Mode {
+    impl AttackVector {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                Mode::Unspecified => "MODE_UNSPECIFIED",
-                Mode::Validation => "VALIDATION",
-                Mode::Enforcement => "ENFORCEMENT",
+                AttackVector::Unspecified => "ATTACK_VECTOR_UNSPECIFIED",
+                AttackVector::Network => "ATTACK_VECTOR_NETWORK",
+                AttackVector::Adjacent => "ATTACK_VECTOR_ADJACENT",
+                AttackVector::Local => "ATTACK_VECTOR_LOCAL",
+                AttackVector::Physical => "ATTACK_VECTOR_PHYSICAL",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
         pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
             match value {
-                "MODE_UNSPECIFIED" => Some(Self::Unspecified),
-                "VALIDATION" => Some(Self::Validation),
-                "ENFORCEMENT" => Some(Self::Enforcement),
+                "ATTACK_VECTOR_UNSPECIFIED" => Some(Self::Unspecified),
+                "ATTACK_VECTOR_NETWORK" => Some(Self::Network),
+                "ATTACK_VECTOR_ADJACENT" => Some(Self::Adjacent),
+                "ATTACK_VECTOR_LOCAL" => Some(Self::Local),
+                "ATTACK_VECTOR_PHYSICAL" => Some(Self::Physical),
+                _ => None,
+            }
+        }
+    }
+    /// This metric describes the conditions beyond the attacker's control that
+    /// must exist in order to exploit the vulnerability.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AttackComplexity {
+        /// Invalid value.
+        Unspecified = 0,
+        /// Specialized access conditions or extenuating circumstances do not exist.
+        /// An attacker can expect repeatable success when attacking the vulnerable
+        /// component.
+        Low = 1,
+        /// A successful attack depends on conditions beyond the attacker's control.
+        /// That is, a successful attack cannot be accomplished at will, but requires
+        /// the attacker to invest in some measurable amount of effort in preparation
+        /// or execution against the vulnerable component before a successful attack
+        /// can be expected.
+        High = 2,
+    }
+    impl AttackComplexity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AttackComplexity::Unspecified => "ATTACK_COMPLEXITY_UNSPECIFIED",
+                AttackComplexity::Low => "ATTACK_COMPLEXITY_LOW",
+                AttackComplexity::High => "ATTACK_COMPLEXITY_HIGH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ATTACK_COMPLEXITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "ATTACK_COMPLEXITY_LOW" => Some(Self::Low),
+                "ATTACK_COMPLEXITY_HIGH" => Some(Self::High),
+                _ => None,
+            }
+        }
+    }
+    /// This metric describes the level of privileges an attacker must possess
+    /// before successfully exploiting the vulnerability.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum PrivilegesRequired {
+        /// Invalid value.
+        Unspecified = 0,
+        /// The attacker is unauthorized prior to attack, and therefore does not
+        /// require any access to settings or files of the vulnerable system to
+        /// carry out an attack.
+        None = 1,
+        /// The attacker requires privileges that provide basic user capabilities
+        /// that could normally affect only settings and files owned by a user.
+        /// Alternatively, an attacker with Low privileges has the ability to access
+        /// only non-sensitive resources.
+        Low = 2,
+        /// The attacker requires privileges that provide significant (e.g.,
+        /// administrative) control over the vulnerable component allowing access to
+        /// component-wide settings and files.
+        High = 3,
+    }
+    impl PrivilegesRequired {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrivilegesRequired::Unspecified => "PRIVILEGES_REQUIRED_UNSPECIFIED",
+                PrivilegesRequired::None => "PRIVILEGES_REQUIRED_NONE",
+                PrivilegesRequired::Low => "PRIVILEGES_REQUIRED_LOW",
+                PrivilegesRequired::High => "PRIVILEGES_REQUIRED_HIGH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PRIVILEGES_REQUIRED_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRIVILEGES_REQUIRED_NONE" => Some(Self::None),
+                "PRIVILEGES_REQUIRED_LOW" => Some(Self::Low),
+                "PRIVILEGES_REQUIRED_HIGH" => Some(Self::High),
+                _ => None,
+            }
+        }
+    }
+    /// This metric captures the requirement for a human user, other than the
+    /// attacker, to participate in the successful compromise of the vulnerable
+    /// component.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum UserInteraction {
+        /// Invalid value.
+        Unspecified = 0,
+        /// The vulnerable system can be exploited without interaction from any user.
+        None = 1,
+        /// Successful exploitation of this vulnerability requires a user to take
+        /// some action before the vulnerability can be exploited.
+        Required = 2,
+    }
+    impl UserInteraction {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                UserInteraction::Unspecified => "USER_INTERACTION_UNSPECIFIED",
+                UserInteraction::None => "USER_INTERACTION_NONE",
+                UserInteraction::Required => "USER_INTERACTION_REQUIRED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "USER_INTERACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "USER_INTERACTION_NONE" => Some(Self::None),
+                "USER_INTERACTION_REQUIRED" => Some(Self::Required),
+                _ => None,
+            }
+        }
+    }
+    /// The Scope metric captures whether a vulnerability in one vulnerable
+    /// component impacts resources in components beyond its security scope.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Scope {
+        /// Invalid value.
+        Unspecified = 0,
+        /// An exploited vulnerability can only affect resources managed by the same
+        /// security authority.
+        Unchanged = 1,
+        /// An exploited vulnerability can affect resources beyond the security scope
+        /// managed by the security authority of the vulnerable component.
+        Changed = 2,
+    }
+    impl Scope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Scope::Unspecified => "SCOPE_UNSPECIFIED",
+                Scope::Unchanged => "SCOPE_UNCHANGED",
+                Scope::Changed => "SCOPE_CHANGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SCOPE_UNCHANGED" => Some(Self::Unchanged),
+                "SCOPE_CHANGED" => Some(Self::Changed),
+                _ => None,
+            }
+        }
+    }
+    /// The Impact metrics capture the effects of a successfully exploited
+    /// vulnerability on the component that suffers the worst outcome that is most
+    /// directly and predictably associated with the attack.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Impact {
+        /// Invalid value.
+        Unspecified = 0,
+        /// High impact.
+        High = 1,
+        /// Low impact.
+        Low = 2,
+        /// No impact.
+        None = 3,
+    }
+    impl Impact {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Impact::Unspecified => "IMPACT_UNSPECIFIED",
+                Impact::High => "IMPACT_HIGH",
+                Impact::Low => "IMPACT_LOW",
+                Impact::None => "IMPACT_NONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "IMPACT_UNSPECIFIED" => Some(Self::Unspecified),
+                "IMPACT_HIGH" => Some(Self::High),
+                "IMPACT_LOW" => Some(Self::Low),
+                "IMPACT_NONE" => Some(Self::None),
                 _ => None,
             }
         }
@@ -3809,553 +3673,6 @@ pub mod os_policy_assignment_report {
         }
     }
 }
-/// This API resource represents the vulnerability report for a specified
-/// Compute Engine virtual machine (VM) instance at a given point in time.
-///
-/// For more information, see [Vulnerability
-/// reports](<https://cloud.google.com/compute/docs/instances/os-inventory-management#vulnerability-reports>).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VulnerabilityReport {
-    /// Output only. The `vulnerabilityReport` API resource name.
-    ///
-    /// Format:
-    /// `projects/{project_number}/locations/{location}/instances/{instance_id}/vulnerabilityReport`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. List of vulnerabilities affecting the VM.
-    #[prost(message, repeated, tag = "2")]
-    pub vulnerabilities: ::prost::alloc::vec::Vec<vulnerability_report::Vulnerability>,
-    /// Output only. The timestamp for when the last vulnerability report was generated for the
-    /// VM.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `VulnerabilityReport`.
-pub mod vulnerability_report {
-    /// A vulnerability affecting the VM instance.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Vulnerability {
-        /// Contains metadata as per the upstream feed of the operating system and
-        /// NVD.
-        #[prost(message, optional, tag = "1")]
-        pub details: ::core::option::Option<vulnerability::Details>,
-        /// Corresponds to the `INSTALLED_PACKAGE` inventory item on the VM.
-        /// This field displays the inventory items affected by this vulnerability.
-        /// If the vulnerability report was not updated after the VM inventory
-        /// update, these values might not display in VM inventory. For some distros,
-        /// this field may be empty.
-        #[deprecated]
-        #[prost(string, repeated, tag = "2")]
-        pub installed_inventory_item_ids: ::prost::alloc::vec::Vec<
-            ::prost::alloc::string::String,
-        >,
-        /// Corresponds to the `AVAILABLE_PACKAGE` inventory item on the VM.
-        /// If the vulnerability report was not updated after the VM inventory
-        /// update, these values might not display in VM inventory. If there is no
-        /// available fix, the field is empty. The `inventory_item` value specifies
-        /// the latest `SoftwarePackage` available to the VM that fixes the
-        /// vulnerability.
-        #[deprecated]
-        #[prost(string, repeated, tag = "3")]
-        pub available_inventory_item_ids: ::prost::alloc::vec::Vec<
-            ::prost::alloc::string::String,
-        >,
-        /// The timestamp for when the vulnerability was first detected.
-        #[prost(message, optional, tag = "4")]
-        pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// The timestamp for when the vulnerability was last modified.
-        #[prost(message, optional, tag = "5")]
-        pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// List of items affected by the vulnerability.
-        #[prost(message, repeated, tag = "6")]
-        pub items: ::prost::alloc::vec::Vec<vulnerability::Item>,
-    }
-    /// Nested message and enum types in `Vulnerability`.
-    pub mod vulnerability {
-        /// Contains metadata information for the vulnerability. This information is
-        /// collected from the upstream feed of the operating system.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Details {
-            /// The CVE of the vulnerability. CVE cannot be
-            /// empty and the combination of <cve, classification> should be unique
-            /// across vulnerabilities for a VM.
-            #[prost(string, tag = "1")]
-            pub cve: ::prost::alloc::string::String,
-            /// The CVSS V2 score of this vulnerability. CVSS V2 score is on a scale of
-            /// 0 - 10 where 0 indicates low severity and 10 indicates high severity.
-            #[prost(float, tag = "2")]
-            pub cvss_v2_score: f32,
-            /// The full description of the CVSSv3 for this vulnerability from NVD.
-            #[prost(message, optional, tag = "3")]
-            pub cvss_v3: ::core::option::Option<super::super::CvsSv3>,
-            /// Assigned severity/impact ranking from the distro.
-            #[prost(string, tag = "4")]
-            pub severity: ::prost::alloc::string::String,
-            /// The note or description describing the vulnerability from the distro.
-            #[prost(string, tag = "5")]
-            pub description: ::prost::alloc::string::String,
-            /// Corresponds to the references attached to the `VulnerabilityDetails`.
-            #[prost(message, repeated, tag = "6")]
-            pub references: ::prost::alloc::vec::Vec<details::Reference>,
-        }
-        /// Nested message and enum types in `Details`.
-        pub mod details {
-            /// A reference for this vulnerability.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Message)]
-            pub struct Reference {
-                /// The url of the reference.
-                #[prost(string, tag = "1")]
-                pub url: ::prost::alloc::string::String,
-                /// The source of the reference e.g. NVD.
-                #[prost(string, tag = "2")]
-                pub source: ::prost::alloc::string::String,
-            }
-        }
-        /// OS inventory item that is affected by a vulnerability or fixed as a
-        /// result of a vulnerability.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Item {
-            /// Corresponds to the `INSTALLED_PACKAGE` inventory item on the VM.
-            /// This field displays the inventory items affected by this vulnerability.
-            /// If the vulnerability report was not updated after the VM inventory
-            /// update, these values might not display in VM inventory. For some
-            /// operating systems, this field might be empty.
-            #[prost(string, tag = "1")]
-            pub installed_inventory_item_id: ::prost::alloc::string::String,
-            /// Corresponds to the `AVAILABLE_PACKAGE` inventory item on the VM.
-            /// If the vulnerability report was not updated after the VM inventory
-            /// update, these values might not display in VM inventory. If there is no
-            /// available fix, the field is empty. The `inventory_item` value specifies
-            /// the latest `SoftwarePackage` available to the VM that fixes the
-            /// vulnerability.
-            #[prost(string, tag = "2")]
-            pub available_inventory_item_id: ::prost::alloc::string::String,
-            /// The recommended [CPE URI](<https://cpe.mitre.org/specification/>) update
-            /// that contains a fix for this vulnerability.
-            #[prost(string, tag = "3")]
-            pub fixed_cpe_uri: ::prost::alloc::string::String,
-            /// The upstream OS patch, packages or KB that fixes the vulnerability.
-            #[prost(string, tag = "4")]
-            pub upstream_fix: ::prost::alloc::string::String,
-        }
-    }
-}
-/// A request message for getting the vulnerability report for the specified VM.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetVulnerabilityReportRequest {
-    /// Required. API resource name for vulnerability resource.
-    ///
-    /// Format:
-    /// `projects/{project}/locations/{location}/instances/{instance}/vulnerabilityReport`
-    ///
-    /// For `{project}`, either `project-number` or `project-id` can be provided.
-    /// For `{instance}`, either Compute Engine `instance-id` or `instance-name`
-    /// can be provided.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A request message for listing vulnerability reports for all VM instances in
-/// the specified location.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVulnerabilityReportsRequest {
-    /// Required. The parent resource name.
-    ///
-    /// Format: `projects/{project}/locations/{location}/instances/-`
-    ///
-    /// For `{project}`, either `project-number` or `project-id` can be provided.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of results to return.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A pagination token returned from a previous call to
-    /// `ListVulnerabilityReports` that indicates where this listing
-    /// should continue from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// If provided, this field specifies the criteria that must be met by a
-    /// `vulnerabilityReport` API resource to be included in the response.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// A response message for listing vulnerability reports for all VM instances in
-/// the specified location.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListVulnerabilityReportsResponse {
-    /// List of vulnerabilityReport objects.
-    #[prost(message, repeated, tag = "1")]
-    pub vulnerability_reports: ::prost::alloc::vec::Vec<VulnerabilityReport>,
-    /// The pagination token to retrieve the next page of vulnerabilityReports
-    /// object.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Common Vulnerability Scoring System version 3.
-/// For details, see <https://www.first.org/cvss/specification-document>
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CvsSv3 {
-    /// The base score is a function of the base metric scores.
-    /// <https://www.first.org/cvss/specification-document#Base-Metrics>
-    #[prost(float, tag = "1")]
-    pub base_score: f32,
-    /// The Exploitability sub-score equation is derived from the Base
-    /// Exploitability metrics.
-    /// <https://www.first.org/cvss/specification-document#2-1-Exploitability-Metrics>
-    #[prost(float, tag = "2")]
-    pub exploitability_score: f32,
-    /// The Impact sub-score equation is derived from the Base Impact metrics.
-    #[prost(float, tag = "3")]
-    pub impact_score: f32,
-    /// This metric reflects the context by which vulnerability exploitation is
-    /// possible.
-    #[prost(enumeration = "cvs_sv3::AttackVector", tag = "5")]
-    pub attack_vector: i32,
-    /// This metric describes the conditions beyond the attacker's control that
-    /// must exist in order to exploit the vulnerability.
-    #[prost(enumeration = "cvs_sv3::AttackComplexity", tag = "6")]
-    pub attack_complexity: i32,
-    /// This metric describes the level of privileges an attacker must possess
-    /// before successfully exploiting the vulnerability.
-    #[prost(enumeration = "cvs_sv3::PrivilegesRequired", tag = "7")]
-    pub privileges_required: i32,
-    /// This metric captures the requirement for a human user, other than the
-    /// attacker, to participate in the successful compromise of the vulnerable
-    /// component.
-    #[prost(enumeration = "cvs_sv3::UserInteraction", tag = "8")]
-    pub user_interaction: i32,
-    /// The Scope metric captures whether a vulnerability in one vulnerable
-    /// component impacts resources in components beyond its security scope.
-    #[prost(enumeration = "cvs_sv3::Scope", tag = "9")]
-    pub scope: i32,
-    /// This metric measures the impact to the confidentiality of the information
-    /// resources managed by a software component due to a successfully exploited
-    /// vulnerability.
-    #[prost(enumeration = "cvs_sv3::Impact", tag = "10")]
-    pub confidentiality_impact: i32,
-    /// This metric measures the impact to integrity of a successfully exploited
-    /// vulnerability.
-    #[prost(enumeration = "cvs_sv3::Impact", tag = "11")]
-    pub integrity_impact: i32,
-    /// This metric measures the impact to the availability of the impacted
-    /// component resulting from a successfully exploited vulnerability.
-    #[prost(enumeration = "cvs_sv3::Impact", tag = "12")]
-    pub availability_impact: i32,
-}
-/// Nested message and enum types in `CVSSv3`.
-pub mod cvs_sv3 {
-    /// This metric reflects the context by which vulnerability exploitation is
-    /// possible.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AttackVector {
-        /// Invalid value.
-        Unspecified = 0,
-        /// The vulnerable component is bound to the network stack and the set of
-        /// possible attackers extends beyond the other options listed below, up to
-        /// and including the entire Internet.
-        Network = 1,
-        /// The vulnerable component is bound to the network stack, but the attack is
-        /// limited at the protocol level to a logically adjacent topology.
-        Adjacent = 2,
-        /// The vulnerable component is not bound to the network stack and the
-        /// attacker's path is via read/write/execute capabilities.
-        Local = 3,
-        /// The attack requires the attacker to physically touch or manipulate the
-        /// vulnerable component.
-        Physical = 4,
-    }
-    impl AttackVector {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AttackVector::Unspecified => "ATTACK_VECTOR_UNSPECIFIED",
-                AttackVector::Network => "ATTACK_VECTOR_NETWORK",
-                AttackVector::Adjacent => "ATTACK_VECTOR_ADJACENT",
-                AttackVector::Local => "ATTACK_VECTOR_LOCAL",
-                AttackVector::Physical => "ATTACK_VECTOR_PHYSICAL",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ATTACK_VECTOR_UNSPECIFIED" => Some(Self::Unspecified),
-                "ATTACK_VECTOR_NETWORK" => Some(Self::Network),
-                "ATTACK_VECTOR_ADJACENT" => Some(Self::Adjacent),
-                "ATTACK_VECTOR_LOCAL" => Some(Self::Local),
-                "ATTACK_VECTOR_PHYSICAL" => Some(Self::Physical),
-                _ => None,
-            }
-        }
-    }
-    /// This metric describes the conditions beyond the attacker's control that
-    /// must exist in order to exploit the vulnerability.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AttackComplexity {
-        /// Invalid value.
-        Unspecified = 0,
-        /// Specialized access conditions or extenuating circumstances do not exist.
-        /// An attacker can expect repeatable success when attacking the vulnerable
-        /// component.
-        Low = 1,
-        /// A successful attack depends on conditions beyond the attacker's control.
-        /// That is, a successful attack cannot be accomplished at will, but requires
-        /// the attacker to invest in some measurable amount of effort in preparation
-        /// or execution against the vulnerable component before a successful attack
-        /// can be expected.
-        High = 2,
-    }
-    impl AttackComplexity {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AttackComplexity::Unspecified => "ATTACK_COMPLEXITY_UNSPECIFIED",
-                AttackComplexity::Low => "ATTACK_COMPLEXITY_LOW",
-                AttackComplexity::High => "ATTACK_COMPLEXITY_HIGH",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ATTACK_COMPLEXITY_UNSPECIFIED" => Some(Self::Unspecified),
-                "ATTACK_COMPLEXITY_LOW" => Some(Self::Low),
-                "ATTACK_COMPLEXITY_HIGH" => Some(Self::High),
-                _ => None,
-            }
-        }
-    }
-    /// This metric describes the level of privileges an attacker must possess
-    /// before successfully exploiting the vulnerability.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum PrivilegesRequired {
-        /// Invalid value.
-        Unspecified = 0,
-        /// The attacker is unauthorized prior to attack, and therefore does not
-        /// require any access to settings or files of the vulnerable system to
-        /// carry out an attack.
-        None = 1,
-        /// The attacker requires privileges that provide basic user capabilities
-        /// that could normally affect only settings and files owned by a user.
-        /// Alternatively, an attacker with Low privileges has the ability to access
-        /// only non-sensitive resources.
-        Low = 2,
-        /// The attacker requires privileges that provide significant (e.g.,
-        /// administrative) control over the vulnerable component allowing access to
-        /// component-wide settings and files.
-        High = 3,
-    }
-    impl PrivilegesRequired {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PrivilegesRequired::Unspecified => "PRIVILEGES_REQUIRED_UNSPECIFIED",
-                PrivilegesRequired::None => "PRIVILEGES_REQUIRED_NONE",
-                PrivilegesRequired::Low => "PRIVILEGES_REQUIRED_LOW",
-                PrivilegesRequired::High => "PRIVILEGES_REQUIRED_HIGH",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PRIVILEGES_REQUIRED_UNSPECIFIED" => Some(Self::Unspecified),
-                "PRIVILEGES_REQUIRED_NONE" => Some(Self::None),
-                "PRIVILEGES_REQUIRED_LOW" => Some(Self::Low),
-                "PRIVILEGES_REQUIRED_HIGH" => Some(Self::High),
-                _ => None,
-            }
-        }
-    }
-    /// This metric captures the requirement for a human user, other than the
-    /// attacker, to participate in the successful compromise of the vulnerable
-    /// component.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum UserInteraction {
-        /// Invalid value.
-        Unspecified = 0,
-        /// The vulnerable system can be exploited without interaction from any user.
-        None = 1,
-        /// Successful exploitation of this vulnerability requires a user to take
-        /// some action before the vulnerability can be exploited.
-        Required = 2,
-    }
-    impl UserInteraction {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                UserInteraction::Unspecified => "USER_INTERACTION_UNSPECIFIED",
-                UserInteraction::None => "USER_INTERACTION_NONE",
-                UserInteraction::Required => "USER_INTERACTION_REQUIRED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "USER_INTERACTION_UNSPECIFIED" => Some(Self::Unspecified),
-                "USER_INTERACTION_NONE" => Some(Self::None),
-                "USER_INTERACTION_REQUIRED" => Some(Self::Required),
-                _ => None,
-            }
-        }
-    }
-    /// The Scope metric captures whether a vulnerability in one vulnerable
-    /// component impacts resources in components beyond its security scope.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Scope {
-        /// Invalid value.
-        Unspecified = 0,
-        /// An exploited vulnerability can only affect resources managed by the same
-        /// security authority.
-        Unchanged = 1,
-        /// An exploited vulnerability can affect resources beyond the security scope
-        /// managed by the security authority of the vulnerable component.
-        Changed = 2,
-    }
-    impl Scope {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Scope::Unspecified => "SCOPE_UNSPECIFIED",
-                Scope::Unchanged => "SCOPE_UNCHANGED",
-                Scope::Changed => "SCOPE_CHANGED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "SCOPE_UNCHANGED" => Some(Self::Unchanged),
-                "SCOPE_CHANGED" => Some(Self::Changed),
-                _ => None,
-            }
-        }
-    }
-    /// The Impact metrics capture the effects of a successfully exploited
-    /// vulnerability on the component that suffers the worst outcome that is most
-    /// directly and predictably associated with the attack.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Impact {
-        /// Invalid value.
-        Unspecified = 0,
-        /// High impact.
-        High = 1,
-        /// Low impact.
-        Low = 2,
-        /// No impact.
-        None = 3,
-    }
-    impl Impact {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Impact::Unspecified => "IMPACT_UNSPECIFIED",
-                Impact::High => "IMPACT_HIGH",
-                Impact::Low => "IMPACT_LOW",
-                Impact::None => "IMPACT_NONE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "IMPACT_UNSPECIFIED" => Some(Self::Unspecified),
-                "IMPACT_HIGH" => Some(Self::High),
-                "IMPACT_LOW" => Some(Self::Low),
-                "IMPACT_NONE" => Some(Self::None),
-                _ => None,
-            }
-        }
-    }
-}
 /// Generated client implementations.
 pub mod os_config_zonal_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -4715,6 +4032,689 @@ pub mod os_config_zonal_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.osconfig.v1.OsConfigZonalService/ListVulnerabilityReports",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Patch deployments are configurations that individual patch jobs use to
+/// complete a patch. These configurations include instance filter, package
+/// repository settings, and a schedule. For more information about creating and
+/// managing patch deployments, see [Scheduling patch
+/// jobs](<https://cloud.google.com/compute/docs/os-patch-management/schedule-patch-jobs>).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PatchDeployment {
+    /// Unique name for the patch deployment resource in a project. The patch
+    /// deployment name is in the form:
+    /// `projects/{project_id}/patchDeployments/{patch_deployment_id}`.
+    /// This field is ignored when you create a new patch deployment.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Description of the patch deployment. Length of the description is
+    /// limited to 1024 characters.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. VM instances to patch.
+    #[prost(message, optional, tag = "3")]
+    pub instance_filter: ::core::option::Option<PatchInstanceFilter>,
+    /// Optional. Patch configuration that is applied.
+    #[prost(message, optional, tag = "4")]
+    pub patch_config: ::core::option::Option<PatchConfig>,
+    /// Optional. Duration of the patch. After the duration ends, the patch times
+    /// out.
+    #[prost(message, optional, tag = "5")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+    /// Output only. Time the patch deployment was created. Timestamp is in
+    /// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
+    #[prost(message, optional, tag = "8")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Time the patch deployment was last updated. Timestamp is in
+    /// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
+    #[prost(message, optional, tag = "9")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last time a patch job was started by this deployment.
+    /// Timestamp is in \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text
+    /// format.
+    #[prost(message, optional, tag = "10")]
+    pub last_execute_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Rollout strategy of the patch job.
+    #[prost(message, optional, tag = "11")]
+    pub rollout: ::core::option::Option<PatchRollout>,
+    /// Output only. Current state of the patch deployment.
+    #[prost(enumeration = "patch_deployment::State", tag = "12")]
+    pub state: i32,
+    /// Schedule for the patch.
+    #[prost(oneof = "patch_deployment::Schedule", tags = "6, 7")]
+    pub schedule: ::core::option::Option<patch_deployment::Schedule>,
+}
+/// Nested message and enum types in `PatchDeployment`.
+pub mod patch_deployment {
+    /// Represents state of patch peployment.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// The default value. This value is used if the state is omitted.
+        Unspecified = 0,
+        /// Active value means that patch deployment generates Patch Jobs.
+        Active = 1,
+        /// Paused value means that patch deployment does not generate
+        /// Patch jobs. Requires user action to move in and out from this state.
+        Paused = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::Paused => "PAUSED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "PAUSED" => Some(Self::Paused),
+                _ => None,
+            }
+        }
+    }
+    /// Schedule for the patch.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Schedule {
+        /// Required. Schedule a one-time execution.
+        #[prost(message, tag = "6")]
+        OneTimeSchedule(super::OneTimeSchedule),
+        /// Required. Schedule recurring executions.
+        #[prost(message, tag = "7")]
+        RecurringSchedule(super::RecurringSchedule),
+    }
+}
+/// Sets the time for a one time patch deployment. Timestamp is in
+/// \[RFC3339\](<https://www.ietf.org/rfc/rfc3339.txt>) text format.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OneTimeSchedule {
+    /// Required. The desired patch job execution time.
+    #[prost(message, optional, tag = "1")]
+    pub execute_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Sets the time for recurring patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RecurringSchedule {
+    /// Required. Defines the time zone that `time_of_day` is relative to.
+    /// The rules for daylight saving time are determined by the chosen time zone.
+    #[prost(message, optional, tag = "1")]
+    pub time_zone: ::core::option::Option<super::super::super::r#type::TimeZone>,
+    /// Optional. The time that the recurring schedule becomes effective.
+    /// Defaults to `create_time` of the patch deployment.
+    #[prost(message, optional, tag = "2")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. The end time at which a recurring patch deployment schedule is no
+    /// longer active.
+    #[prost(message, optional, tag = "3")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. Time of the day to run a recurring deployment.
+    #[prost(message, optional, tag = "4")]
+    pub time_of_day: ::core::option::Option<super::super::super::r#type::TimeOfDay>,
+    /// Required. The frequency unit of this recurring schedule.
+    #[prost(enumeration = "recurring_schedule::Frequency", tag = "5")]
+    pub frequency: i32,
+    /// Output only. The time the last patch job ran successfully.
+    #[prost(message, optional, tag = "9")]
+    pub last_execute_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the next patch job is scheduled to run.
+    #[prost(message, optional, tag = "10")]
+    pub next_execute_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Configurations for this recurring schedule.
+    /// Configurations must match frequency.
+    #[prost(oneof = "recurring_schedule::ScheduleConfig", tags = "6, 7")]
+    pub schedule_config: ::core::option::Option<recurring_schedule::ScheduleConfig>,
+}
+/// Nested message and enum types in `RecurringSchedule`.
+pub mod recurring_schedule {
+    /// Specifies the frequency of the recurring patch deployments.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Frequency {
+        /// Invalid. A frequency must be specified.
+        Unspecified = 0,
+        /// Indicates that the frequency of recurrence should be expressed in terms
+        /// of weeks.
+        Weekly = 1,
+        /// Indicates that the frequency of recurrence should be expressed in terms
+        /// of months.
+        Monthly = 2,
+        /// Indicates that the frequency of recurrence should be expressed in terms
+        /// of days.
+        Daily = 3,
+    }
+    impl Frequency {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Frequency::Unspecified => "FREQUENCY_UNSPECIFIED",
+                Frequency::Weekly => "WEEKLY",
+                Frequency::Monthly => "MONTHLY",
+                Frequency::Daily => "DAILY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FREQUENCY_UNSPECIFIED" => Some(Self::Unspecified),
+                "WEEKLY" => Some(Self::Weekly),
+                "MONTHLY" => Some(Self::Monthly),
+                "DAILY" => Some(Self::Daily),
+                _ => None,
+            }
+        }
+    }
+    /// Configurations for this recurring schedule.
+    /// Configurations must match frequency.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ScheduleConfig {
+        /// Required. Schedule with weekly executions.
+        #[prost(message, tag = "6")]
+        Weekly(super::WeeklySchedule),
+        /// Required. Schedule with monthly executions.
+        #[prost(message, tag = "7")]
+        Monthly(super::MonthlySchedule),
+    }
+}
+/// Represents a weekly schedule.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WeeklySchedule {
+    /// Required. Day of the week.
+    #[prost(enumeration = "super::super::super::r#type::DayOfWeek", tag = "1")]
+    pub day_of_week: i32,
+}
+/// Represents a monthly schedule. An example of a valid monthly schedule is
+/// "on the third Tuesday of the month" or "on the 15th of the month".
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MonthlySchedule {
+    /// One day in a month.
+    #[prost(oneof = "monthly_schedule::DayOfMonth", tags = "1, 2")]
+    pub day_of_month: ::core::option::Option<monthly_schedule::DayOfMonth>,
+}
+/// Nested message and enum types in `MonthlySchedule`.
+pub mod monthly_schedule {
+    /// One day in a month.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DayOfMonth {
+        /// Required. Week day in a month.
+        #[prost(message, tag = "1")]
+        WeekDayOfMonth(super::WeekDayOfMonth),
+        /// Required. One day of the month. 1-31 indicates the 1st to the 31st day.
+        /// -1 indicates the last day of the month. Months without the target day
+        /// will be skipped. For example, a schedule to run "every month on the 31st"
+        /// will not run in February, April, June, etc.
+        #[prost(int32, tag = "2")]
+        MonthDay(i32),
+    }
+}
+/// Represents one week day in a month. An example is "the 4th Sunday".
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WeekDayOfMonth {
+    /// Required. Week number in a month. 1-4 indicates the 1st to 4th week of the
+    /// month. -1 indicates the last week of the month.
+    #[prost(int32, tag = "1")]
+    pub week_ordinal: i32,
+    /// Required. A day of the week.
+    #[prost(enumeration = "super::super::super::r#type::DayOfWeek", tag = "2")]
+    pub day_of_week: i32,
+    /// Optional. Represents the number of days before or after the given week day
+    /// of month that the patch deployment is scheduled for. For example if
+    /// `week_ordinal` and `day_of_week` values point to the second day of the
+    /// month and this `day_offset` value is set to `3`, the patch deployment takes
+    /// place three days after the second Tuesday of the month. If this value is
+    /// negative, for example -5, the patches are deployed five days before before
+    /// the second Tuesday of the month. Allowed values are in range [-30, 30].
+    #[prost(int32, tag = "3")]
+    pub day_offset: i32,
+}
+/// A request message for creating a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreatePatchDeploymentRequest {
+    /// Required. The project to apply this patch deployment to in the form
+    /// `projects/*`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. A name for the patch deployment in the project. When creating a
+    /// name the following rules apply:
+    /// * Must contain only lowercase letters, numbers, and hyphens.
+    /// * Must start with a letter.
+    /// * Must be between 1-63 characters.
+    /// * Must end with a number or a letter.
+    /// * Must be unique within the project.
+    #[prost(string, tag = "2")]
+    pub patch_deployment_id: ::prost::alloc::string::String,
+    /// Required. The patch deployment to create.
+    #[prost(message, optional, tag = "3")]
+    pub patch_deployment: ::core::option::Option<PatchDeployment>,
+}
+/// A request message for retrieving a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetPatchDeploymentRequest {
+    /// Required. The resource name of the patch deployment in the form
+    /// `projects/*/patchDeployments/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A request message for listing patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPatchDeploymentsRequest {
+    /// Required. The resource name of the parent in the form `projects/*`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of patch deployments to return. Default is
+    /// 100.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// ListPatchDeployments that indicates where this listing should continue
+    /// from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// A response message for listing patch deployments.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPatchDeploymentsResponse {
+    /// The list of patch deployments.
+    #[prost(message, repeated, tag = "1")]
+    pub patch_deployments: ::prost::alloc::vec::Vec<PatchDeployment>,
+    /// A pagination token that can be used to get the next page of patch
+    /// deployments.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A request message for deleting a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeletePatchDeploymentRequest {
+    /// Required. The resource name of the patch deployment in the form
+    /// `projects/*/patchDeployments/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A request message for updating a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdatePatchDeploymentRequest {
+    /// Required. The patch deployment to Update.
+    #[prost(message, optional, tag = "1")]
+    pub patch_deployment: ::core::option::Option<PatchDeployment>,
+    /// Optional. Field mask that controls which fields of the patch deployment
+    /// should be updated.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// A request message for pausing a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PausePatchDeploymentRequest {
+    /// Required. The resource name of the patch deployment in the form
+    /// `projects/*/patchDeployments/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A request message for resuming a patch deployment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResumePatchDeploymentRequest {
+    /// Required. The resource name of the patch deployment in the form
+    /// `projects/*/patchDeployments/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod os_config_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// OS Config API
+    ///
+    /// The OS Config service is a server-side component that you can use to
+    /// manage package installations and patch jobs for virtual machine instances.
+    #[derive(Debug, Clone)]
+    pub struct OsConfigServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> OsConfigServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> OsConfigServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            OsConfigServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Patch VM instances by creating and running a patch job.
+        pub async fn execute_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ExecutePatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ExecutePatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get the patch job. This can be used to track the progress of an
+        /// ongoing patch job or review the details of completed jobs.
+        pub async fn get_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/GetPatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Cancel a patch job. The patch job must be active. Canceled patch jobs
+        /// cannot be restarted.
+        pub async fn cancel_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelPatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/CancelPatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a list of patch jobs.
+        pub async fn list_patch_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchJobsRequest>,
+        ) -> Result<tonic::Response<super::ListPatchJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a list of instance details for a given patch job.
+        pub async fn list_patch_job_instance_details(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchJobInstanceDetailsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPatchJobInstanceDetailsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobInstanceDetails",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Create an OS Config patch deployment.
+        pub async fn create_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreatePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/CreatePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get an OS Config patch deployment.
+        pub async fn get_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/GetPatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a page of OS Config patch deployments.
+        pub async fn list_patch_deployments(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchDeploymentsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPatchDeploymentsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchDeployments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Delete an OS Config patch deployment.
+        pub async fn delete_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeletePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/DeletePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Update an OS Config patch deployment.
+        pub async fn update_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdatePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/UpdatePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Change state of patch deployment to "PAUSED".
+        /// Patch deployment in paused state doesn't generate patch jobs.
+        pub async fn pause_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PausePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/PausePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Change state of patch deployment back to "ACTIVE".
+        /// Patch deployment in active state continues to generate patch jobs.
+        pub async fn resume_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ResumePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ResumePatchDeployment",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
