@@ -7116,26 +7116,6 @@ pub mod cluster_manager_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Lists the node pools for a cluster.
-        pub async fn list_node_pools(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListNodePoolsRequest>,
-        ) -> Result<tonic::Response<super::ListNodePoolsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.container.v1beta1.ClusterManager/ListNodePools",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
         /// Gets the public component of the cluster signing keys in
         /// JSON Web Key format.
         /// This API is not yet intended for general use, and is not available for all
@@ -7156,6 +7136,26 @@ pub mod cluster_manager_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.container.v1beta1.ClusterManager/GetJSONWebKeys",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists the node pools for a cluster.
+        pub async fn list_node_pools(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListNodePoolsRequest>,
+        ) -> Result<tonic::Response<super::ListNodePoolsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.container.v1beta1.ClusterManager/ListNodePools",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
