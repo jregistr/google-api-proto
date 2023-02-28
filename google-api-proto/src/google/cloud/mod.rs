@@ -19,6 +19,14 @@ pub mod advisorynotifications;
     )
 )]
 pub mod aiplatform;
+#[cfg(
+    any(
+        feature = "google-cloud-alloydb-v1",
+        feature = "google-cloud-alloydb-v1alpha",
+        feature = "google-cloud-alloydb-v1beta",
+    )
+)]
+pub mod alloydb;
 #[cfg(any(feature = "google-cloud-apigateway-v1"))]
 pub mod apigateway;
 #[cfg(any(feature = "google-cloud-apigeeconnect-v1"))]
