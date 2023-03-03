@@ -13206,6 +13206,15 @@ pub struct BatchPredictionJob {
     pub model_monitoring_status: ::core::option::Option<
         super::super::super::rpc::Status,
     >,
+    /// For custom-trained Models and AutoML Tabular Models, the container of the
+    /// DeployedModel instances will send `stderr` and `stdout` streams to
+    /// Stackdriver Logging by default. Please note that the logs incur cost,
+    /// which are subject to [Cloud Logging
+    /// pricing](<https://cloud.google.com/stackdriver/pricing>).
+    ///
+    /// User can disable container logging by setting this flag to true.
+    #[prost(bool, tag = "34")]
+    pub disable_container_logging: bool,
 }
 /// Nested message and enum types in `BatchPredictionJob`.
 pub mod batch_prediction_job {
