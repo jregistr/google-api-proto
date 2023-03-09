@@ -73,6 +73,23 @@ pub mod arrow_serialization_options {
         }
     }
 }
+/// Avro schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag = "1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+}
 /// Schema of a table
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -242,23 +259,6 @@ pub mod table_field_schema {
             }
         }
     }
-}
-/// Avro schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag = "1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
 }
 /// Information about the ReadSession.
 #[allow(clippy::derive_partial_eq_without_eq)]

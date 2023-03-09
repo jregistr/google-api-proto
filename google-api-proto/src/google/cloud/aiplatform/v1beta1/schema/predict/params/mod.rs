@@ -1,3 +1,17 @@
+/// Prediction model parameters for Image Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageClassificationPredictionParams {
+    /// The Model only returns predictions with at least this confidence score.
+    /// Default value is 0.0
+    #[prost(float, tag = "1")]
+    pub confidence_threshold: f32,
+    /// The Model only returns up to that many top, by confidence score,
+    /// predictions per instance. If this number is very high, the Model may return
+    /// fewer predictions. Default value is 10.
+    #[prost(int32, tag = "2")]
+    pub max_predictions: i32,
+}
 /// Prediction model parameters for Image Segmentation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -8,6 +22,34 @@ pub struct ImageSegmentationPredictionParams {
     /// 0.5.
     #[prost(float, tag = "1")]
     pub confidence_threshold: f32,
+}
+/// Prediction model parameters for Image Object Detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionPredictionParams {
+    /// The Model only returns predictions with at least this confidence score.
+    /// Default value is 0.0
+    #[prost(float, tag = "1")]
+    pub confidence_threshold: f32,
+    /// The Model only returns up to that many top, by confidence score,
+    /// predictions per instance. Note that number of returned predictions is also
+    /// limited by metadata's predictionsLimit. Default value is 10.
+    #[prost(int32, tag = "2")]
+    pub max_predictions: i32,
+}
+/// Prediction model parameters for Video Action Recognition.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoActionRecognitionPredictionParams {
+    /// The Model only returns predictions with at least this confidence score.
+    /// Default value is 0.0
+    #[prost(float, tag = "1")]
+    pub confidence_threshold: f32,
+    /// The model only returns up to that many top, by confidence score,
+    /// predictions per frame of the video. If this number is very high, the
+    /// Model may return fewer predictions per frame. Default value is 50.
+    #[prost(int32, tag = "2")]
+    pub max_predictions: i32,
 }
 /// Prediction model parameters for Video Classification.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -65,46 +107,4 @@ pub struct VideoObjectTrackingPredictionParams {
     /// value of video frame size are returned. Default value is 0.0.
     #[prost(float, tag = "3")]
     pub min_bounding_box_size: f32,
-}
-/// Prediction model parameters for Image Object Detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionPredictionParams {
-    /// The Model only returns predictions with at least this confidence score.
-    /// Default value is 0.0
-    #[prost(float, tag = "1")]
-    pub confidence_threshold: f32,
-    /// The Model only returns up to that many top, by confidence score,
-    /// predictions per instance. Note that number of returned predictions is also
-    /// limited by metadata's predictionsLimit. Default value is 10.
-    #[prost(int32, tag = "2")]
-    pub max_predictions: i32,
-}
-/// Prediction model parameters for Video Action Recognition.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoActionRecognitionPredictionParams {
-    /// The Model only returns predictions with at least this confidence score.
-    /// Default value is 0.0
-    #[prost(float, tag = "1")]
-    pub confidence_threshold: f32,
-    /// The model only returns up to that many top, by confidence score,
-    /// predictions per frame of the video. If this number is very high, the
-    /// Model may return fewer predictions per frame. Default value is 50.
-    #[prost(int32, tag = "2")]
-    pub max_predictions: i32,
-}
-/// Prediction model parameters for Image Classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageClassificationPredictionParams {
-    /// The Model only returns predictions with at least this confidence score.
-    /// Default value is 0.0
-    #[prost(float, tag = "1")]
-    pub confidence_threshold: f32,
-    /// The Model only returns up to that many top, by confidence score,
-    /// predictions per instance. If this number is very high, the Model may return
-    /// fewer predictions. Default value is 10.
-    #[prost(int32, tag = "2")]
-    pub max_predictions: i32,
 }

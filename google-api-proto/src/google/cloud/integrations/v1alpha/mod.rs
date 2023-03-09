@@ -71,21 +71,6 @@ pub struct BooleanParameterArray {
     #[prost(bool, repeated, tag = "1")]
     pub boolean_values: ::prost::alloc::vec::Vec<bool>,
 }
-/// This message is used for processing and persisting (when applicable) key
-/// value pair parameters for each event in the event bus.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EventParameter {
-    /// Key is used to retrieve the corresponding parameter value. This should be
-    /// unique for a given fired event. These parameters must be predefined in the
-    /// integration definition.
-    #[prost(string, tag = "1")]
-    pub key: ::prost::alloc::string::String,
-    /// Values for the defined keys. Each value can either be string, int, double
-    /// or any proto message.
-    #[prost(message, optional, tag = "2")]
-    pub value: ::core::option::Option<ValueType>,
-}
 /// Enum Product.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -122,6 +107,21 @@ impl Product {
             _ => None,
         }
     }
+}
+/// This message is used for processing and persisting (when applicable) key
+/// value pair parameters for each event in the event bus.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EventParameter {
+    /// Key is used to retrieve the corresponding parameter value. This should be
+    /// unique for a given fired event. These parameters must be predefined in the
+    /// integration definition.
+    #[prost(string, tag = "1")]
+    pub key: ::prost::alloc::string::String,
+    /// Values for the defined keys. Each value can either be string, int, double
+    /// or any proto message.
+    #[prost(message, optional, tag = "2")]
+    pub value: ::core::option::Option<ValueType>,
 }
 /// Options for how to validate json schemas.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]

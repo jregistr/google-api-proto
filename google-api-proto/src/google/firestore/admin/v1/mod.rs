@@ -260,466 +260,6 @@ pub mod index {
         }
     }
 }
-/// Represents a single field in the database.
-///
-/// Fields are grouped by their "Collection Group", which represent all
-/// collections in the database with the same id.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Field {
-    /// Required. A field name of the form
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
-    ///
-    /// A field path may be a simple field name, e.g. `address` or a path to fields
-    /// within map_value , e.g. `address.city`,
-    /// or a special field path. The only valid special field is `*`, which
-    /// represents any field.
-    ///
-    /// Field paths may be quoted using ` (backtick). The only character that needs
-    /// to be escaped within a quoted field path is the backtick character itself,
-    /// escaped using a backslash. Special characters in field paths that
-    /// must be quoted include: `*`, `.`,
-    /// ``` (backtick), `[`, `]`, as well as any ascii symbolic characters.
-    ///
-    /// Examples:
-    /// (Note: Comments here are written in markdown syntax, so there is an
-    ///   additional layer of backticks to represent a code block)
-    /// `\`address.city\`` represents a field named `address.city`, not the map key
-    /// `city` in the field `address`.
-    /// `\`*\`` represents a field named `*`, not any field.
-    ///
-    /// A special `Field` contains the default indexing settings for all fields.
-    /// This field's resource name is:
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/__default__/fields/*`
-    /// Indexes defined on this `Field` will be applied to all fields which do not
-    /// have their own `Field` index configuration.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The index configuration for this field. If unset, field indexing will
-    /// revert to the configuration defined by the `ancestor_field`. To
-    /// explicitly remove all indexes for this field, specify an index config
-    /// with an empty list of indexes.
-    #[prost(message, optional, tag = "2")]
-    pub index_config: ::core::option::Option<field::IndexConfig>,
-    /// The TTL configuration for this `Field`.
-    /// Setting or unsetting this will enable or disable the TTL for
-    /// documents that have this `Field`.
-    #[prost(message, optional, tag = "3")]
-    pub ttl_config: ::core::option::Option<field::TtlConfig>,
-}
-/// Nested message and enum types in `Field`.
-pub mod field {
-    /// The index configuration for this field.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IndexConfig {
-        /// The indexes supported for this field.
-        #[prost(message, repeated, tag = "1")]
-        pub indexes: ::prost::alloc::vec::Vec<super::Index>,
-        /// Output only. When true, the `Field`'s index configuration is set from the
-        /// configuration specified by the `ancestor_field`.
-        /// When false, the `Field`'s index configuration is defined explicitly.
-        #[prost(bool, tag = "2")]
-        pub uses_ancestor_config: bool,
-        /// Output only. Specifies the resource name of the `Field` from which this field's
-        /// index configuration is set (when `uses_ancestor_config` is true),
-        /// or from which it *would* be set if this field had no index configuration
-        /// (when `uses_ancestor_config` is false).
-        #[prost(string, tag = "3")]
-        pub ancestor_field: ::prost::alloc::string::String,
-        /// Output only
-        /// When true, the `Field`'s index configuration is in the process of being
-        /// reverted. Once complete, the index config will transition to the same
-        /// state as the field specified by `ancestor_field`, at which point
-        /// `uses_ancestor_config` will be `true` and `reverting` will be `false`.
-        #[prost(bool, tag = "4")]
-        pub reverting: bool,
-    }
-    /// The TTL (time-to-live) configuration for documents that have this `Field`
-    /// set.
-    /// Storing a timestamp value into a TTL-enabled field will be treated as
-    /// the document's absolute expiration time. Using any other data type or
-    /// leaving the field absent will disable the TTL for the individual document.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TtlConfig {
-        /// Output only. The state of the TTL configuration.
-        #[prost(enumeration = "ttl_config::State", tag = "1")]
-        pub state: i32,
-    }
-    /// Nested message and enum types in `TtlConfig`.
-    pub mod ttl_config {
-        /// The state of applying the TTL configuration to all documents.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum State {
-            /// The state is unspecified or unknown.
-            Unspecified = 0,
-            /// The TTL is being applied. There is an active long-running operation to
-            /// track the change. Newly written documents will have TTLs applied as
-            /// requested. Requested TTLs on existing documents are still being
-            /// processed. When TTLs on all existing documents have been processed, the
-            /// state will move to 'ACTIVE'.
-            Creating = 1,
-            /// The TTL is active for all documents.
-            Active = 2,
-            /// The TTL configuration could not be enabled for all existing documents.
-            /// Newly written documents will continue to have their TTL applied.
-            /// The LRO returned when last attempting to enable TTL for this `Field`
-            /// has failed, and may have more details.
-            NeedsRepair = 3,
-        }
-        impl State {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    State::Unspecified => "STATE_UNSPECIFIED",
-                    State::Creating => "CREATING",
-                    State::Active => "ACTIVE",
-                    State::NeedsRepair => "NEEDS_REPAIR",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "CREATING" => Some(Self::Creating),
-                    "ACTIVE" => Some(Self::Active),
-                    "NEEDS_REPAIR" => Some(Self::NeedsRepair),
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.CreateIndex][google.firestore.admin.v1.FirestoreAdmin.CreateIndex\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IndexOperationMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The index resource that this operation is acting on. For example:
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/indexes/{index_id}`
-    #[prost(string, tag = "3")]
-    pub index: ::prost::alloc::string::String,
-    /// The state of the operation.
-    #[prost(enumeration = "OperationState", tag = "4")]
-    pub state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "6")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.UpdateField][google.firestore.admin.v1.FirestoreAdmin.UpdateField\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldOperationMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The field resource that this operation is acting on. For example:
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
-    #[prost(string, tag = "3")]
-    pub field: ::prost::alloc::string::String,
-    /// A list of \[IndexConfigDelta][google.firestore.admin.v1.FieldOperationMetadata.IndexConfigDelta\], which describe the intent of this
-    /// operation.
-    #[prost(message, repeated, tag = "4")]
-    pub index_config_deltas: ::prost::alloc::vec::Vec<
-        field_operation_metadata::IndexConfigDelta,
-    >,
-    /// The state of the operation.
-    #[prost(enumeration = "OperationState", tag = "5")]
-    pub state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "6")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "7")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Describes the deltas of TTL configuration.
-    #[prost(message, optional, tag = "8")]
-    pub ttl_config_delta: ::core::option::Option<
-        field_operation_metadata::TtlConfigDelta,
-    >,
-}
-/// Nested message and enum types in `FieldOperationMetadata`.
-pub mod field_operation_metadata {
-    /// Information about an index configuration change.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IndexConfigDelta {
-        /// Specifies how the index is changing.
-        #[prost(enumeration = "index_config_delta::ChangeType", tag = "1")]
-        pub change_type: i32,
-        /// The index being changed.
-        #[prost(message, optional, tag = "2")]
-        pub index: ::core::option::Option<super::Index>,
-    }
-    /// Nested message and enum types in `IndexConfigDelta`.
-    pub mod index_config_delta {
-        /// Specifies how the index is changing.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ChangeType {
-            /// The type of change is not specified or known.
-            Unspecified = 0,
-            /// The single field index is being added.
-            Add = 1,
-            /// The single field index is being removed.
-            Remove = 2,
-        }
-        impl ChangeType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
-                    ChangeType::Add => "ADD",
-                    ChangeType::Remove => "REMOVE",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "ADD" => Some(Self::Add),
-                    "REMOVE" => Some(Self::Remove),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// Information about an TTL configuration change.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TtlConfigDelta {
-        /// Specifies how the TTL configuration is changing.
-        #[prost(enumeration = "ttl_config_delta::ChangeType", tag = "1")]
-        pub change_type: i32,
-    }
-    /// Nested message and enum types in `TtlConfigDelta`.
-    pub mod ttl_config_delta {
-        /// Specifies how the TTL config is changing.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ChangeType {
-            /// The type of change is not specified or known.
-            Unspecified = 0,
-            /// The TTL config is being added.
-            Add = 1,
-            /// The TTL config is being removed.
-            Remove = 2,
-        }
-        impl ChangeType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
-                    ChangeType::Add => "ADD",
-                    ChangeType::Remove => "REMOVE",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "ADD" => Some(Self::Add),
-                    "REMOVE" => Some(Self::Remove),
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.ExportDocuments][google.firestore.admin.v1.FirestoreAdmin.ExportDocuments\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportDocumentsMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The state of the export operation.
-    #[prost(enumeration = "OperationState", tag = "3")]
-    pub operation_state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "4")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Which collection ids are being exported.
-    #[prost(string, repeated, tag = "6")]
-    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Where the entities are being exported to.
-    #[prost(string, tag = "7")]
-    pub output_uri_prefix: ::prost::alloc::string::String,
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.ImportDocuments][google.firestore.admin.v1.FirestoreAdmin.ImportDocuments\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportDocumentsMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The state of the import operation.
-    #[prost(enumeration = "OperationState", tag = "3")]
-    pub operation_state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "4")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Which collection ids are being imported.
-    #[prost(string, repeated, tag = "6")]
-    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The location of the documents being imported.
-    #[prost(string, tag = "7")]
-    pub input_uri_prefix: ::prost::alloc::string::String,
-}
-/// Returned in the \[google.longrunning.Operation][google.longrunning.Operation\] response field.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportDocumentsResponse {
-    /// Location of the output files. This can be used to begin an import
-    /// into Cloud Firestore (this project or another project) after the operation
-    /// completes successfully.
-    #[prost(string, tag = "1")]
-    pub output_uri_prefix: ::prost::alloc::string::String,
-}
-/// Describes the progress of the operation.
-/// Unit of work is generic and must be interpreted based on where \[Progress][google.firestore.admin.v1.Progress\]
-/// is used.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Progress {
-    /// The amount of work estimated.
-    #[prost(int64, tag = "1")]
-    pub estimated_work: i64,
-    /// The amount of work completed.
-    #[prost(int64, tag = "2")]
-    pub completed_work: i64,
-}
-/// Describes the state of the operation.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum OperationState {
-    /// Unspecified.
-    Unspecified = 0,
-    /// Request is being prepared for processing.
-    Initializing = 1,
-    /// Request is actively being processed.
-    Processing = 2,
-    /// Request is in the process of being cancelled after user called
-    /// google.longrunning.Operations.CancelOperation on the operation.
-    Cancelling = 3,
-    /// Request has been processed and is in its finalization stage.
-    Finalizing = 4,
-    /// Request has completed successfully.
-    Successful = 5,
-    /// Request has finished being processed, but encountered an error.
-    Failed = 6,
-    /// Request has finished being cancelled after user called
-    /// google.longrunning.Operations.CancelOperation.
-    Cancelled = 7,
-}
-impl OperationState {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
-            OperationState::Initializing => "INITIALIZING",
-            OperationState::Processing => "PROCESSING",
-            OperationState::Cancelling => "CANCELLING",
-            OperationState::Finalizing => "FINALIZING",
-            OperationState::Successful => "SUCCESSFUL",
-            OperationState::Failed => "FAILED",
-            OperationState::Cancelled => "CANCELLED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "OPERATION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-            "INITIALIZING" => Some(Self::Initializing),
-            "PROCESSING" => Some(Self::Processing),
-            "CANCELLING" => Some(Self::Cancelling),
-            "FINALIZING" => Some(Self::Finalizing),
-            "SUCCESSFUL" => Some(Self::Successful),
-            "FAILED" => Some(Self::Failed),
-            "CANCELLED" => Some(Self::Cancelled),
-            _ => None,
-        }
-    }
-}
-/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationMetadata {}
 /// A Cloud Firestore Database.
 /// Currently only one database is allowed per cloud project; this database
 /// must have a `database_id` of '(default)'.
@@ -913,6 +453,151 @@ pub mod database {
                 "ENABLED" => Some(Self::Enabled),
                 "DISABLED" => Some(Self::Disabled),
                 _ => None,
+            }
+        }
+    }
+}
+/// Represents a single field in the database.
+///
+/// Fields are grouped by their "Collection Group", which represent all
+/// collections in the database with the same id.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Field {
+    /// Required. A field name of the form
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
+    ///
+    /// A field path may be a simple field name, e.g. `address` or a path to fields
+    /// within map_value , e.g. `address.city`,
+    /// or a special field path. The only valid special field is `*`, which
+    /// represents any field.
+    ///
+    /// Field paths may be quoted using ` (backtick). The only character that needs
+    /// to be escaped within a quoted field path is the backtick character itself,
+    /// escaped using a backslash. Special characters in field paths that
+    /// must be quoted include: `*`, `.`,
+    /// ``` (backtick), `[`, `]`, as well as any ascii symbolic characters.
+    ///
+    /// Examples:
+    /// (Note: Comments here are written in markdown syntax, so there is an
+    ///   additional layer of backticks to represent a code block)
+    /// `\`address.city\`` represents a field named `address.city`, not the map key
+    /// `city` in the field `address`.
+    /// `\`*\`` represents a field named `*`, not any field.
+    ///
+    /// A special `Field` contains the default indexing settings for all fields.
+    /// This field's resource name is:
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/__default__/fields/*`
+    /// Indexes defined on this `Field` will be applied to all fields which do not
+    /// have their own `Field` index configuration.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The index configuration for this field. If unset, field indexing will
+    /// revert to the configuration defined by the `ancestor_field`. To
+    /// explicitly remove all indexes for this field, specify an index config
+    /// with an empty list of indexes.
+    #[prost(message, optional, tag = "2")]
+    pub index_config: ::core::option::Option<field::IndexConfig>,
+    /// The TTL configuration for this `Field`.
+    /// Setting or unsetting this will enable or disable the TTL for
+    /// documents that have this `Field`.
+    #[prost(message, optional, tag = "3")]
+    pub ttl_config: ::core::option::Option<field::TtlConfig>,
+}
+/// Nested message and enum types in `Field`.
+pub mod field {
+    /// The index configuration for this field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IndexConfig {
+        /// The indexes supported for this field.
+        #[prost(message, repeated, tag = "1")]
+        pub indexes: ::prost::alloc::vec::Vec<super::Index>,
+        /// Output only. When true, the `Field`'s index configuration is set from the
+        /// configuration specified by the `ancestor_field`.
+        /// When false, the `Field`'s index configuration is defined explicitly.
+        #[prost(bool, tag = "2")]
+        pub uses_ancestor_config: bool,
+        /// Output only. Specifies the resource name of the `Field` from which this field's
+        /// index configuration is set (when `uses_ancestor_config` is true),
+        /// or from which it *would* be set if this field had no index configuration
+        /// (when `uses_ancestor_config` is false).
+        #[prost(string, tag = "3")]
+        pub ancestor_field: ::prost::alloc::string::String,
+        /// Output only
+        /// When true, the `Field`'s index configuration is in the process of being
+        /// reverted. Once complete, the index config will transition to the same
+        /// state as the field specified by `ancestor_field`, at which point
+        /// `uses_ancestor_config` will be `true` and `reverting` will be `false`.
+        #[prost(bool, tag = "4")]
+        pub reverting: bool,
+    }
+    /// The TTL (time-to-live) configuration for documents that have this `Field`
+    /// set.
+    /// Storing a timestamp value into a TTL-enabled field will be treated as
+    /// the document's absolute expiration time. Using any other data type or
+    /// leaving the field absent will disable the TTL for the individual document.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TtlConfig {
+        /// Output only. The state of the TTL configuration.
+        #[prost(enumeration = "ttl_config::State", tag = "1")]
+        pub state: i32,
+    }
+    /// Nested message and enum types in `TtlConfig`.
+    pub mod ttl_config {
+        /// The state of applying the TTL configuration to all documents.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum State {
+            /// The state is unspecified or unknown.
+            Unspecified = 0,
+            /// The TTL is being applied. There is an active long-running operation to
+            /// track the change. Newly written documents will have TTLs applied as
+            /// requested. Requested TTLs on existing documents are still being
+            /// processed. When TTLs on all existing documents have been processed, the
+            /// state will move to 'ACTIVE'.
+            Creating = 1,
+            /// The TTL is active for all documents.
+            Active = 2,
+            /// The TTL configuration could not be enabled for all existing documents.
+            /// Newly written documents will continue to have their TTL applied.
+            /// The LRO returned when last attempting to enable TTL for this `Field`
+            /// has failed, and may have more details.
+            NeedsRepair = 3,
+        }
+        impl State {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    State::Unspecified => "STATE_UNSPECIFIED",
+                    State::Creating => "CREATING",
+                    State::Active => "ACTIVE",
+                    State::NeedsRepair => "NEEDS_REPAIR",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "CREATING" => Some(Self::Creating),
+                    "ACTIVE" => Some(Self::Active),
+                    "NEEDS_REPAIR" => Some(Self::NeedsRepair),
+                    _ => None,
+                }
             }
         }
     }
@@ -1492,6 +1177,321 @@ pub mod firestore_admin_client {
                 "/google.firestore.admin.v1.FirestoreAdmin/UpdateDatabase",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// The metadata message for \[google.cloud.location.Location.metadata][google.cloud.location.Location.metadata\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationMetadata {}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.CreateIndex][google.firestore.admin.v1.FirestoreAdmin.CreateIndex\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IndexOperationMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The index resource that this operation is acting on. For example:
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/indexes/{index_id}`
+    #[prost(string, tag = "3")]
+    pub index: ::prost::alloc::string::String,
+    /// The state of the operation.
+    #[prost(enumeration = "OperationState", tag = "4")]
+    pub state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "6")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.UpdateField][google.firestore.admin.v1.FirestoreAdmin.UpdateField\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldOperationMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The field resource that this operation is acting on. For example:
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
+    #[prost(string, tag = "3")]
+    pub field: ::prost::alloc::string::String,
+    /// A list of \[IndexConfigDelta][google.firestore.admin.v1.FieldOperationMetadata.IndexConfigDelta\], which describe the intent of this
+    /// operation.
+    #[prost(message, repeated, tag = "4")]
+    pub index_config_deltas: ::prost::alloc::vec::Vec<
+        field_operation_metadata::IndexConfigDelta,
+    >,
+    /// The state of the operation.
+    #[prost(enumeration = "OperationState", tag = "5")]
+    pub state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "6")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "7")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Describes the deltas of TTL configuration.
+    #[prost(message, optional, tag = "8")]
+    pub ttl_config_delta: ::core::option::Option<
+        field_operation_metadata::TtlConfigDelta,
+    >,
+}
+/// Nested message and enum types in `FieldOperationMetadata`.
+pub mod field_operation_metadata {
+    /// Information about an index configuration change.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IndexConfigDelta {
+        /// Specifies how the index is changing.
+        #[prost(enumeration = "index_config_delta::ChangeType", tag = "1")]
+        pub change_type: i32,
+        /// The index being changed.
+        #[prost(message, optional, tag = "2")]
+        pub index: ::core::option::Option<super::Index>,
+    }
+    /// Nested message and enum types in `IndexConfigDelta`.
+    pub mod index_config_delta {
+        /// Specifies how the index is changing.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ChangeType {
+            /// The type of change is not specified or known.
+            Unspecified = 0,
+            /// The single field index is being added.
+            Add = 1,
+            /// The single field index is being removed.
+            Remove = 2,
+        }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Add => "ADD",
+                    ChangeType::Remove => "REMOVE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "ADD" => Some(Self::Add),
+                    "REMOVE" => Some(Self::Remove),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// Information about an TTL configuration change.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TtlConfigDelta {
+        /// Specifies how the TTL configuration is changing.
+        #[prost(enumeration = "ttl_config_delta::ChangeType", tag = "1")]
+        pub change_type: i32,
+    }
+    /// Nested message and enum types in `TtlConfigDelta`.
+    pub mod ttl_config_delta {
+        /// Specifies how the TTL config is changing.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ChangeType {
+            /// The type of change is not specified or known.
+            Unspecified = 0,
+            /// The TTL config is being added.
+            Add = 1,
+            /// The TTL config is being removed.
+            Remove = 2,
+        }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Add => "ADD",
+                    ChangeType::Remove => "REMOVE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "ADD" => Some(Self::Add),
+                    "REMOVE" => Some(Self::Remove),
+                    _ => None,
+                }
+            }
+        }
+    }
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.ExportDocuments][google.firestore.admin.v1.FirestoreAdmin.ExportDocuments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportDocumentsMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The state of the export operation.
+    #[prost(enumeration = "OperationState", tag = "3")]
+    pub operation_state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "4")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Which collection ids are being exported.
+    #[prost(string, repeated, tag = "6")]
+    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Where the entities are being exported to.
+    #[prost(string, tag = "7")]
+    pub output_uri_prefix: ::prost::alloc::string::String,
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.ImportDocuments][google.firestore.admin.v1.FirestoreAdmin.ImportDocuments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportDocumentsMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The state of the import operation.
+    #[prost(enumeration = "OperationState", tag = "3")]
+    pub operation_state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "4")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Which collection ids are being imported.
+    #[prost(string, repeated, tag = "6")]
+    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The location of the documents being imported.
+    #[prost(string, tag = "7")]
+    pub input_uri_prefix: ::prost::alloc::string::String,
+}
+/// Returned in the \[google.longrunning.Operation][google.longrunning.Operation\] response field.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportDocumentsResponse {
+    /// Location of the output files. This can be used to begin an import
+    /// into Cloud Firestore (this project or another project) after the operation
+    /// completes successfully.
+    #[prost(string, tag = "1")]
+    pub output_uri_prefix: ::prost::alloc::string::String,
+}
+/// Describes the progress of the operation.
+/// Unit of work is generic and must be interpreted based on where \[Progress][google.firestore.admin.v1.Progress\]
+/// is used.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Progress {
+    /// The amount of work estimated.
+    #[prost(int64, tag = "1")]
+    pub estimated_work: i64,
+    /// The amount of work completed.
+    #[prost(int64, tag = "2")]
+    pub completed_work: i64,
+}
+/// Describes the state of the operation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum OperationState {
+    /// Unspecified.
+    Unspecified = 0,
+    /// Request is being prepared for processing.
+    Initializing = 1,
+    /// Request is actively being processed.
+    Processing = 2,
+    /// Request is in the process of being cancelled after user called
+    /// google.longrunning.Operations.CancelOperation on the operation.
+    Cancelling = 3,
+    /// Request has been processed and is in its finalization stage.
+    Finalizing = 4,
+    /// Request has completed successfully.
+    Successful = 5,
+    /// Request has finished being processed, but encountered an error.
+    Failed = 6,
+    /// Request has finished being cancelled after user called
+    /// google.longrunning.Operations.CancelOperation.
+    Cancelled = 7,
+}
+impl OperationState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
+            OperationState::Initializing => "INITIALIZING",
+            OperationState::Processing => "PROCESSING",
+            OperationState::Cancelling => "CANCELLING",
+            OperationState::Finalizing => "FINALIZING",
+            OperationState::Successful => "SUCCESSFUL",
+            OperationState::Failed => "FAILED",
+            OperationState::Cancelled => "CANCELLED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OPERATION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "INITIALIZING" => Some(Self::Initializing),
+            "PROCESSING" => Some(Self::Processing),
+            "CANCELLING" => Some(Self::Cancelling),
+            "FINALIZING" => Some(Self::Finalizing),
+            "SUCCESSFUL" => Some(Self::Successful),
+            "FAILED" => Some(Self::Failed),
+            "CANCELLED" => Some(Self::Cancelled),
+            _ => None,
         }
     }
 }

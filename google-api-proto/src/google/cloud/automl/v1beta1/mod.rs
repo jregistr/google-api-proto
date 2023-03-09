@@ -1,3 +1,28 @@
+/// A vertex represents a 2D point in the image.
+/// The normalized vertex coordinates are between 0 to 1 fractions relative to
+/// the original plane (image, video). E.g. if the plane (e.g. whole image) would
+/// have size 10 x 20 then a point with normalized coordinates (0.1, 0.3) would
+/// be at the position (1, 6) on that plane.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// Required. Horizontal coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Required. Vertical coordinate.
+    #[prost(float, tag = "2")]
+    pub y: f32,
+}
+/// A bounding polygon of a detected object on a plane.
+/// On output both vertices and normalized_vertices are provided.
+/// The polygon is formed by connecting vertices in the order they are listed.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// Output only . The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag = "2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
+}
 /// A definition of an annotation spec.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -436,6 +461,131 @@ pub struct ImageObjectDetectionModelDeploymentMetadata {
     #[prost(int64, tag = "1")]
     pub node_count: i64,
 }
+/// Annotation details for image object detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionAnnotation {
+    /// Output only. The rectangle representing the object location.
+    #[prost(message, optional, tag = "1")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// Output only. The confidence that this annotation is positive for the parent example,
+    /// value in [0, 1], higher means higher positivity confidence.
+    #[prost(float, tag = "2")]
+    pub score: f32,
+}
+/// Annotation details for video object tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingAnnotation {
+    /// Optional. The instance of the object, expressed as a positive integer. Used to tell
+    /// apart objects of the same type (i.e. AnnotationSpec) when multiple are
+    /// present on a single example.
+    /// NOTE: Instance ID prediction quality is not a part of model evaluation and
+    /// is done as best effort. Especially in cases when an entity goes
+    /// off-screen for a longer time (minutes), when it comes back it may be given
+    /// a new instance ID.
+    #[prost(string, tag = "1")]
+    pub instance_id: ::prost::alloc::string::String,
+    /// Required. A time (frame) of a video to which this annotation pertains.
+    /// Represented as the duration since the video's start.
+    #[prost(message, optional, tag = "2")]
+    pub time_offset: ::core::option::Option<::prost_types::Duration>,
+    /// Required. The rectangle representing the object location on the frame (i.e.
+    /// at the time_offset of the video).
+    #[prost(message, optional, tag = "3")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// Output only. The confidence that this annotation is positive for the video at
+    /// the time_offset, value in [0, 1], higher means higher positivity
+    /// confidence. For annotations created by the user the score is 1. When
+    /// user approves an annotation, the original float score is kept (and not
+    /// changed to 1).
+    #[prost(float, tag = "4")]
+    pub score: f32,
+}
+/// Bounding box matching model metrics for a single intersection-over-union
+/// threshold and multiple label match confidence thresholds.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingBoxMetricsEntry {
+    /// Output only. The intersection-over-union threshold value used to compute
+    /// this metrics entry.
+    #[prost(float, tag = "1")]
+    pub iou_threshold: f32,
+    /// Output only. The mean average precision, most often close to au_prc.
+    #[prost(float, tag = "2")]
+    pub mean_average_precision: f32,
+    /// Output only. Metrics for each label-match confidence_threshold from
+    /// 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99. Precision-recall curve is
+    /// derived from them.
+    #[prost(message, repeated, tag = "3")]
+    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
+        bounding_box_metrics_entry::ConfidenceMetricsEntry,
+    >,
+}
+/// Nested message and enum types in `BoundingBoxMetricsEntry`.
+pub mod bounding_box_metrics_entry {
+    /// Metrics for a single confidence threshold.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceMetricsEntry {
+        /// Output only. The confidence threshold value used to compute the metrics.
+        #[prost(float, tag = "1")]
+        pub confidence_threshold: f32,
+        /// Output only. Recall under the given confidence threshold.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// Output only. Precision under the given confidence threshold.
+        #[prost(float, tag = "3")]
+        pub precision: f32,
+        /// Output only. The harmonic mean of recall and precision.
+        #[prost(float, tag = "4")]
+        pub f1_score: f32,
+    }
+}
+/// Model evaluation metrics for image object detection problems.
+/// Evaluates prediction quality of labeled bounding boxes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionEvaluationMetrics {
+    /// Output only. The total number of bounding boxes (i.e. summed over all
+    /// images) the ground truth used to create this evaluation had.
+    #[prost(int32, tag = "1")]
+    pub evaluated_bounding_box_count: i32,
+    /// Output only. The bounding boxes match metrics for each
+    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// pair.
+    #[prost(message, repeated, tag = "2")]
+    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
+    /// Output only. The single metric for bounding boxes evaluation:
+    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
+    #[prost(float, tag = "3")]
+    pub bounding_box_mean_average_precision: f32,
+}
+/// Model evaluation metrics for video object tracking problems.
+/// Evaluates prediction quality of both labeled bounding boxes and labeled
+/// tracks (i.e. series of bounding boxes sharing same label and instance ID).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingEvaluationMetrics {
+    /// Output only. The number of video frames used to create this evaluation.
+    #[prost(int32, tag = "1")]
+    pub evaluated_frame_count: i32,
+    /// Output only. The total number of bounding boxes (i.e. summed over all
+    /// frames) the ground truth used to create this evaluation had.
+    #[prost(int32, tag = "2")]
+    pub evaluated_bounding_box_count: i32,
+    /// Output only. The bounding boxes match metrics for each
+    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// pair.
+    #[prost(message, repeated, tag = "4")]
+    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
+    /// Output only. The single metric for bounding boxes evaluation:
+    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
+    #[prost(float, tag = "6")]
+    pub bounding_box_mean_average_precision: f32,
+}
 /// The data statistics of a series of values that share the same DataType.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -800,31 +950,6 @@ pub mod column_spec {
         #[prost(message, optional, tag = "2")]
         pub correlation_stats: ::core::option::Option<super::CorrelationStats>,
     }
-}
-/// A vertex represents a 2D point in the image.
-/// The normalized vertex coordinates are between 0 to 1 fractions relative to
-/// the original plane (image, video). E.g. if the plane (e.g. whole image) would
-/// have size 10 x 20 then a point with normalized coordinates (0.1, 0.3) would
-/// be at the position (1, 6) on that plane.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// Required. Horizontal coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Required. Vertical coordinate.
-    #[prost(float, tag = "2")]
-    pub y: f32,
-}
-/// A bounding polygon of a detected object on a plane.
-/// On output both vertices and normalized_vertices are provided.
-/// The polygon is formed by connecting vertices in the order they are listed.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// Output only . The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag = "2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
 }
 /// Input configuration for ImportData Action.
 ///
@@ -2675,361 +2800,6 @@ pub struct TablesModelColumnInfo {
     #[prost(float, tag = "3")]
     pub feature_importance: f32,
 }
-/// Dataset metadata for classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextClassificationDatasetMetadata {
-    /// Required. Type of the classification problem.
-    #[prost(enumeration = "ClassificationType", tag = "1")]
-    pub classification_type: i32,
-}
-/// Model metadata that is specific to text classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextClassificationModelMetadata {
-    /// Output only. Classification type of the dataset used to train this model.
-    #[prost(enumeration = "ClassificationType", tag = "3")]
-    pub classification_type: i32,
-}
-/// Dataset metadata that is specific to text extraction
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextExtractionDatasetMetadata {}
-/// Model metadata that is specific to text extraction.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextExtractionModelMetadata {
-    /// Indicates the scope of model use case.
-    ///
-    /// * `default`: Use to train a general text extraction model. Default value.
-    ///
-    /// * `health_care`: Use to train a text extraction model that is tuned for
-    ///    healthcare applications.
-    #[prost(string, tag = "3")]
-    pub model_hint: ::prost::alloc::string::String,
-}
-/// Dataset metadata for text sentiment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextSentimentDatasetMetadata {
-    /// Required. A sentiment is expressed as an integer ordinal, where higher value
-    /// means a more positive sentiment. The range of sentiments that will be used
-    /// is between 0 and sentiment_max (inclusive on both ends), and all the values
-    /// in the range must be represented in the dataset before a model can be
-    /// created.
-    /// sentiment_max value must be between 1 and 10 (inclusive).
-    #[prost(int32, tag = "1")]
-    pub sentiment_max: i32,
-}
-/// Model metadata that is specific to text sentiment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextSentimentModelMetadata {}
-/// Dataset metadata that is specific to translation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslationDatasetMetadata {
-    /// Required. The BCP-47 language code of the source language.
-    #[prost(string, tag = "1")]
-    pub source_language_code: ::prost::alloc::string::String,
-    /// Required. The BCP-47 language code of the target language.
-    #[prost(string, tag = "2")]
-    pub target_language_code: ::prost::alloc::string::String,
-}
-/// Evaluation metrics for the dataset.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslationEvaluationMetrics {
-    /// Output only. BLEU score.
-    #[prost(double, tag = "1")]
-    pub bleu_score: f64,
-    /// Output only. BLEU score for base model.
-    #[prost(double, tag = "2")]
-    pub base_bleu_score: f64,
-}
-/// Model metadata that is specific to translation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslationModelMetadata {
-    /// The resource name of the model to use as a baseline to train the custom
-    /// model. If unset, we use the default base model provided by Google
-    /// Translate. Format:
-    /// `projects/{project_id}/locations/{location_id}/models/{model_id}`
-    #[prost(string, tag = "1")]
-    pub base_model: ::prost::alloc::string::String,
-    /// Output only. Inferred from the dataset.
-    /// The source languge (The BCP-47 language code) that is used for training.
-    #[prost(string, tag = "2")]
-    pub source_language_code: ::prost::alloc::string::String,
-    /// Output only. The target languge (The BCP-47 language code) that is used for
-    /// training.
-    #[prost(string, tag = "3")]
-    pub target_language_code: ::prost::alloc::string::String,
-}
-/// Annotation details specific to translation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TranslationAnnotation {
-    /// Output only . The translated content.
-    #[prost(message, optional, tag = "1")]
-    pub translated_content: ::core::option::Option<TextSnippet>,
-}
-/// Dataset metadata specific to video classification.
-/// All Video Classification datasets are treated as multi label.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoClassificationDatasetMetadata {}
-/// Dataset metadata specific to video object tracking.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingDatasetMetadata {}
-/// Model metadata specific to video classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoClassificationModelMetadata {}
-/// Model metadata specific to video object tracking.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingModelMetadata {}
-/// API proto representing a trained machine learning model.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Model {
-    /// Output only. Resource name of the model.
-    /// Format: `projects/{project_id}/locations/{location_id}/models/{model_id}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the model to show in the interface. The name can be
-    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
-    /// and a-z, underscores
-    /// (_), and ASCII digits 0-9. It must start with a letter.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The resource ID of the dataset used to create the model. The dataset must
-    /// come from the same ancestor project and location.
-    #[prost(string, tag = "3")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// Output only. Timestamp when the model training finished  and can be used for prediction.
-    #[prost(message, optional, tag = "7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when this model was last updated.
-    #[prost(message, optional, tag = "11")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Deployment state of the model. A model can only serve
-    /// prediction requests after it gets deployed.
-    #[prost(enumeration = "model::DeploymentState", tag = "8")]
-    pub deployment_state: i32,
-    /// Required.
-    /// The model metadata that is specific to the problem type.
-    /// Must match the metadata type of the dataset used to train the model.
-    #[prost(oneof = "model::ModelMetadata", tags = "15, 13, 14, 20, 23, 21, 19, 24, 22")]
-    pub model_metadata: ::core::option::Option<model::ModelMetadata>,
-}
-/// Nested message and enum types in `Model`.
-pub mod model {
-    /// Deployment state of the model.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DeploymentState {
-        /// Should not be used, an un-set enum has this value by default.
-        Unspecified = 0,
-        /// Model is deployed.
-        Deployed = 1,
-        /// Model is not deployed.
-        Undeployed = 2,
-    }
-    impl DeploymentState {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DeploymentState::Unspecified => "DEPLOYMENT_STATE_UNSPECIFIED",
-                DeploymentState::Deployed => "DEPLOYED",
-                DeploymentState::Undeployed => "UNDEPLOYED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "DEPLOYMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "DEPLOYED" => Some(Self::Deployed),
-                "UNDEPLOYED" => Some(Self::Undeployed),
-                _ => None,
-            }
-        }
-    }
-    /// Required.
-    /// The model metadata that is specific to the problem type.
-    /// Must match the metadata type of the dataset used to train the model.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ModelMetadata {
-        /// Metadata for translation models.
-        #[prost(message, tag = "15")]
-        TranslationModelMetadata(super::TranslationModelMetadata),
-        /// Metadata for image classification models.
-        #[prost(message, tag = "13")]
-        ImageClassificationModelMetadata(super::ImageClassificationModelMetadata),
-        /// Metadata for text classification models.
-        #[prost(message, tag = "14")]
-        TextClassificationModelMetadata(super::TextClassificationModelMetadata),
-        /// Metadata for image object detection models.
-        #[prost(message, tag = "20")]
-        ImageObjectDetectionModelMetadata(super::ImageObjectDetectionModelMetadata),
-        /// Metadata for video classification models.
-        #[prost(message, tag = "23")]
-        VideoClassificationModelMetadata(super::VideoClassificationModelMetadata),
-        /// Metadata for video object tracking models.
-        #[prost(message, tag = "21")]
-        VideoObjectTrackingModelMetadata(super::VideoObjectTrackingModelMetadata),
-        /// Metadata for text extraction models.
-        #[prost(message, tag = "19")]
-        TextExtractionModelMetadata(super::TextExtractionModelMetadata),
-        /// Metadata for Tables models.
-        #[prost(message, tag = "24")]
-        TablesModelMetadata(super::TablesModelMetadata),
-        /// Metadata for text sentiment models.
-        #[prost(message, tag = "22")]
-        TextSentimentModelMetadata(super::TextSentimentModelMetadata),
-    }
-}
-/// Annotation details for image object detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionAnnotation {
-    /// Output only. The rectangle representing the object location.
-    #[prost(message, optional, tag = "1")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// Output only. The confidence that this annotation is positive for the parent example,
-    /// value in [0, 1], higher means higher positivity confidence.
-    #[prost(float, tag = "2")]
-    pub score: f32,
-}
-/// Annotation details for video object tracking.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingAnnotation {
-    /// Optional. The instance of the object, expressed as a positive integer. Used to tell
-    /// apart objects of the same type (i.e. AnnotationSpec) when multiple are
-    /// present on a single example.
-    /// NOTE: Instance ID prediction quality is not a part of model evaluation and
-    /// is done as best effort. Especially in cases when an entity goes
-    /// off-screen for a longer time (minutes), when it comes back it may be given
-    /// a new instance ID.
-    #[prost(string, tag = "1")]
-    pub instance_id: ::prost::alloc::string::String,
-    /// Required. A time (frame) of a video to which this annotation pertains.
-    /// Represented as the duration since the video's start.
-    #[prost(message, optional, tag = "2")]
-    pub time_offset: ::core::option::Option<::prost_types::Duration>,
-    /// Required. The rectangle representing the object location on the frame (i.e.
-    /// at the time_offset of the video).
-    #[prost(message, optional, tag = "3")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// Output only. The confidence that this annotation is positive for the video at
-    /// the time_offset, value in [0, 1], higher means higher positivity
-    /// confidence. For annotations created by the user the score is 1. When
-    /// user approves an annotation, the original float score is kept (and not
-    /// changed to 1).
-    #[prost(float, tag = "4")]
-    pub score: f32,
-}
-/// Bounding box matching model metrics for a single intersection-over-union
-/// threshold and multiple label match confidence thresholds.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingBoxMetricsEntry {
-    /// Output only. The intersection-over-union threshold value used to compute
-    /// this metrics entry.
-    #[prost(float, tag = "1")]
-    pub iou_threshold: f32,
-    /// Output only. The mean average precision, most often close to au_prc.
-    #[prost(float, tag = "2")]
-    pub mean_average_precision: f32,
-    /// Output only. Metrics for each label-match confidence_threshold from
-    /// 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99. Precision-recall curve is
-    /// derived from them.
-    #[prost(message, repeated, tag = "3")]
-    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
-        bounding_box_metrics_entry::ConfidenceMetricsEntry,
-    >,
-}
-/// Nested message and enum types in `BoundingBoxMetricsEntry`.
-pub mod bounding_box_metrics_entry {
-    /// Metrics for a single confidence threshold.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceMetricsEntry {
-        /// Output only. The confidence threshold value used to compute the metrics.
-        #[prost(float, tag = "1")]
-        pub confidence_threshold: f32,
-        /// Output only. Recall under the given confidence threshold.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// Output only. Precision under the given confidence threshold.
-        #[prost(float, tag = "3")]
-        pub precision: f32,
-        /// Output only. The harmonic mean of recall and precision.
-        #[prost(float, tag = "4")]
-        pub f1_score: f32,
-    }
-}
-/// Model evaluation metrics for image object detection problems.
-/// Evaluates prediction quality of labeled bounding boxes.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionEvaluationMetrics {
-    /// Output only. The total number of bounding boxes (i.e. summed over all
-    /// images) the ground truth used to create this evaluation had.
-    #[prost(int32, tag = "1")]
-    pub evaluated_bounding_box_count: i32,
-    /// Output only. The bounding boxes match metrics for each
-    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// pair.
-    #[prost(message, repeated, tag = "2")]
-    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
-    /// Output only. The single metric for bounding boxes evaluation:
-    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
-    #[prost(float, tag = "3")]
-    pub bounding_box_mean_average_precision: f32,
-}
-/// Model evaluation metrics for video object tracking problems.
-/// Evaluates prediction quality of both labeled bounding boxes and labeled
-/// tracks (i.e. series of bounding boxes sharing same label and instance ID).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingEvaluationMetrics {
-    /// Output only. The number of video frames used to create this evaluation.
-    #[prost(int32, tag = "1")]
-    pub evaluated_frame_count: i32,
-    /// Output only. The total number of bounding boxes (i.e. summed over all
-    /// frames) the ground truth used to create this evaluation had.
-    #[prost(int32, tag = "2")]
-    pub evaluated_bounding_box_count: i32,
-    /// Output only. The bounding boxes match metrics for each
-    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// pair.
-    #[prost(message, repeated, tag = "4")]
-    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
-    /// Output only. The single metric for bounding boxes evaluation:
-    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
-    #[prost(float, tag = "6")]
-    pub bounding_box_mean_average_precision: f32,
-}
 /// Annotation for identifying spans of text.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3153,6 +2923,55 @@ pub struct TextSentimentEvaluationMetrics {
     #[prost(string, repeated, tag = "9")]
     pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// Dataset metadata that is specific to translation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslationDatasetMetadata {
+    /// Required. The BCP-47 language code of the source language.
+    #[prost(string, tag = "1")]
+    pub source_language_code: ::prost::alloc::string::String,
+    /// Required. The BCP-47 language code of the target language.
+    #[prost(string, tag = "2")]
+    pub target_language_code: ::prost::alloc::string::String,
+}
+/// Evaluation metrics for the dataset.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslationEvaluationMetrics {
+    /// Output only. BLEU score.
+    #[prost(double, tag = "1")]
+    pub bleu_score: f64,
+    /// Output only. BLEU score for base model.
+    #[prost(double, tag = "2")]
+    pub base_bleu_score: f64,
+}
+/// Model metadata that is specific to translation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslationModelMetadata {
+    /// The resource name of the model to use as a baseline to train the custom
+    /// model. If unset, we use the default base model provided by Google
+    /// Translate. Format:
+    /// `projects/{project_id}/locations/{location_id}/models/{model_id}`
+    #[prost(string, tag = "1")]
+    pub base_model: ::prost::alloc::string::String,
+    /// Output only. Inferred from the dataset.
+    /// The source languge (The BCP-47 language code) that is used for training.
+    #[prost(string, tag = "2")]
+    pub source_language_code: ::prost::alloc::string::String,
+    /// Output only. The target languge (The BCP-47 language code) that is used for
+    /// training.
+    #[prost(string, tag = "3")]
+    pub target_language_code: ::prost::alloc::string::String,
+}
+/// Annotation details specific to translation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TranslationAnnotation {
+    /// Output only . The translated content.
+    #[prost(message, optional, tag = "1")]
+    pub translated_content: ::core::option::Option<TextSnippet>,
+}
 /// Contains annotation information that is relevant to AutoML.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3207,6 +3026,260 @@ pub mod annotation_payload {
         /// Annotation details for Tables.
         #[prost(message, tag = "10")]
         Tables(super::TablesAnnotation),
+    }
+}
+/// Dataset metadata for classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextClassificationDatasetMetadata {
+    /// Required. Type of the classification problem.
+    #[prost(enumeration = "ClassificationType", tag = "1")]
+    pub classification_type: i32,
+}
+/// Model metadata that is specific to text classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextClassificationModelMetadata {
+    /// Output only. Classification type of the dataset used to train this model.
+    #[prost(enumeration = "ClassificationType", tag = "3")]
+    pub classification_type: i32,
+}
+/// Dataset metadata that is specific to text extraction
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextExtractionDatasetMetadata {}
+/// Model metadata that is specific to text extraction.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextExtractionModelMetadata {
+    /// Indicates the scope of model use case.
+    ///
+    /// * `default`: Use to train a general text extraction model. Default value.
+    ///
+    /// * `health_care`: Use to train a text extraction model that is tuned for
+    ///    healthcare applications.
+    #[prost(string, tag = "3")]
+    pub model_hint: ::prost::alloc::string::String,
+}
+/// Dataset metadata for text sentiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextSentimentDatasetMetadata {
+    /// Required. A sentiment is expressed as an integer ordinal, where higher value
+    /// means a more positive sentiment. The range of sentiments that will be used
+    /// is between 0 and sentiment_max (inclusive on both ends), and all the values
+    /// in the range must be represented in the dataset before a model can be
+    /// created.
+    /// sentiment_max value must be between 1 and 10 (inclusive).
+    #[prost(int32, tag = "1")]
+    pub sentiment_max: i32,
+}
+/// Model metadata that is specific to text sentiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextSentimentModelMetadata {}
+/// Dataset metadata specific to video classification.
+/// All Video Classification datasets are treated as multi label.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoClassificationDatasetMetadata {}
+/// Dataset metadata specific to video object tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingDatasetMetadata {}
+/// Model metadata specific to video classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoClassificationModelMetadata {}
+/// Model metadata specific to video object tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingModelMetadata {}
+/// A workspace for solving a single, particular machine learning (ML) problem.
+/// A workspace contains examples that may be annotated.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Dataset {
+    /// Output only. The resource name of the dataset.
+    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the dataset to show in the interface. The name can be
+    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
+    /// and a-z, underscores
+    /// (_), and ASCII digits 0-9.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// User-provided description of the dataset. The description can be up to
+    /// 25000 characters long.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The number of examples in the dataset.
+    #[prost(int32, tag = "21")]
+    pub example_count: i32,
+    /// Output only. Timestamp when this dataset was created.
+    #[prost(message, optional, tag = "14")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Used to perform consistent read-modify-write updates. If not set, a blind
+    /// "overwrite" update happens.
+    #[prost(string, tag = "17")]
+    pub etag: ::prost::alloc::string::String,
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
+    #[prost(
+        oneof = "dataset::DatasetMetadata",
+        tags = "23, 24, 25, 26, 31, 29, 28, 30, 33"
+    )]
+    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
+}
+/// Nested message and enum types in `Dataset`.
+pub mod dataset {
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DatasetMetadata {
+        /// Metadata for a dataset used for translation.
+        #[prost(message, tag = "23")]
+        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
+        /// Metadata for a dataset used for image classification.
+        #[prost(message, tag = "24")]
+        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
+        /// Metadata for a dataset used for text classification.
+        #[prost(message, tag = "25")]
+        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
+        /// Metadata for a dataset used for image object detection.
+        #[prost(message, tag = "26")]
+        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
+        /// Metadata for a dataset used for video classification.
+        #[prost(message, tag = "31")]
+        VideoClassificationDatasetMetadata(super::VideoClassificationDatasetMetadata),
+        /// Metadata for a dataset used for video object tracking.
+        #[prost(message, tag = "29")]
+        VideoObjectTrackingDatasetMetadata(super::VideoObjectTrackingDatasetMetadata),
+        /// Metadata for a dataset used for text extraction.
+        #[prost(message, tag = "28")]
+        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
+        /// Metadata for a dataset used for text sentiment.
+        #[prost(message, tag = "30")]
+        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
+        /// Metadata for a dataset used for Tables.
+        #[prost(message, tag = "33")]
+        TablesDatasetMetadata(super::TablesDatasetMetadata),
+    }
+}
+/// API proto representing a trained machine learning model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Model {
+    /// Output only. Resource name of the model.
+    /// Format: `projects/{project_id}/locations/{location_id}/models/{model_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the model to show in the interface. The name can be
+    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
+    /// and a-z, underscores
+    /// (_), and ASCII digits 0-9. It must start with a letter.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The resource ID of the dataset used to create the model. The dataset must
+    /// come from the same ancestor project and location.
+    #[prost(string, tag = "3")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// Output only. Timestamp when the model training finished  and can be used for prediction.
+    #[prost(message, optional, tag = "7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when this model was last updated.
+    #[prost(message, optional, tag = "11")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Deployment state of the model. A model can only serve
+    /// prediction requests after it gets deployed.
+    #[prost(enumeration = "model::DeploymentState", tag = "8")]
+    pub deployment_state: i32,
+    /// Required.
+    /// The model metadata that is specific to the problem type.
+    /// Must match the metadata type of the dataset used to train the model.
+    #[prost(oneof = "model::ModelMetadata", tags = "15, 13, 14, 20, 23, 21, 19, 24, 22")]
+    pub model_metadata: ::core::option::Option<model::ModelMetadata>,
+}
+/// Nested message and enum types in `Model`.
+pub mod model {
+    /// Deployment state of the model.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DeploymentState {
+        /// Should not be used, an un-set enum has this value by default.
+        Unspecified = 0,
+        /// Model is deployed.
+        Deployed = 1,
+        /// Model is not deployed.
+        Undeployed = 2,
+    }
+    impl DeploymentState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DeploymentState::Unspecified => "DEPLOYMENT_STATE_UNSPECIFIED",
+                DeploymentState::Deployed => "DEPLOYED",
+                DeploymentState::Undeployed => "UNDEPLOYED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DEPLOYMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DEPLOYED" => Some(Self::Deployed),
+                "UNDEPLOYED" => Some(Self::Undeployed),
+                _ => None,
+            }
+        }
+    }
+    /// Required.
+    /// The model metadata that is specific to the problem type.
+    /// Must match the metadata type of the dataset used to train the model.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ModelMetadata {
+        /// Metadata for translation models.
+        #[prost(message, tag = "15")]
+        TranslationModelMetadata(super::TranslationModelMetadata),
+        /// Metadata for image classification models.
+        #[prost(message, tag = "13")]
+        ImageClassificationModelMetadata(super::ImageClassificationModelMetadata),
+        /// Metadata for text classification models.
+        #[prost(message, tag = "14")]
+        TextClassificationModelMetadata(super::TextClassificationModelMetadata),
+        /// Metadata for image object detection models.
+        #[prost(message, tag = "20")]
+        ImageObjectDetectionModelMetadata(super::ImageObjectDetectionModelMetadata),
+        /// Metadata for video classification models.
+        #[prost(message, tag = "23")]
+        VideoClassificationModelMetadata(super::VideoClassificationModelMetadata),
+        /// Metadata for video object tracking models.
+        #[prost(message, tag = "21")]
+        VideoObjectTrackingModelMetadata(super::VideoObjectTrackingModelMetadata),
+        /// Metadata for text extraction models.
+        #[prost(message, tag = "19")]
+        TextExtractionModelMetadata(super::TextExtractionModelMetadata),
+        /// Metadata for Tables models.
+        #[prost(message, tag = "24")]
+        TablesModelMetadata(super::TablesModelMetadata),
+        /// Metadata for text sentiment models.
+        #[prost(message, tag = "22")]
+        TextSentimentModelMetadata(super::TextSentimentModelMetadata),
     }
 }
 /// Evaluation results of a model.
@@ -3298,79 +3371,6 @@ pub mod model_evaluation {
         /// Evaluation metrics for text extraction models.
         #[prost(message, tag = "13")]
         TextExtractionEvaluationMetrics(super::TextExtractionEvaluationMetrics),
-    }
-}
-/// A workspace for solving a single, particular machine learning (ML) problem.
-/// A workspace contains examples that may be annotated.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Dataset {
-    /// Output only. The resource name of the dataset.
-    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the dataset to show in the interface. The name can be
-    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
-    /// and a-z, underscores
-    /// (_), and ASCII digits 0-9.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// User-provided description of the dataset. The description can be up to
-    /// 25000 characters long.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The number of examples in the dataset.
-    #[prost(int32, tag = "21")]
-    pub example_count: i32,
-    /// Output only. Timestamp when this dataset was created.
-    #[prost(message, optional, tag = "14")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Used to perform consistent read-modify-write updates. If not set, a blind
-    /// "overwrite" update happens.
-    #[prost(string, tag = "17")]
-    pub etag: ::prost::alloc::string::String,
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[prost(
-        oneof = "dataset::DatasetMetadata",
-        tags = "23, 24, 25, 26, 31, 29, 28, 30, 33"
-    )]
-    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
-}
-/// Nested message and enum types in `Dataset`.
-pub mod dataset {
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DatasetMetadata {
-        /// Metadata for a dataset used for translation.
-        #[prost(message, tag = "23")]
-        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
-        /// Metadata for a dataset used for image classification.
-        #[prost(message, tag = "24")]
-        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
-        /// Metadata for a dataset used for text classification.
-        #[prost(message, tag = "25")]
-        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
-        /// Metadata for a dataset used for image object detection.
-        #[prost(message, tag = "26")]
-        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
-        /// Metadata for a dataset used for video classification.
-        #[prost(message, tag = "31")]
-        VideoClassificationDatasetMetadata(super::VideoClassificationDatasetMetadata),
-        /// Metadata for a dataset used for video object tracking.
-        #[prost(message, tag = "29")]
-        VideoObjectTrackingDatasetMetadata(super::VideoObjectTrackingDatasetMetadata),
-        /// Metadata for a dataset used for text extraction.
-        #[prost(message, tag = "28")]
-        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
-        /// Metadata for a dataset used for text sentiment.
-        #[prost(message, tag = "30")]
-        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
-        /// Metadata for a dataset used for Tables.
-        #[prost(message, tag = "33")]
-        TablesDatasetMetadata(super::TablesDatasetMetadata),
     }
 }
 /// Metadata used across all long running operations returned by AutoML API.

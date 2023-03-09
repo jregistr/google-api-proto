@@ -79,6 +79,45 @@ pub mod arrow_serialization_options {
         }
     }
 }
+/// Avro schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
+    #[prost(string, tag = "1")]
+    pub schema: ::prost::alloc::string::String,
+}
+/// Avro rows.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
+    /// \[Deprecated\] The count of rows in the returning block.
+    /// Please use the format-independent ReadRowsResponse.row_count instead.
+    #[deprecated]
+    #[prost(int64, tag = "2")]
+    pub row_count: i64,
+}
+/// Contains options specific to Avro Serialization.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AvroSerializationOptions {
+    /// Enable displayName attribute in Avro schema.
+    ///
+    /// The Avro specification requires field names to be alphanumeric.  By
+    /// default, in cases when column names do not conform to these requirements
+    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
+    /// format, the CreateReadSession call will fail.
+    ///
+    /// Setting this field to true, populates avro field names with a placeholder
+    /// value and populates a "displayName" attribute for every avro field with the
+    /// original column name.
+    #[prost(bool, tag = "1")]
+    pub enable_display_name_attribute: bool,
+}
 /// Schema of a table. This schema is a subset of
 /// google.cloud.bigquery.v2.TableSchema containing information necessary to
 /// generate valid message to write to BigQuery.
@@ -306,45 +345,6 @@ pub mod table_field_schema {
             }
         }
     }
-}
-/// Avro schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html.>
-    #[prost(string, tag = "1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
-    /// \[Deprecated\] The count of rows in the returning block.
-    /// Please use the format-independent ReadRowsResponse.row_count instead.
-    #[deprecated]
-    #[prost(int64, tag = "2")]
-    pub row_count: i64,
-}
-/// Contains options specific to Avro Serialization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSerializationOptions {
-    /// Enable displayName attribute in Avro schema.
-    ///
-    /// The Avro specification requires field names to be alphanumeric.  By
-    /// default, in cases when column names do not conform to these requirements
-    /// (e.g. non-ascii unicode codepoints) and Avro is requested as an output
-    /// format, the CreateReadSession call will fail.
-    ///
-    /// Setting this field to true, populates avro field names with a placeholder
-    /// value and populates a "displayName" attribute for every avro field with the
-    /// original column name.
-    #[prost(bool, tag = "1")]
-    pub enable_display_name_attribute: bool,
 }
 /// Information about the ReadSession.
 #[allow(clippy::derive_partial_eq_without_eq)]

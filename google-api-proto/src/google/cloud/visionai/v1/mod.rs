@@ -946,6 +946,1348 @@ pub struct GcsSource {
     #[prost(string, repeated, tag = "1")]
     pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// Message describing the Stream object. The Stream and the Event resources are
+/// many to many; i.e., each Stream resource can associate to many Event
+/// resources and each Event resource can associate to many Stream resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Stream {
+    /// Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels as key value pairs.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Annotations to allow clients to store small amounts of arbitrary data.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// The display name for the stream resource.
+    #[prost(string, tag = "6")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Whether to enable the HLS playback service on this stream.
+    #[prost(bool, tag = "7")]
+    pub enable_hls_playback: bool,
+    /// The name of the media warehouse asset for long term storage of stream data.
+    /// Format: projects/${p_id}/locations/${l_id}/corpora/${c_id}/assets/${a_id}
+    /// Remain empty if the media warehouse storage is not needed for the stream.
+    #[prost(string, tag = "8")]
+    pub media_warehouse_asset: ::prost::alloc::string::String,
+}
+/// Message describing the Event object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Event {
+    /// Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels as key value pairs.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Annotations to allow clients to store small amounts of arbitrary data.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// The clock used for joining streams.
+    #[prost(enumeration = "event::Clock", tag = "6")]
+    pub alignment_clock: i32,
+    /// Grace period for cleaning up the event. This is the time the controller
+    /// waits for before deleting the event. During this period, if there is any
+    /// active channel on the event. The deletion of the event after grace_period
+    /// will be ignored.
+    #[prost(message, optional, tag = "7")]
+    pub grace_period: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `Event`.
+pub mod event {
+    /// Clock that will be used for joining streams.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Clock {
+        /// Clock is not specified.
+        Unspecified = 0,
+        /// Use the timestamp when the data is captured. Clients need to sync the
+        /// clock.
+        Capture = 1,
+        /// Use the timestamp when the data is received.
+        Ingest = 2,
+    }
+    impl Clock {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Clock::Unspecified => "CLOCK_UNSPECIFIED",
+                Clock::Capture => "CAPTURE",
+                Clock::Ingest => "INGEST",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CLOCK_UNSPECIFIED" => Some(Self::Unspecified),
+                "CAPTURE" => Some(Self::Capture),
+                "INGEST" => Some(Self::Ingest),
+                _ => None,
+            }
+        }
+    }
+}
+/// Message describing the Series object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Series {
+    /// Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels as key value pairs.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Annotations to allow clients to store small amounts of arbitrary data.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Required. Stream that is associated with this series.
+    #[prost(string, tag = "6")]
+    pub stream: ::prost::alloc::string::String,
+    /// Required. Event that is associated with this series.
+    #[prost(string, tag = "7")]
+    pub event: ::prost::alloc::string::String,
+}
+/// Message describing the Channel object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Channel {
+    /// Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels as key value pairs.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Annotations to allow clients to store small amounts of arbitrary data.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Required. Stream that is associated with this series.
+    #[prost(string, tag = "6")]
+    pub stream: ::prost::alloc::string::String,
+    /// Required. Event that is associated with this series.
+    #[prost(string, tag = "7")]
+    pub event: ::prost::alloc::string::String,
+}
+/// Message for requesting list of Clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListClustersRequest {
+    /// Required. Parent value for ListClustersRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results.
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Clusters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListClustersResponse {
+    /// The list of Cluster.
+    #[prost(message, repeated, tag = "1")]
+    pub clusters: ::prost::alloc::vec::Vec<Cluster>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetClusterRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateClusterRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub cluster_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub cluster: ::core::option::Option<Cluster>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateClusterRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Cluster resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated
+    #[prost(message, optional, tag = "2")]
+    pub cluster: ::core::option::Option<Cluster>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Cluster.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteClusterRequest {
+    /// Required. Name of the resource
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for requesting list of Streams.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListStreamsRequest {
+    /// Required. Parent value for ListStreamsRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results.
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Streams.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListStreamsResponse {
+    /// The list of Stream.
+    #[prost(message, repeated, tag = "1")]
+    pub streams: ::prost::alloc::vec::Vec<Stream>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStreamRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateStreamRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub stream_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub stream: ::core::option::Option<Stream>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateStreamRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Stream resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated.
+    #[prost(message, optional, tag = "2")]
+    pub stream: ::core::option::Option<Stream>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteStreamRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for getting the thumbnail of a Stream.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStreamThumbnailRequest {
+    /// Required. The name of the stream for to get the thumbnail from.
+    #[prost(string, tag = "1")]
+    pub stream: ::prost::alloc::string::String,
+    /// Required. The name of the GCS object to store the thumbnail image.
+    #[prost(string, tag = "2")]
+    pub gcs_object_name: ::prost::alloc::string::String,
+    /// Optional. The name of the event. If unspecified, the thumbnail will be retrieved from
+    /// the latest event.
+    #[prost(string, tag = "3")]
+    pub event: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify the requests. Specify a unique request
+    /// ID so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for the response of GetStreamThumbnail. The empty response message
+/// indicates the thumbnail image has been uploaded to GCS successfully.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetStreamThumbnailResponse {}
+/// Request message for getting the auth token to access the stream HLS contents.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateStreamHlsTokenRequest {
+    /// Required. The name of the stream.
+    #[prost(string, tag = "1")]
+    pub stream: ::prost::alloc::string::String,
+}
+/// Response message for GenerateStreamHlsToken.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenerateStreamHlsTokenResponse {
+    /// The generated JWT token.
+    ///
+    /// The caller should insert this token to the authorization header of the HTTP
+    /// requests to get the HLS playlist manifest and the video chunks.
+    /// eg: curl -H "Authorization: Bearer $TOKEN"
+    ///      <https://domain.com/test-stream.playback/master.m3u8>
+    #[prost(string, tag = "1")]
+    pub token: ::prost::alloc::string::String,
+    /// The expiration time of the token.
+    #[prost(message, optional, tag = "2")]
+    pub expiration_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Message for requesting list of Events.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEventsRequest {
+    /// Required. Parent value for ListEventsRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results.
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Events.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEventsResponse {
+    /// The list of Event.
+    #[prost(message, repeated, tag = "1")]
+    pub events: ::prost::alloc::vec::Vec<Event>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetEventRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateEventRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub event_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub event: ::core::option::Option<Event>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateEventRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Event resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated.
+    #[prost(message, optional, tag = "2")]
+    pub event: ::core::option::Option<Event>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Event.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteEventRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for requesting list of Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSeriesRequest {
+    /// Required. Parent value for ListSeriesRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results.
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSeriesResponse {
+    /// The list of Series.
+    #[prost(message, repeated, tag = "1")]
+    pub series: ::prost::alloc::vec::Vec<Series>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetSeriesRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateSeriesRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub series_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub series: ::core::option::Option<Series>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateSeriesRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the Series
+    /// resource by the update. The fields specified in the update_mask are
+    /// relative to the resource, not the full request. A field will be overwritten
+    /// if it is in the mask. If the user does not provide a mask then all fields
+    /// will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated
+    #[prost(message, optional, tag = "2")]
+    pub series: ::core::option::Option<Series>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteSeriesRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for materializing a channel.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MaterializeChannelRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the channel.
+    #[prost(string, tag = "2")]
+    pub channel_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub channel: ::core::option::Option<Channel>,
+    /// Optional. An optional request ID to identify requests. Specify a unique request ID
+    /// so that if you must retry your request, the server will know to ignore
+    /// the request if it has already been completed. The server will guarantee
+    /// that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod streams_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service describing handlers for resources.
+    /// Vision API and Vision AI API are two independent APIs developed by the same
+    /// team. Vision API is for people to annotate their image while Vision AI is an
+    /// e2e solution for customer to build their own computer vision application.
+    #[derive(Debug, Clone)]
+    pub struct StreamsServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> StreamsServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> StreamsServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            StreamsServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Lists Clusters in a given project and location.
+        pub async fn list_clusters(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListClustersRequest>,
+        ) -> Result<tonic::Response<super::ListClustersResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/ListClusters",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Cluster.
+        pub async fn get_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetClusterRequest>,
+        ) -> Result<tonic::Response<super::Cluster>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Cluster in a given project and location.
+        pub async fn create_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/CreateCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Cluster.
+        pub async fn update_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/UpdateCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Cluster.
+        pub async fn delete_cluster(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteClusterRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/DeleteCluster",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Streams in a given project and location.
+        pub async fn list_streams(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListStreamsRequest>,
+        ) -> Result<tonic::Response<super::ListStreamsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/ListStreams",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Stream.
+        pub async fn get_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStreamRequest>,
+        ) -> Result<tonic::Response<super::Stream>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetStream",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Stream in a given project and location.
+        pub async fn create_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateStreamRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/CreateStream",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Stream.
+        pub async fn update_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateStreamRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/UpdateStream",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Stream.
+        pub async fn delete_stream(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteStreamRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/DeleteStream",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the thumbnail (image snapshot) of a single Stream.
+        pub async fn get_stream_thumbnail(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetStreamThumbnailRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetStreamThumbnail",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Generate the JWT auth token required to get the stream HLS contents.
+        pub async fn generate_stream_hls_token(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GenerateStreamHlsTokenRequest>,
+        ) -> Result<
+            tonic::Response<super::GenerateStreamHlsTokenResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GenerateStreamHlsToken",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Events in a given project and location.
+        pub async fn list_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListEventsRequest>,
+        ) -> Result<tonic::Response<super::ListEventsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/ListEvents",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Event.
+        pub async fn get_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetEventRequest>,
+        ) -> Result<tonic::Response<super::Event>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Event in a given project and location.
+        pub async fn create_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateEventRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/CreateEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Event.
+        pub async fn update_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateEventRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/UpdateEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Event.
+        pub async fn delete_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteEventRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/DeleteEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Series in a given project and location.
+        pub async fn list_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSeriesRequest>,
+        ) -> Result<tonic::Response<super::ListSeriesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/ListSeries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Series.
+        pub async fn get_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSeriesRequest>,
+        ) -> Result<tonic::Response<super::Series>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/GetSeries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Series in a given project and location.
+        pub async fn create_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateSeriesRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/CreateSeries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Event.
+        pub async fn update_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateSeriesRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/UpdateSeries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Series.
+        pub async fn delete_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteSeriesRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/DeleteSeries",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Materialize a channel.
+        pub async fn materialize_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MaterializeChannelRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamsService/MaterializeChannel",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Output format for Personal Protective Equipment Detection Operator.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -4672,1348 +6014,6 @@ pub mod app_platform_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.visionai.v1.AppPlatform/DeleteProcessor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Message describing the Stream object. The Stream and the Event resources are
-/// many to many; i.e., each Stream resource can associate to many Event
-/// resources and each Event resource can associate to many Stream resources.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Stream {
-    /// Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels as key value pairs.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Annotations to allow clients to store small amounts of arbitrary data.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// The display name for the stream resource.
-    #[prost(string, tag = "6")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Whether to enable the HLS playback service on this stream.
-    #[prost(bool, tag = "7")]
-    pub enable_hls_playback: bool,
-    /// The name of the media warehouse asset for long term storage of stream data.
-    /// Format: projects/${p_id}/locations/${l_id}/corpora/${c_id}/assets/${a_id}
-    /// Remain empty if the media warehouse storage is not needed for the stream.
-    #[prost(string, tag = "8")]
-    pub media_warehouse_asset: ::prost::alloc::string::String,
-}
-/// Message describing the Event object.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Event {
-    /// Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels as key value pairs.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Annotations to allow clients to store small amounts of arbitrary data.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// The clock used for joining streams.
-    #[prost(enumeration = "event::Clock", tag = "6")]
-    pub alignment_clock: i32,
-    /// Grace period for cleaning up the event. This is the time the controller
-    /// waits for before deleting the event. During this period, if there is any
-    /// active channel on the event. The deletion of the event after grace_period
-    /// will be ignored.
-    #[prost(message, optional, tag = "7")]
-    pub grace_period: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `Event`.
-pub mod event {
-    /// Clock that will be used for joining streams.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Clock {
-        /// Clock is not specified.
-        Unspecified = 0,
-        /// Use the timestamp when the data is captured. Clients need to sync the
-        /// clock.
-        Capture = 1,
-        /// Use the timestamp when the data is received.
-        Ingest = 2,
-    }
-    impl Clock {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Clock::Unspecified => "CLOCK_UNSPECIFIED",
-                Clock::Capture => "CAPTURE",
-                Clock::Ingest => "INGEST",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "CLOCK_UNSPECIFIED" => Some(Self::Unspecified),
-                "CAPTURE" => Some(Self::Capture),
-                "INGEST" => Some(Self::Ingest),
-                _ => None,
-            }
-        }
-    }
-}
-/// Message describing the Series object.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Series {
-    /// Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels as key value pairs.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Annotations to allow clients to store small amounts of arbitrary data.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Required. Stream that is associated with this series.
-    #[prost(string, tag = "6")]
-    pub stream: ::prost::alloc::string::String,
-    /// Required. Event that is associated with this series.
-    #[prost(string, tag = "7")]
-    pub event: ::prost::alloc::string::String,
-}
-/// Message describing the Channel object.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Channel {
-    /// Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels as key value pairs.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Annotations to allow clients to store small amounts of arbitrary data.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Required. Stream that is associated with this series.
-    #[prost(string, tag = "6")]
-    pub stream: ::prost::alloc::string::String,
-    /// Required. Event that is associated with this series.
-    #[prost(string, tag = "7")]
-    pub event: ::prost::alloc::string::String,
-}
-/// Message for requesting list of Clusters.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListClustersRequest {
-    /// Required. Parent value for ListClustersRequest.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results.
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Clusters.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListClustersResponse {
-    /// The list of Cluster.
-    #[prost(message, repeated, tag = "1")]
-    pub clusters: ::prost::alloc::vec::Vec<Cluster>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting a Cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetClusterRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating a Cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateClusterRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub cluster_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub cluster: ::core::option::Option<Cluster>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating a Cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateClusterRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the
-    /// Cluster resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated
-    #[prost(message, optional, tag = "2")]
-    pub cluster: ::core::option::Option<Cluster>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting a Cluster.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteClusterRequest {
-    /// Required. Name of the resource
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for requesting list of Streams.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListStreamsRequest {
-    /// Required. Parent value for ListStreamsRequest.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results.
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Streams.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListStreamsResponse {
-    /// The list of Stream.
-    #[prost(message, repeated, tag = "1")]
-    pub streams: ::prost::alloc::vec::Vec<Stream>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting a Stream.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetStreamRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating a Stream.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateStreamRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub stream_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub stream: ::core::option::Option<Stream>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating a Stream.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateStreamRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the
-    /// Stream resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated.
-    #[prost(message, optional, tag = "2")]
-    pub stream: ::core::option::Option<Stream>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting a Stream.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteStreamRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for getting the thumbnail of a Stream.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetStreamThumbnailRequest {
-    /// Required. The name of the stream for to get the thumbnail from.
-    #[prost(string, tag = "1")]
-    pub stream: ::prost::alloc::string::String,
-    /// Required. The name of the GCS object to store the thumbnail image.
-    #[prost(string, tag = "2")]
-    pub gcs_object_name: ::prost::alloc::string::String,
-    /// Optional. The name of the event. If unspecified, the thumbnail will be retrieved from
-    /// the latest event.
-    #[prost(string, tag = "3")]
-    pub event: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify the requests. Specify a unique request
-    /// ID so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for the response of GetStreamThumbnail. The empty response message
-/// indicates the thumbnail image has been uploaded to GCS successfully.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetStreamThumbnailResponse {}
-/// Request message for getting the auth token to access the stream HLS contents.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateStreamHlsTokenRequest {
-    /// Required. The name of the stream.
-    #[prost(string, tag = "1")]
-    pub stream: ::prost::alloc::string::String,
-}
-/// Response message for GenerateStreamHlsToken.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenerateStreamHlsTokenResponse {
-    /// The generated JWT token.
-    ///
-    /// The caller should insert this token to the authorization header of the HTTP
-    /// requests to get the HLS playlist manifest and the video chunks.
-    /// eg: curl -H "Authorization: Bearer $TOKEN"
-    ///      <https://domain.com/test-stream.playback/master.m3u8>
-    #[prost(string, tag = "1")]
-    pub token: ::prost::alloc::string::String,
-    /// The expiration time of the token.
-    #[prost(message, optional, tag = "2")]
-    pub expiration_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Message for requesting list of Events.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEventsRequest {
-    /// Required. Parent value for ListEventsRequest.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results.
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Events.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEventsResponse {
-    /// The list of Event.
-    #[prost(message, repeated, tag = "1")]
-    pub events: ::prost::alloc::vec::Vec<Event>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting a Event.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetEventRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating a Event.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateEventRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub event_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub event: ::core::option::Option<Event>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating a Event.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateEventRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the
-    /// Event resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated.
-    #[prost(message, optional, tag = "2")]
-    pub event: ::core::option::Option<Event>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting a Event.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteEventRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for requesting list of Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSeriesRequest {
-    /// Required. Parent value for ListSeriesRequest.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results.
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSeriesResponse {
-    /// The list of Series.
-    #[prost(message, repeated, tag = "1")]
-    pub series: ::prost::alloc::vec::Vec<Series>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting a Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetSeriesRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating a Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateSeriesRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub series_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub series: ::core::option::Option<Series>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating a Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateSeriesRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the Series
-    /// resource by the update. The fields specified in the update_mask are
-    /// relative to the resource, not the full request. A field will be overwritten
-    /// if it is in the mask. If the user does not provide a mask then all fields
-    /// will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated
-    #[prost(message, optional, tag = "2")]
-    pub series: ::core::option::Option<Series>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting a Series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteSeriesRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for materializing a channel.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MaterializeChannelRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the channel.
-    #[prost(string, tag = "2")]
-    pub channel_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub channel: ::core::option::Option<Channel>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod streams_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service describing handlers for resources.
-    /// Vision API and Vision AI API are two independent APIs developed by the same
-    /// team. Vision API is for people to annotate their image while Vision AI is an
-    /// e2e solution for customer to build their own computer vision application.
-    #[derive(Debug, Clone)]
-    pub struct StreamsServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> StreamsServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> StreamsServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            StreamsServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists Clusters in a given project and location.
-        pub async fn list_clusters(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListClustersRequest>,
-        ) -> Result<tonic::Response<super::ListClustersResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/ListClusters",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Cluster.
-        pub async fn get_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetClusterRequest>,
-        ) -> Result<tonic::Response<super::Cluster>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GetCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Cluster in a given project and location.
-        pub async fn create_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/CreateCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Cluster.
-        pub async fn update_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/UpdateCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Cluster.
-        pub async fn delete_cluster(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteClusterRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/DeleteCluster",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Streams in a given project and location.
-        pub async fn list_streams(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListStreamsRequest>,
-        ) -> Result<tonic::Response<super::ListStreamsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/ListStreams",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Stream.
-        pub async fn get_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetStreamRequest>,
-        ) -> Result<tonic::Response<super::Stream>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GetStream",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Stream in a given project and location.
-        pub async fn create_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateStreamRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/CreateStream",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Stream.
-        pub async fn update_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateStreamRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/UpdateStream",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Stream.
-        pub async fn delete_stream(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteStreamRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/DeleteStream",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the thumbnail (image snapshot) of a single Stream.
-        pub async fn get_stream_thumbnail(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetStreamThumbnailRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GetStreamThumbnail",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Generate the JWT auth token required to get the stream HLS contents.
-        pub async fn generate_stream_hls_token(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GenerateStreamHlsTokenRequest>,
-        ) -> Result<
-            tonic::Response<super::GenerateStreamHlsTokenResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GenerateStreamHlsToken",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Events in a given project and location.
-        pub async fn list_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListEventsRequest>,
-        ) -> Result<tonic::Response<super::ListEventsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/ListEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Event.
-        pub async fn get_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetEventRequest>,
-        ) -> Result<tonic::Response<super::Event>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GetEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Event in a given project and location.
-        pub async fn create_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateEventRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/CreateEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Event.
-        pub async fn update_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateEventRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/UpdateEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Event.
-        pub async fn delete_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteEventRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/DeleteEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Series in a given project and location.
-        pub async fn list_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListSeriesRequest>,
-        ) -> Result<tonic::Response<super::ListSeriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/ListSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Series.
-        pub async fn get_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSeriesRequest>,
-        ) -> Result<tonic::Response<super::Series>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/GetSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Series in a given project and location.
-        pub async fn create_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateSeriesRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/CreateSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Event.
-        pub async fn update_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateSeriesRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/UpdateSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Series.
-        pub async fn delete_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteSeriesRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/DeleteSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Materialize a channel.
-        pub async fn materialize_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::MaterializeChannelRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamsService/MaterializeChannel",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

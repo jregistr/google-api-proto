@@ -1,172 +1,3 @@
-/// Represents the metadata of the long-running operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// Output only. The time the operation was created.
-    #[prost(message, optional, tag = "1")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time the operation finished running.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Server-defined resource path for the target of the operation.
-    #[prost(string, tag = "3")]
-    pub target: ::prost::alloc::string::String,
-    /// Output only. Name of the verb executed by the operation.
-    #[prost(string, tag = "4")]
-    pub verb: ::prost::alloc::string::String,
-    /// Output only. Human-readable status of the operation, if any.
-    #[prost(string, tag = "5")]
-    pub status_message: ::prost::alloc::string::String,
-    /// Output only. Identifies whether the user has requested cancellation
-    /// of the operation. Operations that have successfully been cancelled
-    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
-    /// corresponding to `Code.CANCELLED`.
-    #[prost(bool, tag = "6")]
-    pub requested_cancellation: bool,
-    /// Output only. API version used to start the operation.
-    #[prost(string, tag = "7")]
-    pub api_version: ::prost::alloc::string::String,
-}
-/// Specification of a port-based selector.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficPortSelector {
-    /// Optional. A list of ports. Can be port numbers or port range
-    /// (example, \[80-90\] specifies all ports from 80 to 90, including
-    /// 80 and 90) or named ports or * to specify all ports. If the
-    /// list is empty, all ports are selected.
-    #[prost(string, repeated, tag = "1")]
-    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A definition of a matcher that selects endpoints to which the policies
-/// should be applied.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndpointMatcher {
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[prost(oneof = "endpoint_matcher::MatcherType", tags = "1")]
-    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
-}
-/// Nested message and enum types in `EndpointMatcher`.
-pub mod endpoint_matcher {
-    /// The matcher that is based on node metadata presented by xDS clients.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MetadataLabelMatcher {
-        /// Specifies how matching should be done.
-        ///
-        /// Supported values are:
-        /// MATCH_ANY: At least one of the Labels specified in the
-        ///    matcher should match the metadata presented by xDS client.
-        /// MATCH_ALL: The metadata presented by the xDS client should
-        ///    contain all of the labels specified here.
-        ///
-        /// The selection is determined based on the best match. For
-        /// example, suppose there are three EndpointPolicy
-        /// resources P1, P2 and P3 and if P1 has a the matcher as
-        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
-        /// MATCH_ALL <A:1,B:1,C:1>.
-        ///
-        /// If a client with label <A:1> connects, the config from P1
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1> connects, the config from P2
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1,C:1> connects, the config
-        /// from P3 will be selected.
-        ///
-        /// If there is more than one best match, (for example, if a
-        /// config P4 with selector <A:1,D:1> exists and if a client with
-        /// label <A:1,B:1,D:1> connects), an error will be thrown.
-        #[prost(
-            enumeration = "metadata_label_matcher::MetadataLabelMatchCriteria",
-            tag = "1"
-        )]
-        pub metadata_label_match_criteria: i32,
-        /// The list of label value pairs that must match labels in the
-        /// provided metadata based on filterMatchCriteria This list can
-        /// have at most 64 entries. The list can be empty if the match
-        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
-        /// matches any client).
-        #[prost(message, repeated, tag = "2")]
-        pub metadata_labels: ::prost::alloc::vec::Vec<
-            metadata_label_matcher::MetadataLabels,
-        >,
-    }
-    /// Nested message and enum types in `MetadataLabelMatcher`.
-    pub mod metadata_label_matcher {
-        /// Defines a name-pair value for a single label.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MetadataLabels {
-            /// Required. Label name presented as key in xDS Node Metadata.
-            #[prost(string, tag = "1")]
-            pub label_name: ::prost::alloc::string::String,
-            /// Required. Label value presented as value corresponding to the above
-            /// key, in xDS Node Metadata.
-            #[prost(string, tag = "2")]
-            pub label_value: ::prost::alloc::string::String,
-        }
-        /// Possible criteria values that define logic of how matching is made.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum MetadataLabelMatchCriteria {
-            /// Default value. Should not be used.
-            Unspecified = 0,
-            /// At least one of the Labels specified in the matcher should match the
-            /// metadata presented by xDS client.
-            MatchAny = 1,
-            /// The metadata presented by the xDS client should contain all of the
-            /// labels specified here.
-            MatchAll = 2,
-        }
-        impl MetadataLabelMatchCriteria {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MetadataLabelMatchCriteria::Unspecified => {
-                        "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED"
-                    }
-                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
-                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED" => {
-                        Some(Self::Unspecified)
-                    }
-                    "MATCH_ANY" => Some(Self::MatchAny),
-                    "MATCH_ALL" => Some(Self::MatchAll),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MatcherType {
-        /// The matcher is based on node metadata presented by xDS clients.
-        #[prost(message, tag = "1")]
-        MetadataLabelMatcher(MetadataLabelMatcher),
-    }
-}
 /// ServiceBinding is the resource that defines a Service Directory Service to
 /// be used in a BackendService resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -259,18 +90,17 @@ pub struct DeleteServiceBindingRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Mesh represents a logical configuration grouping for workload to workload
-/// communication within a service mesh. Routes that point to mesh dictate how
-/// requests are routed within this logical mesh boundary.
+/// TcpRoute is the resource defining how TCP traffic should be routed by a
+/// Mesh/Gateway resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Mesh {
-    /// Required. Name of the Mesh resource. It matches pattern
-    /// `projects/*/locations/global/meshes/<mesh_name>`.
+pub struct TcpRoute {
+    /// Required. Name of the TcpRoute resource. It matches pattern
+    /// `projects/*/locations/global/tcpRoutes/tcp_route_name>`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
     /// Output only. Server-defined URL of this resource
-    #[prost(string, tag = "9")]
+    #[prost(string, tag = "11")]
     pub self_link: ::prost::alloc::string::String,
     /// Output only. The timestamp when the resource was created.
     #[prost(message, optional, tag = "2")]
@@ -278,99 +108,190 @@ pub struct Mesh {
     /// Output only. The timestamp when the resource was updated.
     #[prost(message, optional, tag = "3")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the Mesh resource.
-    #[prost(btree_map = "string, string", tag = "4")]
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Rules that define how traffic is routed and handled. At least one RouteRule
+    /// must be supplied. If there are multiple rules then the action taken will be
+    /// the first rule to match.
+    #[prost(message, repeated, tag = "5")]
+    pub rules: ::prost::alloc::vec::Vec<tcp_route::RouteRule>,
+    /// Optional. Meshes defines a list of meshes this TcpRoute is attached to, as one of the
+    /// routing rules to route the requests served by the mesh.
+    ///
+    /// Each mesh reference should match the pattern:
+    /// `projects/*/locations/global/meshes/<mesh_name>`
+    ///
+    /// The attached Mesh should be of a type SIDECAR
+    #[prost(string, repeated, tag = "8")]
+    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Gateways defines a list of gateways this TcpRoute is attached to, as one of
+    /// the routing rules to route the requests served by the gateway.
+    ///
+    /// Each gateway reference should match the pattern:
+    /// `projects/*/locations/global/gateways/<gateway_name>`
+    #[prost(string, repeated, tag = "9")]
+    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Set of label tags associated with the TcpRoute resource.
+    #[prost(btree_map = "string, string", tag = "10")]
     pub labels: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. If set to a valid TCP port (1-65535), instructs the SIDECAR proxy to listen
-    /// on the specified port of localhost (127.0.0.1) address. The SIDECAR proxy
-    /// will expect all traffic to be redirected to this port regardless of its
-    /// actual ip:port destination. If unset, a port '15001' is used as the
-    /// interception port. This will is applicable only for sidecar proxy
-    /// deployments.
-    #[prost(int32, tag = "8")]
-    pub interception_port: i32,
 }
-/// Request used with the ListMeshes method.
+/// Nested message and enum types in `TcpRoute`.
+pub mod tcp_route {
+    /// Specifies how to match traffic and how to route traffic when traffic is
+    /// matched.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteRule {
+        /// Optional. RouteMatch defines the predicate used to match requests to a given
+        /// action. Multiple match types are "OR"ed for evaluation.
+        /// If no routeMatch field is specified, this rule will unconditionally match
+        /// traffic.
+        #[prost(message, repeated, tag = "1")]
+        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
+        /// Required. The detailed rule defining how to route matched traffic.
+        #[prost(message, optional, tag = "2")]
+        pub action: ::core::option::Option<RouteAction>,
+    }
+    /// RouteMatch defines the predicate used to match requests to a given action.
+    /// Multiple match types are "OR"ed for evaluation.
+    /// If no routeMatch field is specified, this rule will unconditionally match
+    /// traffic.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteMatch {
+        /// Required. Must be specified in the CIDR range format. A CIDR range consists of an
+        /// IP Address and a prefix length to construct the subnet mask. By default,
+        /// the prefix length is 32 (i.e. matches a single IP address). Only IPV4
+        /// addresses are supported.
+        /// Examples:
+        /// "10.0.0.1" - matches against this exact IP address.
+        /// "10.0.0.0/8" - matches against any IP address within the 10.0.0.0 subnet
+        /// and 255.255.255.0 mask.
+        /// "0.0.0.0/0" - matches against any IP address'.
+        #[prost(string, tag = "1")]
+        pub address: ::prost::alloc::string::String,
+        /// Required. Specifies the destination port to match against.
+        #[prost(string, tag = "2")]
+        pub port: ::prost::alloc::string::String,
+    }
+    /// The specifications for routing traffic and applying associated policies.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteAction {
+        /// Optional. The destination services to which traffic should be forwarded. At least
+        /// one destination service is required.
+        #[prost(message, repeated, tag = "1")]
+        pub destinations: ::prost::alloc::vec::Vec<RouteDestination>,
+        /// Optional. If true, Router will use the destination IP and port of the original
+        /// connection as the destination of the request. Default is false.
+        #[prost(bool, tag = "3")]
+        pub original_destination: bool,
+    }
+    /// Describe the destination for traffic to be routed to.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteDestination {
+        /// Required. The URL of a BackendService to route traffic to.
+        #[prost(string, tag = "1")]
+        pub service_name: ::prost::alloc::string::String,
+        /// Optional. Specifies the proportion of requests forwarded to the backend referenced
+        /// by the serviceName field. This is computed as:
+        ///          weight/Sum(weights in this destination list).
+        /// For non-zero values, there may be some epsilon from the exact proportion
+        /// defined here depending on the precision an implementation supports.
+        ///
+        /// If only one serviceName is specified and it has a weight greater than 0,
+        /// 100% of the traffic is forwarded to that backend.
+        ///
+        /// If weights are specified for any one service name, they need to be
+        /// specified for all of them.
+        ///
+        /// If weights are unspecified for all services, then, traffic is distributed
+        /// in equal proportions to all of them.
+        #[prost(int32, tag = "2")]
+        pub weight: i32,
+    }
+}
+/// Request used with the ListTcpRoutes method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMeshesRequest {
-    /// Required. The project and location from which the Meshes should be
+pub struct ListTcpRoutesRequest {
+    /// Required. The project and location from which the TcpRoutes should be
     /// listed, specified in the format `projects/*/locations/global`.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Meshes to return per call.
+    /// Maximum number of TcpRoutes to return per call.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
-    /// The value returned by the last `ListMeshesResponse`
-    /// Indicates that this is a continuation of a prior `ListMeshes` call,
+    /// The value returned by the last `ListTcpRoutesResponse`
+    /// Indicates that this is a continuation of a prior `ListTcpRoutes` call,
     /// and that the system should return the next page of data.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
-/// Response returned by the ListMeshes method.
+/// Response returned by the ListTcpRoutes method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMeshesResponse {
-    /// List of Mesh resources.
+pub struct ListTcpRoutesResponse {
+    /// List of TcpRoute resources.
     #[prost(message, repeated, tag = "1")]
-    pub meshes: ::prost::alloc::vec::Vec<Mesh>,
+    pub tcp_routes: ::prost::alloc::vec::Vec<TcpRoute>,
     /// If there might be more results than those appearing in this response, then
     /// `next_page_token` is included. To get the next set of results, call this
     /// method again using the value of `next_page_token` as `page_token`.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request used by the GetMesh method.
+/// Request used by the GetTcpRoute method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMeshRequest {
-    /// Required. A name of the Mesh to get. Must be in the format
-    /// `projects/*/locations/global/meshes/*`.
+pub struct GetTcpRouteRequest {
+    /// Required. A name of the TcpRoute to get. Must be in the format
+    /// `projects/*/locations/global/tcpRoutes/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request used by the CreateMesh method.
+/// Request used by the TcpRoute method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateMeshRequest {
-    /// Required. The parent resource of the Mesh. Must be in the
+pub struct CreateTcpRouteRequest {
+    /// Required. The parent resource of the TcpRoute. Must be in the
     /// format `projects/*/locations/global`.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the Mesh resource to be created.
+    /// Required. Short name of the TcpRoute resource to be created. E.g. TODO(Add an
+    /// example).
     #[prost(string, tag = "2")]
-    pub mesh_id: ::prost::alloc::string::String,
-    /// Required. Mesh resource to be created.
+    pub tcp_route_id: ::prost::alloc::string::String,
+    /// Required. TcpRoute resource to be created.
     #[prost(message, optional, tag = "3")]
-    pub mesh: ::core::option::Option<Mesh>,
+    pub tcp_route: ::core::option::Option<TcpRoute>,
 }
-/// Request used by the UpdateMesh method.
+/// Request used by the UpdateTcpRoute method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateMeshRequest {
+pub struct UpdateTcpRouteRequest {
     /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// Mesh resource by the update.
+    /// TcpRoute resource by the update.
     /// The fields specified in the update_mask are relative to the resource, not
     /// the full request. A field will be overwritten if it is in the mask. If the
     /// user does not provide a mask then all fields will be overwritten.
     #[prost(message, optional, tag = "1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated Mesh resource.
+    /// Required. Updated TcpRoute resource.
     #[prost(message, optional, tag = "2")]
-    pub mesh: ::core::option::Option<Mesh>,
+    pub tcp_route: ::core::option::Option<TcpRoute>,
 }
-/// Request used by the DeleteMesh method.
+/// Request used by the DeleteTcpRoute method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteMeshRequest {
-    /// Required. A name of the Mesh to delete. Must be in the format
-    /// `projects/*/locations/global/meshes/*`.
+pub struct DeleteTcpRouteRequest {
+    /// Required. A name of the TcpRoute to delete. Must be in the format
+    /// `projects/*/locations/global/tcpRoutes/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1043,6 +964,121 @@ pub struct DeleteHttpRouteRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
+/// Mesh represents a logical configuration grouping for workload to workload
+/// communication within a service mesh. Routes that point to mesh dictate how
+/// requests are routed within this logical mesh boundary.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Mesh {
+    /// Required. Name of the Mesh resource. It matches pattern
+    /// `projects/*/locations/global/meshes/<mesh_name>`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server-defined URL of this resource
+    #[prost(string, tag = "9")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Set of label tags associated with the Mesh resource.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. If set to a valid TCP port (1-65535), instructs the SIDECAR proxy to listen
+    /// on the specified port of localhost (127.0.0.1) address. The SIDECAR proxy
+    /// will expect all traffic to be redirected to this port regardless of its
+    /// actual ip:port destination. If unset, a port '15001' is used as the
+    /// interception port. This will is applicable only for sidecar proxy
+    /// deployments.
+    #[prost(int32, tag = "8")]
+    pub interception_port: i32,
+}
+/// Request used with the ListMeshes method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMeshesRequest {
+    /// Required. The project and location from which the Meshes should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Meshes to return per call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListMeshesResponse`
+    /// Indicates that this is a continuation of a prior `ListMeshes` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListMeshes method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMeshesResponse {
+    /// List of Mesh resources.
+    #[prost(message, repeated, tag = "1")]
+    pub meshes: ::prost::alloc::vec::Vec<Mesh>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetMesh method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetMeshRequest {
+    /// Required. A name of the Mesh to get. Must be in the format
+    /// `projects/*/locations/global/meshes/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the CreateMesh method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateMeshRequest {
+    /// Required. The parent resource of the Mesh. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the Mesh resource to be created.
+    #[prost(string, tag = "2")]
+    pub mesh_id: ::prost::alloc::string::String,
+    /// Required. Mesh resource to be created.
+    #[prost(message, optional, tag = "3")]
+    pub mesh: ::core::option::Option<Mesh>,
+}
+/// Request used by the UpdateMesh method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateMeshRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// Mesh resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated Mesh resource.
+    #[prost(message, optional, tag = "2")]
+    pub mesh: ::core::option::Option<Mesh>,
+}
+/// Request used by the DeleteMesh method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteMeshRequest {
+    /// Required. A name of the Mesh to delete. Must be in the format
+    /// `projects/*/locations/global/meshes/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// Gateway represents the configuration for a proxy, typically a load balancer.
 /// It captures the ip:port over which the services are exposed by the proxy,
 /// along with any policy configurations. Routes have reference to to Gateways to
@@ -1221,193 +1257,6 @@ pub struct UpdateGatewayRequest {
 pub struct DeleteGatewayRequest {
     /// Required. A name of the Gateway to delete. Must be in the format
     /// `projects/*/locations/*/gateways/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// EndpointPolicy is a resource that helps apply desired configuration
-/// on the endpoints that match specific criteria.
-/// For example, this resource can be used to apply "authentication config"
-/// an all endpoints that serve on port 8080.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndpointPolicy {
-    /// Required. Name of the EndpointPolicy resource. It matches pattern
-    /// `projects/{project}/locations/global/endpointPolicies/{endpoint_policy}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the EndpointPolicy resource.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Required. The type of endpoint policy. This is primarily used to validate
-    /// the configuration.
-    #[prost(enumeration = "endpoint_policy::EndpointPolicyType", tag = "5")]
-    pub r#type: i32,
-    /// Optional. This field specifies the URL of AuthorizationPolicy resource that
-    /// applies authorization policies to the inbound traffic at the
-    /// matched endpoints. Refer to Authorization. If this field is not
-    /// specified, authorization is disabled(no authz checks) for this
-    /// endpoint.
-    #[prost(string, tag = "7")]
-    pub authorization_policy: ::prost::alloc::string::String,
-    /// Required. A matcher that selects endpoints to which the policies should be applied.
-    #[prost(message, optional, tag = "9")]
-    pub endpoint_matcher: ::core::option::Option<EndpointMatcher>,
-    /// Optional. Port selector for the (matched) endpoints. If no port selector is
-    /// provided, the matched config is applied to all ports.
-    #[prost(message, optional, tag = "10")]
-    pub traffic_port_selector: ::core::option::Option<TrafficPortSelector>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "11")]
-    pub description: ::prost::alloc::string::String,
-    /// Optional. A URL referring to ServerTlsPolicy resource. ServerTlsPolicy is used to
-    /// determine the authentication policy to be applied to terminate the inbound
-    /// traffic at the identified backends. If this field is not set,
-    /// authentication is disabled(open) for this endpoint.
-    #[prost(string, tag = "12")]
-    pub server_tls_policy: ::prost::alloc::string::String,
-    /// Optional. A URL referring to a ClientTlsPolicy resource. ClientTlsPolicy can be set
-    /// to specify the authentication for traffic from the proxy to the actual
-    /// endpoints. More specifically, it is applied to the outgoing traffic from
-    /// the proxy to the endpoint. This is typically used for sidecar model where
-    /// the proxy identifies itself as endpoint to the control plane, with the
-    /// connection between sidecar and endpoint requiring authentication. If this
-    /// field is not set, authentication is disabled(open). Applicable only when
-    /// EndpointPolicyType is SIDECAR_PROXY.
-    #[prost(string, tag = "13")]
-    pub client_tls_policy: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `EndpointPolicy`.
-pub mod endpoint_policy {
-    /// The type of endpoint policy.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EndpointPolicyType {
-        /// Default value. Must not be used.
-        Unspecified = 0,
-        /// Represents a proxy deployed as a sidecar.
-        SidecarProxy = 1,
-        /// Represents a proxyless gRPC backend.
-        GrpcServer = 2,
-    }
-    impl EndpointPolicyType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EndpointPolicyType::Unspecified => "ENDPOINT_POLICY_TYPE_UNSPECIFIED",
-                EndpointPolicyType::SidecarProxy => "SIDECAR_PROXY",
-                EndpointPolicyType::GrpcServer => "GRPC_SERVER",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ENDPOINT_POLICY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "SIDECAR_PROXY" => Some(Self::SidecarProxy),
-                "GRPC_SERVER" => Some(Self::GrpcServer),
-                _ => None,
-            }
-        }
-    }
-}
-/// Request used with the ListEndpointPolicies method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEndpointPoliciesRequest {
-    /// Required. The project and location from which the EndpointPolicies should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of EndpointPolicies to return per call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListEndpointPoliciesResponse`
-    /// Indicates that this is a continuation of a prior
-    /// `ListEndpointPolicies` call, and that the system should return the
-    /// next page of data.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListEndpointPolicies method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEndpointPoliciesResponse {
-    /// List of EndpointPolicy resources.
-    #[prost(message, repeated, tag = "1")]
-    pub endpoint_policies: ::prost::alloc::vec::Vec<EndpointPolicy>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used with the GetEndpointPolicy method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetEndpointPolicyRequest {
-    /// Required. A name of the EndpointPolicy to get. Must be in the format
-    /// `projects/*/locations/global/endpointPolicies/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used with the CreateEndpointPolicy method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateEndpointPolicyRequest {
-    /// Required. The parent resource of the EndpointPolicy. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the EndpointPolicy resource to be created.
-    /// E.g. "CustomECS".
-    #[prost(string, tag = "2")]
-    pub endpoint_policy_id: ::prost::alloc::string::String,
-    /// Required. EndpointPolicy resource to be created.
-    #[prost(message, optional, tag = "3")]
-    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
-}
-/// Request used with the UpdateEndpointPolicy method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateEndpointPolicyRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// EndpointPolicy resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated EndpointPolicy resource.
-    #[prost(message, optional, tag = "2")]
-    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
-}
-/// Request used with the DeleteEndpointPolicy method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteEndpointPolicyRequest {
-    /// Required. A name of the EndpointPolicy to delete. Must be in the format
-    /// `projects/*/locations/global/endpointPolicies/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1872,208 +1721,359 @@ pub struct DeleteGrpcRouteRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// TcpRoute is the resource defining how TCP traffic should be routed by a
-/// Mesh/Gateway resource.
+/// Represents the metadata of the long-running operation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TcpRoute {
-    /// Required. Name of the TcpRoute resource. It matches pattern
-    /// `projects/*/locations/global/tcpRoutes/tcp_route_name>`.
+pub struct OperationMetadata {
+    /// Output only. The time the operation was created.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the operation finished running.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Server-defined resource path for the target of the operation.
+    #[prost(string, tag = "3")]
+    pub target: ::prost::alloc::string::String,
+    /// Output only. Name of the verb executed by the operation.
+    #[prost(string, tag = "4")]
+    pub verb: ::prost::alloc::string::String,
+    /// Output only. Human-readable status of the operation, if any.
+    #[prost(string, tag = "5")]
+    pub status_message: ::prost::alloc::string::String,
+    /// Output only. Identifies whether the user has requested cancellation
+    /// of the operation. Operations that have successfully been cancelled
+    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
+    /// corresponding to `Code.CANCELLED`.
+    #[prost(bool, tag = "6")]
+    pub requested_cancellation: bool,
+    /// Output only. API version used to start the operation.
+    #[prost(string, tag = "7")]
+    pub api_version: ::prost::alloc::string::String,
+}
+/// Specification of a port-based selector.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficPortSelector {
+    /// Optional. A list of ports. Can be port numbers or port range
+    /// (example, \[80-90\] specifies all ports from 80 to 90, including
+    /// 80 and 90) or named ports or * to specify all ports. If the
+    /// list is empty, all ports are selected.
+    #[prost(string, repeated, tag = "1")]
+    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A definition of a matcher that selects endpoints to which the policies
+/// should be applied.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndpointMatcher {
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[prost(oneof = "endpoint_matcher::MatcherType", tags = "1")]
+    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
+}
+/// Nested message and enum types in `EndpointMatcher`.
+pub mod endpoint_matcher {
+    /// The matcher that is based on node metadata presented by xDS clients.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MetadataLabelMatcher {
+        /// Specifies how matching should be done.
+        ///
+        /// Supported values are:
+        /// MATCH_ANY: At least one of the Labels specified in the
+        ///    matcher should match the metadata presented by xDS client.
+        /// MATCH_ALL: The metadata presented by the xDS client should
+        ///    contain all of the labels specified here.
+        ///
+        /// The selection is determined based on the best match. For
+        /// example, suppose there are three EndpointPolicy
+        /// resources P1, P2 and P3 and if P1 has a the matcher as
+        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
+        /// MATCH_ALL <A:1,B:1,C:1>.
+        ///
+        /// If a client with label <A:1> connects, the config from P1
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1> connects, the config from P2
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1,C:1> connects, the config
+        /// from P3 will be selected.
+        ///
+        /// If there is more than one best match, (for example, if a
+        /// config P4 with selector <A:1,D:1> exists and if a client with
+        /// label <A:1,B:1,D:1> connects), an error will be thrown.
+        #[prost(
+            enumeration = "metadata_label_matcher::MetadataLabelMatchCriteria",
+            tag = "1"
+        )]
+        pub metadata_label_match_criteria: i32,
+        /// The list of label value pairs that must match labels in the
+        /// provided metadata based on filterMatchCriteria This list can
+        /// have at most 64 entries. The list can be empty if the match
+        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
+        /// matches any client).
+        #[prost(message, repeated, tag = "2")]
+        pub metadata_labels: ::prost::alloc::vec::Vec<
+            metadata_label_matcher::MetadataLabels,
+        >,
+    }
+    /// Nested message and enum types in `MetadataLabelMatcher`.
+    pub mod metadata_label_matcher {
+        /// Defines a name-pair value for a single label.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MetadataLabels {
+            /// Required. Label name presented as key in xDS Node Metadata.
+            #[prost(string, tag = "1")]
+            pub label_name: ::prost::alloc::string::String,
+            /// Required. Label value presented as value corresponding to the above
+            /// key, in xDS Node Metadata.
+            #[prost(string, tag = "2")]
+            pub label_value: ::prost::alloc::string::String,
+        }
+        /// Possible criteria values that define logic of how matching is made.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MetadataLabelMatchCriteria {
+            /// Default value. Should not be used.
+            Unspecified = 0,
+            /// At least one of the Labels specified in the matcher should match the
+            /// metadata presented by xDS client.
+            MatchAny = 1,
+            /// The metadata presented by the xDS client should contain all of the
+            /// labels specified here.
+            MatchAll = 2,
+        }
+        impl MetadataLabelMatchCriteria {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetadataLabelMatchCriteria::Unspecified => {
+                        "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED"
+                    }
+                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
+                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED" => {
+                        Some(Self::Unspecified)
+                    }
+                    "MATCH_ANY" => Some(Self::MatchAny),
+                    "MATCH_ALL" => Some(Self::MatchAll),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MatcherType {
+        /// The matcher is based on node metadata presented by xDS clients.
+        #[prost(message, tag = "1")]
+        MetadataLabelMatcher(MetadataLabelMatcher),
+    }
+}
+/// EndpointPolicy is a resource that helps apply desired configuration
+/// on the endpoints that match specific criteria.
+/// For example, this resource can be used to apply "authentication config"
+/// an all endpoints that serve on port 8080.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndpointPolicy {
+    /// Required. Name of the EndpointPolicy resource. It matches pattern
+    /// `projects/{project}/locations/global/endpointPolicies/{endpoint_policy}`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Output only. Server-defined URL of this resource
-    #[prost(string, tag = "11")]
-    pub self_link: ::prost::alloc::string::String,
     /// Output only. The timestamp when the resource was created.
     #[prost(message, optional, tag = "2")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
     /// Output only. The timestamp when the resource was updated.
     #[prost(message, optional, tag = "3")]
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Rules that define how traffic is routed and handled. At least one RouteRule
-    /// must be supplied. If there are multiple rules then the action taken will be
-    /// the first rule to match.
-    #[prost(message, repeated, tag = "5")]
-    pub rules: ::prost::alloc::vec::Vec<tcp_route::RouteRule>,
-    /// Optional. Meshes defines a list of meshes this TcpRoute is attached to, as one of the
-    /// routing rules to route the requests served by the mesh.
-    ///
-    /// Each mesh reference should match the pattern:
-    /// `projects/*/locations/global/meshes/<mesh_name>`
-    ///
-    /// The attached Mesh should be of a type SIDECAR
-    #[prost(string, repeated, tag = "8")]
-    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Gateways defines a list of gateways this TcpRoute is attached to, as one of
-    /// the routing rules to route the requests served by the gateway.
-    ///
-    /// Each gateway reference should match the pattern:
-    /// `projects/*/locations/global/gateways/<gateway_name>`
-    #[prost(string, repeated, tag = "9")]
-    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Set of label tags associated with the TcpRoute resource.
-    #[prost(btree_map = "string, string", tag = "10")]
+    /// Optional. Set of label tags associated with the EndpointPolicy resource.
+    #[prost(btree_map = "string, string", tag = "4")]
     pub labels: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
+    /// Required. The type of endpoint policy. This is primarily used to validate
+    /// the configuration.
+    #[prost(enumeration = "endpoint_policy::EndpointPolicyType", tag = "5")]
+    pub r#type: i32,
+    /// Optional. This field specifies the URL of AuthorizationPolicy resource that
+    /// applies authorization policies to the inbound traffic at the
+    /// matched endpoints. Refer to Authorization. If this field is not
+    /// specified, authorization is disabled(no authz checks) for this
+    /// endpoint.
+    #[prost(string, tag = "7")]
+    pub authorization_policy: ::prost::alloc::string::String,
+    /// Required. A matcher that selects endpoints to which the policies should be applied.
+    #[prost(message, optional, tag = "9")]
+    pub endpoint_matcher: ::core::option::Option<EndpointMatcher>,
+    /// Optional. Port selector for the (matched) endpoints. If no port selector is
+    /// provided, the matched config is applied to all ports.
+    #[prost(message, optional, tag = "10")]
+    pub traffic_port_selector: ::core::option::Option<TrafficPortSelector>,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "11")]
+    pub description: ::prost::alloc::string::String,
+    /// Optional. A URL referring to ServerTlsPolicy resource. ServerTlsPolicy is used to
+    /// determine the authentication policy to be applied to terminate the inbound
+    /// traffic at the identified backends. If this field is not set,
+    /// authentication is disabled(open) for this endpoint.
+    #[prost(string, tag = "12")]
+    pub server_tls_policy: ::prost::alloc::string::String,
+    /// Optional. A URL referring to a ClientTlsPolicy resource. ClientTlsPolicy can be set
+    /// to specify the authentication for traffic from the proxy to the actual
+    /// endpoints. More specifically, it is applied to the outgoing traffic from
+    /// the proxy to the endpoint. This is typically used for sidecar model where
+    /// the proxy identifies itself as endpoint to the control plane, with the
+    /// connection between sidecar and endpoint requiring authentication. If this
+    /// field is not set, authentication is disabled(open). Applicable only when
+    /// EndpointPolicyType is SIDECAR_PROXY.
+    #[prost(string, tag = "13")]
+    pub client_tls_policy: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `TcpRoute`.
-pub mod tcp_route {
-    /// Specifies how to match traffic and how to route traffic when traffic is
-    /// matched.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteRule {
-        /// Optional. RouteMatch defines the predicate used to match requests to a given
-        /// action. Multiple match types are "OR"ed for evaluation.
-        /// If no routeMatch field is specified, this rule will unconditionally match
-        /// traffic.
-        #[prost(message, repeated, tag = "1")]
-        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
-        /// Required. The detailed rule defining how to route matched traffic.
-        #[prost(message, optional, tag = "2")]
-        pub action: ::core::option::Option<RouteAction>,
+/// Nested message and enum types in `EndpointPolicy`.
+pub mod endpoint_policy {
+    /// The type of endpoint policy.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EndpointPolicyType {
+        /// Default value. Must not be used.
+        Unspecified = 0,
+        /// Represents a proxy deployed as a sidecar.
+        SidecarProxy = 1,
+        /// Represents a proxyless gRPC backend.
+        GrpcServer = 2,
     }
-    /// RouteMatch defines the predicate used to match requests to a given action.
-    /// Multiple match types are "OR"ed for evaluation.
-    /// If no routeMatch field is specified, this rule will unconditionally match
-    /// traffic.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteMatch {
-        /// Required. Must be specified in the CIDR range format. A CIDR range consists of an
-        /// IP Address and a prefix length to construct the subnet mask. By default,
-        /// the prefix length is 32 (i.e. matches a single IP address). Only IPV4
-        /// addresses are supported.
-        /// Examples:
-        /// "10.0.0.1" - matches against this exact IP address.
-        /// "10.0.0.0/8" - matches against any IP address within the 10.0.0.0 subnet
-        /// and 255.255.255.0 mask.
-        /// "0.0.0.0/0" - matches against any IP address'.
-        #[prost(string, tag = "1")]
-        pub address: ::prost::alloc::string::String,
-        /// Required. Specifies the destination port to match against.
-        #[prost(string, tag = "2")]
-        pub port: ::prost::alloc::string::String,
-    }
-    /// The specifications for routing traffic and applying associated policies.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteAction {
-        /// Optional. The destination services to which traffic should be forwarded. At least
-        /// one destination service is required.
-        #[prost(message, repeated, tag = "1")]
-        pub destinations: ::prost::alloc::vec::Vec<RouteDestination>,
-        /// Optional. If true, Router will use the destination IP and port of the original
-        /// connection as the destination of the request. Default is false.
-        #[prost(bool, tag = "3")]
-        pub original_destination: bool,
-    }
-    /// Describe the destination for traffic to be routed to.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteDestination {
-        /// Required. The URL of a BackendService to route traffic to.
-        #[prost(string, tag = "1")]
-        pub service_name: ::prost::alloc::string::String,
-        /// Optional. Specifies the proportion of requests forwarded to the backend referenced
-        /// by the serviceName field. This is computed as:
-        ///          weight/Sum(weights in this destination list).
-        /// For non-zero values, there may be some epsilon from the exact proportion
-        /// defined here depending on the precision an implementation supports.
+    impl EndpointPolicyType {
+        /// String value of the enum field names used in the ProtoBuf definition.
         ///
-        /// If only one serviceName is specified and it has a weight greater than 0,
-        /// 100% of the traffic is forwarded to that backend.
-        ///
-        /// If weights are specified for any one service name, they need to be
-        /// specified for all of them.
-        ///
-        /// If weights are unspecified for all services, then, traffic is distributed
-        /// in equal proportions to all of them.
-        #[prost(int32, tag = "2")]
-        pub weight: i32,
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EndpointPolicyType::Unspecified => "ENDPOINT_POLICY_TYPE_UNSPECIFIED",
+                EndpointPolicyType::SidecarProxy => "SIDECAR_PROXY",
+                EndpointPolicyType::GrpcServer => "GRPC_SERVER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENDPOINT_POLICY_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "SIDECAR_PROXY" => Some(Self::SidecarProxy),
+                "GRPC_SERVER" => Some(Self::GrpcServer),
+                _ => None,
+            }
+        }
     }
 }
-/// Request used with the ListTcpRoutes method.
+/// Request used with the ListEndpointPolicies method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTcpRoutesRequest {
-    /// Required. The project and location from which the TcpRoutes should be
+pub struct ListEndpointPoliciesRequest {
+    /// Required. The project and location from which the EndpointPolicies should be
     /// listed, specified in the format `projects/*/locations/global`.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Maximum number of TcpRoutes to return per call.
+    /// Maximum number of EndpointPolicies to return per call.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
-    /// The value returned by the last `ListTcpRoutesResponse`
-    /// Indicates that this is a continuation of a prior `ListTcpRoutes` call,
-    /// and that the system should return the next page of data.
+    /// The value returned by the last `ListEndpointPoliciesResponse`
+    /// Indicates that this is a continuation of a prior
+    /// `ListEndpointPolicies` call, and that the system should return the
+    /// next page of data.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
 }
-/// Response returned by the ListTcpRoutes method.
+/// Response returned by the ListEndpointPolicies method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTcpRoutesResponse {
-    /// List of TcpRoute resources.
+pub struct ListEndpointPoliciesResponse {
+    /// List of EndpointPolicy resources.
     #[prost(message, repeated, tag = "1")]
-    pub tcp_routes: ::prost::alloc::vec::Vec<TcpRoute>,
+    pub endpoint_policies: ::prost::alloc::vec::Vec<EndpointPolicy>,
     /// If there might be more results than those appearing in this response, then
     /// `next_page_token` is included. To get the next set of results, call this
     /// method again using the value of `next_page_token` as `page_token`.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
-/// Request used by the GetTcpRoute method.
+/// Request used with the GetEndpointPolicy method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTcpRouteRequest {
-    /// Required. A name of the TcpRoute to get. Must be in the format
-    /// `projects/*/locations/global/tcpRoutes/*`.
+pub struct GetEndpointPolicyRequest {
+    /// Required. A name of the EndpointPolicy to get. Must be in the format
+    /// `projects/*/locations/global/endpointPolicies/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
-/// Request used by the TcpRoute method.
+/// Request used with the CreateEndpointPolicy method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTcpRouteRequest {
-    /// Required. The parent resource of the TcpRoute. Must be in the
+pub struct CreateEndpointPolicyRequest {
+    /// Required. The parent resource of the EndpointPolicy. Must be in the
     /// format `projects/*/locations/global`.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the TcpRoute resource to be created. E.g. TODO(Add an
-    /// example).
+    /// Required. Short name of the EndpointPolicy resource to be created.
+    /// E.g. "CustomECS".
     #[prost(string, tag = "2")]
-    pub tcp_route_id: ::prost::alloc::string::String,
-    /// Required. TcpRoute resource to be created.
+    pub endpoint_policy_id: ::prost::alloc::string::String,
+    /// Required. EndpointPolicy resource to be created.
     #[prost(message, optional, tag = "3")]
-    pub tcp_route: ::core::option::Option<TcpRoute>,
+    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
 }
-/// Request used by the UpdateTcpRoute method.
+/// Request used with the UpdateEndpointPolicy method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTcpRouteRequest {
+pub struct UpdateEndpointPolicyRequest {
     /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// TcpRoute resource by the update.
+    /// EndpointPolicy resource by the update.
     /// The fields specified in the update_mask are relative to the resource, not
     /// the full request. A field will be overwritten if it is in the mask. If the
     /// user does not provide a mask then all fields will be overwritten.
     #[prost(message, optional, tag = "1")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated TcpRoute resource.
+    /// Required. Updated EndpointPolicy resource.
     #[prost(message, optional, tag = "2")]
-    pub tcp_route: ::core::option::Option<TcpRoute>,
+    pub endpoint_policy: ::core::option::Option<EndpointPolicy>,
 }
-/// Request used by the DeleteTcpRoute method.
+/// Request used with the DeleteEndpointPolicy method.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTcpRouteRequest {
-    /// Required. A name of the TcpRoute to delete. Must be in the format
-    /// `projects/*/locations/global/tcpRoutes/*`.
+pub struct DeleteEndpointPolicyRequest {
+    /// Required. A name of the EndpointPolicy to delete. Must be in the format
+    /// `projects/*/locations/global/endpointPolicies/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }

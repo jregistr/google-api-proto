@@ -1,3 +1,58 @@
+/// Contains information about the place the input was geocoded to.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Geocode {
+    /// The geocoded location of the input.
+    ///
+    /// Using place IDs is preferred over using addresses,
+    /// latitude/longitude coordinates, or plus codes. Using coordinates when
+    /// routing or calculating driving directions will always result in the point
+    /// being snapped to the road nearest to those coordinates. This may not be a
+    /// road that will quickly or safely lead to the destination and may not be
+    /// near an access point to the property. Additionally, when a location is
+    /// reverse geocoded, there is no guarantee that the returned address will
+    /// match the original.
+    #[prost(message, optional, tag = "1")]
+    pub location: ::core::option::Option<super::super::super::r#type::LatLng>,
+    /// The plus code corresponding to the `location`.
+    #[prost(message, optional, tag = "2")]
+    pub plus_code: ::core::option::Option<PlusCode>,
+    /// The bounds of the geocoded place.
+    #[prost(message, optional, tag = "4")]
+    pub bounds: ::core::option::Option<super::super::super::geo::r#type::Viewport>,
+    /// The size of the geocoded place, in meters. This is another measure of the
+    /// coarseness of the geocoded location, but in physical size rather than in
+    /// semantic meaning.
+    #[prost(float, tag = "5")]
+    pub feature_size_meters: f32,
+    /// The PlaceID of the place this input geocodes to.
+    ///
+    /// For more information about Place IDs see
+    /// \[here\](<https://developers.google.com/maps/documentation/places/web-service/place-id>).
+    #[prost(string, tag = "6")]
+    pub place_id: ::prost::alloc::string::String,
+    /// The type(s) of place that the input geocoded to. For example,
+    /// `['locality', 'political']`. The full list of types can be found
+    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/requests-geocoding#Types>).
+    #[prost(string, repeated, tag = "7")]
+    pub place_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Plus code (<http://plus.codes>) is a location reference with two formats:
+/// global code defining a 14mx14m (1/8000th of a degree) or smaller rectangle,
+/// and compound code, replacing the prefix with a reference location.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PlusCode {
+    /// Place's global (full) code, such as "9FWM33GV+HQ", representing an
+    /// 1/8000 by 1/8000 degree area (~14 by 14 meters).
+    #[prost(string, tag = "1")]
+    pub global_code: ::prost::alloc::string::String,
+    /// Place's compound code, such as "33GV+HQ, Ramberg, Norway", containing
+    /// the suffix of the global code and replacing the prefix with a formatted
+    /// name of a reference entity.
+    #[prost(string, tag = "2")]
+    pub compound_code: ::prost::alloc::string::String,
+}
 /// Details of the address parsed from the input.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -160,61 +215,6 @@ pub struct ComponentName {
     /// not associated with a language, such as a street number.
     #[prost(string, tag = "2")]
     pub language_code: ::prost::alloc::string::String,
-}
-/// Contains information about the place the input was geocoded to.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Geocode {
-    /// The geocoded location of the input.
-    ///
-    /// Using place IDs is preferred over using addresses,
-    /// latitude/longitude coordinates, or plus codes. Using coordinates when
-    /// routing or calculating driving directions will always result in the point
-    /// being snapped to the road nearest to those coordinates. This may not be a
-    /// road that will quickly or safely lead to the destination and may not be
-    /// near an access point to the property. Additionally, when a location is
-    /// reverse geocoded, there is no guarantee that the returned address will
-    /// match the original.
-    #[prost(message, optional, tag = "1")]
-    pub location: ::core::option::Option<super::super::super::r#type::LatLng>,
-    /// The plus code corresponding to the `location`.
-    #[prost(message, optional, tag = "2")]
-    pub plus_code: ::core::option::Option<PlusCode>,
-    /// The bounds of the geocoded place.
-    #[prost(message, optional, tag = "4")]
-    pub bounds: ::core::option::Option<super::super::super::geo::r#type::Viewport>,
-    /// The size of the geocoded place, in meters. This is another measure of the
-    /// coarseness of the geocoded location, but in physical size rather than in
-    /// semantic meaning.
-    #[prost(float, tag = "5")]
-    pub feature_size_meters: f32,
-    /// The PlaceID of the place this input geocodes to.
-    ///
-    /// For more information about Place IDs see
-    /// \[here\](<https://developers.google.com/maps/documentation/places/web-service/place-id>).
-    #[prost(string, tag = "6")]
-    pub place_id: ::prost::alloc::string::String,
-    /// The type(s) of place that the input geocoded to. For example,
-    /// `['locality', 'political']`. The full list of types can be found
-    /// \[here\](<https://developers.google.com/maps/documentation/geocoding/requests-geocoding#Types>).
-    #[prost(string, repeated, tag = "7")]
-    pub place_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Plus code (<http://plus.codes>) is a location reference with two formats:
-/// global code defining a 14mx14m (1/8000th of a degree) or smaller rectangle,
-/// and compound code, replacing the prefix with a reference location.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PlusCode {
-    /// Place's global (full) code, such as "9FWM33GV+HQ", representing an
-    /// 1/8000 by 1/8000 degree area (~14 by 14 meters).
-    #[prost(string, tag = "1")]
-    pub global_code: ::prost::alloc::string::String,
-    /// Place's compound code, such as "33GV+HQ, Ramberg, Norway", containing
-    /// the suffix of the global code and replacing the prefix with a formatted
-    /// name of a reference entity.
-    #[prost(string, tag = "2")]
-    pub compound_code: ::prost::alloc::string::String,
 }
 /// The metadata for the address.
 #[allow(clippy::derive_partial_eq_without_eq)]
