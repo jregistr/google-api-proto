@@ -1,3 +1,761 @@
+/// A single device IP block
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeviceIpBlock {
+    /// An IP address block in CIDR notation eg: 34.68.194.64/29
+    #[prost(string, tag = "1")]
+    pub block: ::prost::alloc::string::String,
+    /// Whether this block is used by physical or virtual devices
+    #[prost(enumeration = "DeviceForm", tag = "2")]
+    pub form: i32,
+    /// The date this block was added to Firebase Test Lab
+    #[prost(message, optional, tag = "3")]
+    pub added_date: ::core::option::Option<super::super::super::r#type::Date>,
+}
+/// Request to list the currently supported values for an environment type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTestEnvironmentCatalogRequest {
+    /// Required. The type of environment that should be listed.
+    #[prost(
+        enumeration = "get_test_environment_catalog_request::EnvironmentType",
+        tag = "1"
+    )]
+    pub environment_type: i32,
+    /// For authorization, the cloud project requesting the TestEnvironmentCatalog.
+    #[prost(string, tag = "2")]
+    pub project_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `GetTestEnvironmentCatalogRequest`.
+pub mod get_test_environment_catalog_request {
+    /// Types of environments the Test API supports.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EnvironmentType {
+        /// Do not use.  For proto versioning only.
+        Unspecified = 0,
+        /// A device running a version of the Android OS.
+        Android = 1,
+        /// A device running a version of iOS.
+        Ios = 3,
+        /// A network configuration to use when running a test.
+        NetworkConfiguration = 4,
+        /// The software environment provided by TestExecutionService.
+        ProvidedSoftware = 5,
+        /// The IP blocks used by devices in the test environment.
+        DeviceIpBlocks = 6,
+    }
+    impl EnvironmentType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnvironmentType::Unspecified => "ENVIRONMENT_TYPE_UNSPECIFIED",
+                EnvironmentType::Android => "ANDROID",
+                EnvironmentType::Ios => "IOS",
+                EnvironmentType::NetworkConfiguration => "NETWORK_CONFIGURATION",
+                EnvironmentType::ProvidedSoftware => "PROVIDED_SOFTWARE",
+                EnvironmentType::DeviceIpBlocks => "DEVICE_IP_BLOCKS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENVIRONMENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ANDROID" => Some(Self::Android),
+                "IOS" => Some(Self::Ios),
+                "NETWORK_CONFIGURATION" => Some(Self::NetworkConfiguration),
+                "PROVIDED_SOFTWARE" => Some(Self::ProvidedSoftware),
+                "DEVICE_IP_BLOCKS" => Some(Self::DeviceIpBlocks),
+                _ => None,
+            }
+        }
+    }
+}
+/// A description of a test environment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TestEnvironmentCatalog {
+    /// Output only.
+    #[prost(
+        oneof = "test_environment_catalog::EnvironmentCatalog",
+        tags = "1, 3, 4, 5, 6"
+    )]
+    pub environment_catalog: ::core::option::Option<
+        test_environment_catalog::EnvironmentCatalog,
+    >,
+}
+/// Nested message and enum types in `TestEnvironmentCatalog`.
+pub mod test_environment_catalog {
+    /// Output only.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum EnvironmentCatalog {
+        /// Supported Android devices.
+        #[prost(message, tag = "1")]
+        AndroidDeviceCatalog(super::AndroidDeviceCatalog),
+        /// Supported iOS devices.
+        #[prost(message, tag = "3")]
+        IosDeviceCatalog(super::IosDeviceCatalog),
+        /// Supported network configurations.
+        #[prost(message, tag = "4")]
+        NetworkConfigurationCatalog(super::NetworkConfigurationCatalog),
+        /// The software test environment provided by TestExecutionService.
+        #[prost(message, tag = "5")]
+        SoftwareCatalog(super::ProvidedSoftwareCatalog),
+        /// The IP blocks used by devices in the test environment.
+        #[prost(message, tag = "6")]
+        DeviceIpBlockCatalog(super::DeviceIpBlockCatalog),
+    }
+}
+/// List of IP blocks used by the Firebase Test Lab
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeviceIpBlockCatalog {
+    /// The device IP blocks used by Firebase Test Lab
+    #[prost(message, repeated, tag = "1")]
+    pub ip_blocks: ::prost::alloc::vec::Vec<DeviceIpBlock>,
+}
+/// The currently supported Android devices.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AndroidDeviceCatalog {
+    /// The set of supported Android device models.
+    #[prost(message, repeated, tag = "1")]
+    pub models: ::prost::alloc::vec::Vec<AndroidModel>,
+    /// The set of supported Android OS versions.
+    #[prost(message, repeated, tag = "2")]
+    pub versions: ::prost::alloc::vec::Vec<AndroidVersion>,
+    /// The set of supported runtime configurations.
+    #[prost(message, optional, tag = "3")]
+    pub runtime_configuration: ::core::option::Option<AndroidRuntimeConfiguration>,
+}
+/// Android configuration that can be selected at the time a test is run.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AndroidRuntimeConfiguration {
+    /// The set of available locales.
+    #[prost(message, repeated, tag = "1")]
+    pub locales: ::prost::alloc::vec::Vec<Locale>,
+    /// The set of available orientations.
+    #[prost(message, repeated, tag = "2")]
+    pub orientations: ::prost::alloc::vec::Vec<Orientation>,
+}
+/// A description of an Android device tests may be run on.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AndroidModel {
+    /// The unique opaque id for this model.
+    /// Use this for invoking the TestExecutionService.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The human-readable marketing name for this device model.
+    /// Examples: "Nexus 5", "Galaxy S5".
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// The manufacturer of this device.
+    #[prost(string, tag = "3")]
+    pub manufacturer: ::prost::alloc::string::String,
+    /// The company that this device is branded with.
+    /// Example: "Google", "Samsung".
+    #[prost(string, tag = "9")]
+    pub brand: ::prost::alloc::string::String,
+    /// The name of the industrial design.
+    /// This corresponds to android.os.Build.DEVICE.
+    #[prost(string, tag = "10")]
+    pub codename: ::prost::alloc::string::String,
+    /// Whether this device is virtual or physical.
+    #[prost(enumeration = "DeviceForm", tag = "4")]
+    pub form: i32,
+    /// Whether this device is a phone, tablet, wearable, etc.
+    #[prost(enumeration = "DeviceFormFactor", tag = "16")]
+    pub form_factor: i32,
+    /// Version-specific information of an Android model.
+    #[prost(message, repeated, tag = "21")]
+    pub per_version_info: ::prost::alloc::vec::Vec<PerAndroidVersionInfo>,
+    /// Screen size in the horizontal (X) dimension measured in pixels.
+    #[prost(int32, tag = "5")]
+    pub screen_x: i32,
+    /// Screen size in the vertical (Y) dimension measured in pixels.
+    #[prost(int32, tag = "6")]
+    pub screen_y: i32,
+    /// Screen density in DPI.
+    /// This corresponds to ro.sf.lcd_density
+    #[prost(int32, tag = "12")]
+    pub screen_density: i32,
+    /// True if and only if tests with this model are recorded by stitching
+    /// together screenshots. See use_low_spec_video_recording in device config.
+    #[prost(bool, tag = "17")]
+    pub low_fps_video_recording: bool,
+    /// The set of Android versions this device supports.
+    #[prost(string, repeated, tag = "7")]
+    pub supported_version_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The list of supported ABIs for this device.
+    /// This corresponds to either android.os.Build.SUPPORTED_ABIS (for API level
+    /// 21 and above) or android.os.Build.CPU_ABI/CPU_ABI2.
+    /// The most preferred ABI is the first element in the list.
+    ///
+    /// Elements are optionally prefixed by "version_id:" (where version_id is
+    /// the id of an AndroidVersion), denoting an ABI that is supported only on
+    /// a particular version.
+    #[prost(string, repeated, tag = "11")]
+    pub supported_abis: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Tags for this dimension.
+    /// Examples: "default", "preview", "deprecated".
+    #[prost(string, repeated, tag = "8")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// URL of a thumbnail image (photo) of the device.
+    #[prost(string, tag = "19")]
+    pub thumbnail_url: ::prost::alloc::string::String,
+}
+/// A version of the Android OS.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AndroidVersion {
+    /// An opaque id for this Android version.
+    /// Use this id to invoke the TestExecutionService.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// A string representing this version of the Android OS.
+    /// Examples: "4.3", "4.4".
+    #[prost(string, tag = "2")]
+    pub version_string: ::prost::alloc::string::String,
+    /// The API level for this Android version.
+    /// Examples: 18, 19.
+    #[prost(int32, tag = "3")]
+    pub api_level: i32,
+    /// The code name for this Android version.
+    /// Examples: "JellyBean", "KitKat".
+    #[prost(string, tag = "4")]
+    pub code_name: ::prost::alloc::string::String,
+    /// The date this Android version became available in the market.
+    #[prost(message, optional, tag = "5")]
+    pub release_date: ::core::option::Option<super::super::super::r#type::Date>,
+    /// Market share for this version.
+    #[prost(message, optional, tag = "6")]
+    pub distribution: ::core::option::Option<Distribution>,
+    /// Tags for this dimension.
+    /// Examples: "default", "preview", "deprecated".
+    #[prost(string, repeated, tag = "7")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A version-specific information of an Android model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PerAndroidVersionInfo {
+    /// An Android version.
+    #[prost(string, tag = "1")]
+    pub version_id: ::prost::alloc::string::String,
+    /// The number of online devices for an Android version.
+    #[prost(enumeration = "DeviceCapacity", tag = "2")]
+    pub device_capacity: i32,
+}
+/// Data about the relative number of devices running a
+/// given configuration of the Android platform.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Distribution {
+    /// Output only. The time this distribution was measured.
+    #[prost(message, optional, tag = "1")]
+    pub measurement_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The estimated fraction (0-1) of the total market with this
+    /// configuration.
+    #[prost(double, tag = "2")]
+    pub market_share: f64,
+}
+/// The currently supported iOS devices.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IosDeviceCatalog {
+    /// The set of supported iOS device models.
+    #[prost(message, repeated, tag = "1")]
+    pub models: ::prost::alloc::vec::Vec<IosModel>,
+    /// The set of supported iOS software versions.
+    #[prost(message, repeated, tag = "2")]
+    pub versions: ::prost::alloc::vec::Vec<IosVersion>,
+    /// The set of supported Xcode versions.
+    #[prost(message, repeated, tag = "4")]
+    pub xcode_versions: ::prost::alloc::vec::Vec<XcodeVersion>,
+    /// The set of supported runtime configurations.
+    #[prost(message, optional, tag = "3")]
+    pub runtime_configuration: ::core::option::Option<IosRuntimeConfiguration>,
+}
+/// iOS configuration that can be selected at the time a test is run.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IosRuntimeConfiguration {
+    /// The set of available locales.
+    #[prost(message, repeated, tag = "1")]
+    pub locales: ::prost::alloc::vec::Vec<Locale>,
+    /// The set of available orientations.
+    #[prost(message, repeated, tag = "2")]
+    pub orientations: ::prost::alloc::vec::Vec<Orientation>,
+}
+/// A description of an iOS device tests may be run on.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IosModel {
+    /// The unique opaque id for this model.
+    /// Use this for invoking the TestExecutionService.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The human-readable name for this device model.
+    /// Examples: "iPhone 4s", "iPad Mini 2".
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// The set of iOS major software versions this device supports.
+    #[prost(string, repeated, tag = "3")]
+    pub supported_version_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Tags for this dimension.
+    /// Examples: "default", "preview", "deprecated".
+    #[prost(string, repeated, tag = "4")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Device capabilities.
+    /// Copied from
+    /// <https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/DeviceCompatibilityMatrix/DeviceCompatibilityMatrix.html>
+    #[prost(string, repeated, tag = "5")]
+    pub device_capabilities: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Screen size in the horizontal (X) dimension measured in pixels.
+    #[prost(int32, tag = "7")]
+    pub screen_x: i32,
+    /// Screen size in the vertical (Y) dimension measured in pixels.
+    #[prost(int32, tag = "8")]
+    pub screen_y: i32,
+    /// Screen density in DPI.
+    #[prost(int32, tag = "9")]
+    pub screen_density: i32,
+    /// Whether this device is a phone, tablet, wearable, etc.
+    #[prost(enumeration = "DeviceFormFactor", tag = "6")]
+    pub form_factor: i32,
+    /// Version-specific information of an iOS model.
+    #[prost(message, repeated, tag = "14")]
+    pub per_version_info: ::prost::alloc::vec::Vec<PerIosVersionInfo>,
+}
+/// An iOS version.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IosVersion {
+    /// An opaque id for this iOS version.
+    /// Use this id to invoke the TestExecutionService.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// An integer representing the major iOS version.
+    /// Examples: "8", "9".
+    #[prost(int32, tag = "2")]
+    pub major_version: i32,
+    /// An integer representing the minor iOS version.
+    /// Examples: "1", "2".
+    #[prost(int32, tag = "4")]
+    pub minor_version: i32,
+    /// Tags for this dimension.
+    /// Examples: "default", "preview", "deprecated".
+    #[prost(string, repeated, tag = "3")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The available Xcode versions for this version.
+    #[prost(string, repeated, tag = "5")]
+    pub supported_xcode_version_ids: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
+}
+/// A version-specific information of an iOS model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PerIosVersionInfo {
+    /// An iOS version.
+    #[prost(string, tag = "1")]
+    pub version_id: ::prost::alloc::string::String,
+    /// The number of online devices for an iOS version.
+    #[prost(enumeration = "DeviceCapacity", tag = "2")]
+    pub device_capacity: i32,
+}
+/// A location/region designation for language.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Locale {
+    /// The id for this locale.
+    /// Example: "en_US".
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// A human-friendly name for this language/locale.
+    /// Example: "English".
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// A human-friendly string representing the region for this
+    /// locale. Example: "United States". Not present for every locale.
+    #[prost(string, tag = "3")]
+    pub region: ::prost::alloc::string::String,
+    /// Tags for this dimension.
+    /// Example: "default".
+    #[prost(string, repeated, tag = "4")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Screen orientation of the device.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Orientation {
+    /// The id for this orientation.
+    /// Example: "portrait".
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// A human-friendly name for this orientation.
+    /// Example: "portrait".
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    /// Tags for this dimension.
+    /// Example: "default".
+    #[prost(string, repeated, tag = "3")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// An Xcode version that an iOS version is compatible with.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct XcodeVersion {
+    /// The id for this version.
+    /// Example: "9.2".
+    #[prost(string, tag = "1")]
+    pub version: ::prost::alloc::string::String,
+    /// Tags for this Xcode version.
+    /// Example: "default".
+    #[prost(string, repeated, tag = "2")]
+    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkConfigurationCatalog {
+    #[prost(message, repeated, tag = "1")]
+    pub configurations: ::prost::alloc::vec::Vec<NetworkConfiguration>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NetworkConfiguration {
+    /// The unique opaque id for this network traffic configuration.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The emulation rule applying to the upload traffic.
+    #[prost(message, optional, tag = "2")]
+    pub up_rule: ::core::option::Option<TrafficRule>,
+    /// The emulation rule applying to the download traffic.
+    #[prost(message, optional, tag = "3")]
+    pub down_rule: ::core::option::Option<TrafficRule>,
+}
+/// Network emulation parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficRule {
+    /// Packet delay, must be >= 0.
+    #[prost(message, optional, tag = "1")]
+    pub delay: ::core::option::Option<::prost_types::Duration>,
+    /// Packet loss ratio (0.0 - 1.0).
+    #[prost(float, tag = "2")]
+    pub packet_loss_ratio: f32,
+    /// Packet duplication ratio (0.0 - 1.0).
+    #[prost(float, tag = "3")]
+    pub packet_duplication_ratio: f32,
+    /// Bandwidth in kbits/second.
+    #[prost(float, tag = "4")]
+    pub bandwidth: f32,
+    /// Burst size in kbits.
+    #[prost(float, tag = "5")]
+    pub burst: f32,
+}
+/// The currently provided software environment on the devices under test.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProvidedSoftwareCatalog {
+    /// Deprecated: Use AndroidX Test Orchestrator going forward.
+    ///
+    /// A string representing the current version of Android Test Orchestrator
+    /// that is used in the environment. The package is available at
+    /// <https://maven.google.com/web/index.html#com.android.support.test:orchestrator.>
+    #[deprecated]
+    #[prost(string, tag = "1")]
+    pub orchestrator_version: ::prost::alloc::string::String,
+    /// A string representing the current version of AndroidX Test Orchestrator
+    /// that is used in the environment. The package is available at
+    /// <https://maven.google.com/web/index.html#androidx.test:orchestrator.>
+    #[prost(string, tag = "2")]
+    pub androidx_orchestrator_version: ::prost::alloc::string::String,
+}
+/// Whether the device is physical or virtual.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum DeviceForm {
+    /// Do not use.  For proto versioning only.
+    Unspecified = 0,
+    /// Android virtual device using Compute Engine native virtualization. Firebase
+    /// Test Lab only.
+    Virtual = 1,
+    /// Actual hardware.
+    Physical = 2,
+    /// Android virtual device using emulator in nested virtualization. Equivalent
+    /// to Android Studio.
+    Emulator = 3,
+}
+impl DeviceForm {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceForm::Unspecified => "DEVICE_FORM_UNSPECIFIED",
+            DeviceForm::Virtual => "VIRTUAL",
+            DeviceForm::Physical => "PHYSICAL",
+            DeviceForm::Emulator => "EMULATOR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "DEVICE_FORM_UNSPECIFIED" => Some(Self::Unspecified),
+            "VIRTUAL" => Some(Self::Virtual),
+            "PHYSICAL" => Some(Self::Physical),
+            "EMULATOR" => Some(Self::Emulator),
+            _ => None,
+        }
+    }
+}
+/// The form factor of a device.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum DeviceFormFactor {
+    /// Do not use. For proto versioning only.
+    Unspecified = 0,
+    /// This device has the shape of a phone.
+    Phone = 1,
+    /// This device has the shape of a tablet.
+    Tablet = 2,
+    /// This device has the shape of a watch or other wearable.
+    Wearable = 3,
+}
+impl DeviceFormFactor {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceFormFactor::Unspecified => "DEVICE_FORM_FACTOR_UNSPECIFIED",
+            DeviceFormFactor::Phone => "PHONE",
+            DeviceFormFactor::Tablet => "TABLET",
+            DeviceFormFactor::Wearable => "WEARABLE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "DEVICE_FORM_FACTOR_UNSPECIFIED" => Some(Self::Unspecified),
+            "PHONE" => Some(Self::Phone),
+            "TABLET" => Some(Self::Tablet),
+            "WEARABLE" => Some(Self::Wearable),
+            _ => None,
+        }
+    }
+}
+/// Capacity based on the number of online devices in the lab.
+///
+/// Important: device capacity does not directly reflect the length of the
+/// queue at a moment in time. It does not take into account current traffic or
+/// the state of the devices.
+///
+/// For physical devices, the number is the average of online devices in the last
+/// 30 days.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum DeviceCapacity {
+    /// The value of device capacity is unknown or unset.
+    Unspecified = 0,
+    /// Devices that are high in capacity (The lab has a large number of these
+    /// devices).
+    ///
+    /// These devices are generally suggested for running a large number of
+    /// simultaneous tests (e.g. more than 100 tests).
+    ///
+    /// Please note that high capacity devices do not guarantee short wait times
+    /// due to several factors:
+    /// 1. Traffic (how heavily they are used at any given moment)
+    /// 2. High capacity devices are prioritized for certain usages, which may
+    /// cause user tests to be slower than selecting other similar device types.
+    High = 1,
+    /// Devices that are medium in capacity (The lab has a decent number of these
+    /// devices, though not as many as high capacity devices).
+    ///
+    /// These devices are suitable for fewer test runs (e.g. fewer than 100 tests)
+    /// and only for low shard counts (e.g. less than 10 shards).
+    Medium = 2,
+    /// Devices that are low in capacity (The lab has a small number of these
+    /// devices).
+    ///
+    /// These devices may be used if users need to test on this specific device
+    /// model and version. Please note that due to low capacity, the tests may take
+    /// much longer to finish, especially if a large number of tests are invoked at
+    /// once. These devices are not suitable for test sharding.
+    Low = 3,
+    /// Devices that are completely missing from the lab.
+    ///
+    /// These devices are unavailable either temporarily or permanently and should
+    /// not be requested. If the device is also marked as deprecated, this state
+    /// is very likely permanent.
+    None = 4,
+}
+impl DeviceCapacity {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            DeviceCapacity::Unspecified => "DEVICE_CAPACITY_UNSPECIFIED",
+            DeviceCapacity::High => "DEVICE_CAPACITY_HIGH",
+            DeviceCapacity::Medium => "DEVICE_CAPACITY_MEDIUM",
+            DeviceCapacity::Low => "DEVICE_CAPACITY_LOW",
+            DeviceCapacity::None => "DEVICE_CAPACITY_NONE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "DEVICE_CAPACITY_UNSPECIFIED" => Some(Self::Unspecified),
+            "DEVICE_CAPACITY_HIGH" => Some(Self::High),
+            "DEVICE_CAPACITY_MEDIUM" => Some(Self::Medium),
+            "DEVICE_CAPACITY_LOW" => Some(Self::Low),
+            "DEVICE_CAPACITY_NONE" => Some(Self::None),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod test_environment_discovery_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for discovering environments supported by the TestExecutionService.
+    ///
+    /// Over time the TestService may add or remove devices or configuration options
+    /// (e.g., when new devices and APIs are released).  Clients should check here
+    /// periodically to discover what options are supported.
+    ///
+    /// It defines the following resource model:
+    ///
+    /// - The API a collection of [TestEnvironmentCatalog]
+    ///   [google.devtools.test.v1.TestEnvironmentCatalog] resources, named
+    ///   `testEnvironmentCatalog/*`
+    ///
+    /// - Each TestEnvironmentCatalog resource describes a set of supported
+    ///   environments.
+    ///
+    /// - An [AndroidDeviceCatalog][google.devtools.test.v1.AndroidDeviceCatalog]
+    ///   describes supported Android devices. It contains lists of supported
+    ///   [AndroidModels][google.devtools.test.v1.AndroidModel] and
+    ///   [AndroidVersions][google.devtools.test.v1.AndroidVersion] along with a
+    ///   [AndroidRuntimeConfiguration][google.devtools.test.v1.AndroidRuntimeConfiguration].
+    ///   Each AndroidModel contains a list of Versions it supports. All
+    ///   models support all locales and orientations described by the
+    ///   AndroidRuntimeConfiguration
+    ///
+    /// - An [IosDeviceCatalog][google.devtools.test.v1.IosDeviceCatalog]
+    ///   describes supported iOS devices. It contains lists of supported
+    ///   [IosModels][google.devtools.test.v1.IosModel] and
+    ///   [IosVersions][google.devtools.test.v1.IosVersion] along with a
+    ///   [IosRuntimeConfiguration][google.devtools.test.v1.IosRuntimeConfiguration].
+    ///   Each IosModel contains a list of Versions it supports. All
+    ///   models support all locales and orientations described by the
+    ///   IosRuntimeConfiguration.
+    #[derive(Debug, Clone)]
+    pub struct TestEnvironmentDiscoveryServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TestEnvironmentDiscoveryServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TestEnvironmentDiscoveryServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TestEnvironmentDiscoveryServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets the catalog of supported test environments.
+        ///
+        /// May return any of the following canonical error codes:
+        ///
+        /// - INVALID_ARGUMENT - if the request is malformed
+        /// - NOT_FOUND - if the environment type does not exist
+        /// - INTERNAL - if an internal error occurred
+        pub async fn get_test_environment_catalog(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTestEnvironmentCatalogRequest>,
+        ) -> Result<tonic::Response<super::TestEnvironmentCatalog>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.devtools.testing.v1.TestEnvironmentDiscoveryService/GetTestEnvironmentCatalog",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// TestMatrix captures all details about a test. It contains the environment
 /// configuration, test specification, test executions and overall state and
 /// outcome.
@@ -194,10 +952,15 @@ pub struct TestSetup {
     /// instrumentation tests).
     #[prost(message, repeated, tag = "6")]
     pub environment_variables: ::prost::alloc::vec::Vec<EnvironmentVariable>,
+    /// Deprecated: Systrace uses Python 2 which has been sunset 2020-01-01.
+    /// Support of Systrace may stop at any time, at which point no Systrace file
+    /// will be provided in the results.
+    ///
     /// Systrace configuration for the run.
     /// If set a systrace will be taken, starting on test start and lasting for the
     /// configured duration. The systrace file thus obtained is put in the results
     /// bucket together with the other artifacts from the run.
+    #[deprecated]
     #[prost(message, optional, tag = "9")]
     pub systrace: ::core::option::Option<SystraceSetup>,
     /// Whether to prevent all runtime permissions to be granted at app install
@@ -223,9 +986,9 @@ pub struct IosTestSetup {
     /// List of directories on the device to upload to Cloud Storage at the end of
     /// the test.
     ///
-    /// Directories should either be in a shared directory
-    /// (e.g. /private/var/mobile/Media) or within an accessible directory inside
-    /// the app's filesystem (e.g. /Documents) by specifying the bundle id.
+    /// Directories should either be in a shared directory (such as
+    /// /private/var/mobile/Media) or within an accessible directory inside the
+    /// app's filesystem (such as /Documents) by specifying the bundle ID.
     #[prost(message, repeated, tag = "4")]
     pub pull_directories: ::prost::alloc::vec::Vec<IosDeviceFile>,
 }
@@ -488,7 +1251,7 @@ pub struct IosTestLoop {
 /// a test runner class, such as com.google.GoogleTestRunner, which can vary
 /// on the specific instrumentation framework chosen.
 ///
-/// See <<http://developer.android.com/tools/testing/testing_android.html>> for
+/// See <<https://developer.android.com/training/testing/fundamentals>> for
 /// more information on types of Android tests.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -519,7 +1282,7 @@ pub struct AndroidInstrumentationTest {
     pub test_targets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// The option of whether running each test within its own invocation of
     /// instrumentation with Android Test Orchestrator or not.
-    /// ** Orchestrator is only compatible with AndroidJUnitRunner version 1.0 or
+    /// ** Orchestrator is only compatible with AndroidJUnitRunner version 1.1 or
     /// higher! **
     /// Orchestrator offers the following benefits:
     ///   - No shared state
@@ -558,7 +1321,6 @@ pub mod android_instrumentation_test {
 }
 /// A test of an android application that explores the application on a virtual
 /// or physical Android Device, finding culprits and crashes as it goes.
-/// Next tag: 30
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct AndroidRoboTest {
@@ -585,6 +1347,10 @@ pub struct AndroidRoboTest {
     /// password for a test account can be provided.
     #[prost(message, repeated, tag = "11")]
     pub robo_directives: ::prost::alloc::vec::Vec<RoboDirective>,
+    /// The mode in which Robo should run. Most clients should allow the server to
+    /// populate this field automatically.
+    #[prost(enumeration = "RoboMode", tag = "14")]
+    pub robo_mode: i32,
     /// A JSON file with a sequence of actions Robo should perform as a prologue
     /// for the crawl.
     #[prost(message, optional, tag = "13")]
@@ -1040,15 +1806,21 @@ pub mod sharding_option {
 }
 /// Uniformly shards test cases given a total number of shards.
 ///
-/// For Instrumentation test, it will be translated to "-e numShard" "-e
+/// For instrumentation tests, it will be translated to "-e numShard" and "-e
 /// shardIndex" AndroidJUnitRunner arguments. With uniform sharding enabled,
-/// specifying these sharding arguments via environment_variables is invalid.
+/// specifying either of these sharding arguments via `environment_variables` is
+/// invalid.
+///
+/// Based on the sharding mechanism AndroidJUnitRunner uses, there is no
+/// guarantee that test cases will be distributed uniformly across all shards.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UniformSharding {
-    /// Required. Total number of shards. When any physical devices are selected,
-    /// the number must be >= 1 and <= 50. When no physical devices are selected,
-    /// the number must be >= 1 and <= 500.
+    /// Required. The total number of shards to create. This must always be a
+    /// positive number that is no greater than the total number of test cases.
+    /// When you select one or more physical devices, the number of shards must be
+    /// <= 50. When you select one or more ARM virtual devices, it must be <= 100.
+    /// When you select only x86 virtual devices, it must be <= 500.
     #[prost(int32, tag = "1")]
     pub num_shards: i32,
 }
@@ -1061,9 +1833,11 @@ pub struct UniformSharding {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ManualSharding {
     /// Required. Group of packages, classes, and/or test methods to be run for
-    /// each shard. When any physical devices are selected,  the number of
-    /// test_targets_for_shard must be >= 1 and <= 50. When no physical devices are
-    /// selected, the number must be >= 1 and <= 500.
+    /// each manually-created shard. You must specify at least one shard if this
+    /// field is present. When you select one or more physical devices, the number
+    /// of repeated test_targets_for_shard must be <= 50. When you select one or
+    /// more ARM virtual devices, it must be <= 100. When you select only x86
+    /// virtual devices, it must be <= 500.
     #[prost(message, repeated, tag = "1")]
     pub test_targets_for_shard: ::prost::alloc::vec::Vec<TestTargetsForShard>,
 }
@@ -1075,7 +1849,7 @@ pub struct TestTargetsForShard {
     /// The targets need to be specified in AndroidJUnitRunner argument format. For
     /// example, "package com.my.packages" "class com.my.package.MyClass".
     ///
-    /// The number of shard_test_targets must be greater than 0.
+    /// The number of test_targets must be greater than 0.
     #[prost(string, repeated, tag = "1")]
     pub test_targets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
@@ -1089,7 +1863,7 @@ pub struct Shard {
     /// Output only. The total number of shards.
     #[prost(int32, tag = "2")]
     pub num_shards: i32,
-    /// Output only. Test targets for each shard.
+    /// Output only. Test targets for each shard. Only set for manual sharding.
     #[prost(message, optional, tag = "3")]
     pub test_targets_for_shard: ::core::option::Option<TestTargetsForShard>,
 }
@@ -1155,7 +1929,7 @@ pub enum OrchestratorOption {
     /// offers.
     Unspecified = 0,
     /// Run test using orchestrator.
-    /// ** Only compatible with AndroidJUnitRunner version 1.0 or higher! **
+    /// ** Only compatible with AndroidJUnitRunner version 1.1 or higher! **
     /// Recommended.
     UseOrchestrator = 1,
     /// Run test without using orchestrator.
@@ -1179,6 +1953,40 @@ impl OrchestratorOption {
             "ORCHESTRATOR_OPTION_UNSPECIFIED" => Some(Self::Unspecified),
             "USE_ORCHESTRATOR" => Some(Self::UseOrchestrator),
             "DO_NOT_USE_ORCHESTRATOR" => Some(Self::DoNotUseOrchestrator),
+            _ => None,
+        }
+    }
+}
+/// The mode in which Robo should run.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RoboMode {
+    /// This means that the server should choose the mode.
+    /// Recommended.
+    Unspecified = 0,
+    /// Runs Robo in UIAutomator-only mode without app resigning
+    RoboVersion1 = 1,
+    /// Runs Robo in standard Espresso with UIAutomator fallback
+    RoboVersion2 = 2,
+}
+impl RoboMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RoboMode::Unspecified => "ROBO_MODE_UNSPECIFIED",
+            RoboMode::RoboVersion1 => "ROBO_VERSION_1",
+            RoboMode::RoboVersion2 => "ROBO_VERSION_2",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ROBO_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+            "ROBO_VERSION_1" => Some(Self::RoboVersion1),
+            "ROBO_VERSION_2" => Some(Self::RoboVersion2),
             _ => None,
         }
     }
@@ -1250,7 +2058,7 @@ pub enum InvalidMatrixDetails {
     NoSignature = 20,
     /// The test runner class specified by user or in the test APK's manifest file
     /// is not compatible with Android Test Orchestrator.
-    /// Orchestrator is only compatible with AndroidJUnitRunner version 1.0 or
+    /// Orchestrator is only compatible with AndroidJUnitRunner version 1.1 or
     /// higher.
     /// Orchestrator can be disabled by using DO_NOT_USE_ORCHESTRATOR
     /// OrchestratorOption.
@@ -1323,6 +2131,16 @@ pub enum InvalidMatrixDetails {
     InvalidInputApk = 27,
     /// APK is built for a preview SDK which is unsupported
     InvalidApkPreviewSdk = 29,
+    /// The matrix expanded to contain too many executions.
+    MatrixTooLarge = 37,
+    /// Not enough test quota to run the executions in this matrix.
+    TestQuotaExceeded = 39,
+    /// A required cloud service api is not activated.
+    /// See:
+    /// <https://firebase.google.com/docs/test-lab/android/continuous#requirements>
+    ServiceNotActivated = 40,
+    /// There was an unknown permission issue running this test.
+    UnknownPermissionError = 41,
 }
 impl InvalidMatrixDetails {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -1372,6 +2190,10 @@ impl InvalidMatrixDetails {
             InvalidMatrixDetails::NoCodeApk => "NO_CODE_APK",
             InvalidMatrixDetails::InvalidInputApk => "INVALID_INPUT_APK",
             InvalidMatrixDetails::InvalidApkPreviewSdk => "INVALID_APK_PREVIEW_SDK",
+            InvalidMatrixDetails::MatrixTooLarge => "MATRIX_TOO_LARGE",
+            InvalidMatrixDetails::TestQuotaExceeded => "TEST_QUOTA_EXCEEDED",
+            InvalidMatrixDetails::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
+            InvalidMatrixDetails::UnknownPermissionError => "UNKNOWN_PERMISSION_ERROR",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -1416,6 +2238,10 @@ impl InvalidMatrixDetails {
             "NO_CODE_APK" => Some(Self::NoCodeApk),
             "INVALID_INPUT_APK" => Some(Self::InvalidInputApk),
             "INVALID_APK_PREVIEW_SDK" => Some(Self::InvalidApkPreviewSdk),
+            "MATRIX_TOO_LARGE" => Some(Self::MatrixTooLarge),
+            "TEST_QUOTA_EXCEEDED" => Some(Self::TestQuotaExceeded),
+            "SERVICE_NOT_ACTIVATED" => Some(Self::ServiceNotActivated),
+            "UNKNOWN_PERMISSION_ERROR" => Some(Self::UnknownPermissionError),
             _ => None,
         }
     }
@@ -1726,662 +2552,6 @@ pub mod test_execution_service_client {
         }
     }
 }
-/// A single device IP block
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeviceIpBlock {
-    /// An IP address block in CIDR notation eg: 34.68.194.64/29
-    #[prost(string, tag = "1")]
-    pub block: ::prost::alloc::string::String,
-    /// Whether this block is used by physical or virtual devices
-    #[prost(enumeration = "DeviceForm", tag = "2")]
-    pub form: i32,
-    /// The date this block was added to Firebase Test Lab
-    #[prost(message, optional, tag = "3")]
-    pub added_date: ::core::option::Option<super::super::super::r#type::Date>,
-}
-/// Request to list the currently supported values for an environment type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTestEnvironmentCatalogRequest {
-    /// Required. The type of environment that should be listed.
-    #[prost(
-        enumeration = "get_test_environment_catalog_request::EnvironmentType",
-        tag = "1"
-    )]
-    pub environment_type: i32,
-    /// For authorization, the cloud project requesting the TestEnvironmentCatalog.
-    #[prost(string, tag = "2")]
-    pub project_id: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `GetTestEnvironmentCatalogRequest`.
-pub mod get_test_environment_catalog_request {
-    /// Types of environments the Test API supports.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EnvironmentType {
-        /// Do not use.  For proto versioning only.
-        Unspecified = 0,
-        /// A device running a version of the Android OS.
-        Android = 1,
-        /// A device running a version of iOS.
-        Ios = 3,
-        /// A network configuration to use when running a test.
-        NetworkConfiguration = 4,
-        /// The software environment provided by TestExecutionService.
-        ProvidedSoftware = 5,
-        /// The IP blocks used by devices in the test environment.
-        DeviceIpBlocks = 6,
-    }
-    impl EnvironmentType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EnvironmentType::Unspecified => "ENVIRONMENT_TYPE_UNSPECIFIED",
-                EnvironmentType::Android => "ANDROID",
-                EnvironmentType::Ios => "IOS",
-                EnvironmentType::NetworkConfiguration => "NETWORK_CONFIGURATION",
-                EnvironmentType::ProvidedSoftware => "PROVIDED_SOFTWARE",
-                EnvironmentType::DeviceIpBlocks => "DEVICE_IP_BLOCKS",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ENVIRONMENT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ANDROID" => Some(Self::Android),
-                "IOS" => Some(Self::Ios),
-                "NETWORK_CONFIGURATION" => Some(Self::NetworkConfiguration),
-                "PROVIDED_SOFTWARE" => Some(Self::ProvidedSoftware),
-                "DEVICE_IP_BLOCKS" => Some(Self::DeviceIpBlocks),
-                _ => None,
-            }
-        }
-    }
-}
-/// A description of a test environment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TestEnvironmentCatalog {
-    /// Output only.
-    #[prost(
-        oneof = "test_environment_catalog::EnvironmentCatalog",
-        tags = "1, 3, 4, 5, 6"
-    )]
-    pub environment_catalog: ::core::option::Option<
-        test_environment_catalog::EnvironmentCatalog,
-    >,
-}
-/// Nested message and enum types in `TestEnvironmentCatalog`.
-pub mod test_environment_catalog {
-    /// Output only.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum EnvironmentCatalog {
-        /// Supported Android devices.
-        #[prost(message, tag = "1")]
-        AndroidDeviceCatalog(super::AndroidDeviceCatalog),
-        /// Supported iOS devices.
-        #[prost(message, tag = "3")]
-        IosDeviceCatalog(super::IosDeviceCatalog),
-        /// Supported network configurations.
-        #[prost(message, tag = "4")]
-        NetworkConfigurationCatalog(super::NetworkConfigurationCatalog),
-        /// The software test environment provided by TestExecutionService.
-        #[prost(message, tag = "5")]
-        SoftwareCatalog(super::ProvidedSoftwareCatalog),
-        /// The IP blocks used by devices in the test environment.
-        #[prost(message, tag = "6")]
-        DeviceIpBlockCatalog(super::DeviceIpBlockCatalog),
-    }
-}
-/// List of IP blocks used by the Firebase Test Lab
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeviceIpBlockCatalog {
-    /// The device IP blocks used by Firebase Test Lab
-    #[prost(message, repeated, tag = "1")]
-    pub ip_blocks: ::prost::alloc::vec::Vec<DeviceIpBlock>,
-}
-/// The currently supported Android devices.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AndroidDeviceCatalog {
-    /// The set of supported Android device models.
-    #[prost(message, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<AndroidModel>,
-    /// The set of supported Android OS versions.
-    #[prost(message, repeated, tag = "2")]
-    pub versions: ::prost::alloc::vec::Vec<AndroidVersion>,
-    /// The set of supported runtime configurations.
-    #[prost(message, optional, tag = "3")]
-    pub runtime_configuration: ::core::option::Option<AndroidRuntimeConfiguration>,
-}
-/// Android configuration that can be selected at the time a test is run.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AndroidRuntimeConfiguration {
-    /// The set of available locales.
-    #[prost(message, repeated, tag = "1")]
-    pub locales: ::prost::alloc::vec::Vec<Locale>,
-    /// The set of available orientations.
-    #[prost(message, repeated, tag = "2")]
-    pub orientations: ::prost::alloc::vec::Vec<Orientation>,
-}
-/// A description of an Android device tests may be run on.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AndroidModel {
-    /// The unique opaque id for this model.
-    /// Use this for invoking the TestExecutionService.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The human-readable marketing name for this device model.
-    /// Examples: "Nexus 5", "Galaxy S5".
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// The manufacturer of this device.
-    #[prost(string, tag = "3")]
-    pub manufacturer: ::prost::alloc::string::String,
-    /// The company that this device is branded with.
-    /// Example: "Google", "Samsung".
-    #[prost(string, tag = "9")]
-    pub brand: ::prost::alloc::string::String,
-    /// The name of the industrial design.
-    /// This corresponds to android.os.Build.DEVICE.
-    #[prost(string, tag = "10")]
-    pub codename: ::prost::alloc::string::String,
-    /// Whether this device is virtual or physical.
-    #[prost(enumeration = "DeviceForm", tag = "4")]
-    pub form: i32,
-    /// Whether this device is a phone, tablet, wearable, etc.
-    #[prost(enumeration = "DeviceFormFactor", tag = "16")]
-    pub form_factor: i32,
-    /// Screen size in the horizontal (X) dimension measured in pixels.
-    #[prost(int32, tag = "5")]
-    pub screen_x: i32,
-    /// Screen size in the vertical (Y) dimension measured in pixels.
-    #[prost(int32, tag = "6")]
-    pub screen_y: i32,
-    /// Screen density in DPI.
-    /// This corresponds to ro.sf.lcd_density
-    #[prost(int32, tag = "12")]
-    pub screen_density: i32,
-    /// True if and only if tests with this model are recorded by stitching
-    /// together screenshots. See use_low_spec_video_recording in device config.
-    #[prost(bool, tag = "17")]
-    pub low_fps_video_recording: bool,
-    /// The set of Android versions this device supports.
-    #[prost(string, repeated, tag = "7")]
-    pub supported_version_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The list of supported ABIs for this device.
-    /// This corresponds to either android.os.Build.SUPPORTED_ABIS (for API level
-    /// 21 and above) or android.os.Build.CPU_ABI/CPU_ABI2.
-    /// The most preferred ABI is the first element in the list.
-    ///
-    /// Elements are optionally prefixed by "version_id:" (where version_id is
-    /// the id of an AndroidVersion), denoting an ABI that is supported only on
-    /// a particular version.
-    #[prost(string, repeated, tag = "11")]
-    pub supported_abis: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Tags for this dimension.
-    /// Examples: "default", "preview", "deprecated".
-    #[prost(string, repeated, tag = "8")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// URL of a thumbnail image (photo) of the device.
-    /// e.g. <https://lh3.googleusercontent.com/90WcauuJiCYABEl8U0lcZeuS5STUbf2yW...>
-    #[prost(string, tag = "19")]
-    pub thumbnail_url: ::prost::alloc::string::String,
-}
-/// A version of the Android OS.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AndroidVersion {
-    /// An opaque id for this Android version.
-    /// Use this id to invoke the TestExecutionService.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// A string representing this version of the Android OS.
-    /// Examples: "4.3", "4.4".
-    #[prost(string, tag = "2")]
-    pub version_string: ::prost::alloc::string::String,
-    /// The API level for this Android version.
-    /// Examples: 18, 19.
-    #[prost(int32, tag = "3")]
-    pub api_level: i32,
-    /// The code name for this Android version.
-    /// Examples: "JellyBean", "KitKat".
-    #[prost(string, tag = "4")]
-    pub code_name: ::prost::alloc::string::String,
-    /// The date this Android version became available in the market.
-    #[prost(message, optional, tag = "5")]
-    pub release_date: ::core::option::Option<super::super::super::r#type::Date>,
-    /// Market share for this version.
-    #[prost(message, optional, tag = "6")]
-    pub distribution: ::core::option::Option<Distribution>,
-    /// Tags for this dimension.
-    /// Examples: "default", "preview", "deprecated".
-    #[prost(string, repeated, tag = "7")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Data about the relative number of devices running a
-/// given configuration of the Android platform.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Distribution {
-    /// Output only. The time this distribution was measured.
-    #[prost(message, optional, tag = "1")]
-    pub measurement_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The estimated fraction (0-1) of the total market with this
-    /// configuration.
-    #[prost(double, tag = "2")]
-    pub market_share: f64,
-}
-/// The currently supported iOS devices.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IosDeviceCatalog {
-    /// The set of supported iOS device models.
-    #[prost(message, repeated, tag = "1")]
-    pub models: ::prost::alloc::vec::Vec<IosModel>,
-    /// The set of supported iOS software versions.
-    #[prost(message, repeated, tag = "2")]
-    pub versions: ::prost::alloc::vec::Vec<IosVersion>,
-    /// The set of supported Xcode versions.
-    #[prost(message, repeated, tag = "4")]
-    pub xcode_versions: ::prost::alloc::vec::Vec<XcodeVersion>,
-    /// The set of supported runtime configurations.
-    #[prost(message, optional, tag = "3")]
-    pub runtime_configuration: ::core::option::Option<IosRuntimeConfiguration>,
-}
-/// iOS configuration that can be selected at the time a test is run.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IosRuntimeConfiguration {
-    /// The set of available locales.
-    #[prost(message, repeated, tag = "1")]
-    pub locales: ::prost::alloc::vec::Vec<Locale>,
-    /// The set of available orientations.
-    #[prost(message, repeated, tag = "2")]
-    pub orientations: ::prost::alloc::vec::Vec<Orientation>,
-}
-/// A description of an iOS device tests may be run on.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IosModel {
-    /// The unique opaque id for this model.
-    /// Use this for invoking the TestExecutionService.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The human-readable name for this device model.
-    /// Examples: "iPhone 4s", "iPad Mini 2".
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// The set of iOS major software versions this device supports.
-    #[prost(string, repeated, tag = "3")]
-    pub supported_version_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Tags for this dimension.
-    /// Examples: "default", "preview", "deprecated".
-    #[prost(string, repeated, tag = "4")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Device capabilities.
-    /// Copied from
-    /// <https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/DeviceCompatibilityMatrix/DeviceCompatibilityMatrix.html>
-    #[prost(string, repeated, tag = "5")]
-    pub device_capabilities: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Screen size in the horizontal (X) dimension measured in pixels.
-    #[prost(int32, tag = "7")]
-    pub screen_x: i32,
-    /// Screen size in the vertical (Y) dimension measured in pixels.
-    #[prost(int32, tag = "8")]
-    pub screen_y: i32,
-    /// Screen density in DPI.
-    #[prost(int32, tag = "9")]
-    pub screen_density: i32,
-    /// Whether this device is a phone, tablet, wearable, etc.
-    #[prost(enumeration = "DeviceFormFactor", tag = "6")]
-    pub form_factor: i32,
-}
-/// An iOS version.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IosVersion {
-    /// An opaque id for this iOS version.
-    /// Use this id to invoke the TestExecutionService.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// An integer representing the major iOS version.
-    /// Examples: "8", "9".
-    #[prost(int32, tag = "2")]
-    pub major_version: i32,
-    /// An integer representing the minor iOS version.
-    /// Examples: "1", "2".
-    #[prost(int32, tag = "4")]
-    pub minor_version: i32,
-    /// Tags for this dimension.
-    /// Examples: "default", "preview", "deprecated".
-    #[prost(string, repeated, tag = "3")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The available Xcode versions for this version.
-    #[prost(string, repeated, tag = "5")]
-    pub supported_xcode_version_ids: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
-}
-/// A location/region designation for language.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Locale {
-    /// The id for this locale.
-    /// Example: "en_US".
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// A human-friendly name for this language/locale.
-    /// Example: "English".
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// A human-friendly string representing the region for this
-    /// locale. Example: "United States". Not present for every locale.
-    #[prost(string, tag = "3")]
-    pub region: ::prost::alloc::string::String,
-    /// Tags for this dimension.
-    /// Example: "default".
-    #[prost(string, repeated, tag = "4")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Screen orientation of the device.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Orientation {
-    /// The id for this orientation.
-    /// Example: "portrait".
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// A human-friendly name for this orientation.
-    /// Example: "portrait".
-    #[prost(string, tag = "2")]
-    pub name: ::prost::alloc::string::String,
-    /// Tags for this dimension.
-    /// Example: "default".
-    #[prost(string, repeated, tag = "3")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// An Xcode version that an iOS version is compatible with.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct XcodeVersion {
-    /// The id for this version.
-    /// Example: "9.2".
-    #[prost(string, tag = "1")]
-    pub version: ::prost::alloc::string::String,
-    /// Tags for this Xcode version.
-    /// Example: "default".
-    #[prost(string, repeated, tag = "2")]
-    pub tags: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkConfigurationCatalog {
-    #[prost(message, repeated, tag = "1")]
-    pub configurations: ::prost::alloc::vec::Vec<NetworkConfiguration>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NetworkConfiguration {
-    /// The unique opaque id for this network traffic configuration.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The emulation rule applying to the upload traffic.
-    #[prost(message, optional, tag = "2")]
-    pub up_rule: ::core::option::Option<TrafficRule>,
-    /// The emulation rule applying to the download traffic.
-    #[prost(message, optional, tag = "3")]
-    pub down_rule: ::core::option::Option<TrafficRule>,
-}
-/// Network emulation parameters.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficRule {
-    /// Packet delay, must be >= 0.
-    #[prost(message, optional, tag = "1")]
-    pub delay: ::core::option::Option<::prost_types::Duration>,
-    /// Packet loss ratio (0.0 - 1.0).
-    #[prost(float, tag = "2")]
-    pub packet_loss_ratio: f32,
-    /// Packet duplication ratio (0.0 - 1.0).
-    #[prost(float, tag = "3")]
-    pub packet_duplication_ratio: f32,
-    /// Bandwidth in kbits/second.
-    #[prost(float, tag = "4")]
-    pub bandwidth: f32,
-    /// Burst size in kbits.
-    #[prost(float, tag = "5")]
-    pub burst: f32,
-}
-/// The currently provided software environment on the devices under test.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProvidedSoftwareCatalog {
-    /// A string representing the current version of Android Test Orchestrator
-    /// that is used in the environment. The package is available at
-    /// <https://maven.google.com/web/index.html#com.android.support.test:orchestrator.>
-    #[prost(string, tag = "1")]
-    pub orchestrator_version: ::prost::alloc::string::String,
-    /// A string representing the current version of AndroidX Test Orchestrator
-    /// that is used in the environment. The package is available at
-    /// <https://maven.google.com/web/index.html#androidx.test:orchestrator.>
-    #[prost(string, tag = "2")]
-    pub androidx_orchestrator_version: ::prost::alloc::string::String,
-}
-/// Whether the device is physical or virtual.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum DeviceForm {
-    /// Do not use.  For proto versioning only.
-    Unspecified = 0,
-    /// Android virtual device using Compute Engine native virtualization. Firebase
-    /// Test Lab only.
-    Virtual = 1,
-    /// Actual hardware.
-    Physical = 2,
-    /// Android virtual device using emulator in nested virtualization. Equivalent
-    /// to Android Studio.
-    Emulator = 3,
-}
-impl DeviceForm {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            DeviceForm::Unspecified => "DEVICE_FORM_UNSPECIFIED",
-            DeviceForm::Virtual => "VIRTUAL",
-            DeviceForm::Physical => "PHYSICAL",
-            DeviceForm::Emulator => "EMULATOR",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "DEVICE_FORM_UNSPECIFIED" => Some(Self::Unspecified),
-            "VIRTUAL" => Some(Self::Virtual),
-            "PHYSICAL" => Some(Self::Physical),
-            "EMULATOR" => Some(Self::Emulator),
-            _ => None,
-        }
-    }
-}
-/// The form factor of a device.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum DeviceFormFactor {
-    /// Do not use. For proto versioning only.
-    Unspecified = 0,
-    /// This device has the shape of a phone.
-    Phone = 1,
-    /// This device has the shape of a tablet.
-    Tablet = 2,
-    /// This device has the shape of a watch or other wearable.
-    Wearable = 3,
-}
-impl DeviceFormFactor {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            DeviceFormFactor::Unspecified => "DEVICE_FORM_FACTOR_UNSPECIFIED",
-            DeviceFormFactor::Phone => "PHONE",
-            DeviceFormFactor::Tablet => "TABLET",
-            DeviceFormFactor::Wearable => "WEARABLE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "DEVICE_FORM_FACTOR_UNSPECIFIED" => Some(Self::Unspecified),
-            "PHONE" => Some(Self::Phone),
-            "TABLET" => Some(Self::Tablet),
-            "WEARABLE" => Some(Self::Wearable),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod test_environment_discovery_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for discovering environments supported by the TestExecutionService.
-    ///
-    /// Over time the TestService may add or remove devices or configuration options
-    /// (e.g., when new devices and APIs are released).  Clients should check here
-    /// periodically to discover what options are supported.
-    ///
-    /// It defines the following resource model:
-    ///
-    /// - The API a collection of [TestEnvironmentCatalog]
-    ///   [google.devtools.test.v1.TestEnvironmentCatalog] resources, named
-    ///   `testEnvironmentCatalog/*`
-    ///
-    /// - Each TestEnvironmentCatalog resource describes a set of supported
-    ///   environments.
-    ///
-    /// - An [AndroidDeviceCatalog][google.devtools.test.v1.AndroidDeviceCatalog]
-    ///   describes supported Android devices. It contains lists of supported
-    ///   [AndroidModels][google.devtools.test.v1.AndroidModel] and
-    ///   [AndroidVersions][google.devtools.test.v1.AndroidVersion] along with a
-    ///   [AndroidRuntimeConfiguration][google.devtools.test.v1.AndroidRuntimeConfiguration].
-    ///   Each AndroidModel contains a list of Versions it supports. All
-    ///   models support all locales and orientations described by the
-    ///   AndroidRuntimeConfiguration
-    ///
-    /// - An [IosDeviceCatalog][google.devtools.test.v1.IosDeviceCatalog]
-    ///   describes supported iOS devices. It contains lists of supported
-    ///   [IosModels][google.devtools.test.v1.IosModel] and
-    ///   [IosVersions][google.devtools.test.v1.IosVersion] along with a
-    ///   [IosRuntimeConfiguration][google.devtools.test.v1.IosRuntimeConfiguration].
-    ///   Each IosModel contains a list of Versions it supports. All
-    ///   models support all locales and orientations described by the
-    ///   IosRuntimeConfiguration.
-    #[derive(Debug, Clone)]
-    pub struct TestEnvironmentDiscoveryServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TestEnvironmentDiscoveryServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TestEnvironmentDiscoveryServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TestEnvironmentDiscoveryServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Gets the catalog of supported test environments.
-        ///
-        /// May return any of the following canonical error codes:
-        ///
-        /// - INVALID_ARGUMENT - if the request is malformed
-        /// - NOT_FOUND - if the environment type does not exist
-        /// - INTERNAL - if an internal error occurred
-        pub async fn get_test_environment_catalog(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTestEnvironmentCatalogRequest>,
-        ) -> Result<tonic::Response<super::TestEnvironmentCatalog>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.devtools.testing.v1.TestEnvironmentDiscoveryService/GetTestEnvironmentCatalog",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Android application details based on application manifest and apk archive
 /// contents.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2416,6 +2586,18 @@ pub struct ApkManifest {
     /// Permissions declared to be used by the application
     #[prost(string, repeated, tag = "7")]
     pub uses_permission: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Version number used internally by the app.
+    #[prost(int64, tag = "8")]
+    pub version_code: i64,
+    /// Version number shown to users.
+    #[prost(string, tag = "9")]
+    pub version_name: ::prost::alloc::string::String,
+    /// Meta-data tags defined in the manifest.
+    #[prost(message, repeated, tag = "10")]
+    pub metadata: ::prost::alloc::vec::Vec<Metadata>,
+    /// Feature usage tags defined in the manifest.
+    #[prost(message, repeated, tag = "11")]
+    pub uses_feature: ::prost::alloc::vec::Vec<UsesFeature>,
 }
 /// The <intent-filter> section of an <activity> tag.
 /// <https://developer.android.com/guide/topics/manifest/intent-filter-element.html>
@@ -2431,6 +2613,30 @@ pub struct IntentFilter {
     /// The android:mimeType value of the <data> tag.
     #[prost(string, tag = "3")]
     pub mime_type: ::prost::alloc::string::String,
+}
+/// A <meta-data> tag within a manifest.
+/// <https://developer.android.com/guide/topics/manifest/meta-data-element.html>
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Metadata {
+    /// The android:name value
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The android:value value
+    #[prost(string, tag = "2")]
+    pub value: ::prost::alloc::string::String,
+}
+/// A <uses-feature> tag within a manifest.
+/// <https://developer.android.com/guide/topics/manifest/uses-feature-element.html>
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UsesFeature {
+    /// The android:name value
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The android:required value
+    #[prost(bool, tag = "2")]
+    pub is_required: bool,
 }
 /// A request to get the details of an Android application APK.
 #[allow(clippy::derive_partial_eq_without_eq)]
