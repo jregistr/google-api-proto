@@ -1,40 +1,3 @@
-/// Defines flags that are used to run the diagnostic tool
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DiagnosticConfig {
-    /// Required. User Cloud Storage bucket location (REQUIRED).
-    /// Must be formatted with path prefix (`gs://$GCS_BUCKET`).
-    ///
-    /// Permissions:
-    /// User Managed Notebooks:
-    /// - storage.buckets.writer: Must be given to the project's service account
-    ///    attached to VM.
-    /// Google Managed Notebooks:
-    /// - storage.buckets.writer: Must be given to the project's service account or
-    ///    user credentials attached to VM depending on authentication mode.
-    ///
-    /// Cloud Storage bucket Log file will be written to
-    /// `gs://$GCS_BUCKET/$RELATIVE_PATH/$VM_DATE_$TIME.tar.gz`
-    #[prost(string, tag = "1")]
-    pub gcs_bucket: ::prost::alloc::string::String,
-    /// Optional. Defines the relative storage path in the Cloud Storage bucket
-    /// where the diagnostic logs will be written: Default path will be the root
-    /// directory of the Cloud Storage bucket
-    /// (`gs://$GCS_BUCKET/$DATE_$TIME.tar.gz`)
-    /// Example of full path where Log file will be written:
-    /// `gs://$GCS_BUCKET/$RELATIVE_PATH/`
-    #[prost(string, tag = "2")]
-    pub relative_path: ::prost::alloc::string::String,
-    /// Optional. Enables flag to repair service for instance
-    #[prost(bool, tag = "3")]
-    pub repair_flag_enabled: bool,
-    /// Optional. Enables flag to capture packets from the instance for 30 seconds
-    #[prost(bool, tag = "4")]
-    pub packet_capture_flag_enabled: bool,
-    /// Optional. Enables flag to copy all `/home/jupyter` folder contents
-    #[prost(bool, tag = "5")]
-    pub copy_home_files_flag_enabled: bool,
-}
 /// The definition of an Event for a managed / semi-managed notebook instance.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -111,6 +74,43 @@ pub mod event {
             }
         }
     }
+}
+/// Defines flags that are used to run the diagnostic tool
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DiagnosticConfig {
+    /// Required. User Cloud Storage bucket location (REQUIRED).
+    /// Must be formatted with path prefix (`gs://$GCS_BUCKET`).
+    ///
+    /// Permissions:
+    /// User Managed Notebooks:
+    /// - storage.buckets.writer: Must be given to the project's service account
+    ///    attached to VM.
+    /// Google Managed Notebooks:
+    /// - storage.buckets.writer: Must be given to the project's service account or
+    ///    user credentials attached to VM depending on authentication mode.
+    ///
+    /// Cloud Storage bucket Log file will be written to
+    /// `gs://$GCS_BUCKET/$RELATIVE_PATH/$VM_DATE_$TIME.tar.gz`
+    #[prost(string, tag = "1")]
+    pub gcs_bucket: ::prost::alloc::string::String,
+    /// Optional. Defines the relative storage path in the Cloud Storage bucket
+    /// where the diagnostic logs will be written: Default path will be the root
+    /// directory of the Cloud Storage bucket
+    /// (`gs://$GCS_BUCKET/$DATE_$TIME.tar.gz`)
+    /// Example of full path where Log file will be written:
+    /// `gs://$GCS_BUCKET/$RELATIVE_PATH/`
+    #[prost(string, tag = "2")]
+    pub relative_path: ::prost::alloc::string::String,
+    /// Optional. Enables flag to repair service for instance
+    #[prost(bool, tag = "3")]
+    pub repair_flag_enabled: bool,
+    /// Optional. Enables flag to capture packets from the instance for 30 seconds
+    #[prost(bool, tag = "4")]
+    pub packet_capture_flag_enabled: bool,
+    /// Optional. Enables flag to copy all `/home/jupyter` folder contents
+    #[prost(bool, tag = "5")]
+    pub copy_home_files_flag_enabled: bool,
 }
 /// Definition of a software environment that is used to start a notebook
 /// instance.
@@ -2157,121 +2157,6 @@ pub mod execution {
         }
     }
 }
-/// The definition of a schedule.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Schedule {
-    /// Output only. The name of this schedule. Format:
-    /// `projects/{project_id}/locations/{location}/schedules/{schedule_id}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Display name used for UI purposes.
-    /// Name can only contain alphanumeric characters, hyphens `-`,
-    /// and underscores `_`.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// A brief description of this environment.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    #[prost(enumeration = "schedule::State", tag = "4")]
-    pub state: i32,
-    /// Cron-tab formatted schedule by which the job will execute.
-    /// Format: minute, hour, day of month, month, day of week,
-    /// e.g. `0 0 * * WED` = every Wednesday
-    /// More examples: <https://crontab.guru/examples.html>
-    #[prost(string, tag = "5")]
-    pub cron_schedule: ::prost::alloc::string::String,
-    /// Timezone on which the cron_schedule.
-    /// The value of this field must be a time zone name from the tz database.
-    /// TZ Database: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>
-    ///
-    /// Note that some time zones include a provision for daylight savings time.
-    /// The rules for daylight saving time are determined by the chosen tz.
-    /// For UTC use the string "utc". If a time zone is not specified,
-    /// the default will be in UTC (also known as GMT).
-    #[prost(string, tag = "6")]
-    pub time_zone: ::prost::alloc::string::String,
-    /// Output only. Time the schedule was created.
-    #[prost(message, optional, tag = "7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Time the schedule was last updated.
-    #[prost(message, optional, tag = "8")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Notebook Execution Template corresponding to this schedule.
-    #[prost(message, optional, tag = "9")]
-    pub execution_template: ::core::option::Option<ExecutionTemplate>,
-    /// Output only. The most recent execution names triggered from this schedule and their
-    /// corresponding states.
-    #[prost(message, repeated, tag = "10")]
-    pub recent_executions: ::prost::alloc::vec::Vec<Execution>,
-}
-/// Nested message and enum types in `Schedule`.
-pub mod schedule {
-    /// State of the job.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// The job is executing normally.
-        Enabled = 1,
-        /// The job is paused by the user. It will not execute. A user can
-        /// intentionally pause the job using
-        /// \[PauseJobRequest][\].
-        Paused = 2,
-        /// The job is disabled by the system due to error. The user
-        /// cannot directly set a job to be disabled.
-        Disabled = 3,
-        /// The job state resulting from a failed \[CloudScheduler.UpdateJob][\]
-        /// operation. To recover a job from this state, retry
-        /// \[CloudScheduler.UpdateJob][\] until a successful response is received.
-        UpdateFailed = 4,
-        /// The schedule resource is being created.
-        Initializing = 5,
-        /// The schedule resource is being deleted.
-        Deleting = 6,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Enabled => "ENABLED",
-                State::Paused => "PAUSED",
-                State::Disabled => "DISABLED",
-                State::UpdateFailed => "UPDATE_FAILED",
-                State::Initializing => "INITIALIZING",
-                State::Deleting => "DELETING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ENABLED" => Some(Self::Enabled),
-                "PAUSED" => Some(Self::Paused),
-                "DISABLED" => Some(Self::Disabled),
-                "UPDATE_FAILED" => Some(Self::UpdateFailed),
-                "INITIALIZING" => Some(Self::Initializing),
-                "DELETING" => Some(Self::Deleting),
-                _ => None,
-            }
-        }
-    }
-}
 /// Reservation Affinity for consuming Zonal reservation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3099,6 +2984,121 @@ pub struct InstanceConfig {
     /// Verifies core internal services are running.
     #[prost(bool, tag = "2")]
     pub enable_health_monitoring: bool,
+}
+/// The definition of a schedule.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Schedule {
+    /// Output only. The name of this schedule. Format:
+    /// `projects/{project_id}/locations/{location}/schedules/{schedule_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Display name used for UI purposes.
+    /// Name can only contain alphanumeric characters, hyphens `-`,
+    /// and underscores `_`.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// A brief description of this environment.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    #[prost(enumeration = "schedule::State", tag = "4")]
+    pub state: i32,
+    /// Cron-tab formatted schedule by which the job will execute.
+    /// Format: minute, hour, day of month, month, day of week,
+    /// e.g. `0 0 * * WED` = every Wednesday
+    /// More examples: <https://crontab.guru/examples.html>
+    #[prost(string, tag = "5")]
+    pub cron_schedule: ::prost::alloc::string::String,
+    /// Timezone on which the cron_schedule.
+    /// The value of this field must be a time zone name from the tz database.
+    /// TZ Database: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>
+    ///
+    /// Note that some time zones include a provision for daylight savings time.
+    /// The rules for daylight saving time are determined by the chosen tz.
+    /// For UTC use the string "utc". If a time zone is not specified,
+    /// the default will be in UTC (also known as GMT).
+    #[prost(string, tag = "6")]
+    pub time_zone: ::prost::alloc::string::String,
+    /// Output only. Time the schedule was created.
+    #[prost(message, optional, tag = "7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Time the schedule was last updated.
+    #[prost(message, optional, tag = "8")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Notebook Execution Template corresponding to this schedule.
+    #[prost(message, optional, tag = "9")]
+    pub execution_template: ::core::option::Option<ExecutionTemplate>,
+    /// Output only. The most recent execution names triggered from this schedule and their
+    /// corresponding states.
+    #[prost(message, repeated, tag = "10")]
+    pub recent_executions: ::prost::alloc::vec::Vec<Execution>,
+}
+/// Nested message and enum types in `Schedule`.
+pub mod schedule {
+    /// State of the job.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// The job is executing normally.
+        Enabled = 1,
+        /// The job is paused by the user. It will not execute. A user can
+        /// intentionally pause the job using
+        /// \[PauseJobRequest][\].
+        Paused = 2,
+        /// The job is disabled by the system due to error. The user
+        /// cannot directly set a job to be disabled.
+        Disabled = 3,
+        /// The job state resulting from a failed \[CloudScheduler.UpdateJob][\]
+        /// operation. To recover a job from this state, retry
+        /// \[CloudScheduler.UpdateJob][\] until a successful response is received.
+        UpdateFailed = 4,
+        /// The schedule resource is being created.
+        Initializing = 5,
+        /// The schedule resource is being deleted.
+        Deleting = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Enabled => "ENABLED",
+                State::Paused => "PAUSED",
+                State::Disabled => "DISABLED",
+                State::UpdateFailed => "UPDATE_FAILED",
+                State::Initializing => "INITIALIZING",
+                State::Deleting => "DELETING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ENABLED" => Some(Self::Enabled),
+                "PAUSED" => Some(Self::Paused),
+                "DISABLED" => Some(Self::Disabled),
+                "UPDATE_FAILED" => Some(Self::UpdateFailed),
+                "INITIALIZING" => Some(Self::Initializing),
+                "DELETING" => Some(Self::Deleting),
+                _ => None,
+            }
+        }
+    }
 }
 /// Represents the metadata of the long-running operation.
 #[allow(clippy::derive_partial_eq_without_eq)]

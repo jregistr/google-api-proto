@@ -105,47 +105,6 @@ pub mod static_image_prompt {
         }
     }
 }
-/// A card for presenting a collection of options to select from.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticCollectionPrompt {
-    /// Optional. Title of the collection.
-    #[prost(string, tag = "1")]
-    pub title: ::prost::alloc::string::String,
-    /// Optional. Subtitle of the collection.
-    #[prost(string, tag = "2")]
-    pub subtitle: ::prost::alloc::string::String,
-    /// Required. Collection items.
-    #[prost(message, repeated, tag = "3")]
-    pub items: ::prost::alloc::vec::Vec<static_collection_prompt::CollectionItem>,
-    /// Optional. Type of image display option.
-    #[prost(enumeration = "static_image_prompt::ImageFill", tag = "4")]
-    pub image_fill: i32,
-}
-/// Nested message and enum types in `StaticCollectionPrompt`.
-pub mod static_collection_prompt {
-    /// An item in the collection.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CollectionItem {
-        /// Required. The NLU key that matches the entry key name in the associated
-        /// Type. When item tapped, this key will be posted back as a select option
-        /// parameter.
-        #[prost(string, tag = "1")]
-        pub key: ::prost::alloc::string::String,
-        /// Required. Title of the item. When tapped, this text will be
-        /// posted back to the conversation verbatim as if the user had typed it.
-        /// Each title must be unique among the set of items.
-        #[prost(string, tag = "2")]
-        pub title: ::prost::alloc::string::String,
-        /// Optional. Body text of the item.
-        #[prost(string, tag = "3")]
-        pub description: ::prost::alloc::string::String,
-        /// Optional. Item image.
-        #[prost(message, optional, tag = "4")]
-        pub image: ::core::option::Option<super::StaticImagePrompt>,
-    }
-}
 /// Defines a link which will be displayed as a suggestion chip and can be opened
 /// by the user.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -200,115 +159,29 @@ impl UrlHint {
         }
     }
 }
-/// A table card for displaying a table of text.
+/// A basic card for displaying some information, e.g. an image and/or text.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticTablePrompt {
-    /// Optional. Overall title of the table. Must be set if subtitle is set.
+pub struct StaticCardPrompt {
+    /// Optional. Overall title of the card.
     #[prost(string, tag = "1")]
     pub title: ::prost::alloc::string::String,
-    /// Optional. Subtitle for the table.
+    /// Optional. Subtitle of the card.
     #[prost(string, tag = "2")]
     pub subtitle: ::prost::alloc::string::String,
-    /// Optional. Image associated with the table.
-    #[prost(message, optional, tag = "3")]
+    /// Required. Body text of the card which is needed unless image is present. Supports a
+    /// limited set of markdown syntax for formatting.
+    #[prost(string, tag = "3")]
+    pub text: ::prost::alloc::string::String,
+    /// Optional. A hero image for the card. The height is fixed to 192dp.
+    #[prost(message, optional, tag = "4")]
     pub image: ::core::option::Option<StaticImagePrompt>,
-    /// Optional. Headers and alignment of columns.
-    #[prost(message, repeated, tag = "4")]
-    pub columns: ::prost::alloc::vec::Vec<TableColumn>,
-    /// Optional. Row data of the table. The first 3 rows are guaranteed to be shown but
-    /// others might be cut on certain surfaces. Please test with the simulator to
-    /// see which rows will be shown for a given surface. On surfaces that support
-    /// the `WEB_BROWSER` capability, you can point the user to
-    /// a web page with more data.
-    #[prost(message, repeated, tag = "5")]
-    pub rows: ::prost::alloc::vec::Vec<TableRow>,
-    /// Optional. Button.
+    /// Optional. How the image background will be filled.
+    #[prost(enumeration = "static_image_prompt::ImageFill", tag = "5")]
+    pub image_fill: i32,
+    /// Optional. A clickable button to be shown in the Card.
     #[prost(message, optional, tag = "6")]
     pub button: ::core::option::Option<StaticLinkPrompt>,
-}
-/// Describes a column in the table.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableColumn {
-    /// Header text for the column.
-    #[prost(string, tag = "1")]
-    pub header: ::prost::alloc::string::String,
-    /// Horizontal alignment of content w.r.t column. If unspecified, content
-    /// will be aligned to the leading edge.
-    #[prost(enumeration = "table_column::HorizontalAlignment", tag = "2")]
-    pub align: i32,
-}
-/// Nested message and enum types in `TableColumn`.
-pub mod table_column {
-    /// The alignment of the content within the cell.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum HorizontalAlignment {
-        /// HorizontalAlignment unspecified.
-        Unspecified = 0,
-        /// Leading edge of the cell. This is the default.
-        Leading = 1,
-        /// Content is aligned to the center of the column.
-        Center = 2,
-        /// Content is aligned to the trailing edge of the column.
-        Trailing = 3,
-    }
-    impl HorizontalAlignment {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                HorizontalAlignment::Unspecified => "UNSPECIFIED",
-                HorizontalAlignment::Leading => "LEADING",
-                HorizontalAlignment::Center => "CENTER",
-                HorizontalAlignment::Trailing => "TRAILING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "LEADING" => Some(Self::Leading),
-                "CENTER" => Some(Self::Center),
-                "TRAILING" => Some(Self::Trailing),
-                _ => None,
-            }
-        }
-    }
-}
-/// Describes a cell in a row.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableCell {
-    /// Text content of the cell.
-    #[prost(string, tag = "1")]
-    pub text: ::prost::alloc::string::String,
-}
-/// Describes a row in the table.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableRow {
-    /// Cells in this row. The first 3 cells are guaranteed to be shown but
-    /// others might be cut on certain surfaces. Please test with the simulator
-    /// to see which cells will be shown for a given surface.
-    #[prost(message, repeated, tag = "1")]
-    pub cells: ::prost::alloc::vec::Vec<TableCell>,
-    /// Indicates whether there should be a divider after each row.
-    #[prost(bool, tag = "2")]
-    pub divider: bool,
 }
 /// Presents a set of web documents as a collection of large-tile items. Items
 /// may be selected to launch their associated web document in a web viewer.
@@ -349,6 +222,47 @@ pub mod static_collection_browse_prompt {
         pub open_uri_action: ::core::option::Option<super::OpenUrl>,
     }
 }
+/// A card for presenting a collection of options to select from.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StaticCollectionPrompt {
+    /// Optional. Title of the collection.
+    #[prost(string, tag = "1")]
+    pub title: ::prost::alloc::string::String,
+    /// Optional. Subtitle of the collection.
+    #[prost(string, tag = "2")]
+    pub subtitle: ::prost::alloc::string::String,
+    /// Required. Collection items.
+    #[prost(message, repeated, tag = "3")]
+    pub items: ::prost::alloc::vec::Vec<static_collection_prompt::CollectionItem>,
+    /// Optional. Type of image display option.
+    #[prost(enumeration = "static_image_prompt::ImageFill", tag = "4")]
+    pub image_fill: i32,
+}
+/// Nested message and enum types in `StaticCollectionPrompt`.
+pub mod static_collection_prompt {
+    /// An item in the collection.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CollectionItem {
+        /// Required. The NLU key that matches the entry key name in the associated
+        /// Type. When item tapped, this key will be posted back as a select option
+        /// parameter.
+        #[prost(string, tag = "1")]
+        pub key: ::prost::alloc::string::String,
+        /// Required. Title of the item. When tapped, this text will be
+        /// posted back to the conversation verbatim as if the user had typed it.
+        /// Each title must be unique among the set of items.
+        #[prost(string, tag = "2")]
+        pub title: ::prost::alloc::string::String,
+        /// Optional. Body text of the item.
+        #[prost(string, tag = "3")]
+        pub description: ::prost::alloc::string::String,
+        /// Optional. Item image.
+        #[prost(message, optional, tag = "4")]
+        pub image: ::core::option::Option<super::StaticImagePrompt>,
+    }
+}
 /// A card for presenting a list of options to select from.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -385,30 +299,6 @@ pub mod static_list_prompt {
         #[prost(message, optional, tag = "4")]
         pub image: ::core::option::Option<super::StaticImagePrompt>,
     }
-}
-/// A basic card for displaying some information, e.g. an image and/or text.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StaticCardPrompt {
-    /// Optional. Overall title of the card.
-    #[prost(string, tag = "1")]
-    pub title: ::prost::alloc::string::String,
-    /// Optional. Subtitle of the card.
-    #[prost(string, tag = "2")]
-    pub subtitle: ::prost::alloc::string::String,
-    /// Required. Body text of the card which is needed unless image is present. Supports a
-    /// limited set of markdown syntax for formatting.
-    #[prost(string, tag = "3")]
-    pub text: ::prost::alloc::string::String,
-    /// Optional. A hero image for the card. The height is fixed to 192dp.
-    #[prost(message, optional, tag = "4")]
-    pub image: ::core::option::Option<StaticImagePrompt>,
-    /// Optional. How the image background will be filled.
-    #[prost(enumeration = "static_image_prompt::ImageFill", tag = "5")]
-    pub image_fill: i32,
-    /// Optional. A clickable button to be shown in the Card.
-    #[prost(message, optional, tag = "6")]
-    pub button: ::core::option::Option<StaticLinkPrompt>,
 }
 /// Contains information about the media, such as name, description, url, etc.
 /// Next id: 11
@@ -612,6 +502,116 @@ pub mod media_image {
         #[prost(message, tag = "2")]
         Icon(super::StaticImagePrompt),
     }
+}
+/// A table card for displaying a table of text.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StaticTablePrompt {
+    /// Optional. Overall title of the table. Must be set if subtitle is set.
+    #[prost(string, tag = "1")]
+    pub title: ::prost::alloc::string::String,
+    /// Optional. Subtitle for the table.
+    #[prost(string, tag = "2")]
+    pub subtitle: ::prost::alloc::string::String,
+    /// Optional. Image associated with the table.
+    #[prost(message, optional, tag = "3")]
+    pub image: ::core::option::Option<StaticImagePrompt>,
+    /// Optional. Headers and alignment of columns.
+    #[prost(message, repeated, tag = "4")]
+    pub columns: ::prost::alloc::vec::Vec<TableColumn>,
+    /// Optional. Row data of the table. The first 3 rows are guaranteed to be shown but
+    /// others might be cut on certain surfaces. Please test with the simulator to
+    /// see which rows will be shown for a given surface. On surfaces that support
+    /// the `WEB_BROWSER` capability, you can point the user to
+    /// a web page with more data.
+    #[prost(message, repeated, tag = "5")]
+    pub rows: ::prost::alloc::vec::Vec<TableRow>,
+    /// Optional. Button.
+    #[prost(message, optional, tag = "6")]
+    pub button: ::core::option::Option<StaticLinkPrompt>,
+}
+/// Describes a column in the table.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableColumn {
+    /// Header text for the column.
+    #[prost(string, tag = "1")]
+    pub header: ::prost::alloc::string::String,
+    /// Horizontal alignment of content w.r.t column. If unspecified, content
+    /// will be aligned to the leading edge.
+    #[prost(enumeration = "table_column::HorizontalAlignment", tag = "2")]
+    pub align: i32,
+}
+/// Nested message and enum types in `TableColumn`.
+pub mod table_column {
+    /// The alignment of the content within the cell.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum HorizontalAlignment {
+        /// HorizontalAlignment unspecified.
+        Unspecified = 0,
+        /// Leading edge of the cell. This is the default.
+        Leading = 1,
+        /// Content is aligned to the center of the column.
+        Center = 2,
+        /// Content is aligned to the trailing edge of the column.
+        Trailing = 3,
+    }
+    impl HorizontalAlignment {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                HorizontalAlignment::Unspecified => "UNSPECIFIED",
+                HorizontalAlignment::Leading => "LEADING",
+                HorizontalAlignment::Center => "CENTER",
+                HorizontalAlignment::Trailing => "TRAILING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "LEADING" => Some(Self::Leading),
+                "CENTER" => Some(Self::Center),
+                "TRAILING" => Some(Self::Trailing),
+                _ => None,
+            }
+        }
+    }
+}
+/// Describes a cell in a row.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableCell {
+    /// Text content of the cell.
+    #[prost(string, tag = "1")]
+    pub text: ::prost::alloc::string::String,
+}
+/// Describes a row in the table.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableRow {
+    /// Cells in this row. The first 3 cells are guaranteed to be shown but
+    /// others might be cut on certain surfaces. Please test with the simulator
+    /// to see which cells will be shown for a given surface.
+    #[prost(message, repeated, tag = "1")]
+    pub cells: ::prost::alloc::vec::Vec<TableCell>,
+    /// Indicates whether there should be a divider after each row.
+    #[prost(bool, tag = "2")]
+    pub divider: bool,
 }
 /// A placeholder for the Content part of a StaticPrompt.
 #[allow(clippy::derive_partial_eq_without_eq)]
