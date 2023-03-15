@@ -1,39 +1,3 @@
-/// A vertex represents a 2D point in the image.
-/// NOTE: the vertex coordinates are in the same scale as the original image.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vertex {
-    /// X coordinate.
-    #[prost(int32, tag = "1")]
-    pub x: i32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(int32, tag = "2")]
-    pub y: i32,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the normalized vertex coordinates are relative to the original image
-/// and range from 0 to 1.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// X coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Y coordinate (starts from the top of the image).
-    #[prost(float, tag = "2")]
-    pub y: f32,
-}
-/// A bounding polygon for the detected image annotation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// The bounding polygon vertices.
-    #[prost(message, repeated, tag = "1")]
-    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
-    /// The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag = "2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
-}
 /// Encodes the detailed information of a barcode.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -80,244 +44,41 @@ pub struct Barcode {
     #[prost(string, tag = "3")]
     pub raw_value: ::prost::alloc::string::String,
 }
-/// A processor type is responsible for performing a certain document
-/// understanding task on a certain type of document.
+/// A vertex represents a 2D point in the image.
+/// NOTE: the vertex coordinates are in the same scale as the original image.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessorType {
-    /// The resource name of the processor type.
-    /// Format: `projects/{project}/processorTypes/{processor_type}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The processor category, used by UI to group processor types.
-    #[prost(string, tag = "3")]
-    pub category: ::prost::alloc::string::String,
-    /// The locations in which this processor is available.
-    #[prost(message, repeated, tag = "4")]
-    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
-    /// Whether the processor type allows creation. If true, users can create a
-    /// processor of this processor type. Otherwise, users need to request access.
-    #[prost(bool, tag = "6")]
-    pub allow_creation: bool,
-    /// Launch stage of the processor type
-    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "8")]
-    pub launch_stage: i32,
-    /// A set of Cloud Storage URIs of sample documents for this processor.
-    #[prost(string, repeated, tag = "9")]
-    pub sample_document_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+pub struct Vertex {
+    /// X coordinate.
+    #[prost(int32, tag = "1")]
+    pub x: i32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(int32, tag = "2")]
+    pub y: i32,
 }
-/// Nested message and enum types in `ProcessorType`.
-pub mod processor_type {
-    /// The location information about where the processor is available.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LocationInfo {
-        /// The location id, currently must be one of [us, eu].
-        #[prost(string, tag = "1")]
-        pub location_id: ::prost::alloc::string::String,
-    }
-}
-/// Gives a short summary of an evaluation, and links to the evaluation itself.
+/// A vertex represents a 2D point in the image.
+/// NOTE: the normalized vertex coordinates are relative to the original image
+/// and range from 0 to 1.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EvaluationReference {
-    /// The resource name of the Long Running Operation for the evaluation.
-    #[prost(string, tag = "1")]
-    pub operation: ::prost::alloc::string::String,
-    /// The resource name of the evaluation.
-    #[prost(string, tag = "2")]
-    pub evaluation: ::prost::alloc::string::String,
-    /// An aggregate of the statistics for the evaluation with fuzzy matching on.
-    #[prost(message, optional, tag = "4")]
-    pub aggregate_metrics: ::core::option::Option<evaluation::Metrics>,
-    /// An aggregate of the statistics for the evaluation with fuzzy matching off.
-    #[prost(message, optional, tag = "5")]
-    pub aggregate_metrics_exact: ::core::option::Option<evaluation::Metrics>,
+pub struct NormalizedVertex {
+    /// X coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Y coordinate (starts from the top of the image).
+    #[prost(float, tag = "2")]
+    pub y: f32,
 }
-/// An evaluation of a ProcessorVersion's performance.
+/// A bounding polygon for the detected image annotation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Evaluation {
-    /// The resource name of the evaluation.
-    /// Format:
-    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}/evaluations/{evaluation}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The time that the evaluation was created.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Counters for the documents used in the evaluation.
-    #[prost(message, optional, tag = "5")]
-    pub document_counters: ::core::option::Option<evaluation::Counters>,
-    /// Metrics for all the entities in aggregate.
-    #[prost(message, optional, tag = "3")]
-    pub all_entities_metrics: ::core::option::Option<evaluation::MultiConfidenceMetrics>,
-    /// Metrics across confidence levels, for different entities.
-    #[prost(btree_map = "string, message", tag = "4")]
-    pub entity_metrics: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        evaluation::MultiConfidenceMetrics,
-    >,
-    /// The KMS key name used for encryption.
-    #[prost(string, tag = "6")]
-    pub kms_key_name: ::prost::alloc::string::String,
-    /// The KMS key version with which data is encrypted.
-    #[prost(string, tag = "7")]
-    pub kms_key_version_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Evaluation`.
-pub mod evaluation {
-    /// Evaluation counters for the documents that were used.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Counters {
-        /// How many documents were sent for evaluation.
-        #[prost(int32, tag = "1")]
-        pub input_documents_count: i32,
-        /// How many documents were not included in the evaluation as they didn't
-        /// pass validation.
-        #[prost(int32, tag = "2")]
-        pub invalid_documents_count: i32,
-        /// How many documents were not included in the evaluation as Document AI
-        /// failed to process them.
-        #[prost(int32, tag = "3")]
-        pub failed_documents_count: i32,
-        /// How many documents were used in the evaluation.
-        #[prost(int32, tag = "4")]
-        pub evaluated_documents_count: i32,
-    }
-    /// Evaluation metrics, either in aggregate or about a specific entity.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Metrics {
-        /// The calculated precision.
-        #[prost(float, tag = "1")]
-        pub precision: f32,
-        /// The calculated recall.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// The calculated f1 score.
-        #[prost(float, tag = "3")]
-        pub f1_score: f32,
-        /// The amount of occurrences in predicted documents.
-        #[prost(int32, tag = "4")]
-        pub predicted_occurrences_count: i32,
-        /// The amount of occurrences in ground truth documents.
-        #[prost(int32, tag = "5")]
-        pub ground_truth_occurrences_count: i32,
-        /// The amount of documents with a predicted occurrence.
-        #[prost(int32, tag = "10")]
-        pub predicted_document_count: i32,
-        /// The amount of documents with a ground truth occurrence.
-        #[prost(int32, tag = "11")]
-        pub ground_truth_document_count: i32,
-        /// The amount of true positives.
-        #[prost(int32, tag = "6")]
-        pub true_positives_count: i32,
-        /// The amount of false positives.
-        #[prost(int32, tag = "7")]
-        pub false_positives_count: i32,
-        /// The amount of false negatives.
-        #[prost(int32, tag = "8")]
-        pub false_negatives_count: i32,
-        /// The amount of documents that had an occurrence of this label.
-        #[prost(int32, tag = "9")]
-        pub total_documents_count: i32,
-    }
-    /// Evaluations metrics, at a specific confidence level.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceLevelMetrics {
-        /// The confidence level.
-        #[prost(float, tag = "1")]
-        pub confidence_level: f32,
-        /// The metrics at the specific confidence level.
-        #[prost(message, optional, tag = "2")]
-        pub metrics: ::core::option::Option<Metrics>,
-    }
-    /// Metrics across multiple confidence levels.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MultiConfidenceMetrics {
-        /// Metrics across confidence levels with fuzzy matching enabled.
-        #[prost(message, repeated, tag = "1")]
-        pub confidence_level_metrics: ::prost::alloc::vec::Vec<ConfidenceLevelMetrics>,
-        /// Metrics across confidence levels with only exact matching.
-        #[prost(message, repeated, tag = "4")]
-        pub confidence_level_metrics_exact: ::prost::alloc::vec::Vec<
-            ConfidenceLevelMetrics,
-        >,
-        /// The calculated area under the precision recall curve (AUPRC), computed by
-        /// integrating over all confidence thresholds.
-        #[prost(float, tag = "2")]
-        pub auprc: f32,
-        /// The Estimated Calibration Error (ECE) of the confidence of the predicted
-        /// entities.
-        #[prost(float, tag = "3")]
-        pub estimated_calibration_error: f32,
-        /// The AUPRC for metrics with fuzzy matching disabled, i.e., exact matching
-        /// only.
-        #[prost(float, tag = "5")]
-        pub auprc_exact: f32,
-        /// The ECE for the predicted entities with fuzzy matching disabled, i.e.,
-        /// exact matching only.
-        #[prost(float, tag = "6")]
-        pub estimated_calibration_error_exact: f32,
-        /// The metrics type for the label.
-        #[prost(enumeration = "multi_confidence_metrics::MetricsType", tag = "7")]
-        pub metrics_type: i32,
-    }
-    /// Nested message and enum types in `MultiConfidenceMetrics`.
-    pub mod multi_confidence_metrics {
-        /// A type that determines how metrics should be interpreted.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum MetricsType {
-            /// The metrics type is unspecified. By default, metrics without a
-            /// particular specification are for leaf entity types (i.e., top-level
-            /// entity types without child types, or child types which are not
-            /// parent types themselves).
-            Unspecified = 0,
-            /// Indicates whether metrics for this particular label type represent an
-            /// aggregate of metrics for other types instead of being based on actual
-            /// TP/FP/FN values for the label type. Metrics for parent (i.e., non-leaf)
-            /// entity types are an aggregate of metrics for their children.
-            Aggregate = 1,
-        }
-        impl MetricsType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MetricsType::Unspecified => "METRICS_TYPE_UNSPECIFIED",
-                    MetricsType::Aggregate => "AGGREGATE",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "METRICS_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "AGGREGATE" => Some(Self::Aggregate),
-                    _ => None,
-                }
-            }
-        }
-    }
+pub struct BoundingPoly {
+    /// The bounding polygon vertices.
+    #[prost(message, repeated, tag = "1")]
+    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
+    /// The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag = "2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
 }
 /// Document represents the canonical document resource in Document AI. It is an
 /// interchange format that provides insights into documents and allows for
@@ -1759,80 +1520,201 @@ pub mod document_schema {
         pub skip_naming_validation: bool,
     }
 }
-/// The common metadata for long running operations.
+/// Gives a short summary of an evaluation, and links to the evaluation itself.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommonOperationMetadata {
-    /// The state of the operation.
-    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
-    pub state: i32,
-    /// A message providing more details about the current state of processing.
+pub struct EvaluationReference {
+    /// The resource name of the Long Running Operation for the evaluation.
+    #[prost(string, tag = "1")]
+    pub operation: ::prost::alloc::string::String,
+    /// The resource name of the evaluation.
     #[prost(string, tag = "2")]
-    pub state_message: ::prost::alloc::string::String,
-    /// A related resource to this operation.
-    #[prost(string, tag = "5")]
-    pub resource: ::prost::alloc::string::String,
-    /// The creation time of the operation.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last update time of the operation.
+    pub evaluation: ::prost::alloc::string::String,
+    /// An aggregate of the statistics for the evaluation with fuzzy matching on.
     #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub aggregate_metrics: ::core::option::Option<evaluation::Metrics>,
+    /// An aggregate of the statistics for the evaluation with fuzzy matching off.
+    #[prost(message, optional, tag = "5")]
+    pub aggregate_metrics_exact: ::core::option::Option<evaluation::Metrics>,
 }
-/// Nested message and enum types in `CommonOperationMetadata`.
-pub mod common_operation_metadata {
-    /// State of the longrunning operation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// Operation is still running.
-        Running = 1,
-        /// Operation is being cancelled.
-        Cancelling = 2,
-        /// Operation succeeded.
-        Succeeded = 3,
-        /// Operation failed.
-        Failed = 4,
-        /// Operation is cancelled.
-        Cancelled = 5,
+/// An evaluation of a ProcessorVersion's performance.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Evaluation {
+    /// The resource name of the evaluation.
+    /// Format:
+    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}/evaluations/{evaluation}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The time that the evaluation was created.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Counters for the documents used in the evaluation.
+    #[prost(message, optional, tag = "5")]
+    pub document_counters: ::core::option::Option<evaluation::Counters>,
+    /// Metrics for all the entities in aggregate.
+    #[prost(message, optional, tag = "3")]
+    pub all_entities_metrics: ::core::option::Option<evaluation::MultiConfidenceMetrics>,
+    /// Metrics across confidence levels, for different entities.
+    #[prost(btree_map = "string, message", tag = "4")]
+    pub entity_metrics: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        evaluation::MultiConfidenceMetrics,
+    >,
+    /// The KMS key name used for encryption.
+    #[prost(string, tag = "6")]
+    pub kms_key_name: ::prost::alloc::string::String,
+    /// The KMS key version with which data is encrypted.
+    #[prost(string, tag = "7")]
+    pub kms_key_version_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Evaluation`.
+pub mod evaluation {
+    /// Evaluation counters for the documents that were used.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Counters {
+        /// How many documents were sent for evaluation.
+        #[prost(int32, tag = "1")]
+        pub input_documents_count: i32,
+        /// How many documents were not included in the evaluation as they didn't
+        /// pass validation.
+        #[prost(int32, tag = "2")]
+        pub invalid_documents_count: i32,
+        /// How many documents were not included in the evaluation as Document AI
+        /// failed to process them.
+        #[prost(int32, tag = "3")]
+        pub failed_documents_count: i32,
+        /// How many documents were used in the evaluation.
+        #[prost(int32, tag = "4")]
+        pub evaluated_documents_count: i32,
     }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Running => "RUNNING",
-                State::Cancelling => "CANCELLING",
-                State::Succeeded => "SUCCEEDED",
-                State::Failed => "FAILED",
-                State::Cancelled => "CANCELLED",
-            }
+    /// Evaluation metrics, either in aggregate or about a specific entity.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metrics {
+        /// The calculated precision.
+        #[prost(float, tag = "1")]
+        pub precision: f32,
+        /// The calculated recall.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// The calculated f1 score.
+        #[prost(float, tag = "3")]
+        pub f1_score: f32,
+        /// The amount of occurrences in predicted documents.
+        #[prost(int32, tag = "4")]
+        pub predicted_occurrences_count: i32,
+        /// The amount of occurrences in ground truth documents.
+        #[prost(int32, tag = "5")]
+        pub ground_truth_occurrences_count: i32,
+        /// The amount of documents with a predicted occurrence.
+        #[prost(int32, tag = "10")]
+        pub predicted_document_count: i32,
+        /// The amount of documents with a ground truth occurrence.
+        #[prost(int32, tag = "11")]
+        pub ground_truth_document_count: i32,
+        /// The amount of true positives.
+        #[prost(int32, tag = "6")]
+        pub true_positives_count: i32,
+        /// The amount of false positives.
+        #[prost(int32, tag = "7")]
+        pub false_positives_count: i32,
+        /// The amount of false negatives.
+        #[prost(int32, tag = "8")]
+        pub false_negatives_count: i32,
+        /// The amount of documents that had an occurrence of this label.
+        #[prost(int32, tag = "9")]
+        pub total_documents_count: i32,
+    }
+    /// Evaluations metrics, at a specific confidence level.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceLevelMetrics {
+        /// The confidence level.
+        #[prost(float, tag = "1")]
+        pub confidence_level: f32,
+        /// The metrics at the specific confidence level.
+        #[prost(message, optional, tag = "2")]
+        pub metrics: ::core::option::Option<Metrics>,
+    }
+    /// Metrics across multiple confidence levels.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MultiConfidenceMetrics {
+        /// Metrics across confidence levels with fuzzy matching enabled.
+        #[prost(message, repeated, tag = "1")]
+        pub confidence_level_metrics: ::prost::alloc::vec::Vec<ConfidenceLevelMetrics>,
+        /// Metrics across confidence levels with only exact matching.
+        #[prost(message, repeated, tag = "4")]
+        pub confidence_level_metrics_exact: ::prost::alloc::vec::Vec<
+            ConfidenceLevelMetrics,
+        >,
+        /// The calculated area under the precision recall curve (AUPRC), computed by
+        /// integrating over all confidence thresholds.
+        #[prost(float, tag = "2")]
+        pub auprc: f32,
+        /// The Estimated Calibration Error (ECE) of the confidence of the predicted
+        /// entities.
+        #[prost(float, tag = "3")]
+        pub estimated_calibration_error: f32,
+        /// The AUPRC for metrics with fuzzy matching disabled, i.e., exact matching
+        /// only.
+        #[prost(float, tag = "5")]
+        pub auprc_exact: f32,
+        /// The ECE for the predicted entities with fuzzy matching disabled, i.e.,
+        /// exact matching only.
+        #[prost(float, tag = "6")]
+        pub estimated_calibration_error_exact: f32,
+        /// The metrics type for the label.
+        #[prost(enumeration = "multi_confidence_metrics::MetricsType", tag = "7")]
+        pub metrics_type: i32,
+    }
+    /// Nested message and enum types in `MultiConfidenceMetrics`.
+    pub mod multi_confidence_metrics {
+        /// A type that determines how metrics should be interpreted.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MetricsType {
+            /// The metrics type is unspecified. By default, metrics without a
+            /// particular specification are for leaf entity types (i.e., top-level
+            /// entity types without child types, or child types which are not
+            /// parent types themselves).
+            Unspecified = 0,
+            /// Indicates whether metrics for this particular label type represent an
+            /// aggregate of metrics for other types instead of being based on actual
+            /// TP/FP/FN values for the label type. Metrics for parent (i.e., non-leaf)
+            /// entity types are an aggregate of metrics for their children.
+            Aggregate = 1,
         }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "RUNNING" => Some(Self::Running),
-                "CANCELLING" => Some(Self::Cancelling),
-                "SUCCEEDED" => Some(Self::Succeeded),
-                "FAILED" => Some(Self::Failed),
-                "CANCELLED" => Some(Self::Cancelled),
-                _ => None,
+        impl MetricsType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetricsType::Unspecified => "METRICS_TYPE_UNSPECIFIED",
+                    MetricsType::Aggregate => "AGGREGATE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "METRICS_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "AGGREGATE" => Some(Self::Aggregate),
+                    _ => None,
+                }
             }
         }
     }
@@ -2059,6 +1941,124 @@ pub mod processor {
                 "CREATING" => Some(Self::Creating),
                 "FAILED" => Some(Self::Failed),
                 "DELETING" => Some(Self::Deleting),
+                _ => None,
+            }
+        }
+    }
+}
+/// A processor type is responsible for performing a certain document
+/// understanding task on a certain type of document.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProcessorType {
+    /// The resource name of the processor type.
+    /// Format: `projects/{project}/processorTypes/{processor_type}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
+    #[prost(string, tag = "2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The processor category, used by UI to group processor types.
+    #[prost(string, tag = "3")]
+    pub category: ::prost::alloc::string::String,
+    /// The locations in which this processor is available.
+    #[prost(message, repeated, tag = "4")]
+    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
+    /// Whether the processor type allows creation. If true, users can create a
+    /// processor of this processor type. Otherwise, users need to request access.
+    #[prost(bool, tag = "6")]
+    pub allow_creation: bool,
+    /// Launch stage of the processor type
+    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "8")]
+    pub launch_stage: i32,
+    /// A set of Cloud Storage URIs of sample documents for this processor.
+    #[prost(string, repeated, tag = "9")]
+    pub sample_document_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `ProcessorType`.
+pub mod processor_type {
+    /// The location information about where the processor is available.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LocationInfo {
+        /// The location id, currently must be one of [us, eu].
+        #[prost(string, tag = "1")]
+        pub location_id: ::prost::alloc::string::String,
+    }
+}
+/// The common metadata for long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommonOperationMetadata {
+    /// The state of the operation.
+    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
+    pub state: i32,
+    /// A message providing more details about the current state of processing.
+    #[prost(string, tag = "2")]
+    pub state_message: ::prost::alloc::string::String,
+    /// A related resource to this operation.
+    #[prost(string, tag = "5")]
+    pub resource: ::prost::alloc::string::String,
+    /// The creation time of the operation.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last update time of the operation.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `CommonOperationMetadata`.
+pub mod common_operation_metadata {
+    /// State of the longrunning operation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// Operation is still running.
+        Running = 1,
+        /// Operation is being cancelled.
+        Cancelling = 2,
+        /// Operation succeeded.
+        Succeeded = 3,
+        /// Operation failed.
+        Failed = 4,
+        /// Operation is cancelled.
+        Cancelled = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "CANCELLING" => Some(Self::Cancelling),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
                 _ => None,
             }
         }

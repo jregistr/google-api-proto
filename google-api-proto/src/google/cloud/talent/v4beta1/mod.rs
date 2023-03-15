@@ -228,6 +228,109 @@ pub mod job_event {
         }
     }
 }
+/// The report event request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateClientEventRequest {
+    /// Required. Resource name of the tenant under which the event is created.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenant/bar". If tenant id is unspecified, a default tenant
+    /// is created, for example, "projects/foo".
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Events issued when end user interacts with customer's application
+    /// that uses Cloud Talent Solution.
+    #[prost(message, optional, tag = "2")]
+    pub client_event: ::core::option::Option<ClientEvent>,
+}
+/// Generated client implementations.
+pub mod event_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service handles client event report.
+    #[derive(Debug, Clone)]
+    pub struct EventServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> EventServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> EventServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            EventServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Report events issued when end user interacts with customer's application
+        /// that uses Cloud Talent Solution. You may inspect the created events in
+        /// [self service
+        /// tools](https://console.cloud.google.com/talent-solution/overview).
+        /// [Learn
+        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
+        /// about self service tools.
+        pub async fn create_client_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
+        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.EventService/CreateClientEvent",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Message representing a period of time between two timestamps.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1639,6 +1742,465 @@ impl CommuteMethod {
         }
     }
 }
+/// A Company resource represents a company in the service. A company is the
+/// entity that owns job postings, that is, the hiring entity responsible for
+/// employing applicants for the job position.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Company {
+    /// Required during company update.
+    ///
+    /// The resource name for a company. This is generated by the service when a
+    /// company is created.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used. For
+    /// example, "projects/foo/companies/bar".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the company, for example, "Google LLC".
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. Client side company identifier, used to uniquely identify the
+    /// company.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag = "3")]
+    pub external_id: ::prost::alloc::string::String,
+    /// The employer's company size.
+    #[prost(enumeration = "CompanySize", tag = "4")]
+    pub size: i32,
+    /// The street address of the company's main headquarters, which may be
+    /// different from the job location. The service attempts
+    /// to geolocate the provided address, and populates a more specific
+    /// location wherever possible in
+    /// \[DerivedInfo.headquarters_location][google.cloud.talent.v4beta1.Company.DerivedInfo.headquarters_location\].
+    #[prost(string, tag = "5")]
+    pub headquarters_address: ::prost::alloc::string::String,
+    /// Set to true if it is the hiring agency that post jobs for other
+    /// employers.
+    ///
+    /// Defaults to false if not provided.
+    #[prost(bool, tag = "6")]
+    pub hiring_agency: bool,
+    /// Equal Employment Opportunity legal disclaimer text to be
+    /// associated with all jobs, and typically to be displayed in all
+    /// roles.
+    ///
+    /// The maximum number of allowed characters is 500.
+    #[prost(string, tag = "7")]
+    pub eeo_text: ::prost::alloc::string::String,
+    /// The URI representing the company's primary web site or home page,
+    /// for example, "<https://www.google.com".>
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag = "8")]
+    pub website_uri: ::prost::alloc::string::String,
+    /// The URI to employer's career site or careers page on the employer's web
+    /// site, for example, "<https://careers.google.com".>
+    #[prost(string, tag = "9")]
+    pub career_site_uri: ::prost::alloc::string::String,
+    /// A URI that hosts the employer's company logo.
+    #[prost(string, tag = "10")]
+    pub image_uri: ::prost::alloc::string::String,
+    /// This field is deprecated. Please set the searchability of the custom
+    /// attribute in the
+    /// \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\]
+    /// going forward.
+    ///
+    /// A list of keys of filterable
+    /// \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\],
+    /// whose corresponding `string_values` are used in keyword searches. Jobs with
+    /// `string_values` under these specified field keys are returned if any
+    /// of the values match the search keyword. Custom field values with
+    /// parenthesis, brackets and special symbols are not searchable as-is,
+    /// and those keyword queries must be surrounded by quotes.
+    #[deprecated]
+    #[prost(string, repeated, tag = "11")]
+    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Derived details about the company.
+    #[prost(message, optional, tag = "12")]
+    pub derived_info: ::core::option::Option<company::DerivedInfo>,
+    /// Output only. Indicates whether a company is flagged to be suspended from
+    /// public availability by the service when job content appears suspicious,
+    /// abusive, or spammy.
+    #[prost(bool, tag = "13")]
+    pub suspended: bool,
+}
+/// Nested message and enum types in `Company`.
+pub mod company {
+    /// Derived details about the company.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DerivedInfo {
+        /// A structured headquarters location of the company, resolved from
+        /// \[Company.headquarters_address][google.cloud.talent.v4beta1.Company.headquarters_address\]
+        /// if provided.
+        #[prost(message, optional, tag = "1")]
+        pub headquarters_location: ::core::option::Option<super::Location>,
+    }
+}
+/// A Job resource represents a job posting (also referred to as a "job listing"
+/// or "job requisition"). A job belongs to a
+/// \[Company][google.cloud.talent.v4beta1.Company\], which is the hiring entity
+/// responsible for the job.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Job {
+    /// Required during job update.
+    ///
+    /// The resource name for the job. This is generated by the service when a
+    /// job is created.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/jobs/{job_id}". For
+    /// example, "projects/foo/tenants/bar/jobs/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used. For
+    /// example, "projects/foo/jobs/bar".
+    ///
+    /// Use of this field in job queries and API calls is preferred over the use of
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] since this
+    /// value is unique.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The resource name of the company listing the job.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}". For
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used. For
+    /// example, "projects/foo/companies/bar".
+    #[prost(string, tag = "2")]
+    pub company: ::prost::alloc::string::String,
+    /// Required. The requisition ID, also referred to as the posting ID, is
+    /// assigned by the client to identify a job. This field is intended to be used
+    /// by clients for client identification and tracking of postings. A job isn't
+    /// allowed to be created if there is another job with the same
+    /// \[company][google.cloud.talent.v4beta1.Job.name\],
+    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\].
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag = "3")]
+    pub requisition_id: ::prost::alloc::string::String,
+    /// Required. The title of the job, such as "Software Engineer"
+    ///
+    /// The maximum number of allowed characters is 500.
+    #[prost(string, tag = "4")]
+    pub title: ::prost::alloc::string::String,
+    /// Required. The description of the job, which typically includes a
+    /// multi-paragraph description of the company and related information.
+    /// Separate fields are provided on the job object for
+    /// \[responsibilities][google.cloud.talent.v4beta1.Job.responsibilities\],
+    /// \[qualifications][google.cloud.talent.v4beta1.Job.qualifications\], and other
+    /// job characteristics. Use of these separate job fields is recommended.
+    ///
+    /// This field accepts and sanitizes HTML input, and also accepts
+    /// bold, italic, ordered list, and unordered list markup tags.
+    ///
+    /// The maximum number of allowed characters is 100,000.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Strongly recommended for the best service experience.
+    ///
+    /// Location(s) where the employer is looking to hire for this job posting.
+    ///
+    /// Specifying the full street address(es) of the hiring location enables
+    /// better API results, especially job searches by commute time.
+    ///
+    /// At most 50 locations are allowed for best search performance. If a job has
+    /// more locations, it is suggested to split it into multiple jobs with unique
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\]s (e.g.
+    /// 'ReqA' becomes 'ReqA-1', 'ReqA-2', and so on.) as multiple jobs with the
+    /// same \[company][google.cloud.talent.v4beta1.Job.company\],
+    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] are not
+    /// allowed. If the original
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] must be
+    /// preserved, a custom field should be used for storage. It is also suggested
+    /// to group the locations that close to each other in the same job for better
+    /// search experience.
+    ///
+    /// The maximum number of allowed characters is 500.
+    #[prost(string, repeated, tag = "6")]
+    pub addresses: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Job application information.
+    #[prost(message, optional, tag = "7")]
+    pub application_info: ::core::option::Option<job::ApplicationInfo>,
+    /// The benefits included with the job.
+    #[prost(enumeration = "JobBenefit", repeated, tag = "8")]
+    pub job_benefits: ::prost::alloc::vec::Vec<i32>,
+    /// Job compensation information (a.k.a. "pay rate") i.e., the compensation
+    /// that will paid to the employee.
+    #[prost(message, optional, tag = "9")]
+    pub compensation_info: ::core::option::Option<CompensationInfo>,
+    /// A map of fields to hold both filterable and non-filterable custom job
+    /// attributes that are not covered by the provided structured fields.
+    ///
+    /// The keys of the map are strings up to 64 bytes and must match the
+    /// pattern: `\[a-zA-Z][a-zA-Z0-9_\]*`. For example, key0LikeThis or
+    /// KEY_1_LIKE_THIS.
+    ///
+    /// At most 100 filterable and at most 100 unfilterable keys are supported.
+    /// For filterable `string_values`, across all keys at most 200 values are
+    /// allowed, with each string no more than 255 characters. For unfilterable
+    /// `string_values`, the maximum total size of `string_values` across all keys
+    /// is 50KB.
+    #[prost(btree_map = "string, message", tag = "10")]
+    pub custom_attributes: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        CustomAttribute,
+    >,
+    /// The desired education degrees for the job, such as Bachelors, Masters.
+    #[prost(enumeration = "DegreeType", repeated, tag = "11")]
+    pub degree_types: ::prost::alloc::vec::Vec<i32>,
+    /// The department or functional area within the company with the open
+    /// position.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag = "12")]
+    pub department: ::prost::alloc::string::String,
+    /// The employment type(s) of a job, for example,
+    /// [full time]\[google.cloud.talent.v4beta1.EmploymentType.FULL_TIME\] or
+    /// [part time]\[google.cloud.talent.v4beta1.EmploymentType.PART_TIME\].
+    #[prost(enumeration = "EmploymentType", repeated, tag = "13")]
+    pub employment_types: ::prost::alloc::vec::Vec<i32>,
+    /// A description of bonus, commission, and other compensation
+    /// incentives associated with the job not including salary or pay.
+    ///
+    /// The maximum number of allowed characters is 10,000.
+    #[prost(string, tag = "14")]
+    pub incentives: ::prost::alloc::string::String,
+    /// The language of the posting. This field is distinct from
+    /// any requirements for fluency that are associated with the job.
+    ///
+    /// Language codes must be in BCP-47 format, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>){:
+    /// class="external" target="_blank" }.
+    ///
+    /// If this field is unspecified and
+    /// \[Job.description][google.cloud.talent.v4beta1.Job.description\] is present,
+    /// detected language code based on
+    /// \[Job.description][google.cloud.talent.v4beta1.Job.description\] is assigned,
+    /// otherwise defaults to 'en_US'.
+    #[prost(string, tag = "15")]
+    pub language_code: ::prost::alloc::string::String,
+    /// The experience level associated with the job, such as "Entry Level".
+    #[prost(enumeration = "JobLevel", tag = "16")]
+    pub job_level: i32,
+    /// A promotion value of the job, as determined by the client.
+    /// The value determines the sort order of the jobs returned when searching for
+    /// jobs using the featured jobs search call, with higher promotional values
+    /// being returned first and ties being resolved by relevance sort. Only the
+    /// jobs with a promotionValue >0 are returned in a FEATURED_JOB_SEARCH.
+    ///
+    /// Default value is 0, and negative values are treated as 0.
+    #[prost(int32, tag = "17")]
+    pub promotion_value: i32,
+    /// A description of the qualifications required to perform the
+    /// job. The use of this field is recommended
+    /// as an alternative to using the more general
+    /// \[description][google.cloud.talent.v4beta1.Job.description\] field.
+    ///
+    /// This field accepts and sanitizes HTML input, and also accepts
+    /// bold, italic, ordered list, and unordered list markup tags.
+    ///
+    /// The maximum number of allowed characters is 10,000.
+    #[prost(string, tag = "18")]
+    pub qualifications: ::prost::alloc::string::String,
+    /// A description of job responsibilities. The use of this field is
+    /// recommended as an alternative to using the more general
+    /// \[description][google.cloud.talent.v4beta1.Job.description\] field.
+    ///
+    /// This field accepts and sanitizes HTML input, and also accepts
+    /// bold, italic, ordered list, and unordered list markup tags.
+    ///
+    /// The maximum number of allowed characters is 10,000.
+    #[prost(string, tag = "19")]
+    pub responsibilities: ::prost::alloc::string::String,
+    /// The job \[PostingRegion][google.cloud.talent.v4beta1.PostingRegion\] (for
+    /// example, state, country) throughout which the job is available. If this
+    /// field is set, a
+    /// \[LocationFilter][google.cloud.talent.v4beta1.LocationFilter\] in a search
+    /// query within the job region finds this job posting if an exact location
+    /// match isn't specified. If this field is set to
+    /// \[PostingRegion.NATION][google.cloud.talent.v4beta1.PostingRegion.NATION\] or
+    /// \[PostingRegion.ADMINISTRATIVE_AREA][google.cloud.talent.v4beta1.PostingRegion.ADMINISTRATIVE_AREA\],
+    /// setting job \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\] to
+    /// the same location level as this field is strongly recommended.
+    #[prost(enumeration = "PostingRegion", tag = "20")]
+    pub posting_region: i32,
+    /// Deprecated. The job is only visible to the owner.
+    ///
+    /// The visibility of the job.
+    ///
+    /// Defaults to
+    /// \[Visibility.ACCOUNT_ONLY][google.cloud.talent.v4beta1.Visibility.ACCOUNT_ONLY\]
+    /// if not specified.
+    #[deprecated]
+    #[prost(enumeration = "Visibility", tag = "21")]
+    pub visibility: i32,
+    /// The start timestamp of the job in UTC time zone. Typically this field
+    /// is used for contracting engagements. Invalid timestamps are ignored.
+    #[prost(message, optional, tag = "22")]
+    pub job_start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The end timestamp of the job. Typically this field is used for contracting
+    /// engagements. Invalid timestamps are ignored.
+    #[prost(message, optional, tag = "23")]
+    pub job_end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The timestamp this job posting was most recently published. The default
+    /// value is the time the request arrives at the server. Invalid timestamps are
+    /// ignored.
+    #[prost(message, optional, tag = "24")]
+    pub posting_publish_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Strongly recommended for the best service experience.
+    ///
+    /// The expiration timestamp of the job. After this timestamp, the
+    /// job is marked as expired, and it no longer appears in search results. The
+    /// expired job can't be listed by the
+    /// \[ListJobs][google.cloud.talent.v4beta1.JobService.ListJobs\] API, but it can
+    /// be retrieved with the
+    /// \[GetJob][google.cloud.talent.v4beta1.JobService.GetJob\] API or updated with
+    /// the \[UpdateJob][google.cloud.talent.v4beta1.JobService.UpdateJob\] API or
+    /// deleted with the
+    /// \[DeleteJob][google.cloud.talent.v4beta1.JobService.DeleteJob\] API. An
+    /// expired job can be updated and opened again by using a future expiration
+    /// timestamp. Updating an expired job fails if there is another existing open
+    /// job with same \[company][google.cloud.talent.v4beta1.Job.company\],
+    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
+    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\].
+    ///
+    /// The expired jobs are retained in our system for 90 days. However, the
+    /// overall expired job count cannot exceed 3 times the maximum number of
+    /// open jobs over previous 7 days. If this threshold is exceeded,
+    /// expired jobs are cleaned out in order of earliest expire time.
+    /// Expired jobs are no longer accessible after they are cleaned
+    /// out.
+    ///
+    /// Invalid timestamps are ignored, and treated as expire time not provided.
+    ///
+    /// If the timestamp is before the instant request is made, the job
+    /// is treated as expired immediately on creation. This kind of job can
+    /// not be updated. And when creating a job with past timestamp, the
+    /// \[posting_publish_time][google.cloud.talent.v4beta1.Job.posting_publish_time\]
+    /// must be set before
+    /// \[posting_expire_time][google.cloud.talent.v4beta1.Job.posting_expire_time\].
+    /// The purpose of this feature is to allow other objects, such as
+    /// \[Application][google.cloud.talent.v4beta1.Application\], to refer a job that
+    /// didn't exist in the system prior to becoming expired. If you want to modify
+    /// a job that was expired on creation, delete it and create a new one.
+    ///
+    /// If this value isn't provided at the time of job creation or is invalid,
+    /// the job posting expires after 30 days from the job's creation time. For
+    /// example, if the job was created on 2017/01/01 13:00AM UTC with an
+    /// unspecified expiration date, the job expires after 2017/01/31 13:00AM UTC.
+    ///
+    /// If this value isn't provided on job update, it depends on the field masks
+    /// set by
+    /// \[UpdateJobRequest.update_mask][google.cloud.talent.v4beta1.UpdateJobRequest.update_mask\].
+    /// If the field masks include
+    /// \[job_end_time][google.cloud.talent.v4beta1.Job.job_end_time\], or the masks
+    /// are empty meaning that every field is updated, the job posting expires
+    /// after 30 days from the job's last update time. Otherwise the expiration
+    /// date isn't updated.
+    #[prost(message, optional, tag = "25")]
+    pub posting_expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when this job posting was created.
+    #[prost(message, optional, tag = "26")]
+    pub posting_create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when this job posting was last updated.
+    #[prost(message, optional, tag = "27")]
+    pub posting_update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Display name of the company listing the job.
+    #[prost(string, tag = "28")]
+    pub company_display_name: ::prost::alloc::string::String,
+    /// Output only. Derived details about the job posting.
+    #[prost(message, optional, tag = "29")]
+    pub derived_info: ::core::option::Option<job::DerivedInfo>,
+    /// Options for job processing.
+    #[prost(message, optional, tag = "30")]
+    pub processing_options: ::core::option::Option<job::ProcessingOptions>,
+}
+/// Nested message and enum types in `Job`.
+pub mod job {
+    /// Application related details of a job posting.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ApplicationInfo {
+        /// Use this field to specify email address(es) to which resumes or
+        /// applications can be sent.
+        ///
+        /// The maximum number of allowed characters for each entry is 255.
+        #[prost(string, repeated, tag = "1")]
+        pub emails: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Use this field to provide instructions, such as "Mail your application
+        /// to ...", that a candidate can follow to apply for the job.
+        ///
+        /// This field accepts and sanitizes HTML input, and also accepts
+        /// bold, italic, ordered list, and unordered list markup tags.
+        ///
+        /// The maximum number of allowed characters is 3,000.
+        #[prost(string, tag = "2")]
+        pub instruction: ::prost::alloc::string::String,
+        /// Use this URI field to direct an applicant to a website, for example to
+        /// link to an online application form.
+        ///
+        /// The maximum number of allowed characters for each entry is 2,000.
+        #[prost(string, repeated, tag = "3")]
+        pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// Derived details about the job posting.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DerivedInfo {
+        /// Structured locations of the job, resolved from
+        /// \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\].
+        ///
+        /// \[locations][google.cloud.talent.v4beta1.Job.DerivedInfo.locations\] are
+        /// exactly matched to
+        /// \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\] in the same
+        /// order.
+        #[prost(message, repeated, tag = "1")]
+        pub locations: ::prost::alloc::vec::Vec<super::Location>,
+        /// Job categories derived from
+        /// \[Job.title][google.cloud.talent.v4beta1.Job.title\] and
+        /// \[Job.description][google.cloud.talent.v4beta1.Job.description\].
+        #[prost(enumeration = "super::JobCategory", repeated, tag = "3")]
+        pub job_categories: ::prost::alloc::vec::Vec<i32>,
+    }
+    /// Options for job processing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ProcessingOptions {
+        /// If set to `true`, the service does not attempt to resolve a
+        /// more precise address for the job.
+        #[prost(bool, tag = "1")]
+        pub disable_street_address_resolution: bool,
+        /// Option for job HTML content sanitization. Applied fields are:
+        ///
+        /// * description
+        /// * applicationInfo.instruction
+        /// * incentives
+        /// * qualifications
+        /// * responsibilities
+        ///
+        /// HTML tags in these fields may be stripped if sanitiazation isn't
+        /// disabled.
+        ///
+        /// Defaults to
+        /// \[HtmlSanitization.SIMPLE_FORMATTING_ONLY][google.cloud.talent.v4beta1.HtmlSanitization.SIMPLE_FORMATTING_ONLY\].
+        #[prost(enumeration = "super::HtmlSanitization", tag = "2")]
+        pub html_sanitization: i32,
+    }
+}
 /// The query required to perform a search query.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2170,362 +2732,6 @@ pub struct HistogramQueryResult {
         ::prost::alloc::string::String,
         i64,
     >,
-}
-/// A Job resource represents a job posting (also referred to as a "job listing"
-/// or "job requisition"). A job belongs to a
-/// \[Company][google.cloud.talent.v4beta1.Company\], which is the hiring entity
-/// responsible for the job.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Job {
-    /// Required during job update.
-    ///
-    /// The resource name for the job. This is generated by the service when a
-    /// job is created.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/jobs/{job_id}". For
-    /// example, "projects/foo/tenants/bar/jobs/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used. For
-    /// example, "projects/foo/jobs/bar".
-    ///
-    /// Use of this field in job queries and API calls is preferred over the use of
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] since this
-    /// value is unique.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The resource name of the company listing the job.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}". For
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used. For
-    /// example, "projects/foo/companies/bar".
-    #[prost(string, tag = "2")]
-    pub company: ::prost::alloc::string::String,
-    /// Required. The requisition ID, also referred to as the posting ID, is
-    /// assigned by the client to identify a job. This field is intended to be used
-    /// by clients for client identification and tracking of postings. A job isn't
-    /// allowed to be created if there is another job with the same
-    /// \[company][google.cloud.talent.v4beta1.Job.name\],
-    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\].
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag = "3")]
-    pub requisition_id: ::prost::alloc::string::String,
-    /// Required. The title of the job, such as "Software Engineer"
-    ///
-    /// The maximum number of allowed characters is 500.
-    #[prost(string, tag = "4")]
-    pub title: ::prost::alloc::string::String,
-    /// Required. The description of the job, which typically includes a
-    /// multi-paragraph description of the company and related information.
-    /// Separate fields are provided on the job object for
-    /// \[responsibilities][google.cloud.talent.v4beta1.Job.responsibilities\],
-    /// \[qualifications][google.cloud.talent.v4beta1.Job.qualifications\], and other
-    /// job characteristics. Use of these separate job fields is recommended.
-    ///
-    /// This field accepts and sanitizes HTML input, and also accepts
-    /// bold, italic, ordered list, and unordered list markup tags.
-    ///
-    /// The maximum number of allowed characters is 100,000.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Strongly recommended for the best service experience.
-    ///
-    /// Location(s) where the employer is looking to hire for this job posting.
-    ///
-    /// Specifying the full street address(es) of the hiring location enables
-    /// better API results, especially job searches by commute time.
-    ///
-    /// At most 50 locations are allowed for best search performance. If a job has
-    /// more locations, it is suggested to split it into multiple jobs with unique
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\]s (e.g.
-    /// 'ReqA' becomes 'ReqA-1', 'ReqA-2', and so on.) as multiple jobs with the
-    /// same \[company][google.cloud.talent.v4beta1.Job.company\],
-    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] are not
-    /// allowed. If the original
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\] must be
-    /// preserved, a custom field should be used for storage. It is also suggested
-    /// to group the locations that close to each other in the same job for better
-    /// search experience.
-    ///
-    /// The maximum number of allowed characters is 500.
-    #[prost(string, repeated, tag = "6")]
-    pub addresses: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Job application information.
-    #[prost(message, optional, tag = "7")]
-    pub application_info: ::core::option::Option<job::ApplicationInfo>,
-    /// The benefits included with the job.
-    #[prost(enumeration = "JobBenefit", repeated, tag = "8")]
-    pub job_benefits: ::prost::alloc::vec::Vec<i32>,
-    /// Job compensation information (a.k.a. "pay rate") i.e., the compensation
-    /// that will paid to the employee.
-    #[prost(message, optional, tag = "9")]
-    pub compensation_info: ::core::option::Option<CompensationInfo>,
-    /// A map of fields to hold both filterable and non-filterable custom job
-    /// attributes that are not covered by the provided structured fields.
-    ///
-    /// The keys of the map are strings up to 64 bytes and must match the
-    /// pattern: `\[a-zA-Z][a-zA-Z0-9_\]*`. For example, key0LikeThis or
-    /// KEY_1_LIKE_THIS.
-    ///
-    /// At most 100 filterable and at most 100 unfilterable keys are supported.
-    /// For filterable `string_values`, across all keys at most 200 values are
-    /// allowed, with each string no more than 255 characters. For unfilterable
-    /// `string_values`, the maximum total size of `string_values` across all keys
-    /// is 50KB.
-    #[prost(btree_map = "string, message", tag = "10")]
-    pub custom_attributes: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        CustomAttribute,
-    >,
-    /// The desired education degrees for the job, such as Bachelors, Masters.
-    #[prost(enumeration = "DegreeType", repeated, tag = "11")]
-    pub degree_types: ::prost::alloc::vec::Vec<i32>,
-    /// The department or functional area within the company with the open
-    /// position.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag = "12")]
-    pub department: ::prost::alloc::string::String,
-    /// The employment type(s) of a job, for example,
-    /// [full time]\[google.cloud.talent.v4beta1.EmploymentType.FULL_TIME\] or
-    /// [part time]\[google.cloud.talent.v4beta1.EmploymentType.PART_TIME\].
-    #[prost(enumeration = "EmploymentType", repeated, tag = "13")]
-    pub employment_types: ::prost::alloc::vec::Vec<i32>,
-    /// A description of bonus, commission, and other compensation
-    /// incentives associated with the job not including salary or pay.
-    ///
-    /// The maximum number of allowed characters is 10,000.
-    #[prost(string, tag = "14")]
-    pub incentives: ::prost::alloc::string::String,
-    /// The language of the posting. This field is distinct from
-    /// any requirements for fluency that are associated with the job.
-    ///
-    /// Language codes must be in BCP-47 format, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>){:
-    /// class="external" target="_blank" }.
-    ///
-    /// If this field is unspecified and
-    /// \[Job.description][google.cloud.talent.v4beta1.Job.description\] is present,
-    /// detected language code based on
-    /// \[Job.description][google.cloud.talent.v4beta1.Job.description\] is assigned,
-    /// otherwise defaults to 'en_US'.
-    #[prost(string, tag = "15")]
-    pub language_code: ::prost::alloc::string::String,
-    /// The experience level associated with the job, such as "Entry Level".
-    #[prost(enumeration = "JobLevel", tag = "16")]
-    pub job_level: i32,
-    /// A promotion value of the job, as determined by the client.
-    /// The value determines the sort order of the jobs returned when searching for
-    /// jobs using the featured jobs search call, with higher promotional values
-    /// being returned first and ties being resolved by relevance sort. Only the
-    /// jobs with a promotionValue >0 are returned in a FEATURED_JOB_SEARCH.
-    ///
-    /// Default value is 0, and negative values are treated as 0.
-    #[prost(int32, tag = "17")]
-    pub promotion_value: i32,
-    /// A description of the qualifications required to perform the
-    /// job. The use of this field is recommended
-    /// as an alternative to using the more general
-    /// \[description][google.cloud.talent.v4beta1.Job.description\] field.
-    ///
-    /// This field accepts and sanitizes HTML input, and also accepts
-    /// bold, italic, ordered list, and unordered list markup tags.
-    ///
-    /// The maximum number of allowed characters is 10,000.
-    #[prost(string, tag = "18")]
-    pub qualifications: ::prost::alloc::string::String,
-    /// A description of job responsibilities. The use of this field is
-    /// recommended as an alternative to using the more general
-    /// \[description][google.cloud.talent.v4beta1.Job.description\] field.
-    ///
-    /// This field accepts and sanitizes HTML input, and also accepts
-    /// bold, italic, ordered list, and unordered list markup tags.
-    ///
-    /// The maximum number of allowed characters is 10,000.
-    #[prost(string, tag = "19")]
-    pub responsibilities: ::prost::alloc::string::String,
-    /// The job \[PostingRegion][google.cloud.talent.v4beta1.PostingRegion\] (for
-    /// example, state, country) throughout which the job is available. If this
-    /// field is set, a
-    /// \[LocationFilter][google.cloud.talent.v4beta1.LocationFilter\] in a search
-    /// query within the job region finds this job posting if an exact location
-    /// match isn't specified. If this field is set to
-    /// \[PostingRegion.NATION][google.cloud.talent.v4beta1.PostingRegion.NATION\] or
-    /// \[PostingRegion.ADMINISTRATIVE_AREA][google.cloud.talent.v4beta1.PostingRegion.ADMINISTRATIVE_AREA\],
-    /// setting job \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\] to
-    /// the same location level as this field is strongly recommended.
-    #[prost(enumeration = "PostingRegion", tag = "20")]
-    pub posting_region: i32,
-    /// Deprecated. The job is only visible to the owner.
-    ///
-    /// The visibility of the job.
-    ///
-    /// Defaults to
-    /// \[Visibility.ACCOUNT_ONLY][google.cloud.talent.v4beta1.Visibility.ACCOUNT_ONLY\]
-    /// if not specified.
-    #[deprecated]
-    #[prost(enumeration = "Visibility", tag = "21")]
-    pub visibility: i32,
-    /// The start timestamp of the job in UTC time zone. Typically this field
-    /// is used for contracting engagements. Invalid timestamps are ignored.
-    #[prost(message, optional, tag = "22")]
-    pub job_start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The end timestamp of the job. Typically this field is used for contracting
-    /// engagements. Invalid timestamps are ignored.
-    #[prost(message, optional, tag = "23")]
-    pub job_end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The timestamp this job posting was most recently published. The default
-    /// value is the time the request arrives at the server. Invalid timestamps are
-    /// ignored.
-    #[prost(message, optional, tag = "24")]
-    pub posting_publish_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Strongly recommended for the best service experience.
-    ///
-    /// The expiration timestamp of the job. After this timestamp, the
-    /// job is marked as expired, and it no longer appears in search results. The
-    /// expired job can't be listed by the
-    /// \[ListJobs][google.cloud.talent.v4beta1.JobService.ListJobs\] API, but it can
-    /// be retrieved with the
-    /// \[GetJob][google.cloud.talent.v4beta1.JobService.GetJob\] API or updated with
-    /// the \[UpdateJob][google.cloud.talent.v4beta1.JobService.UpdateJob\] API or
-    /// deleted with the
-    /// \[DeleteJob][google.cloud.talent.v4beta1.JobService.DeleteJob\] API. An
-    /// expired job can be updated and opened again by using a future expiration
-    /// timestamp. Updating an expired job fails if there is another existing open
-    /// job with same \[company][google.cloud.talent.v4beta1.Job.company\],
-    /// \[language_code][google.cloud.talent.v4beta1.Job.language_code\] and
-    /// \[requisition_id][google.cloud.talent.v4beta1.Job.requisition_id\].
-    ///
-    /// The expired jobs are retained in our system for 90 days. However, the
-    /// overall expired job count cannot exceed 3 times the maximum number of
-    /// open jobs over previous 7 days. If this threshold is exceeded,
-    /// expired jobs are cleaned out in order of earliest expire time.
-    /// Expired jobs are no longer accessible after they are cleaned
-    /// out.
-    ///
-    /// Invalid timestamps are ignored, and treated as expire time not provided.
-    ///
-    /// If the timestamp is before the instant request is made, the job
-    /// is treated as expired immediately on creation. This kind of job can
-    /// not be updated. And when creating a job with past timestamp, the
-    /// \[posting_publish_time][google.cloud.talent.v4beta1.Job.posting_publish_time\]
-    /// must be set before
-    /// \[posting_expire_time][google.cloud.talent.v4beta1.Job.posting_expire_time\].
-    /// The purpose of this feature is to allow other objects, such as
-    /// \[Application][google.cloud.talent.v4beta1.Application\], to refer a job that
-    /// didn't exist in the system prior to becoming expired. If you want to modify
-    /// a job that was expired on creation, delete it and create a new one.
-    ///
-    /// If this value isn't provided at the time of job creation or is invalid,
-    /// the job posting expires after 30 days from the job's creation time. For
-    /// example, if the job was created on 2017/01/01 13:00AM UTC with an
-    /// unspecified expiration date, the job expires after 2017/01/31 13:00AM UTC.
-    ///
-    /// If this value isn't provided on job update, it depends on the field masks
-    /// set by
-    /// \[UpdateJobRequest.update_mask][google.cloud.talent.v4beta1.UpdateJobRequest.update_mask\].
-    /// If the field masks include
-    /// \[job_end_time][google.cloud.talent.v4beta1.Job.job_end_time\], or the masks
-    /// are empty meaning that every field is updated, the job posting expires
-    /// after 30 days from the job's last update time. Otherwise the expiration
-    /// date isn't updated.
-    #[prost(message, optional, tag = "25")]
-    pub posting_expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when this job posting was created.
-    #[prost(message, optional, tag = "26")]
-    pub posting_create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when this job posting was last updated.
-    #[prost(message, optional, tag = "27")]
-    pub posting_update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Display name of the company listing the job.
-    #[prost(string, tag = "28")]
-    pub company_display_name: ::prost::alloc::string::String,
-    /// Output only. Derived details about the job posting.
-    #[prost(message, optional, tag = "29")]
-    pub derived_info: ::core::option::Option<job::DerivedInfo>,
-    /// Options for job processing.
-    #[prost(message, optional, tag = "30")]
-    pub processing_options: ::core::option::Option<job::ProcessingOptions>,
-}
-/// Nested message and enum types in `Job`.
-pub mod job {
-    /// Application related details of a job posting.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ApplicationInfo {
-        /// Use this field to specify email address(es) to which resumes or
-        /// applications can be sent.
-        ///
-        /// The maximum number of allowed characters for each entry is 255.
-        #[prost(string, repeated, tag = "1")]
-        pub emails: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Use this field to provide instructions, such as "Mail your application
-        /// to ...", that a candidate can follow to apply for the job.
-        ///
-        /// This field accepts and sanitizes HTML input, and also accepts
-        /// bold, italic, ordered list, and unordered list markup tags.
-        ///
-        /// The maximum number of allowed characters is 3,000.
-        #[prost(string, tag = "2")]
-        pub instruction: ::prost::alloc::string::String,
-        /// Use this URI field to direct an applicant to a website, for example to
-        /// link to an online application form.
-        ///
-        /// The maximum number of allowed characters for each entry is 2,000.
-        #[prost(string, repeated, tag = "3")]
-        pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// Derived details about the job posting.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DerivedInfo {
-        /// Structured locations of the job, resolved from
-        /// \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\].
-        ///
-        /// \[locations][google.cloud.talent.v4beta1.Job.DerivedInfo.locations\] are
-        /// exactly matched to
-        /// \[Job.addresses][google.cloud.talent.v4beta1.Job.addresses\] in the same
-        /// order.
-        #[prost(message, repeated, tag = "1")]
-        pub locations: ::prost::alloc::vec::Vec<super::Location>,
-        /// Job categories derived from
-        /// \[Job.title][google.cloud.talent.v4beta1.Job.title\] and
-        /// \[Job.description][google.cloud.talent.v4beta1.Job.description\].
-        #[prost(enumeration = "super::JobCategory", repeated, tag = "3")]
-        pub job_categories: ::prost::alloc::vec::Vec<i32>,
-    }
-    /// Options for job processing.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ProcessingOptions {
-        /// If set to `true`, the service does not attempt to resolve a
-        /// more precise address for the job.
-        #[prost(bool, tag = "1")]
-        pub disable_street_address_resolution: bool,
-        /// Option for job HTML content sanitization. Applied fields are:
-        ///
-        /// * description
-        /// * applicationInfo.instruction
-        /// * incentives
-        /// * qualifications
-        /// * responsibilities
-        ///
-        /// HTML tags in these fields may be stripped if sanitiazation isn't
-        /// disabled.
-        ///
-        /// Defaults to
-        /// \[HtmlSanitization.SIMPLE_FORMATTING_ONLY][google.cloud.talent.v4beta1.HtmlSanitization.SIMPLE_FORMATTING_ONLY\].
-        #[prost(enumeration = "super::HtmlSanitization", tag = "2")]
-        pub html_sanitization: i32,
-    }
 }
 /// Create job request.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -3831,493 +4037,6 @@ pub mod job_service_client {
         }
     }
 }
-/// Auto-complete parameters.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryRequest {
-    /// Required. Resource name of tenant the completion is performed within.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenant/bar".
-    ///
-    /// If tenant id is unspecified, the default tenant is used, for
-    /// example, "projects/foo".
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The query used to generate suggestions.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag = "2")]
-    pub query: ::prost::alloc::string::String,
-    /// The list of languages of the query. This is
-    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
-    /// For more information, see
-    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, repeated, tag = "3")]
-    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Required. Completion result count.
-    ///
-    /// The maximum allowed page size is 10.
-    #[prost(int32, tag = "4")]
-    pub page_size: i32,
-    /// If provided, restricts completion to specified company.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used, for
-    /// example, "projects/foo".
-    #[prost(string, tag = "5")]
-    pub company: ::prost::alloc::string::String,
-    /// The scope of the completion. The defaults is
-    /// \[CompletionScope.PUBLIC][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionScope.PUBLIC\].
-    #[prost(enumeration = "complete_query_request::CompletionScope", tag = "6")]
-    pub scope: i32,
-    /// The completion topic. The default is
-    /// \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\].
-    #[prost(enumeration = "complete_query_request::CompletionType", tag = "7")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `CompleteQueryRequest`.
-pub mod complete_query_request {
-    /// Enum to specify the scope of completion.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum CompletionScope {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggestions are based only on the data provided by the client.
-        Tenant = 1,
-        /// Suggestions are based on all jobs data in the system that's visible to
-        /// the client
-        Public = 2,
-    }
-    impl CompletionScope {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CompletionScope::Unspecified => "COMPLETION_SCOPE_UNSPECIFIED",
-                CompletionScope::Tenant => "TENANT",
-                CompletionScope::Public => "PUBLIC",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "COMPLETION_SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "TENANT" => Some(Self::Tenant),
-                "PUBLIC" => Some(Self::Public),
-                _ => None,
-            }
-        }
-    }
-    /// Enum to specify auto-completion topics.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum CompletionType {
-        /// Default value.
-        Unspecified = 0,
-        /// Suggest job titles for jobs autocomplete.
-        ///
-        /// For
-        /// \[CompletionType.JOB_TITLE][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.JOB_TITLE\]
-        /// type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
-        /// are returned.
-        JobTitle = 1,
-        /// Suggest company names for jobs autocomplete.
-        ///
-        /// For
-        /// \[CompletionType.COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\]
-        /// type, only companies having open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
-        /// are returned.
-        CompanyName = 2,
-        /// Suggest both job titles and company names for jobs autocomplete.
-        ///
-        /// For
-        /// \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\]
-        /// type, only open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
-        /// or companies having open jobs with the same
-        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
-        /// are returned.
-        Combined = 3,
-    }
-    impl CompletionType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CompletionType::Unspecified => "COMPLETION_TYPE_UNSPECIFIED",
-                CompletionType::JobTitle => "JOB_TITLE",
-                CompletionType::CompanyName => "COMPANY_NAME",
-                CompletionType::Combined => "COMBINED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "COMPLETION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "JOB_TITLE" => Some(Self::JobTitle),
-                "COMPANY_NAME" => Some(Self::CompanyName),
-                "COMBINED" => Some(Self::Combined),
-                _ => None,
-            }
-        }
-    }
-}
-/// Response of auto-complete query.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryResponse {
-    /// Results of the matching job/company candidates.
-    #[prost(message, repeated, tag = "1")]
-    pub completion_results: ::prost::alloc::vec::Vec<
-        complete_query_response::CompletionResult,
-    >,
-    /// Additional information for the API invocation, such as the request
-    /// tracking id.
-    #[prost(message, optional, tag = "2")]
-    pub metadata: ::core::option::Option<ResponseMetadata>,
-}
-/// Nested message and enum types in `CompleteQueryResponse`.
-pub mod complete_query_response {
-    /// Resource that represents completion results.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CompletionResult {
-        /// The suggestion for the query.
-        #[prost(string, tag = "1")]
-        pub suggestion: ::prost::alloc::string::String,
-        /// The completion topic.
-        #[prost(
-            enumeration = "super::complete_query_request::CompletionType",
-            tag = "2"
-        )]
-        pub r#type: i32,
-        /// The URI of the company image for
-        /// \[COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
-        #[prost(string, tag = "3")]
-        pub image_uri: ::prost::alloc::string::String,
-    }
-}
-/// Generated client implementations.
-pub mod completion_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service handles auto completion.
-    #[derive(Debug, Clone)]
-    pub struct CompletionClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CompletionClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CompletionClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CompletionClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Completes the specified prefix with keyword suggestions.
-        /// Intended for use by a job search auto-complete search box.
-        pub async fn complete_query(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
-        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.Completion/CompleteQuery",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// The report event request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateClientEventRequest {
-    /// Required. Resource name of the tenant under which the event is created.
-    ///
-    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
-    /// "projects/foo/tenant/bar". If tenant id is unspecified, a default tenant
-    /// is created, for example, "projects/foo".
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Events issued when end user interacts with customer's application
-    /// that uses Cloud Talent Solution.
-    #[prost(message, optional, tag = "2")]
-    pub client_event: ::core::option::Option<ClientEvent>,
-}
-/// Generated client implementations.
-pub mod event_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// A service handles client event report.
-    #[derive(Debug, Clone)]
-    pub struct EventServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> EventServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> EventServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            EventServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Report events issued when end user interacts with customer's application
-        /// that uses Cloud Talent Solution. You may inspect the created events in
-        /// [self service
-        /// tools](https://console.cloud.google.com/talent-solution/overview).
-        /// [Learn
-        /// more](https://cloud.google.com/talent-solution/docs/management-tools)
-        /// about self service tools.
-        pub async fn create_client_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateClientEventRequest>,
-        ) -> Result<tonic::Response<super::ClientEvent>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.talent.v4beta1.EventService/CreateClientEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A Company resource represents a company in the service. A company is the
-/// entity that owns job postings, that is, the hiring entity responsible for
-/// employing applicants for the job position.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Company {
-    /// Required during company update.
-    ///
-    /// The resource name for a company. This is generated by the service when a
-    /// company is created.
-    ///
-    /// The format is
-    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
-    /// example, "projects/foo/tenants/bar/companies/baz".
-    ///
-    /// If tenant id is unspecified, the default tenant is used. For
-    /// example, "projects/foo/companies/bar".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the company, for example, "Google LLC".
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. Client side company identifier, used to uniquely identify the
-    /// company.
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag = "3")]
-    pub external_id: ::prost::alloc::string::String,
-    /// The employer's company size.
-    #[prost(enumeration = "CompanySize", tag = "4")]
-    pub size: i32,
-    /// The street address of the company's main headquarters, which may be
-    /// different from the job location. The service attempts
-    /// to geolocate the provided address, and populates a more specific
-    /// location wherever possible in
-    /// \[DerivedInfo.headquarters_location][google.cloud.talent.v4beta1.Company.DerivedInfo.headquarters_location\].
-    #[prost(string, tag = "5")]
-    pub headquarters_address: ::prost::alloc::string::String,
-    /// Set to true if it is the hiring agency that post jobs for other
-    /// employers.
-    ///
-    /// Defaults to false if not provided.
-    #[prost(bool, tag = "6")]
-    pub hiring_agency: bool,
-    /// Equal Employment Opportunity legal disclaimer text to be
-    /// associated with all jobs, and typically to be displayed in all
-    /// roles.
-    ///
-    /// The maximum number of allowed characters is 500.
-    #[prost(string, tag = "7")]
-    pub eeo_text: ::prost::alloc::string::String,
-    /// The URI representing the company's primary web site or home page,
-    /// for example, "<https://www.google.com".>
-    ///
-    /// The maximum number of allowed characters is 255.
-    #[prost(string, tag = "8")]
-    pub website_uri: ::prost::alloc::string::String,
-    /// The URI to employer's career site or careers page on the employer's web
-    /// site, for example, "<https://careers.google.com".>
-    #[prost(string, tag = "9")]
-    pub career_site_uri: ::prost::alloc::string::String,
-    /// A URI that hosts the employer's company logo.
-    #[prost(string, tag = "10")]
-    pub image_uri: ::prost::alloc::string::String,
-    /// This field is deprecated. Please set the searchability of the custom
-    /// attribute in the
-    /// \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\]
-    /// going forward.
-    ///
-    /// A list of keys of filterable
-    /// \[Job.custom_attributes][google.cloud.talent.v4beta1.Job.custom_attributes\],
-    /// whose corresponding `string_values` are used in keyword searches. Jobs with
-    /// `string_values` under these specified field keys are returned if any
-    /// of the values match the search keyword. Custom field values with
-    /// parenthesis, brackets and special symbols are not searchable as-is,
-    /// and those keyword queries must be surrounded by quotes.
-    #[deprecated]
-    #[prost(string, repeated, tag = "11")]
-    pub keyword_searchable_job_custom_attributes: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Derived details about the company.
-    #[prost(message, optional, tag = "12")]
-    pub derived_info: ::core::option::Option<company::DerivedInfo>,
-    /// Output only. Indicates whether a company is flagged to be suspended from
-    /// public availability by the service when job content appears suspicious,
-    /// abusive, or spammy.
-    #[prost(bool, tag = "13")]
-    pub suspended: bool,
-}
-/// Nested message and enum types in `Company`.
-pub mod company {
-    /// Derived details about the company.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DerivedInfo {
-        /// A structured headquarters location of the company, resolved from
-        /// \[Company.headquarters_address][google.cloud.talent.v4beta1.Company.headquarters_address\]
-        /// if provided.
-        #[prost(message, optional, tag = "1")]
-        pub headquarters_location: ::core::option::Option<super::Location>,
-    }
-}
 /// A Tenant resource represents a tenant in the service. A tenant is a group or
 /// entity that shares common access with specific privileges for resources like
 /// profiles. Customer may create multiple tenants to provide data isolation for
@@ -4655,6 +4374,287 @@ pub mod tenant_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.talent.v4beta1.TenantService/ListTenants",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Auto-complete parameters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryRequest {
+    /// Required. Resource name of tenant the completion is performed within.
+    ///
+    /// The format is "projects/{project_id}/tenants/{tenant_id}", for example,
+    /// "projects/foo/tenant/bar".
+    ///
+    /// If tenant id is unspecified, the default tenant is used, for
+    /// example, "projects/foo".
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The query used to generate suggestions.
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, tag = "2")]
+    pub query: ::prost::alloc::string::String,
+    /// The list of languages of the query. This is
+    /// the BCP-47 language code, such as "en-US" or "sr-Latn".
+    /// For more information, see
+    /// [Tags for Identifying Languages](<https://tools.ietf.org/html/bcp47>).
+    ///
+    /// The maximum number of allowed characters is 255.
+    #[prost(string, repeated, tag = "3")]
+    pub language_codes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Required. Completion result count.
+    ///
+    /// The maximum allowed page size is 10.
+    #[prost(int32, tag = "4")]
+    pub page_size: i32,
+    /// If provided, restricts completion to specified company.
+    ///
+    /// The format is
+    /// "projects/{project_id}/tenants/{tenant_id}/companies/{company_id}", for
+    /// example, "projects/foo/tenants/bar/companies/baz".
+    ///
+    /// If tenant id is unspecified, the default tenant is used, for
+    /// example, "projects/foo".
+    #[prost(string, tag = "5")]
+    pub company: ::prost::alloc::string::String,
+    /// The scope of the completion. The defaults is
+    /// \[CompletionScope.PUBLIC][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionScope.PUBLIC\].
+    #[prost(enumeration = "complete_query_request::CompletionScope", tag = "6")]
+    pub scope: i32,
+    /// The completion topic. The default is
+    /// \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\].
+    #[prost(enumeration = "complete_query_request::CompletionType", tag = "7")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `CompleteQueryRequest`.
+pub mod complete_query_request {
+    /// Enum to specify the scope of completion.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum CompletionScope {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggestions are based only on the data provided by the client.
+        Tenant = 1,
+        /// Suggestions are based on all jobs data in the system that's visible to
+        /// the client
+        Public = 2,
+    }
+    impl CompletionScope {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionScope::Unspecified => "COMPLETION_SCOPE_UNSPECIFIED",
+                CompletionScope::Tenant => "TENANT",
+                CompletionScope::Public => "PUBLIC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMPLETION_SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TENANT" => Some(Self::Tenant),
+                "PUBLIC" => Some(Self::Public),
+                _ => None,
+            }
+        }
+    }
+    /// Enum to specify auto-completion topics.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum CompletionType {
+        /// Default value.
+        Unspecified = 0,
+        /// Suggest job titles for jobs autocomplete.
+        ///
+        /// For
+        /// \[CompletionType.JOB_TITLE][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.JOB_TITLE\]
+        /// type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
+        /// are returned.
+        JobTitle = 1,
+        /// Suggest company names for jobs autocomplete.
+        ///
+        /// For
+        /// \[CompletionType.COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\]
+        /// type, only companies having open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
+        /// are returned.
+        CompanyName = 2,
+        /// Suggest both job titles and company names for jobs autocomplete.
+        ///
+        /// For
+        /// \[CompletionType.COMBINED][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMBINED\]
+        /// type, only open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
+        /// or companies having open jobs with the same
+        /// \[language_codes][google.cloud.talent.v4beta1.CompleteQueryRequest.language_codes\]
+        /// are returned.
+        Combined = 3,
+    }
+    impl CompletionType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CompletionType::Unspecified => "COMPLETION_TYPE_UNSPECIFIED",
+                CompletionType::JobTitle => "JOB_TITLE",
+                CompletionType::CompanyName => "COMPANY_NAME",
+                CompletionType::Combined => "COMBINED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMPLETION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "JOB_TITLE" => Some(Self::JobTitle),
+                "COMPANY_NAME" => Some(Self::CompanyName),
+                "COMBINED" => Some(Self::Combined),
+                _ => None,
+            }
+        }
+    }
+}
+/// Response of auto-complete query.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryResponse {
+    /// Results of the matching job/company candidates.
+    #[prost(message, repeated, tag = "1")]
+    pub completion_results: ::prost::alloc::vec::Vec<
+        complete_query_response::CompletionResult,
+    >,
+    /// Additional information for the API invocation, such as the request
+    /// tracking id.
+    #[prost(message, optional, tag = "2")]
+    pub metadata: ::core::option::Option<ResponseMetadata>,
+}
+/// Nested message and enum types in `CompleteQueryResponse`.
+pub mod complete_query_response {
+    /// Resource that represents completion results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CompletionResult {
+        /// The suggestion for the query.
+        #[prost(string, tag = "1")]
+        pub suggestion: ::prost::alloc::string::String,
+        /// The completion topic.
+        #[prost(
+            enumeration = "super::complete_query_request::CompletionType",
+            tag = "2"
+        )]
+        pub r#type: i32,
+        /// The URI of the company image for
+        /// \[COMPANY_NAME][google.cloud.talent.v4beta1.CompleteQueryRequest.CompletionType.COMPANY_NAME\].
+        #[prost(string, tag = "3")]
+        pub image_uri: ::prost::alloc::string::String,
+    }
+}
+/// Generated client implementations.
+pub mod completion_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// A service handles auto completion.
+    #[derive(Debug, Clone)]
+    pub struct CompletionClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CompletionClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CompletionClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CompletionClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Completes the specified prefix with keyword suggestions.
+        /// Intended for use by a job search auto-complete search box.
+        pub async fn complete_query(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
+        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.talent.v4beta1.Completion/CompleteQuery",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

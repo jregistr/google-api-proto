@@ -1,3 +1,13 @@
+/// A chart that displays alert policy data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AlertChart {
+    /// Required. The resource name of the alert policy. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
 /// series in the set is _aligned_ to the same time interval boundaries, then the
@@ -942,6 +952,118 @@ impl SparkChartType {
         }
     }
 }
+/// Table display options that can be reused.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableDisplayOptions {
+    /// Optional. This field is unused and has been replaced by
+    /// TimeSeriesTable.column_settings
+    #[deprecated]
+    #[prost(string, repeated, tag = "1")]
+    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A widget showing the latest value of a metric, and how this value relates to
+/// one or more thresholds.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Scorecard {
+    /// Required. Fields for querying time series data from the
+    /// Stackdriver metrics API.
+    #[prost(message, optional, tag = "1")]
+    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
+    /// The thresholds used to determine the state of the scorecard given the
+    /// time series' current value. For an actual value x, the scorecard is in a
+    /// danger state if x is less than or equal to a danger threshold that triggers
+    /// below, or greater than or equal to a danger threshold that triggers above.
+    /// Similarly, if x is above/below a warning threshold that triggers
+    /// above/below, then the scorecard is in a warning state - unless x also puts
+    /// it in a danger state. (Danger trumps warning.)
+    ///
+    /// As an example, consider a scorecard with the following four thresholds:
+    ///
+    /// ```
+    /// {
+    ///    value: 90,
+    ///    category: 'DANGER',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 70,
+    ///    category: 'WARNING',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 10,
+    ///    category: 'DANGER',
+    ///    trigger: 'BELOW',
+    /// },
+    /// {
+    ///    value: 20,
+    ///    category: 'WARNING',
+    ///    trigger: 'BELOW',
+    /// }
+    /// ```
+    ///
+    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
+    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
+    /// values strictly between 20 and 70 an OK state, values greater than or equal
+    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
+    /// 90 a DANGER state.
+    #[prost(message, repeated, tag = "6")]
+    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[prost(oneof = "scorecard::DataView", tags = "4, 5")]
+    pub data_view: ::core::option::Option<scorecard::DataView>,
+}
+/// Nested message and enum types in `Scorecard`.
+pub mod scorecard {
+    /// A gauge chart shows where the current value sits within a pre-defined
+    /// range. The upper and lower bounds should define the possible range of
+    /// values for the scorecard's query (inclusive).
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GaugeView {
+        /// The lower bound for this gauge chart. The value of the chart should
+        /// always be greater than or equal to this.
+        #[prost(double, tag = "1")]
+        pub lower_bound: f64,
+        /// The upper bound for this gauge chart. The value of the chart should
+        /// always be less than or equal to this.
+        #[prost(double, tag = "2")]
+        pub upper_bound: f64,
+    }
+    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
+    /// inline in text. This message contains the configuration for a sparkChart
+    /// to show up on a Scorecard, showing recent trends of the scorecard's
+    /// timeseries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SparkChartView {
+        /// Required. The type of sparkchart to show in this chartView.
+        #[prost(enumeration = "super::SparkChartType", tag = "1")]
+        pub spark_chart_type: i32,
+        /// The lower bound on data point frequency in the chart implemented by
+        /// specifying the minimum alignment period to use in a time series query.
+        /// For example, if the data is published once every 10 minutes it would not
+        /// make sense to fetch and align data at one minute intervals. This field is
+        /// optional and exists only as a hint.
+        #[prost(message, optional, tag = "2")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+    }
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DataView {
+        /// Will cause the scorecard to show a gauge chart.
+        #[prost(message, tag = "4")]
+        GaugeView(GaugeView),
+        /// Will cause the scorecard to show a spark chart.
+        #[prost(message, tag = "5")]
+        SparkChartView(SparkChartView),
+    }
+}
 /// A chart that displays data on a 2D (X and Y axes) plane.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1311,16 +1433,6 @@ pub mod dashboard_filter {
         StringValue(::prost::alloc::string::String),
     }
 }
-/// A chart that displays alert policy data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AlertChart {
-    /// Required. The resource name of the alert policy. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
 /// A widget that groups the other widgets. All widgets that are within
 /// the area spanned by the grouping widget are considered member widgets.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1344,118 +1456,6 @@ pub struct LogsPanel {
     /// are supported. If empty, the widget will default to the host project.
     #[prost(string, repeated, tag = "2")]
     pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A widget showing the latest value of a metric, and how this value relates to
-/// one or more thresholds.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Scorecard {
-    /// Required. Fields for querying time series data from the
-    /// Stackdriver metrics API.
-    #[prost(message, optional, tag = "1")]
-    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
-    /// The thresholds used to determine the state of the scorecard given the
-    /// time series' current value. For an actual value x, the scorecard is in a
-    /// danger state if x is less than or equal to a danger threshold that triggers
-    /// below, or greater than or equal to a danger threshold that triggers above.
-    /// Similarly, if x is above/below a warning threshold that triggers
-    /// above/below, then the scorecard is in a warning state - unless x also puts
-    /// it in a danger state. (Danger trumps warning.)
-    ///
-    /// As an example, consider a scorecard with the following four thresholds:
-    ///
-    /// ```
-    /// {
-    ///    value: 90,
-    ///    category: 'DANGER',
-    ///    trigger: 'ABOVE',
-    /// },
-    /// {
-    ///    value: 70,
-    ///    category: 'WARNING',
-    ///    trigger: 'ABOVE',
-    /// },
-    /// {
-    ///    value: 10,
-    ///    category: 'DANGER',
-    ///    trigger: 'BELOW',
-    /// },
-    /// {
-    ///    value: 20,
-    ///    category: 'WARNING',
-    ///    trigger: 'BELOW',
-    /// }
-    /// ```
-    ///
-    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
-    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
-    /// values strictly between 20 and 70 an OK state, values greater than or equal
-    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
-    /// 90 a DANGER state.
-    #[prost(message, repeated, tag = "6")]
-    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[prost(oneof = "scorecard::DataView", tags = "4, 5")]
-    pub data_view: ::core::option::Option<scorecard::DataView>,
-}
-/// Nested message and enum types in `Scorecard`.
-pub mod scorecard {
-    /// A gauge chart shows where the current value sits within a pre-defined
-    /// range. The upper and lower bounds should define the possible range of
-    /// values for the scorecard's query (inclusive).
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GaugeView {
-        /// The lower bound for this gauge chart. The value of the chart should
-        /// always be greater than or equal to this.
-        #[prost(double, tag = "1")]
-        pub lower_bound: f64,
-        /// The upper bound for this gauge chart. The value of the chart should
-        /// always be less than or equal to this.
-        #[prost(double, tag = "2")]
-        pub upper_bound: f64,
-    }
-    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
-    /// inline in text. This message contains the configuration for a sparkChart
-    /// to show up on a Scorecard, showing recent trends of the scorecard's
-    /// timeseries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SparkChartView {
-        /// Required. The type of sparkchart to show in this chartView.
-        #[prost(enumeration = "super::SparkChartType", tag = "1")]
-        pub spark_chart_type: i32,
-        /// The lower bound on data point frequency in the chart implemented by
-        /// specifying the minimum alignment period to use in a time series query.
-        /// For example, if the data is published once every 10 minutes it would not
-        /// make sense to fetch and align data at one minute intervals. This field is
-        /// optional and exists only as a hint.
-        #[prost(message, optional, tag = "2")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-    }
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DataView {
-        /// Will cause the scorecard to show a gauge chart.
-        #[prost(message, tag = "4")]
-        GaugeView(GaugeView),
-        /// Will cause the scorecard to show a spark chart.
-        #[prost(message, tag = "5")]
-        SparkChartView(SparkChartView),
-    }
-}
-/// Table display options that can be reused.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableDisplayOptions {
-    /// Optional. This field is unused and has been replaced by
-    /// TimeSeriesTable.column_settings
-    #[deprecated]
-    #[prost(string, repeated, tag = "1")]
-    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// A table that displays time series data.
 #[allow(clippy::derive_partial_eq_without_eq)]

@@ -1,3 +1,126 @@
+/// Tiers list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlTiersListRequest {
+    /// Project ID of the project for which to list tiers.
+    #[prost(string, tag = "1")]
+    pub project: ::prost::alloc::string::String,
+}
+/// Tiers list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TiersListResponse {
+    /// This is always **sql#tiersList**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// List of tiers.
+    #[prost(message, repeated, tag = "2")]
+    pub items: ::prost::alloc::vec::Vec<Tier>,
+}
+/// A Google Cloud SQL service tier resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Tier {
+    /// An identifier for the machine type, for example, db-custom-1-3840. For
+    /// related information, see \[Pricing\](/sql/pricing).
+    #[prost(string, tag = "1")]
+    pub tier: ::prost::alloc::string::String,
+    /// The maximum RAM usage of this tier in bytes.
+    #[prost(int64, tag = "2")]
+    pub ram: i64,
+    /// This is always **sql#tier**.
+    #[prost(string, tag = "3")]
+    pub kind: ::prost::alloc::string::String,
+    /// The maximum disk size of this tier in bytes.
+    #[prost(int64, tag = "4")]
+    pub disk_quota: i64,
+    /// The applicable regions for this tier.
+    #[prost(string, repeated, tag = "5")]
+    pub region: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod sql_tiers_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for providing machine types (tiers) for Cloud SQL instances.
+    #[derive(Debug, Clone)]
+    pub struct SqlTiersServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SqlTiersServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SqlTiersServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SqlTiersServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Lists all available machine types (tiers) for Cloud SQL, for example,
+        /// db-custom-1-3840. For more information, see
+        /// https://cloud.google.com/sql/pricing.
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlTiersListRequest>,
+        ) -> Result<tonic::Response<super::TiersListResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlTiersService/List",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// An entry for an Access Control list.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1687,6 +1810,325 @@ impl SqlUpdateTrack {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlUsersDeleteRequest {
+    /// Host of the user in the instance.
+    #[prost(string, tag = "1")]
+    pub host: ::prost::alloc::string::String,
+    /// Database instance ID. This does not include the project ID.
+    #[prost(string, tag = "2")]
+    pub instance: ::prost::alloc::string::String,
+    /// Name of the user in the instance.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "4")]
+    pub project: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlUsersInsertRequest {
+    /// Database instance ID. This does not include the project ID.
+    #[prost(string, tag = "1")]
+    pub instance: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "2")]
+    pub project: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "100")]
+    pub body: ::core::option::Option<User>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlUsersListRequest {
+    /// Database instance ID. This does not include the project ID.
+    #[prost(string, tag = "1")]
+    pub instance: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "2")]
+    pub project: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlUsersUpdateRequest {
+    /// Optional. Host of the user in the instance.
+    #[prost(string, tag = "1")]
+    pub host: ::prost::alloc::string::String,
+    /// Database instance ID. This does not include the project ID.
+    #[prost(string, tag = "2")]
+    pub instance: ::prost::alloc::string::String,
+    /// Name of the user in the instance.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "4")]
+    pub project: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "100")]
+    pub body: ::core::option::Option<User>,
+}
+/// A Cloud SQL user resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct User {
+    /// This is always **sql#user**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// The password for the user.
+    #[prost(string, tag = "2")]
+    pub password: ::prost::alloc::string::String,
+    /// This field is deprecated and will be removed from a future version of the
+    /// API.
+    #[prost(string, tag = "3")]
+    pub etag: ::prost::alloc::string::String,
+    /// The name of the user in the Cloud SQL instance. Can be omitted for
+    /// **update** since it is already specified in the URL.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The host name from which the user can connect. For **insert**
+    /// operations, host defaults to an empty string. For **update**
+    /// operations, host is specified as part of the request URL. The host name
+    /// cannot be updated after insertion.
+    #[prost(string, tag = "5")]
+    pub host: ::prost::alloc::string::String,
+    /// The name of the Cloud SQL instance. This does not include the project ID.
+    /// Can be omitted for **update** since it is already specified on the
+    /// URL.
+    #[prost(string, tag = "6")]
+    pub instance: ::prost::alloc::string::String,
+    /// The project ID of the project containing the Cloud SQL database. The Google
+    /// apps domain is prefixed if applicable. Can be omitted for **update** since
+    /// it is already specified on the URL.
+    #[prost(string, tag = "7")]
+    pub project: ::prost::alloc::string::String,
+    /// The user type. It determines the method to authenticate the user during
+    /// login. The default is the database's built-in user type.
+    #[prost(enumeration = "user::SqlUserType", tag = "8")]
+    pub r#type: i32,
+    /// User details for specific database type
+    #[prost(oneof = "user::UserDetails", tags = "9")]
+    pub user_details: ::core::option::Option<user::UserDetails>,
+}
+/// Nested message and enum types in `User`.
+pub mod user {
+    /// The user type.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SqlUserType {
+        /// The database's built-in user type.
+        BuiltIn = 0,
+        /// Cloud IAM user.
+        CloudIamUser = 1,
+        /// Cloud IAM service account.
+        CloudIamServiceAccount = 2,
+    }
+    impl SqlUserType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SqlUserType::BuiltIn => "BUILT_IN",
+                SqlUserType::CloudIamUser => "CLOUD_IAM_USER",
+                SqlUserType::CloudIamServiceAccount => "CLOUD_IAM_SERVICE_ACCOUNT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "BUILT_IN" => Some(Self::BuiltIn),
+                "CLOUD_IAM_USER" => Some(Self::CloudIamUser),
+                "CLOUD_IAM_SERVICE_ACCOUNT" => Some(Self::CloudIamServiceAccount),
+                _ => None,
+            }
+        }
+    }
+    /// User details for specific database type
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum UserDetails {
+        #[prost(message, tag = "9")]
+        SqlserverUserDetails(super::SqlServerUserDetails),
+    }
+}
+/// Represents a Sql Server user on the Cloud SQL instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlServerUserDetails {
+    /// If the user has been disabled
+    #[prost(bool, tag = "1")]
+    pub disabled: bool,
+    /// The server roles for this user
+    #[prost(string, repeated, tag = "2")]
+    pub server_roles: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// User list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UsersListResponse {
+    /// This is always **sql#usersList**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// List of user resources in the instance.
+    #[prost(message, repeated, tag = "2")]
+    pub items: ::prost::alloc::vec::Vec<User>,
+    /// An identifier that uniquely identifies the operation. You can use this
+    /// identifier to retrieve the Operations resource that has information about
+    /// the operation.
+    #[prost(string, tag = "3")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod sql_users_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Cloud SQL users service.
+    #[derive(Debug, Clone)]
+    pub struct SqlUsersServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SqlUsersServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SqlUsersServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SqlUsersServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Deletes a user from a Cloud SQL instance.
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlUsersDeleteRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlUsersService/Delete",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new user in a Cloud SQL instance.
+        pub async fn insert(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlUsersInsertRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlUsersService/Insert",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists users in the specified Cloud SQL instance.
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlUsersListRequest>,
+        ) -> Result<tonic::Response<super::UsersListResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlUsersService/List",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates an existing user in a Cloud SQL instance.
+        pub async fn update(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlUsersUpdateRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlUsersService/Update",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SqlSslCertsDeleteRequest {
     /// Cloud SQL instance ID. This does not include the project ID.
     #[prost(string, tag = "1")]
@@ -1918,131 +2360,17 @@ pub mod sql_ssl_certs_service_client {
         }
     }
 }
-/// Flags list request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlFlagsListRequest {
-    /// Database type and version you want to retrieve flags for. By default, this
-    /// method returns flags for all database types and versions.
-    #[prost(string, tag = "1")]
-    pub database_version: ::prost::alloc::string::String,
-}
-/// Flags list response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FlagsListResponse {
-    /// This is always **sql#flagsList**.
-    #[prost(string, tag = "1")]
-    pub kind: ::prost::alloc::string::String,
-    /// List of flags.
-    #[prost(message, repeated, tag = "2")]
-    pub items: ::prost::alloc::vec::Vec<Flag>,
-}
-/// A flag resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Flag {
-    /// This is the name of the flag. Flag names always use underscores, not
-    /// hyphens, for example: **max_allowed_packet**
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The type of the flag. Flags are typed to being **BOOLEAN**, **STRING**,
-    /// **INTEGER** or **NONE**. **NONE** is used for flags which do not take a
-    /// value, such as **skip_grant_tables**.
-    #[prost(enumeration = "SqlFlagType", tag = "2")]
-    pub r#type: i32,
-    /// The database version this flag applies to. Can be **MYSQL_8_0**,
-    /// **MYSQL_5_6**, or **MYSQL_5_7**.
-    #[prost(enumeration = "SqlDatabaseVersion", repeated, tag = "3")]
-    pub applies_to: ::prost::alloc::vec::Vec<i32>,
-    /// For **STRING** flags, a list of strings that the value can be set to.
-    #[prost(string, repeated, tag = "4")]
-    pub allowed_string_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// For **INTEGER** flags, the minimum allowed value.
-    #[prost(message, optional, tag = "5")]
-    pub min_value: ::core::option::Option<i64>,
-    /// For **INTEGER** flags, the maximum allowed value.
-    #[prost(message, optional, tag = "6")]
-    pub max_value: ::core::option::Option<i64>,
-    /// Indicates whether changing this flag will trigger a database restart. Only
-    /// applicable to Second Generation instances.
-    #[prost(message, optional, tag = "7")]
-    pub requires_restart: ::core::option::Option<bool>,
-    /// This is always **sql#flag**.
-    #[prost(string, tag = "8")]
-    pub kind: ::prost::alloc::string::String,
-    /// Whether or not the flag is considered in beta.
-    #[prost(message, optional, tag = "9")]
-    pub in_beta: ::core::option::Option<bool>,
-    /// Use this field if only certain integers are accepted. Can be combined
-    /// with min_value and max_value to add additional values.
-    #[prost(int64, repeated, tag = "10")]
-    pub allowed_int_values: ::prost::alloc::vec::Vec<i64>,
-}
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SqlFlagType {
-    /// This is an unknown flag type.
-    Unspecified = 0,
-    /// Boolean type flag.
-    Boolean = 1,
-    /// String type flag.
-    String = 2,
-    /// Integer type flag.
-    Integer = 3,
-    /// Flag type used for a server startup option.
-    None = 4,
-    /// Type introduced specially for MySQL TimeZone offset. Accept a string value
-    /// with the format [-12:59, 13:00].
-    MysqlTimezoneOffset = 5,
-    /// Float type flag.
-    Float = 6,
-    /// Comma-separated list of the strings in a SqlFlagType enum.
-    RepeatedString = 7,
-}
-impl SqlFlagType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            SqlFlagType::Unspecified => "SQL_FLAG_TYPE_UNSPECIFIED",
-            SqlFlagType::Boolean => "BOOLEAN",
-            SqlFlagType::String => "STRING",
-            SqlFlagType::Integer => "INTEGER",
-            SqlFlagType::None => "NONE",
-            SqlFlagType::MysqlTimezoneOffset => "MYSQL_TIMEZONE_OFFSET",
-            SqlFlagType::Float => "FLOAT",
-            SqlFlagType::RepeatedString => "REPEATED_STRING",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SQL_FLAG_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "BOOLEAN" => Some(Self::Boolean),
-            "STRING" => Some(Self::String),
-            "INTEGER" => Some(Self::Integer),
-            "NONE" => Some(Self::None),
-            "MYSQL_TIMEZONE_OFFSET" => Some(Self::MysqlTimezoneOffset),
-            "FLOAT" => Some(Self::Float),
-            "REPEATED_STRING" => Some(Self::RepeatedString),
-            _ => None,
-        }
-    }
-}
 /// Generated client implementations.
-pub mod sql_flags_service_client {
+pub mod sql_instance_names_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service to manage database flags for Cloud SQL instances.
+    /// Cloud SQL instance names service.
     #[derive(Debug, Clone)]
-    pub struct SqlFlagsServiceClient<T> {
+    pub struct SqlInstanceNamesServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> SqlFlagsServiceClient<T>
+    impl<T> SqlInstanceNamesServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -2060,7 +2388,7 @@ pub mod sql_flags_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> SqlFlagsServiceClient<InterceptedService<T, F>>
+        ) -> SqlInstanceNamesServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2074,7 +2402,9 @@ pub mod sql_flags_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            SqlFlagsServiceClient::new(InterceptedService::new(inner, interceptor))
+            SqlInstanceNamesServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
         }
         /// Compress requests with the given encoding.
         ///
@@ -2090,26 +2420,6 @@ pub mod sql_flags_service_client {
         pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
             self.inner = self.inner.accept_compressed(encoding);
             self
-        }
-        /// Lists all available database flags for Cloud SQL instances.
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlFlagsListRequest>,
-        ) -> Result<tonic::Response<super::FlagsListResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlFlagsService/List",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
         }
     }
 }
@@ -2377,436 +2687,131 @@ pub mod sql_databases_service_client {
         }
     }
 }
-/// Operations get request.
+/// Flags list request.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlOperationsGetRequest {
-    /// Instance operation ID.
+pub struct SqlFlagsListRequest {
+    /// Database type and version you want to retrieve flags for. By default, this
+    /// method returns flags for all database types and versions.
     #[prost(string, tag = "1")]
-    pub operation: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "2")]
-    pub project: ::prost::alloc::string::String,
+    pub database_version: ::prost::alloc::string::String,
 }
-/// Operations list request.
+/// Flags list response.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlOperationsListRequest {
-    /// Cloud SQL instance ID. This does not include the project ID.
-    #[prost(string, tag = "1")]
-    pub instance: ::prost::alloc::string::String,
-    /// Maximum number of operations per response.
-    #[prost(uint32, tag = "2")]
-    pub max_results: u32,
-    /// A previously-returned page token representing part of the larger set of
-    /// results to view.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "4")]
-    pub project: ::prost::alloc::string::String,
-}
-/// Operations list response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationsListResponse {
-    /// This is always **sql#operationsList**.
+pub struct FlagsListResponse {
+    /// This is always **sql#flagsList**.
     #[prost(string, tag = "1")]
     pub kind: ::prost::alloc::string::String,
-    /// List of operation resources.
+    /// List of flags.
     #[prost(message, repeated, tag = "2")]
-    pub items: ::prost::alloc::vec::Vec<Operation>,
-    /// The continuation token, used to page through large result sets. Provide
-    /// this value in a subsequent request to return the next page of results.
-    #[prost(string, tag = "3")]
-    pub next_page_token: ::prost::alloc::string::String,
+    pub items: ::prost::alloc::vec::Vec<Flag>,
 }
-/// Generated client implementations.
-pub mod sql_operations_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to fetch operations for database instances.
-    #[derive(Debug, Clone)]
-    pub struct SqlOperationsServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SqlOperationsServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SqlOperationsServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SqlOperationsServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Retrieves an instance operation that has been performed on an instance.
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlOperationsGetRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlOperationsService/Get",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all instance operations that have been performed on the given Cloud
-        /// SQL instance in the reverse chronological order of the start time.
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlOperationsListRequest>,
-        ) -> Result<tonic::Response<super::OperationsListResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlOperationsService/List",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Backup runs delete request.
+/// A flag resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlBackupRunsDeleteRequest {
-    /// The ID of the backup run to delete. To find a backup run ID, use the
-    /// \[list\](<https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1/backupRuns/list>)
-    /// method.
-    #[prost(int64, tag = "1")]
-    pub id: i64,
-    /// Cloud SQL instance ID. This does not include the project ID.
-    #[prost(string, tag = "2")]
-    pub instance: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "3")]
-    pub project: ::prost::alloc::string::String,
-}
-/// Backup runs get request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlBackupRunsGetRequest {
-    /// The ID of this backup run.
-    #[prost(int64, tag = "1")]
-    pub id: i64,
-    /// Cloud SQL instance ID. This does not include the project ID.
-    #[prost(string, tag = "2")]
-    pub instance: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "3")]
-    pub project: ::prost::alloc::string::String,
-}
-/// Backup runs insert request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlBackupRunsInsertRequest {
-    /// Cloud SQL instance ID. This does not include the project ID.
+pub struct Flag {
+    /// This is the name of the flag. Flag names always use underscores, not
+    /// hyphens, for example: **max_allowed_packet**
     #[prost(string, tag = "1")]
-    pub instance: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "2")]
-    pub project: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "100")]
-    pub body: ::core::option::Option<BackupRun>,
-}
-/// Backup runs list request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlBackupRunsListRequest {
-    /// Cloud SQL instance ID, or "-" for all instances. This does not include
-    /// the project ID.
-    #[prost(string, tag = "1")]
-    pub instance: ::prost::alloc::string::String,
-    /// Maximum number of backup runs per response.
-    #[prost(int32, tag = "2")]
-    pub max_results: i32,
-    /// A previously-returned page token representing part of the larger set of
-    /// results to view.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "4")]
-    pub project: ::prost::alloc::string::String,
-}
-/// A BackupRun resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BackupRun {
-    /// This is always **sql#backupRun**.
-    #[prost(string, tag = "1")]
-    pub kind: ::prost::alloc::string::String,
-    /// The status of this run.
-    #[prost(enumeration = "SqlBackupRunStatus", tag = "2")]
-    pub status: i32,
-    /// The time the run was enqueued in UTC timezone in
-    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
-    /// **2012-11-15T16:19:00.094Z**.
-    #[prost(message, optional, tag = "3")]
-    pub enqueued_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The identifier for this backup run. Unique only for a specific Cloud SQL
-    /// instance.
-    #[prost(int64, tag = "4")]
-    pub id: i64,
-    /// The time the backup operation actually started in UTC timezone in
-    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
-    /// **2012-11-15T16:19:00.094Z**.
-    #[prost(message, optional, tag = "5")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time the backup operation completed in UTC timezone in
-    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
-    /// **2012-11-15T16:19:00.094Z**.
-    #[prost(message, optional, tag = "6")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Information about why the backup operation failed. This is only present if
-    /// the run has the FAILED status.
-    #[prost(message, optional, tag = "7")]
-    pub error: ::core::option::Option<OperationError>,
-    /// The type of this run; can be either "AUTOMATED" or "ON_DEMAND". This field
-    /// defaults to "ON_DEMAND" and is ignored, when specified for insert requests.
-    #[prost(enumeration = "SqlBackupRunType", tag = "8")]
+    pub name: ::prost::alloc::string::String,
+    /// The type of the flag. Flags are typed to being **BOOLEAN**, **STRING**,
+    /// **INTEGER** or **NONE**. **NONE** is used for flags which do not take a
+    /// value, such as **skip_grant_tables**.
+    #[prost(enumeration = "SqlFlagType", tag = "2")]
     pub r#type: i32,
-    /// The description of this run, only applicable to on-demand backups.
-    #[prost(string, tag = "9")]
-    pub description: ::prost::alloc::string::String,
-    /// The start time of the backup window during which this the backup was
-    /// attempted in [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for
-    /// example **2012-11-15T16:19:00.094Z**.
-    #[prost(message, optional, tag = "10")]
-    pub window_start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Name of the database instance.
-    #[prost(string, tag = "11")]
-    pub instance: ::prost::alloc::string::String,
-    /// The URI of this resource.
-    #[prost(string, tag = "12")]
-    pub self_link: ::prost::alloc::string::String,
-    /// Location of the backups.
-    #[prost(string, tag = "13")]
-    pub location: ::prost::alloc::string::String,
-    /// Encryption configuration specific to a backup.
-    #[prost(message, optional, tag = "16")]
-    pub disk_encryption_configuration: ::core::option::Option<
-        DiskEncryptionConfiguration,
-    >,
-    /// Encryption status specific to a backup.
-    #[prost(message, optional, tag = "17")]
-    pub disk_encryption_status: ::core::option::Option<DiskEncryptionStatus>,
-    /// Specifies the kind of backup, PHYSICAL or DEFAULT_SNAPSHOT.
-    #[prost(enumeration = "SqlBackupKind", tag = "19")]
-    pub backup_kind: i32,
-}
-/// Backup run list results.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BackupRunsListResponse {
-    /// This is always **sql#backupRunsList**.
-    #[prost(string, tag = "1")]
+    /// The database version this flag applies to. Can be **MYSQL_8_0**,
+    /// **MYSQL_5_6**, or **MYSQL_5_7**.
+    #[prost(enumeration = "SqlDatabaseVersion", repeated, tag = "3")]
+    pub applies_to: ::prost::alloc::vec::Vec<i32>,
+    /// For **STRING** flags, a list of strings that the value can be set to.
+    #[prost(string, repeated, tag = "4")]
+    pub allowed_string_values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// For **INTEGER** flags, the minimum allowed value.
+    #[prost(message, optional, tag = "5")]
+    pub min_value: ::core::option::Option<i64>,
+    /// For **INTEGER** flags, the maximum allowed value.
+    #[prost(message, optional, tag = "6")]
+    pub max_value: ::core::option::Option<i64>,
+    /// Indicates whether changing this flag will trigger a database restart. Only
+    /// applicable to Second Generation instances.
+    #[prost(message, optional, tag = "7")]
+    pub requires_restart: ::core::option::Option<bool>,
+    /// This is always **sql#flag**.
+    #[prost(string, tag = "8")]
     pub kind: ::prost::alloc::string::String,
-    /// A list of backup runs in reverse chronological order of the enqueued time.
-    #[prost(message, repeated, tag = "2")]
-    pub items: ::prost::alloc::vec::Vec<BackupRun>,
-    /// The continuation token, used to page through large result sets. Provide
-    /// this value in a subsequent request to return the next page of results.
-    #[prost(string, tag = "3")]
-    pub next_page_token: ::prost::alloc::string::String,
+    /// Whether or not the flag is considered in beta.
+    #[prost(message, optional, tag = "9")]
+    pub in_beta: ::core::option::Option<bool>,
+    /// Use this field if only certain integers are accepted. Can be combined
+    /// with min_value and max_value to add additional values.
+    #[prost(int64, repeated, tag = "10")]
+    pub allowed_int_values: ::prost::alloc::vec::Vec<i64>,
 }
-/// The status of a backup run.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
-pub enum SqlBackupRunStatus {
-    /// The status of the run is unknown.
+pub enum SqlFlagType {
+    /// This is an unknown flag type.
     Unspecified = 0,
-    /// The backup operation was enqueued.
-    Enqueued = 1,
-    /// The backup is overdue across a given backup window. Indicates a
-    /// problem. Example: Long-running operation in progress during
-    /// the whole window.
-    Overdue = 2,
-    /// The backup is in progress.
-    Running = 3,
-    /// The backup failed.
-    Failed = 4,
-    /// The backup was successful.
-    Successful = 5,
-    /// The backup was skipped (without problems) for a given backup
-    /// window. Example: Instance was idle.
-    Skipped = 6,
-    /// The backup is about to be deleted.
-    DeletionPending = 7,
-    /// The backup deletion failed.
-    DeletionFailed = 8,
-    /// The backup has been deleted.
-    Deleted = 9,
+    /// Boolean type flag.
+    Boolean = 1,
+    /// String type flag.
+    String = 2,
+    /// Integer type flag.
+    Integer = 3,
+    /// Flag type used for a server startup option.
+    None = 4,
+    /// Type introduced specially for MySQL TimeZone offset. Accept a string value
+    /// with the format [-12:59, 13:00].
+    MysqlTimezoneOffset = 5,
+    /// Float type flag.
+    Float = 6,
+    /// Comma-separated list of the strings in a SqlFlagType enum.
+    RepeatedString = 7,
 }
-impl SqlBackupRunStatus {
+impl SqlFlagType {
     /// String value of the enum field names used in the ProtoBuf definition.
     ///
     /// The values are not transformed in any way and thus are considered stable
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
-            SqlBackupRunStatus::Unspecified => "SQL_BACKUP_RUN_STATUS_UNSPECIFIED",
-            SqlBackupRunStatus::Enqueued => "ENQUEUED",
-            SqlBackupRunStatus::Overdue => "OVERDUE",
-            SqlBackupRunStatus::Running => "RUNNING",
-            SqlBackupRunStatus::Failed => "FAILED",
-            SqlBackupRunStatus::Successful => "SUCCESSFUL",
-            SqlBackupRunStatus::Skipped => "SKIPPED",
-            SqlBackupRunStatus::DeletionPending => "DELETION_PENDING",
-            SqlBackupRunStatus::DeletionFailed => "DELETION_FAILED",
-            SqlBackupRunStatus::Deleted => "DELETED",
+            SqlFlagType::Unspecified => "SQL_FLAG_TYPE_UNSPECIFIED",
+            SqlFlagType::Boolean => "BOOLEAN",
+            SqlFlagType::String => "STRING",
+            SqlFlagType::Integer => "INTEGER",
+            SqlFlagType::None => "NONE",
+            SqlFlagType::MysqlTimezoneOffset => "MYSQL_TIMEZONE_OFFSET",
+            SqlFlagType::Float => "FLOAT",
+            SqlFlagType::RepeatedString => "REPEATED_STRING",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
-            "SQL_BACKUP_RUN_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
-            "ENQUEUED" => Some(Self::Enqueued),
-            "OVERDUE" => Some(Self::Overdue),
-            "RUNNING" => Some(Self::Running),
-            "FAILED" => Some(Self::Failed),
-            "SUCCESSFUL" => Some(Self::Successful),
-            "SKIPPED" => Some(Self::Skipped),
-            "DELETION_PENDING" => Some(Self::DeletionPending),
-            "DELETION_FAILED" => Some(Self::DeletionFailed),
-            "DELETED" => Some(Self::Deleted),
-            _ => None,
-        }
-    }
-}
-/// Defines the supported backup kinds.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SqlBackupKind {
-    /// This is an unknown BackupKind.
-    Unspecified = 0,
-    /// The snapshot based backups
-    Snapshot = 1,
-    /// Physical backups
-    Physical = 2,
-}
-impl SqlBackupKind {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            SqlBackupKind::Unspecified => "SQL_BACKUP_KIND_UNSPECIFIED",
-            SqlBackupKind::Snapshot => "SNAPSHOT",
-            SqlBackupKind::Physical => "PHYSICAL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SQL_BACKUP_KIND_UNSPECIFIED" => Some(Self::Unspecified),
-            "SNAPSHOT" => Some(Self::Snapshot),
-            "PHYSICAL" => Some(Self::Physical),
-            _ => None,
-        }
-    }
-}
-/// Type of backup (i.e. automated, on demand, etc).
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SqlBackupRunType {
-    /// This is an unknown BackupRun type.
-    Unspecified = 0,
-    /// The backup schedule automatically triggers a backup.
-    Automated = 1,
-    /// The user manually triggers a backup.
-    OnDemand = 2,
-}
-impl SqlBackupRunType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            SqlBackupRunType::Unspecified => "SQL_BACKUP_RUN_TYPE_UNSPECIFIED",
-            SqlBackupRunType::Automated => "AUTOMATED",
-            SqlBackupRunType::OnDemand => "ON_DEMAND",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SQL_BACKUP_RUN_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "AUTOMATED" => Some(Self::Automated),
-            "ON_DEMAND" => Some(Self::OnDemand),
+            "SQL_FLAG_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "BOOLEAN" => Some(Self::Boolean),
+            "STRING" => Some(Self::String),
+            "INTEGER" => Some(Self::Integer),
+            "NONE" => Some(Self::None),
+            "MYSQL_TIMEZONE_OFFSET" => Some(Self::MysqlTimezoneOffset),
+            "FLOAT" => Some(Self::Float),
+            "REPEATED_STRING" => Some(Self::RepeatedString),
             _ => None,
         }
     }
 }
 /// Generated client implementations.
-pub mod sql_backup_runs_service_client {
+pub mod sql_flags_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Service for managing database backups.
+    /// Service to manage database flags for Cloud SQL instances.
     #[derive(Debug, Clone)]
-    pub struct SqlBackupRunsServiceClient<T> {
+    pub struct SqlFlagsServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> SqlBackupRunsServiceClient<T>
+    impl<T> SqlFlagsServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -2824,7 +2829,7 @@ pub mod sql_backup_runs_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> SqlBackupRunsServiceClient<InterceptedService<T, F>>
+        ) -> SqlFlagsServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2838,7 +2843,7 @@ pub mod sql_backup_runs_service_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            SqlBackupRunsServiceClient::new(InterceptedService::new(inner, interceptor))
+            SqlFlagsServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2855,73 +2860,11 @@ pub mod sql_backup_runs_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Deletes the backup taken by a backup run.
-        pub async fn delete(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlBackupRunsDeleteRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlBackupRunsService/Delete",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Retrieves a resource containing information about a backup run.
-        pub async fn get(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlBackupRunsGetRequest>,
-        ) -> Result<tonic::Response<super::BackupRun>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlBackupRunsService/Get",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new backup run on demand.
-        pub async fn insert(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlBackupRunsInsertRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlBackupRunsService/Insert",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists all backup runs associated with the project or a given instance
-        /// and configuration in the reverse chronological order of the backup
-        /// initiation time.
+        /// Lists all available database flags for Cloud SQL instances.
         pub async fn list(
             &mut self,
-            request: impl tonic::IntoRequest<super::SqlBackupRunsListRequest>,
-        ) -> Result<tonic::Response<super::BackupRunsListResponse>, tonic::Status> {
+            request: impl tonic::IntoRequest<super::SqlFlagsListRequest>,
+        ) -> Result<tonic::Response<super::FlagsListResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2933,72 +2876,9 @@ pub mod sql_backup_runs_service_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlBackupRunsService/List",
+                "/google.cloud.sql.v1.SqlFlagsService/List",
             );
             self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod sql_instance_names_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Cloud SQL instance names service.
-    #[derive(Debug, Clone)]
-    pub struct SqlInstanceNamesServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SqlInstanceNamesServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SqlInstanceNamesServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SqlInstanceNamesServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
         }
     }
 }
@@ -5018,448 +4898,6 @@ pub mod sql_instances_service_client {
         }
     }
 }
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlUsersDeleteRequest {
-    /// Host of the user in the instance.
-    #[prost(string, tag = "1")]
-    pub host: ::prost::alloc::string::String,
-    /// Database instance ID. This does not include the project ID.
-    #[prost(string, tag = "2")]
-    pub instance: ::prost::alloc::string::String,
-    /// Name of the user in the instance.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "4")]
-    pub project: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlUsersInsertRequest {
-    /// Database instance ID. This does not include the project ID.
-    #[prost(string, tag = "1")]
-    pub instance: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "2")]
-    pub project: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "100")]
-    pub body: ::core::option::Option<User>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlUsersListRequest {
-    /// Database instance ID. This does not include the project ID.
-    #[prost(string, tag = "1")]
-    pub instance: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "2")]
-    pub project: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlUsersUpdateRequest {
-    /// Optional. Host of the user in the instance.
-    #[prost(string, tag = "1")]
-    pub host: ::prost::alloc::string::String,
-    /// Database instance ID. This does not include the project ID.
-    #[prost(string, tag = "2")]
-    pub instance: ::prost::alloc::string::String,
-    /// Name of the user in the instance.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Project ID of the project that contains the instance.
-    #[prost(string, tag = "4")]
-    pub project: ::prost::alloc::string::String,
-    #[prost(message, optional, tag = "100")]
-    pub body: ::core::option::Option<User>,
-}
-/// A Cloud SQL user resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct User {
-    /// This is always **sql#user**.
-    #[prost(string, tag = "1")]
-    pub kind: ::prost::alloc::string::String,
-    /// The password for the user.
-    #[prost(string, tag = "2")]
-    pub password: ::prost::alloc::string::String,
-    /// This field is deprecated and will be removed from a future version of the
-    /// API.
-    #[prost(string, tag = "3")]
-    pub etag: ::prost::alloc::string::String,
-    /// The name of the user in the Cloud SQL instance. Can be omitted for
-    /// **update** since it is already specified in the URL.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The host name from which the user can connect. For **insert**
-    /// operations, host defaults to an empty string. For **update**
-    /// operations, host is specified as part of the request URL. The host name
-    /// cannot be updated after insertion.
-    #[prost(string, tag = "5")]
-    pub host: ::prost::alloc::string::String,
-    /// The name of the Cloud SQL instance. This does not include the project ID.
-    /// Can be omitted for **update** since it is already specified on the
-    /// URL.
-    #[prost(string, tag = "6")]
-    pub instance: ::prost::alloc::string::String,
-    /// The project ID of the project containing the Cloud SQL database. The Google
-    /// apps domain is prefixed if applicable. Can be omitted for **update** since
-    /// it is already specified on the URL.
-    #[prost(string, tag = "7")]
-    pub project: ::prost::alloc::string::String,
-    /// The user type. It determines the method to authenticate the user during
-    /// login. The default is the database's built-in user type.
-    #[prost(enumeration = "user::SqlUserType", tag = "8")]
-    pub r#type: i32,
-    /// User details for specific database type
-    #[prost(oneof = "user::UserDetails", tags = "9")]
-    pub user_details: ::core::option::Option<user::UserDetails>,
-}
-/// Nested message and enum types in `User`.
-pub mod user {
-    /// The user type.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SqlUserType {
-        /// The database's built-in user type.
-        BuiltIn = 0,
-        /// Cloud IAM user.
-        CloudIamUser = 1,
-        /// Cloud IAM service account.
-        CloudIamServiceAccount = 2,
-    }
-    impl SqlUserType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SqlUserType::BuiltIn => "BUILT_IN",
-                SqlUserType::CloudIamUser => "CLOUD_IAM_USER",
-                SqlUserType::CloudIamServiceAccount => "CLOUD_IAM_SERVICE_ACCOUNT",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "BUILT_IN" => Some(Self::BuiltIn),
-                "CLOUD_IAM_USER" => Some(Self::CloudIamUser),
-                "CLOUD_IAM_SERVICE_ACCOUNT" => Some(Self::CloudIamServiceAccount),
-                _ => None,
-            }
-        }
-    }
-    /// User details for specific database type
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum UserDetails {
-        #[prost(message, tag = "9")]
-        SqlserverUserDetails(super::SqlServerUserDetails),
-    }
-}
-/// Represents a Sql Server user on the Cloud SQL instance.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlServerUserDetails {
-    /// If the user has been disabled
-    #[prost(bool, tag = "1")]
-    pub disabled: bool,
-    /// The server roles for this user
-    #[prost(string, repeated, tag = "2")]
-    pub server_roles: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// User list response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UsersListResponse {
-    /// This is always **sql#usersList**.
-    #[prost(string, tag = "1")]
-    pub kind: ::prost::alloc::string::String,
-    /// List of user resources in the instance.
-    #[prost(message, repeated, tag = "2")]
-    pub items: ::prost::alloc::vec::Vec<User>,
-    /// An identifier that uniquely identifies the operation. You can use this
-    /// identifier to retrieve the Operations resource that has information about
-    /// the operation.
-    #[prost(string, tag = "3")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod sql_users_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Cloud SQL users service.
-    #[derive(Debug, Clone)]
-    pub struct SqlUsersServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SqlUsersServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SqlUsersServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SqlUsersServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Deletes a user from a Cloud SQL instance.
-        pub async fn delete(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlUsersDeleteRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlUsersService/Delete",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new user in a Cloud SQL instance.
-        pub async fn insert(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlUsersInsertRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlUsersService/Insert",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists users in the specified Cloud SQL instance.
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlUsersListRequest>,
-        ) -> Result<tonic::Response<super::UsersListResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlUsersService/List",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates an existing user in a Cloud SQL instance.
-        pub async fn update(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlUsersUpdateRequest>,
-        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlUsersService/Update",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Tiers list request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SqlTiersListRequest {
-    /// Project ID of the project for which to list tiers.
-    #[prost(string, tag = "1")]
-    pub project: ::prost::alloc::string::String,
-}
-/// Tiers list response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TiersListResponse {
-    /// This is always **sql#tiersList**.
-    #[prost(string, tag = "1")]
-    pub kind: ::prost::alloc::string::String,
-    /// List of tiers.
-    #[prost(message, repeated, tag = "2")]
-    pub items: ::prost::alloc::vec::Vec<Tier>,
-}
-/// A Google Cloud SQL service tier resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Tier {
-    /// An identifier for the machine type, for example, db-custom-1-3840. For
-    /// related information, see \[Pricing\](/sql/pricing).
-    #[prost(string, tag = "1")]
-    pub tier: ::prost::alloc::string::String,
-    /// The maximum RAM usage of this tier in bytes.
-    #[prost(int64, tag = "2")]
-    pub ram: i64,
-    /// This is always **sql#tier**.
-    #[prost(string, tag = "3")]
-    pub kind: ::prost::alloc::string::String,
-    /// The maximum disk size of this tier in bytes.
-    #[prost(int64, tag = "4")]
-    pub disk_quota: i64,
-    /// The applicable regions for this tier.
-    #[prost(string, repeated, tag = "5")]
-    pub region: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Generated client implementations.
-pub mod sql_tiers_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for providing machine types (tiers) for Cloud SQL instances.
-    #[derive(Debug, Clone)]
-    pub struct SqlTiersServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SqlTiersServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SqlTiersServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SqlTiersServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists all available machine types (tiers) for Cloud SQL, for example,
-        /// db-custom-1-3840. For more information, see
-        /// https://cloud.google.com/sql/pricing.
-        pub async fn list(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SqlTiersListRequest>,
-        ) -> Result<tonic::Response<super::TiersListResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.sql.v1.SqlTiersService/List",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// Connect settings retrieval request.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -5639,6 +5077,568 @@ pub mod sql_connect_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.sql.v1.SqlConnectService/GenerateEphemeralCert",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Operations get request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlOperationsGetRequest {
+    /// Instance operation ID.
+    #[prost(string, tag = "1")]
+    pub operation: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "2")]
+    pub project: ::prost::alloc::string::String,
+}
+/// Operations list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlOperationsListRequest {
+    /// Cloud SQL instance ID. This does not include the project ID.
+    #[prost(string, tag = "1")]
+    pub instance: ::prost::alloc::string::String,
+    /// Maximum number of operations per response.
+    #[prost(uint32, tag = "2")]
+    pub max_results: u32,
+    /// A previously-returned page token representing part of the larger set of
+    /// results to view.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "4")]
+    pub project: ::prost::alloc::string::String,
+}
+/// Operations list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationsListResponse {
+    /// This is always **sql#operationsList**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// List of operation resources.
+    #[prost(message, repeated, tag = "2")]
+    pub items: ::prost::alloc::vec::Vec<Operation>,
+    /// The continuation token, used to page through large result sets. Provide
+    /// this value in a subsequent request to return the next page of results.
+    #[prost(string, tag = "3")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod sql_operations_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to fetch operations for database instances.
+    #[derive(Debug, Clone)]
+    pub struct SqlOperationsServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SqlOperationsServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SqlOperationsServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SqlOperationsServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Retrieves an instance operation that has been performed on an instance.
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlOperationsGetRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlOperationsService/Get",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all instance operations that have been performed on the given Cloud
+        /// SQL instance in the reverse chronological order of the start time.
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlOperationsListRequest>,
+        ) -> Result<tonic::Response<super::OperationsListResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlOperationsService/List",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Backup runs delete request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlBackupRunsDeleteRequest {
+    /// The ID of the backup run to delete. To find a backup run ID, use the
+    /// \[list\](<https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1/backupRuns/list>)
+    /// method.
+    #[prost(int64, tag = "1")]
+    pub id: i64,
+    /// Cloud SQL instance ID. This does not include the project ID.
+    #[prost(string, tag = "2")]
+    pub instance: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "3")]
+    pub project: ::prost::alloc::string::String,
+}
+/// Backup runs get request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlBackupRunsGetRequest {
+    /// The ID of this backup run.
+    #[prost(int64, tag = "1")]
+    pub id: i64,
+    /// Cloud SQL instance ID. This does not include the project ID.
+    #[prost(string, tag = "2")]
+    pub instance: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "3")]
+    pub project: ::prost::alloc::string::String,
+}
+/// Backup runs insert request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlBackupRunsInsertRequest {
+    /// Cloud SQL instance ID. This does not include the project ID.
+    #[prost(string, tag = "1")]
+    pub instance: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "2")]
+    pub project: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "100")]
+    pub body: ::core::option::Option<BackupRun>,
+}
+/// Backup runs list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SqlBackupRunsListRequest {
+    /// Cloud SQL instance ID, or "-" for all instances. This does not include
+    /// the project ID.
+    #[prost(string, tag = "1")]
+    pub instance: ::prost::alloc::string::String,
+    /// Maximum number of backup runs per response.
+    #[prost(int32, tag = "2")]
+    pub max_results: i32,
+    /// A previously-returned page token representing part of the larger set of
+    /// results to view.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Project ID of the project that contains the instance.
+    #[prost(string, tag = "4")]
+    pub project: ::prost::alloc::string::String,
+}
+/// A BackupRun resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BackupRun {
+    /// This is always **sql#backupRun**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// The status of this run.
+    #[prost(enumeration = "SqlBackupRunStatus", tag = "2")]
+    pub status: i32,
+    /// The time the run was enqueued in UTC timezone in
+    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
+    /// **2012-11-15T16:19:00.094Z**.
+    #[prost(message, optional, tag = "3")]
+    pub enqueued_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The identifier for this backup run. Unique only for a specific Cloud SQL
+    /// instance.
+    #[prost(int64, tag = "4")]
+    pub id: i64,
+    /// The time the backup operation actually started in UTC timezone in
+    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
+    /// **2012-11-15T16:19:00.094Z**.
+    #[prost(message, optional, tag = "5")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time the backup operation completed in UTC timezone in
+    /// [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for example
+    /// **2012-11-15T16:19:00.094Z**.
+    #[prost(message, optional, tag = "6")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Information about why the backup operation failed. This is only present if
+    /// the run has the FAILED status.
+    #[prost(message, optional, tag = "7")]
+    pub error: ::core::option::Option<OperationError>,
+    /// The type of this run; can be either "AUTOMATED" or "ON_DEMAND". This field
+    /// defaults to "ON_DEMAND" and is ignored, when specified for insert requests.
+    #[prost(enumeration = "SqlBackupRunType", tag = "8")]
+    pub r#type: i32,
+    /// The description of this run, only applicable to on-demand backups.
+    #[prost(string, tag = "9")]
+    pub description: ::prost::alloc::string::String,
+    /// The start time of the backup window during which this the backup was
+    /// attempted in [RFC 3339](<https://tools.ietf.org/html/rfc3339>) format, for
+    /// example **2012-11-15T16:19:00.094Z**.
+    #[prost(message, optional, tag = "10")]
+    pub window_start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Name of the database instance.
+    #[prost(string, tag = "11")]
+    pub instance: ::prost::alloc::string::String,
+    /// The URI of this resource.
+    #[prost(string, tag = "12")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Location of the backups.
+    #[prost(string, tag = "13")]
+    pub location: ::prost::alloc::string::String,
+    /// Encryption configuration specific to a backup.
+    #[prost(message, optional, tag = "16")]
+    pub disk_encryption_configuration: ::core::option::Option<
+        DiskEncryptionConfiguration,
+    >,
+    /// Encryption status specific to a backup.
+    #[prost(message, optional, tag = "17")]
+    pub disk_encryption_status: ::core::option::Option<DiskEncryptionStatus>,
+    /// Specifies the kind of backup, PHYSICAL or DEFAULT_SNAPSHOT.
+    #[prost(enumeration = "SqlBackupKind", tag = "19")]
+    pub backup_kind: i32,
+}
+/// Backup run list results.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BackupRunsListResponse {
+    /// This is always **sql#backupRunsList**.
+    #[prost(string, tag = "1")]
+    pub kind: ::prost::alloc::string::String,
+    /// A list of backup runs in reverse chronological order of the enqueued time.
+    #[prost(message, repeated, tag = "2")]
+    pub items: ::prost::alloc::vec::Vec<BackupRun>,
+    /// The continuation token, used to page through large result sets. Provide
+    /// this value in a subsequent request to return the next page of results.
+    #[prost(string, tag = "3")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The status of a backup run.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SqlBackupRunStatus {
+    /// The status of the run is unknown.
+    Unspecified = 0,
+    /// The backup operation was enqueued.
+    Enqueued = 1,
+    /// The backup is overdue across a given backup window. Indicates a
+    /// problem. Example: Long-running operation in progress during
+    /// the whole window.
+    Overdue = 2,
+    /// The backup is in progress.
+    Running = 3,
+    /// The backup failed.
+    Failed = 4,
+    /// The backup was successful.
+    Successful = 5,
+    /// The backup was skipped (without problems) for a given backup
+    /// window. Example: Instance was idle.
+    Skipped = 6,
+    /// The backup is about to be deleted.
+    DeletionPending = 7,
+    /// The backup deletion failed.
+    DeletionFailed = 8,
+    /// The backup has been deleted.
+    Deleted = 9,
+}
+impl SqlBackupRunStatus {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SqlBackupRunStatus::Unspecified => "SQL_BACKUP_RUN_STATUS_UNSPECIFIED",
+            SqlBackupRunStatus::Enqueued => "ENQUEUED",
+            SqlBackupRunStatus::Overdue => "OVERDUE",
+            SqlBackupRunStatus::Running => "RUNNING",
+            SqlBackupRunStatus::Failed => "FAILED",
+            SqlBackupRunStatus::Successful => "SUCCESSFUL",
+            SqlBackupRunStatus::Skipped => "SKIPPED",
+            SqlBackupRunStatus::DeletionPending => "DELETION_PENDING",
+            SqlBackupRunStatus::DeletionFailed => "DELETION_FAILED",
+            SqlBackupRunStatus::Deleted => "DELETED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SQL_BACKUP_RUN_STATUS_UNSPECIFIED" => Some(Self::Unspecified),
+            "ENQUEUED" => Some(Self::Enqueued),
+            "OVERDUE" => Some(Self::Overdue),
+            "RUNNING" => Some(Self::Running),
+            "FAILED" => Some(Self::Failed),
+            "SUCCESSFUL" => Some(Self::Successful),
+            "SKIPPED" => Some(Self::Skipped),
+            "DELETION_PENDING" => Some(Self::DeletionPending),
+            "DELETION_FAILED" => Some(Self::DeletionFailed),
+            "DELETED" => Some(Self::Deleted),
+            _ => None,
+        }
+    }
+}
+/// Defines the supported backup kinds.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SqlBackupKind {
+    /// This is an unknown BackupKind.
+    Unspecified = 0,
+    /// The snapshot based backups
+    Snapshot = 1,
+    /// Physical backups
+    Physical = 2,
+}
+impl SqlBackupKind {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SqlBackupKind::Unspecified => "SQL_BACKUP_KIND_UNSPECIFIED",
+            SqlBackupKind::Snapshot => "SNAPSHOT",
+            SqlBackupKind::Physical => "PHYSICAL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SQL_BACKUP_KIND_UNSPECIFIED" => Some(Self::Unspecified),
+            "SNAPSHOT" => Some(Self::Snapshot),
+            "PHYSICAL" => Some(Self::Physical),
+            _ => None,
+        }
+    }
+}
+/// Type of backup (i.e. automated, on demand, etc).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SqlBackupRunType {
+    /// This is an unknown BackupRun type.
+    Unspecified = 0,
+    /// The backup schedule automatically triggers a backup.
+    Automated = 1,
+    /// The user manually triggers a backup.
+    OnDemand = 2,
+}
+impl SqlBackupRunType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SqlBackupRunType::Unspecified => "SQL_BACKUP_RUN_TYPE_UNSPECIFIED",
+            SqlBackupRunType::Automated => "AUTOMATED",
+            SqlBackupRunType::OnDemand => "ON_DEMAND",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SQL_BACKUP_RUN_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "AUTOMATED" => Some(Self::Automated),
+            "ON_DEMAND" => Some(Self::OnDemand),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod sql_backup_runs_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for managing database backups.
+    #[derive(Debug, Clone)]
+    pub struct SqlBackupRunsServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SqlBackupRunsServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SqlBackupRunsServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SqlBackupRunsServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Deletes the backup taken by a backup run.
+        pub async fn delete(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlBackupRunsDeleteRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlBackupRunsService/Delete",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Retrieves a resource containing information about a backup run.
+        pub async fn get(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlBackupRunsGetRequest>,
+        ) -> Result<tonic::Response<super::BackupRun>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlBackupRunsService/Get",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new backup run on demand.
+        pub async fn insert(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlBackupRunsInsertRequest>,
+        ) -> Result<tonic::Response<super::Operation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlBackupRunsService/Insert",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists all backup runs associated with the project or a given instance
+        /// and configuration in the reverse chronological order of the backup
+        /// initiation time.
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SqlBackupRunsListRequest>,
+        ) -> Result<tonic::Response<super::BackupRunsListResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.sql.v1.SqlBackupRunsService/List",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
