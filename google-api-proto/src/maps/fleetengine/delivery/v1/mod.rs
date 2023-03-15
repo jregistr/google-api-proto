@@ -804,6 +804,67 @@ pub mod task {
         }
     }
 }
+/// The `TaskTrackingInfo` message. The message contains task tracking
+/// information which will be used for display. If a tracking ID is associated
+/// with multiple Tasks, Fleet Engine uses a heuristic to decide which Task's
+/// TaskTrackingInfo to select.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TaskTrackingInfo {
+    /// Must be in the format `providers/{provider}/taskTrackingInfo/{tracking}`,
+    /// where `tracking` represents the tracking ID.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Immutable. The tracking ID of a Task.
+    /// * Must be a valid Unicode string.
+    /// * Limited to a maximum length of 64 characters.
+    /// * Normalized according to [Unicode Normalization Form C]
+    /// (<http://www.unicode.org/reports/tr15/>).
+    /// * May not contain any of the following ASCII characters: '/', ':', '?',
+    /// ',', or '#'.
+    #[prost(string, tag = "2")]
+    pub tracking_id: ::prost::alloc::string::String,
+    /// The vehicle's last location.
+    #[prost(message, optional, tag = "3")]
+    pub vehicle_location: ::core::option::Option<DeliveryVehicleLocation>,
+    /// A list of points which when connected forms a polyline of the vehicle's
+    /// expected route to the location of this task.
+    #[prost(message, repeated, tag = "4")]
+    pub route_polyline_points: ::prost::alloc::vec::Vec<
+        super::super::super::super::google::r#type::LatLng,
+    >,
+    /// Indicates the number of stops the vehicle remaining until the task stop is
+    /// reached, including the task stop. For example, if the vehicle's next stop
+    /// is the task stop, the value will be 1.
+    #[prost(message, optional, tag = "5")]
+    pub remaining_stop_count: ::core::option::Option<i32>,
+    /// The total remaining distance in meters to the `VehicleStop` of interest.
+    #[prost(message, optional, tag = "6")]
+    pub remaining_driving_distance_meters: ::core::option::Option<i32>,
+    /// The timestamp that indicates the estimated arrival time to the stop
+    /// location.
+    #[prost(message, optional, tag = "7")]
+    pub estimated_arrival_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The timestamp that indicates the estimated completion time of a Task.
+    #[prost(message, optional, tag = "8")]
+    pub estimated_task_completion_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The current execution state of the Task.
+    #[prost(enumeration = "task::State", tag = "11")]
+    pub state: i32,
+    /// The outcome of attempting to execute a Task.
+    #[prost(enumeration = "task::TaskOutcome", tag = "9")]
+    pub task_outcome: i32,
+    /// The timestamp that indicates when the Task's outcome was set by the
+    /// provider.
+    #[prost(message, optional, tag = "12")]
+    pub task_outcome_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Immutable. The location where the Task will be completed.
+    #[prost(message, optional, tag = "10")]
+    pub planned_location: ::core::option::Option<LocationInfo>,
+    /// The time window during which the task should be completed.
+    #[prost(message, optional, tag = "13")]
+    pub target_time_window: ::core::option::Option<TimeWindow>,
+}
 /// A RequestHeader contains fields common to all Delivery RPC requests.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -950,67 +1011,6 @@ pub mod delivery_request_header {
             }
         }
     }
-}
-/// The `TaskTrackingInfo` message. The message contains task tracking
-/// information which will be used for display. If a tracking ID is associated
-/// with multiple Tasks, Fleet Engine uses a heuristic to decide which Task's
-/// TaskTrackingInfo to select.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TaskTrackingInfo {
-    /// Must be in the format `providers/{provider}/taskTrackingInfo/{tracking}`,
-    /// where `tracking` represents the tracking ID.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Immutable. The tracking ID of a Task.
-    /// * Must be a valid Unicode string.
-    /// * Limited to a maximum length of 64 characters.
-    /// * Normalized according to [Unicode Normalization Form C]
-    /// (<http://www.unicode.org/reports/tr15/>).
-    /// * May not contain any of the following ASCII characters: '/', ':', '?',
-    /// ',', or '#'.
-    #[prost(string, tag = "2")]
-    pub tracking_id: ::prost::alloc::string::String,
-    /// The vehicle's last location.
-    #[prost(message, optional, tag = "3")]
-    pub vehicle_location: ::core::option::Option<DeliveryVehicleLocation>,
-    /// A list of points which when connected forms a polyline of the vehicle's
-    /// expected route to the location of this task.
-    #[prost(message, repeated, tag = "4")]
-    pub route_polyline_points: ::prost::alloc::vec::Vec<
-        super::super::super::super::google::r#type::LatLng,
-    >,
-    /// Indicates the number of stops the vehicle remaining until the task stop is
-    /// reached, including the task stop. For example, if the vehicle's next stop
-    /// is the task stop, the value will be 1.
-    #[prost(message, optional, tag = "5")]
-    pub remaining_stop_count: ::core::option::Option<i32>,
-    /// The total remaining distance in meters to the `VehicleStop` of interest.
-    #[prost(message, optional, tag = "6")]
-    pub remaining_driving_distance_meters: ::core::option::Option<i32>,
-    /// The timestamp that indicates the estimated arrival time to the stop
-    /// location.
-    #[prost(message, optional, tag = "7")]
-    pub estimated_arrival_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The timestamp that indicates the estimated completion time of a Task.
-    #[prost(message, optional, tag = "8")]
-    pub estimated_task_completion_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The current execution state of the Task.
-    #[prost(enumeration = "task::State", tag = "11")]
-    pub state: i32,
-    /// The outcome of attempting to execute a Task.
-    #[prost(enumeration = "task::TaskOutcome", tag = "9")]
-    pub task_outcome: i32,
-    /// The timestamp that indicates when the Task's outcome was set by the
-    /// provider.
-    #[prost(message, optional, tag = "12")]
-    pub task_outcome_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Immutable. The location where the Task will be completed.
-    #[prost(message, optional, tag = "10")]
-    pub planned_location: ::core::option::Option<LocationInfo>,
-    /// The time window during which the task should be completed.
-    #[prost(message, optional, tag = "13")]
-    pub target_time_window: ::core::option::Option<TimeWindow>,
 }
 /// The `CreateDeliveryVehicle` request message.
 #[allow(clippy::derive_partial_eq_without_eq)]
