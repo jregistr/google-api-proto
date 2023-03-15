@@ -1,3 +1,38 @@
+/// Represents an intent.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Intent {
+    /// Required. The name of the last matched intent.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. Represents parameters identified as part of intent matching.
+    /// This is a map of the name of the identified parameter to the value of the
+    /// parameter identified from user input. All parameters defined in
+    /// the matched intent that are identified will be surfaced here.
+    #[prost(btree_map = "string, message", tag = "2")]
+    pub params: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        IntentParameterValue,
+    >,
+    /// Optional. Typed or spoken input from the end user that matched this intent.
+    /// This will be populated when an intent is matched, based on the user input.
+    #[prost(string, tag = "3")]
+    pub query: ::prost::alloc::string::String,
+}
+/// Represents a value for intent parameter.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IntentParameterValue {
+    /// Required. Original text value extracted from user utterance.
+    #[prost(string, tag = "1")]
+    pub original: ::prost::alloc::string::String,
+    /// Required. Structured value for parameter extracted from user input.
+    /// This will only be populated if the parameter is defined in the matched
+    /// intent and the value of the parameter could be identified during intent
+    /// matching.
+    #[prost(message, optional, tag = "2")]
+    pub resolved: ::core::option::Option<::prost_types::Value>,
+}
 /// Represents an Interactive Canvas response to be sent to the user.
 /// This can be used in conjunction with the "first_simple" field in the
 /// containing prompt to speak to the user in addition to displaying a
@@ -541,17 +576,6 @@ pub mod content {
         List(super::List),
     }
 }
-/// Input suggestion to be presented to the user.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Suggestion {
-    /// Required. The text shown in the suggestion chip. When tapped, this text will be
-    /// posted back to the conversation verbatim as if the user had typed it.
-    /// Each title must be unique among the set of suggestion chips.
-    /// Max 25 chars
-    #[prost(string, tag = "1")]
-    pub title: ::prost::alloc::string::String,
-}
 /// Represents a simple prompt to be send to a user.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -569,6 +593,17 @@ pub struct Simple {
     /// defined in this field replaces to the previous Simple prompt's text.
     #[prost(string, tag = "2")]
     pub text: ::prost::alloc::string::String,
+}
+/// Input suggestion to be presented to the user.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Suggestion {
+    /// Required. The text shown in the suggestion chip. When tapped, this text will be
+    /// posted back to the conversation verbatim as if the user had typed it.
+    /// Each title must be unique among the set of suggestion chips.
+    /// Max 25 chars
+    #[prost(string, tag = "1")]
+    pub title: ::prost::alloc::string::String,
 }
 /// Represent a response to a user.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -625,41 +660,6 @@ pub struct Prompt {
     /// Optional. Represents a Interactive Canvas response to be sent to the user.
     #[prost(message, optional, tag = "9")]
     pub canvas: ::core::option::Option<Canvas>,
-}
-/// Represents an intent.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Intent {
-    /// Required. The name of the last matched intent.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Represents parameters identified as part of intent matching.
-    /// This is a map of the name of the identified parameter to the value of the
-    /// parameter identified from user input. All parameters defined in
-    /// the matched intent that are identified will be surfaced here.
-    #[prost(btree_map = "string, message", tag = "2")]
-    pub params: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        IntentParameterValue,
-    >,
-    /// Optional. Typed or spoken input from the end user that matched this intent.
-    /// This will be populated when an intent is matched, based on the user input.
-    #[prost(string, tag = "3")]
-    pub query: ::prost::alloc::string::String,
-}
-/// Represents a value for intent parameter.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IntentParameterValue {
-    /// Required. Original text value extracted from user utterance.
-    #[prost(string, tag = "1")]
-    pub original: ::prost::alloc::string::String,
-    /// Required. Structured value for parameter extracted from user input.
-    /// This will only be populated if the parameter is defined in the matched
-    /// intent and the value of the parameter could be identified during intent
-    /// matching.
-    #[prost(message, optional, tag = "2")]
-    pub resolved: ::core::option::Option<::prost_types::Value>,
 }
 /// Represents a slot.
 #[allow(clippy::derive_partial_eq_without_eq)]

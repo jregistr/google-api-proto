@@ -1,3 +1,210 @@
+/// Step performed by the OS Config agent for configuring an `OSPolicyResource`
+/// to its desired state.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OsPolicyResourceConfigStep {
+    /// Configuration step type.
+    #[prost(enumeration = "os_policy_resource_config_step::Type", tag = "1")]
+    pub r#type: i32,
+    /// Outcome of the configuration step.
+    #[prost(enumeration = "os_policy_resource_config_step::Outcome", tag = "2")]
+    pub outcome: i32,
+    /// An error message recorded during the execution of this step.
+    /// Only populated when outcome is FAILED.
+    #[prost(string, tag = "3")]
+    pub error_message: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `OSPolicyResourceConfigStep`.
+pub mod os_policy_resource_config_step {
+    /// Supported configuration step types
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Default value. This value is unused.
+        Unspecified = 0,
+        /// Validation to detect resource conflicts, schema errors, etc.
+        Validation = 1,
+        /// Check the current desired state status of the resource.
+        DesiredStateCheck = 2,
+        /// Enforce the desired state for a resource that is not in desired state.
+        DesiredStateEnforcement = 3,
+        /// Re-check desired state status for a resource after enforcement of all
+        /// resources in the current configuration run.
+        ///
+        /// This step is used to determine the final desired state status for the
+        /// resource. It accounts for any resources that might have drifted from
+        /// their desired state due to side effects from configuring other resources
+        /// during the current configuration run.
+        DesiredStateCheckPostEnforcement = 4,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Validation => "VALIDATION",
+                Type::DesiredStateCheck => "DESIRED_STATE_CHECK",
+                Type::DesiredStateEnforcement => "DESIRED_STATE_ENFORCEMENT",
+                Type::DesiredStateCheckPostEnforcement => {
+                    "DESIRED_STATE_CHECK_POST_ENFORCEMENT"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "VALIDATION" => Some(Self::Validation),
+                "DESIRED_STATE_CHECK" => Some(Self::DesiredStateCheck),
+                "DESIRED_STATE_ENFORCEMENT" => Some(Self::DesiredStateEnforcement),
+                "DESIRED_STATE_CHECK_POST_ENFORCEMENT" => {
+                    Some(Self::DesiredStateCheckPostEnforcement)
+                }
+                _ => None,
+            }
+        }
+    }
+    /// Supported outcomes for a configuration step.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Outcome {
+        /// Default value. This value is unused.
+        Unspecified = 0,
+        /// The step succeeded.
+        Succeeded = 1,
+        /// The step failed.
+        Failed = 2,
+    }
+    impl Outcome {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Outcome::Unspecified => "OUTCOME_UNSPECIFIED",
+                Outcome::Succeeded => "SUCCEEDED",
+                Outcome::Failed => "FAILED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OUTCOME_UNSPECIFIED" => Some(Self::Unspecified),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                _ => None,
+            }
+        }
+    }
+}
+/// Compliance data for an OS policy resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OsPolicyResourceCompliance {
+    /// The id of the OS policy resource.
+    #[prost(string, tag = "1")]
+    pub os_policy_resource_id: ::prost::alloc::string::String,
+    /// Ordered list of configuration steps taken by the agent for the OS policy
+    /// resource.
+    #[prost(message, repeated, tag = "2")]
+    pub config_steps: ::prost::alloc::vec::Vec<OsPolicyResourceConfigStep>,
+    /// Compliance state of the OS policy resource.
+    #[prost(enumeration = "OsPolicyComplianceState", tag = "3")]
+    pub state: i32,
+    /// Resource specific output.
+    #[prost(oneof = "os_policy_resource_compliance::Output", tags = "4")]
+    pub output: ::core::option::Option<os_policy_resource_compliance::Output>,
+}
+/// Nested message and enum types in `OSPolicyResourceCompliance`.
+pub mod os_policy_resource_compliance {
+    /// ExecResource specific output.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExecResourceOutput {
+        /// Output from Enforcement phase output file (if run).
+        /// Output size is limited to 100K bytes.
+        #[prost(bytes = "bytes", tag = "2")]
+        pub enforcement_output: ::prost::bytes::Bytes,
+    }
+    /// Resource specific output.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Output {
+        /// ExecResource specific output.
+        #[prost(message, tag = "4")]
+        ExecResourceOutput(ExecResourceOutput),
+    }
+}
+/// Supported OSPolicy compliance states.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum OsPolicyComplianceState {
+    /// Default value. This value is unused.
+    Unspecified = 0,
+    /// Compliant state.
+    Compliant = 1,
+    /// Non-compliant state
+    NonCompliant = 2,
+    /// Unknown compliance state.
+    Unknown = 3,
+    /// No applicable OS policies were found for the instance.
+    /// This state is only applicable to the instance.
+    NoOsPoliciesApplicable = 4,
+}
+impl OsPolicyComplianceState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OsPolicyComplianceState::Unspecified => {
+                "OS_POLICY_COMPLIANCE_STATE_UNSPECIFIED"
+            }
+            OsPolicyComplianceState::Compliant => "COMPLIANT",
+            OsPolicyComplianceState::NonCompliant => "NON_COMPLIANT",
+            OsPolicyComplianceState::Unknown => "UNKNOWN",
+            OsPolicyComplianceState::NoOsPoliciesApplicable => {
+                "NO_OS_POLICIES_APPLICABLE"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OS_POLICY_COMPLIANCE_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "COMPLIANT" => Some(Self::Compliant),
+            "NON_COMPLIANT" => Some(Self::NonCompliant),
+            "UNKNOWN" => Some(Self::Unknown),
+            "NO_OS_POLICIES_APPLICABLE" => Some(Self::NoOsPoliciesApplicable),
+            _ => None,
+        }
+    }
+}
 /// An OS policy defines the desired state configuration for an instance.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -672,213 +879,6 @@ pub mod os_policy {
                 "ENFORCEMENT" => Some(Self::Enforcement),
                 _ => None,
             }
-        }
-    }
-}
-/// Step performed by the OS Config agent for configuring an `OSPolicyResource`
-/// to its desired state.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicyResourceConfigStep {
-    /// Configuration step type.
-    #[prost(enumeration = "os_policy_resource_config_step::Type", tag = "1")]
-    pub r#type: i32,
-    /// Outcome of the configuration step.
-    #[prost(enumeration = "os_policy_resource_config_step::Outcome", tag = "2")]
-    pub outcome: i32,
-    /// An error message recorded during the execution of this step.
-    /// Only populated when outcome is FAILED.
-    #[prost(string, tag = "3")]
-    pub error_message: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `OSPolicyResourceConfigStep`.
-pub mod os_policy_resource_config_step {
-    /// Supported configuration step types
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Default value. This value is unused.
-        Unspecified = 0,
-        /// Validation to detect resource conflicts, schema errors, etc.
-        Validation = 1,
-        /// Check the current desired state status of the resource.
-        DesiredStateCheck = 2,
-        /// Enforce the desired state for a resource that is not in desired state.
-        DesiredStateEnforcement = 3,
-        /// Re-check desired state status for a resource after enforcement of all
-        /// resources in the current configuration run.
-        ///
-        /// This step is used to determine the final desired state status for the
-        /// resource. It accounts for any resources that might have drifted from
-        /// their desired state due to side effects from configuring other resources
-        /// during the current configuration run.
-        DesiredStateCheckPostEnforcement = 4,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::Validation => "VALIDATION",
-                Type::DesiredStateCheck => "DESIRED_STATE_CHECK",
-                Type::DesiredStateEnforcement => "DESIRED_STATE_ENFORCEMENT",
-                Type::DesiredStateCheckPostEnforcement => {
-                    "DESIRED_STATE_CHECK_POST_ENFORCEMENT"
-                }
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "VALIDATION" => Some(Self::Validation),
-                "DESIRED_STATE_CHECK" => Some(Self::DesiredStateCheck),
-                "DESIRED_STATE_ENFORCEMENT" => Some(Self::DesiredStateEnforcement),
-                "DESIRED_STATE_CHECK_POST_ENFORCEMENT" => {
-                    Some(Self::DesiredStateCheckPostEnforcement)
-                }
-                _ => None,
-            }
-        }
-    }
-    /// Supported outcomes for a configuration step.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Outcome {
-        /// Default value. This value is unused.
-        Unspecified = 0,
-        /// The step succeeded.
-        Succeeded = 1,
-        /// The step failed.
-        Failed = 2,
-    }
-    impl Outcome {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Outcome::Unspecified => "OUTCOME_UNSPECIFIED",
-                Outcome::Succeeded => "SUCCEEDED",
-                Outcome::Failed => "FAILED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "OUTCOME_UNSPECIFIED" => Some(Self::Unspecified),
-                "SUCCEEDED" => Some(Self::Succeeded),
-                "FAILED" => Some(Self::Failed),
-                _ => None,
-            }
-        }
-    }
-}
-/// Compliance data for an OS policy resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicyResourceCompliance {
-    /// The id of the OS policy resource.
-    #[prost(string, tag = "1")]
-    pub os_policy_resource_id: ::prost::alloc::string::String,
-    /// Ordered list of configuration steps taken by the agent for the OS policy
-    /// resource.
-    #[prost(message, repeated, tag = "2")]
-    pub config_steps: ::prost::alloc::vec::Vec<OsPolicyResourceConfigStep>,
-    /// Compliance state of the OS policy resource.
-    #[prost(enumeration = "OsPolicyComplianceState", tag = "3")]
-    pub state: i32,
-    /// Resource specific output.
-    #[prost(oneof = "os_policy_resource_compliance::Output", tags = "4")]
-    pub output: ::core::option::Option<os_policy_resource_compliance::Output>,
-}
-/// Nested message and enum types in `OSPolicyResourceCompliance`.
-pub mod os_policy_resource_compliance {
-    /// ExecResource specific output.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExecResourceOutput {
-        /// Output from Enforcement phase output file (if run).
-        /// Output size is limited to 100K bytes.
-        #[prost(bytes = "bytes", tag = "2")]
-        pub enforcement_output: ::prost::bytes::Bytes,
-    }
-    /// Resource specific output.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Output {
-        /// ExecResource specific output.
-        #[prost(message, tag = "4")]
-        ExecResourceOutput(ExecResourceOutput),
-    }
-}
-/// Supported OSPolicy compliance states.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum OsPolicyComplianceState {
-    /// Default value. This value is unused.
-    Unspecified = 0,
-    /// Compliant state.
-    Compliant = 1,
-    /// Non-compliant state
-    NonCompliant = 2,
-    /// Unknown compliance state.
-    Unknown = 3,
-    /// No applicable OS policies were found for the instance.
-    /// This state is only applicable to the instance.
-    NoOsPoliciesApplicable = 4,
-}
-impl OsPolicyComplianceState {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            OsPolicyComplianceState::Unspecified => {
-                "OS_POLICY_COMPLIANCE_STATE_UNSPECIFIED"
-            }
-            OsPolicyComplianceState::Compliant => "COMPLIANT",
-            OsPolicyComplianceState::NonCompliant => "NON_COMPLIANT",
-            OsPolicyComplianceState::Unknown => "UNKNOWN",
-            OsPolicyComplianceState::NoOsPoliciesApplicable => {
-                "NO_OS_POLICIES_APPLICABLE"
-            }
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "OS_POLICY_COMPLIANCE_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-            "COMPLIANT" => Some(Self::Compliant),
-            "NON_COMPLIANT" => Some(Self::NonCompliant),
-            "UNKNOWN" => Some(Self::Unknown),
-            "NO_OS_POLICIES_APPLICABLE" => Some(Self::NoOsPoliciesApplicable),
-            _ => None,
         }
     }
 }

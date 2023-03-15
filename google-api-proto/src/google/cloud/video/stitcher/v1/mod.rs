@@ -1,16 +1,3 @@
-/// Slate object
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Slate {
-    /// Output only. The name of the slate, in the form of
-    /// `projects/{project_number}/locations/{location}/slates/{id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The URI to fetch the source content for the slate. This URI must return an
-    /// MP4 video with at least one audio track.
-    #[prost(string, tag = "2")]
-    pub uri: ::prost::alloc::string::String,
-}
 /// Container for a live session's ad tag detail.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -389,71 +376,6 @@ pub struct StaticAdResource {
     #[prost(string, tag = "2")]
     pub creative_type: ::prost::alloc::string::String,
 }
-/// Configuration for a CDN key. Used by the Video Stitcher
-/// to sign URIs for fetching video manifests and signing
-/// media segments for playback.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CdnKey {
-    /// The resource name of the CDN key, in the form of
-    /// `projects/{project}/locations/{location}/cdnKeys/{id}`.
-    /// The name is ignored when creating a CDN key.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The hostname this key applies to.
-    #[prost(string, tag = "4")]
-    pub hostname: ::prost::alloc::string::String,
-    /// Configuration associated with the CDN key.
-    #[prost(oneof = "cdn_key::CdnKeyConfig", tags = "5, 6, 8")]
-    pub cdn_key_config: ::core::option::Option<cdn_key::CdnKeyConfig>,
-}
-/// Nested message and enum types in `CdnKey`.
-pub mod cdn_key {
-    /// Configuration associated with the CDN key.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum CdnKeyConfig {
-        /// The configuration for a Google Cloud CDN key.
-        #[prost(message, tag = "5")]
-        GoogleCdnKey(super::GoogleCdnKey),
-        /// The configuration for an Akamai CDN key.
-        #[prost(message, tag = "6")]
-        AkamaiCdnKey(super::AkamaiCdnKey),
-        /// The configuration for a Media CDN key.
-        #[prost(message, tag = "8")]
-        MediaCdnKey(super::MediaCdnKey),
-    }
-}
-/// Configuration for a Google Cloud CDN key.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GoogleCdnKey {
-    /// Input only. Secret for this Google Cloud CDN key.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub private_key: ::prost::bytes::Bytes,
-    /// The public name of the Google Cloud CDN key.
-    #[prost(string, tag = "2")]
-    pub key_name: ::prost::alloc::string::String,
-}
-/// Configuration for an Akamai CDN key.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AkamaiCdnKey {
-    /// Input only. Token key for the Akamai CDN edge configuration.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub token_key: ::prost::bytes::Bytes,
-}
-/// Configuration for a Media CDN key.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MediaCdnKey {
-    /// Input only. 64-byte ed25519 private key for this Media CDN key.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub private_key: ::prost::bytes::Bytes,
-    /// The keyset name of the Media CDN key.
-    #[prost(string, tag = "2")]
-    pub key_name: ::prost::alloc::string::String,
-}
 /// Metadata for a VOD session.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -756,6 +678,84 @@ pub struct RenditionFilter {
     /// will match.
     #[prost(string, tag = "2")]
     pub codecs: ::prost::alloc::string::String,
+}
+/// Slate object
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Slate {
+    /// Output only. The name of the slate, in the form of
+    /// `projects/{project_number}/locations/{location}/slates/{id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The URI to fetch the source content for the slate. This URI must return an
+    /// MP4 video with at least one audio track.
+    #[prost(string, tag = "2")]
+    pub uri: ::prost::alloc::string::String,
+}
+/// Configuration for a CDN key. Used by the Video Stitcher
+/// to sign URIs for fetching video manifests and signing
+/// media segments for playback.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CdnKey {
+    /// The resource name of the CDN key, in the form of
+    /// `projects/{project}/locations/{location}/cdnKeys/{id}`.
+    /// The name is ignored when creating a CDN key.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The hostname this key applies to.
+    #[prost(string, tag = "4")]
+    pub hostname: ::prost::alloc::string::String,
+    /// Configuration associated with the CDN key.
+    #[prost(oneof = "cdn_key::CdnKeyConfig", tags = "5, 6, 8")]
+    pub cdn_key_config: ::core::option::Option<cdn_key::CdnKeyConfig>,
+}
+/// Nested message and enum types in `CdnKey`.
+pub mod cdn_key {
+    /// Configuration associated with the CDN key.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum CdnKeyConfig {
+        /// The configuration for a Google Cloud CDN key.
+        #[prost(message, tag = "5")]
+        GoogleCdnKey(super::GoogleCdnKey),
+        /// The configuration for an Akamai CDN key.
+        #[prost(message, tag = "6")]
+        AkamaiCdnKey(super::AkamaiCdnKey),
+        /// The configuration for a Media CDN key.
+        #[prost(message, tag = "8")]
+        MediaCdnKey(super::MediaCdnKey),
+    }
+}
+/// Configuration for a Google Cloud CDN key.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GoogleCdnKey {
+    /// Input only. Secret for this Google Cloud CDN key.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub private_key: ::prost::bytes::Bytes,
+    /// The public name of the Google Cloud CDN key.
+    #[prost(string, tag = "2")]
+    pub key_name: ::prost::alloc::string::String,
+}
+/// Configuration for an Akamai CDN key.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AkamaiCdnKey {
+    /// Input only. Token key for the Akamai CDN edge configuration.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub token_key: ::prost::bytes::Bytes,
+}
+/// Configuration for a Media CDN key.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MediaCdnKey {
+    /// Input only. 64-byte ed25519 private key for this Media CDN key.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub private_key: ::prost::bytes::Bytes,
+    /// The keyset name of the Media CDN key.
+    #[prost(string, tag = "2")]
+    pub key_name: ::prost::alloc::string::String,
 }
 /// Detailed information related to the interstitial of a VOD session.
 #[allow(clippy::derive_partial_eq_without_eq)]

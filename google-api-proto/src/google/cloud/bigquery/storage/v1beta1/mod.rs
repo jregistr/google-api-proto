@@ -1,3 +1,22 @@
+/// Arrow schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSchema {
+    /// IPC serialized Arrow schema.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_schema: ::prost::bytes::Bytes,
+}
+/// Arrow RecordBatch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowRecordBatch {
+    /// IPC serialized Arrow RecordBatch.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_record_batch: ::prost::bytes::Bytes,
+    /// The count of rows in the returning block.
+    #[prost(int64, tag = "2")]
+    pub row_count: i64,
+}
 /// Options dictating how we read a table.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -19,21 +38,22 @@ pub struct TableReadOptions {
     #[prost(string, tag = "2")]
     pub row_restriction: ::prost::alloc::string::String,
 }
-/// Arrow schema.
+/// Avro schema.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSchema {
-    /// IPC serialized Arrow schema.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_schema: ::prost::bytes::Bytes,
+pub struct AvroSchema {
+    /// Json serialized schema, as described at
+    /// <https://avro.apache.org/docs/1.8.1/spec.html>
+    #[prost(string, tag = "1")]
+    pub schema: ::prost::alloc::string::String,
 }
-/// Arrow RecordBatch.
+/// Avro rows.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowRecordBatch {
-    /// IPC serialized Arrow RecordBatch.
+pub struct AvroRows {
+    /// Binary serialized rows in a block.
     #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_record_batch: ::prost::bytes::Bytes,
+    pub serialized_binary_rows: ::prost::bytes::Bytes,
     /// The count of rows in the returning block.
     #[prost(int64, tag = "2")]
     pub row_count: i64,
@@ -59,26 +79,6 @@ pub struct TableModifiers {
     /// The snapshot time of the table. If not set, interpreted as now.
     #[prost(message, optional, tag = "1")]
     pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Avro schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroSchema {
-    /// Json serialized schema, as described at
-    /// <https://avro.apache.org/docs/1.8.1/spec.html>
-    #[prost(string, tag = "1")]
-    pub schema: ::prost::alloc::string::String,
-}
-/// Avro rows.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AvroRows {
-    /// Binary serialized rows in a block.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_binary_rows: ::prost::bytes::Bytes,
-    /// The count of rows in the returning block.
-    #[prost(int64, tag = "2")]
-    pub row_count: i64,
 }
 /// Information about a single data stream within a read session.
 #[allow(clippy::derive_partial_eq_without_eq)]

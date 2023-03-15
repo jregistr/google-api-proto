@@ -1,79 +1,3 @@
-/// Specification of the GRPC Endpoint.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GrpcEndpoint {
-    /// Required. The target URI of the gRPC endpoint. Only UDS path is supported, and
-    /// should start with "unix:".
-    #[prost(string, tag = "1")]
-    pub target_uri: ::prost::alloc::string::String,
-}
-/// Specification of ValidationCA. Defines the mechanism to obtain the
-/// Certificate Authority certificate to validate the peer certificate.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ValidationCa {
-    /// The type of certificate provider which provides the CA certificate.
-    #[prost(oneof = "validation_ca::Type", tags = "2, 3")]
-    pub r#type: ::core::option::Option<validation_ca::Type>,
-}
-/// Nested message and enum types in `ValidationCA`.
-pub mod validation_ca {
-    /// The type of certificate provider which provides the CA certificate.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Type {
-        /// gRPC specific configuration to access the gRPC server to
-        /// obtain the CA certificate.
-        #[prost(message, tag = "2")]
-        GrpcEndpoint(super::GrpcEndpoint),
-        /// The certificate provider instance specification that will be passed to
-        /// the data plane, which will be used to load necessary credential
-        /// information.
-        #[prost(message, tag = "3")]
-        CertificateProviderInstance(super::CertificateProviderInstance),
-    }
-}
-/// Specification of a TLS certificate provider instance. Workloads may have one
-/// or more CertificateProvider instances (plugins) and one of them is enabled
-/// and configured by specifying this message. Workloads use the values from this
-/// message to locate and load the CertificateProvider instance configuration.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CertificateProviderInstance {
-    /// Required. Plugin instance name, used to locate and load CertificateProvider instance
-    /// configuration. Set to "google_cloud_private_spiffe" to use Certificate
-    /// Authority Service certificate provider instance.
-    #[prost(string, tag = "1")]
-    pub plugin_instance: ::prost::alloc::string::String,
-}
-/// Specification of certificate provider. Defines the mechanism to obtain the
-/// certificate and private key for peer to peer authentication.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CertificateProvider {
-    /// The type of certificate provider which provides the certificates and
-    /// private keys.
-    #[prost(oneof = "certificate_provider::Type", tags = "2, 3")]
-    pub r#type: ::core::option::Option<certificate_provider::Type>,
-}
-/// Nested message and enum types in `CertificateProvider`.
-pub mod certificate_provider {
-    /// The type of certificate provider which provides the certificates and
-    /// private keys.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Type {
-        /// gRPC specific configuration to access the gRPC server to
-        /// obtain the cert and private key.
-        #[prost(message, tag = "2")]
-        GrpcEndpoint(super::GrpcEndpoint),
-        /// The certificate provider instance specification that will be passed to
-        /// the data plane, which will be used to load necessary credential
-        /// information.
-        #[prost(message, tag = "3")]
-        CertificateProviderInstance(super::CertificateProviderInstance),
-    }
-}
 /// AuthorizationPolicy is a resource that specifies how a server
 /// should authorize incoming connections. This resource in itself does
 /// not change the configuration unless it's attached to a target https
@@ -339,6 +263,82 @@ pub struct DeleteAuthorizationPolicyRequest {
     /// `projects/{project}/locations/{location}/authorizationPolicies/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
+}
+/// Specification of the GRPC Endpoint.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GrpcEndpoint {
+    /// Required. The target URI of the gRPC endpoint. Only UDS path is supported, and
+    /// should start with "unix:".
+    #[prost(string, tag = "1")]
+    pub target_uri: ::prost::alloc::string::String,
+}
+/// Specification of ValidationCA. Defines the mechanism to obtain the
+/// Certificate Authority certificate to validate the peer certificate.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ValidationCa {
+    /// The type of certificate provider which provides the CA certificate.
+    #[prost(oneof = "validation_ca::Type", tags = "2, 3")]
+    pub r#type: ::core::option::Option<validation_ca::Type>,
+}
+/// Nested message and enum types in `ValidationCA`.
+pub mod validation_ca {
+    /// The type of certificate provider which provides the CA certificate.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Type {
+        /// gRPC specific configuration to access the gRPC server to
+        /// obtain the CA certificate.
+        #[prost(message, tag = "2")]
+        GrpcEndpoint(super::GrpcEndpoint),
+        /// The certificate provider instance specification that will be passed to
+        /// the data plane, which will be used to load necessary credential
+        /// information.
+        #[prost(message, tag = "3")]
+        CertificateProviderInstance(super::CertificateProviderInstance),
+    }
+}
+/// Specification of a TLS certificate provider instance. Workloads may have one
+/// or more CertificateProvider instances (plugins) and one of them is enabled
+/// and configured by specifying this message. Workloads use the values from this
+/// message to locate and load the CertificateProvider instance configuration.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CertificateProviderInstance {
+    /// Required. Plugin instance name, used to locate and load CertificateProvider instance
+    /// configuration. Set to "google_cloud_private_spiffe" to use Certificate
+    /// Authority Service certificate provider instance.
+    #[prost(string, tag = "1")]
+    pub plugin_instance: ::prost::alloc::string::String,
+}
+/// Specification of certificate provider. Defines the mechanism to obtain the
+/// certificate and private key for peer to peer authentication.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CertificateProvider {
+    /// The type of certificate provider which provides the certificates and
+    /// private keys.
+    #[prost(oneof = "certificate_provider::Type", tags = "2, 3")]
+    pub r#type: ::core::option::Option<certificate_provider::Type>,
+}
+/// Nested message and enum types in `CertificateProvider`.
+pub mod certificate_provider {
+    /// The type of certificate provider which provides the certificates and
+    /// private keys.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Type {
+        /// gRPC specific configuration to access the gRPC server to
+        /// obtain the cert and private key.
+        #[prost(message, tag = "2")]
+        GrpcEndpoint(super::GrpcEndpoint),
+        /// The certificate provider instance specification that will be passed to
+        /// the data plane, which will be used to load necessary credential
+        /// information.
+        #[prost(message, tag = "3")]
+        CertificateProviderInstance(super::CertificateProviderInstance),
+    }
 }
 /// ClientTlsPolicy is a resource that specifies how a client should authenticate
 /// connections to backends of a service. This resource itself does not affect

@@ -4438,6 +4438,78 @@ pub mod issuer_switch_transactions_client {
         }
     }
 }
+/// The payload for the log entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpiTransaction {
+    /// A human readable message about the log entry.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The severity of the log entry.
+    #[prost(
+        enumeration = "super::super::super::super::logging::r#type::LogSeverity",
+        tag = "2"
+    )]
+    pub severity: i32,
+    /// The API type of the transaction.
+    #[prost(enumeration = "ApiType", tag = "3")]
+    pub api_type: i32,
+    /// The XML API type of the transaction.
+    #[prost(enumeration = "XmlApiType", tag = "4")]
+    pub xml_api_type: i32,
+    /// The type of the transaction.
+    #[prost(enumeration = "TransactionType", tag = "5")]
+    pub transaction_type: i32,
+    /// UPI's transaction ID.
+    #[prost(string, tag = "6")]
+    pub transaction_id: ::prost::alloc::string::String,
+    /// UPI's message ID.
+    #[prost(string, tag = "7")]
+    pub message_id: ::prost::alloc::string::String,
+    /// The payment's RRN. This will be present only for payment related
+    /// transactions.
+    #[prost(string, tag = "8")]
+    pub rrn: ::prost::alloc::string::String,
+    /// The timestamp at which the payload was received by the issuer switch.
+    #[prost(message, optional, tag = "9")]
+    pub payload_receipt_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The timestamp at which the payload was sent by the issuer switch.
+    #[prost(message, optional, tag = "10")]
+    pub payload_sent_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Status of the transaction which could be SUCCESS or FAILURE. This will be
+    /// populated only after transaction is complete.
+    #[prost(enumeration = "transaction_info::State", tag = "11")]
+    pub status: i32,
+    /// Issuer switch error code. This will be present only for failed
+    /// transactions.
+    #[prost(string, tag = "12")]
+    pub error_code: ::prost::alloc::string::String,
+    /// UPI error code that was sent back to NPCI. This will be present only for
+    /// failed transactions.
+    #[prost(string, tag = "13")]
+    pub upi_error_code: ::prost::alloc::string::String,
+    /// Issuer switch error message. This will be present only for failed
+    /// transactions.
+    #[prost(string, tag = "14")]
+    pub error_message: ::prost::alloc::string::String,
+    /// The ack, request or response payload.
+    #[prost(oneof = "upi_transaction::Payload", tags = "15, 16")]
+    pub payload: ::core::option::Option<upi_transaction::Payload>,
+}
+/// Nested message and enum types in `UpiTransaction`.
+pub mod upi_transaction {
+    /// The ack, request or response payload.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Payload {
+        /// The payload in XML format sent to the issuer switch.
+        #[prost(string, tag = "15")]
+        Sent(::prost::alloc::string::String),
+        /// The payload in XML format received by the issuer switch.
+        #[prost(string, tag = "16")]
+        Received(::prost::alloc::string::String),
+    }
+}
 /// A rule that is executed by the issuer switch while processing an
 /// API transaction.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -4904,77 +4976,5 @@ pub mod issuer_switch_rules_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-    }
-}
-/// The payload for the log entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpiTransaction {
-    /// A human readable message about the log entry.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The severity of the log entry.
-    #[prost(
-        enumeration = "super::super::super::super::logging::r#type::LogSeverity",
-        tag = "2"
-    )]
-    pub severity: i32,
-    /// The API type of the transaction.
-    #[prost(enumeration = "ApiType", tag = "3")]
-    pub api_type: i32,
-    /// The XML API type of the transaction.
-    #[prost(enumeration = "XmlApiType", tag = "4")]
-    pub xml_api_type: i32,
-    /// The type of the transaction.
-    #[prost(enumeration = "TransactionType", tag = "5")]
-    pub transaction_type: i32,
-    /// UPI's transaction ID.
-    #[prost(string, tag = "6")]
-    pub transaction_id: ::prost::alloc::string::String,
-    /// UPI's message ID.
-    #[prost(string, tag = "7")]
-    pub message_id: ::prost::alloc::string::String,
-    /// The payment's RRN. This will be present only for payment related
-    /// transactions.
-    #[prost(string, tag = "8")]
-    pub rrn: ::prost::alloc::string::String,
-    /// The timestamp at which the payload was received by the issuer switch.
-    #[prost(message, optional, tag = "9")]
-    pub payload_receipt_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The timestamp at which the payload was sent by the issuer switch.
-    #[prost(message, optional, tag = "10")]
-    pub payload_sent_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Status of the transaction which could be SUCCESS or FAILURE. This will be
-    /// populated only after transaction is complete.
-    #[prost(enumeration = "transaction_info::State", tag = "11")]
-    pub status: i32,
-    /// Issuer switch error code. This will be present only for failed
-    /// transactions.
-    #[prost(string, tag = "12")]
-    pub error_code: ::prost::alloc::string::String,
-    /// UPI error code that was sent back to NPCI. This will be present only for
-    /// failed transactions.
-    #[prost(string, tag = "13")]
-    pub upi_error_code: ::prost::alloc::string::String,
-    /// Issuer switch error message. This will be present only for failed
-    /// transactions.
-    #[prost(string, tag = "14")]
-    pub error_message: ::prost::alloc::string::String,
-    /// The ack, request or response payload.
-    #[prost(oneof = "upi_transaction::Payload", tags = "15, 16")]
-    pub payload: ::core::option::Option<upi_transaction::Payload>,
-}
-/// Nested message and enum types in `UpiTransaction`.
-pub mod upi_transaction {
-    /// The ack, request or response payload.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Payload {
-        /// The payload in XML format sent to the issuer switch.
-        #[prost(string, tag = "15")]
-        Sent(::prost::alloc::string::String),
-        /// The payload in XML format received by the issuer switch.
-        #[prost(string, tag = "16")]
-        Received(::prost::alloc::string::String),
     }
 }
