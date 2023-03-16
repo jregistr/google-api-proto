@@ -1,372 +1,3 @@
-/// The root node in the resource hierarchy to which a particular entity's
-/// (a company, for example) resources belong.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Organization {
-    /// Output only. The resource name of the organization. This is the
-    /// organization's relative path in the API. Its format is
-    /// "organizations/\[organization_id\]". For example, "organizations/1234".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. A human-readable string that refers to the organization in the
-    /// Google Cloud Console. This string is set by the server and cannot be
-    /// changed. The string will be set to the primary domain (for example,
-    /// "google.com") of the Google Workspace customer that owns the organization.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The organization's current lifecycle state.
-    #[prost(enumeration = "organization::State", tag = "4")]
-    pub state: i32,
-    /// Output only. Timestamp when the Organization was created.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when the Organization was last modified.
-    #[prost(message, optional, tag = "6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when the Organization was requested for deletion.
-    #[prost(message, optional, tag = "7")]
-    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. A checksum computed by the server based on the current value of the
-    /// Organization resource. This may be sent on update and delete requests to
-    /// ensure the client has an up-to-date value before proceeding.
-    #[prost(string, tag = "8")]
-    pub etag: ::prost::alloc::string::String,
-    /// The owner of this organization. The owner should be specified on
-    /// creation. Once set, it cannot be changed.
-    ///
-    /// The lifetime of the organization and all of its descendants are bound to
-    /// the owner. If the owner is deleted, the organization and all its
-    /// descendants will be deleted.
-    #[prost(oneof = "organization::Owner", tags = "3")]
-    pub owner: ::core::option::Option<organization::Owner>,
-}
-/// Nested message and enum types in `Organization`.
-pub mod organization {
-    /// Organization lifecycle states.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.  This is only useful for distinguishing unset values.
-        Unspecified = 0,
-        /// The normal and active state.
-        Active = 1,
-        /// The organization has been marked for deletion by the user.
-        DeleteRequested = 2,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Active => "ACTIVE",
-                State::DeleteRequested => "DELETE_REQUESTED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ACTIVE" => Some(Self::Active),
-                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
-                _ => None,
-            }
-        }
-    }
-    /// The owner of this organization. The owner should be specified on
-    /// creation. Once set, it cannot be changed.
-    ///
-    /// The lifetime of the organization and all of its descendants are bound to
-    /// the owner. If the owner is deleted, the organization and all its
-    /// descendants will be deleted.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Owner {
-        /// Immutable. The G Suite / Workspace customer id used in the Directory API.
-        #[prost(string, tag = "3")]
-        DirectoryCustomerId(::prost::alloc::string::String),
-    }
-}
-/// The request sent to the `GetOrganization` method. The `name` field is
-/// required. `organization_id` is no longer accepted.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetOrganizationRequest {
-    /// Required. The resource name of the Organization to fetch. This is the organization's
-    /// relative path in the API, formatted as "organizations/\[organizationId\]".
-    /// For example, "organizations/1234".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The request sent to the `SearchOrganizations` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchOrganizationsRequest {
-    /// Optional. The maximum number of organizations to return in the response.
-    /// If unspecified, server picks an appropriate default.
-    #[prost(int32, tag = "1")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to `SearchOrganizations`
-    /// that indicates from where listing should continue.
-    #[prost(string, tag = "2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. An optional query string used to filter the Organizations to return in
-    /// the response. Query rules are case-insensitive.
-    ///
-    /// ```
-    /// | Field            | Description                                |
-    /// |------------------|--------------------------------------------|
-    /// | directoryCustomerId, owner.directoryCustomerId | Filters by directory
-    /// customer id. |
-    /// | domain           | Filters by domain.                         |
-    /// ```
-    ///
-    /// Organizations may be queried by `directoryCustomerId` or by
-    /// `domain`, where the domain is a G Suite domain, for example:
-    ///
-    /// * Query `directorycustomerid:123456789` returns Organization
-    /// resources with `owner.directory_customer_id` equal to `123456789`.
-    /// * Query `domain:google.com` returns Organization resources corresponding
-    /// to the domain `google.com`.
-    #[prost(string, tag = "3")]
-    pub query: ::prost::alloc::string::String,
-}
-/// The response returned from the `SearchOrganizations` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchOrganizationsResponse {
-    /// The list of Organizations that matched the search query, possibly
-    /// paginated.
-    #[prost(message, repeated, tag = "1")]
-    pub organizations: ::prost::alloc::vec::Vec<Organization>,
-    /// A pagination token to be used to retrieve the next page of results. If the
-    /// result is too large to fit within the page size specified in the request,
-    /// this field will be set with a token that can be used to fetch the next page
-    /// of results. If this field is empty, it indicates that this response
-    /// contains the last page of results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A status object which is used as the `metadata` field for the operation
-/// returned by DeleteOrganization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteOrganizationMetadata {}
-/// A status object which is used as the `metadata` field for the Operation
-/// returned by UndeleteOrganization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UndeleteOrganizationMetadata {}
-/// Generated client implementations.
-pub mod organizations_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Allows users to manage their organization resources.
-    #[derive(Debug, Clone)]
-    pub struct OrganizationsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> OrganizationsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> OrganizationsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            OrganizationsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Fetches an organization resource identified by the specified resource name.
-        pub async fn get_organization(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetOrganizationRequest>,
-        ) -> Result<tonic::Response<super::Organization>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/GetOrganization",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches organization resources that are visible to the user and satisfy
-        /// the specified filter. This method returns organizations in an unspecified
-        /// order. New organizations do not necessarily appear at the end of the
-        /// results, and may take a small amount of time to appear.
-        ///
-        /// Search will only return organizations on which the user has the permission
-        /// `resourcemanager.organizations.get`
-        pub async fn search_organizations(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchOrganizationsRequest>,
-        ) -> Result<tonic::Response<super::SearchOrganizationsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/SearchOrganizations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for an organization resource. The policy may
-        /// be empty if no such policy or resource exists. The `resource` field should
-        /// be the organization's resource name, for example: "organizations/123".
-        ///
-        /// Authorization requires the IAM permission
-        /// `resourcemanager.organizations.getIamPolicy` on the specified organization.
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on an organization resource. Replaces any
-        /// existing policy. The `resource` field should be the organization's resource
-        /// name, for example: "organizations/123".
-        ///
-        /// Authorization requires the IAM permission
-        /// `resourcemanager.organizations.setIamPolicy` on the specified organization.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the permissions that a caller has on the specified organization.
-        /// The `resource` field should be the organization's resource name,
-        /// for example: "organizations/123".
-        ///
-        /// There are no permissions required for making this API call.
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<
-                super::super::super::super::iam::v1::TestIamPermissionsResponse,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
 /// A folder in an organization's resource hierarchy, used to
 /// organize that organization's resources.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1074,6 +705,375 @@ pub mod folders_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.resourcemanager.v3.Folders/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// The root node in the resource hierarchy to which a particular entity's
+/// (a company, for example) resources belong.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Organization {
+    /// Output only. The resource name of the organization. This is the
+    /// organization's relative path in the API. Its format is
+    /// "organizations/\[organization_id\]". For example, "organizations/1234".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. A human-readable string that refers to the organization in the
+    /// Google Cloud Console. This string is set by the server and cannot be
+    /// changed. The string will be set to the primary domain (for example,
+    /// "google.com") of the Google Workspace customer that owns the organization.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The organization's current lifecycle state.
+    #[prost(enumeration = "organization::State", tag = "4")]
+    pub state: i32,
+    /// Output only. Timestamp when the Organization was created.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when the Organization was last modified.
+    #[prost(message, optional, tag = "6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when the Organization was requested for deletion.
+    #[prost(message, optional, tag = "7")]
+    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. A checksum computed by the server based on the current value of the
+    /// Organization resource. This may be sent on update and delete requests to
+    /// ensure the client has an up-to-date value before proceeding.
+    #[prost(string, tag = "8")]
+    pub etag: ::prost::alloc::string::String,
+    /// The owner of this organization. The owner should be specified on
+    /// creation. Once set, it cannot be changed.
+    ///
+    /// The lifetime of the organization and all of its descendants are bound to
+    /// the owner. If the owner is deleted, the organization and all its
+    /// descendants will be deleted.
+    #[prost(oneof = "organization::Owner", tags = "3")]
+    pub owner: ::core::option::Option<organization::Owner>,
+}
+/// Nested message and enum types in `Organization`.
+pub mod organization {
+    /// Organization lifecycle states.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.  This is only useful for distinguishing unset values.
+        Unspecified = 0,
+        /// The normal and active state.
+        Active = 1,
+        /// The organization has been marked for deletion by the user.
+        DeleteRequested = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::DeleteRequested => "DELETE_REQUESTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
+                _ => None,
+            }
+        }
+    }
+    /// The owner of this organization. The owner should be specified on
+    /// creation. Once set, it cannot be changed.
+    ///
+    /// The lifetime of the organization and all of its descendants are bound to
+    /// the owner. If the owner is deleted, the organization and all its
+    /// descendants will be deleted.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Owner {
+        /// Immutable. The G Suite / Workspace customer id used in the Directory API.
+        #[prost(string, tag = "3")]
+        DirectoryCustomerId(::prost::alloc::string::String),
+    }
+}
+/// The request sent to the `GetOrganization` method. The `name` field is
+/// required. `organization_id` is no longer accepted.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetOrganizationRequest {
+    /// Required. The resource name of the Organization to fetch. This is the organization's
+    /// relative path in the API, formatted as "organizations/\[organizationId\]".
+    /// For example, "organizations/1234".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The request sent to the `SearchOrganizations` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchOrganizationsRequest {
+    /// Optional. The maximum number of organizations to return in the response.
+    /// If unspecified, server picks an appropriate default.
+    #[prost(int32, tag = "1")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to `SearchOrganizations`
+    /// that indicates from where listing should continue.
+    #[prost(string, tag = "2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. An optional query string used to filter the Organizations to return in
+    /// the response. Query rules are case-insensitive.
+    ///
+    /// ```
+    /// | Field            | Description                                |
+    /// |------------------|--------------------------------------------|
+    /// | directoryCustomerId, owner.directoryCustomerId | Filters by directory
+    /// customer id. |
+    /// | domain           | Filters by domain.                         |
+    /// ```
+    ///
+    /// Organizations may be queried by `directoryCustomerId` or by
+    /// `domain`, where the domain is a G Suite domain, for example:
+    ///
+    /// * Query `directorycustomerid:123456789` returns Organization
+    /// resources with `owner.directory_customer_id` equal to `123456789`.
+    /// * Query `domain:google.com` returns Organization resources corresponding
+    /// to the domain `google.com`.
+    #[prost(string, tag = "3")]
+    pub query: ::prost::alloc::string::String,
+}
+/// The response returned from the `SearchOrganizations` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchOrganizationsResponse {
+    /// The list of Organizations that matched the search query, possibly
+    /// paginated.
+    #[prost(message, repeated, tag = "1")]
+    pub organizations: ::prost::alloc::vec::Vec<Organization>,
+    /// A pagination token to be used to retrieve the next page of results. If the
+    /// result is too large to fit within the page size specified in the request,
+    /// this field will be set with a token that can be used to fetch the next page
+    /// of results. If this field is empty, it indicates that this response
+    /// contains the last page of results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A status object which is used as the `metadata` field for the operation
+/// returned by DeleteOrganization.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteOrganizationMetadata {}
+/// A status object which is used as the `metadata` field for the Operation
+/// returned by UndeleteOrganization.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UndeleteOrganizationMetadata {}
+/// Generated client implementations.
+pub mod organizations_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Allows users to manage their organization resources.
+    #[derive(Debug, Clone)]
+    pub struct OrganizationsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> OrganizationsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> OrganizationsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            OrganizationsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Fetches an organization resource identified by the specified resource name.
+        pub async fn get_organization(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOrganizationRequest>,
+        ) -> Result<tonic::Response<super::Organization>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/GetOrganization",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Searches organization resources that are visible to the user and satisfy
+        /// the specified filter. This method returns organizations in an unspecified
+        /// order. New organizations do not necessarily appear at the end of the
+        /// results, and may take a small amount of time to appear.
+        ///
+        /// Search will only return organizations on which the user has the permission
+        /// `resourcemanager.organizations.get`
+        pub async fn search_organizations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchOrganizationsRequest>,
+        ) -> Result<tonic::Response<super::SearchOrganizationsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/SearchOrganizations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the access control policy for an organization resource. The policy may
+        /// be empty if no such policy or resource exists. The `resource` field should
+        /// be the organization's resource name, for example: "organizations/123".
+        ///
+        /// Authorization requires the IAM permission
+        /// `resourcemanager.organizations.getIamPolicy` on the specified organization.
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the access control policy on an organization resource. Replaces any
+        /// existing policy. The `resource` field should be the organization's resource
+        /// name, for example: "organizations/123".
+        ///
+        /// Authorization requires the IAM permission
+        /// `resourcemanager.organizations.setIamPolicy` on the specified organization.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the permissions that a caller has on the specified organization.
+        /// The `resource` field should be the organization's resource name,
+        /// for example: "organizations/123".
+        ///
+        /// There are no permissions required for making this API call.
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::super::super::super::iam::v1::TestIamPermissionsResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/TestIamPermissions",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

@@ -1,3 +1,108 @@
+/// The permission that applies to a principal (user, group, audience) on a
+/// label.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LabelPermission {
+    /// Resource name of this permission.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Specifies the email address for a user or group pricinpal. Not populated
+    /// for audience principals. User and Group permissions may only be inserted
+    /// using email address. On update requests, if email address is specified,
+    /// no principal should be specified.
+    #[prost(string, tag = "2")]
+    pub email: ::prost::alloc::string::String,
+    /// The role the principal should have.
+    #[prost(enumeration = "label_permission::LabelRole", tag = "6")]
+    pub role: i32,
+    /// The principal this permission applies to. Must be either an email, user,
+    /// group, or audience.
+    /// Example:
+    /// * people/12345
+    /// * groups/45678
+    /// * audiences/default
+    #[prost(oneof = "label_permission::Principal", tags = "3, 4, 5")]
+    pub principal: ::core::option::Option<label_permission::Principal>,
+}
+/// Nested message and enum types in `LabelPermission`.
+pub mod label_permission {
+    /// Roles are concentric with subsequent role.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum LabelRole {
+        /// Unknown role.
+        Unspecified = 0,
+        /// A reader can read the label and associated metadata applied to Drive
+        /// items.
+        Reader = 1,
+        /// An applier can write associated metadata on Drive items in which they
+        /// also have write access to. Implies `READER`.
+        Applier = 2,
+        /// An organizer can pin this label in shared drives they manage
+        /// and add new appliers to the label.
+        Organizer = 3,
+        /// Editors can make any update including deleting the label which
+        /// also deletes the associated Drive item metadata. Implies `APPLIER`.
+        Editor = 4,
+    }
+    impl LabelRole {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                LabelRole::Unspecified => "LABEL_ROLE_UNSPECIFIED",
+                LabelRole::Reader => "READER",
+                LabelRole::Applier => "APPLIER",
+                LabelRole::Organizer => "ORGANIZER",
+                LabelRole::Editor => "EDITOR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LABEL_ROLE_UNSPECIFIED" => Some(Self::Unspecified),
+                "READER" => Some(Self::Reader),
+                "APPLIER" => Some(Self::Applier),
+                "ORGANIZER" => Some(Self::Organizer),
+                "EDITOR" => Some(Self::Editor),
+                _ => None,
+            }
+        }
+    }
+    /// The principal this permission applies to. Must be either an email, user,
+    /// group, or audience.
+    /// Example:
+    /// * people/12345
+    /// * groups/45678
+    /// * audiences/default
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Principal {
+        /// Person resource name.
+        #[prost(string, tag = "3")]
+        Person(::prost::alloc::string::String),
+        /// Group resource name.
+        #[prost(string, tag = "4")]
+        Group(::prost::alloc::string::String),
+        /// Audience to grant a role to. The magic value of `audiences/default` may
+        /// be used to apply the role to the default audience in the context of the
+        /// organization that owns the Label.
+        #[prost(string, tag = "5")]
+        Audience(::prost::alloc::string::String),
+    }
+}
 /// The lifecycle state of an object, such as label, field, or choice. The
 /// lifecycle enforces the following transitions:
 ///
@@ -871,6 +976,148 @@ pub mod label {
         }
     }
 }
+/// Label constraints governing the structure of a Label; such as, the maximum
+/// number of Fields allowed and maximum length of the label title.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LabelLimits {
+    /// Resource name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The maximum number of characters allowed for the title.
+    #[prost(int32, tag = "2")]
+    pub max_title_length: i32,
+    /// The maximum number of characters allowed for the description.
+    #[prost(int32, tag = "3")]
+    pub max_description_length: i32,
+    /// The maximum number of Fields allowed within the label.
+    #[prost(int32, tag = "4")]
+    pub max_fields: i32,
+    /// The maximum number of published Fields that can be deleted.
+    #[prost(int32, tag = "5")]
+    pub max_deleted_fields: i32,
+    /// The maximum number of draft revisions that will be kept before deleting
+    /// old drafts.
+    #[prost(int32, tag = "6")]
+    pub max_draft_revisions: i32,
+    /// The limits for Fields.
+    #[prost(message, optional, tag = "7")]
+    pub field_limits: ::core::option::Option<FieldLimits>,
+}
+/// Field constants governing the structure of a Field; such as, the maximum
+/// title length, minimum and maximum field values or length, etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldLimits {
+    /// Max length for the id.
+    #[prost(int32, tag = "1")]
+    pub max_id_length: i32,
+    /// Limits for Field title.
+    #[prost(int32, tag = "2")]
+    pub max_display_name_length: i32,
+    /// Limits for Field description, also called help text.
+    #[prost(int32, tag = "3")]
+    pub max_description_length: i32,
+    /// The relevant limits for the specified Field.Type.
+    /// Text Field limits.
+    #[prost(message, optional, tag = "4")]
+    pub text_limits: ::core::option::Option<TextLimits>,
+    /// Long text Field limits.
+    #[prost(message, optional, tag = "5")]
+    pub long_text_limits: ::core::option::Option<LongTextLimits>,
+    /// Integer Field limits.
+    #[prost(message, optional, tag = "6")]
+    pub integer_limits: ::core::option::Option<IntegerLimits>,
+    /// Date Field limits.
+    #[prost(message, optional, tag = "7")]
+    pub date_limits: ::core::option::Option<DateLimits>,
+    /// User Field limits.
+    #[prost(message, optional, tag = "8")]
+    pub user_limits: ::core::option::Option<UserLimits>,
+    /// Selection Field limits.
+    #[prost(message, optional, tag = "9")]
+    pub selection_limits: ::core::option::Option<SelectionLimits>,
+}
+/// Limits for list-variant of a Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLimits {
+    /// Maximum number of values allowed for the Field type.
+    #[prost(int32, tag = "1")]
+    pub max_entries: i32,
+}
+/// Limits for text Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextLimits {
+    /// Minimum length allowed for a text Field type.
+    #[prost(int32, tag = "1")]
+    pub min_length: i32,
+    /// Maximum length allowed for a text Field type.
+    #[prost(int32, tag = "2")]
+    pub max_length: i32,
+}
+/// Limits for long text Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LongTextLimits {
+    /// Minimum length allowed for a long text Field type.
+    #[prost(int32, tag = "1")]
+    pub min_length: i32,
+    /// Maximum length allowed for a long text Field type.
+    #[prost(int32, tag = "2")]
+    pub max_length: i32,
+}
+/// Limits for integer Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IntegerLimits {
+    /// Minimum value for an integer Field type.
+    #[prost(int64, tag = "1")]
+    pub min_value: i64,
+    /// Maximum value for an integer Field type.
+    #[prost(int64, tag = "2")]
+    pub max_value: i64,
+}
+/// Limits for date Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DateLimits {
+    /// Minimum value for the date Field type.
+    #[prost(message, optional, tag = "1")]
+    pub min_value: ::core::option::Option<super::super::super::super::r#type::Date>,
+    /// Maximum value for the date Field type.
+    #[prost(message, optional, tag = "2")]
+    pub max_value: ::core::option::Option<super::super::super::super::r#type::Date>,
+}
+/// Limits for selection Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SelectionLimits {
+    /// Limits for list-variant of a Field type.
+    #[prost(message, optional, tag = "1")]
+    pub list_limits: ::core::option::Option<ListLimits>,
+    /// Maximum ID length for a selection options.
+    #[prost(int32, tag = "2")]
+    pub max_id_length: i32,
+    /// Maximum length for display name.
+    #[prost(int32, tag = "3")]
+    pub max_display_name_length: i32,
+    /// The max number of choices.
+    #[prost(int32, tag = "4")]
+    pub max_choices: i32,
+    /// Maximum number of deleted choices.
+    #[prost(int32, tag = "5")]
+    pub max_deleted_choices: i32,
+}
+/// Limits for Field.Type.USER.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserLimits {
+    /// Limits for list-variant of a Field type.
+    #[prost(message, optional, tag = "1")]
+    pub list_limits: ::core::option::Option<ListLimits>,
+}
 /// A Lock that can be applied to a Label, Field, or Choice.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -959,111 +1206,6 @@ pub mod label_lock {
                 _ => None,
             }
         }
-    }
-}
-/// The permission that applies to a principal (user, group, audience) on a
-/// label.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LabelPermission {
-    /// Resource name of this permission.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Specifies the email address for a user or group pricinpal. Not populated
-    /// for audience principals. User and Group permissions may only be inserted
-    /// using email address. On update requests, if email address is specified,
-    /// no principal should be specified.
-    #[prost(string, tag = "2")]
-    pub email: ::prost::alloc::string::String,
-    /// The role the principal should have.
-    #[prost(enumeration = "label_permission::LabelRole", tag = "6")]
-    pub role: i32,
-    /// The principal this permission applies to. Must be either an email, user,
-    /// group, or audience.
-    /// Example:
-    /// * people/12345
-    /// * groups/45678
-    /// * audiences/default
-    #[prost(oneof = "label_permission::Principal", tags = "3, 4, 5")]
-    pub principal: ::core::option::Option<label_permission::Principal>,
-}
-/// Nested message and enum types in `LabelPermission`.
-pub mod label_permission {
-    /// Roles are concentric with subsequent role.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum LabelRole {
-        /// Unknown role.
-        Unspecified = 0,
-        /// A reader can read the label and associated metadata applied to Drive
-        /// items.
-        Reader = 1,
-        /// An applier can write associated metadata on Drive items in which they
-        /// also have write access to. Implies `READER`.
-        Applier = 2,
-        /// An organizer can pin this label in shared drives they manage
-        /// and add new appliers to the label.
-        Organizer = 3,
-        /// Editors can make any update including deleting the label which
-        /// also deletes the associated Drive item metadata. Implies `APPLIER`.
-        Editor = 4,
-    }
-    impl LabelRole {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                LabelRole::Unspecified => "LABEL_ROLE_UNSPECIFIED",
-                LabelRole::Reader => "READER",
-                LabelRole::Applier => "APPLIER",
-                LabelRole::Organizer => "ORGANIZER",
-                LabelRole::Editor => "EDITOR",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "LABEL_ROLE_UNSPECIFIED" => Some(Self::Unspecified),
-                "READER" => Some(Self::Reader),
-                "APPLIER" => Some(Self::Applier),
-                "ORGANIZER" => Some(Self::Organizer),
-                "EDITOR" => Some(Self::Editor),
-                _ => None,
-            }
-        }
-    }
-    /// The principal this permission applies to. Must be either an email, user,
-    /// group, or audience.
-    /// Example:
-    /// * people/12345
-    /// * groups/45678
-    /// * audiences/default
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Principal {
-        /// Person resource name.
-        #[prost(string, tag = "3")]
-        Person(::prost::alloc::string::String),
-        /// Group resource name.
-        #[prost(string, tag = "4")]
-        Group(::prost::alloc::string::String),
-        /// Audience to grant a role to. The magic value of `audiences/default` may
-        /// be used to apply the role to the default audience in the context of the
-        /// organization that owns the Label.
-        #[prost(string, tag = "5")]
-        Audience(::prost::alloc::string::String),
     }
 }
 /// Provides control over how write requests are executed. When not specified,
@@ -1925,369 +2067,6 @@ impl LabelView {
         }
     }
 }
-/// Describes violations in a request to create or update a Label or its
-/// Fields.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InvalidArgument {
-    /// Describes all violations in a client request.
-    #[prost(message, repeated, tag = "1")]
-    pub field_violations: ::prost::alloc::vec::Vec<invalid_argument::FieldViolation>,
-}
-/// Nested message and enum types in `InvalidArgument`.
-pub mod invalid_argument {
-    /// Describes the Field in which the violation occurred.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FieldViolation {
-        /// The path to the field where this violation occurred. This path is
-        /// specified using `FieldMask` format:
-        /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-        #[prost(string, tag = "1")]
-        pub field: ::prost::alloc::string::String,
-        /// The detailed reason for this FieldViolation.
-        #[prost(enumeration = "field_violation::Reason", tag = "2")]
-        pub reason: i32,
-        /// A message that describes the violation. This message is intended to
-        /// be shown to end users, and is localized into the requesting user's
-        /// preferred language.
-        #[prost(string, tag = "3")]
-        pub display_message: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `FieldViolation`.
-    pub mod field_violation {
-        /// Possible reasons a field is invalid.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum Reason {
-            /// Unknown reason.
-            Unspecified = 0,
-            /// The referenced field is required.
-            FieldRequired = 1,
-            /// The referenced value was invalid.
-            InvalidValue = 2,
-            /// The specified numeric value is out of the allowed range.
-            ValueOutOfRange = 3,
-            /// The specified string value was too long.
-            StringValueTooLong = 4,
-            /// The number of entries exceeded the maximum.
-            MaxEntriesExceeded = 5,
-            /// The specified field is not found in the Label.
-            FieldNotFound = 6,
-            /// The specified choice is not found in the Field.
-            ChoiceNotFound = 7,
-        }
-        impl Reason {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Reason::Unspecified => "REASON_UNSPECIFIED",
-                    Reason::FieldRequired => "FIELD_REQUIRED",
-                    Reason::InvalidValue => "INVALID_VALUE",
-                    Reason::ValueOutOfRange => "VALUE_OUT_OF_RANGE",
-                    Reason::StringValueTooLong => "STRING_VALUE_TOO_LONG",
-                    Reason::MaxEntriesExceeded => "MAX_ENTRIES_EXCEEDED",
-                    Reason::FieldNotFound => "FIELD_NOT_FOUND",
-                    Reason::ChoiceNotFound => "CHOICE_NOT_FOUND",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "REASON_UNSPECIFIED" => Some(Self::Unspecified),
-                    "FIELD_REQUIRED" => Some(Self::FieldRequired),
-                    "INVALID_VALUE" => Some(Self::InvalidValue),
-                    "VALUE_OUT_OF_RANGE" => Some(Self::ValueOutOfRange),
-                    "STRING_VALUE_TOO_LONG" => Some(Self::StringValueTooLong),
-                    "MAX_ENTRIES_EXCEEDED" => Some(Self::MaxEntriesExceeded),
-                    "FIELD_NOT_FOUND" => Some(Self::FieldNotFound),
-                    "CHOICE_NOT_FOUND" => Some(Self::ChoiceNotFound),
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Describes what preconditions have failed.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PreconditionFailure {
-    /// Describes all violations in a client request.
-    #[prost(message, repeated, tag = "1")]
-    pub violation: ::prost::alloc::vec::Vec<precondition_failure::Violation>,
-}
-/// Nested message and enum types in `PreconditionFailure`.
-pub mod precondition_failure {
-    /// Specific failure reason.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Violation {
-        /// The path to the field where this violation occurred. This path is
-        /// specified using `FieldMask` format:
-        /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
-        #[prost(string, tag = "1")]
-        pub field: ::prost::alloc::string::String,
-        /// The type of this violation.
-        #[prost(enumeration = "violation::Reason", tag = "2")]
-        pub reason: i32,
-        /// A message that describes the violation. This message is intended to
-        /// be shown to end users, and is localized into the requesting user's
-        /// preferred language.
-        #[prost(string, tag = "3")]
-        pub display_message: ::prost::alloc::string::String,
-    }
-    /// Nested message and enum types in `Violation`.
-    pub mod violation {
-        /// The possible reasons a the violation occurred.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum Reason {
-            /// Unknown violation type.
-            Unspecified = 0,
-            /// This Resource cannot be Disabled. Only Published resources can be
-            /// Disabled.
-            CannotDisable = 1,
-            /// This Resource cannot be Enabled. Only Disabled resources can be
-            /// Enabled.
-            CannotEnable = 2,
-            /// This Resource cannot be Published. Only Draft or Disabled resources
-            /// can be Published.
-            CannotPublish = 3,
-            /// This Resource cannot be Unpublished. Once published, resources may
-            /// not be set in "Draft" state.
-            CannotUnpublish = 4,
-            /// This Resource cannot be Deleted. Only Disabled resources
-            /// can be Deleted.
-            CannotDelete = 5,
-            /// The request modified a range in a Field, but the new range does
-            /// not include the previous range. When this error happens, `field` points
-            /// at the Field where the violation occurred.
-            CannotRestrictRange = 6,
-            /// The specified change cannot be made to published Resources.
-            CannotChangePublishedField = 7,
-            /// The customer cannot create new labels because the maximum number
-            /// of labels for the customer has been reached.
-            CannotCreateMoreLabels = 8,
-            /// The Field type cannot be changed because the Field has been published.
-            CannotChangePublishedFieldType = 9,
-            /// The Label component is locked and cannot be modified
-            CannotModifyLockedComponent = 10,
-        }
-        impl Reason {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    Reason::Unspecified => "REASON_UNSPECIFIED",
-                    Reason::CannotDisable => "CANNOT_DISABLE",
-                    Reason::CannotEnable => "CANNOT_ENABLE",
-                    Reason::CannotPublish => "CANNOT_PUBLISH",
-                    Reason::CannotUnpublish => "CANNOT_UNPUBLISH",
-                    Reason::CannotDelete => "CANNOT_DELETE",
-                    Reason::CannotRestrictRange => "CANNOT_RESTRICT_RANGE",
-                    Reason::CannotChangePublishedField => "CANNOT_CHANGE_PUBLISHED_FIELD",
-                    Reason::CannotCreateMoreLabels => "CANNOT_CREATE_MORE_LABELS",
-                    Reason::CannotChangePublishedFieldType => {
-                        "CANNOT_CHANGE_PUBLISHED_FIELD_TYPE"
-                    }
-                    Reason::CannotModifyLockedComponent => {
-                        "CANNOT_MODIFY_LOCKED_COMPONENT"
-                    }
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "REASON_UNSPECIFIED" => Some(Self::Unspecified),
-                    "CANNOT_DISABLE" => Some(Self::CannotDisable),
-                    "CANNOT_ENABLE" => Some(Self::CannotEnable),
-                    "CANNOT_PUBLISH" => Some(Self::CannotPublish),
-                    "CANNOT_UNPUBLISH" => Some(Self::CannotUnpublish),
-                    "CANNOT_DELETE" => Some(Self::CannotDelete),
-                    "CANNOT_RESTRICT_RANGE" => Some(Self::CannotRestrictRange),
-                    "CANNOT_CHANGE_PUBLISHED_FIELD" => {
-                        Some(Self::CannotChangePublishedField)
-                    }
-                    "CANNOT_CREATE_MORE_LABELS" => Some(Self::CannotCreateMoreLabels),
-                    "CANNOT_CHANGE_PUBLISHED_FIELD_TYPE" => {
-                        Some(Self::CannotChangePublishedFieldType)
-                    }
-                    "CANNOT_MODIFY_LOCKED_COMPONENT" => {
-                        Some(Self::CannotModifyLockedComponent)
-                    }
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Label constraints governing the structure of a Label; such as, the maximum
-/// number of Fields allowed and maximum length of the label title.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LabelLimits {
-    /// Resource name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The maximum number of characters allowed for the title.
-    #[prost(int32, tag = "2")]
-    pub max_title_length: i32,
-    /// The maximum number of characters allowed for the description.
-    #[prost(int32, tag = "3")]
-    pub max_description_length: i32,
-    /// The maximum number of Fields allowed within the label.
-    #[prost(int32, tag = "4")]
-    pub max_fields: i32,
-    /// The maximum number of published Fields that can be deleted.
-    #[prost(int32, tag = "5")]
-    pub max_deleted_fields: i32,
-    /// The maximum number of draft revisions that will be kept before deleting
-    /// old drafts.
-    #[prost(int32, tag = "6")]
-    pub max_draft_revisions: i32,
-    /// The limits for Fields.
-    #[prost(message, optional, tag = "7")]
-    pub field_limits: ::core::option::Option<FieldLimits>,
-}
-/// Field constants governing the structure of a Field; such as, the maximum
-/// title length, minimum and maximum field values or length, etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldLimits {
-    /// Max length for the id.
-    #[prost(int32, tag = "1")]
-    pub max_id_length: i32,
-    /// Limits for Field title.
-    #[prost(int32, tag = "2")]
-    pub max_display_name_length: i32,
-    /// Limits for Field description, also called help text.
-    #[prost(int32, tag = "3")]
-    pub max_description_length: i32,
-    /// The relevant limits for the specified Field.Type.
-    /// Text Field limits.
-    #[prost(message, optional, tag = "4")]
-    pub text_limits: ::core::option::Option<TextLimits>,
-    /// Long text Field limits.
-    #[prost(message, optional, tag = "5")]
-    pub long_text_limits: ::core::option::Option<LongTextLimits>,
-    /// Integer Field limits.
-    #[prost(message, optional, tag = "6")]
-    pub integer_limits: ::core::option::Option<IntegerLimits>,
-    /// Date Field limits.
-    #[prost(message, optional, tag = "7")]
-    pub date_limits: ::core::option::Option<DateLimits>,
-    /// User Field limits.
-    #[prost(message, optional, tag = "8")]
-    pub user_limits: ::core::option::Option<UserLimits>,
-    /// Selection Field limits.
-    #[prost(message, optional, tag = "9")]
-    pub selection_limits: ::core::option::Option<SelectionLimits>,
-}
-/// Limits for list-variant of a Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLimits {
-    /// Maximum number of values allowed for the Field type.
-    #[prost(int32, tag = "1")]
-    pub max_entries: i32,
-}
-/// Limits for text Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextLimits {
-    /// Minimum length allowed for a text Field type.
-    #[prost(int32, tag = "1")]
-    pub min_length: i32,
-    /// Maximum length allowed for a text Field type.
-    #[prost(int32, tag = "2")]
-    pub max_length: i32,
-}
-/// Limits for long text Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LongTextLimits {
-    /// Minimum length allowed for a long text Field type.
-    #[prost(int32, tag = "1")]
-    pub min_length: i32,
-    /// Maximum length allowed for a long text Field type.
-    #[prost(int32, tag = "2")]
-    pub max_length: i32,
-}
-/// Limits for integer Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IntegerLimits {
-    /// Minimum value for an integer Field type.
-    #[prost(int64, tag = "1")]
-    pub min_value: i64,
-    /// Maximum value for an integer Field type.
-    #[prost(int64, tag = "2")]
-    pub max_value: i64,
-}
-/// Limits for date Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DateLimits {
-    /// Minimum value for the date Field type.
-    #[prost(message, optional, tag = "1")]
-    pub min_value: ::core::option::Option<super::super::super::super::r#type::Date>,
-    /// Maximum value for the date Field type.
-    #[prost(message, optional, tag = "2")]
-    pub max_value: ::core::option::Option<super::super::super::super::r#type::Date>,
-}
-/// Limits for selection Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SelectionLimits {
-    /// Limits for list-variant of a Field type.
-    #[prost(message, optional, tag = "1")]
-    pub list_limits: ::core::option::Option<ListLimits>,
-    /// Maximum ID length for a selection options.
-    #[prost(int32, tag = "2")]
-    pub max_id_length: i32,
-    /// Maximum length for display name.
-    #[prost(int32, tag = "3")]
-    pub max_display_name_length: i32,
-    /// The max number of choices.
-    #[prost(int32, tag = "4")]
-    pub max_choices: i32,
-    /// Maximum number of deleted choices.
-    #[prost(int32, tag = "5")]
-    pub max_deleted_choices: i32,
-}
-/// Limits for Field.Type.USER.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserLimits {
-    /// Limits for list-variant of a Field type.
-    #[prost(message, optional, tag = "1")]
-    pub list_limits: ::core::option::Option<ListLimits>,
-}
 /// The capabilities of a user.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2787,6 +2566,227 @@ pub mod label_service_client {
                 "/google.apps.drive.labels.v2beta.LabelService/ListLabelLocks",
             );
             self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Describes violations in a request to create or update a Label or its
+/// Fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InvalidArgument {
+    /// Describes all violations in a client request.
+    #[prost(message, repeated, tag = "1")]
+    pub field_violations: ::prost::alloc::vec::Vec<invalid_argument::FieldViolation>,
+}
+/// Nested message and enum types in `InvalidArgument`.
+pub mod invalid_argument {
+    /// Describes the Field in which the violation occurred.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FieldViolation {
+        /// The path to the field where this violation occurred. This path is
+        /// specified using `FieldMask` format:
+        /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+        #[prost(string, tag = "1")]
+        pub field: ::prost::alloc::string::String,
+        /// The detailed reason for this FieldViolation.
+        #[prost(enumeration = "field_violation::Reason", tag = "2")]
+        pub reason: i32,
+        /// A message that describes the violation. This message is intended to
+        /// be shown to end users, and is localized into the requesting user's
+        /// preferred language.
+        #[prost(string, tag = "3")]
+        pub display_message: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `FieldViolation`.
+    pub mod field_violation {
+        /// Possible reasons a field is invalid.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum Reason {
+            /// Unknown reason.
+            Unspecified = 0,
+            /// The referenced field is required.
+            FieldRequired = 1,
+            /// The referenced value was invalid.
+            InvalidValue = 2,
+            /// The specified numeric value is out of the allowed range.
+            ValueOutOfRange = 3,
+            /// The specified string value was too long.
+            StringValueTooLong = 4,
+            /// The number of entries exceeded the maximum.
+            MaxEntriesExceeded = 5,
+            /// The specified field is not found in the Label.
+            FieldNotFound = 6,
+            /// The specified choice is not found in the Field.
+            ChoiceNotFound = 7,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::FieldRequired => "FIELD_REQUIRED",
+                    Reason::InvalidValue => "INVALID_VALUE",
+                    Reason::ValueOutOfRange => "VALUE_OUT_OF_RANGE",
+                    Reason::StringValueTooLong => "STRING_VALUE_TOO_LONG",
+                    Reason::MaxEntriesExceeded => "MAX_ENTRIES_EXCEEDED",
+                    Reason::FieldNotFound => "FIELD_NOT_FOUND",
+                    Reason::ChoiceNotFound => "CHOICE_NOT_FOUND",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                    "FIELD_REQUIRED" => Some(Self::FieldRequired),
+                    "INVALID_VALUE" => Some(Self::InvalidValue),
+                    "VALUE_OUT_OF_RANGE" => Some(Self::ValueOutOfRange),
+                    "STRING_VALUE_TOO_LONG" => Some(Self::StringValueTooLong),
+                    "MAX_ENTRIES_EXCEEDED" => Some(Self::MaxEntriesExceeded),
+                    "FIELD_NOT_FOUND" => Some(Self::FieldNotFound),
+                    "CHOICE_NOT_FOUND" => Some(Self::ChoiceNotFound),
+                    _ => None,
+                }
+            }
+        }
+    }
+}
+/// Describes what preconditions have failed.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PreconditionFailure {
+    /// Describes all violations in a client request.
+    #[prost(message, repeated, tag = "1")]
+    pub violation: ::prost::alloc::vec::Vec<precondition_failure::Violation>,
+}
+/// Nested message and enum types in `PreconditionFailure`.
+pub mod precondition_failure {
+    /// Specific failure reason.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Violation {
+        /// The path to the field where this violation occurred. This path is
+        /// specified using `FieldMask` format:
+        /// <https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask>
+        #[prost(string, tag = "1")]
+        pub field: ::prost::alloc::string::String,
+        /// The type of this violation.
+        #[prost(enumeration = "violation::Reason", tag = "2")]
+        pub reason: i32,
+        /// A message that describes the violation. This message is intended to
+        /// be shown to end users, and is localized into the requesting user's
+        /// preferred language.
+        #[prost(string, tag = "3")]
+        pub display_message: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `Violation`.
+    pub mod violation {
+        /// The possible reasons a the violation occurred.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum Reason {
+            /// Unknown violation type.
+            Unspecified = 0,
+            /// This Resource cannot be Disabled. Only Published resources can be
+            /// Disabled.
+            CannotDisable = 1,
+            /// This Resource cannot be Enabled. Only Disabled resources can be
+            /// Enabled.
+            CannotEnable = 2,
+            /// This Resource cannot be Published. Only Draft or Disabled resources
+            /// can be Published.
+            CannotPublish = 3,
+            /// This Resource cannot be Unpublished. Once published, resources may
+            /// not be set in "Draft" state.
+            CannotUnpublish = 4,
+            /// This Resource cannot be Deleted. Only Disabled resources
+            /// can be Deleted.
+            CannotDelete = 5,
+            /// The request modified a range in a Field, but the new range does
+            /// not include the previous range. When this error happens, `field` points
+            /// at the Field where the violation occurred.
+            CannotRestrictRange = 6,
+            /// The specified change cannot be made to published Resources.
+            CannotChangePublishedField = 7,
+            /// The customer cannot create new labels because the maximum number
+            /// of labels for the customer has been reached.
+            CannotCreateMoreLabels = 8,
+            /// The Field type cannot be changed because the Field has been published.
+            CannotChangePublishedFieldType = 9,
+            /// The Label component is locked and cannot be modified
+            CannotModifyLockedComponent = 10,
+        }
+        impl Reason {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    Reason::Unspecified => "REASON_UNSPECIFIED",
+                    Reason::CannotDisable => "CANNOT_DISABLE",
+                    Reason::CannotEnable => "CANNOT_ENABLE",
+                    Reason::CannotPublish => "CANNOT_PUBLISH",
+                    Reason::CannotUnpublish => "CANNOT_UNPUBLISH",
+                    Reason::CannotDelete => "CANNOT_DELETE",
+                    Reason::CannotRestrictRange => "CANNOT_RESTRICT_RANGE",
+                    Reason::CannotChangePublishedField => "CANNOT_CHANGE_PUBLISHED_FIELD",
+                    Reason::CannotCreateMoreLabels => "CANNOT_CREATE_MORE_LABELS",
+                    Reason::CannotChangePublishedFieldType => {
+                        "CANNOT_CHANGE_PUBLISHED_FIELD_TYPE"
+                    }
+                    Reason::CannotModifyLockedComponent => {
+                        "CANNOT_MODIFY_LOCKED_COMPONENT"
+                    }
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                    "CANNOT_DISABLE" => Some(Self::CannotDisable),
+                    "CANNOT_ENABLE" => Some(Self::CannotEnable),
+                    "CANNOT_PUBLISH" => Some(Self::CannotPublish),
+                    "CANNOT_UNPUBLISH" => Some(Self::CannotUnpublish),
+                    "CANNOT_DELETE" => Some(Self::CannotDelete),
+                    "CANNOT_RESTRICT_RANGE" => Some(Self::CannotRestrictRange),
+                    "CANNOT_CHANGE_PUBLISHED_FIELD" => {
+                        Some(Self::CannotChangePublishedField)
+                    }
+                    "CANNOT_CREATE_MORE_LABELS" => Some(Self::CannotCreateMoreLabels),
+                    "CANNOT_CHANGE_PUBLISHED_FIELD_TYPE" => {
+                        Some(Self::CannotChangePublishedFieldType)
+                    }
+                    "CANNOT_MODIFY_LOCKED_COMPONENT" => {
+                        Some(Self::CannotModifyLockedComponent)
+                    }
+                    _ => None,
+                }
+            }
         }
     }
 }
