@@ -392,6 +392,7 @@ pub mod chromeos;
         feature = "google-cloud-workflows-type",
         feature = "google-cloud-workflows-v1",
         feature = "google-cloud-workflows-v1beta",
+        feature = "google-cloud-workstations-logging-v1",
         feature = "google-cloud-workstations-v1beta",
     )
 )]
