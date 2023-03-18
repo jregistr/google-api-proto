@@ -1430,6 +1430,11 @@ pub struct ComputeRoutesRequest {
     /// display language is inferred from the location of the route request.
     #[prost(string, tag = "10")]
     pub language_code: ::prost::alloc::string::String,
+    /// Optional. The region code, specified as a ccTLD ("top-level domain")
+    /// two-character value. For more information see
+    /// <https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains#Country_code_top-level_domains>
+    #[prost(string, tag = "16")]
+    pub region_code: ::prost::alloc::string::String,
     /// Optional. Specifies the units of measure for the display fields. This
     /// includes the `instruction` field in `NavigationInstruction`. The units of
     /// measure used for the route, leg, step distance, and duration are not
@@ -1607,6 +1612,19 @@ pub struct ComputeRouteMatrixRequest {
     /// has already occurred, the request fails.
     #[prost(message, optional, tag = "5")]
     pub departure_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. The BCP-47 language code, such as "en-US" or "sr-Latn". For more
+    /// information, see
+    /// <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> See
+    /// [Language Support](<https://developers.google.com/maps/faq#languagesupport>)
+    /// for the list of supported languages. When you don't provide this value, the
+    /// display language is inferred from the location of the first origin.
+    #[prost(string, tag = "6")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Optional. The region code, specified as a ccTLD ("top-level domain")
+    /// two-character value. For more information see
+    /// <https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains#Country_code_top-level_domains>
+    #[prost(string, tag = "9")]
+    pub region_code: ::prost::alloc::string::String,
     /// Optional. A list of extra computations which may be used to complete the
     /// request. Note: These extra computations may return extra fields on the
     /// response. These extra fields must also be specified in the field mask to be
