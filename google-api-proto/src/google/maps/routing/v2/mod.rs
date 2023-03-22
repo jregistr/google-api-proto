@@ -9,7 +9,8 @@ pub struct Location {
     /// This value is used to specify the side of the road to use for pickup and
     /// drop-off. Heading values can be from 0 to 360, where 0 specifies a heading
     /// of due North, 90 specifies a heading of due East, etc. You can use this
-    /// field only for `DRIVE` and `TWO_WHEELER` travel modes.
+    /// field only for `DRIVE` and `TWO_WHEELER`
+    /// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(message, optional, tag = "2")]
     pub heading: ::core::option::Option<i32>,
 }
@@ -20,22 +21,23 @@ pub struct Location {
 pub struct Waypoint {
     /// Marks this waypoint as a milestone rather a stopping point. For
     /// each non-via waypoint in the request, the response appends an entry to the
-    /// `legs` array to provide the details for stopovers on that leg of the
-    /// trip. Set this value to true when you want the route to pass through this
-    /// waypoint without stopping over. Via waypoints don't cause an entry to be
-    /// added to the `legs` array, but they do route the journey through the
-    /// waypoint. You can only set this value on waypoints that are intermediates.
-    /// The request fails if you set this field on terminal waypoints.
-    /// If `ComputeRoutesRequest.optimize_waypoint_order`
-    /// is set to true then this field cannot be set to
-    /// true; otherwise, the request fails.
+    /// \[legs][google.maps.routing.v2.Route.legs\]
+    /// array to provide the details for stopovers on that leg of the trip. Set
+    /// this value to true when you want the route to pass through this waypoint
+    /// without stopping over. Via waypoints don't cause an entry to be added to
+    /// the `legs` array, but they do route the journey through the waypoint. You
+    /// can only set this value on waypoints that are intermediates. The request
+    /// fails if you set this field on terminal waypoints. If
+    /// `ComputeRoutesRequest.optimize_waypoint_order` is set to true then this
+    /// field cannot be set to true; otherwise, the request fails.
     #[prost(bool, tag = "3")]
     pub via: bool,
     /// Indicates that the waypoint is meant for vehicles to stop at, where the
     /// intention is to either pickup or drop-off. When you set this value, the
     /// calculated route won't include non-`via` waypoints on roads that are
     /// unsuitable for pickup and drop-off. This option works only for `DRIVE` and
-    /// `TWO_WHEELER` travel modes, and when the `location_type` is `location`.
+    /// `TWO_WHEELER` travel modes, and when the `location_type` is
+    /// \[Location][google.maps.routing.v2.Location\].
     #[prost(bool, tag = "4")]
     pub vehicle_stopover: bool,
     /// Indicates that the location of this waypoint is meant to have a preference
@@ -43,7 +45,7 @@ pub struct Waypoint {
     /// value, the route will pass through the location so that the vehicle can
     /// stop at the side of road that the location is biased towards from the
     /// center of the road. This option works only for 'DRIVE' and 'TWO_WHEELER'
-    /// travel modes.
+    /// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(bool, tag = "5")]
     pub side_of_road: bool,
     /// Different ways to represent a location.
@@ -181,8 +183,8 @@ pub struct NavigationInstruction {
     pub instructions: ::prost::alloc::string::String,
 }
 /// A set of values used to specify the mode of travel.
-/// NOTE: WALK, BICYCLE, and TWO_WHEELER routes are in beta and might sometimes
-/// be missing clear sidewalks, pedestrian paths, or bicycling paths.
+/// NOTE: `WALK`, `BICYCLE`, and `TWO_WHEELER` routes are in beta and might
+/// sometimes be missing clear sidewalks, pedestrian paths, or bicycling paths.
 /// You must display this warning to the user for all walking, bicycling, and
 /// two-wheel routes that you display in your app.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -286,11 +288,12 @@ impl FallbackReason {
 pub enum FallbackRoutingMode {
     /// Not used.
     Unspecified = 0,
-    /// Indicates the "TRAFFIC_UNAWARE" routing mode was used to compute the
-    /// response.
+    /// Indicates the `TRAFFIC_UNAWARE` \[google.maps.routing.v2.RoutingPreference\]
+    /// was used to compute the response.
     FallbackTrafficUnaware = 1,
-    /// Indicates the "TRAFFIC_AWARE" routing mode was used to compute the
-    /// response.
+    /// Indicates the `TRAFFIC_AWARE`
+    /// \[RoutingPreference][google.maps.routing.v2.RoutingPreference\] was used to
+    /// compute the response.
     FallbackTrafficAware = 2,
 }
 impl FallbackRoutingMode {
@@ -325,12 +328,13 @@ pub enum RoutingPreference {
     /// Computes routes without taking live traffic conditions into consideration.
     /// Suitable when traffic conditions don't matter or are not applicable.
     /// Using this value produces the lowest latency.
-    /// Note: For `RouteTravelMode` DRIVE and TWO_WHEELER choice of route and
-    /// duration are based on road network and average time-independent traffic
-    /// conditions. Results for a given request may vary over time due to changes
-    /// in the road network, updated average traffic conditions, and the
-    /// distributed nature of the service. Results may also vary between
-    /// nearly-equivalent routes at any time or frequency.
+    /// Note: For \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\] `DRIVE`
+    /// and `TWO_WHEELER` choice of route and duration are based on road network
+    /// and average time-independent traffic conditions. Results for a given
+    /// request may vary over time due to changes in the road network, updated
+    /// average traffic conditions, and the distributed nature of the service.
+    /// Results may also vary between nearly-equivalent routes at any time or
+    /// frequency.
     TrafficUnaware = 1,
     /// Calculates routes taking live traffic conditions into consideration.
     /// In contrast to `TRAFFIC_AWARE_OPTIMAL`, some optimizations are applied to
@@ -497,6 +501,8 @@ pub enum TollPass {
     /// MI, USA.
     UsMiAmbassadorBridgePremierCommuterCard = 36,
     /// MI, USA.
+    UsMiBcpass = 94,
+    /// MI, USA.
     UsMiGrosseIleTollBridgePassTag = 37,
     /// MI, USA.
     UsMiIqProxCard = 38,
@@ -642,6 +648,7 @@ impl TollPass {
             TollPass::UsMiAmbassadorBridgePremierCommuterCard => {
                 "US_MI_AMBASSADOR_BRIDGE_PREMIER_COMMUTER_CARD"
             }
+            TollPass::UsMiBcpass => "US_MI_BCPASS",
             TollPass::UsMiGrosseIleTollBridgePassTag => {
                 "US_MI_GROSSE_ILE_TOLL_BRIDGE_PASS_TAG"
             }
@@ -753,6 +760,7 @@ impl TollPass {
             "US_MI_AMBASSADOR_BRIDGE_PREMIER_COMMUTER_CARD" => {
                 Some(Self::UsMiAmbassadorBridgePremierCommuterCard)
             }
+            "US_MI_BCPASS" => Some(Self::UsMiBcpass),
             "US_MI_GROSSE_ILE_TOLL_BRIDGE_PASS_TAG" => {
                 Some(Self::UsMiGrosseIleTollBridgePassTag)
             }
@@ -797,8 +805,8 @@ impl TollPass {
         }
     }
 }
-/// Labels for the `Route` that are useful to identify specific properties
-/// of the route to compare against others.
+/// Labels for the \[Route][google.maps.routing.v2.Route\] that are useful to
+/// identify specific properties of the route to compare against others.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum RouteLabel {
@@ -807,8 +815,9 @@ pub enum RouteLabel {
     /// The default "best" route returned for the route computation.
     DefaultRoute = 1,
     /// An alternative to the default "best" route. Routes like this will be
-    /// returned when `ComputeRoutesRequest.compute_alternative_routes` is
-    /// specified.
+    /// returned when
+    /// \[compute_alternative_routes][google.maps.routing.v2.ComputeRoutesRequest.compute_alternative_routes\]
+    /// is specified.
     DefaultRouteAlternate = 2,
     /// Fuel efficient route. Routes labeled with this value are determined to be
     /// optimized for Eco parameters such as fuel consumption.
@@ -839,11 +848,12 @@ impl RouteLabel {
     }
 }
 /// A set of values describing the vehicle's emission type.
-/// Applies only to the DRIVE travel mode.
+/// Applies only to the `DRIVE`
+/// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum VehicleEmissionType {
-    /// No emission type specified. Default to GASOLINE.
+    /// No emission type specified. Default to `GASOLINE`.
     Unspecified = 0,
     /// Gasoline/petrol fueled vehicle.
     Gasoline = 1,
@@ -886,7 +896,7 @@ impl VehicleEmissionType {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VehicleInfo {
     /// Describes the vehicle's emission type.
-    /// Applies only to the DRIVE travel mode.
+    /// Applies only to the `DRIVE` travel mode.
     #[prost(enumeration = "VehicleEmissionType", tag = "2")]
     pub emission_type: i32,
 }
@@ -924,16 +934,18 @@ impl Units {
         }
     }
 }
-/// Encapsulates toll information on a `Route` or on a `RouteLeg`.
+/// Encapsulates toll information on a \[Route][google.maps.routing.v2.Route\] or
+/// on a \[RouteLeg][google.maps.routing.v2.RouteLeg\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TollInfo {
-    /// The monetary amount of tolls for the corresponding Route or RouteLeg.
-    /// This list contains a money amount for each currency that is expected
-    /// to be charged by the toll stations. Typically this list will contain only
-    /// one item for routes with tolls in one currency. For international trips,
-    /// this list may contain multiple items to reflect tolls in different
-    /// currencies.
+    /// The monetary amount of tolls for the corresponding
+    /// \[Route][google.maps.routing.v2.Route\] or
+    /// \[RouteLeg][google.maps.routing.v2.RouteLeg\]. This list contains a money
+    /// amount for each currency that is expected to be charged by the toll
+    /// stations. Typically this list will contain only one item for routes with
+    /// tolls in one currency. For international trips, this list may contain
+    /// multiple items to reflect tolls in different currencies.
     #[prost(message, repeated, tag = "1")]
     pub estimated_price: ::prost::alloc::vec::Vec<super::super::super::r#type::Money>,
 }
@@ -950,9 +962,8 @@ pub struct SpeedReadingInterval {
     /// The ending index of this interval in the polyline.
     #[prost(int32, optional, tag = "2")]
     pub end_polyline_point_index: ::core::option::Option<i32>,
-    /// Traffic speed in this interval.
-    #[prost(enumeration = "speed_reading_interval::Speed", tag = "3")]
-    pub speed: i32,
+    #[prost(oneof = "speed_reading_interval::SpeedType", tags = "3")]
+    pub speed_type: ::core::option::Option<speed_reading_interval::SpeedType>,
 }
 /// Nested message and enum types in `SpeedReadingInterval`.
 pub mod speed_reading_interval {
@@ -1002,6 +1013,13 @@ pub mod speed_reading_interval {
                 _ => None,
             }
         }
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum SpeedType {
+        /// Traffic speed in this interval.
+        #[prost(enumeration = "Speed", tag = "3")]
+        Speed(i32),
     }
 }
 /// Encapsulates an encoded polyline.
@@ -1111,12 +1129,12 @@ pub struct Route {
     #[prost(enumeration = "RouteLabel", repeated, tag = "13")]
     pub route_labels: ::prost::alloc::vec::Vec<i32>,
     /// A collection of legs (path segments between waypoints) that make-up the
-    /// route. Each leg corresponds to the trip between two non-`via` Waypoints.
-    /// For example, a route with no intermediate waypoints has only one leg. A
-    /// route that includes one non-`via` intermediate waypoint has two legs. A
-    /// route that includes one `via` intermediate waypoint has one leg. The order
-    /// of the legs matches the order of Waypoints from `origin` to `intermediates`
-    /// to `destination`.
+    /// route. Each leg corresponds to the trip between two non-`via`
+    /// \[Waypoints][google.maps.routing.v2.Waypoint\]. For example, a route with no
+    /// intermediate waypoints has only one leg. A route that includes one
+    /// non-`via` intermediate waypoint has two legs. A route that includes one
+    /// `via` intermediate waypoint has one leg. The order of the legs matches the
+    /// order of Waypoints from `origin` to `intermediates` to `destination`.
     #[prost(message, repeated, tag = "1")]
     pub legs: ::prost::alloc::vec::Vec<RouteLeg>,
     /// The travel distance of the route, in meters.
@@ -1264,8 +1282,9 @@ pub struct RouteLeg {
     #[prost(message, optional, tag = "8")]
     pub travel_advisory: ::core::option::Option<RouteLegTravelAdvisory>,
 }
-/// Encapsulates a segment of a `RouteLeg`. A step corresponds to a single
-/// navigation instruction. Route legs are made up of steps.
+/// Encapsulates a segment of a \[RouteLeg][google.maps.routing.v2.RouteLeg\]. A
+/// step corresponds to a single navigation instruction. Route legs are made up
+/// of steps.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RouteLegStep {
@@ -1295,8 +1314,9 @@ pub struct RouteLegStep {
     #[prost(message, optional, tag = "7")]
     pub travel_advisory: ::core::option::Option<RouteLegStepTravelAdvisory>,
 }
-/// Contains GeocodedWaypoints for origin, destination and intermediate
-/// waypoints. Only populated for address waypoints.
+/// Contains \[GeocodedWaypoints][google.maps.routing.v2.GeocodedWaypoint\] for
+/// origin, destination and intermediate waypoints. Only populated for address
+/// waypoints.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GeocodingResults {
@@ -1348,22 +1368,24 @@ pub struct GeocodedWaypoint {
 pub struct RouteModifiers {
     /// Specifies whether to avoid toll roads where reasonable. Preference will be
     /// given to routes not containing toll roads. Applies only to the `DRIVE` and
-    /// `TWO_WHEELER` travel modes.
+    /// `TWO_WHEELER` \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(bool, tag = "1")]
     pub avoid_tolls: bool,
     /// Specifies whether to avoid highways where reasonable. Preference will be
     /// given to routes not containing highways. Applies only to the `DRIVE` and
-    /// `TWO_WHEELER` travel modes.
+    /// `TWO_WHEELER` \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(bool, tag = "2")]
     pub avoid_highways: bool,
     /// Specifies whether to avoid ferries where reasonable. Preference will be
     /// given to routes not containing travel by ferries.
-    /// Applies only to the `DRIVE` and`TWO_WHEELER` travel modes.
+    /// Applies only to the `DRIVE` and`TWO_WHEELER`
+    /// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(bool, tag = "3")]
     pub avoid_ferries: bool,
     /// Specifies whether to avoid navigating indoors where reasonable. Preference
     /// will be given to routes not containing indoor navigation.
-    /// Applies only to the `WALK` travel mode.
+    /// Applies only to the `WALK`
+    /// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(bool, tag = "4")]
     pub avoid_indoor: bool,
     /// Specifies the vehicle information.
@@ -1373,7 +1395,8 @@ pub struct RouteModifiers {
     /// If toll passes are provided, the API tries to return the pass price. If
     /// toll passes are not provided, the API treats the toll pass as unknown and
     /// tries to return the cash price.
-    /// Applies only to the DRIVE and TWO_WHEELER travel modes.
+    /// Applies only to the `DRIVE` and `TWO_WHEELER`
+    /// \[RouteTravelMode][google.maps.routing.v2.RouteTravelMode\].
     #[prost(enumeration = "TollPass", repeated, tag = "6")]
     pub toll_passes: ::prost::alloc::vec::Vec<i32>,
 }
@@ -1436,16 +1459,17 @@ pub struct ComputeRoutesRequest {
     #[prost(string, tag = "16")]
     pub region_code: ::prost::alloc::string::String,
     /// Optional. Specifies the units of measure for the display fields. This
-    /// includes the `instruction` field in `NavigationInstruction`. The units of
-    /// measure used for the route, leg, step distance, and duration are not
-    /// affected by this value. If you don't provide this value, then the display
-    /// units are inferred from the location of the request.
+    /// includes the `instruction` field in
+    /// \[NavigationInstruction][google.maps.routing.v2.NavigationInstruction\]. The
+    /// units of measure used for the route, leg, step distance, and duration are
+    /// not affected by this value. If you don't provide this value, then the
+    /// display units are inferred from the location of the request.
     #[prost(enumeration = "Units", tag = "11")]
     pub units: i32,
     /// Optional. Specifies what reference routes to calculate as part of the
     /// request in addition to the default route. A reference route is a route with
     /// a different route calculation objective than the default route. For example
-    /// an FUEL_EFFICIENT reference route calculation takes into account various
+    /// a `FUEL_EFFICIENT` reference route calculation takes into account various
     /// parameters that would generate an optimal fuel efficient route.
     #[prost(
         enumeration = "compute_routes_request::ReferenceRoute",
@@ -1719,10 +1743,11 @@ pub struct RouteMatrixElement {
     #[prost(int32, tag = "4")]
     pub distance_meters: i32,
     /// The length of time needed to navigate the route. If you set the
-    /// `routing_preference` to `TRAFFIC_UNAWARE`, then this value is the same as
-    /// `static_duration`. If you set the `routing_preference` to either
-    /// `TRAFFIC_AWARE` or `TRAFFIC_AWARE_OPTIMAL`, then this value is calculated
-    /// taking traffic conditions into account.
+    /// \[routing_preference][google.maps.routing.v2.ComputeRouteMatrixRequest.routing_preference\]
+    /// to `TRAFFIC_UNAWARE`, then this value is the same as `static_duration`. If
+    /// you set the `routing_preference` to either `TRAFFIC_AWARE` or
+    /// `TRAFFIC_AWARE_OPTIMAL`, then this value is calculated taking traffic
+    /// conditions into account.
     #[prost(message, optional, tag = "5")]
     pub duration: ::core::option::Option<::prost_types::Duration>,
     /// The duration of traveling through the route without taking traffic
