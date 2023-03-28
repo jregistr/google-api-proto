@@ -146,6 +146,7 @@ pub mod cloud;
         feature = "google-cloud-datacatalog-lineage-v1",
         feature = "google-cloud-datacatalog-v1",
         feature = "google-cloud-datacatalog-v1beta1",
+        feature = "google-cloud-dataform-logging-v1",
         feature = "google-cloud-dataform-v1alpha2",
         feature = "google-cloud-dataform-v1beta1",
         feature = "google-cloud-datafusion-v1",

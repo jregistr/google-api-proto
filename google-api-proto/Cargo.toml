@@ -173,6 +173,7 @@ google-cloud-contentwarehouse-v1 = ["google-api", "google-cloud", "google-cloud-
 google-cloud-datacatalog-lineage-v1 = ["google-api", "google-cloud", "google-longrunning"]
 google-cloud-datacatalog-v1 = ["google-api", "google-cloud", "google-iam-v1", "google-longrunning", "google-rpc"]
 google-cloud-datacatalog-v1beta1 = ["google-api", "google-cloud", "google-iam-v1"]
+google-cloud-dataform-logging-v1 = ["google-api", "google-cloud"]
 google-cloud-dataform-v1alpha2 = ["google-api", "google-cloud", "google-type"]
 google-cloud-dataform-v1beta1 = ["google-api", "google-cloud", "google-type"]
 google-cloud-datafusion-v1 = ["google-api", "google-cloud", "google-longrunning"]

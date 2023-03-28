@@ -149,6 +149,7 @@ pub mod contentwarehouse;
 pub mod datacatalog;
 #[cfg(
     any(
+        feature = "google-cloud-dataform-logging-v1",
         feature = "google-cloud-dataform-v1alpha2",
         feature = "google-cloud-dataform-v1beta1",
     )
