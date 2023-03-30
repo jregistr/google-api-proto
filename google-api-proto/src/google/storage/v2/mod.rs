@@ -2508,6 +2508,13 @@ pub mod storage_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
         /// Cancels an in-progress resumable upload.
+        ///
+        /// Any attempts to write to the resumable upload after cancelling the upload
+        /// will fail.
+        ///
+        /// The behavior for currently in progress write operations is not guaranteed -
+        /// they could either complete before the cancellation or fail if the
+        /// cancellation completes first.
         pub async fn cancel_resumable_write(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelResumableWriteRequest>,

@@ -511,11 +511,6 @@ pub struct LiveConfig {
     /// The configuration for prefetching ads.
     #[prost(message, optional, tag = "10")]
     pub prefetch_config: ::core::option::Option<PrefetchConfig>,
-    /// The default ad pod duration in seconds that will be requested when a
-    /// cue-out does not specify a duration.
-    /// The default value of this field is 30s.
-    #[prost(message, optional, tag = "11")]
-    pub default_ad_break_duration: ::core::option::Option<::prost_types::Duration>,
 }
 /// Nested message and enum types in `LiveConfig`.
 pub mod live_config {
