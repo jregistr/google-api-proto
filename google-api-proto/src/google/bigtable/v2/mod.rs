@@ -1,18 +1,3 @@
-/// Response metadata proto
-/// This is an experimental feature that will be used to get zone_id and
-/// cluster_id from response trailers to tag the metrics. This should not be
-/// used by customers directly
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResponseParams {
-    /// The cloud bigtable zone associated with the cluster.
-    #[prost(string, optional, tag = "1")]
-    pub zone_id: ::core::option::Option<::prost::alloc::string::String>,
-    /// Identifier for a cluster that represents set of
-    /// bigtable resources.
-    #[prost(string, optional, tag = "2")]
-    pub cluster_id: ::core::option::Option<::prost::alloc::string::String>,
-}
 /// Specifies the complete (requested) contents of a single row of a table.
 /// Rows which exceed 256MiB in size cannot be read in full.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1764,4 +1749,19 @@ pub mod bigtable_client {
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
     }
+}
+/// Response metadata proto
+/// This is an experimental feature that will be used to get zone_id and
+/// cluster_id from response trailers to tag the metrics. This should not be
+/// used by customers directly
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResponseParams {
+    /// The cloud bigtable zone associated with the cluster.
+    #[prost(string, optional, tag = "1")]
+    pub zone_id: ::core::option::Option<::prost::alloc::string::String>,
+    /// Identifier for a cluster that represents set of
+    /// bigtable resources.
+    #[prost(string, optional, tag = "2")]
+    pub cluster_id: ::core::option::Option<::prost::alloc::string::String>,
 }

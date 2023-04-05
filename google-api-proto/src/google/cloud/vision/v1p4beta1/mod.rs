@@ -1,3 +1,55 @@
+/// A vertex represents a 2D point in the image.
+/// NOTE: the vertex coordinates are in the same scale as the original image.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Vertex {
+    /// X coordinate.
+    #[prost(int32, tag = "1")]
+    pub x: i32,
+    /// Y coordinate.
+    #[prost(int32, tag = "2")]
+    pub y: i32,
+}
+/// A vertex represents a 2D point in the image.
+/// NOTE: the normalized vertex coordinates are relative to the original image
+/// and range from 0 to 1.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// X coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Y coordinate.
+    #[prost(float, tag = "2")]
+    pub y: f32,
+}
+/// A bounding polygon for the detected image annotation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// The bounding polygon vertices.
+    #[prost(message, repeated, tag = "1")]
+    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
+    /// The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag = "2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
+}
+/// A 3D position in the image, used primarily for Face detection landmarks.
+/// A valid Position must have both x and y coordinates.
+/// The position coordinates are in the same scale as the original image.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Position {
+    /// X coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Y coordinate.
+    #[prost(float, tag = "2")]
+    pub y: f32,
+    /// Z coordinate (or depth).
+    #[prost(float, tag = "3")]
+    pub z: f32,
+}
 /// Relevant information for the image from the Internet.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -90,97 +142,6 @@ pub mod web_detection {
         #[prost(string, tag = "2")]
         pub language_code: ::prost::alloc::string::String,
     }
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the vertex coordinates are in the same scale as the original image.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Vertex {
-    /// X coordinate.
-    #[prost(int32, tag = "1")]
-    pub x: i32,
-    /// Y coordinate.
-    #[prost(int32, tag = "2")]
-    pub y: i32,
-}
-/// A vertex represents a 2D point in the image.
-/// NOTE: the normalized vertex coordinates are relative to the original image
-/// and range from 0 to 1.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// X coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Y coordinate.
-    #[prost(float, tag = "2")]
-    pub y: f32,
-}
-/// A bounding polygon for the detected image annotation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// The bounding polygon vertices.
-    #[prost(message, repeated, tag = "1")]
-    pub vertices: ::prost::alloc::vec::Vec<Vertex>,
-    /// The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag = "2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
-}
-/// A 3D position in the image, used primarily for Face detection landmarks.
-/// A valid Position must have both x and y coordinates.
-/// The position coordinates are in the same scale as the original image.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Position {
-    /// X coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Y coordinate.
-    #[prost(float, tag = "2")]
-    pub y: f32,
-    /// Z coordinate (or depth).
-    #[prost(float, tag = "3")]
-    pub z: f32,
-}
-/// Parameters for a celebrity recognition request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FaceRecognitionParams {
-    /// The resource names for one or more
-    /// \[CelebritySet][google.cloud.vision.v1p4beta1.CelebritySet\]s. A celebrity
-    /// set is preloaded and can be specified as "builtin/default". If this is
-    /// specified, the algorithm will try to match the faces detected in the input
-    /// image to the Celebrities in the CelebritySets.
-    #[prost(string, repeated, tag = "1")]
-    pub celebrity_set: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A Celebrity is a group of Faces with an identity.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Celebrity {
-    /// The resource name of the preloaded Celebrity. Has the format
-    /// `builtin/{mid}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The Celebrity's display name.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The Celebrity's description.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-}
-/// Information about a face's identity.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FaceRecognitionResult {
-    /// The \[Celebrity][google.cloud.vision.v1p4beta1.Celebrity\] that this face was
-    /// matched to.
-    #[prost(message, optional, tag = "1")]
-    pub celebrity: ::core::option::Option<Celebrity>,
-    /// Recognition confidence. Range [0, 1].
-    #[prost(float, tag = "2")]
-    pub confidence: f32,
 }
 /// A Product contains ReferenceImages.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1465,116 +1426,6 @@ pub mod product_search_client {
         }
     }
 }
-/// Parameters for a product search request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProductSearchParams {
-    /// The bounding polygon around the area of interest in the image.
-    /// If it is not specified, system discretion will be applied.
-    #[prost(message, optional, tag = "9")]
-    pub bounding_poly: ::core::option::Option<BoundingPoly>,
-    /// The resource name of a
-    /// \[ProductSet][google.cloud.vision.v1p4beta1.ProductSet\] to be searched for
-    /// similar images.
-    ///
-    /// Format is:
-    /// `projects/PROJECT_ID/locations/LOC_ID/productSets/PRODUCT_SET_ID`.
-    #[prost(string, tag = "6")]
-    pub product_set: ::prost::alloc::string::String,
-    /// The list of product categories to search in. Currently, we only consider
-    /// the first category, and either "homegoods-v2", "apparel-v2", "toys-v2",
-    /// "packagedgoods-v1", or "general-v1" should be specified. The legacy
-    /// categories "homegoods", "apparel", and "toys" are still supported but will
-    /// be deprecated. For new products, please use "homegoods-v2", "apparel-v2",
-    /// or "toys-v2" for better product search accuracy. It is recommended to
-    /// migrate existing products to these categories as well.
-    #[prost(string, repeated, tag = "7")]
-    pub product_categories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The filtering expression. This can be used to restrict search results based
-    /// on Product labels. We currently support an AND of OR of key-value
-    /// expressions, where each expression within an OR must have the same key. An
-    /// '=' should be used to connect the key and value.
-    ///
-    /// For example, "(color = red OR color = blue) AND brand = Google" is
-    /// acceptable, but "(color = red OR brand = Google)" is not acceptable.
-    /// "color: red" is not acceptable because it uses a ':' instead of an '='.
-    #[prost(string, tag = "8")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// Results for a product search request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProductSearchResults {
-    /// Timestamp of the index which provided these results. Products added to the
-    /// product set and products removed from the product set after this time are
-    /// not reflected in the current results.
-    #[prost(message, optional, tag = "2")]
-    pub index_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// List of results, one for each product match.
-    #[prost(message, repeated, tag = "5")]
-    pub results: ::prost::alloc::vec::Vec<product_search_results::Result>,
-    /// List of results grouped by products detected in the query image. Each entry
-    /// corresponds to one bounding polygon in the query image, and contains the
-    /// matching products specific to that region. There may be duplicate product
-    /// matches in the union of all the per-product results.
-    #[prost(message, repeated, tag = "6")]
-    pub product_grouped_results: ::prost::alloc::vec::Vec<
-        product_search_results::GroupedResult,
-    >,
-}
-/// Nested message and enum types in `ProductSearchResults`.
-pub mod product_search_results {
-    /// Information about a product.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Result {
-        /// The Product.
-        #[prost(message, optional, tag = "1")]
-        pub product: ::core::option::Option<super::Product>,
-        /// A confidence level on the match, ranging from 0 (no confidence) to
-        /// 1 (full confidence).
-        #[prost(float, tag = "2")]
-        pub score: f32,
-        /// The resource name of the image from the product that is the closest match
-        /// to the query.
-        #[prost(string, tag = "3")]
-        pub image: ::prost::alloc::string::String,
-    }
-    /// Prediction for what the object in the bounding box is.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ObjectAnnotation {
-        /// Object ID that should align with EntityAnnotation mid.
-        #[prost(string, tag = "1")]
-        pub mid: ::prost::alloc::string::String,
-        /// The BCP-47 language code, such as "en-US" or "sr-Latn". For more
-        /// information, see
-        /// <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
-        #[prost(string, tag = "2")]
-        pub language_code: ::prost::alloc::string::String,
-        /// Object name, expressed in its `language_code` language.
-        #[prost(string, tag = "3")]
-        pub name: ::prost::alloc::string::String,
-        /// Score of the result. Range [0, 1].
-        #[prost(float, tag = "4")]
-        pub score: f32,
-    }
-    /// Information about the products similar to a single product in a query
-    /// image.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GroupedResult {
-        /// The bounding polygon around the product detected in the query image.
-        #[prost(message, optional, tag = "1")]
-        pub bounding_poly: ::core::option::Option<super::BoundingPoly>,
-        /// List of results, one for each product match.
-        #[prost(message, repeated, tag = "2")]
-        pub results: ::prost::alloc::vec::Vec<Result>,
-        /// List of generic predictions for the object in the bounding box.
-        #[prost(message, repeated, tag = "3")]
-        pub object_annotations: ::prost::alloc::vec::Vec<ObjectAnnotation>,
-    }
-}
 /// TextAnnotation contains a structured representation of OCR extracted text.
 /// The hierarchy of an OCR extracted text structure is like this:
 ///      TextAnnotation -> Page -> Block -> Paragraph -> Word -> Symbol
@@ -1902,6 +1753,155 @@ pub struct Symbol {
     /// Confidence of the OCR results for the symbol. Range [0, 1].
     #[prost(float, tag = "4")]
     pub confidence: f32,
+}
+/// Parameters for a celebrity recognition request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FaceRecognitionParams {
+    /// The resource names for one or more
+    /// \[CelebritySet][google.cloud.vision.v1p4beta1.CelebritySet\]s. A celebrity
+    /// set is preloaded and can be specified as "builtin/default". If this is
+    /// specified, the algorithm will try to match the faces detected in the input
+    /// image to the Celebrities in the CelebritySets.
+    #[prost(string, repeated, tag = "1")]
+    pub celebrity_set: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A Celebrity is a group of Faces with an identity.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Celebrity {
+    /// The resource name of the preloaded Celebrity. Has the format
+    /// `builtin/{mid}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The Celebrity's display name.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The Celebrity's description.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+}
+/// Information about a face's identity.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FaceRecognitionResult {
+    /// The \[Celebrity][google.cloud.vision.v1p4beta1.Celebrity\] that this face was
+    /// matched to.
+    #[prost(message, optional, tag = "1")]
+    pub celebrity: ::core::option::Option<Celebrity>,
+    /// Recognition confidence. Range [0, 1].
+    #[prost(float, tag = "2")]
+    pub confidence: f32,
+}
+/// Parameters for a product search request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductSearchParams {
+    /// The bounding polygon around the area of interest in the image.
+    /// If it is not specified, system discretion will be applied.
+    #[prost(message, optional, tag = "9")]
+    pub bounding_poly: ::core::option::Option<BoundingPoly>,
+    /// The resource name of a
+    /// \[ProductSet][google.cloud.vision.v1p4beta1.ProductSet\] to be searched for
+    /// similar images.
+    ///
+    /// Format is:
+    /// `projects/PROJECT_ID/locations/LOC_ID/productSets/PRODUCT_SET_ID`.
+    #[prost(string, tag = "6")]
+    pub product_set: ::prost::alloc::string::String,
+    /// The list of product categories to search in. Currently, we only consider
+    /// the first category, and either "homegoods-v2", "apparel-v2", "toys-v2",
+    /// "packagedgoods-v1", or "general-v1" should be specified. The legacy
+    /// categories "homegoods", "apparel", and "toys" are still supported but will
+    /// be deprecated. For new products, please use "homegoods-v2", "apparel-v2",
+    /// or "toys-v2" for better product search accuracy. It is recommended to
+    /// migrate existing products to these categories as well.
+    #[prost(string, repeated, tag = "7")]
+    pub product_categories: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The filtering expression. This can be used to restrict search results based
+    /// on Product labels. We currently support an AND of OR of key-value
+    /// expressions, where each expression within an OR must have the same key. An
+    /// '=' should be used to connect the key and value.
+    ///
+    /// For example, "(color = red OR color = blue) AND brand = Google" is
+    /// acceptable, but "(color = red OR brand = Google)" is not acceptable.
+    /// "color: red" is not acceptable because it uses a ':' instead of an '='.
+    #[prost(string, tag = "8")]
+    pub filter: ::prost::alloc::string::String,
+}
+/// Results for a product search request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProductSearchResults {
+    /// Timestamp of the index which provided these results. Products added to the
+    /// product set and products removed from the product set after this time are
+    /// not reflected in the current results.
+    #[prost(message, optional, tag = "2")]
+    pub index_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// List of results, one for each product match.
+    #[prost(message, repeated, tag = "5")]
+    pub results: ::prost::alloc::vec::Vec<product_search_results::Result>,
+    /// List of results grouped by products detected in the query image. Each entry
+    /// corresponds to one bounding polygon in the query image, and contains the
+    /// matching products specific to that region. There may be duplicate product
+    /// matches in the union of all the per-product results.
+    #[prost(message, repeated, tag = "6")]
+    pub product_grouped_results: ::prost::alloc::vec::Vec<
+        product_search_results::GroupedResult,
+    >,
+}
+/// Nested message and enum types in `ProductSearchResults`.
+pub mod product_search_results {
+    /// Information about a product.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Result {
+        /// The Product.
+        #[prost(message, optional, tag = "1")]
+        pub product: ::core::option::Option<super::Product>,
+        /// A confidence level on the match, ranging from 0 (no confidence) to
+        /// 1 (full confidence).
+        #[prost(float, tag = "2")]
+        pub score: f32,
+        /// The resource name of the image from the product that is the closest match
+        /// to the query.
+        #[prost(string, tag = "3")]
+        pub image: ::prost::alloc::string::String,
+    }
+    /// Prediction for what the object in the bounding box is.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ObjectAnnotation {
+        /// Object ID that should align with EntityAnnotation mid.
+        #[prost(string, tag = "1")]
+        pub mid: ::prost::alloc::string::String,
+        /// The BCP-47 language code, such as "en-US" or "sr-Latn". For more
+        /// information, see
+        /// <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
+        #[prost(string, tag = "2")]
+        pub language_code: ::prost::alloc::string::String,
+        /// Object name, expressed in its `language_code` language.
+        #[prost(string, tag = "3")]
+        pub name: ::prost::alloc::string::String,
+        /// Score of the result. Range [0, 1].
+        #[prost(float, tag = "4")]
+        pub score: f32,
+    }
+    /// Information about the products similar to a single product in a query
+    /// image.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GroupedResult {
+        /// The bounding polygon around the product detected in the query image.
+        #[prost(message, optional, tag = "1")]
+        pub bounding_poly: ::core::option::Option<super::BoundingPoly>,
+        /// List of results, one for each product match.
+        #[prost(message, repeated, tag = "2")]
+        pub results: ::prost::alloc::vec::Vec<Result>,
+        /// List of generic predictions for the object in the bounding box.
+        #[prost(message, repeated, tag = "3")]
+        pub object_annotations: ::prost::alloc::vec::Vec<ObjectAnnotation>,
+    }
 }
 /// The type of Google Cloud Vision API detection to perform, and the maximum
 /// number of results to return for that type. Multiple `Feature` objects can

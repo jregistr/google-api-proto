@@ -1771,7 +1771,7 @@ pub enum SubjectRequestMode {
     /// the `privateca.certificates.create` permission.
     Default = 1,
     /// A mode reserved for special cases. Indicates that the certificate should
-    /// have one or more SPIFFE
+    /// have one SPIFFE
     /// \[SubjectAltNames][google.cloud.security.privateca.v1.SubjectAltNames\] set
     /// by the service based on the caller's identity. This mode will ignore any
     /// explicitly specified \[Subject][google.cloud.security.privateca.v1.Subject\]
@@ -2089,6 +2089,12 @@ pub struct DisableCertificateAuthorityRequest {
     /// not supported (00000000-0000-0000-0000-000000000000).
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
+    /// Optional. This field allows this CA to be disabled even if it's being
+    /// depended on by another resource. However, doing so may result in unintended
+    /// and unrecoverable effects on any dependent resource(s) since the CA will
+    /// no longer be able to issue certificates.
+    #[prost(bool, tag = "3")]
+    pub ignore_dependent_resources: bool,
 }
 /// Request message for
 /// \[CertificateAuthorityService.EnableCertificateAuthority][google.cloud.security.privateca.v1.CertificateAuthorityService.EnableCertificateAuthority\].
@@ -2258,6 +2264,12 @@ pub struct DeleteCertificateAuthorityRequest {
     /// been allowed. If you proceed, there will be no way to recover this CA.
     #[prost(bool, tag = "5")]
     pub skip_grace_period: bool,
+    /// Optional. This field allows this ca to be deleted even if it's being
+    /// depended on by another resource. However, doing so may result in unintended
+    /// and unrecoverable effects on any dependent resource(s) since the CA will
+    /// no longer be able to issue certificates.
+    #[prost(bool, tag = "6")]
+    pub ignore_dependent_resources: bool,
 }
 /// Request message for
 /// \[CertificateAuthorityService.UpdateCertificateAuthority][google.cloud.security.privateca.v1.CertificateAuthorityService.UpdateCertificateAuthority\].
@@ -2375,6 +2387,12 @@ pub struct DeleteCaPoolRequest {
     /// not supported (00000000-0000-0000-0000-000000000000).
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
+    /// Optional. This field allows this pool to be deleted even if it's being
+    /// depended on by another resource. However, doing so may result in unintended
+    /// and unrecoverable effects on any dependent resource(s) since the pool will
+    /// no longer be able to issue certificates.
+    #[prost(bool, tag = "4")]
+    pub ignore_dependent_resources: bool,
 }
 /// Request message for
 /// \[CertificateAuthorityService.FetchCaCerts][google.cloud.security.privateca.v1.CertificateAuthorityService.FetchCaCerts\].
