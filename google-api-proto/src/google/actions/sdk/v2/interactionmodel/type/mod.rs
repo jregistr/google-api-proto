@@ -11,6 +11,16 @@ pub struct EntityDisplay {
     #[prost(string, tag = "2")]
     pub icon_url: ::prost::alloc::string::String,
 }
+/// Type that matches any text if surrounding words context is close to provided
+/// training examples.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FreeTextType {
+    /// Optional. Elements that will be displayed on the canvas once an entity is extracted
+    /// from a query. Only relevant for canvas enabled apps.
+    #[prost(message, optional, tag = "2")]
+    pub display: ::core::option::Option<EntityDisplay>,
+}
 /// Type that matches text by regular expressions.
 /// **This message is localizable.**
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -41,20 +51,6 @@ pub mod regular_expression_type {
             ::prost::alloc::string::String,
         >,
     }
-}
-/// A reference to a class which is used to declare the type of a field or return
-/// value. Enums are also a type of class that can be referenced using
-/// ClassReference.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassReference {
-    /// Required. Name of a built-in type or custom type of the parameter. Examples:
-    /// `PizzaToppings`, `actions.type.Number`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Indicates whether the data type represents a list of values.
-    #[prost(bool, tag = "2")]
-    pub list: bool,
 }
 /// Type that matches text by set of synonyms.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -138,16 +134,6 @@ pub mod synonym_type {
         }
     }
 }
-/// Type that matches any text if surrounding words context is close to provided
-/// training examples.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FreeTextType {
-    /// Optional. Elements that will be displayed on the canvas once an entity is extracted
-    /// from a query. Only relevant for canvas enabled apps.
-    #[prost(message, optional, tag = "2")]
-    pub display: ::core::option::Option<EntityDisplay>,
-}
 /// Declaration of a custom type, as opposed to built-in types. Types can be
 /// assigned to slots in a scene or parameters of an intent's training phrases.
 /// Practically, Types can be thought of as enums.
@@ -181,4 +167,18 @@ pub mod r#type {
         #[prost(message, tag = "3")]
         FreeText(super::FreeTextType),
     }
+}
+/// A reference to a class which is used to declare the type of a field or return
+/// value. Enums are also a type of class that can be referenced using
+/// ClassReference.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassReference {
+    /// Required. Name of a built-in type or custom type of the parameter. Examples:
+    /// `PizzaToppings`, `actions.type.Number`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Indicates whether the data type represents a list of values.
+    #[prost(bool, tag = "2")]
+    pub list: bool,
 }

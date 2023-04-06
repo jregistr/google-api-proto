@@ -472,6 +472,30 @@ impl InventoryView {
         }
     }
 }
+/// Message encapsulating a value that can be either absolute ("fixed") or
+/// relative ("percent") to a value.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FixedOrPercent {
+    /// Type of the value.
+    #[prost(oneof = "fixed_or_percent::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<fixed_or_percent::Mode>,
+}
+/// Nested message and enum types in `FixedOrPercent`.
+pub mod fixed_or_percent {
+    /// Type of the value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        /// Specifies a fixed value.
+        #[prost(int32, tag = "1")]
+        Fixed(i32),
+        /// Specifies the relative value defined as a percentage, which will be
+        /// multiplied by a reference value.
+        #[prost(int32, tag = "2")]
+        Percent(i32),
+    }
+}
 /// An OS policy defines the desired state configuration for a VM.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1255,29 +1279,464 @@ pub mod os_policy {
         }
     }
 }
-/// Message encapsulating a value that can be either absolute ("fixed") or
-/// relative ("percent") to a value.
+/// OS policy assignment is an API resource that is used to
+/// apply a set of OS policies to a dynamically targeted group of Compute Engine
+/// VM instances.
+///
+/// An OS policy is used to define the desired state configuration for a
+/// Compute Engine VM instance through a set of configuration resources that
+/// provide capabilities such as installing or removing software packages, or
+/// executing a script.
+///
+/// For more information, see [OS policy and OS policy
+/// assignment](<https://cloud.google.com/compute/docs/os-configuration-management/working-with-os-policies>).
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FixedOrPercent {
-    /// Type of the value.
-    #[prost(oneof = "fixed_or_percent::Mode", tags = "1, 2")]
-    pub mode: ::core::option::Option<fixed_or_percent::Mode>,
+pub struct OsPolicyAssignment {
+    /// Resource name.
+    ///
+    /// Format:
+    /// `projects/{project_number}/locations/{location}/osPolicyAssignments/{os_policy_assignment_id}`
+    ///
+    /// This field is ignored when you create an OS policy assignment.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// OS policy assignment description.
+    /// Length of the description is limited to 1024 characters.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. List of OS policies to be applied to the VMs.
+    #[prost(message, repeated, tag = "3")]
+    pub os_policies: ::prost::alloc::vec::Vec<OsPolicy>,
+    /// Required. Filter to select VMs.
+    #[prost(message, optional, tag = "4")]
+    pub instance_filter: ::core::option::Option<os_policy_assignment::InstanceFilter>,
+    /// Required. Rollout to deploy the OS policy assignment.
+    /// A rollout is triggered in the following situations:
+    /// 1) OSPolicyAssignment is created.
+    /// 2) OSPolicyAssignment is updated and the update contains changes to one of
+    /// the following fields:
+    ///     - instance_filter
+    ///     - os_policies
+    /// 3) OSPolicyAssignment is deleted.
+    #[prost(message, optional, tag = "5")]
+    pub rollout: ::core::option::Option<os_policy_assignment::Rollout>,
+    /// Output only. The assignment revision ID
+    /// A new revision is committed whenever a rollout is triggered for a OS policy
+    /// assignment
+    #[prost(string, tag = "6")]
+    pub revision_id: ::prost::alloc::string::String,
+    /// Output only. The timestamp that the revision was created.
+    #[prost(message, optional, tag = "7")]
+    pub revision_create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The etag for this OS policy assignment.
+    /// If this is provided on update, it must match the server's etag.
+    #[prost(string, tag = "8")]
+    pub etag: ::prost::alloc::string::String,
+    /// Output only. OS policy assignment rollout state
+    #[prost(enumeration = "os_policy_assignment::RolloutState", tag = "9")]
+    pub rollout_state: i32,
+    /// Output only. Indicates that this revision has been successfully rolled out
+    /// in this zone and new VMs will be assigned OS policies from this revision.
+    ///
+    /// For a given OS policy assignment, there is only one revision with a value
+    /// of `true` for this field.
+    #[prost(bool, tag = "10")]
+    pub baseline: bool,
+    /// Output only. Indicates that this revision deletes the OS policy assignment.
+    #[prost(bool, tag = "11")]
+    pub deleted: bool,
+    /// Output only. Indicates that reconciliation is in progress for the revision.
+    /// This value is `true` when the `rollout_state` is one of:
+    /// * IN_PROGRESS
+    /// * CANCELLING
+    #[prost(bool, tag = "12")]
+    pub reconciling: bool,
+    /// Output only. Server generated unique id for the OS policy assignment
+    /// resource.
+    #[prost(string, tag = "13")]
+    pub uid: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `FixedOrPercent`.
-pub mod fixed_or_percent {
-    /// Type of the value.
+/// Nested message and enum types in `OSPolicyAssignment`.
+pub mod os_policy_assignment {
+    /// Message representing label set.
+    /// * A label is a key value pair set for a VM.
+    /// * A LabelSet is a set of labels.
+    /// * Labels within a LabelSet are ANDed. In other words, a LabelSet is
+    ///    applicable for a VM only if it matches all the labels in the
+    ///    LabelSet.
+    /// * Example: A LabelSet with 2 labels: `env=prod` and `type=webserver` will
+    ///             only be applicable for those VMs with both labels
+    ///             present.
     #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Mode {
-        /// Specifies a fixed value.
-        #[prost(int32, tag = "1")]
-        Fixed(i32),
-        /// Specifies the relative value defined as a percentage, which will be
-        /// multiplied by a reference value.
-        #[prost(int32, tag = "2")]
-        Percent(i32),
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LabelSet {
+        /// Labels are identified by key/value pairs in this map.
+        /// A VM should contain all the key/value pairs specified in this
+        /// map to be selected.
+        #[prost(btree_map = "string, string", tag = "1")]
+        pub labels: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
     }
+    /// Filters to select target VMs for an assignment.
+    ///
+    /// If more than one filter criteria is specified below, a VM will be selected
+    /// if and only if it satisfies all of them.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InstanceFilter {
+        /// Target all VMs in the project. If true, no other criteria is
+        /// permitted.
+        #[prost(bool, tag = "1")]
+        pub all: bool,
+        /// List of label sets used for VM inclusion.
+        ///
+        /// If the list has more than one `LabelSet`, the VM is included if any
+        /// of the label sets are applicable for the VM.
+        #[prost(message, repeated, tag = "2")]
+        pub inclusion_labels: ::prost::alloc::vec::Vec<LabelSet>,
+        /// List of label sets used for VM exclusion.
+        ///
+        /// If the list has more than one label set, the VM is excluded if any
+        /// of the label sets are applicable for the VM.
+        #[prost(message, repeated, tag = "3")]
+        pub exclusion_labels: ::prost::alloc::vec::Vec<LabelSet>,
+        /// List of inventories to select VMs.
+        ///
+        /// A VM is selected if its inventory data matches at least one of the
+        /// following inventories.
+        #[prost(message, repeated, tag = "4")]
+        pub inventories: ::prost::alloc::vec::Vec<instance_filter::Inventory>,
+    }
+    /// Nested message and enum types in `InstanceFilter`.
+    pub mod instance_filter {
+        /// VM inventory details.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Inventory {
+            /// Required. The OS short name
+            #[prost(string, tag = "1")]
+            pub os_short_name: ::prost::alloc::string::String,
+            /// The OS version
+            ///
+            /// Prefix matches are supported if asterisk(*) is provided as the
+            /// last character. For example, to match all versions with a major
+            /// version of `7`, specify the following value for this field `7.*`
+            ///
+            /// An empty string matches all OS versions.
+            #[prost(string, tag = "2")]
+            pub os_version: ::prost::alloc::string::String,
+        }
+    }
+    /// Message to configure the rollout at the zonal level for the OS policy
+    /// assignment.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Rollout {
+        /// Required. The maximum number (or percentage) of VMs per zone to disrupt
+        /// at any given moment.
+        #[prost(message, optional, tag = "1")]
+        pub disruption_budget: ::core::option::Option<super::FixedOrPercent>,
+        /// Required. This determines the minimum duration of time to wait after the
+        /// configuration changes are applied through the current rollout. A
+        /// VM continues to count towards the `disruption_budget` at least
+        /// until this duration of time has passed after configuration changes are
+        /// applied.
+        #[prost(message, optional, tag = "2")]
+        pub min_wait_duration: ::core::option::Option<::prost_types::Duration>,
+    }
+    /// OS policy assignment rollout state
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum RolloutState {
+        /// Invalid value
+        Unspecified = 0,
+        /// The rollout is in progress.
+        InProgress = 1,
+        /// The rollout is being cancelled.
+        Cancelling = 2,
+        /// The rollout is cancelled.
+        Cancelled = 3,
+        /// The rollout has completed successfully.
+        Succeeded = 4,
+    }
+    impl RolloutState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RolloutState::Unspecified => "ROLLOUT_STATE_UNSPECIFIED",
+                RolloutState::InProgress => "IN_PROGRESS",
+                RolloutState::Cancelling => "CANCELLING",
+                RolloutState::Cancelled => "CANCELLED",
+                RolloutState::Succeeded => "SUCCEEDED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ROLLOUT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "IN_PROGRESS" => Some(Self::InProgress),
+                "CANCELLING" => Some(Self::Cancelling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                _ => None,
+            }
+        }
+    }
+}
+/// OS policy assignment operation metadata provided by OS policy assignment API
+/// methods that return long running operations.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OsPolicyAssignmentOperationMetadata {
+    /// Reference to the `OSPolicyAssignment` API resource.
+    ///
+    /// Format:
+    /// `projects/{project_number}/locations/{location}/osPolicyAssignments/{os_policy_assignment_id@revision_id}`
+    #[prost(string, tag = "1")]
+    pub os_policy_assignment: ::prost::alloc::string::String,
+    /// The OS policy assignment API method.
+    #[prost(
+        enumeration = "os_policy_assignment_operation_metadata::ApiMethod",
+        tag = "2"
+    )]
+    pub api_method: i32,
+    /// State of the rollout
+    #[prost(
+        enumeration = "os_policy_assignment_operation_metadata::RolloutState",
+        tag = "3"
+    )]
+    pub rollout_state: i32,
+    /// Rollout start time
+    #[prost(message, optional, tag = "4")]
+    pub rollout_start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Rollout update time
+    #[prost(message, optional, tag = "5")]
+    pub rollout_update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `OSPolicyAssignmentOperationMetadata`.
+pub mod os_policy_assignment_operation_metadata {
+    /// The OS policy assignment API method.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ApiMethod {
+        /// Invalid value
+        Unspecified = 0,
+        /// Create OS policy assignment API method
+        Create = 1,
+        /// Update OS policy assignment API method
+        Update = 2,
+        /// Delete OS policy assignment API method
+        Delete = 3,
+    }
+    impl ApiMethod {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ApiMethod::Unspecified => "API_METHOD_UNSPECIFIED",
+                ApiMethod::Create => "CREATE",
+                ApiMethod::Update => "UPDATE",
+                ApiMethod::Delete => "DELETE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "API_METHOD_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATE" => Some(Self::Create),
+                "UPDATE" => Some(Self::Update),
+                "DELETE" => Some(Self::Delete),
+                _ => None,
+            }
+        }
+    }
+    /// State of the rollout
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum RolloutState {
+        /// Invalid value
+        Unspecified = 0,
+        /// The rollout is in progress.
+        InProgress = 1,
+        /// The rollout is being cancelled.
+        Cancelling = 2,
+        /// The rollout is cancelled.
+        Cancelled = 3,
+        /// The rollout has completed successfully.
+        Succeeded = 4,
+    }
+    impl RolloutState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RolloutState::Unspecified => "ROLLOUT_STATE_UNSPECIFIED",
+                RolloutState::InProgress => "IN_PROGRESS",
+                RolloutState::Cancelling => "CANCELLING",
+                RolloutState::Cancelled => "CANCELLED",
+                RolloutState::Succeeded => "SUCCEEDED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ROLLOUT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "IN_PROGRESS" => Some(Self::InProgress),
+                "CANCELLING" => Some(Self::Cancelling),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                _ => None,
+            }
+        }
+    }
+}
+/// A request message to create an OS policy assignment
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateOsPolicyAssignmentRequest {
+    /// Required. The parent resource name in the form:
+    /// projects/{project}/locations/{location}
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The OS policy assignment to be created.
+    #[prost(message, optional, tag = "2")]
+    pub os_policy_assignment: ::core::option::Option<OsPolicyAssignment>,
+    /// Required. The logical name of the OS policy assignment in the project
+    /// with the following restrictions:
+    ///
+    /// * Must contain only lowercase letters, numbers, and hyphens.
+    /// * Must start with a letter.
+    /// * Must be between 1-63 characters.
+    /// * Must end with a number or a letter.
+    /// * Must be unique within the project.
+    #[prost(string, tag = "3")]
+    pub os_policy_assignment_id: ::prost::alloc::string::String,
+}
+/// A request message to update an OS policy assignment
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateOsPolicyAssignmentRequest {
+    /// Required. The updated OS policy assignment.
+    #[prost(message, optional, tag = "1")]
+    pub os_policy_assignment: ::core::option::Option<OsPolicyAssignment>,
+    /// Optional. Field mask that controls which fields of the assignment should be
+    /// updated.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// A request message to get an OS policy assignment
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetOsPolicyAssignmentRequest {
+    /// Required. The resource name of OS policy assignment.
+    ///
+    /// Format:
+    /// `projects/{project}/locations/{location}/osPolicyAssignments/{os_policy_assignment}@{revisionId}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A request message to list OS policy assignments for a parent resource
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListOsPolicyAssignmentsRequest {
+    /// Required. The parent resource name.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of assignments to return.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A pagination token returned from a previous call to
+    /// `ListOSPolicyAssignments` that indicates where this listing should continue
+    /// from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// A response message for listing all assignments under given parent.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListOsPolicyAssignmentsResponse {
+    /// The list of assignments
+    #[prost(message, repeated, tag = "1")]
+    pub os_policy_assignments: ::prost::alloc::vec::Vec<OsPolicyAssignment>,
+    /// The pagination token to retrieve the next page of OS policy assignments.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A request message to list revisions for a OS policy assignment
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListOsPolicyAssignmentRevisionsRequest {
+    /// Required. The name of the OS policy assignment to list revisions for.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The maximum number of revisions to return.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A pagination token returned from a previous call to
+    /// `ListOSPolicyAssignmentRevisions` that indicates where this listing should
+    /// continue from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// A response message for listing all revisions for a OS policy assignment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListOsPolicyAssignmentRevisionsResponse {
+    /// The OS policy assignment revisions
+    #[prost(message, repeated, tag = "1")]
+    pub os_policy_assignments: ::prost::alloc::vec::Vec<OsPolicyAssignment>,
+    /// The pagination token to retrieve the next page of OS policy assignment
+    /// revisions.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A request message for deleting a OS policy assignment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteOsPolicyAssignmentRequest {
+    /// Required. The name of the OS policy assignment to be deleted
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
 }
 /// A request message to initiate patching across Compute Engine
 /// instances.
@@ -2647,6 +3106,320 @@ pub struct ResumePatchDeploymentRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
+/// Generated client implementations.
+pub mod os_config_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// OS Config API
+    ///
+    /// The OS Config service is a server-side component that you can use to
+    /// manage package installations and patch jobs for virtual machine instances.
+    #[derive(Debug, Clone)]
+    pub struct OsConfigServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> OsConfigServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> OsConfigServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            OsConfigServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Patch VM instances by creating and running a patch job.
+        pub async fn execute_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ExecutePatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ExecutePatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get the patch job. This can be used to track the progress of an
+        /// ongoing patch job or review the details of completed jobs.
+        pub async fn get_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/GetPatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Cancel a patch job. The patch job must be active. Canceled patch jobs
+        /// cannot be restarted.
+        pub async fn cancel_patch_job(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CancelPatchJobRequest>,
+        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/CancelPatchJob",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a list of patch jobs.
+        pub async fn list_patch_jobs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchJobsRequest>,
+        ) -> Result<tonic::Response<super::ListPatchJobsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobs",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a list of instance details for a given patch job.
+        pub async fn list_patch_job_instance_details(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchJobInstanceDetailsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPatchJobInstanceDetailsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobInstanceDetails",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Create an OS Config patch deployment.
+        pub async fn create_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreatePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/CreatePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get an OS Config patch deployment.
+        pub async fn get_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/GetPatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Get a page of OS Config patch deployments.
+        pub async fn list_patch_deployments(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListPatchDeploymentsRequest>,
+        ) -> Result<
+            tonic::Response<super::ListPatchDeploymentsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ListPatchDeployments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Delete an OS Config patch deployment.
+        pub async fn delete_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeletePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/DeletePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Update an OS Config patch deployment.
+        pub async fn update_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdatePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/UpdatePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Change state of patch deployment to "PAUSED".
+        /// Patch deployment in paused state doesn't generate patch jobs.
+        pub async fn pause_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PausePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/PausePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Change state of patch deployment back to "ACTIVE".
+        /// Patch deployment in active state continues to generate patch jobs.
+        pub async fn resume_patch_deployment(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ResumePatchDeploymentRequest>,
+        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.osconfig.v1.OsConfigService/ResumePatchDeployment",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Get a report of the OS policy assignment for a VM instance.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3035,465 +3808,6 @@ pub mod os_policy_assignment_report {
             }
         }
     }
-}
-/// OS policy assignment is an API resource that is used to
-/// apply a set of OS policies to a dynamically targeted group of Compute Engine
-/// VM instances.
-///
-/// An OS policy is used to define the desired state configuration for a
-/// Compute Engine VM instance through a set of configuration resources that
-/// provide capabilities such as installing or removing software packages, or
-/// executing a script.
-///
-/// For more information, see [OS policy and OS policy
-/// assignment](<https://cloud.google.com/compute/docs/os-configuration-management/working-with-os-policies>).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicyAssignment {
-    /// Resource name.
-    ///
-    /// Format:
-    /// `projects/{project_number}/locations/{location}/osPolicyAssignments/{os_policy_assignment_id}`
-    ///
-    /// This field is ignored when you create an OS policy assignment.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// OS policy assignment description.
-    /// Length of the description is limited to 1024 characters.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. List of OS policies to be applied to the VMs.
-    #[prost(message, repeated, tag = "3")]
-    pub os_policies: ::prost::alloc::vec::Vec<OsPolicy>,
-    /// Required. Filter to select VMs.
-    #[prost(message, optional, tag = "4")]
-    pub instance_filter: ::core::option::Option<os_policy_assignment::InstanceFilter>,
-    /// Required. Rollout to deploy the OS policy assignment.
-    /// A rollout is triggered in the following situations:
-    /// 1) OSPolicyAssignment is created.
-    /// 2) OSPolicyAssignment is updated and the update contains changes to one of
-    /// the following fields:
-    ///     - instance_filter
-    ///     - os_policies
-    /// 3) OSPolicyAssignment is deleted.
-    #[prost(message, optional, tag = "5")]
-    pub rollout: ::core::option::Option<os_policy_assignment::Rollout>,
-    /// Output only. The assignment revision ID
-    /// A new revision is committed whenever a rollout is triggered for a OS policy
-    /// assignment
-    #[prost(string, tag = "6")]
-    pub revision_id: ::prost::alloc::string::String,
-    /// Output only. The timestamp that the revision was created.
-    #[prost(message, optional, tag = "7")]
-    pub revision_create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The etag for this OS policy assignment.
-    /// If this is provided on update, it must match the server's etag.
-    #[prost(string, tag = "8")]
-    pub etag: ::prost::alloc::string::String,
-    /// Output only. OS policy assignment rollout state
-    #[prost(enumeration = "os_policy_assignment::RolloutState", tag = "9")]
-    pub rollout_state: i32,
-    /// Output only. Indicates that this revision has been successfully rolled out
-    /// in this zone and new VMs will be assigned OS policies from this revision.
-    ///
-    /// For a given OS policy assignment, there is only one revision with a value
-    /// of `true` for this field.
-    #[prost(bool, tag = "10")]
-    pub baseline: bool,
-    /// Output only. Indicates that this revision deletes the OS policy assignment.
-    #[prost(bool, tag = "11")]
-    pub deleted: bool,
-    /// Output only. Indicates that reconciliation is in progress for the revision.
-    /// This value is `true` when the `rollout_state` is one of:
-    /// * IN_PROGRESS
-    /// * CANCELLING
-    #[prost(bool, tag = "12")]
-    pub reconciling: bool,
-    /// Output only. Server generated unique id for the OS policy assignment
-    /// resource.
-    #[prost(string, tag = "13")]
-    pub uid: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `OSPolicyAssignment`.
-pub mod os_policy_assignment {
-    /// Message representing label set.
-    /// * A label is a key value pair set for a VM.
-    /// * A LabelSet is a set of labels.
-    /// * Labels within a LabelSet are ANDed. In other words, a LabelSet is
-    ///    applicable for a VM only if it matches all the labels in the
-    ///    LabelSet.
-    /// * Example: A LabelSet with 2 labels: `env=prod` and `type=webserver` will
-    ///             only be applicable for those VMs with both labels
-    ///             present.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LabelSet {
-        /// Labels are identified by key/value pairs in this map.
-        /// A VM should contain all the key/value pairs specified in this
-        /// map to be selected.
-        #[prost(btree_map = "string, string", tag = "1")]
-        pub labels: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-    }
-    /// Filters to select target VMs for an assignment.
-    ///
-    /// If more than one filter criteria is specified below, a VM will be selected
-    /// if and only if it satisfies all of them.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InstanceFilter {
-        /// Target all VMs in the project. If true, no other criteria is
-        /// permitted.
-        #[prost(bool, tag = "1")]
-        pub all: bool,
-        /// List of label sets used for VM inclusion.
-        ///
-        /// If the list has more than one `LabelSet`, the VM is included if any
-        /// of the label sets are applicable for the VM.
-        #[prost(message, repeated, tag = "2")]
-        pub inclusion_labels: ::prost::alloc::vec::Vec<LabelSet>,
-        /// List of label sets used for VM exclusion.
-        ///
-        /// If the list has more than one label set, the VM is excluded if any
-        /// of the label sets are applicable for the VM.
-        #[prost(message, repeated, tag = "3")]
-        pub exclusion_labels: ::prost::alloc::vec::Vec<LabelSet>,
-        /// List of inventories to select VMs.
-        ///
-        /// A VM is selected if its inventory data matches at least one of the
-        /// following inventories.
-        #[prost(message, repeated, tag = "4")]
-        pub inventories: ::prost::alloc::vec::Vec<instance_filter::Inventory>,
-    }
-    /// Nested message and enum types in `InstanceFilter`.
-    pub mod instance_filter {
-        /// VM inventory details.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Inventory {
-            /// Required. The OS short name
-            #[prost(string, tag = "1")]
-            pub os_short_name: ::prost::alloc::string::String,
-            /// The OS version
-            ///
-            /// Prefix matches are supported if asterisk(*) is provided as the
-            /// last character. For example, to match all versions with a major
-            /// version of `7`, specify the following value for this field `7.*`
-            ///
-            /// An empty string matches all OS versions.
-            #[prost(string, tag = "2")]
-            pub os_version: ::prost::alloc::string::String,
-        }
-    }
-    /// Message to configure the rollout at the zonal level for the OS policy
-    /// assignment.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Rollout {
-        /// Required. The maximum number (or percentage) of VMs per zone to disrupt
-        /// at any given moment.
-        #[prost(message, optional, tag = "1")]
-        pub disruption_budget: ::core::option::Option<super::FixedOrPercent>,
-        /// Required. This determines the minimum duration of time to wait after the
-        /// configuration changes are applied through the current rollout. A
-        /// VM continues to count towards the `disruption_budget` at least
-        /// until this duration of time has passed after configuration changes are
-        /// applied.
-        #[prost(message, optional, tag = "2")]
-        pub min_wait_duration: ::core::option::Option<::prost_types::Duration>,
-    }
-    /// OS policy assignment rollout state
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum RolloutState {
-        /// Invalid value
-        Unspecified = 0,
-        /// The rollout is in progress.
-        InProgress = 1,
-        /// The rollout is being cancelled.
-        Cancelling = 2,
-        /// The rollout is cancelled.
-        Cancelled = 3,
-        /// The rollout has completed successfully.
-        Succeeded = 4,
-    }
-    impl RolloutState {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                RolloutState::Unspecified => "ROLLOUT_STATE_UNSPECIFIED",
-                RolloutState::InProgress => "IN_PROGRESS",
-                RolloutState::Cancelling => "CANCELLING",
-                RolloutState::Cancelled => "CANCELLED",
-                RolloutState::Succeeded => "SUCCEEDED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ROLLOUT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "IN_PROGRESS" => Some(Self::InProgress),
-                "CANCELLING" => Some(Self::Cancelling),
-                "CANCELLED" => Some(Self::Cancelled),
-                "SUCCEEDED" => Some(Self::Succeeded),
-                _ => None,
-            }
-        }
-    }
-}
-/// OS policy assignment operation metadata provided by OS policy assignment API
-/// methods that return long running operations.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OsPolicyAssignmentOperationMetadata {
-    /// Reference to the `OSPolicyAssignment` API resource.
-    ///
-    /// Format:
-    /// `projects/{project_number}/locations/{location}/osPolicyAssignments/{os_policy_assignment_id@revision_id}`
-    #[prost(string, tag = "1")]
-    pub os_policy_assignment: ::prost::alloc::string::String,
-    /// The OS policy assignment API method.
-    #[prost(
-        enumeration = "os_policy_assignment_operation_metadata::ApiMethod",
-        tag = "2"
-    )]
-    pub api_method: i32,
-    /// State of the rollout
-    #[prost(
-        enumeration = "os_policy_assignment_operation_metadata::RolloutState",
-        tag = "3"
-    )]
-    pub rollout_state: i32,
-    /// Rollout start time
-    #[prost(message, optional, tag = "4")]
-    pub rollout_start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Rollout update time
-    #[prost(message, optional, tag = "5")]
-    pub rollout_update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `OSPolicyAssignmentOperationMetadata`.
-pub mod os_policy_assignment_operation_metadata {
-    /// The OS policy assignment API method.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ApiMethod {
-        /// Invalid value
-        Unspecified = 0,
-        /// Create OS policy assignment API method
-        Create = 1,
-        /// Update OS policy assignment API method
-        Update = 2,
-        /// Delete OS policy assignment API method
-        Delete = 3,
-    }
-    impl ApiMethod {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ApiMethod::Unspecified => "API_METHOD_UNSPECIFIED",
-                ApiMethod::Create => "CREATE",
-                ApiMethod::Update => "UPDATE",
-                ApiMethod::Delete => "DELETE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "API_METHOD_UNSPECIFIED" => Some(Self::Unspecified),
-                "CREATE" => Some(Self::Create),
-                "UPDATE" => Some(Self::Update),
-                "DELETE" => Some(Self::Delete),
-                _ => None,
-            }
-        }
-    }
-    /// State of the rollout
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum RolloutState {
-        /// Invalid value
-        Unspecified = 0,
-        /// The rollout is in progress.
-        InProgress = 1,
-        /// The rollout is being cancelled.
-        Cancelling = 2,
-        /// The rollout is cancelled.
-        Cancelled = 3,
-        /// The rollout has completed successfully.
-        Succeeded = 4,
-    }
-    impl RolloutState {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                RolloutState::Unspecified => "ROLLOUT_STATE_UNSPECIFIED",
-                RolloutState::InProgress => "IN_PROGRESS",
-                RolloutState::Cancelling => "CANCELLING",
-                RolloutState::Cancelled => "CANCELLED",
-                RolloutState::Succeeded => "SUCCEEDED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ROLLOUT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "IN_PROGRESS" => Some(Self::InProgress),
-                "CANCELLING" => Some(Self::Cancelling),
-                "CANCELLED" => Some(Self::Cancelled),
-                "SUCCEEDED" => Some(Self::Succeeded),
-                _ => None,
-            }
-        }
-    }
-}
-/// A request message to create an OS policy assignment
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateOsPolicyAssignmentRequest {
-    /// Required. The parent resource name in the form:
-    /// projects/{project}/locations/{location}
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The OS policy assignment to be created.
-    #[prost(message, optional, tag = "2")]
-    pub os_policy_assignment: ::core::option::Option<OsPolicyAssignment>,
-    /// Required. The logical name of the OS policy assignment in the project
-    /// with the following restrictions:
-    ///
-    /// * Must contain only lowercase letters, numbers, and hyphens.
-    /// * Must start with a letter.
-    /// * Must be between 1-63 characters.
-    /// * Must end with a number or a letter.
-    /// * Must be unique within the project.
-    #[prost(string, tag = "3")]
-    pub os_policy_assignment_id: ::prost::alloc::string::String,
-}
-/// A request message to update an OS policy assignment
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateOsPolicyAssignmentRequest {
-    /// Required. The updated OS policy assignment.
-    #[prost(message, optional, tag = "1")]
-    pub os_policy_assignment: ::core::option::Option<OsPolicyAssignment>,
-    /// Optional. Field mask that controls which fields of the assignment should be
-    /// updated.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// A request message to get an OS policy assignment
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetOsPolicyAssignmentRequest {
-    /// Required. The resource name of OS policy assignment.
-    ///
-    /// Format:
-    /// `projects/{project}/locations/{location}/osPolicyAssignments/{os_policy_assignment}@{revisionId}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A request message to list OS policy assignments for a parent resource
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListOsPolicyAssignmentsRequest {
-    /// Required. The parent resource name.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of assignments to return.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A pagination token returned from a previous call to
-    /// `ListOSPolicyAssignments` that indicates where this listing should continue
-    /// from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// A response message for listing all assignments under given parent.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListOsPolicyAssignmentsResponse {
-    /// The list of assignments
-    #[prost(message, repeated, tag = "1")]
-    pub os_policy_assignments: ::prost::alloc::vec::Vec<OsPolicyAssignment>,
-    /// The pagination token to retrieve the next page of OS policy assignments.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A request message to list revisions for a OS policy assignment
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListOsPolicyAssignmentRevisionsRequest {
-    /// Required. The name of the OS policy assignment to list revisions for.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The maximum number of revisions to return.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A pagination token returned from a previous call to
-    /// `ListOSPolicyAssignmentRevisions` that indicates where this listing should
-    /// continue from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// A response message for listing all revisions for a OS policy assignment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListOsPolicyAssignmentRevisionsResponse {
-    /// The OS policy assignment revisions
-    #[prost(message, repeated, tag = "1")]
-    pub os_policy_assignments: ::prost::alloc::vec::Vec<OsPolicyAssignment>,
-    /// The pagination token to retrieve the next page of OS policy assignment
-    /// revisions.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A request message for deleting a OS policy assignment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteOsPolicyAssignmentRequest {
-    /// Required. The name of the OS policy assignment to be deleted
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
 }
 /// This API resource represents the vulnerability report for a specified
 /// Compute Engine virtual machine (VM) instance at a given point in time.
@@ -4401,320 +4715,6 @@ pub mod os_config_zonal_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.osconfig.v1.OsConfigZonalService/ListVulnerabilityReports",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod os_config_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// OS Config API
-    ///
-    /// The OS Config service is a server-side component that you can use to
-    /// manage package installations and patch jobs for virtual machine instances.
-    #[derive(Debug, Clone)]
-    pub struct OsConfigServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> OsConfigServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> OsConfigServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            OsConfigServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Patch VM instances by creating and running a patch job.
-        pub async fn execute_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExecutePatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ExecutePatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get the patch job. This can be used to track the progress of an
-        /// ongoing patch job or review the details of completed jobs.
-        pub async fn get_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/GetPatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Cancel a patch job. The patch job must be active. Canceled patch jobs
-        /// cannot be restarted.
-        pub async fn cancel_patch_job(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CancelPatchJobRequest>,
-        ) -> Result<tonic::Response<super::PatchJob>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/CancelPatchJob",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a list of patch jobs.
-        pub async fn list_patch_jobs(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchJobsRequest>,
-        ) -> Result<tonic::Response<super::ListPatchJobsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobs",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a list of instance details for a given patch job.
-        pub async fn list_patch_job_instance_details(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchJobInstanceDetailsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListPatchJobInstanceDetailsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchJobInstanceDetails",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Create an OS Config patch deployment.
-        pub async fn create_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreatePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/CreatePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get an OS Config patch deployment.
-        pub async fn get_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetPatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/GetPatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Get a page of OS Config patch deployments.
-        pub async fn list_patch_deployments(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPatchDeploymentsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListPatchDeploymentsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ListPatchDeployments",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Delete an OS Config patch deployment.
-        pub async fn delete_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeletePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/DeletePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Update an OS Config patch deployment.
-        pub async fn update_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdatePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/UpdatePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Change state of patch deployment to "PAUSED".
-        /// Patch deployment in paused state doesn't generate patch jobs.
-        pub async fn pause_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PausePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/PausePatchDeployment",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Change state of patch deployment back to "ACTIVE".
-        /// Patch deployment in active state continues to generate patch jobs.
-        pub async fn resume_patch_deployment(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ResumePatchDeploymentRequest>,
-        ) -> Result<tonic::Response<super::PatchDeployment>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.osconfig.v1.OsConfigService/ResumePatchDeployment",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

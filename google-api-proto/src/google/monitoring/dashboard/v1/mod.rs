@@ -1,3 +1,88 @@
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag = "1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag = "3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
+                "METRIC_LABEL" => Some(Self::MetricLabel),
+                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
+                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
+                "GROUP" => Some(Self::Group),
+                _ => None,
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag = "4")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// A chart that displays alert policy data.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -7,6 +92,30 @@ pub struct AlertChart {
     ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
+}
+/// A widget that groups the other widgets. All widgets that are within
+/// the area spanned by the grouping widget are considered member widgets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CollapsibleGroup {
+    /// The collapsed state of the widget on first page load.
+    #[prost(bool, tag = "1")]
+    pub collapsed: bool,
+}
+/// A widget that displays a stream of log.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogsPanel {
+    /// A filter that chooses which log entries to return.  See [Advanced Logs
+    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries.
+    #[prost(string, tag = "1")]
+    pub filter: ::prost::alloc::string::String,
+    /// The names of logging resources to collect logs for. Currently only projects
+    /// are supported. If empty, the widget will default to the host project.
+    #[prost(string, repeated, tag = "2")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
@@ -952,16 +1061,6 @@ impl SparkChartType {
         }
     }
 }
-/// Table display options that can be reused.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableDisplayOptions {
-    /// Optional. This field is unused and has been replaced by
-    /// TimeSeriesTable.column_settings
-    #[deprecated]
-    #[prost(string, repeated, tag = "1")]
-    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
 /// A widget showing the latest value of a metric, and how this value relates to
 /// one or more thresholds.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1062,6 +1161,170 @@ pub mod scorecard {
         /// Will cause the scorecard to show a spark chart.
         #[prost(message, tag = "5")]
         SparkChartView(SparkChartView),
+    }
+}
+/// Table display options that can be reused.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableDisplayOptions {
+    /// Optional. This field is unused and has been replaced by
+    /// TimeSeriesTable.column_settings
+    #[deprecated]
+    #[prost(string, repeated, tag = "1")]
+    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A table that displays time series data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeriesTable {
+    /// Required. The data displayed in this table.
+    #[prost(message, repeated, tag = "1")]
+    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
+    /// Optional. Store rendering strategy
+    #[prost(enumeration = "time_series_table::MetricVisualization", tag = "2")]
+    pub metric_visualization: i32,
+    /// Optional. The list of the persistent column settings for the table.
+    #[prost(message, repeated, tag = "4")]
+    pub column_settings: ::prost::alloc::vec::Vec<time_series_table::ColumnSettings>,
+}
+/// Nested message and enum types in `TimeSeriesTable`.
+pub mod time_series_table {
+    /// Groups a time series query definition with table options.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TableDataSet {
+        /// Required. Fields for querying time series data from the
+        /// Stackdriver metrics API.
+        #[prost(message, optional, tag = "1")]
+        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
+        /// Optional. A template string for naming `TimeSeries` in the resulting data
+        /// set. This should be a string with interpolations of the form
+        /// `${label_name}`, which will resolve to the label's value i.e.
+        /// "${resource.labels.project_id}."
+        #[prost(string, tag = "2")]
+        pub table_template: ::prost::alloc::string::String,
+        /// Optional. The lower bound on data point frequency for this data set,
+        /// implemented by specifying the minimum alignment period to use in a time
+        /// series query For example, if the data is published once every 10 minutes,
+        /// the `min_alignment_period` should be at least 10 minutes. It would not
+        /// make sense to fetch and align data at one minute intervals.
+        #[prost(message, optional, tag = "3")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+        /// Optional. Table display options for configuring how the table is
+        /// rendered.
+        #[prost(message, optional, tag = "4")]
+        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
+    }
+    /// The persistent settings for a table's columns.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ColumnSettings {
+        /// Required. The id of the column.
+        #[prost(string, tag = "1")]
+        pub column: ::prost::alloc::string::String,
+        /// Required. Whether the column should be visible on page load.
+        #[prost(bool, tag = "2")]
+        pub visible: bool,
+    }
+    /// Enum for metric metric_visualization
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum MetricVisualization {
+        /// Unspecified state
+        Unspecified = 0,
+        /// Default text rendering
+        Number = 1,
+        /// Horizontal bar rendering
+        Bar = 2,
+    }
+    impl MetricVisualization {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MetricVisualization::Unspecified => "METRIC_VISUALIZATION_UNSPECIFIED",
+                MetricVisualization::Number => "NUMBER",
+                MetricVisualization::Bar => "BAR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "METRIC_VISUALIZATION_UNSPECIFIED" => Some(Self::Unspecified),
+                "NUMBER" => Some(Self::Number),
+                "BAR" => Some(Self::Bar),
+                _ => None,
+            }
+        }
+    }
+}
+/// A widget that displays textual content.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Text {
+    /// The text content to be displayed.
+    #[prost(string, tag = "1")]
+    pub content: ::prost::alloc::string::String,
+    /// How the text content is formatted.
+    #[prost(enumeration = "text::Format", tag = "2")]
+    pub format: i32,
+}
+/// Nested message and enum types in `Text`.
+pub mod text {
+    /// The format type of the text content.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Format {
+        /// Format is unspecified. Defaults to MARKDOWN.
+        Unspecified = 0,
+        /// The text contains Markdown formatting.
+        Markdown = 1,
+        /// The text contains no special formatting.
+        Raw = 2,
+    }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Markdown => "MARKDOWN",
+                Format::Raw => "RAW",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "MARKDOWN" => Some(Self::Markdown),
+                "RAW" => Some(Self::Raw),
+                _ => None,
+            }
+        }
     }
 }
 /// A chart that displays data on a 2D (X and Y axes) plane.
@@ -1343,269 +1606,6 @@ pub mod chart_options {
                 "COLOR" => Some(Self::Color),
                 "X_RAY" => Some(Self::XRay),
                 "STATS" => Some(Self::Stats),
-                _ => None,
-            }
-        }
-    }
-}
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag = "1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag = "3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    impl FilterType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
-                FilterType::ResourceLabel => "RESOURCE_LABEL",
-                FilterType::MetricLabel => "METRIC_LABEL",
-                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
-                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
-                FilterType::Group => "GROUP",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
-                "METRIC_LABEL" => Some(Self::MetricLabel),
-                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
-                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
-                "GROUP" => Some(Self::Group),
-                _ => None,
-            }
-        }
-    }
-    /// The default value used in the filter comparison
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag = "4")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// A widget that groups the other widgets. All widgets that are within
-/// the area spanned by the grouping widget are considered member widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollapsibleGroup {
-    /// The collapsed state of the widget on first page load.
-    #[prost(bool, tag = "1")]
-    pub collapsed: bool,
-}
-/// A widget that displays a stream of log.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogsPanel {
-    /// A filter that chooses which log entries to return.  See [Advanced Logs
-    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries.
-    #[prost(string, tag = "1")]
-    pub filter: ::prost::alloc::string::String,
-    /// The names of logging resources to collect logs for. Currently only projects
-    /// are supported. If empty, the widget will default to the host project.
-    #[prost(string, repeated, tag = "2")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A table that displays time series data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeriesTable {
-    /// Required. The data displayed in this table.
-    #[prost(message, repeated, tag = "1")]
-    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
-    /// Optional. Store rendering strategy
-    #[prost(enumeration = "time_series_table::MetricVisualization", tag = "2")]
-    pub metric_visualization: i32,
-    /// Optional. The list of the persistent column settings for the table.
-    #[prost(message, repeated, tag = "4")]
-    pub column_settings: ::prost::alloc::vec::Vec<time_series_table::ColumnSettings>,
-}
-/// Nested message and enum types in `TimeSeriesTable`.
-pub mod time_series_table {
-    /// Groups a time series query definition with table options.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TableDataSet {
-        /// Required. Fields for querying time series data from the
-        /// Stackdriver metrics API.
-        #[prost(message, optional, tag = "1")]
-        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
-        /// Optional. A template string for naming `TimeSeries` in the resulting data
-        /// set. This should be a string with interpolations of the form
-        /// `${label_name}`, which will resolve to the label's value i.e.
-        /// "${resource.labels.project_id}."
-        #[prost(string, tag = "2")]
-        pub table_template: ::prost::alloc::string::String,
-        /// Optional. The lower bound on data point frequency for this data set,
-        /// implemented by specifying the minimum alignment period to use in a time
-        /// series query For example, if the data is published once every 10 minutes,
-        /// the `min_alignment_period` should be at least 10 minutes. It would not
-        /// make sense to fetch and align data at one minute intervals.
-        #[prost(message, optional, tag = "3")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-        /// Optional. Table display options for configuring how the table is
-        /// rendered.
-        #[prost(message, optional, tag = "4")]
-        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
-    }
-    /// The persistent settings for a table's columns.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ColumnSettings {
-        /// Required. The id of the column.
-        #[prost(string, tag = "1")]
-        pub column: ::prost::alloc::string::String,
-        /// Required. Whether the column should be visible on page load.
-        #[prost(bool, tag = "2")]
-        pub visible: bool,
-    }
-    /// Enum for metric metric_visualization
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum MetricVisualization {
-        /// Unspecified state
-        Unspecified = 0,
-        /// Default text rendering
-        Number = 1,
-        /// Horizontal bar rendering
-        Bar = 2,
-    }
-    impl MetricVisualization {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MetricVisualization::Unspecified => "METRIC_VISUALIZATION_UNSPECIFIED",
-                MetricVisualization::Number => "NUMBER",
-                MetricVisualization::Bar => "BAR",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "METRIC_VISUALIZATION_UNSPECIFIED" => Some(Self::Unspecified),
-                "NUMBER" => Some(Self::Number),
-                "BAR" => Some(Self::Bar),
-                _ => None,
-            }
-        }
-    }
-}
-/// A widget that displays textual content.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Text {
-    /// The text content to be displayed.
-    #[prost(string, tag = "1")]
-    pub content: ::prost::alloc::string::String,
-    /// How the text content is formatted.
-    #[prost(enumeration = "text::Format", tag = "2")]
-    pub format: i32,
-}
-/// Nested message and enum types in `Text`.
-pub mod text {
-    /// The format type of the text content.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Format {
-        /// Format is unspecified. Defaults to MARKDOWN.
-        Unspecified = 0,
-        /// The text contains Markdown formatting.
-        Markdown = 1,
-        /// The text contains no special formatting.
-        Raw = 2,
-    }
-    impl Format {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Format::Unspecified => "FORMAT_UNSPECIFIED",
-                Format::Markdown => "MARKDOWN",
-                Format::Raw => "RAW",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
-                "MARKDOWN" => Some(Self::Markdown),
-                "RAW" => Some(Self::Raw),
                 _ => None,
             }
         }

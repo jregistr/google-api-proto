@@ -1,3 +1,90 @@
+/// The Artifact Registry VPC SC config that apply to a Project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VpcscConfig {
+    /// The name of the project's VPC SC Config.
+    ///
+    /// Always of the form:
+    /// projects/{projectID}/locations/{location}/vpcscConfig
+    ///
+    /// In update request: never set
+    /// In response: always set
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The project per location VPC SC policy that defines the VPC SC behavior for
+    /// the Remote Repository (Allow/Deny).
+    #[prost(enumeration = "vpcsc_config::VpcscPolicy", tag = "2")]
+    pub vpcsc_policy: i32,
+}
+/// Nested message and enum types in `VPCSCConfig`.
+pub mod vpcsc_config {
+    /// VPCSCPolicy is the VPC SC policy for project and location.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum VpcscPolicy {
+        /// VPCSC_POLICY_UNSPECIFIED - the VPS SC policy is not defined.
+        /// When VPS SC policy is not defined - the Service will use the default
+        /// behavior (VPCSC_DENY).
+        Unspecified = 0,
+        /// VPCSC_DENY - repository will block the requests to the Upstreams for the
+        /// Remote Repositories if the resource is in the perimeter.
+        Deny = 1,
+        /// VPCSC_ALLOW - repository will allow the requests to the Upstreams for the
+        /// Remote Repositories if the resource is in the perimeter.
+        Allow = 2,
+    }
+    impl VpcscPolicy {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                VpcscPolicy::Unspecified => "VPCSC_POLICY_UNSPECIFIED",
+                VpcscPolicy::Deny => "DENY",
+                VpcscPolicy::Allow => "ALLOW",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "VPCSC_POLICY_UNSPECIFIED" => Some(Self::Unspecified),
+                "DENY" => Some(Self::Deny),
+                "ALLOW" => Some(Self::Allow),
+                _ => None,
+            }
+        }
+    }
+}
+/// Gets the VPC SC config for a project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetVpcscConfigRequest {
+    /// Required. The name of the VPCSCConfig resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Sets the VPCSC config of the project.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateVpcscConfigRequest {
+    /// The project config.
+    #[prost(message, optional, tag = "1")]
+    pub vpcsc_config: ::core::option::Option<VpcscConfig>,
+    /// Field mask to support partial updates.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
 /// A detailed representation of an Apt artifact. Information in the record
 /// is derived from the archive's control file.
 /// See <https://www.debian.org/doc/debian-policy/ch-controlfields.html>
@@ -1204,93 +1291,6 @@ impl VersionView {
             _ => None,
         }
     }
-}
-/// The Artifact Registry VPC SC config that apply to a Project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VpcscConfig {
-    /// The name of the project's VPC SC Config.
-    ///
-    /// Always of the form:
-    /// projects/{projectID}/locations/{location}/vpcscConfig
-    ///
-    /// In update request: never set
-    /// In response: always set
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The project per location VPC SC policy that defines the VPC SC behavior for
-    /// the Remote Repository (Allow/Deny).
-    #[prost(enumeration = "vpcsc_config::VpcscPolicy", tag = "2")]
-    pub vpcsc_policy: i32,
-}
-/// Nested message and enum types in `VPCSCConfig`.
-pub mod vpcsc_config {
-    /// VPCSCPolicy is the VPC SC policy for project and location.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum VpcscPolicy {
-        /// VPCSC_POLICY_UNSPECIFIED - the VPS SC policy is not defined.
-        /// When VPS SC policy is not defined - the Service will use the default
-        /// behavior (VPCSC_DENY).
-        Unspecified = 0,
-        /// VPCSC_DENY - repository will block the requests to the Upstreams for the
-        /// Remote Repositories if the resource is in the perimeter.
-        Deny = 1,
-        /// VPCSC_ALLOW - repository will allow the requests to the Upstreams for the
-        /// Remote Repositories if the resource is in the perimeter.
-        Allow = 2,
-    }
-    impl VpcscPolicy {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                VpcscPolicy::Unspecified => "VPCSC_POLICY_UNSPECIFIED",
-                VpcscPolicy::Deny => "DENY",
-                VpcscPolicy::Allow => "ALLOW",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "VPCSC_POLICY_UNSPECIFIED" => Some(Self::Unspecified),
-                "DENY" => Some(Self::Deny),
-                "ALLOW" => Some(Self::Allow),
-                _ => None,
-            }
-        }
-    }
-}
-/// Gets the VPC SC config for a project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetVpcscConfigRequest {
-    /// Required. The name of the VPCSCConfig resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Sets the VPCSC config of the project.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateVpcscConfigRequest {
-    /// The project config.
-    #[prost(message, optional, tag = "1")]
-    pub vpcsc_config: ::core::option::Option<VpcscConfig>,
-    /// Field mask to support partial updates.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
 /// A detailed representation of a Yum artifact.
 #[allow(clippy::derive_partial_eq_without_eq)]
