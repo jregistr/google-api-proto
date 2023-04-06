@@ -1,3 +1,198 @@
+/// USPS representation of a US address.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UspsAddress {
+    /// First address line.
+    #[prost(string, tag = "1")]
+    pub first_address_line: ::prost::alloc::string::String,
+    /// Firm name.
+    #[prost(string, tag = "2")]
+    pub firm: ::prost::alloc::string::String,
+    /// Second address line.
+    #[prost(string, tag = "3")]
+    pub second_address_line: ::prost::alloc::string::String,
+    /// Puerto Rican urbanization name.
+    #[prost(string, tag = "4")]
+    pub urbanization: ::prost::alloc::string::String,
+    /// City + state + postal code.
+    #[prost(string, tag = "5")]
+    pub city_state_zip_address_line: ::prost::alloc::string::String,
+    /// City name.
+    #[prost(string, tag = "6")]
+    pub city: ::prost::alloc::string::String,
+    /// 2 letter state code.
+    #[prost(string, tag = "7")]
+    pub state: ::prost::alloc::string::String,
+    /// Postal code e.g. 10009.
+    #[prost(string, tag = "8")]
+    pub zip_code: ::prost::alloc::string::String,
+    /// 4-digit postal code extension e.g. 5023.
+    #[prost(string, tag = "9")]
+    pub zip_code_extension: ::prost::alloc::string::String,
+}
+/// The USPS data for the address.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UspsData {
+    /// USPS standardized address.
+    #[prost(message, optional, tag = "1")]
+    pub standardized_address: ::core::option::Option<UspsAddress>,
+    /// 2 digit delivery point code
+    #[prost(string, tag = "2")]
+    pub delivery_point_code: ::prost::alloc::string::String,
+    /// The delivery point check digit. This number is added to the end of the
+    /// delivery_point_barcode for mechanically scanned mail. Adding all the
+    /// digits of the delivery_point_barcode, delivery_point_check_digit, postal
+    /// code, and ZIP+4 together should yield a number divisible by 10.
+    #[prost(string, tag = "3")]
+    pub delivery_point_check_digit: ::prost::alloc::string::String,
+    /// The possible values for DPV confirmation. Returns a single character.
+    ///
+    /// * `Y`: Address was DPV confirmed for primary and any secondary numbers.
+    /// * `N`: Primary and any secondary number information failed to
+    /// DPV confirm.
+    /// * `S`: Address was DPV confirmed for the primary number only, and the
+    /// secondary number information was present by not confirmed.
+    /// * `D`: Address was DPV confirmed for the primary number only, and the
+    /// secondary number information was missing.
+    #[prost(string, tag = "4")]
+    pub dpv_confirmation: ::prost::alloc::string::String,
+    /// The footnotes from delivery point validation.
+    /// Multiple footnotes may be strung together in the same string.
+    ///
+    /// * `AA`: Input address matched to the ZIP+4 file
+    /// * `A1`: Input address was not matched to the ZIP+4 file
+    /// * `BB`: Matched to DPV (all components)
+    /// * `CC`: Secondary number not matched (present but invalid)
+    /// * `N1`: High-rise address missing secondary number
+    /// * `M1`: Primary number missing
+    /// * `M3`: Primary number invalid
+    /// * `P1`: Input address RR or HC box number missing
+    /// * `P3`: Input address PO, RR, or HC Box number invalid
+    /// * `F1`: Input address matched to a military address
+    /// * `G1`: Input address matched to a general delivery address
+    /// * `U1`: Input address matched to a unique ZIP code
+    /// * `PB`: Input address matched to PBSA record
+    /// * `RR`: DPV confirmed address with PMB information
+    /// * `R1`: DPV confirmed address without PMB information
+    /// * `R7`: Carrier Route R777 or R779 record
+    #[prost(string, tag = "5")]
+    pub dpv_footnote: ::prost::alloc::string::String,
+    /// Indicates if the address is a CMRA (Commercial Mail Receiving Agency)--a
+    /// private business receiving mail for clients. Returns a single character.
+    ///
+    /// * `Y`: The address is a CMRA
+    /// * `N`: The address is not a CMRA
+    #[prost(string, tag = "6")]
+    pub dpv_cmra: ::prost::alloc::string::String,
+    /// Is this place vacant?
+    /// Returns a single character.
+    ///
+    /// * `Y`: The address is vacant
+    /// * `N`: The address is not vacant
+    #[prost(string, tag = "7")]
+    pub dpv_vacant: ::prost::alloc::string::String,
+    /// Is this a no stat address or an active address?
+    /// No stat addresses are ones which are not continuously occupied or addresses
+    /// that the USPS does not service. Returns a single character.
+    ///
+    /// * `Y`: The address is not active
+    /// * `N`: The address is active
+    #[prost(string, tag = "8")]
+    pub dpv_no_stat: ::prost::alloc::string::String,
+    /// The carrier route code.
+    /// A four character code consisting of a one letter prefix and a three digit
+    /// route designator.
+    ///
+    /// Prefixes:
+    ///
+    /// * `C`: Carrier route (or city route)
+    /// * `R`: Rural route
+    /// * `H`: Highway Contract Route
+    /// * `B`: Post Office Box Section
+    /// * `G`: General delivery unit
+    #[prost(string, tag = "9")]
+    pub carrier_route: ::prost::alloc::string::String,
+    /// Carrier route rate sort indicator.
+    #[prost(string, tag = "10")]
+    pub carrier_route_indicator: ::prost::alloc::string::String,
+    /// The delivery address is matchable, but the EWS file indicates that an exact
+    /// match will be available soon.
+    #[prost(bool, tag = "11")]
+    pub ews_no_match: bool,
+    /// Main post office city.
+    #[prost(string, tag = "12")]
+    pub post_office_city: ::prost::alloc::string::String,
+    /// Main post office state.
+    #[prost(string, tag = "13")]
+    pub post_office_state: ::prost::alloc::string::String,
+    /// Abbreviated city.
+    #[prost(string, tag = "14")]
+    pub abbreviated_city: ::prost::alloc::string::String,
+    /// FIPS county code.
+    #[prost(string, tag = "15")]
+    pub fips_county_code: ::prost::alloc::string::String,
+    /// County name.
+    #[prost(string, tag = "16")]
+    pub county: ::prost::alloc::string::String,
+    /// Enhanced Line of Travel (eLOT) number.
+    #[prost(string, tag = "17")]
+    pub elot_number: ::prost::alloc::string::String,
+    /// eLOT Ascending/Descending Flag (A/D).
+    #[prost(string, tag = "18")]
+    pub elot_flag: ::prost::alloc::string::String,
+    /// LACSLink return code.
+    #[prost(string, tag = "19")]
+    pub lacs_link_return_code: ::prost::alloc::string::String,
+    /// LACSLink indicator.
+    #[prost(string, tag = "20")]
+    pub lacs_link_indicator: ::prost::alloc::string::String,
+    /// PO Box only postal code.
+    #[prost(bool, tag = "21")]
+    pub po_box_only_postal_code: bool,
+    /// Footnotes from matching a street or highrise record to suite information.
+    /// If business name match is found, the secondary number is returned.
+    ///
+    /// * `A`: SuiteLink record match, business address improved.
+    /// * `00`: No match, business address is not improved.
+    #[prost(string, tag = "22")]
+    pub suitelink_footnote: ::prost::alloc::string::String,
+    /// PMB (Private Mail Box) unit designator.
+    #[prost(string, tag = "23")]
+    pub pmb_designator: ::prost::alloc::string::String,
+    /// PMB (Private Mail Box) number;
+    #[prost(string, tag = "24")]
+    pub pmb_number: ::prost::alloc::string::String,
+    /// Type of the address record that matches the input address.
+    ///
+    /// * `F`: FIRM. This is a match to a Firm Record, which is the finest level of
+    /// match available for an address.
+    /// * `G`: GENERAL DELIVERY. This is a match to a General Delivery record.
+    /// * `H`: BUILDING / APARTMENT. This is a match to a Building or Apartment
+    /// record.
+    /// * `P`: POST OFFICE BOX. This is a match to a Post Office Box.
+    /// * `R`: RURAL ROUTE or HIGHWAY CONTRACT: This is a match to either a Rural
+    /// Route or a Highway Contract record, both of which may have associated Box
+    /// Number ranges.
+    /// * `S`: STREET RECORD: This is a match to a Street record containing a valid
+    /// primary number range.
+    #[prost(string, tag = "25")]
+    pub address_record_type: ::prost::alloc::string::String,
+    /// Indicator that a default address was found, but more specific addresses
+    /// exists.
+    #[prost(bool, tag = "26")]
+    pub default_address: bool,
+    /// Error message for USPS data retrieval. This is populated when USPS
+    /// processing is suspended because of the detection of artificially created
+    /// addresses.
+    ///
+    /// The USPS data fields might not be populated when this error is present.
+    #[prost(string, tag = "27")]
+    pub error_message: ::prost::alloc::string::String,
+    /// Indicator that the request has been CASS processed.
+    #[prost(bool, tag = "28")]
+    pub cass_processed: bool,
+}
 /// Details of the address parsed from the input.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -232,201 +427,6 @@ pub struct AddressMetadata {
     /// If unset, indicates that the value is unknown.
     #[prost(bool, optional, tag = "6")]
     pub residential: ::core::option::Option<bool>,
-}
-/// USPS representation of a US address.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UspsAddress {
-    /// First address line.
-    #[prost(string, tag = "1")]
-    pub first_address_line: ::prost::alloc::string::String,
-    /// Firm name.
-    #[prost(string, tag = "2")]
-    pub firm: ::prost::alloc::string::String,
-    /// Second address line.
-    #[prost(string, tag = "3")]
-    pub second_address_line: ::prost::alloc::string::String,
-    /// Puerto Rican urbanization name.
-    #[prost(string, tag = "4")]
-    pub urbanization: ::prost::alloc::string::String,
-    /// City + state + postal code.
-    #[prost(string, tag = "5")]
-    pub city_state_zip_address_line: ::prost::alloc::string::String,
-    /// City name.
-    #[prost(string, tag = "6")]
-    pub city: ::prost::alloc::string::String,
-    /// 2 letter state code.
-    #[prost(string, tag = "7")]
-    pub state: ::prost::alloc::string::String,
-    /// Postal code e.g. 10009.
-    #[prost(string, tag = "8")]
-    pub zip_code: ::prost::alloc::string::String,
-    /// 4-digit postal code extension e.g. 5023.
-    #[prost(string, tag = "9")]
-    pub zip_code_extension: ::prost::alloc::string::String,
-}
-/// The USPS data for the address.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UspsData {
-    /// USPS standardized address.
-    #[prost(message, optional, tag = "1")]
-    pub standardized_address: ::core::option::Option<UspsAddress>,
-    /// 2 digit delivery point code
-    #[prost(string, tag = "2")]
-    pub delivery_point_code: ::prost::alloc::string::String,
-    /// The delivery point check digit. This number is added to the end of the
-    /// delivery_point_barcode for mechanically scanned mail. Adding all the
-    /// digits of the delivery_point_barcode, delivery_point_check_digit, postal
-    /// code, and ZIP+4 together should yield a number divisible by 10.
-    #[prost(string, tag = "3")]
-    pub delivery_point_check_digit: ::prost::alloc::string::String,
-    /// The possible values for DPV confirmation. Returns a single character.
-    ///
-    /// * `Y`: Address was DPV confirmed for primary and any secondary numbers.
-    /// * `N`: Primary and any secondary number information failed to
-    /// DPV confirm.
-    /// * `S`: Address was DPV confirmed for the primary number only, and the
-    /// secondary number information was present by not confirmed.
-    /// * `D`: Address was DPV confirmed for the primary number only, and the
-    /// secondary number information was missing.
-    #[prost(string, tag = "4")]
-    pub dpv_confirmation: ::prost::alloc::string::String,
-    /// The footnotes from delivery point validation.
-    /// Multiple footnotes may be strung together in the same string.
-    ///
-    /// * `AA`: Input address matched to the ZIP+4 file
-    /// * `A1`: Input address was not matched to the ZIP+4 file
-    /// * `BB`: Matched to DPV (all components)
-    /// * `CC`: Secondary number not matched (present but invalid)
-    /// * `N1`: High-rise address missing secondary number
-    /// * `M1`: Primary number missing
-    /// * `M3`: Primary number invalid
-    /// * `P1`: Input address RR or HC box number missing
-    /// * `P3`: Input address PO, RR, or HC Box number invalid
-    /// * `F1`: Input address matched to a military address
-    /// * `G1`: Input address matched to a general delivery address
-    /// * `U1`: Input address matched to a unique ZIP code
-    /// * `PB`: Input address matched to PBSA record
-    /// * `RR`: DPV confirmed address with PMB information
-    /// * `R1`: DPV confirmed address without PMB information
-    /// * `R7`: Carrier Route R777 or R779 record
-    #[prost(string, tag = "5")]
-    pub dpv_footnote: ::prost::alloc::string::String,
-    /// Indicates if the address is a CMRA (Commercial Mail Receiving Agency)--a
-    /// private business receiving mail for clients. Returns a single character.
-    ///
-    /// * `Y`: The address is a CMRA
-    /// * `N`: The address is not a CMRA
-    #[prost(string, tag = "6")]
-    pub dpv_cmra: ::prost::alloc::string::String,
-    /// Is this place vacant?
-    /// Returns a single character.
-    ///
-    /// * `Y`: The address is vacant
-    /// * `N`: The address is not vacant
-    #[prost(string, tag = "7")]
-    pub dpv_vacant: ::prost::alloc::string::String,
-    /// Is this a no stat address or an active address?
-    /// No stat addresses are ones which are not continuously occupied or addresses
-    /// that the USPS does not service. Returns a single character.
-    ///
-    /// * `Y`: The address is not active
-    /// * `N`: The address is active
-    #[prost(string, tag = "8")]
-    pub dpv_no_stat: ::prost::alloc::string::String,
-    /// The carrier route code.
-    /// A four character code consisting of a one letter prefix and a three digit
-    /// route designator.
-    ///
-    /// Prefixes:
-    ///
-    /// * `C`: Carrier route (or city route)
-    /// * `R`: Rural route
-    /// * `H`: Highway Contract Route
-    /// * `B`: Post Office Box Section
-    /// * `G`: General delivery unit
-    #[prost(string, tag = "9")]
-    pub carrier_route: ::prost::alloc::string::String,
-    /// Carrier route rate sort indicator.
-    #[prost(string, tag = "10")]
-    pub carrier_route_indicator: ::prost::alloc::string::String,
-    /// The delivery address is matchable, but the EWS file indicates that an exact
-    /// match will be available soon.
-    #[prost(bool, tag = "11")]
-    pub ews_no_match: bool,
-    /// Main post office city.
-    #[prost(string, tag = "12")]
-    pub post_office_city: ::prost::alloc::string::String,
-    /// Main post office state.
-    #[prost(string, tag = "13")]
-    pub post_office_state: ::prost::alloc::string::String,
-    /// Abbreviated city.
-    #[prost(string, tag = "14")]
-    pub abbreviated_city: ::prost::alloc::string::String,
-    /// FIPS county code.
-    #[prost(string, tag = "15")]
-    pub fips_county_code: ::prost::alloc::string::String,
-    /// County name.
-    #[prost(string, tag = "16")]
-    pub county: ::prost::alloc::string::String,
-    /// Enhanced Line of Travel (eLOT) number.
-    #[prost(string, tag = "17")]
-    pub elot_number: ::prost::alloc::string::String,
-    /// eLOT Ascending/Descending Flag (A/D).
-    #[prost(string, tag = "18")]
-    pub elot_flag: ::prost::alloc::string::String,
-    /// LACSLink return code.
-    #[prost(string, tag = "19")]
-    pub lacs_link_return_code: ::prost::alloc::string::String,
-    /// LACSLink indicator.
-    #[prost(string, tag = "20")]
-    pub lacs_link_indicator: ::prost::alloc::string::String,
-    /// PO Box only postal code.
-    #[prost(bool, tag = "21")]
-    pub po_box_only_postal_code: bool,
-    /// Footnotes from matching a street or highrise record to suite information.
-    /// If business name match is found, the secondary number is returned.
-    ///
-    /// * `A`: SuiteLink record match, business address improved.
-    /// * `00`: No match, business address is not improved.
-    #[prost(string, tag = "22")]
-    pub suitelink_footnote: ::prost::alloc::string::String,
-    /// PMB (Private Mail Box) unit designator.
-    #[prost(string, tag = "23")]
-    pub pmb_designator: ::prost::alloc::string::String,
-    /// PMB (Private Mail Box) number;
-    #[prost(string, tag = "24")]
-    pub pmb_number: ::prost::alloc::string::String,
-    /// Type of the address record that matches the input address.
-    ///
-    /// * `F`: FIRM. This is a match to a Firm Record, which is the finest level of
-    /// match available for an address.
-    /// * `G`: GENERAL DELIVERY. This is a match to a General Delivery record.
-    /// * `H`: BUILDING / APARTMENT. This is a match to a Building or Apartment
-    /// record.
-    /// * `P`: POST OFFICE BOX. This is a match to a Post Office Box.
-    /// * `R`: RURAL ROUTE or HIGHWAY CONTRACT: This is a match to either a Rural
-    /// Route or a Highway Contract record, both of which may have associated Box
-    /// Number ranges.
-    /// * `S`: STREET RECORD: This is a match to a Street record containing a valid
-    /// primary number range.
-    #[prost(string, tag = "25")]
-    pub address_record_type: ::prost::alloc::string::String,
-    /// Indicator that a default address was found, but more specific addresses
-    /// exists.
-    #[prost(bool, tag = "26")]
-    pub default_address: bool,
-    /// Error message for USPS data retrieval. This is populated when USPS
-    /// processing is suspended because of the detection of artificially created
-    /// addresses.
-    ///
-    /// The USPS data fields might not be populated when this error is present.
-    #[prost(string, tag = "27")]
-    pub error_message: ::prost::alloc::string::String,
-    /// Indicator that the request has been CASS processed.
-    #[prost(bool, tag = "28")]
-    pub cass_processed: bool,
 }
 /// The request for validating an address.
 #[allow(clippy::derive_partial_eq_without_eq)]

@@ -637,6 +637,7 @@ pub mod workflows;
 #[cfg(
     any(
         feature = "google-cloud-workstations-logging-v1",
+        feature = "google-cloud-workstations-v1",
         feature = "google-cloud-workstations-v1beta",
     )
 )]

@@ -1196,6 +1196,10 @@ pub struct Settings {
     /// Default analysis settings.
     #[prost(message, optional, tag = "7")]
     pub analysis_config: ::core::option::Option<settings::AnalysisConfig>,
+    /// Default DLP redaction resources to be applied while ingesting
+    /// conversations.
+    #[prost(message, optional, tag = "10")]
+    pub redaction_config: ::core::option::Option<RedactionConfig>,
 }
 /// Nested message and enum types in `Settings`.
 pub mod settings {
@@ -1216,6 +1220,21 @@ pub mod settings {
         #[prost(message, optional, tag = "5")]
         pub annotator_selector: ::core::option::Option<super::AnnotatorSelector>,
     }
+}
+/// DLP resources used for redaction while ingesting conversations.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RedactionConfig {
+    /// The fully-qualified DLP deidentify template resource name.
+    /// Format:
+    /// `projects/{project}/deidentifyTemplates/{template}`
+    #[prost(string, tag = "1")]
+    pub deidentify_template: ::prost::alloc::string::String,
+    /// The fully-qualified DLP inspect template resource name.
+    /// Format:
+    /// `projects/{project}/inspectTemplates/{template}`
+    #[prost(string, tag = "2")]
+    pub inspect_template: ::prost::alloc::string::String,
 }
 /// An annotation that was generated during the customer and agent interaction.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1736,6 +1755,50 @@ pub struct CreateConversationRequest {
     /// expression `^\[a-z0-9-\]{4,64}$`. Valid characters are `\[a-z][0-9\]-`
     #[prost(string, tag = "3")]
     pub conversation_id: ::prost::alloc::string::String,
+}
+/// Request to upload a conversation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadConversationRequest {
+    /// Required. The parent resource of the conversation.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The conversation resource to create.
+    #[prost(message, optional, tag = "2")]
+    pub conversation: ::core::option::Option<Conversation>,
+    /// Optional. A unique ID for the new conversation. This ID will become the
+    /// final component of the conversation's resource name. If no ID is specified,
+    /// a server-generated ID will be used.
+    ///
+    /// This value should be 4-64 characters and must match the regular
+    /// expression `^\[a-z0-9-\]{4,64}$`. Valid characters are `\[a-z][0-9\]-`
+    #[prost(string, tag = "3")]
+    pub conversation_id: ::prost::alloc::string::String,
+    /// Optional. DLP settings for transcript redaction. Optional, will default to
+    /// the config specified in Settings.
+    #[prost(message, optional, tag = "4")]
+    pub redaction_config: ::core::option::Option<RedactionConfig>,
+}
+/// The metadata for an UploadConversation operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UploadConversationMetadata {
+    /// Output only. The time the operation was created.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the operation finished running.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The original request.
+    #[prost(message, optional, tag = "3")]
+    pub request: ::core::option::Option<UploadConversationRequest>,
+    /// Output only. The operation name for a successfully created analysis
+    /// operation, if any.
+    #[prost(string, tag = "4")]
+    pub analysis_operation: ::prost::alloc::string::String,
+    /// Output only. The redaction config applied to the uploaded conversation.
+    #[prost(message, optional, tag = "5")]
+    pub applied_redaction_config: ::core::option::Option<RedactionConfig>,
 }
 /// Request to list conversations.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2637,6 +2700,31 @@ pub mod contact_center_insights_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreateConversation",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Create a longrunning conversation upload operation. This method differs
+        /// from CreateConversation by allowing audio transcription and optional DLP
+        /// redaction.
+        pub async fn upload_conversation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UploadConversationRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UploadConversation",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

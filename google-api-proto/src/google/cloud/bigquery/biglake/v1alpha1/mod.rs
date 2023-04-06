@@ -129,6 +129,12 @@ pub struct Table {
     /// The table type.
     #[prost(enumeration = "table::Type", tag = "6")]
     pub r#type: i32,
+    /// The checksum of a table object computed by the server based on the value of
+    /// other fields. It may be sent on update requests to ensure the client has an
+    /// up-to-date value before proceeding. It is only checked for update table
+    /// operations.
+    #[prost(string, tag = "8")]
+    pub etag: ::prost::alloc::string::String,
     /// Options specified for the table type.
     #[prost(oneof = "table::Options", tags = "7")]
     pub options: ::core::option::Option<table::Options>,
@@ -497,7 +503,7 @@ pub struct DeleteTableRequest {
 pub struct UpdateTableRequest {
     /// Required. The table to update.
     ///
-    /// The table's `name` field is used to identify the database to update.
+    /// The table's `name` field is used to identify the table to update.
     /// Format:
     /// projects/{project_id_or_number}/locations/{location_id}/catalogs/{catalog_id}/databases/{database_id}/tables/{table_id}
     #[prost(message, optional, tag = "1")]
@@ -509,6 +515,21 @@ pub struct UpdateTableRequest {
     /// If not set, defaults to all of the fields that are allowed to update.
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request message for the RenameTable method in MetastoreService
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RenameTableRequest {
+    /// Required. The table's `name` field is used to identify the table to rename.
+    /// Format:
+    /// projects/{project_id_or_number}/locations/{location_id}/catalogs/{catalog_id}/databases/{database_id}/tables/{table_id}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The new `name` for the specified table, must be in the same
+    /// database. Format:
+    /// projects/{project_id_or_number}/locations/{location_id}/catalogs/{catalog_id}/databases/{database_id}/tables/{table_id}
+    #[prost(string, tag = "2")]
+    pub new_name: ::prost::alloc::string::String,
 }
 /// Request message for the GetTable method.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -542,6 +563,9 @@ pub struct ListTablesRequest {
     /// the call that provided the page token.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
+    /// The view for the returned tables.
+    #[prost(enumeration = "TableView", tag = "4")]
+    pub view: i32,
 }
 /// Response message for the ListTables method.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -685,6 +709,41 @@ pub mod hive_table_options {
         /// Serializer and deserializer information.
         #[prost(message, optional, tag = "4")]
         pub serde_info: ::core::option::Option<SerDeInfo>,
+    }
+}
+/// View on Table. Represents which fields will be populated for calls that
+/// return Table objects.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TableView {
+    /// Default value. The API will default to the BASIC view.
+    Unspecified = 0,
+    /// Include only table names.
+    /// This is the default value.
+    Basic = 1,
+    /// Include everything.
+    Full = 2,
+}
+impl TableView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TableView::Unspecified => "TABLE_VIEW_UNSPECIFIED",
+            TableView::Basic => "BASIC",
+            TableView::Full => "FULL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TABLE_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+            "BASIC" => Some(Self::Basic),
+            "FULL" => Some(Self::Full),
+            _ => None,
+        }
     }
 }
 /// Generated client implementations.
@@ -992,6 +1051,26 @@ pub mod metastore_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1alpha1.MetastoreService/UpdateTable",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Renames an existing table specified by the table ID.
+        pub async fn rename_table(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RenameTableRequest>,
+        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.bigquery.biglake.v1alpha1.MetastoreService/RenameTable",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

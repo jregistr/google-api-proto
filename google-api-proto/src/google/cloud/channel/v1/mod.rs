@@ -1,3 +1,219 @@
+/// Configuration for how a reseller will reprice a Customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerRepricingConfig {
+    /// Output only. Resource name of the CustomerRepricingConfig.
+    /// Format:
+    /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The configuration for bill modifications made by a reseller
+    /// before sending it to customers.
+    #[prost(message, optional, tag = "2")]
+    pub repricing_config: ::core::option::Option<RepricingConfig>,
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
+    /// is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
+    /// then it indicates this was set mid-month.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Configuration for how a distributor will rebill a channel partner
+/// (also known as a distributor-authorized reseller).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelPartnerRepricingConfig {
+    /// Output only. Resource name of the ChannelPartnerRepricingConfig.
+    /// Format:
+    /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}/channelPartnerRepricingConfigs/{id}.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The configuration for bill modifications made by a reseller
+    /// before sending it to ChannelPartner.
+    #[prost(message, optional, tag = "2")]
+    pub repricing_config: ::core::option::Option<RepricingConfig>,
+    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
+    /// is after
+    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
+    /// then it indicates this was set mid-month.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Configuration for repricing a Google bill over a period of time.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingConfig {
+    /// Required. The YearMonth when these adjustments activate. The Day field
+    /// needs to be "0" since we only accept YearMonth repricing boundaries.
+    #[prost(message, optional, tag = "1")]
+    pub effective_invoice_month: ::core::option::Option<
+        super::super::super::r#type::Date,
+    >,
+    /// Required. Information about the adjustment.
+    #[prost(message, optional, tag = "2")]
+    pub adjustment: ::core::option::Option<RepricingAdjustment>,
+    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
+    /// use for this bill. Specifies the relative cost based on repricing costs you
+    /// will apply.
+    #[prost(enumeration = "RebillingBasis", tag = "3")]
+    pub rebilling_basis: i32,
+    /// The conditional overrides to apply for this configuration. If you list
+    /// multiple overrides, only the first valid override is used.  If you don't
+    /// list any overrides, the API uses the normal adjustment and rebilling basis.
+    #[prost(message, repeated, tag = "6")]
+    pub conditional_overrides: ::prost::alloc::vec::Vec<ConditionalOverride>,
+    /// Required. Defines the granularity for repricing.
+    #[prost(oneof = "repricing_config::Granularity", tags = "4, 5")]
+    pub granularity: ::core::option::Option<repricing_config::Granularity>,
+}
+/// Nested message and enum types in `RepricingConfig`.
+pub mod repricing_config {
+    /// Applies the repricing configuration at the entitlement level.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntitlementGranularity {
+        /// Resource name of the entitlement.
+        /// Format:
+        /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+        #[prost(string, tag = "1")]
+        pub entitlement: ::prost::alloc::string::String,
+    }
+    /// Applies the repricing configuration at the channel partner level.
+    /// The channel partner value is derived from the resource name. Takes an
+    /// empty json object.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ChannelPartnerGranularity {}
+    /// Required. Defines the granularity for repricing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Granularity {
+        /// Applies the repricing configuration at the entitlement level. This is
+        /// the only supported value for CustomerRepricingConfig.
+        #[prost(message, tag = "4")]
+        EntitlementGranularity(EntitlementGranularity),
+        /// Applies the repricing configuration at the channel partner level.
+        /// This is the only supported value for ChannelPartnerRepricingConfig.
+        #[prost(message, tag = "5")]
+        ChannelPartnerGranularity(ChannelPartnerGranularity),
+    }
+}
+/// A type that represents the various adjustments you can apply to a bill.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingAdjustment {
+    /// A oneof that represents the different types for this adjustment.
+    #[prost(oneof = "repricing_adjustment::Adjustment", tags = "2")]
+    pub adjustment: ::core::option::Option<repricing_adjustment::Adjustment>,
+}
+/// Nested message and enum types in `RepricingAdjustment`.
+pub mod repricing_adjustment {
+    /// A oneof that represents the different types for this adjustment.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Adjustment {
+        /// Flat markup or markdown on an entire bill.
+        #[prost(message, tag = "2")]
+        PercentageAdjustment(super::PercentageAdjustment),
+    }
+}
+/// An adjustment that applies a flat markup or markdown to an entire bill.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PercentageAdjustment {
+    /// The percentage of the bill to adjust.
+    /// For example:
+    /// Mark down by 1% => "-1.00"
+    /// Mark up by 1%   => "1.00"
+    /// Pass-Through    => "0.00"
+    #[prost(message, optional, tag = "2")]
+    pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
+}
+/// Specifies the override to conditionally apply.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConditionalOverride {
+    /// Required. Information about the applied override's adjustment.
+    #[prost(message, optional, tag = "1")]
+    pub adjustment: ::core::option::Option<RepricingAdjustment>,
+    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
+    /// use for the applied override. Shows the relative cost based on your
+    /// repricing costs.
+    #[prost(enumeration = "RebillingBasis", tag = "2")]
+    pub rebilling_basis: i32,
+    /// Required. Specifies the condition which, if met, will apply the override.
+    #[prost(message, optional, tag = "3")]
+    pub repricing_condition: ::core::option::Option<RepricingCondition>,
+}
+/// Represents the various repricing conditions you can use for a conditional
+/// override.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RepricingCondition {
+    /// Represents the types of existing conditional statements.
+    #[prost(oneof = "repricing_condition::Condition", tags = "1")]
+    pub condition: ::core::option::Option<repricing_condition::Condition>,
+}
+/// Nested message and enum types in `RepricingCondition`.
+pub mod repricing_condition {
+    /// Represents the types of existing conditional statements.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Condition {
+        /// SKU Group condition for override.
+        #[prost(message, tag = "1")]
+        SkuGroupCondition(super::SkuGroupCondition),
+    }
+}
+/// A condition that applies the override if a line item SKU is found in the SKU
+/// group.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SkuGroupCondition {
+    /// Specifies a SKU group (<https://cloud.google.com/skus/sku-groups>).
+    /// Resource name of SKU group. Format:
+    /// accounts/{account}/skuGroups/{sku_group}.
+    /// Example:
+    /// "accounts/C01234/skuGroups/3d50fd57-3157-4577-a5a9-a219b8490041".
+    #[prost(string, tag = "1")]
+    pub sku_group: ::prost::alloc::string::String,
+}
+/// Specifies the different costs that the modified bill can be based on.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RebillingBasis {
+    /// Not used.
+    Unspecified = 0,
+    /// Use the list cost, also known as the MSRP.
+    CostAtList = 1,
+    /// Pass through all discounts except the Reseller Program Discount. If this is
+    /// the default cost base and no adjustments are specified, the output cost
+    /// will be exactly what the customer would see if they viewed the bill in the
+    /// Google Cloud Console.
+    DirectCustomerCost = 2,
+}
+impl RebillingBasis {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RebillingBasis::Unspecified => "REBILLING_BASIS_UNSPECIFIED",
+            RebillingBasis::CostAtList => "COST_AT_LIST",
+            RebillingBasis::DirectCustomerCost => "DIRECT_CUSTOMER_COST",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "REBILLING_BASIS_UNSPECIFIED" => Some(Self::Unspecified),
+            "COST_AT_LIST" => Some(Self::CostAtList),
+            "DIRECT_CUSTOMER_COST" => Some(Self::DirectCustomerCost),
+            _ => None,
+        }
+    }
+}
 /// Required Edu Attributes
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1756,222 +1972,6 @@ pub mod operation_metadata {
                 "PROVISION_CLOUD_IDENTITY" => Some(Self::ProvisionCloudIdentity),
                 _ => None,
             }
-        }
-    }
-}
-/// Configuration for how a reseller will reprice a Customer.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerRepricingConfig {
-    /// Output only. Resource name of the CustomerRepricingConfig.
-    /// Format:
-    /// accounts/{account_id}/customers/{customer_id}/customerRepricingConfigs/{id}.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller
-    /// before sending it to customers.
-    #[prost(message, optional, tag = "2")]
-    pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
-    /// is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
-    /// then it indicates this was set mid-month.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Configuration for how a distributor will rebill a channel partner
-/// (also known as a distributor-authorized reseller).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ChannelPartnerRepricingConfig {
-    /// Output only. Resource name of the ChannelPartnerRepricingConfig.
-    /// Format:
-    /// accounts/{account_id}/channelPartnerLinks/{channel_partner_id}/channelPartnerRepricingConfigs/{id}.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The configuration for bill modifications made by a reseller
-    /// before sending it to ChannelPartner.
-    #[prost(message, optional, tag = "2")]
-    pub repricing_config: ::core::option::Option<RepricingConfig>,
-    /// Output only. Timestamp of an update to the repricing rule. If `update_time`
-    /// is after
-    /// \[RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month\]
-    /// then it indicates this was set mid-month.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Configuration for repricing a Google bill over a period of time.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RepricingConfig {
-    /// Required. The YearMonth when these adjustments activate. The Day field
-    /// needs to be "0" since we only accept YearMonth repricing boundaries.
-    #[prost(message, optional, tag = "1")]
-    pub effective_invoice_month: ::core::option::Option<
-        super::super::super::r#type::Date,
-    >,
-    /// Required. Information about the adjustment.
-    #[prost(message, optional, tag = "2")]
-    pub adjustment: ::core::option::Option<RepricingAdjustment>,
-    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
-    /// use for this bill. Specifies the relative cost based on repricing costs you
-    /// will apply.
-    #[prost(enumeration = "RebillingBasis", tag = "3")]
-    pub rebilling_basis: i32,
-    /// The conditional overrides to apply for this configuration. If you list
-    /// multiple overrides, only the first valid override is used.  If you don't
-    /// list any overrides, the API uses the normal adjustment and rebilling basis.
-    #[prost(message, repeated, tag = "6")]
-    pub conditional_overrides: ::prost::alloc::vec::Vec<ConditionalOverride>,
-    /// Required. Defines the granularity for repricing.
-    #[prost(oneof = "repricing_config::Granularity", tags = "4, 5")]
-    pub granularity: ::core::option::Option<repricing_config::Granularity>,
-}
-/// Nested message and enum types in `RepricingConfig`.
-pub mod repricing_config {
-    /// Applies the repricing configuration at the entitlement level.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntitlementGranularity {
-        /// Resource name of the entitlement.
-        /// Format:
-        /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
-        #[prost(string, tag = "1")]
-        pub entitlement: ::prost::alloc::string::String,
-    }
-    /// Applies the repricing configuration at the channel partner level.
-    /// The channel partner value is derived from the resource name. Takes an
-    /// empty json object.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ChannelPartnerGranularity {}
-    /// Required. Defines the granularity for repricing.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Granularity {
-        /// Applies the repricing configuration at the entitlement level. This is
-        /// the only supported value for CustomerRepricingConfig.
-        #[prost(message, tag = "4")]
-        EntitlementGranularity(EntitlementGranularity),
-        /// Applies the repricing configuration at the channel partner level.
-        /// This is the only supported value for ChannelPartnerRepricingConfig.
-        #[prost(message, tag = "5")]
-        ChannelPartnerGranularity(ChannelPartnerGranularity),
-    }
-}
-/// A type that represents the various adjustments you can apply to a bill.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RepricingAdjustment {
-    /// A oneof that represents the different types for this adjustment.
-    #[prost(oneof = "repricing_adjustment::Adjustment", tags = "2")]
-    pub adjustment: ::core::option::Option<repricing_adjustment::Adjustment>,
-}
-/// Nested message and enum types in `RepricingAdjustment`.
-pub mod repricing_adjustment {
-    /// A oneof that represents the different types for this adjustment.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Adjustment {
-        /// Flat markup or markdown on an entire bill.
-        #[prost(message, tag = "2")]
-        PercentageAdjustment(super::PercentageAdjustment),
-    }
-}
-/// An adjustment that applies a flat markup or markdown to an entire bill.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PercentageAdjustment {
-    /// The percentage of the bill to adjust.
-    /// For example:
-    /// Mark down by 1% => "-1.00"
-    /// Mark up by 1%   => "1.00"
-    /// Pass-Through    => "0.00"
-    #[prost(message, optional, tag = "2")]
-    pub percentage: ::core::option::Option<super::super::super::r#type::Decimal>,
-}
-/// Specifies the override to conditionally apply.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConditionalOverride {
-    /// Required. Information about the applied override's adjustment.
-    #[prost(message, optional, tag = "1")]
-    pub adjustment: ::core::option::Option<RepricingAdjustment>,
-    /// Required. The \[RebillingBasis][google.cloud.channel.v1.RebillingBasis\] to
-    /// use for the applied override. Shows the relative cost based on your
-    /// repricing costs.
-    #[prost(enumeration = "RebillingBasis", tag = "2")]
-    pub rebilling_basis: i32,
-    /// Required. Specifies the condition which, if met, will apply the override.
-    #[prost(message, optional, tag = "3")]
-    pub repricing_condition: ::core::option::Option<RepricingCondition>,
-}
-/// Represents the various repricing conditions you can use for a conditional
-/// override.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RepricingCondition {
-    /// Represents the types of existing conditional statements.
-    #[prost(oneof = "repricing_condition::Condition", tags = "1")]
-    pub condition: ::core::option::Option<repricing_condition::Condition>,
-}
-/// Nested message and enum types in `RepricingCondition`.
-pub mod repricing_condition {
-    /// Represents the types of existing conditional statements.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Condition {
-        /// SKU Group condition for override.
-        #[prost(message, tag = "1")]
-        SkuGroupCondition(super::SkuGroupCondition),
-    }
-}
-/// A condition that applies the override if a line item SKU is found in the SKU
-/// group.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SkuGroupCondition {
-    /// Specifies a SKU group (<https://cloud.google.com/skus/sku-groups>).
-    /// Resource name of SKU group. Format:
-    /// accounts/{account}/skuGroups/{sku_group}.
-    /// Example:
-    /// "accounts/C01234/skuGroups/3d50fd57-3157-4577-a5a9-a219b8490041".
-    #[prost(string, tag = "1")]
-    pub sku_group: ::prost::alloc::string::String,
-}
-/// Specifies the different costs that the modified bill can be based on.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RebillingBasis {
-    /// Not used.
-    Unspecified = 0,
-    /// Use the list cost, also known as the MSRP.
-    CostAtList = 1,
-    /// Pass through all discounts except the Reseller Program Discount. If this is
-    /// the default cost base and no adjustments are specified, the output cost
-    /// will be exactly what the customer would see if they viewed the bill in the
-    /// Google Cloud Console.
-    DirectCustomerCost = 2,
-}
-impl RebillingBasis {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            RebillingBasis::Unspecified => "REBILLING_BASIS_UNSPECIFIED",
-            RebillingBasis::CostAtList => "COST_AT_LIST",
-            RebillingBasis::DirectCustomerCost => "DIRECT_CUSTOMER_COST",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "REBILLING_BASIS_UNSPECIFIED" => Some(Self::Unspecified),
-            "COST_AT_LIST" => Some(Self::CostAtList),
-            "DIRECT_CUSTOMER_COST" => Some(Self::DirectCustomerCost),
-            _ => None,
         }
     }
 }
@@ -5372,190 +5372,6 @@ pub mod cloud_channel_service_client {
         }
     }
 }
-/// Represents Pub/Sub message content describing customer update.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerEvent {
-    /// Resource name of the customer.
-    /// Format: accounts/{account_id}/customers/{customer_id}
-    #[prost(string, tag = "1")]
-    pub customer: ::prost::alloc::string::String,
-    /// Type of event which happened on the customer.
-    #[prost(enumeration = "customer_event::Type", tag = "2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `CustomerEvent`.
-pub mod customer_event {
-    /// Type of customer event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// Primary domain for customer was changed.
-        PrimaryDomainChanged = 1,
-        /// Primary domain of the customer has been verified.
-        PrimaryDomainVerified = 2,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
-                Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "PRIMARY_DOMAIN_CHANGED" => Some(Self::PrimaryDomainChanged),
-                "PRIMARY_DOMAIN_VERIFIED" => Some(Self::PrimaryDomainVerified),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represents Pub/Sub message content describing entitlement update.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EntitlementEvent {
-    /// Resource name of an entitlement of the form:
-    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
-    #[prost(string, tag = "1")]
-    pub entitlement: ::prost::alloc::string::String,
-    /// Type of event which happened on the entitlement.
-    #[prost(enumeration = "entitlement_event::Type", tag = "2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `EntitlementEvent`.
-pub mod entitlement_event {
-    /// Type of entitlement event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// A new entitlement was created.
-        Created = 1,
-        /// The offer type associated with an entitlement was changed.
-        /// This is not triggered if an entitlement converts from a commit offer to a
-        /// flexible offer as part of a renewal.
-        PricePlanSwitched = 3,
-        /// Annual commitment for a commit plan was changed.
-        CommitmentChanged = 4,
-        /// An annual entitlement was renewed.
-        Renewed = 5,
-        /// Entitlement was suspended.
-        Suspended = 6,
-        /// Entitlement was unsuspended.
-        Activated = 7,
-        /// Entitlement was cancelled.
-        Cancelled = 8,
-        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
-        /// Business Standard to Google Workspace Business Plus).
-        SkuChanged = 9,
-        /// The renewal settings of an entitlement has changed.
-        RenewalSettingChanged = 10,
-        /// Paid service has started on trial entitlement.
-        PaidServiceStarted = 11,
-        /// License was assigned to or revoked from a user.
-        LicenseAssignmentChanged = 12,
-        /// License cap was changed for the entitlement.
-        LicenseCapChanged = 13,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::Created => "CREATED",
-                Type::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
-                Type::CommitmentChanged => "COMMITMENT_CHANGED",
-                Type::Renewed => "RENEWED",
-                Type::Suspended => "SUSPENDED",
-                Type::Activated => "ACTIVATED",
-                Type::Cancelled => "CANCELLED",
-                Type::SkuChanged => "SKU_CHANGED",
-                Type::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
-                Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
-                Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
-                Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CREATED" => Some(Self::Created),
-                "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
-                "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
-                "RENEWED" => Some(Self::Renewed),
-                "SUSPENDED" => Some(Self::Suspended),
-                "ACTIVATED" => Some(Self::Activated),
-                "CANCELLED" => Some(Self::Cancelled),
-                "SKU_CHANGED" => Some(Self::SkuChanged),
-                "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
-                "PAID_SERVICE_STARTED" => Some(Self::PaidServiceStarted),
-                "LICENSE_ASSIGNMENT_CHANGED" => Some(Self::LicenseAssignmentChanged),
-                "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represents information which resellers will get as part of notification from
-/// Pub/Sub.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SubscriberEvent {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[prost(oneof = "subscriber_event::Event", tags = "1, 2")]
-    pub event: ::core::option::Option<subscriber_event::Event>,
-}
-/// Nested message and enum types in `SubscriberEvent`.
-pub mod subscriber_event {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// Customer event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag = "1")]
-        CustomerEvent(super::CustomerEvent),
-        /// Entitlement event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag = "2")]
-        EntitlementEvent(super::EntitlementEvent),
-    }
-}
 /// Request message for
 /// \[CloudChannelReportsService.RunReportJob][google.cloud.channel.v1.CloudChannelReportsService.RunReportJob\].
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6148,5 +5964,189 @@ pub mod cloud_channel_reports_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+    }
+}
+/// Represents Pub/Sub message content describing customer update.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerEvent {
+    /// Resource name of the customer.
+    /// Format: accounts/{account_id}/customers/{customer_id}
+    #[prost(string, tag = "1")]
+    pub customer: ::prost::alloc::string::String,
+    /// Type of event which happened on the customer.
+    #[prost(enumeration = "customer_event::Type", tag = "2")]
+    pub event_type: i32,
+}
+/// Nested message and enum types in `CustomerEvent`.
+pub mod customer_event {
+    /// Type of customer event.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Not used.
+        Unspecified = 0,
+        /// Primary domain for customer was changed.
+        PrimaryDomainChanged = 1,
+        /// Primary domain of the customer has been verified.
+        PrimaryDomainVerified = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
+                Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRIMARY_DOMAIN_CHANGED" => Some(Self::PrimaryDomainChanged),
+                "PRIMARY_DOMAIN_VERIFIED" => Some(Self::PrimaryDomainVerified),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents Pub/Sub message content describing entitlement update.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EntitlementEvent {
+    /// Resource name of an entitlement of the form:
+    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+    #[prost(string, tag = "1")]
+    pub entitlement: ::prost::alloc::string::String,
+    /// Type of event which happened on the entitlement.
+    #[prost(enumeration = "entitlement_event::Type", tag = "2")]
+    pub event_type: i32,
+}
+/// Nested message and enum types in `EntitlementEvent`.
+pub mod entitlement_event {
+    /// Type of entitlement event.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Not used.
+        Unspecified = 0,
+        /// A new entitlement was created.
+        Created = 1,
+        /// The offer type associated with an entitlement was changed.
+        /// This is not triggered if an entitlement converts from a commit offer to a
+        /// flexible offer as part of a renewal.
+        PricePlanSwitched = 3,
+        /// Annual commitment for a commit plan was changed.
+        CommitmentChanged = 4,
+        /// An annual entitlement was renewed.
+        Renewed = 5,
+        /// Entitlement was suspended.
+        Suspended = 6,
+        /// Entitlement was unsuspended.
+        Activated = 7,
+        /// Entitlement was cancelled.
+        Cancelled = 8,
+        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
+        /// Business Standard to Google Workspace Business Plus).
+        SkuChanged = 9,
+        /// The renewal settings of an entitlement has changed.
+        RenewalSettingChanged = 10,
+        /// Paid service has started on trial entitlement.
+        PaidServiceStarted = 11,
+        /// License was assigned to or revoked from a user.
+        LicenseAssignmentChanged = 12,
+        /// License cap was changed for the entitlement.
+        LicenseCapChanged = 13,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Created => "CREATED",
+                Type::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
+                Type::CommitmentChanged => "COMMITMENT_CHANGED",
+                Type::Renewed => "RENEWED",
+                Type::Suspended => "SUSPENDED",
+                Type::Activated => "ACTIVATED",
+                Type::Cancelled => "CANCELLED",
+                Type::SkuChanged => "SKU_CHANGED",
+                Type::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
+                Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
+                Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
+                Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATED" => Some(Self::Created),
+                "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
+                "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
+                "RENEWED" => Some(Self::Renewed),
+                "SUSPENDED" => Some(Self::Suspended),
+                "ACTIVATED" => Some(Self::Activated),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SKU_CHANGED" => Some(Self::SkuChanged),
+                "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
+                "PAID_SERVICE_STARTED" => Some(Self::PaidServiceStarted),
+                "LICENSE_ASSIGNMENT_CHANGED" => Some(Self::LicenseAssignmentChanged),
+                "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents information which resellers will get as part of notification from
+/// Pub/Sub.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SubscriberEvent {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
+    #[prost(oneof = "subscriber_event::Event", tags = "1, 2")]
+    pub event: ::core::option::Option<subscriber_event::Event>,
+}
+/// Nested message and enum types in `SubscriberEvent`.
+pub mod subscriber_event {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// Customer event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag = "1")]
+        CustomerEvent(super::CustomerEvent),
+        /// Entitlement event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag = "2")]
+        EntitlementEvent(super::EntitlementEvent),
     }
 }

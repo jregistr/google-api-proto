@@ -464,6 +464,22 @@ pub struct NodeNetworkConfig {
     pub network_performance_config: ::core::option::Option<
         node_network_config::NetworkPerformanceConfig,
     >,
+    /// [PRIVATE FIELD]
+    /// Pod CIDR size overprovisioning config for the nodepool.
+    ///
+    /// Pod CIDR size per node depends on max_pods_per_node. By default, the value
+    /// of max_pods_per_node is rounded off to next power of 2 and we then double
+    /// that to get the size of pod CIDR block per node.
+    /// Example: max_pods_per_node of 30 would result in 64 IPs (/26).
+    ///
+    /// This config can disable the doubling of IPs (we still round off to next
+    /// power of 2)
+    /// Example: max_pods_per_node of 30 will result in 32 IPs (/27) when
+    /// overprovisioning is disabled.
+    #[prost(message, optional, tag = "13")]
+    pub pod_cidr_overprovision_config: ::core::option::Option<
+        PodCidrOverprovisionConfig,
+    >,
 }
 /// Nested message and enum types in `NodeNetworkConfig`.
 pub mod node_network_config {
@@ -1248,6 +1264,16 @@ pub mod binary_authorization {
         }
     }
 }
+/// [PRIVATE FIELD]
+/// Config for pod CIDR size overprovisioning.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PodCidrOverprovisionConfig {
+    /// Whether Pod CIDR overprovisioning is disabled.
+    /// Note: Pod CIDR overprovisioning is enabled by default.
+    #[prost(bool, tag = "1")]
+    pub disable: bool,
+}
 /// Configuration for controlling how IPs are allocated in the cluster.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1377,6 +1403,22 @@ pub struct IpAllocationPolicy {
     /// The ipv6 access type (internal or external) when create_subnetwork is true
     #[prost(enumeration = "IPv6AccessType", tag = "17")]
     pub ipv6_access_type: i32,
+    /// [PRIVATE FIELD]
+    /// Pod CIDR size overprovisioning config for the cluster.
+    ///
+    /// Pod CIDR size per node depends on max_pods_per_node. By default, the value
+    /// of max_pods_per_node is doubled and then rounded off to next power of 2 to
+    /// get the size of pod CIDR block per node.
+    /// Example: max_pods_per_node of 30 would result in 64 IPs (/26).
+    ///
+    /// This config can disable the doubling of IPs (we still round off to next
+    /// power of 2)
+    /// Example: max_pods_per_node of 30 will result in 32 IPs (/27) when
+    /// overprovisioning is disabled.
+    #[prost(message, optional, tag = "21")]
+    pub pod_cidr_overprovision_config: ::core::option::Option<
+        PodCidrOverprovisionConfig,
+    >,
     /// Output only. [Output only] The subnet's IPv6 CIDR block used by nodes and
     /// pods.
     #[prost(string, tag = "22")]

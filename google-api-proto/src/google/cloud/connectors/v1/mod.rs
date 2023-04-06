@@ -427,175 +427,309 @@ impl LaunchStage {
         }
     }
 }
-/// AuthConfig defines details of a authentication type.
+/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthConfig {
-    /// The type of authentication configured.
-    #[prost(enumeration = "AuthType", tag = "1")]
-    pub auth_type: i32,
-    /// List containing additional auth configs.
-    #[prost(message, repeated, tag = "5")]
-    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariable>,
-    /// Supported auth types.
-    #[prost(oneof = "auth_config::Type", tags = "2, 3, 4, 6")]
-    pub r#type: ::core::option::Option<auth_config::Type>,
-}
-/// Nested message and enum types in `AuthConfig`.
-pub mod auth_config {
-    /// Parameters to support Username and Password Authentication.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct UserPassword {
-        /// Username.
-        #[prost(string, tag = "1")]
-        pub username: ::prost::alloc::string::String,
-        /// Secret version reference containing the password.
-        #[prost(message, optional, tag = "2")]
-        pub password: ::core::option::Option<super::Secret>,
-    }
-    /// Parameters to support JSON Web Token (JWT) Profile for Oauth 2.0
-    /// Authorization Grant based authentication.
-    /// See <https://tools.ietf.org/html/rfc7523> for more details.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Oauth2JwtBearer {
-        /// Secret version reference containing a PKCS#8 PEM-encoded private
-        /// key associated with the Client Certificate. This private key will be
-        /// used to sign JWTs used for the jwt-bearer authorization grant.
-        /// Specified in the form as: `projects/*/secrets/*/versions/*`.
-        #[prost(message, optional, tag = "1")]
-        pub client_key: ::core::option::Option<super::Secret>,
-        /// JwtClaims providers fields to generate the token.
-        #[prost(message, optional, tag = "2")]
-        pub jwt_claims: ::core::option::Option<oauth2_jwt_bearer::JwtClaims>,
-    }
-    /// Nested message and enum types in `Oauth2JwtBearer`.
-    pub mod oauth2_jwt_bearer {
-        /// JWT claims used for the jwt-bearer authorization grant.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct JwtClaims {
-            /// Value for the "iss" claim.
-            #[prost(string, tag = "1")]
-            pub issuer: ::prost::alloc::string::String,
-            /// Value for the "sub" claim.
-            #[prost(string, tag = "2")]
-            pub subject: ::prost::alloc::string::String,
-            /// Value for the "aud" claim.
-            #[prost(string, tag = "3")]
-            pub audience: ::prost::alloc::string::String,
-        }
-    }
-    /// Parameters to support Oauth 2.0 Client Credentials Grant Authentication.
-    /// See <https://tools.ietf.org/html/rfc6749#section-1.3.4> for more details.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Oauth2ClientCredentials {
-        /// The client identifier.
-        #[prost(string, tag = "1")]
-        pub client_id: ::prost::alloc::string::String,
-        /// Secret version reference containing the client secret.
-        #[prost(message, optional, tag = "2")]
-        pub client_secret: ::core::option::Option<super::Secret>,
-    }
-    /// Parameters to support Ssh public key Authentication.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SshPublicKey {
-        /// The user account used to authenticate.
-        #[prost(string, tag = "1")]
-        pub username: ::prost::alloc::string::String,
-        /// SSH Client Cert. It should contain both public and private key.
-        #[prost(message, optional, tag = "3")]
-        pub ssh_client_cert: ::core::option::Option<super::Secret>,
-        /// Format of SSH Client cert.
-        #[prost(string, tag = "4")]
-        pub cert_type: ::prost::alloc::string::String,
-        /// Password (passphrase) for ssh client certificate if it has one.
-        #[prost(message, optional, tag = "5")]
-        pub ssh_client_cert_pass: ::core::option::Option<super::Secret>,
-    }
-    /// Supported auth types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Type {
-        /// UserPassword.
-        #[prost(message, tag = "2")]
-        UserPassword(UserPassword),
-        /// Oauth2JwtBearer.
-        #[prost(message, tag = "3")]
-        Oauth2JwtBearer(Oauth2JwtBearer),
-        /// Oauth2ClientCredentials.
-        #[prost(message, tag = "4")]
-        Oauth2ClientCredentials(Oauth2ClientCredentials),
-        /// SSH Public Key.
-        #[prost(message, tag = "6")]
-        SshPublicKey(SshPublicKey),
-    }
-}
-/// AuthConfigTemplate defines required field over an authentication type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AuthConfigTemplate {
-    /// The type of authentication configured.
-    #[prost(enumeration = "AuthType", tag = "1")]
-    pub auth_type: i32,
-    /// Config variables to describe an `AuthConfig` for a `Connection`.
-    #[prost(message, repeated, tag = "2")]
-    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
-    /// Display name for authentication template.
-    #[prost(string, tag = "3")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Connector specific description for an authentication template.
-    #[prost(string, tag = "4")]
+pub struct Connector {
+    /// Output only. Resource name of the Connector.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag = "6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag = "7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag = "8")]
     pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag = "9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag = "10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration = "LaunchStage", tag = "11")]
+    pub launch_stage: i32,
 }
-/// AuthType defines different authentication types.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AuthType {
-    /// Authentication type not specified.
-    Unspecified = 0,
-    /// Username and Password Authentication.
-    UserPassword = 1,
-    /// JSON Web Token (JWT) Profile for Oauth 2.0
-    /// Authorization Grant based authentication
-    Oauth2JwtBearer = 2,
-    /// Oauth 2.0 Client Credentials Grant Authentication
-    Oauth2ClientCredentials = 3,
-    /// SSH Public Key Authentication
-    SshPublicKey = 4,
-    /// Oauth 2.0 Authorization Code Flow
-    Oauth2AuthCodeFlow = 5,
+/// Request message for Connectors.GetConnector.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
 }
-impl AuthType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            AuthType::Unspecified => "AUTH_TYPE_UNSPECIFIED",
-            AuthType::UserPassword => "USER_PASSWORD",
-            AuthType::Oauth2JwtBearer => "OAUTH2_JWT_BEARER",
-            AuthType::Oauth2ClientCredentials => "OAUTH2_CLIENT_CREDENTIALS",
-            AuthType::SshPublicKey => "SSH_PUBLIC_KEY",
-            AuthType::Oauth2AuthCodeFlow => "OAUTH2_AUTH_CODE_FLOW",
+/// Request message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsResponse {
+    /// A list of connectors.
+    #[prost(message, repeated, tag = "1")]
+    pub connectors: ::prost::alloc::vec::Vec<Connector>,
+    /// Next page token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request for \[GetGlobalSettingsRequest\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGlobalSettingsRequest {
+    /// Required. The resource name of the Settings.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Global Settings details.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Settings {
+    /// Output only. Resource name of the Connection.
+    /// Format: projects/{project}/locations/global/settings}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Flag indicates whether vpc-sc is enabled.
+    #[prost(bool, tag = "2")]
+    pub vpcsc: bool,
+    /// Output only. Flag indicates if user is in PayG model
+    #[prost(bool, tag = "3")]
+    pub payg: bool,
+}
+/// Request message for Connectors.GetRuntimeConfig.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetRuntimeConfigRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/runtimeConfig`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// RuntimeConfig is the singleton resource of each location.
+/// It includes generic resource configs consumed by control plane and runtime
+/// plane like: pub/sub topic/subscription resource name, Cloud Storage location
+/// storing schema etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RuntimeConfig {
+    /// Output only. location_id of the runtime location. E.g. "us-west1".
+    #[prost(string, tag = "1")]
+    pub location_id: ::prost::alloc::string::String,
+    /// Output only. Pub/Sub topic for connd to send message.
+    /// E.g. projects/{project-id}/topics/{topic-id}
+    #[prost(string, tag = "2")]
+    pub connd_topic: ::prost::alloc::string::String,
+    /// Output only. Pub/Sub subscription for connd to receive message.
+    /// E.g. projects/{project-id}/subscriptions/{topic-id}
+    #[prost(string, tag = "3")]
+    pub connd_subscription: ::prost::alloc::string::String,
+    /// Output only. Pub/Sub topic for control plne to send message.
+    /// communication.
+    /// E.g. projects/{project-id}/topics/{topic-id}
+    #[prost(string, tag = "4")]
+    pub control_plane_topic: ::prost::alloc::string::String,
+    /// Output only. Pub/Sub subscription for control plane to receive message.
+    /// E.g. projects/{project-id}/subscriptions/{topic-id}
+    #[prost(string, tag = "5")]
+    pub control_plane_subscription: ::prost::alloc::string::String,
+    /// Output only. The endpoint of the connectors runtime ingress.
+    #[prost(string, tag = "6")]
+    pub runtime_endpoint: ::prost::alloc::string::String,
+    /// Output only. The state of the location.
+    #[prost(enumeration = "runtime_config::State", tag = "7")]
+    pub state: i32,
+    /// Output only. The Cloud Storage bucket that stores connector's schema
+    /// reports.
+    #[prost(string, tag = "8")]
+    pub schema_gcs_bucket: ::prost::alloc::string::String,
+    /// Output only. The name of the Service Directory service name.
+    #[prost(string, tag = "9")]
+    pub service_directory: ::prost::alloc::string::String,
+    /// Output only. Name of the runtimeConfig resource.
+    /// Format: projects/{project}/locations/{location}/runtimeConfig
+    #[prost(string, tag = "11")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `RuntimeConfig`.
+pub mod runtime_config {
+    /// State of the location.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// STATE_UNSPECIFIED.
+        Unspecified = 0,
+        /// INACTIVE.
+        Inactive = 1,
+        /// ACTIVATING.
+        Activating = 2,
+        /// ACTIVE.
+        Active = 3,
+        /// CREATING.
+        Creating = 4,
+        /// DELETING.
+        Deleting = 5,
+        /// UPDATING.
+        Updating = 6,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Inactive => "INACTIVE",
+                State::Activating => "ACTIVATING",
+                State::Active => "ACTIVE",
+                State::Creating => "CREATING",
+                State::Deleting => "DELETING",
+                State::Updating => "UPDATING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "INACTIVE" => Some(Self::Inactive),
+                "ACTIVATING" => Some(Self::Activating),
+                "ACTIVE" => Some(Self::Active),
+                "CREATING" => Some(Self::Creating),
+                "DELETING" => Some(Self::Deleting),
+                "UPDATING" => Some(Self::Updating),
+                _ => None,
+            }
         }
     }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "AUTH_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "USER_PASSWORD" => Some(Self::UserPassword),
-            "OAUTH2_JWT_BEARER" => Some(Self::Oauth2JwtBearer),
-            "OAUTH2_CLIENT_CREDENTIALS" => Some(Self::Oauth2ClientCredentials),
-            "SSH_PUBLIC_KEY" => Some(Self::SshPublicKey),
-            "OAUTH2_AUTH_CODE_FLOW" => Some(Self::Oauth2AuthCodeFlow),
-            _ => None,
-        }
-    }
+}
+/// Provider indicates the owner who provides the connectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Provider {
+    /// Output only. Resource name of the Provider.
+    /// Format: projects/{project}/locations/{location}/providers/{provider}
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag = "6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag = "7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag = "8")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag = "9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag = "10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration = "LaunchStage", tag = "11")]
+    pub launch_stage: i32,
+}
+/// Request message for Connectors.GetProvider.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProviderRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProvidersRequest {
+    /// Required. Parent resource of the API, of the form:
+    /// `projects/*/locations/*`
+    /// Only global location is supported for Provider resource.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListProviders.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProvidersResponse {
+    /// A list of providers.
+    #[prost(message, repeated, tag = "1")]
+    pub providers: ::prost::alloc::vec::Vec<Provider>,
+    /// Next page token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Define the Connectors target endpoint.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -791,6 +925,176 @@ impl CertType {
         match value {
             "CERT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
             "PEM" => Some(Self::Pem),
+            _ => None,
+        }
+    }
+}
+/// AuthConfig defines details of a authentication type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuthConfig {
+    /// The type of authentication configured.
+    #[prost(enumeration = "AuthType", tag = "1")]
+    pub auth_type: i32,
+    /// List containing additional auth configs.
+    #[prost(message, repeated, tag = "5")]
+    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariable>,
+    /// Supported auth types.
+    #[prost(oneof = "auth_config::Type", tags = "2, 3, 4, 6")]
+    pub r#type: ::core::option::Option<auth_config::Type>,
+}
+/// Nested message and enum types in `AuthConfig`.
+pub mod auth_config {
+    /// Parameters to support Username and Password Authentication.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UserPassword {
+        /// Username.
+        #[prost(string, tag = "1")]
+        pub username: ::prost::alloc::string::String,
+        /// Secret version reference containing the password.
+        #[prost(message, optional, tag = "2")]
+        pub password: ::core::option::Option<super::Secret>,
+    }
+    /// Parameters to support JSON Web Token (JWT) Profile for Oauth 2.0
+    /// Authorization Grant based authentication.
+    /// See <https://tools.ietf.org/html/rfc7523> for more details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Oauth2JwtBearer {
+        /// Secret version reference containing a PKCS#8 PEM-encoded private
+        /// key associated with the Client Certificate. This private key will be
+        /// used to sign JWTs used for the jwt-bearer authorization grant.
+        /// Specified in the form as: `projects/*/secrets/*/versions/*`.
+        #[prost(message, optional, tag = "1")]
+        pub client_key: ::core::option::Option<super::Secret>,
+        /// JwtClaims providers fields to generate the token.
+        #[prost(message, optional, tag = "2")]
+        pub jwt_claims: ::core::option::Option<oauth2_jwt_bearer::JwtClaims>,
+    }
+    /// Nested message and enum types in `Oauth2JwtBearer`.
+    pub mod oauth2_jwt_bearer {
+        /// JWT claims used for the jwt-bearer authorization grant.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct JwtClaims {
+            /// Value for the "iss" claim.
+            #[prost(string, tag = "1")]
+            pub issuer: ::prost::alloc::string::String,
+            /// Value for the "sub" claim.
+            #[prost(string, tag = "2")]
+            pub subject: ::prost::alloc::string::String,
+            /// Value for the "aud" claim.
+            #[prost(string, tag = "3")]
+            pub audience: ::prost::alloc::string::String,
+        }
+    }
+    /// Parameters to support Oauth 2.0 Client Credentials Grant Authentication.
+    /// See <https://tools.ietf.org/html/rfc6749#section-1.3.4> for more details.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Oauth2ClientCredentials {
+        /// The client identifier.
+        #[prost(string, tag = "1")]
+        pub client_id: ::prost::alloc::string::String,
+        /// Secret version reference containing the client secret.
+        #[prost(message, optional, tag = "2")]
+        pub client_secret: ::core::option::Option<super::Secret>,
+    }
+    /// Parameters to support Ssh public key Authentication.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SshPublicKey {
+        /// The user account used to authenticate.
+        #[prost(string, tag = "1")]
+        pub username: ::prost::alloc::string::String,
+        /// SSH Client Cert. It should contain both public and private key.
+        #[prost(message, optional, tag = "3")]
+        pub ssh_client_cert: ::core::option::Option<super::Secret>,
+        /// Format of SSH Client cert.
+        #[prost(string, tag = "4")]
+        pub cert_type: ::prost::alloc::string::String,
+        /// Password (passphrase) for ssh client certificate if it has one.
+        #[prost(message, optional, tag = "5")]
+        pub ssh_client_cert_pass: ::core::option::Option<super::Secret>,
+    }
+    /// Supported auth types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Type {
+        /// UserPassword.
+        #[prost(message, tag = "2")]
+        UserPassword(UserPassword),
+        /// Oauth2JwtBearer.
+        #[prost(message, tag = "3")]
+        Oauth2JwtBearer(Oauth2JwtBearer),
+        /// Oauth2ClientCredentials.
+        #[prost(message, tag = "4")]
+        Oauth2ClientCredentials(Oauth2ClientCredentials),
+        /// SSH Public Key.
+        #[prost(message, tag = "6")]
+        SshPublicKey(SshPublicKey),
+    }
+}
+/// AuthConfigTemplate defines required field over an authentication type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AuthConfigTemplate {
+    /// The type of authentication configured.
+    #[prost(enumeration = "AuthType", tag = "1")]
+    pub auth_type: i32,
+    /// Config variables to describe an `AuthConfig` for a `Connection`.
+    #[prost(message, repeated, tag = "2")]
+    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
+    /// Display name for authentication template.
+    #[prost(string, tag = "3")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Connector specific description for an authentication template.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+}
+/// AuthType defines different authentication types.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AuthType {
+    /// Authentication type not specified.
+    Unspecified = 0,
+    /// Username and Password Authentication.
+    UserPassword = 1,
+    /// JSON Web Token (JWT) Profile for Oauth 2.0
+    /// Authorization Grant based authentication
+    Oauth2JwtBearer = 2,
+    /// Oauth 2.0 Client Credentials Grant Authentication
+    Oauth2ClientCredentials = 3,
+    /// SSH Public Key Authentication
+    SshPublicKey = 4,
+    /// Oauth 2.0 Authorization Code Flow
+    Oauth2AuthCodeFlow = 5,
+}
+impl AuthType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AuthType::Unspecified => "AUTH_TYPE_UNSPECIFIED",
+            AuthType::UserPassword => "USER_PASSWORD",
+            AuthType::Oauth2JwtBearer => "OAUTH2_JWT_BEARER",
+            AuthType::Oauth2ClientCredentials => "OAUTH2_CLIENT_CREDENTIALS",
+            AuthType::SshPublicKey => "SSH_PUBLIC_KEY",
+            AuthType::Oauth2AuthCodeFlow => "OAUTH2_AUTH_CODE_FLOW",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AUTH_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "USER_PASSWORD" => Some(Self::UserPassword),
+            "OAUTH2_JWT_BEARER" => Some(Self::Oauth2JwtBearer),
+            "OAUTH2_CLIENT_CREDENTIALS" => Some(Self::Oauth2ClientCredentials),
+            "SSH_PUBLIC_KEY" => Some(Self::SshPublicKey),
+            "OAUTH2_AUTH_CODE_FLOW" => Some(Self::Oauth2AuthCodeFlow),
             _ => None,
         }
     }
@@ -1584,111 +1888,6 @@ impl ConnectionView {
         }
     }
 }
-/// Provider indicates the owner who provides the connectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Provider {
-    /// Output only. Resource name of the Provider.
-    /// Format: projects/{project}/locations/{location}/providers/{provider}
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag = "6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag = "7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag = "8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag = "9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag = "10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration = "LaunchStage", tag = "11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetProvider.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetProviderRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListProviders.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProvidersRequest {
-    /// Required. Parent resource of the API, of the form:
-    /// `projects/*/locations/*`
-    /// Only global location is supported for Provider resource.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListProviders.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProvidersResponse {
-    /// A list of providers.
-    #[prost(message, repeated, tag = "1")]
-    pub providers: ::prost::alloc::vec::Vec<Provider>,
-    /// Next page token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Request for \[GetGlobalSettingsRequest\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGlobalSettingsRequest {
-    /// Required. The resource name of the Settings.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Global Settings details.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Settings {
-    /// Output only. Resource name of the Connection.
-    /// Format: projects/{project}/locations/global/settings}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Flag indicates whether vpc-sc is enabled.
-    #[prost(bool, tag = "2")]
-    pub vpcsc: bool,
-    /// Output only. Flag indicates if user is in PayG model
-    #[prost(bool, tag = "3")]
-    pub payg: bool,
-}
 /// ConnectorVersion indicates a specific version of a connector.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1944,205 +2143,6 @@ impl ConnectorVersionView {
             _ => None,
         }
     }
-}
-/// Request message for Connectors.GetRuntimeConfig.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetRuntimeConfigRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/runtimeConfig`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// RuntimeConfig is the singleton resource of each location.
-/// It includes generic resource configs consumed by control plane and runtime
-/// plane like: pub/sub topic/subscription resource name, Cloud Storage location
-/// storing schema etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RuntimeConfig {
-    /// Output only. location_id of the runtime location. E.g. "us-west1".
-    #[prost(string, tag = "1")]
-    pub location_id: ::prost::alloc::string::String,
-    /// Output only. Pub/Sub topic for connd to send message.
-    /// E.g. projects/{project-id}/topics/{topic-id}
-    #[prost(string, tag = "2")]
-    pub connd_topic: ::prost::alloc::string::String,
-    /// Output only. Pub/Sub subscription for connd to receive message.
-    /// E.g. projects/{project-id}/subscriptions/{topic-id}
-    #[prost(string, tag = "3")]
-    pub connd_subscription: ::prost::alloc::string::String,
-    /// Output only. Pub/Sub topic for control plne to send message.
-    /// communication.
-    /// E.g. projects/{project-id}/topics/{topic-id}
-    #[prost(string, tag = "4")]
-    pub control_plane_topic: ::prost::alloc::string::String,
-    /// Output only. Pub/Sub subscription for control plane to receive message.
-    /// E.g. projects/{project-id}/subscriptions/{topic-id}
-    #[prost(string, tag = "5")]
-    pub control_plane_subscription: ::prost::alloc::string::String,
-    /// Output only. The endpoint of the connectors runtime ingress.
-    #[prost(string, tag = "6")]
-    pub runtime_endpoint: ::prost::alloc::string::String,
-    /// Output only. The state of the location.
-    #[prost(enumeration = "runtime_config::State", tag = "7")]
-    pub state: i32,
-    /// Output only. The Cloud Storage bucket that stores connector's schema
-    /// reports.
-    #[prost(string, tag = "8")]
-    pub schema_gcs_bucket: ::prost::alloc::string::String,
-    /// Output only. The name of the Service Directory service name.
-    #[prost(string, tag = "9")]
-    pub service_directory: ::prost::alloc::string::String,
-    /// Output only. Name of the runtimeConfig resource.
-    /// Format: projects/{project}/locations/{location}/runtimeConfig
-    #[prost(string, tag = "11")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `RuntimeConfig`.
-pub mod runtime_config {
-    /// State of the location.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// STATE_UNSPECIFIED.
-        Unspecified = 0,
-        /// INACTIVE.
-        Inactive = 1,
-        /// ACTIVATING.
-        Activating = 2,
-        /// ACTIVE.
-        Active = 3,
-        /// CREATING.
-        Creating = 4,
-        /// DELETING.
-        Deleting = 5,
-        /// UPDATING.
-        Updating = 6,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Inactive => "INACTIVE",
-                State::Activating => "ACTIVATING",
-                State::Active => "ACTIVE",
-                State::Creating => "CREATING",
-                State::Deleting => "DELETING",
-                State::Updating => "UPDATING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "INACTIVE" => Some(Self::Inactive),
-                "ACTIVATING" => Some(Self::Activating),
-                "ACTIVE" => Some(Self::Active),
-                "CREATING" => Some(Self::Creating),
-                "DELETING" => Some(Self::Deleting),
-                "UPDATING" => Some(Self::Updating),
-                _ => None,
-            }
-        }
-    }
-}
-/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connector {
-    /// Output only. Resource name of the Connector.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag = "6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag = "7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag = "8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag = "9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag = "10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration = "LaunchStage", tag = "11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetConnector.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListConnectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListConnectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsResponse {
-    /// A list of connectors.
-    #[prost(message, repeated, tag = "1")]
-    pub connectors: ::prost::alloc::vec::Vec<Connector>,
-    /// Next page token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Generated client implementations.
 pub mod connectors_client {

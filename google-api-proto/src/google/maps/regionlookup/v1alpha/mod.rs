@@ -1,20 +1,3 @@
-/// Region Match.
-///
-/// Next available tag: 5
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RegionMatch {
-    /// Place ID of the region that is matched. If region is found, this field is
-    /// not set.
-    #[prost(string, tag = "1")]
-    pub matched_place_id: ::prost::alloc::string::String,
-    /// Region candidate IDs. Up to three candidates may be returned.
-    #[prost(string, repeated, tag = "2")]
-    pub candidate_place_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Matching debug information for when no match is found.
-    #[prost(string, tag = "3")]
-    pub debug_info: ::prost::alloc::string::String,
-}
 /// Region Search Values.
 ///
 /// Desired search values of a single region.
@@ -165,6 +148,23 @@ pub mod region_search_value {
         #[prost(string, tag = "3")]
         PlaceId(::prost::alloc::string::String),
     }
+}
+/// Region Match.
+///
+/// Next available tag: 5
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RegionMatch {
+    /// Place ID of the region that is matched. If region is found, this field is
+    /// not set.
+    #[prost(string, tag = "1")]
+    pub matched_place_id: ::prost::alloc::string::String,
+    /// Region candidate IDs. Up to three candidates may be returned.
+    #[prost(string, repeated, tag = "2")]
+    pub candidate_place_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Matching debug information for when no match is found.
+    #[prost(string, tag = "3")]
+    pub debug_info: ::prost::alloc::string::String,
 }
 /// Region Identifier.
 ///
