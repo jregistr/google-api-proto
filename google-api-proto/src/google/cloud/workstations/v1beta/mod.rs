@@ -211,10 +211,11 @@ pub mod workstation_config {
             /// The name of a Compute Engine machine type.
             #[prost(string, tag = "1")]
             pub machine_type: ::prost::alloc::string::String,
-            /// Email address of the service account that will be used on VM instances
-            /// used to support this config. This service account must have permission
-            /// to pull the specified container image. If not set, VMs will run without
-            /// a service account, in which case the image must be publicly accessible.
+            /// Email address of the service account used on VM instances
+            /// used to support this configuration. If not set, VMs run with a
+            /// Google-managed service account. This service account must have
+            /// permission to pull the specified container image; otherwise, the image
+            /// must be publicly accessible.
             #[prost(string, tag = "2")]
             pub service_account: ::prost::alloc::string::String,
             /// Network tags to add to the Compute Engine machines backing the
