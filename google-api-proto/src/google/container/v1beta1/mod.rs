@@ -1489,6 +1489,12 @@ pub struct IpAllocationPolicy {
     /// Output only. [Output only] The services IPv6 CIDR block for the cluster.
     #[prost(string, tag = "23")]
     pub services_ipv6_cidr_block: ::prost::alloc::string::String,
+    /// Output only. [Output only] The additional pod ranges that are added to the
+    /// cluster. These pod ranges can be used by new node pools to allocate pod IPs
+    /// automatically. Once the range is removed it will not show up in
+    /// IPAllocationPolicy.
+    #[prost(message, optional, tag = "24")]
+    pub additional_pod_ranges_config: ::core::option::Option<AdditionalPodRangesConfig>,
 }
 /// Nested message and enum types in `IPAllocationPolicy`.
 pub mod ip_allocation_policy {
@@ -2555,7 +2561,23 @@ pub struct ClusterUpdate {
     /// the cluster, update will attempt to change the stack type to the new type.
     #[prost(enumeration = "StackType", tag = "119")]
     pub desired_stack_type: i32,
+    /// The additional pod ranges to be added to the cluster. These pod ranges
+    /// can be used by node pools to allocate pod IPs.
+    #[prost(message, optional, tag = "120")]
+    pub additional_pod_ranges_config: ::core::option::Option<AdditionalPodRangesConfig>,
+    /// The additional pod ranges that are to be removed from the cluster.
+    /// The pod ranges specified here must have been specified earlier in the
+    /// 'additional_pod_ranges_config' argument.
+    #[prost(message, optional, tag = "121")]
+    pub removed_additional_pod_ranges_config: ::core::option::Option<
+        AdditionalPodRangesConfig,
+    >,
 }
+/// AdditionalPodRangesConfig is the configuration for additional pod secondary
+/// ranges supporting the ClusterUpdate message.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AdditionalPodRangesConfig {}
 /// This operation resource represents operations that may have happened or are
 /// happening on the cluster. All fields are output only.
 #[allow(clippy::derive_partial_eq_without_eq)]

@@ -349,7 +349,7 @@ pub struct ColorInfo {
     /// it is expected to have only 1 color. May consider using single "Mixed"
     /// instead of multiple values.
     ///
-    /// A maximum of 25 colors are allowed. Each value must be a UTF-8 encoded
+    /// A maximum of 75 colors are allowed. Each value must be a UTF-8 encoded
     /// string with a length limit of 128 characters. Otherwise, an
     /// INVALID_ARGUMENT error is returned.
     ///
@@ -1398,12 +1398,11 @@ pub struct Product {
     pub variants: ::prost::alloc::vec::Vec<Product>,
     /// Output only. A list of local inventories specific to different places.
     ///
-    /// This is only available for users who have Retail Search enabled, and it can
-    /// be managed by
+    /// This field can be managed by
     /// \[ProductService.AddLocalInventories][google.cloud.retail.v2beta.ProductService.AddLocalInventories\]
     /// and
     /// \[ProductService.RemoveLocalInventories][google.cloud.retail.v2beta.ProductService.RemoveLocalInventories\]
-    /// APIs.
+    /// APIs if fine-grained, high-volume updates are necessary.
     #[prost(message, repeated, tag = "35")]
     pub local_inventories: ::prost::alloc::vec::Vec<LocalInventory>,
     #[prost(oneof = "product::Expiration", tags = "16, 17")]
@@ -1836,6 +1835,13 @@ pub struct UserEvent {
     /// Tag Manager, this value is filled in automatically.
     #[prost(string, tag = "15")]
     pub page_view_id: ::prost::alloc::string::String,
+    /// The entity for customers that may run multiple different entities, domains,
+    /// sites or regions, for example, `Google US`, `Google Ads`, `Waymo`,
+    /// `google.com`, `youtube.com`, etc.
+    /// It is recommended to set this field to get better per-entity search,
+    /// completion and prediction results.
+    #[prost(string, tag = "23")]
+    pub entity: ::prost::alloc::string::String,
 }
 /// Detailed product information associated with a user event.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2003,7 +2009,7 @@ pub struct BigQuerySource {
     ///    The schema is available here:
     ///    <https://support.google.com/analytics/answer/7029846.>
     ///
-    /// Supported values for auto-completion imports:
+    /// Supported values for autocomplete imports:
     ///
     /// * `suggestions` (default): One JSON completion suggestion per line.
     /// * `denylist`:  One JSON deny suggestion per line.
@@ -2439,6 +2445,10 @@ pub struct CatalogAttribute {
     /// characters and underscores. For example, an attribute named
     /// `attributes.abc_xyz` can be indexed, but an attribute named
     /// `attributes.abc-xyz` cannot be indexed.
+    ///
+    /// If the attribute key starts with `attributes.`, then the attribute is a
+    /// custom attribute. Attributes such as `brands`, `patterns`, and `title` are
+    /// built-in and called system attributes.
     #[prost(string, tag = "1")]
     pub key: ::prost::alloc::string::String,
     /// Output only. Indicates whether this attribute has been used by any
@@ -2511,11 +2521,14 @@ pub struct CatalogAttribute {
     pub recommendations_filtering_option: i32,
     /// If EXACT_SEARCHABLE_ENABLED, attribute values will be exact searchable.
     /// This property only applies to textual custom attributes and requires
-    /// indexable set to enabled to enable exact-searchable.
+    /// indexable set to enabled to enable exact-searchable. If unset, the server
+    /// behavior defaults to
+    /// \[EXACT_SEARCHABLE_DISABLED][google.cloud.retail.v2beta.CatalogAttribute.ExactSearchableOption.EXACT_SEARCHABLE_DISABLED\].
     #[prost(enumeration = "catalog_attribute::ExactSearchableOption", tag = "11")]
     pub exact_searchable_option: i32,
     /// If RETRIEVABLE_ENABLED, attribute values are retrievable in the search
-    /// results.
+    /// results. If unset, the server behavior defaults to
+    /// \[RETRIEVABLE_DISABLED][google.cloud.retail.v2beta.CatalogAttribute.RetrievableOption.RETRIEVABLE_DISABLED\].
     #[prost(enumeration = "catalog_attribute::RetrievableOption", tag = "12")]
     pub retrievable_option: i32,
 }
@@ -2716,8 +2729,7 @@ pub mod catalog_attribute {
     )]
     #[repr(i32)]
     pub enum ExactSearchableOption {
-        /// Value used when unset. Defaults to
-        /// \[EXACT_SEARCHABLE_DISABLED][google.cloud.retail.v2beta.CatalogAttribute.ExactSearchableOption.EXACT_SEARCHABLE_DISABLED\].
+        /// Value used when unset.
         Unspecified = 0,
         /// Exact searchable option enabled for an attribute.
         ExactSearchableEnabled = 1,
@@ -2766,8 +2778,7 @@ pub mod catalog_attribute {
     )]
     #[repr(i32)]
     pub enum RetrievableOption {
-        /// Value used when unset. Defaults to
-        /// \[RETRIEVABLE_DISABLED][google.cloud.retail.v2beta.CatalogAttribute.RetrievableOption.RETRIEVABLE_DISABLED\].
+        /// Value used when unset.
         Unspecified = 0,
         /// Retrievable option enabled for an attribute.
         RetrievableEnabled = 1,
@@ -2998,7 +3009,7 @@ pub struct Catalog {
         MerchantCenterLinkingConfig,
     >,
 }
-/// Auto-complete parameters.
+/// Autocomplete parameters.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryRequest {
@@ -3074,8 +3085,16 @@ pub struct CompleteQueryRequest {
     /// capped by 20.
     #[prost(int32, tag = "5")]
     pub max_suggestions: i32,
+    /// The entity for customers that may run multiple different entities, domains,
+    /// sites or regions, for example, `Google US`, `Google Ads`, `Waymo`,
+    /// `google.com`, `youtube.com`, etc.
+    /// If this is set, it should be exactly matched with
+    /// \[UserEvent.entity][google.cloud.retail.v2beta.UserEvent.entity\] to get
+    /// per-entity autocomplete results.
+    #[prost(string, tag = "10")]
+    pub entity: ::prost::alloc::string::String,
 }
-/// Response of the auto-complete query.
+/// Response of the autocomplete query.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CompleteQueryResponse {
@@ -3155,7 +3174,7 @@ pub mod completion_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Auto-completion service for retail.
+    /// Autocomplete service for retail.
     ///
     /// This feature is only available for users who have Retail Search enabled.
     /// Enable Retail Search on Cloud Console before using this feature.
@@ -3373,7 +3392,7 @@ pub struct SearchRequest {
     pub order_by: ::prost::alloc::string::String,
     /// Facet specifications for faceted search. If empty, no facets are returned.
     ///
-    /// A maximum of 100 values are allowed. Otherwise, an INVALID_ARGUMENT error
+    /// A maximum of 200 values are allowed. Otherwise, an INVALID_ARGUMENT error
     /// is returned.
     #[prost(message, repeated, tag = "12")]
     pub facet_specs: ::prost::alloc::vec::Vec<search_request::FacetSpec>,
@@ -3474,7 +3493,7 @@ pub struct SearchRequest {
     /// INVALID_ARGUMENT error is returned.
     #[prost(string, repeated, tag = "17")]
     pub variant_rollup_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The categories associated with a category page. Required for category
+    /// The categories associated with a category page. Must be set for category
     /// navigation queries to achieve good search quality. The format should be
     /// the same as
     /// \[UserEvent.page_categories][google.cloud.retail.v2beta.UserEvent.page_categories\];
@@ -3534,6 +3553,14 @@ pub struct SearchRequest {
     pub spell_correction_spec: ::core::option::Option<
         search_request::SpellCorrectionSpec,
     >,
+    /// The entity for customers that may run multiple different entities, domains,
+    /// sites or regions, for example, `Google US`, `Google Ads`, `Waymo`,
+    /// `google.com`, `youtube.com`, etc.
+    /// If this is set, it should be exactly matched with
+    /// \[UserEvent.entity][google.cloud.retail.v2beta.UserEvent.entity\] to get
+    /// search results boosted by entity.
+    #[prost(string, tag = "38")]
+    pub entity: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `SearchRequest`.
 pub mod search_request {
@@ -3665,7 +3692,16 @@ pub mod search_request {
             pub key: ::prost::alloc::string::String,
             /// Set only if values should be bucketized into intervals. Must be set
             /// for facets with numerical values. Must not be set for facet with text
-            /// values. Maximum number of intervals is 30.
+            /// values. Maximum number of intervals is 40.
+            ///
+            /// For all numerical facet keys that appear in the list of products from
+            /// the catalog, the percentiles 0, 10, 30, 50, 70, 90 and 100 are
+            /// computed from their distribution weekly. If the model assigns a high
+            /// score to a numerical facet key and its intervals are not specified in
+            /// the search request, these percentiles will become the bounds
+            /// for its intervals and will be returned in the response. If the
+            /// facet key intervals are specified in the request, then the specified
+            /// intervals will be returned instead.
             #[prost(message, repeated, tag = "2")]
             pub intervals: ::prost::alloc::vec::Vec<super::super::Interval>,
             /// Only get facet for the given restricted values. For example, when using
@@ -4202,6 +4238,10 @@ pub struct SearchResponse {
     pub invalid_condition_boost_specs: ::prost::alloc::vec::Vec<
         search_request::boost_spec::ConditionBoostSpec,
     >,
+    /// Metadata related to A/B testing \[Experiment][\] associated with this
+    /// response. Only exists when an experiment is triggered.
+    #[prost(message, repeated, tag = "17")]
+    pub experiment_info: ::prost::alloc::vec::Vec<ExperimentInfo>,
 }
 /// Nested message and enum types in `SearchResponse`.
 pub mod search_response {
@@ -4374,6 +4414,48 @@ pub mod search_response {
         /// is set to true.
         #[prost(int64, tag = "2")]
         pub pinned_result_count: i64,
+    }
+}
+/// Metadata for active A/B testing \[Experiments][\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExperimentInfo {
+    /// The fully qualified resource name of the experiment that provides the
+    /// serving config under test, should an active experiment exist. For example:
+    /// `projects/*/locations/global/catalogs/default_catalog/experiments/experiment_id`
+    #[prost(string, tag = "1")]
+    pub experiment: ::prost::alloc::string::String,
+    /// Information associated with the specific experiment entity being recorded.
+    #[prost(oneof = "experiment_info::ExperimentMetadata", tags = "2")]
+    pub experiment_metadata: ::core::option::Option<experiment_info::ExperimentMetadata>,
+}
+/// Nested message and enum types in `ExperimentInfo`.
+pub mod experiment_info {
+    /// Metadata for active serving config A/B tests.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ServingConfigExperiment {
+        /// The fully qualified resource name of the original
+        /// \[SearchRequest.placement][google.cloud.retail.v2beta.SearchRequest.placement\]
+        /// in the search request prior to reassignment by experiment API. For
+        /// example: `projects/*/locations/*/catalogs/*/servingConfigs/*`.
+        #[prost(string, tag = "1")]
+        pub original_serving_config: ::prost::alloc::string::String,
+        /// The fully qualified resource name of the serving config
+        /// \[VariantArm.serving_config_id][\] responsible for generating the search
+        /// response. For example:
+        /// `projects/*/locations/*/catalogs/*/servingConfigs/*`.
+        #[prost(string, tag = "2")]
+        pub experiment_serving_config: ::prost::alloc::string::String,
+    }
+    /// Information associated with the specific experiment entity being recorded.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ExperimentMetadata {
+        /// A/B test between existing Cloud Retail Search
+        /// \[ServingConfig][google.cloud.retail.v2beta.ServingConfig\]s.
+        #[prost(message, tag = "2")]
+        ServingConfigExperiment(ServingConfigExperiment),
     }
 }
 /// Generated client implementations.
@@ -4621,6 +4703,9 @@ pub struct PredictRequest {
     ///   * (colors: ANY("Red", "Blue")) AND NOT (categories: ANY("Phones"))
     ///   * (availability: ANY("IN_STOCK")) AND
     ///     (colors: ANY("Red") OR categories: ANY("Phones"))
+    ///
+    /// For more information, see
+    /// [Filter recommendations](<https://cloud.google.com/retail/docs/filter-recs>).
     #[prost(string, tag = "5")]
     pub filter: ::prost::alloc::string::String,
     /// Use validate only mode for this prediction query. If set to true, a
@@ -4847,7 +4932,7 @@ pub struct ServingConfig {
     ///   Allowed values are:
     ///
     /// * `no-price-reranking`
-    /// * `low-price-raranking`
+    /// * `low-price-reranking`
     /// * `medium-price-reranking`
     /// * `high-price-reranking`
     ///
@@ -5006,7 +5091,9 @@ pub struct ServingConfig {
     /// \[SOLUTION_TYPE_RECOMMENDATION][google.cloud.retail.v2main.SolutionType.SOLUTION_TYPE_RECOMMENDATION\].
     #[prost(string, tag = "8")]
     pub diversity_level: ::prost::alloc::string::String,
-    /// What kind of diversity to use - data driven or rule based.
+    /// What kind of diversity to use - data driven or rule based. If unset, the
+    /// server behavior defaults to
+    /// \[RULE_BASED_DIVERSITY][google.cloud.retail.v2beta.ServingConfig.DiversityType.RULE_BASED_DIVERSITY\].
     #[prost(enumeration = "serving_config::DiversityType", tag = "20")]
     pub diversity_type: i32,
     /// Whether to add additional category filters on the `similar-items` model.
@@ -5053,7 +5140,6 @@ pub struct ServingConfig {
 /// Nested message and enum types in `ServingConfig`.
 pub mod serving_config {
     /// What type of diversity - data or rule based.
-    /// If none is specified, default to rule based.
     #[derive(
         Clone,
         Copy,
@@ -6046,6 +6132,16 @@ pub struct UpdateModelRequest {
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
+/// Request for getting a model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetModelRequest {
+    /// Required. The resource name of the
+    /// \[Model][google.cloud.retail.v2beta.Model\] to get. Format:
+    /// `projects/{project_number}/locations/{location_id}/catalogs/{catalog}/models/{model_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// Request for pausing training of a model.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6230,6 +6326,26 @@ pub mod model_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.retail.v2beta.ModelService/CreateModel",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets a model.
+        pub async fn get_model(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetModelRequest>,
+        ) -> Result<tonic::Response<super::Model>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.retail.v2beta.ModelService/GetModel",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -7145,7 +7261,7 @@ pub mod collect_user_event_request {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum ConversionRule {
         /// The prebuilt rule name that can convert a specific type of raw_json.
-        /// For example: "default_schema/v1.0"
+        /// For example: "ga4_bq" rule for the GA4 user event schema.
         #[prost(string, tag = "6")]
         PrebuiltRule(::prost::alloc::string::String),
     }
@@ -8361,9 +8477,6 @@ pub mod product_service_client {
         /// [Operation][google.longrunning.Operation]s associated with the stale
         /// updates are not marked as [done][google.longrunning.Operation.done] until
         /// they are obsolete.
-        ///
-        /// This feature is only available for users who have Retail Search enabled.
-        /// Enable Retail Search on Cloud Console before using this feature.
         pub async fn set_inventory(
             &mut self,
             request: impl tonic::IntoRequest<super::SetInventoryRequest>,
@@ -8386,6 +8499,14 @@ pub mod product_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// It is recommended to use the
+        /// [ProductService.AddLocalInventories][google.cloud.retail.v2beta.ProductService.AddLocalInventories]
+        /// method instead of
+        /// [ProductService.AddFulfillmentPlaces][google.cloud.retail.v2beta.ProductService.AddFulfillmentPlaces].
+        /// [ProductService.AddLocalInventories][google.cloud.retail.v2beta.ProductService.AddLocalInventories]
+        /// achieves the same results but provides more fine-grained control over
+        /// ingesting local inventory data.
+        ///
         /// Incrementally adds place IDs to
         /// [Product.fulfillment_info.place_ids][google.cloud.retail.v2beta.FulfillmentInfo.place_ids].
         ///
@@ -8407,9 +8528,6 @@ pub mod product_service_client {
         /// [Operation][google.longrunning.Operation]s associated with the stale
         /// updates will not be marked as [done][google.longrunning.Operation.done]
         /// until being obsolete.
-        ///
-        /// This feature is only available for users who have Retail Search enabled.
-        /// Enable Retail Search on Cloud Console before using this feature.
         pub async fn add_fulfillment_places(
             &mut self,
             request: impl tonic::IntoRequest<super::AddFulfillmentPlacesRequest>,
@@ -8432,6 +8550,14 @@ pub mod product_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// It is recommended to use the
+        /// [ProductService.RemoveLocalInventories][google.cloud.retail.v2beta.ProductService.RemoveLocalInventories]
+        /// method instead of
+        /// [ProductService.RemoveFulfillmentPlaces][google.cloud.retail.v2beta.ProductService.RemoveFulfillmentPlaces].
+        /// [ProductService.RemoveLocalInventories][google.cloud.retail.v2beta.ProductService.RemoveLocalInventories]
+        /// achieves the same results but provides more fine-grained control over
+        /// ingesting local inventory data.
+        ///
         /// Incrementally removes place IDs from a
         /// [Product.fulfillment_info.place_ids][google.cloud.retail.v2beta.FulfillmentInfo.place_ids].
         ///
@@ -8453,9 +8579,6 @@ pub mod product_service_client {
         /// [Operation][google.longrunning.Operation]s associated with the stale
         /// updates will not be marked as [done][google.longrunning.Operation.done]
         /// until being obsolete.
-        ///
-        /// This feature is only available for users who have Retail Search enabled.
-        /// Enable Retail Search on Cloud Console before using this feature.
         pub async fn remove_fulfillment_places(
             &mut self,
             request: impl tonic::IntoRequest<super::RemoveFulfillmentPlacesRequest>,
@@ -8506,9 +8629,6 @@ pub mod product_service_client {
         /// [Operation][google.longrunning.Operation]s associated with the stale
         /// updates will not be marked as [done][google.longrunning.Operation.done]
         /// until being obsolete.
-        ///
-        /// This feature is only available for users who have Retail Search enabled.
-        /// Enable Retail Search on Cloud Console before using this feature.
         pub async fn add_local_inventories(
             &mut self,
             request: impl tonic::IntoRequest<super::AddLocalInventoriesRequest>,
@@ -8557,9 +8677,6 @@ pub mod product_service_client {
         /// [Operation][google.longrunning.Operation]s associated with the stale
         /// updates will not be marked as [done][google.longrunning.Operation.done]
         /// until being obsolete.
-        ///
-        /// This feature is only available for users who have Retail Search enabled.
-        /// Enable Retail Search on Cloud Console before using this feature.
         pub async fn remove_local_inventories(
             &mut self,
             request: impl tonic::IntoRequest<super::RemoveLocalInventoriesRequest>,
