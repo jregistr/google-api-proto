@@ -2711,6 +2711,11 @@ pub struct ModelMonitoringAlertConfig {
     /// by Cloud Logging.
     #[prost(bool, tag = "2")]
     pub enable_logging: bool,
+    /// Resource names of the NotificationChannels to send alert.
+    /// Must be of the format
+    /// `projects/<project_id_or_number>/notificationChannels/<channel_id>`
+    #[prost(string, repeated, tag = "3")]
+    pub notification_channels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     #[prost(oneof = "model_monitoring_alert_config::Alert", tags = "1")]
     pub alert: ::core::option::Option<model_monitoring_alert_config::Alert>,
 }
