@@ -74,6 +74,7 @@ pub mod beyondcorp;
 #[cfg(
     any(
         feature = "google-cloud-bigquery-analyticshub-v1",
+        feature = "google-cloud-bigquery-biglake-v1",
         feature = "google-cloud-bigquery-biglake-v1alpha1",
         feature = "google-cloud-bigquery-connection-v1",
         feature = "google-cloud-bigquery-connection-v1beta1",
@@ -133,6 +134,13 @@ pub mod common;
     any(feature = "google-cloud-compute-v1", feature = "google-cloud-compute-v1small")
 )]
 pub mod compute;
+#[cfg(
+    any(
+        feature = "google-cloud-confidentialcomputing-v1",
+        feature = "google-cloud-confidentialcomputing-v1alpha1",
+    )
+)]
+pub mod confidentialcomputing;
 #[cfg(any(feature = "google-cloud-connectors-v1"))]
 pub mod connectors;
 #[cfg(any(feature = "google-cloud-contactcenterinsights-v1"))]

@@ -511,8 +511,6 @@ pub struct WriteObjectSpec {
     /// This situation is considered a client error, and if such an error occurs
     /// you must start the upload over from scratch, this time sending the correct
     /// number of bytes.
-    ///
-    /// The `object_size` value is ignored for one-shot (non-resumable) writes.
     #[prost(int64, optional, tag = "8")]
     pub object_size: ::core::option::Option<i64>,
 }
