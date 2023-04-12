@@ -730,9 +730,9 @@ pub struct Trip {
     /// This field supports manual ordering of the waypoints for the trip. It
     /// contains all of the remaining waypoints for the assigned vehicle, as well
     /// as the pickup and drop-off waypoints for this trip. If the trip hasn't been
-    /// assigned to a vehicle, then this field is ignored. For privacy reasons,
-    /// this field is only populated by the server on UpdateTrip and CreateTrip
-    /// calls, NOT on GetTrip calls.
+    /// assigned to a vehicle, then Fleet Engine ignores this field. For privacy
+    /// reasons, this field is only populated by the server on `UpdateTrip` and
+    /// `CreateTrip` calls, NOT on `GetTrip` calls.
     #[prost(message, repeated, tag = "20")]
     pub vehicle_waypoints: ::prost::alloc::vec::Vec<TripWaypoint>,
     /// Output only. Anticipated route for this trip to the first entry in
@@ -804,7 +804,7 @@ pub struct Trip {
     >,
     /// Immutable. Indicates the number of passengers on this trip and does not
     /// include the driver. A vehicle must have available capacity to be returned
-    /// in SearchVehicles.
+    /// in a `SearchVehicles` response.
     #[prost(int32, tag = "10")]
     pub number_of_passengers: i32,
     /// Output only. Indicates the last reported location of the vehicle along the
@@ -1288,9 +1288,9 @@ pub struct SearchTripsResponse {
     /// The list of trips for the requested vehicle.
     #[prost(message, repeated, tag = "1")]
     pub trips: ::prost::alloc::vec::Vec<Trip>,
-    /// Pass this token in the SearchTripsRequest to continue to
-    /// list results. If all results have been returned, this field is an empty
-    /// string or not present in the response.
+    /// Pass this token in the SearchTripsRequest to page through list results. The
+    /// API returns a trip list on each call, and when no more results remain the
+    /// trip list is empty.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
@@ -1503,7 +1503,8 @@ pub struct Vehicle {
     /// not yet supported.
     #[prost(string, tag = "20")]
     pub current_route_segment: ::prost::alloc::string::String,
-    /// Input only. Fleet Engine uses this information to improve Journey Sharing.
+    /// Input only. Fleet Engine uses this information to improve journey sharing.
+    /// Note: This field is intended only for use by the Driver SDK.
     #[prost(message, optional, tag = "28")]
     pub current_route_segment_traffic: ::core::option::Option<TrafficPolylineData>,
     /// Output only. Time when `current_route_segment` was set. It can be stored by
@@ -2058,18 +2059,18 @@ pub struct UpdateVehicleRequest {
     /// the following fields may not be updated as they are managed by the
     /// server.
     ///
-    /// * `current_trips`
     /// * `available_capacity`
     /// * `current_route_segment_version`
+    /// * `current_trips`
+    /// * `name`
     /// * `waypoints_version`
-    ///
-    /// Furthermore, the vehicle `name` cannot be updated.
     ///
     /// If the `attributes` field is updated, **all** the vehicle's attributes are
     /// replaced with the attributes provided in the request. If you want to update
-    /// only some attributes, see the `UpdateVehicleAttributes` method. Likewise,
-    /// the `waypoints` field can be updated, but must contain all the waypoints.
-    /// currently on the vehicle, and no other waypoints.
+    /// only some attributes, see the `UpdateVehicleAttributes` method.
+    ///
+    /// Likewise, the `waypoints` field can be updated, but must contain all the
+    /// waypoints currently on the vehicle, and no other waypoints.
     #[prost(message, optional, tag = "4")]
     pub vehicle: ::core::option::Option<Vehicle>,
     /// Required. A field mask indicating which fields of the `Vehicle` to update.
