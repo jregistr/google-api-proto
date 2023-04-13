@@ -49,6 +49,10 @@ pub struct Job {
     /// This property is always present when `state` is `FAILED`.
     #[prost(message, optional, tag = "17")]
     pub error: ::core::option::Option<super::super::super::super::rpc::Status>,
+    /// The processing mode of the job.
+    /// The default is `PROCESSING_MODE_INTERACTIVE`.
+    #[prost(enumeration = "job::ProcessingMode", tag = "20")]
+    pub mode: i32,
     /// Specify the `job_config` for the transcoding job. If you don't specify the
     /// `job_config`, the API selects `templateId`; this template ID is set to
     /// `preset/web-hd` by default. When you use a `template_id` to create a job,
@@ -110,6 +114,52 @@ pub mod job {
             }
         }
     }
+    /// The processing mode of the job.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ProcessingMode {
+        /// The job processing mode is not specified.
+        Unspecified = 0,
+        /// The job processing mode is interactive mode.
+        /// Interactive job will either be ran or rejected if quota does not allow
+        /// for it.
+        Interactive = 1,
+        /// The job processing mode is batch mode.
+        /// Batch mode allows queuing of jobs.
+        Batch = 2,
+    }
+    impl ProcessingMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ProcessingMode::Unspecified => "PROCESSING_MODE_UNSPECIFIED",
+                ProcessingMode::Interactive => "PROCESSING_MODE_INTERACTIVE",
+                ProcessingMode::Batch => "PROCESSING_MODE_BATCH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROCESSING_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROCESSING_MODE_INTERACTIVE" => Some(Self::Interactive),
+                "PROCESSING_MODE_BATCH" => Some(Self::Batch),
+                _ => None,
+            }
+        }
+    }
     /// Specify the `job_config` for the transcoding job. If you don't specify the
     /// `job_config`, the API selects `templateId`; this template ID is set to
     /// `preset/web-hd` by default. When you use a `template_id` to create a job,
@@ -118,13 +168,9 @@ pub mod job {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum JobConfig {
         /// Input only. Specify the `template_id` to use for populating `Job.config`.
-        /// The default is `preset/web-hd`.
+        /// The default is `preset/web-hd`, which is the only supported preset.
         ///
-        /// Preset Transcoder templates:
-        /// - `preset/{preset_id}`
-        ///
-        /// - User defined JobTemplate:
-        ///    `{job_template_id}`
+        /// User defined JobTemplate: `{job_template_id}`
         #[prost(string, tag = "4")]
         TemplateId(::prost::alloc::string::String),
         /// The configuration for this job.
@@ -507,12 +553,12 @@ pub mod overlay {
         #[prost(double, tag = "2")]
         pub y: f64,
     }
-    /// Overlaid jpeg image.
+    /// Overlaid image.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Image {
-        /// Required. URI of the JPEG image in Cloud Storage. For example,
-        /// `gs://bucket/inputs/image.jpeg`. JPEG is the only supported image type.
+        /// Required. URI of the image in Cloud Storage. For example,
+        /// `gs://bucket/inputs/image.png`. Only PNG and JPEG images are supported.
         #[prost(string, tag = "1")]
         pub uri: ::prost::alloc::string::String,
         /// Normalized image resolution, based on output video resolution. Valid
@@ -1361,11 +1407,12 @@ pub struct AudioStream {
     pub sample_rate_hertz: i32,
     /// The BCP-47 language code, such as `en-US` or `sr-Latn`. For more
     /// information, see
-    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
+    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> Not
+    /// supported in MP4 files.
     #[prost(string, tag = "7")]
     pub language_code: ::prost::alloc::string::String,
     /// The name for this particular audio stream that
-    /// will be added to the HLS/DASH manifest.
+    /// will be added to the HLS/DASH manifest. Not supported in MP4 files.
     #[prost(string, tag = "8")]
     pub display_name: ::prost::alloc::string::String,
 }
@@ -1414,14 +1461,15 @@ pub struct TextStream {
     pub codec: ::prost::alloc::string::String,
     /// The BCP-47 language code, such as `en-US` or `sr-Latn`. For more
     /// information, see
-    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.>
+    /// <https://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> Not
+    /// supported in MP4 files.
     #[prost(string, tag = "2")]
     pub language_code: ::prost::alloc::string::String,
     /// The mapping for the `Job.edit_list` atoms with text `EditAtom.inputs`.
     #[prost(message, repeated, tag = "3")]
     pub mapping: ::prost::alloc::vec::Vec<text_stream::TextMapping>,
     /// The name for this particular text stream that
-    /// will be added to the HLS/DASH manifest.
+    /// will be added to the HLS/DASH manifest. Not supported in MP4 files.
     #[prost(string, tag = "4")]
     pub display_name: ::prost::alloc::string::String,
 }

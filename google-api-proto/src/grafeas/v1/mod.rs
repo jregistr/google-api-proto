@@ -2228,6 +2228,7 @@ pub mod cvss {
         Unspecified = 0,
         Low = 1,
         High = 2,
+        Medium = 3,
     }
     impl AttackComplexity {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2239,6 +2240,7 @@ pub mod cvss {
                 AttackComplexity::Unspecified => "ATTACK_COMPLEXITY_UNSPECIFIED",
                 AttackComplexity::Low => "ATTACK_COMPLEXITY_LOW",
                 AttackComplexity::High => "ATTACK_COMPLEXITY_HIGH",
+                AttackComplexity::Medium => "ATTACK_COMPLEXITY_MEDIUM",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2247,6 +2249,7 @@ pub mod cvss {
                 "ATTACK_COMPLEXITY_UNSPECIFIED" => Some(Self::Unspecified),
                 "ATTACK_COMPLEXITY_LOW" => Some(Self::Low),
                 "ATTACK_COMPLEXITY_HIGH" => Some(Self::High),
+                "ATTACK_COMPLEXITY_MEDIUM" => Some(Self::Medium),
                 _ => None,
             }
         }
@@ -2430,6 +2433,8 @@ pub mod cvss {
         High = 1,
         Low = 2,
         None = 3,
+        Partial = 4,
+        Complete = 5,
     }
     impl Impact {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2442,6 +2447,8 @@ pub mod cvss {
                 Impact::High => "IMPACT_HIGH",
                 Impact::Low => "IMPACT_LOW",
                 Impact::None => "IMPACT_NONE",
+                Impact::Partial => "IMPACT_PARTIAL",
+                Impact::Complete => "IMPACT_COMPLETE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2451,6 +2458,8 @@ pub mod cvss {
                 "IMPACT_HIGH" => Some(Self::High),
                 "IMPACT_LOW" => Some(Self::Low),
                 "IMPACT_NONE" => Some(Self::None),
+                "IMPACT_PARTIAL" => Some(Self::Partial),
+                "IMPACT_COMPLETE" => Some(Self::Complete),
                 _ => None,
             }
         }
