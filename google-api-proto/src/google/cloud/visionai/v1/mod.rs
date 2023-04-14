@@ -110,8 +110,9 @@ pub struct OperationMetadata {
     pub status_message: ::prost::alloc::string::String,
     /// Output only. Identifies whether the user has requested cancellation
     /// of the operation. Operations that have successfully been cancelled
-    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
-    /// corresponding to `Code.CANCELLED`.
+    /// have \[Operation.error][\] value with a
+    /// \[google.rpc.Status.code][google.rpc.Status.code\] of 1, corresponding to
+    /// `Code.CANCELLED`.
     #[prost(bool, tag = "6")]
     pub requested_cancellation: bool,
     /// Output only. API version used to start the operation.
@@ -367,10 +368,10 @@ pub struct CreateClusterRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub cluster: ::core::option::Option<Cluster>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -397,10 +398,10 @@ pub struct UpdateClusterRequest {
     /// Required. The resource being updated
     #[prost(message, optional, tag = "2")]
     pub cluster: ::core::option::Option<Cluster>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -420,10 +421,10 @@ pub struct DeleteClusterRequest {
     /// Required. Name of the resource
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -492,10 +493,10 @@ pub struct CreateStreamRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub stream: ::core::option::Option<Stream>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -522,10 +523,10 @@ pub struct UpdateStreamRequest {
     /// Required. The resource being updated.
     #[prost(message, optional, tag = "2")]
     pub stream: ::core::option::Option<Stream>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -545,10 +546,10 @@ pub struct DeleteStreamRequest {
     /// Required. Name of the resource.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -571,14 +572,14 @@ pub struct GetStreamThumbnailRequest {
     /// Required. The name of the GCS object to store the thumbnail image.
     #[prost(string, tag = "2")]
     pub gcs_object_name: ::prost::alloc::string::String,
-    /// Optional. The name of the event. If unspecified, the thumbnail will be retrieved from
-    /// the latest event.
+    /// Optional. The name of the event. If unspecified, the thumbnail will be
+    /// retrieved from the latest event.
     #[prost(string, tag = "3")]
     pub event: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify the requests. Specify a unique request
-    /// ID so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify the requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -676,10 +677,10 @@ pub struct CreateEventRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub event: ::core::option::Option<Event>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -706,10 +707,10 @@ pub struct UpdateEventRequest {
     /// Required. The resource being updated.
     #[prost(message, optional, tag = "2")]
     pub event: ::core::option::Option<Event>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -729,10 +730,10 @@ pub struct DeleteEventRequest {
     /// Required. Name of the resource.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -801,10 +802,10 @@ pub struct CreateSeriesRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub series: ::core::option::Option<Series>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -821,8 +822,8 @@ pub struct CreateSeriesRequest {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdateSeriesRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the Series
-    /// resource by the update. The fields specified in the update_mask are
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Series resource by the update. The fields specified in the update_mask are
     /// relative to the resource, not the full request. A field will be overwritten
     /// if it is in the mask. If the user does not provide a mask then all fields
     /// will be overwritten.
@@ -831,10 +832,10 @@ pub struct UpdateSeriesRequest {
     /// Required. The resource being updated
     #[prost(message, optional, tag = "2")]
     pub series: ::core::option::Option<Series>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -854,10 +855,10 @@ pub struct DeleteSeriesRequest {
     /// Required. Name of the resource.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -883,10 +884,10 @@ pub struct MaterializeChannelRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub channel: ::core::option::Option<Channel>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -3883,6 +3884,112 @@ pub struct AnalysisDefinition {
     #[prost(message, repeated, tag = "1")]
     pub analyzers: ::prost::alloc::vec::Vec<AnalyzerDefinition>,
 }
+/// Message describing the status of the Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunStatus {
+    /// The state of the Process.
+    #[prost(enumeration = "run_status::State", tag = "1")]
+    pub state: i32,
+    /// The reason of becoming the state.
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `RunStatus`.
+pub mod run_status {
+    /// State represents the running status of the Process.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// State is unspecified.
+        Unspecified = 0,
+        /// INITIALIZING means the Process is scheduled but yet ready to handle
+        /// real traffic.
+        Initializing = 1,
+        /// RUNNING means the Process is up running and handling traffic.
+        Running = 2,
+        /// COMPLETED means the Process has completed the processing, especially
+        /// for non-streaming use case.
+        Completed = 3,
+        /// FAILED means the Process failed to complete the processing.
+        Failed = 4,
+        /// PENDING means the Process is created but yet to be scheduled.
+        Pending = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Initializing => "INITIALIZING",
+                State::Running => "RUNNING",
+                State::Completed => "COMPLETED",
+                State::Failed => "FAILED",
+                State::Pending => "PENDING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "INITIALIZING" => Some(Self::Initializing),
+                "RUNNING" => Some(Self::Running),
+                "COMPLETED" => Some(Self::Completed),
+                "FAILED" => Some(Self::Failed),
+                "PENDING" => Some(Self::Pending),
+                _ => None,
+            }
+        }
+    }
+}
+/// RunMode represents the mode to launch the Process on.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RunMode {
+    /// Mode is unspecified.
+    Unspecified = 0,
+    /// Live mode. Meaning the Process is launched to handle live video
+    /// source, and possible packet drops are expected.
+    Live = 1,
+    /// Submission mode. Meaning the Process is launched to handle bounded video
+    /// files, with no packet drop. Completion status is tracked.
+    Submission = 2,
+}
+impl RunMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RunMode::Unspecified => "RUN_MODE_UNSPECIFIED",
+            RunMode::Live => "LIVE",
+            RunMode::Submission => "SUBMISSION",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "RUN_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+            "LIVE" => Some(Self::Live),
+            "SUBMISSION" => Some(Self::Submission),
+            _ => None,
+        }
+    }
+}
 /// Message describing the Analysis object.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3923,6 +4030,53 @@ pub struct Analysis {
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
+    /// Boolean flag to indicate whether you would like to disable the ability
+    /// to automatically start a Process when new event happening in the input
+    /// Stream. If you would like to start a Process manually, the field needs
+    /// to be set to true.
+    #[prost(bool, tag = "8")]
+    pub disable_event_watch: bool,
+}
+/// Message describing the Process object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Process {
+    /// The name of resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. Reference to an existing Analysis resource.
+    #[prost(string, tag = "4")]
+    pub analysis: ::prost::alloc::string::String,
+    /// Optional. Attribute overrides of the Analyzers.
+    /// Format for each single override item:
+    /// "{analyzer_name}:{attribute_key}={value}"
+    #[prost(string, repeated, tag = "5")]
+    pub attribute_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Status of the Process.
+    #[prost(message, optional, tag = "6")]
+    pub run_status: ::core::option::Option<RunStatus>,
+    /// Optional. Run mode of the Process.
+    #[prost(enumeration = "RunMode", tag = "7")]
+    pub run_mode: i32,
+    /// Optional. Event ID of the input/output streams.
+    /// This is useful when you have a StreamSource/StreamSink operator in the
+    /// Analysis, and you want to manually specify the Event to read from/write to.
+    #[prost(string, tag = "8")]
+    pub event_id: ::prost::alloc::string::String,
+    /// Optional. Optional: Batch ID of the Process.
+    #[prost(string, tag = "9")]
+    pub batch_id: ::prost::alloc::string::String,
+    /// Optional. Optional: The number of retries for a process in submission mode
+    /// the system should try before declaring failure. By default, no retry will
+    /// be performed.
+    #[prost(int32, tag = "10")]
+    pub retry_count: i32,
 }
 /// The descriptor for a gstreamer buffer payload.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -4063,8 +4217,8 @@ pub struct PacketHeader {
     /// Immutable. Packet flag set. SDK will set the flag automatically.
     #[prost(int32, tag = "6")]
     pub flags: i32,
-    /// Immutable. Header string for tracing across services. It should be set when the packet
-    /// is first arrived in the stream server.
+    /// Immutable. Header string for tracing across services. It should be set when
+    /// the packet is first arrived in the stream server.
     ///
     /// The input format is a lowercase hex string:
     ///    - version_id: 1 byte, currently must be zero - hex encoded (2 characters)
@@ -4800,10 +4954,10 @@ pub struct CreateAnalysisRequest {
     /// Required. The resource being created.
     #[prost(message, optional, tag = "3")]
     pub analysis: ::core::option::Option<Analysis>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -4830,10 +4984,10 @@ pub struct UpdateAnalysisRequest {
     /// Required. The resource being updated.
     #[prost(message, optional, tag = "2")]
     pub analysis: ::core::option::Option<Analysis>,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes since the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -4853,10 +5007,10 @@ pub struct DeleteAnalysisRequest {
     /// Required. Name of the resource.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique request ID
-    /// so that if you must retry your request, the server will know to ignore
-    /// the request if it has already been completed. The server will guarantee
-    /// that for at least 60 minutes after the first request.
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
     ///
     /// For example, consider a situation where you make an initial request and the
     /// request times out. If you make the request again with the same request ID,
@@ -4868,6 +5022,175 @@ pub struct DeleteAnalysisRequest {
     /// not supported (00000000-0000-0000-0000-000000000000).
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
+}
+/// Message for requesting list of Processes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProcessesRequest {
+    /// Required. Parent value for ListProcessesRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Processes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProcessesResponse {
+    /// The list of Processes.
+    #[prost(message, repeated, tag = "1")]
+    pub processes: ::prost::alloc::vec::Vec<Process>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProcessRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateProcessRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub process_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub process: ::core::option::Option<Process>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateProcessRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Process resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated.
+    #[prost(message, optional, tag = "2")]
+    pub process: ::core::option::Option<Process>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteProcessRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Request message for running the processes in a batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchRunProcessRequest {
+    /// Required. The parent resource shared by all processes being created.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The create process requests.
+    #[prost(message, repeated, tag = "2")]
+    pub requests: ::prost::alloc::vec::Vec<CreateProcessRequest>,
+    /// Optional. Options for batch processes.
+    #[prost(message, optional, tag = "3")]
+    pub options: ::core::option::Option<
+        batch_run_process_request::BatchRunProcessOptions,
+    >,
+    /// Output only. The batch ID.
+    #[prost(string, tag = "4")]
+    pub batch_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `BatchRunProcessRequest`.
+pub mod batch_run_process_request {
+    /// Options for batch processes.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct BatchRunProcessOptions {
+        /// The retry counts per process. Default: 3.
+        #[prost(int32, tag = "1")]
+        pub retry_count: i32,
+        /// The batch size. Default: 5, maximum: 100.
+        #[prost(int32, tag = "2")]
+        pub batch_size: i32,
+    }
+}
+/// Response message for running the processes in a batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchRunProcessResponse {
+    /// The batch ID.
+    #[prost(string, tag = "1")]
+    pub batch_id: ::prost::alloc::string::String,
+    /// Processes created.
+    #[prost(message, repeated, tag = "2")]
+    pub processes: ::prost::alloc::vec::Vec<Process>,
 }
 /// Generated client implementations.
 pub mod live_video_analytics_client {
@@ -5035,6 +5358,139 @@ pub mod live_video_analytics_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteAnalysis",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Processes in a given project and location.
+        pub async fn list_processes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProcessesRequest>,
+        ) -> Result<tonic::Response<super::ListProcessesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListProcesses",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Process.
+        pub async fn get_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProcessRequest>,
+        ) -> Result<tonic::Response<super::Process>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Process in a given project and location.
+        pub async fn create_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Process.
+        pub async fn update_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Process.
+        pub async fn delete_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Run all of the processes to "completion". Max time for each process is
+        /// the LRO time limit.
+        pub async fn batch_run_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchRunProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/BatchRunProcess",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

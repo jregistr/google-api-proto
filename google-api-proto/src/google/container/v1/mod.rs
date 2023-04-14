@@ -2078,7 +2078,11 @@ pub struct ClusterUpdate {
 /// ranges supporting the ClusterUpdate message.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AdditionalPodRangesConfig {}
+pub struct AdditionalPodRangesConfig {
+    /// Name for pod secondary ipv4 range which has the actual range defined ahead.
+    #[prost(string, repeated, tag = "1")]
+    pub pod_range_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// This operation resource represents operations that may have happened or are
 /// happening on the cluster. All fields are output only.
 #[allow(clippy::derive_partial_eq_without_eq)]

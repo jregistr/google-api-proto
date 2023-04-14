@@ -470,6 +470,10 @@ pub struct QueuedResource {
     /// Output only. State of the QueuedResource request.
     #[prost(message, optional, tag = "6")]
     pub state: ::core::option::Option<QueuedResourceState>,
+    /// Name of the reservation in which the resource should be provisioned.
+    /// Format: projects/{project}/locations/{zone}/reservations/{reservation}
+    #[prost(string, tag = "8")]
+    pub reservation_name: ::prost::alloc::string::String,
     /// Resource specification.
     #[prost(oneof = "queued_resource::Resource", tags = "2")]
     pub resource: ::core::option::Option<queued_resource::Resource>,
@@ -883,7 +887,7 @@ pub struct CreateQueuedResourceRequest {
     /// Required. The parent resource name.
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
-    /// The unqualified resource name. Should follow the ^\[A-Za-z0-9_.~+%-\]+$
+    /// The unqualified resource name. Should follow the `^\[A-Za-z0-9_.~+%-\]+$`
     /// regex format.
     #[prost(string, tag = "2")]
     pub queued_resource_id: ::prost::alloc::string::String,
@@ -905,6 +909,15 @@ pub struct DeleteQueuedResourceRequest {
     /// Idempotent request UUID.
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
+}
+/// Request for
+/// \[ResetQueuedResource][google.cloud.tpu.v2alpha1.Tpu.ResetQueuedResource\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ResetQueuedResourceRequest {
+    /// Required. The name of the queued resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
 }
 /// The per-product per-project service identity for Cloud TPU service.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1563,6 +1576,29 @@ pub mod tpu_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.tpu.v2alpha1.Tpu/DeleteQueuedResource",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Resets a QueuedResource TPU instance
+        pub async fn reset_queued_resource(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ResetQueuedResourceRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.tpu.v2alpha1.Tpu/ResetQueuedResource",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
