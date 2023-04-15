@@ -8,7 +8,7 @@ pub struct Address {
     /// the address formatting rules of the region where the address is located.
     #[prost(string, tag = "2")]
     pub formatted_address: ::prost::alloc::string::String,
-    /// The validated address represented as a postal address.
+    /// The post-processed address represented as a postal address.
     #[prost(message, optional, tag = "3")]
     pub postal_address: ::core::option::Option<
         super::super::super::r#type::PostalAddress,

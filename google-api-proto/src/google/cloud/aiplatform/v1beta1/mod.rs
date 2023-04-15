@@ -9557,6 +9557,13 @@ pub struct Tensorboard {
     /// "overwrite" update happens.
     #[prost(string, tag = "9")]
     pub etag: ::prost::alloc::string::String,
+    /// Used to indicate if the TensorBoard instance is the default one.
+    /// Each project & region can have at most one default TensorBoard instance.
+    /// Creation of a default TensorBoard instance and updating an existing
+    /// TensorBoard instance to be default will mark all other TensorBoard
+    /// instances (if any) as non default.
+    #[prost(bool, tag = "12")]
+    pub is_default: bool,
 }
 /// DataLabelingJob is used to trigger a human labeling job on unlabeled data
 /// from the following Dataset:
