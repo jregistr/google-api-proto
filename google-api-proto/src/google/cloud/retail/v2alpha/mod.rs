@@ -8335,11 +8335,8 @@ pub mod merchant_center_account_link_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Creates a MerchantCenterAccountLink.
-        ///
-        /// [MerchantCenterAccountLink][google.cloud.retail.v2alpha.MerchantCenterAccountLink]
-        /// cannot be set to a different oneof field, if so an INVALID_ARGUMENT is
-        /// returned.
+        /// Creates a
+        /// [MerchantCenterAccountLink][google.cloud.retail.v2alpha.MerchantCenterAccountLink].
         pub async fn create_merchant_center_account_link(
             &mut self,
             request: impl tonic::IntoRequest<
@@ -8364,7 +8361,8 @@ pub mod merchant_center_account_link_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Deletes a MerchantCenterAccountLink.
+        /// Deletes a
+        /// [MerchantCenterAccountLink][google.cloud.retail.v2alpha.MerchantCenterAccountLink].
         /// If the
         /// [MerchantCenterAccountLink][google.cloud.retail.v2alpha.MerchantCenterAccountLink]
         /// to delete does not exist, a NOT_FOUND error is returned.

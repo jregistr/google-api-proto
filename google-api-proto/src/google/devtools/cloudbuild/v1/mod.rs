@@ -51,6 +51,34 @@ pub struct StorageSource {
     #[prost(int64, tag = "3")]
     pub generation: i64,
 }
+/// Location of the source in any accessible Git repository.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GitSource {
+    /// Location of the Git repo to build.
+    ///
+    /// This will be used as a `git remote`, see
+    /// <https://git-scm.com/docs/git-remote.>
+    #[prost(string, tag = "1")]
+    pub url: ::prost::alloc::string::String,
+    /// Directory, relative to the source root, in which to run the build.
+    ///
+    /// This must be a relative path. If a step's `dir` is specified and is an
+    /// absolute path, this value is ignored for that step's execution.
+    #[prost(string, tag = "5")]
+    pub dir: ::prost::alloc::string::String,
+    /// The revision to fetch from the Git repository such as a branch, a tag, a
+    /// commit SHA, or any Git ref.
+    ///
+    /// Cloud Build uses `git fetch` to fetch the revision from the Git
+    /// repository; therefore make sure that the string you provide for `revision`
+    /// is parsable  by the command. For information on string values accepted by
+    /// `git fetch`, see
+    /// <https://git-scm.com/docs/gitrevisions#_specifying_revisions.> For
+    /// information on `git fetch`, see <https://git-scm.com/docs/git-fetch.>
+    #[prost(string, tag = "6")]
+    pub revision: ::prost::alloc::string::String,
+}
 /// Location of the source in a Google Cloud Source Repository.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -134,7 +162,7 @@ pub struct StorageSourceManifest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Source {
     /// Location of source.
-    #[prost(oneof = "source::Source", tags = "2, 3, 8")]
+    #[prost(oneof = "source::Source", tags = "2, 3, 5, 8")]
     pub source: ::core::option::Option<source::Source>,
 }
 /// Nested message and enum types in `Source`.
@@ -150,6 +178,9 @@ pub mod source {
         /// Repository.
         #[prost(message, tag = "3")]
         RepoSource(super::RepoSource),
+        /// If provided, get the source from this Git repository.
+        #[prost(message, tag = "5")]
+        GitSource(super::GitSource),
         /// If provided, get the source from this manifest in Google Cloud Storage.
         /// This feature is in Preview; see description
         /// \[here\](<https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/gcs-fetcher>).
