@@ -2111,10 +2111,23 @@ pub struct Operation {
     #[deprecated]
     #[prost(string, tag = "5")]
     pub status_message: ::prost::alloc::string::String,
-    /// Server-defined URL for the resource.
+    /// Server-defined URI for the operation. Example:
+    /// `<https://container.googleapis.com/v1alpha1/projects/123/locations/us-central1/operations/operation-123`.>
     #[prost(string, tag = "6")]
     pub self_link: ::prost::alloc::string::String,
-    /// Server-defined URL for the target of the operation.
+    /// Server-defined URI for the target of the operation. The format of this is a
+    /// URI to the resource being modified (such as a cluster, node pool, or node).
+    /// For node pool repairs, there may be multiple nodes being repaired, but only
+    /// one will be the target.
+    ///
+    /// Examples:
+    ///
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/locations/us-central1/clusters/my-cluster`>
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np`>
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np/node/my-node`>
     #[prost(string, tag = "7")]
     pub target_link: ::prost::alloc::string::String,
     /// [Output only] The name of the Google Compute Engine
@@ -2202,7 +2215,7 @@ pub mod operation {
             }
         }
     }
-    /// Operation type.
+    /// Operation type categorizes the operation.
     #[derive(
         Clone,
         Copy,
@@ -2218,38 +2231,104 @@ pub mod operation {
     pub enum Type {
         /// Not set.
         Unspecified = 0,
-        /// Cluster create.
+        /// The cluster is being created. The cluster should be assumed to be
+        /// unusable until the operation finishes.
+        ///
+        /// In the event of the operation failing, the cluster will enter the [ERROR
+        /// state]\[Cluster.Status.ERROR\] and eventually be deleted.
         CreateCluster = 1,
-        /// Cluster delete.
+        /// The cluster is being deleted. The cluster should be assumed to be
+        /// unusable as soon as this operation starts.
+        ///
+        /// In the event of the operation failing, the cluster will enter the [ERROR
+        /// state]\[Cluster.Status.ERROR\] and the deletion will be automatically
+        /// retried until completed.
         DeleteCluster = 2,
-        /// A master upgrade.
+        /// The [cluster
+        /// version]\[google.container.v1.ClusterUpdate.desired_master_version\] is
+        /// being updated. Note that this includes "upgrades" to the same version,
+        /// which are simply a recreation. This also includes
+        /// \[auto-upgrades\](<https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-upgrades#upgrading_automatically>).
+        /// For more details, see [documentation on cluster
+        /// upgrades](<https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-upgrades#cluster_upgrades>).
         UpgradeMaster = 3,
-        /// A node upgrade.
+        /// A node pool is being updated. Despite calling this an "upgrade", this
+        /// includes most forms of updates to node pools. This also includes
+        /// \[auto-upgrades\](<https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades>).
+        ///
+        /// This operation sets the
+        /// \[progress][google.container.v1.Operation.progress\] field and may be
+        /// \[canceled][google.container.v1.ClusterManager.CancelOperation\].
+        ///
+        /// The upgrade strategy depends on [node pool
+        /// configuration](<https://cloud.google.com/kubernetes-engine/docs/concepts/node-pool-upgrade-strategies>).
+        /// The nodes are generally still usable during this operation.
         UpgradeNodes = 4,
-        /// Cluster repair.
+        /// A problem has been detected with the control plane and is being repaired.
+        /// This operation type is initiated by GKE. For more details, see
+        /// [documentation on
+        /// repairs](<https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#repairs>).
         RepairCluster = 5,
-        /// Cluster update.
+        /// The cluster is being updated. This is a broad category of operations and
+        /// includes operations that only change metadata as well as those that must
+        /// recreate the entire cluster. If the control plane must be recreated, this
+        /// will cause temporary downtime for zonal clusters.
+        ///
+        /// Some features require recreating the nodes as well. Those will be
+        /// recreated as separate operations and the update may not be completely
+        /// functional until the node pools recreations finish. Node recreations will
+        /// generally follow [maintenance
+        /// policies](<https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions>).
+        ///
+        /// Some GKE-initiated operations use this type. This includes certain types
+        /// of auto-upgrades and incident mitigations.
         UpdateCluster = 6,
-        /// Node pool create.
+        /// A node pool is being created. The node pool should be assumed to be
+        /// unusable until this operation finishes. In the event of an error, the
+        /// node pool may be partially created.
+        ///
+        /// If enabled, [node
+        /// autoprovisioning](<https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning>)
+        /// may have automatically initiated such operations.
         CreateNodePool = 7,
-        /// Node pool delete.
+        /// The node pool is being deleted. The node pool should be assumed to be
+        /// unusable as soon as this operation starts.
         DeleteNodePool = 8,
-        /// Set node pool management.
+        /// The node pool's \[manamagent][google.container.v1.NodePool.management\]
+        /// field is being updated. These operations only update metadata and may be
+        /// concurrent with most other operations.
         SetNodePoolManagement = 9,
-        /// Automatic node pool repair.
+        /// A problem has been detected with nodes and [they are being
+        /// repaired](<https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>).
+        /// This operation type is initiated by GKE, typically automatically. This
+        /// operation may be concurrent with other operations and there may be
+        /// multiple repairs occurring on the same node pool.
         AutoRepairNodes = 10,
-        /// Automatic node upgrade.
+        /// Unused. Automatic node upgrade uses
+        /// \[UPGRADE_NODES][google.container.v1.Operation.Type.UPGRADE_NODES\].
         AutoUpgradeNodes = 11,
-        /// Set labels.
+        /// Unused. Updating labels uses
+        /// \[UPDATE_CLUSTER][google.container.v1.Operation.Type.UPDATE_CLUSTER\].
         SetLabels = 12,
-        /// Set/generate master auth materials
+        /// Unused. Updating master auth uses
+        /// \[UPDATE_CLUSTER][google.container.v1.Operation.Type.UPDATE_CLUSTER\].
         SetMasterAuth = 13,
-        /// Set node pool size.
+        /// The node pool is being resized. With the exception of resizing to or from
+        /// size zero, the node pool is generally usable during this operation.
         SetNodePoolSize = 14,
-        /// Updates network policy for a cluster.
+        /// Unused. Updating network policy uses
+        /// \[UPDATE_CLUSTER][google.container.v1.Operation.Type.UPDATE_CLUSTER\].
         SetNetworkPolicy = 15,
-        /// Set the maintenance policy.
+        /// Unused. Updating maintenance policy uses
+        /// \[UPDATE_CLUSTER][google.container.v1.Operation.Type.UPDATE_CLUSTER\].
         SetMaintenancePolicy = 16,
+        /// The control plane is being resized. This operation type is initiated by
+        /// GKE. These operations are often performed preemptively to ensure that the
+        /// control plane has sufficient resources and is not typically an indication
+        /// of issues. For more details, see
+        /// [documentation on
+        /// resizes](<https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#repairs>).
+        ResizeCluster = 18,
     }
     impl Type {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2275,6 +2354,7 @@ pub mod operation {
                 Type::SetNodePoolSize => "SET_NODE_POOL_SIZE",
                 Type::SetNetworkPolicy => "SET_NETWORK_POLICY",
                 Type::SetMaintenancePolicy => "SET_MAINTENANCE_POLICY",
+                Type::ResizeCluster => "RESIZE_CLUSTER",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2297,6 +2377,7 @@ pub mod operation {
                 "SET_NODE_POOL_SIZE" => Some(Self::SetNodePoolSize),
                 "SET_NETWORK_POLICY" => Some(Self::SetNetworkPolicy),
                 "SET_MAINTENANCE_POLICY" => Some(Self::SetMaintenancePolicy),
+                "RESIZE_CLUSTER" => Some(Self::ResizeCluster),
                 _ => None,
             }
         }
@@ -5092,13 +5173,13 @@ pub struct MeshCertificates {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DatabaseEncryption {
-    /// Denotes the state of etcd encryption.
-    #[prost(enumeration = "database_encryption::State", tag = "2")]
-    pub state: i32,
     /// Name of CloudKMS key to use for the encryption of secrets in etcd.
     /// Ex. projects/my-project/locations/global/keyRings/my-ring/cryptoKeys/my-key
     #[prost(string, tag = "1")]
     pub key_name: ::prost::alloc::string::String,
+    /// The desired state of etcd encryption.
+    #[prost(enumeration = "database_encryption::State", tag = "2")]
+    pub state: i32,
 }
 /// Nested message and enum types in `DatabaseEncryption`.
 pub mod database_encryption {
