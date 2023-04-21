@@ -89,7 +89,6 @@ pub mod beyondcorp;
         feature = "google-cloud-bigquery-storage-v1",
         feature = "google-cloud-bigquery-storage-v1beta1",
         feature = "google-cloud-bigquery-storage-v1beta2",
-        feature = "google-cloud-bigquery-v2",
     )
 )]
 pub mod bigquery;

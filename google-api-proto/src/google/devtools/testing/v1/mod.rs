@@ -1714,6 +1714,10 @@ pub mod test_execution_service_client {
         /// Unsupported environments will be returned in the state UNSUPPORTED.
         /// A test matrix is limited to use at most 2000 devices in parallel.
         ///
+        /// The returned matrix will not yet contain
+        /// the executions that will be created for this matrix. That happens later on
+        /// and will require a call to GetTestMatrix.
+        ///
         /// May return any of the following canonical error codes:
         ///
         /// - PERMISSION_DENIED - if the user is not authorized to write to project
@@ -1738,7 +1742,14 @@ pub mod test_execution_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-        /// Checks the status of a test matrix.
+        /// Checks the status of a test matrix and the executions once they
+        /// are created.
+        ///
+        /// The test matrix will contain the list of test executions to run if and only
+        /// if the resultStorage.toolResultsExecution fields have been populated.
+        ///
+        /// Note: Flaky test executions may still be added to the matrix at a later
+        /// stage.
         ///
         /// May return any of the following canonical error codes:
         ///

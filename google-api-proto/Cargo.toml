@@ -147,7 +147,6 @@ google-cloud-bigquery-reservation-v1 = ["google-api", "google-cloud", "google-rp
 google-cloud-bigquery-storage-v1 = ["google-api", "google-cloud", "google-rpc"]
 google-cloud-bigquery-storage-v1beta1 = ["google-api", "google-cloud"]
 google-cloud-bigquery-storage-v1beta2 = ["google-api", "google-cloud", "google-rpc"]
-google-cloud-bigquery-v2 = ["google-api", "google-cloud"]
 google-cloud-billing-budgets-v1 = ["google-api", "google-cloud", "google-type"]
 google-cloud-billing-budgets-v1beta1 = ["google-api", "google-cloud", "google-type"]
 google-cloud-billing-v1 = ["google-api", "google-cloud", "google-iam-v1", "google-type"]

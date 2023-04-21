@@ -44,5 +44,3 @@ pub mod reservation;
     )
 )]
 pub mod storage;
-#[cfg(any(feature = "google-cloud-bigquery-v2"))]
-pub mod v2;
