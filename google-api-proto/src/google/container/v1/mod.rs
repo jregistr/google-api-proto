@@ -2122,12 +2122,12 @@ pub struct Operation {
     ///
     /// Examples:
     ///
-    ///    -
-    ///    `<https://container.googleapis.com/v1/projects/123/locations/us-central1/clusters/my-cluster`>
-    ///    -
-    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np`>
-    ///    -
-    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np/node/my-node`>
+    /// -
+    /// `<https://container.googleapis.com/v1/projects/123/locations/us-central1/clusters/my-cluster`>
+    /// -
+    /// `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np`>
+    /// -
+    /// `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np/node/my-node`>
     #[prost(string, tag = "7")]
     pub target_link: ::prost::alloc::string::String,
     /// [Output only] The name of the Google Compute Engine
