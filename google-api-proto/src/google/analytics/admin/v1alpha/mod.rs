@@ -1129,6 +1129,191 @@ impl AudienceFilterScope {
         }
     }
 }
+/// A specific filter for a single dimension.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGroupFilter {
+    /// Required. Immutable. The dimension name to filter.
+    #[prost(string, tag = "1")]
+    pub field_name: ::prost::alloc::string::String,
+    /// A StringFilter or InListFilter that defines this filters behavior.
+    #[prost(oneof = "channel_group_filter::ValueFilter", tags = "2, 3")]
+    pub value_filter: ::core::option::Option<channel_group_filter::ValueFilter>,
+}
+/// Nested message and enum types in `ChannelGroupFilter`.
+pub mod channel_group_filter {
+    /// Filter where the field value is a String. The match is case insensitive.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StringFilter {
+        /// Required. The match type for the string filter.
+        #[prost(enumeration = "string_filter::MatchType", tag = "1")]
+        pub match_type: i32,
+        /// Required. The string value to be matched against.
+        #[prost(string, tag = "2")]
+        pub value: ::prost::alloc::string::String,
+    }
+    /// Nested message and enum types in `StringFilter`.
+    pub mod string_filter {
+        /// How the filter will be used to determine a match.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MatchType {
+            /// Default match type.
+            Unspecified = 0,
+            /// Exact match of the string value.
+            Exact = 1,
+            /// Begins with the string value.
+            BeginsWith = 2,
+            /// Ends with the string value.
+            EndsWith = 3,
+            /// Contains the string value.
+            Contains = 4,
+            /// Full regular expression match with the string value.
+            FullRegexp = 5,
+            /// Partial regular expression match with the string value.
+            PartialRegexp = 6,
+        }
+        impl MatchType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                    MatchType::Exact => "EXACT",
+                    MatchType::BeginsWith => "BEGINS_WITH",
+                    MatchType::EndsWith => "ENDS_WITH",
+                    MatchType::Contains => "CONTAINS",
+                    MatchType::FullRegexp => "FULL_REGEXP",
+                    MatchType::PartialRegexp => "PARTIAL_REGEXP",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "MATCH_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "EXACT" => Some(Self::Exact),
+                    "BEGINS_WITH" => Some(Self::BeginsWith),
+                    "ENDS_WITH" => Some(Self::EndsWith),
+                    "CONTAINS" => Some(Self::Contains),
+                    "FULL_REGEXP" => Some(Self::FullRegexp),
+                    "PARTIAL_REGEXP" => Some(Self::PartialRegexp),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// A filter for a string dimension that matches a particular list of options.
+    /// The match is case insensitive.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InListFilter {
+        /// Required. The list of possible string values to match against. Must be
+        /// non-empty.
+        #[prost(string, repeated, tag = "1")]
+        pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// A StringFilter or InListFilter that defines this filters behavior.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ValueFilter {
+        /// A filter for a string-type dimension that matches a particular pattern.
+        #[prost(message, tag = "2")]
+        StringFilter(StringFilter),
+        /// A filter for a string dimension that matches a particular list of
+        /// options.
+        #[prost(message, tag = "3")]
+        InListFilter(InListFilter),
+    }
+}
+/// A logical expression of Channel Group dimension filters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGroupFilterExpression {
+    /// The expression applied to a filter.
+    #[prost(oneof = "channel_group_filter_expression::Expr", tags = "1, 2, 3, 4")]
+    pub expr: ::core::option::Option<channel_group_filter_expression::Expr>,
+}
+/// Nested message and enum types in `ChannelGroupFilterExpression`.
+pub mod channel_group_filter_expression {
+    /// The expression applied to a filter.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Expr {
+        /// A list of expressions to be AND’ed together. It can only contain
+        /// ChannelGroupFilterExpressions with or_group. This must be set for the
+        /// top level ChannelGroupFilterExpression.
+        #[prost(message, tag = "1")]
+        AndGroup(super::ChannelGroupFilterExpressionList),
+        /// A list of expressions to OR’ed together. It cannot contain
+        /// ChannelGroupFilterExpressions with and_group or or_group.
+        #[prost(message, tag = "2")]
+        OrGroup(super::ChannelGroupFilterExpressionList),
+        /// A filter expression to be NOT'ed (that is inverted, complemented). It
+        /// can only include a dimension_or_metric_filter. This cannot be set on the
+        /// top level ChannelGroupFilterExpression.
+        #[prost(message, tag = "3")]
+        NotExpression(::prost::alloc::boxed::Box<super::ChannelGroupFilterExpression>),
+        /// A filter on a single dimension. This cannot be set on the top
+        /// level ChannelGroupFilterExpression.
+        #[prost(message, tag = "4")]
+        Filter(super::ChannelGroupFilter),
+    }
+}
+/// A list of Channel Group filter expressions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGroupFilterExpressionList {
+    /// A list of Channel Group filter expressions.
+    #[prost(message, repeated, tag = "1")]
+    pub filter_expressions: ::prost::alloc::vec::Vec<ChannelGroupFilterExpression>,
+}
+/// The rules that govern how traffic is grouped into one channel.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GroupingRule {
+    /// Required. Customer defined display name for the channel.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The Filter Expression that defines the Grouping Rule.
+    #[prost(message, optional, tag = "2")]
+    pub expression: ::core::option::Option<ChannelGroupFilterExpression>,
+}
+/// A resource message representing a Channel Group.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChannelGroup {
+    /// Output only. The resource name for this Channel Group resource.
+    /// Format: properties/{property}/channelGroups/{channel_group}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the Channel Group. Max length of 80
+    /// characters.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the Channel Group. Max length of 256 characters.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. The grouping rules of channels. Maximum number of rules is 25.
+    #[prost(message, repeated, tag = "4")]
+    pub grouping_rule: ::prost::alloc::vec::Vec<GroupingRule>,
+    /// Output only. Default Channel Group defined by Google, which cannot be
+    /// updated.
+    #[prost(bool, tag = "5")]
+    pub system_defined: bool,
+}
 /// A specific filter for a single dimension
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1252,7 +1437,7 @@ pub mod expanded_data_set_filter_expression {
         /// ExpandedDataSetFilterExpression.
         #[prost(message, tag = "1")]
         AndGroup(super::ExpandedDataSetFilterExpressionList),
-        /// A filter expression to be NOT'ed (i.e., inverted, complemented). It
+        /// A filter expression to be NOT'ed (that is, inverted, complemented). It
         /// must include a dimension_filter. This cannot be set on the
         /// top level ExpandedDataSetFilterExpression.
         #[prost(message, tag = "2")]
@@ -1303,7 +1488,7 @@ pub struct ExpandedDataSet {
     pub metric_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     /// Immutable. A logical expression of ExpandedDataSet filters applied to
     /// dimension included in the ExpandedDataSet. This filter is used to reduce
-    /// the number of rows and thus the change of encountering `other row`.
+    /// the number of rows and thus the chance of encountering `other` row.
     #[prost(message, optional, tag = "6")]
     pub dimension_filter_expression: ::core::option::Option<
         ExpandedDataSetFilterExpression,
@@ -1831,7 +2016,7 @@ pub mod change_history_change {
     pub struct ChangeHistoryResource {
         #[prost(
             oneof = "change_history_resource::Resource",
-            tags = "1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21, 23, 24"
+            tags = "1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 24"
         )]
         pub resource: ::core::option::Option<change_history_resource::Resource>,
     }
@@ -1892,6 +2077,9 @@ pub mod change_history_change {
             /// A snapshot of an ExpandedDataSet resource in change history.
             #[prost(message, tag = "21")]
             ExpandedDataSet(super::super::ExpandedDataSet),
+            /// A snapshot of a ChannelGroup resource in change history.
+            #[prost(message, tag = "22")]
+            ChannelGroup(super::super::ChannelGroup),
             /// A snapshot of a BigQuery link resource in change history.
             #[prost(message, tag = "23")]
             BigqueryLink(super::super::BigQueryLink),
@@ -2096,6 +2284,9 @@ pub struct CustomDimension {
     /// If this is an event-scoped dimension, then this is the event parameter
     /// name.
     ///
+    /// If this is an item-scoped dimension, then this is the parameter
+    /// name found in the eCommerce items array.
+    ///
     /// May only contain alphanumeric and underscore characters, starting with a
     /// letter. Max length of 24 characters for user-scoped dimensions, 40
     /// characters for event-scoped dimensions.
@@ -2144,6 +2335,8 @@ pub mod custom_dimension {
         Event = 1,
         /// Dimension scoped to a user.
         User = 2,
+        /// Dimension scoped to eCommerce items
+        Item = 3,
     }
     impl DimensionScope {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2155,6 +2348,7 @@ pub mod custom_dimension {
                 DimensionScope::Unspecified => "DIMENSION_SCOPE_UNSPECIFIED",
                 DimensionScope::Event => "EVENT",
                 DimensionScope::User => "USER",
+                DimensionScope::Item => "ITEM",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2163,6 +2357,7 @@ pub mod custom_dimension {
                 "DIMENSION_SCOPE_UNSPECIFIED" => Some(Self::Unspecified),
                 "EVENT" => Some(Self::Event),
                 "USER" => Some(Self::User),
+                "ITEM" => Some(Self::Item),
                 _ => None,
             }
         }
@@ -5140,7 +5335,7 @@ pub struct DeleteExpandedDataSetRequest {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetExpandedDataSetRequest {
-    /// Required. The name of the Audience to get.
+    /// Required. The name of the ExpandedDataSet to get.
     /// Example format: properties/1234/expandedDataSets/5678
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
@@ -5173,6 +5368,86 @@ pub struct ListExpandedDataSetsResponse {
     /// order.
     #[prost(message, repeated, tag = "1")]
     pub expanded_data_sets: ::prost::alloc::vec::Vec<ExpandedDataSet>,
+    /// A token, which can be sent as `page_token` to retrieve the next page.
+    /// If this field is omitted, there are no subsequent pages.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for CreateChannelGroup RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateChannelGroupRequest {
+    /// Required. The property for which to create a ChannelGroup.
+    /// Example format: properties/1234
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The ChannelGroup to create.
+    #[prost(message, optional, tag = "2")]
+    pub channel_group: ::core::option::Option<ChannelGroup>,
+}
+/// Request message for UpdateChannelGroup RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateChannelGroupRequest {
+    /// Required. The ChannelGroup to update.
+    /// The resource's `name` field is used to identify the ChannelGroup to be
+    /// updated.
+    #[prost(message, optional, tag = "1")]
+    pub channel_group: ::core::option::Option<ChannelGroup>,
+    /// Required. The list of fields to be updated. Field names must be in snake
+    /// case (e.g., "field_to_update"). Omitted fields will not be updated. To
+    /// replace the entire entity, use one path with the string "*" to match all
+    /// fields.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Request message for DeleteChannelGroup RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteChannelGroupRequest {
+    /// Required. The ChannelGroup to delete.
+    /// Example format: properties/1234/channelGroups/5678
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for GetChannelGroup RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetChannelGroupRequest {
+    /// Required. The ChannelGroup to get.
+    /// Example format: properties/1234/channelGroups/5678
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for ListChannelGroups RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListChannelGroupsRequest {
+    /// Required. The property for which to list ChannelGroups.
+    /// Example format: properties/1234
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of resources to return.
+    /// If unspecified, at most 50 resources will be returned.
+    /// The maximum value is 200 (higher values will be coerced to the maximum).
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListChannelGroups` call. Provide
+    /// this to retrieve the subsequent page.
+    ///
+    /// When paginating, all other parameters provided to `ListChannelGroups`
+    /// must match the call that provided the page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for ListChannelGroups RPC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListChannelGroupsResponse {
+    /// List of ChannelGroup. These will be ordered stably, but in an arbitrary
+    /// order.
+    #[prost(message, repeated, tag = "1")]
+    pub channel_groups: ::prost::alloc::vec::Vec<ChannelGroup>,
     /// A token, which can be sent as `page_token` to retrieve the next page.
     /// If this field is omitted, there are no subsequent pages.
     #[prost(string, tag = "2")]
@@ -5341,6 +5616,29 @@ pub struct ListConnectedSiteTagsResponse {
     /// connected site tags will be returned.
     #[prost(message, repeated, tag = "1")]
     pub connected_site_tags: ::prost::alloc::vec::Vec<ConnectedSiteTag>,
+}
+/// Request for looking up GA4 property connected to a UA property.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FetchConnectedGa4PropertyRequest {
+    /// Required. The UA property for which to look up the connected GA4 property.
+    /// Note this request uses the
+    /// internal property ID, not the tracking ID of the form UA-XXXXXX-YY.
+    /// Format: properties/{internal_web_property_id}
+    /// Example: properties/1234
+    #[prost(string, tag = "1")]
+    pub property: ::prost::alloc::string::String,
+}
+/// Response for looking up GA4 property connected to a UA property.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FetchConnectedGa4PropertyResponse {
+    /// The GA4 property connected to the UA property. An empty string is returned
+    /// when there is no connected GA4 property.
+    /// Format: properties/{property_id}
+    /// Example: properties/1234
+    #[prost(string, tag = "1")]
+    pub property: ::prost::alloc::string::String,
 }
 /// Generated client implementations.
 pub mod analytics_admin_service_client {
@@ -7549,6 +7847,106 @@ pub mod analytics_admin_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// Lookup for a single ChannelGroup.
+        pub async fn get_channel_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetChannelGroupRequest>,
+        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetChannelGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists ChannelGroups on a property.
+        pub async fn list_channel_groups(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListChannelGroupsRequest>,
+        ) -> Result<tonic::Response<super::ListChannelGroupsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListChannelGroups",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a ChannelGroup.
+        pub async fn create_channel_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateChannelGroupRequest>,
+        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateChannelGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a ChannelGroup.
+        pub async fn update_channel_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateChannelGroupRequest>,
+        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateChannelGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a ChannelGroup on a property.
+        pub async fn delete_channel_group(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteChannelGroupRequest>,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteChannelGroup",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
         /// Sets the opt out status for the automated GA4 setup process for a UA
         /// property.
         /// Note: this has no effect on GA4 property.
@@ -7759,6 +8157,30 @@ pub mod analytics_admin_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListConnectedSiteTags",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Given a specified UA property, looks up the GA4 property connected to it.
+        /// Note: this cannot be used with GA4 properties.
+        pub async fn fetch_connected_ga4_property(
+            &mut self,
+            request: impl tonic::IntoRequest<super::FetchConnectedGa4PropertyRequest>,
+        ) -> Result<
+            tonic::Response<super::FetchConnectedGa4PropertyResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.analytics.admin.v1alpha.AnalyticsAdminService/FetchConnectedGa4Property",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

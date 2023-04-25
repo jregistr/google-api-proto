@@ -539,13 +539,6 @@ pub mod sql;
 pub mod storageinsights;
 #[cfg(any(feature = "google-cloud-stream-logging-v1"))]
 pub mod stream;
-#[cfg(
-    any(
-        feature = "google-cloud-support-common",
-        feature = "google-cloud-support-v1alpha1",
-    )
-)]
-pub mod support;
 #[cfg(any(feature = "google-cloud-talent-v4", feature = "google-cloud-talent-v4beta1"))]
 pub mod talent;
 #[cfg(
