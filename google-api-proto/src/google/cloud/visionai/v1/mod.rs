@@ -127,6 +127,1735 @@ pub struct GcsSource {
     #[prost(string, repeated, tag = "1")]
     pub uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+/// The descriptor for a gstreamer buffer payload.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GstreamerBufferDescriptor {
+    /// The caps string of the payload.
+    #[prost(string, tag = "1")]
+    pub caps_string: ::prost::alloc::string::String,
+    /// Whether the buffer is a key frame.
+    #[prost(bool, tag = "2")]
+    pub is_key_frame: bool,
+    /// PTS of the frame.
+    #[prost(message, optional, tag = "3")]
+    pub pts_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// DTS of the frame.
+    #[prost(message, optional, tag = "4")]
+    pub dts_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Duration of the frame.
+    #[prost(message, optional, tag = "5")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// The descriptor for a raw image.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RawImageDescriptor {
+    /// Raw image format. Its possible values are: "srgb".
+    #[prost(string, tag = "1")]
+    pub format: ::prost::alloc::string::String,
+    /// The height of the image.
+    #[prost(int32, tag = "2")]
+    pub height: i32,
+    /// The width of the image.
+    #[prost(int32, tag = "3")]
+    pub width: i32,
+}
+/// The message that represents the data type of a packet.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PacketType {
+    /// The type class of the packet. Its possible values are:
+    /// "gst", "protobuf", and "string".
+    #[prost(string, tag = "1")]
+    pub type_class: ::prost::alloc::string::String,
+    /// The type descriptor.
+    #[prost(message, optional, tag = "2")]
+    pub type_descriptor: ::core::option::Option<packet_type::TypeDescriptor>,
+}
+/// Nested message and enum types in `PacketType`.
+pub mod packet_type {
+    /// The message that fully specifies the type of the packet.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TypeDescriptor {
+        /// The type of the packet. Its possible values is codec dependent.
+        ///
+        /// The fully qualified type name is always the concatenation of the
+        /// value in `type_class` together with the value in `type`, separated by a
+        /// '/'.
+        ///
+        /// Note that specific codecs can define their own type hierarchy, and so the
+        /// type string here can in fact be separated by multiple '/'s of its own.
+        ///
+        /// Please see the open source SDK for specific codec documentation.
+        #[prost(string, tag = "1")]
+        pub r#type: ::prost::alloc::string::String,
+        /// Detailed information about the type.
+        ///
+        /// It is non-empty only for specific type class codecs. Needed only when the
+        /// type string alone is not enough to disambiguate the specific type.
+        #[prost(oneof = "type_descriptor::TypeDetails", tags = "2, 3")]
+        pub type_details: ::core::option::Option<type_descriptor::TypeDetails>,
+    }
+    /// Nested message and enum types in `TypeDescriptor`.
+    pub mod type_descriptor {
+        /// Detailed information about the type.
+        ///
+        /// It is non-empty only for specific type class codecs. Needed only when the
+        /// type string alone is not enough to disambiguate the specific type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum TypeDetails {
+            /// GstreamerBufferDescriptor is the descriptor for gstreamer buffer type.
+            #[prost(message, tag = "2")]
+            GstreamerBufferDescriptor(super::super::GstreamerBufferDescriptor),
+            /// RawImageDescriptor is the descriptor for the raw image type.
+            #[prost(message, tag = "3")]
+            RawImageDescriptor(super::super::RawImageDescriptor),
+        }
+    }
+}
+/// The message that represents server metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServerMetadata {
+    /// The offset position for the packet in its stream.
+    #[prost(int64, tag = "1")]
+    pub offset: i64,
+    /// The timestamp at which the stream server receives this packet. This is
+    /// based on the local clock of on the server side. It is guaranteed to be
+    /// monotonically increasing for the packets within each session; however
+    /// this timestamp is not comparable across packets sent to the same stream
+    /// different sessions. Session here refers to one individual gRPC streaming
+    /// request to the stream server.
+    #[prost(message, optional, tag = "2")]
+    pub ingest_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The message that represents series metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SeriesMetadata {
+    /// Series name. It's in the format of
+    /// "projects/{project}/locations/{location}/clusters/{cluster}/series/{stream}".
+    #[prost(string, tag = "1")]
+    pub series: ::prost::alloc::string::String,
+}
+/// The message that represents packet header.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PacketHeader {
+    /// Input only. The capture time of the packet.
+    #[prost(message, optional, tag = "1")]
+    pub capture_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Input only. Immutable. The type of the payload.
+    #[prost(message, optional, tag = "2")]
+    pub r#type: ::core::option::Option<PacketType>,
+    /// Input only. This field is for users to attach user managed metadata.
+    #[prost(message, optional, tag = "3")]
+    pub metadata: ::core::option::Option<::prost_types::Struct>,
+    /// Output only. Metadata that the server appends to each packet before sending
+    /// it to receivers. You don't need to set a value for this field when sending
+    /// packets.
+    #[prost(message, optional, tag = "4")]
+    pub server_metadata: ::core::option::Option<ServerMetadata>,
+    /// Input only. Immutable. Metadata that the server needs to know where to
+    /// write the packets to. It's only required for the first packet.
+    #[prost(message, optional, tag = "5")]
+    pub series_metadata: ::core::option::Option<SeriesMetadata>,
+    /// Immutable. Packet flag set. SDK will set the flag automatically.
+    #[prost(int32, tag = "6")]
+    pub flags: i32,
+    /// Immutable. Header string for tracing across services. It should be set when
+    /// the packet is first arrived in the stream server.
+    ///
+    /// The input format is a lowercase hex string:
+    ///    - version_id: 1 byte, currently must be zero - hex encoded (2 characters)
+    ///    - trace_id: 16 bytes (opaque blob) - hex encoded (32 characters)
+    ///    - span_id: 8 bytes (opaque blob) - hex encoded (16 characters)
+    ///    - trace_options: 1 byte (LSB means tracing enabled) - hex encoded (2
+    ///    characters)
+    /// Example: "00-404142434445464748494a4b4c4d4e4f-6162636465666768-01"
+    ///            v  trace_id                         span_id          options
+    #[prost(string, tag = "7")]
+    pub trace_context: ::prost::alloc::string::String,
+}
+/// The quanta of datum that the series accepts.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Packet {
+    /// The packet header.
+    #[prost(message, optional, tag = "1")]
+    pub header: ::core::option::Option<PacketHeader>,
+    /// The payload of the packet.
+    #[prost(bytes = "bytes", tag = "2")]
+    pub payload: ::prost::bytes::Bytes,
+}
+/// Request message for ReceiveEvents.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceiveEventsRequest {
+    #[prost(oneof = "receive_events_request::Request", tags = "1, 2")]
+    pub request: ::core::option::Option<receive_events_request::Request>,
+}
+/// Nested message and enum types in `ReceiveEventsRequest`.
+pub mod receive_events_request {
+    /// SetupRequest is the first message sent to the service to setup the RPC
+    /// connection.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SetupRequest {
+        /// The cluster name.
+        #[prost(string, tag = "1")]
+        pub cluster: ::prost::alloc::string::String,
+        /// The stream name. The service will return the events for the given stream.
+        #[prost(string, tag = "2")]
+        pub stream: ::prost::alloc::string::String,
+        /// A name for the receiver to self-identify.
+        ///
+        /// This is used to keep track of a receiver's read progress.
+        #[prost(string, tag = "3")]
+        pub receiver: ::prost::alloc::string::String,
+        /// Controller mode configuration for receiving events from the server.
+        #[prost(message, optional, tag = "4")]
+        pub controlled_mode: ::core::option::Option<super::ControlledMode>,
+        /// The maximum duration of server silence before the client determines the
+        /// server unreachable.
+        ///
+        /// The client must either receive an `Event` update or a heart beat message
+        /// before this duration expires; otherwise, the client will automatically
+        /// cancel the current connection and retry.
+        #[prost(message, optional, tag = "5")]
+        pub heartbeat_interval: ::core::option::Option<::prost_types::Duration>,
+        /// The grace period after which a `writes_done_request` is issued, that a
+        /// `WritesDone` is expected from the client.
+        ///
+        /// The server is free to cancel the RPC should this expire.
+        ///
+        /// A system default will be chosen if unset.
+        #[prost(message, optional, tag = "6")]
+        pub writes_done_grace_period: ::core::option::Option<::prost_types::Duration>,
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Request {
+        /// The setup request to setup the RPC connection.
+        #[prost(message, tag = "1")]
+        SetupRequest(SetupRequest),
+        /// This request checkpoints the consumer's read progress.
+        #[prost(message, tag = "2")]
+        CommitRequest(super::CommitRequest),
+    }
+}
+/// The event update message.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EventUpdate {
+    /// The name of the stream that the event is attached to.
+    #[prost(string, tag = "1")]
+    pub stream: ::prost::alloc::string::String,
+    /// The name of the event.
+    #[prost(string, tag = "2")]
+    pub event: ::prost::alloc::string::String,
+    /// The name of the series.
+    #[prost(string, tag = "3")]
+    pub series: ::prost::alloc::string::String,
+    /// The timestamp when the Event update happens.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The offset of the message that will be used to acknowledge of the message
+    /// receiving.
+    #[prost(int64, tag = "5")]
+    pub offset: i64,
+}
+/// Control message for a ReceiveEventsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceiveEventsControlResponse {
+    /// Possible control messages.
+    #[prost(oneof = "receive_events_control_response::Control", tags = "1, 2")]
+    pub control: ::core::option::Option<receive_events_control_response::Control>,
+}
+/// Nested message and enum types in `ReceiveEventsControlResponse`.
+pub mod receive_events_control_response {
+    /// Possible control messages.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Control {
+        /// A server heartbeat.
+        #[prost(bool, tag = "1")]
+        Heartbeat(bool),
+        /// A request to the receiver to complete any final writes followed by a
+        /// `WritesDone`; e.g. issue any final `CommitRequest`s.
+        ///
+        /// May be ignored if `WritesDone` has already been issued at any point
+        /// prior to receiving this message.
+        ///
+        /// If `WritesDone` does not get issued, then the server will forcefully
+        /// cancel the connection, and the receiver will likely receive an
+        /// uninformative after `Read` returns `false` and `Finish` is called.
+        #[prost(bool, tag = "2")]
+        WritesDoneRequest(bool),
+    }
+}
+/// Response message for the ReceiveEvents.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceiveEventsResponse {
+    /// Possible response types.
+    #[prost(oneof = "receive_events_response::Response", tags = "1, 2")]
+    pub response: ::core::option::Option<receive_events_response::Response>,
+}
+/// Nested message and enum types in `ReceiveEventsResponse`.
+pub mod receive_events_response {
+    /// Possible response types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Response {
+        /// The event update message.
+        #[prost(message, tag = "1")]
+        EventUpdate(super::EventUpdate),
+        /// A control message from the server.
+        #[prost(message, tag = "2")]
+        Control(super::ReceiveEventsControlResponse),
+    }
+}
+/// The lease message.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Lease {
+    /// The lease id.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The series name.
+    #[prost(string, tag = "2")]
+    pub series: ::prost::alloc::string::String,
+    /// The owner name.
+    #[prost(string, tag = "3")]
+    pub owner: ::prost::alloc::string::String,
+    /// The lease expire time.
+    #[prost(message, optional, tag = "4")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The lease type.
+    #[prost(enumeration = "LeaseType", tag = "5")]
+    pub lease_type: i32,
+}
+/// Request message for acquiring a lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AcquireLeaseRequest {
+    /// The series name.
+    #[prost(string, tag = "1")]
+    pub series: ::prost::alloc::string::String,
+    /// The owner name.
+    #[prost(string, tag = "2")]
+    pub owner: ::prost::alloc::string::String,
+    /// The lease term.
+    #[prost(message, optional, tag = "3")]
+    pub term: ::core::option::Option<::prost_types::Duration>,
+    /// The lease type.
+    #[prost(enumeration = "LeaseType", tag = "4")]
+    pub lease_type: i32,
+}
+/// Request message for renewing a lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RenewLeaseRequest {
+    /// Lease id.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Series name.
+    #[prost(string, tag = "2")]
+    pub series: ::prost::alloc::string::String,
+    /// Lease owner.
+    #[prost(string, tag = "3")]
+    pub owner: ::prost::alloc::string::String,
+    /// Lease term.
+    #[prost(message, optional, tag = "4")]
+    pub term: ::core::option::Option<::prost_types::Duration>,
+}
+/// Request message for releasing lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseLeaseRequest {
+    /// Lease id.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Series name.
+    #[prost(string, tag = "2")]
+    pub series: ::prost::alloc::string::String,
+    /// Lease owner.
+    #[prost(string, tag = "3")]
+    pub owner: ::prost::alloc::string::String,
+}
+/// Response message for release lease.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseLeaseResponse {}
+/// RequestMetadata is the metadata message for the request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RequestMetadata {
+    /// Stream name.
+    #[prost(string, tag = "1")]
+    pub stream: ::prost::alloc::string::String,
+    /// Evevt name.
+    #[prost(string, tag = "2")]
+    pub event: ::prost::alloc::string::String,
+    /// Series name.
+    #[prost(string, tag = "3")]
+    pub series: ::prost::alloc::string::String,
+    /// Lease id.
+    #[prost(string, tag = "4")]
+    pub lease_id: ::prost::alloc::string::String,
+    /// Owner name.
+    #[prost(string, tag = "5")]
+    pub owner: ::prost::alloc::string::String,
+    /// Lease term specifies how long the client wants the session to be maintained
+    /// by the server after the client leaves. If the lease term is not set, the
+    /// server will release the session immediately and the client cannot reconnect
+    /// to the same session later.
+    #[prost(message, optional, tag = "6")]
+    pub lease_term: ::core::option::Option<::prost_types::Duration>,
+}
+/// Request message for sending packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SendPacketsRequest {
+    #[prost(oneof = "send_packets_request::Request", tags = "1, 2")]
+    pub request: ::core::option::Option<send_packets_request::Request>,
+}
+/// Nested message and enum types in `SendPacketsRequest`.
+pub mod send_packets_request {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Request {
+        /// Packets sent over the streaming rpc.
+        #[prost(message, tag = "1")]
+        Packet(super::Packet),
+        /// The first message of the streaming rpc including the request metadata.
+        #[prost(message, tag = "2")]
+        Metadata(super::RequestMetadata),
+    }
+}
+/// Response message for sending packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SendPacketsResponse {}
+/// Request message for receiving packets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceivePacketsRequest {
+    /// Possible request types from the client.
+    #[prost(oneof = "receive_packets_request::Request", tags = "6, 7")]
+    pub request: ::core::option::Option<receive_packets_request::Request>,
+}
+/// Nested message and enum types in `ReceivePacketsRequest`.
+pub mod receive_packets_request {
+    /// The message specifying the initial settings for the ReceivePackets session.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SetupRequest {
+        /// The configurations that specify where packets are retrieved.
+        #[prost(message, optional, tag = "1")]
+        pub metadata: ::core::option::Option<super::RequestMetadata>,
+        /// A name for the receiver to self-identify.
+        ///
+        /// This is used to keep track of a receiver's read progress.
+        #[prost(string, tag = "2")]
+        pub receiver: ::prost::alloc::string::String,
+        /// The maximum duration of server silence before the client determines the
+        /// server unreachable.
+        ///
+        /// The client must either receive a `Packet` or a heart beat message before
+        /// this duration expires; otherwise, the client will automatically cancel
+        /// the current connection and retry.
+        #[prost(message, optional, tag = "5")]
+        pub heartbeat_interval: ::core::option::Option<::prost_types::Duration>,
+        /// The grace period after which a `writes_done_request` is issued, that a
+        /// `WritesDone` is expected from the client.
+        ///
+        /// The server is free to cancel the RPC should this expire.
+        ///
+        /// A system default will be chosen if unset.
+        #[prost(message, optional, tag = "6")]
+        pub writes_done_grace_period: ::core::option::Option<::prost_types::Duration>,
+        /// The mode in which the consumer reads messages.
+        #[prost(oneof = "setup_request::ConsumerMode", tags = "3, 4")]
+        pub consumer_mode: ::core::option::Option<setup_request::ConsumerMode>,
+    }
+    /// Nested message and enum types in `SetupRequest`.
+    pub mod setup_request {
+        /// The mode in which the consumer reads messages.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ConsumerMode {
+            /// Options for configuring eager mode.
+            #[prost(message, tag = "3")]
+            EagerReceiveMode(super::super::EagerMode),
+            /// Options for configuring controlled mode.
+            #[prost(message, tag = "4")]
+            ControlledReceiveMode(super::super::ControlledMode),
+        }
+    }
+    /// Possible request types from the client.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Request {
+        /// The request to setup the initial state of session.
+        ///
+        /// The client must send and only send this as the first message.
+        #[prost(message, tag = "6")]
+        SetupRequest(SetupRequest),
+        /// This request checkpoints the consumer's read progress.
+        #[prost(message, tag = "7")]
+        CommitRequest(super::CommitRequest),
+    }
+}
+/// Control message for a ReceivePacketsResponse.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceivePacketsControlResponse {
+    /// Possible control messages.
+    #[prost(oneof = "receive_packets_control_response::Control", tags = "1, 2")]
+    pub control: ::core::option::Option<receive_packets_control_response::Control>,
+}
+/// Nested message and enum types in `ReceivePacketsControlResponse`.
+pub mod receive_packets_control_response {
+    /// Possible control messages.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Control {
+        /// A server heartbeat.
+        #[prost(bool, tag = "1")]
+        Heartbeat(bool),
+        /// A request to the receiver to complete any final writes followed by a
+        /// `WritesDone`; e.g. issue any final `CommitRequest`s.
+        ///
+        /// May be ignored if `WritesDone` has already been issued at any point
+        /// prior to receiving this message.
+        ///
+        /// If `WritesDone` does not get issued, then the server will forcefully
+        /// cancel the connection, and the receiver will likely receive an
+        /// uninformative after `Read` returns `false` and `Finish` is called.
+        #[prost(bool, tag = "2")]
+        WritesDoneRequest(bool),
+    }
+}
+/// Response message from ReceivePackets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReceivePacketsResponse {
+    /// Possible response types.
+    #[prost(oneof = "receive_packets_response::Response", tags = "1, 3")]
+    pub response: ::core::option::Option<receive_packets_response::Response>,
+}
+/// Nested message and enum types in `ReceivePacketsResponse`.
+pub mod receive_packets_response {
+    /// Possible response types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Response {
+        /// A genuine data payload originating from the sender.
+        #[prost(message, tag = "1")]
+        Packet(super::Packet),
+        /// A control message from the server.
+        #[prost(message, tag = "3")]
+        Control(super::ReceivePacketsControlResponse),
+    }
+}
+/// The options for receiver under the eager mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EagerMode {}
+/// The options for receiver under the controlled mode.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ControlledMode {
+    /// This is the logical starting point to fallback upon should the
+    /// specified starting offset be unavailable.
+    ///
+    /// This can be one of the following values:
+    ///
+    /// "begin": This will read from the earliest available message.
+    ///
+    /// "end": This will read only future messages.
+    #[prost(string, tag = "2")]
+    pub fallback_starting_offset: ::prost::alloc::string::String,
+    /// This is the offset from which to start receiveing.
+    #[prost(oneof = "controlled_mode::StartingOffset", tags = "1")]
+    pub starting_offset: ::core::option::Option<controlled_mode::StartingOffset>,
+}
+/// Nested message and enum types in `ControlledMode`.
+pub mod controlled_mode {
+    /// This is the offset from which to start receiveing.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum StartingOffset {
+        /// This can be set to the following logical starting points:
+        ///
+        /// "begin": This will read from the earliest available message.
+        ///
+        /// "most-recent": This will read from the latest available message.
+        ///
+        /// "end": This will read only future messages.
+        ///
+        /// "stored": This will resume reads one past the last committed offset.
+        ///            It is the only option that resumes progress; all others
+        ///            jump unilaterally.
+        #[prost(string, tag = "1")]
+        StartingLogicalOffset(::prost::alloc::string::String),
+    }
+}
+/// The message for explicitly committing the read progress.
+///
+/// This may only be used when `ReceivePacketsControlledMode` is set in the
+/// initial setup request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CommitRequest {
+    /// The offset to commit.
+    #[prost(int64, tag = "1")]
+    pub offset: i64,
+}
+/// The lease type.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum LeaseType {
+    /// Lease type unspecified.
+    Unspecified = 0,
+    /// Lease for stream reader.
+    Reader = 1,
+    /// Lease for stream writer.
+    Writer = 2,
+}
+impl LeaseType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            LeaseType::Unspecified => "LEASE_TYPE_UNSPECIFIED",
+            LeaseType::Reader => "LEASE_TYPE_READER",
+            LeaseType::Writer => "LEASE_TYPE_WRITER",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "LEASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "LEASE_TYPE_READER" => Some(Self::Reader),
+            "LEASE_TYPE_WRITER" => Some(Self::Writer),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod streaming_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Streaming service for receiving and sending packets.
+    #[derive(Debug, Clone)]
+    pub struct StreamingServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> StreamingServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> StreamingServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            StreamingServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Send packets to the series.
+        pub async fn send_packets(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::SendPacketsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::SendPacketsResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/SendPackets",
+            );
+            self.inner.streaming(request.into_streaming_request(), path, codec).await
+        }
+        /// Receive packets from the series.
+        pub async fn receive_packets(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::ReceivePacketsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::ReceivePacketsResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/ReceivePackets",
+            );
+            self.inner.streaming(request.into_streaming_request(), path, codec).await
+        }
+        /// Receive events given the stream name.
+        pub async fn receive_events(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<
+                Message = super::ReceiveEventsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<tonic::codec::Streaming<super::ReceiveEventsResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/ReceiveEvents",
+            );
+            self.inner.streaming(request.into_streaming_request(), path, codec).await
+        }
+        /// AcquireLease acquires a lease.
+        pub async fn acquire_lease(
+            &mut self,
+            request: impl tonic::IntoRequest<super::AcquireLeaseRequest>,
+        ) -> Result<tonic::Response<super::Lease>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/AcquireLease",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// RenewLease renews a lease.
+        pub async fn renew_lease(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RenewLeaseRequest>,
+        ) -> Result<tonic::Response<super::Lease>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/RenewLease",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// RleaseLease releases a lease.
+        pub async fn release_lease(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReleaseLeaseRequest>,
+        ) -> Result<tonic::Response<super::ReleaseLeaseResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.StreamingService/ReleaseLease",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Represents an actual value of an operator attribute.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AttributeValue {
+    /// Attribute value.
+    #[prost(oneof = "attribute_value::Value", tags = "1, 2, 3, 4")]
+    pub value: ::core::option::Option<attribute_value::Value>,
+}
+/// Nested message and enum types in `AttributeValue`.
+pub mod attribute_value {
+    /// Attribute value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// int.
+        #[prost(int64, tag = "1")]
+        I(i64),
+        /// float.
+        #[prost(float, tag = "2")]
+        F(f32),
+        /// bool.
+        #[prost(bool, tag = "3")]
+        B(bool),
+        /// string.
+        #[prost(bytes, tag = "4")]
+        S(::prost::bytes::Bytes),
+    }
+}
+/// Defines an Analyzer.
+///
+/// An analyzer processes data from its input streams using the logic defined in
+/// the Operator that it represents. Of course, it produces data for the output
+/// streams declared in the Operator.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnalyzerDefinition {
+    /// The name of this analyzer.
+    ///
+    /// Tentatively \[a-z][a-z0-9]*(_[a-z0-9\]+)*.
+    #[prost(string, tag = "1")]
+    pub analyzer: ::prost::alloc::string::String,
+    /// The name of the operator that this analyzer runs.
+    ///
+    /// Must match the name of a supported operator.
+    #[prost(string, tag = "2")]
+    pub operator: ::prost::alloc::string::String,
+    /// Input streams.
+    #[prost(message, repeated, tag = "3")]
+    pub inputs: ::prost::alloc::vec::Vec<analyzer_definition::StreamInput>,
+    /// The attribute values that this analyzer applies to the operator.
+    ///
+    /// Supply a mapping between the attribute names and the actual value you wish
+    /// to apply. If an attribute name is omitted, then it will take a
+    /// preconfigured default value.
+    #[prost(btree_map = "string, message", tag = "4")]
+    pub attrs: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        AttributeValue,
+    >,
+    /// Debug options.
+    #[prost(message, optional, tag = "5")]
+    pub debug_options: ::core::option::Option<analyzer_definition::DebugOptions>,
+}
+/// Nested message and enum types in `AnalyzerDefinition`.
+pub mod analyzer_definition {
+    /// The inputs to this analyzer.
+    ///
+    /// We accept input name references of the following form:
+    /// <analyzer-name>:<output-argument-name>
+    ///
+    /// Example:
+    ///
+    /// Suppose you had an operator named "SomeOp" that has 2 output
+    /// arguments, the first of which is named "foo" and the second of which is
+    /// named "bar", and an operator named "MyOp" that accepts 2 inputs.
+    ///
+    /// Also suppose that there is an analyzer named "some-analyzer" that is
+    /// running "SomeOp" and another analyzer named "my-analyzer" running "MyOp".
+    ///
+    /// To indicate that "my-analyzer" is to consume "some-analyzer"'s "foo"
+    /// output as its first input and "some-analyzer"'s "bar" output as its
+    /// second input, you can set this field to the following:
+    /// input = ["some-analyzer:foo", "some-analyzer:bar"]
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StreamInput {
+        /// The name of the stream input (as discussed above).
+        #[prost(string, tag = "1")]
+        pub input: ::prost::alloc::string::String,
+    }
+    /// Options available for debugging purposes only.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct DebugOptions {
+        /// Environment variables.
+        #[prost(btree_map = "string, string", tag = "1")]
+        pub environment_variables: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost::alloc::string::String,
+        >,
+    }
+}
+/// Defines a full analysis.
+///
+/// This is a description of the overall live analytics pipeline.
+/// You may think of this as an edge list representation of a multigraph.
+///
+/// This may be directly authored by a human in protobuf textformat, or it may be
+/// generated by a programming API (perhaps Python or JavaScript depending on
+/// context).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnalysisDefinition {
+    /// Analyzer definitions.
+    #[prost(message, repeated, tag = "1")]
+    pub analyzers: ::prost::alloc::vec::Vec<AnalyzerDefinition>,
+}
+/// Message describing the status of the Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunStatus {
+    /// The state of the Process.
+    #[prost(enumeration = "run_status::State", tag = "1")]
+    pub state: i32,
+    /// The reason of becoming the state.
+    #[prost(string, tag = "2")]
+    pub reason: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `RunStatus`.
+pub mod run_status {
+    /// State represents the running status of the Process.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// State is unspecified.
+        Unspecified = 0,
+        /// INITIALIZING means the Process is scheduled but yet ready to handle
+        /// real traffic.
+        Initializing = 1,
+        /// RUNNING means the Process is up running and handling traffic.
+        Running = 2,
+        /// COMPLETED means the Process has completed the processing, especially
+        /// for non-streaming use case.
+        Completed = 3,
+        /// FAILED means the Process failed to complete the processing.
+        Failed = 4,
+        /// PENDING means the Process is created but yet to be scheduled.
+        Pending = 5,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Initializing => "INITIALIZING",
+                State::Running => "RUNNING",
+                State::Completed => "COMPLETED",
+                State::Failed => "FAILED",
+                State::Pending => "PENDING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "INITIALIZING" => Some(Self::Initializing),
+                "RUNNING" => Some(Self::Running),
+                "COMPLETED" => Some(Self::Completed),
+                "FAILED" => Some(Self::Failed),
+                "PENDING" => Some(Self::Pending),
+                _ => None,
+            }
+        }
+    }
+}
+/// RunMode represents the mode to launch the Process on.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum RunMode {
+    /// Mode is unspecified.
+    Unspecified = 0,
+    /// Live mode. Meaning the Process is launched to handle live video
+    /// source, and possible packet drops are expected.
+    Live = 1,
+    /// Submission mode. Meaning the Process is launched to handle bounded video
+    /// files, with no packet drop. Completion status is tracked.
+    Submission = 2,
+}
+impl RunMode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            RunMode::Unspecified => "RUN_MODE_UNSPECIFIED",
+            RunMode::Live => "LIVE",
+            RunMode::Submission => "SUBMISSION",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "RUN_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+            "LIVE" => Some(Self::Live),
+            "SUBMISSION" => Some(Self::Submission),
+            _ => None,
+        }
+    }
+}
+/// Message describing the Analysis object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Analysis {
+    /// The name of resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels as key value pairs.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// The definition of the analysis.
+    #[prost(message, optional, tag = "5")]
+    pub analysis_definition: ::core::option::Option<AnalysisDefinition>,
+    /// Map from the input parameter in the definition to the real stream.
+    /// E.g., suppose you had a stream source operator named "input-0" and you try
+    /// to receive from the real stream "stream-0". You can add the following
+    /// mapping: [input-0: stream-0].
+    #[prost(btree_map = "string, string", tag = "6")]
+    pub input_streams_mapping: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Map from the output parameter in the definition to the real stream.
+    /// E.g., suppose you had a stream sink operator named "output-0" and you try
+    /// to send to the real stream "stream-0". You can add the following
+    /// mapping: [output-0: stream-0].
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub output_streams_mapping: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Boolean flag to indicate whether you would like to disable the ability
+    /// to automatically start a Process when new event happening in the input
+    /// Stream. If you would like to start a Process manually, the field needs
+    /// to be set to true.
+    #[prost(bool, tag = "8")]
+    pub disable_event_watch: bool,
+}
+/// Message describing the Process object.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Process {
+    /// The name of resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The create timestamp.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The update timestamp.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. Reference to an existing Analysis resource.
+    #[prost(string, tag = "4")]
+    pub analysis: ::prost::alloc::string::String,
+    /// Optional. Attribute overrides of the Analyzers.
+    /// Format for each single override item:
+    /// "{analyzer_name}:{attribute_key}={value}"
+    #[prost(string, repeated, tag = "5")]
+    pub attribute_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Status of the Process.
+    #[prost(message, optional, tag = "6")]
+    pub run_status: ::core::option::Option<RunStatus>,
+    /// Optional. Run mode of the Process.
+    #[prost(enumeration = "RunMode", tag = "7")]
+    pub run_mode: i32,
+    /// Optional. Event ID of the input/output streams.
+    /// This is useful when you have a StreamSource/StreamSink operator in the
+    /// Analysis, and you want to manually specify the Event to read from/write to.
+    #[prost(string, tag = "8")]
+    pub event_id: ::prost::alloc::string::String,
+    /// Optional. Optional: Batch ID of the Process.
+    #[prost(string, tag = "9")]
+    pub batch_id: ::prost::alloc::string::String,
+    /// Optional. Optional: The number of retries for a process in submission mode
+    /// the system should try before declaring failure. By default, no retry will
+    /// be performed.
+    #[prost(int32, tag = "10")]
+    pub retry_count: i32,
+}
+/// Message for requesting list of Analyses
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAnalysesRequest {
+    /// Required. Parent value for ListAnalysesRequest
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Analyses
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAnalysesResponse {
+    /// The list of Analysis
+    #[prost(message, repeated, tag = "1")]
+    pub analyses: ::prost::alloc::vec::Vec<Analysis>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAnalysisRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateAnalysisRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub analysis_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub analysis: ::core::option::Option<Analysis>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateAnalysisRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Analysis resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated.
+    #[prost(message, optional, tag = "2")]
+    pub analysis: ::core::option::Option<Analysis>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting an Analysis.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteAnalysisRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for requesting list of Processes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProcessesRequest {
+    /// Required. Parent value for ListProcessesRequest.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Requested page size. Server may return fewer items than requested.
+    /// If unspecified, server will pick an appropriate default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Filtering results
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Hint for how to order the results
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
+}
+/// Message for response to listing Processes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListProcessesResponse {
+    /// The list of Processes.
+    #[prost(message, repeated, tag = "1")]
+    pub processes: ::prost::alloc::vec::Vec<Process>,
+    /// A token identifying a page of results the server should return.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Message for getting a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetProcessRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Message for creating a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateProcessRequest {
+    /// Required. Value for parent.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Id of the requesting object.
+    #[prost(string, tag = "2")]
+    pub process_id: ::prost::alloc::string::String,
+    /// Required. The resource being created.
+    #[prost(message, optional, tag = "3")]
+    pub process: ::core::option::Option<Process>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "4")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for updating a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateProcessRequest {
+    /// Required. Field mask is used to specify the fields to be overwritten in the
+    /// Process resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The resource being updated.
+    #[prost(message, optional, tag = "2")]
+    pub process: ::core::option::Option<Process>,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes since the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "3")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Message for deleting a Process.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteProcessRequest {
+    /// Required. Name of the resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. An optional request ID to identify requests. Specify a unique
+    /// request ID so that if you must retry your request, the server will know to
+    /// ignore the request if it has already been completed. The server will
+    /// guarantee that for at least 60 minutes after the first request.
+    ///
+    /// For example, consider a situation where you make an initial request and the
+    /// request times out. If you make the request again with the same request ID,
+    /// the server can check if original operation with the same request ID was
+    /// received, and if so, will ignore the second request. This prevents clients
+    /// from accidentally creating duplicate commitments.
+    ///
+    /// The request ID must be a valid UUID with the exception that zero UUID is
+    /// not supported (00000000-0000-0000-0000-000000000000).
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+/// Request message for running the processes in a batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchRunProcessRequest {
+    /// Required. The parent resource shared by all processes being created.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The create process requests.
+    #[prost(message, repeated, tag = "2")]
+    pub requests: ::prost::alloc::vec::Vec<CreateProcessRequest>,
+    /// Optional. Options for batch processes.
+    #[prost(message, optional, tag = "3")]
+    pub options: ::core::option::Option<
+        batch_run_process_request::BatchRunProcessOptions,
+    >,
+    /// Output only. The batch ID.
+    #[prost(string, tag = "4")]
+    pub batch_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `BatchRunProcessRequest`.
+pub mod batch_run_process_request {
+    /// Options for batch processes.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct BatchRunProcessOptions {
+        /// The retry counts per process. Default: 3.
+        #[prost(int32, tag = "1")]
+        pub retry_count: i32,
+        /// The batch size. Default: 5, maximum: 100.
+        #[prost(int32, tag = "2")]
+        pub batch_size: i32,
+    }
+}
+/// Response message for running the processes in a batch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchRunProcessResponse {
+    /// The batch ID.
+    #[prost(string, tag = "1")]
+    pub batch_id: ::prost::alloc::string::String,
+    /// Processes created.
+    #[prost(message, repeated, tag = "2")]
+    pub processes: ::prost::alloc::vec::Vec<Process>,
+}
+/// Generated client implementations.
+pub mod live_video_analytics_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service describing handlers for resources. The service enables clients to run
+    /// Live Video Analytics (LVA) on the streaming inputs.
+    #[derive(Debug, Clone)]
+    pub struct LiveVideoAnalyticsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> LiveVideoAnalyticsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> LiveVideoAnalyticsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            LiveVideoAnalyticsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Lists Analyses in a given project and location.
+        pub async fn list_analyses(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAnalysesRequest>,
+        ) -> Result<tonic::Response<super::ListAnalysesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListAnalyses",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Analysis.
+        pub async fn get_analysis(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAnalysisRequest>,
+        ) -> Result<tonic::Response<super::Analysis>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetAnalysis",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Analysis in a given project and location.
+        pub async fn create_analysis(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAnalysisRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateAnalysis",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Analysis.
+        pub async fn update_analysis(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateAnalysisRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateAnalysis",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Analysis.
+        pub async fn delete_analysis(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteAnalysisRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteAnalysis",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Processes in a given project and location.
+        pub async fn list_processes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListProcessesRequest>,
+        ) -> Result<tonic::Response<super::ListProcessesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListProcesses",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets details of a single Process.
+        pub async fn get_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetProcessRequest>,
+        ) -> Result<tonic::Response<super::Process>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a new Process in a given project and location.
+        pub async fn create_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the parameters of a single Process.
+        pub async fn update_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a single Process.
+        pub async fn delete_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Run all of the processes to "completion". Max time for each process is
+        /// the LRO time limit.
+        pub async fn batch_run_process(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchRunProcessRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.visionai.v1.LiveVideoAnalytics/BatchRunProcess",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Message describing the Stream object. The Stream and the Event resources are
 /// many to many; i.e., each Stream resource can associate to many Event
 /// resources and each Event resource can associate to many Stream resources.
@@ -3762,1735 +5491,6 @@ pub mod warehouse_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.visionai.v1.Warehouse/SearchAssets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Represents an actual value of an operator attribute.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AttributeValue {
-    /// Attribute value.
-    #[prost(oneof = "attribute_value::Value", tags = "1, 2, 3, 4")]
-    pub value: ::core::option::Option<attribute_value::Value>,
-}
-/// Nested message and enum types in `AttributeValue`.
-pub mod attribute_value {
-    /// Attribute value.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// int.
-        #[prost(int64, tag = "1")]
-        I(i64),
-        /// float.
-        #[prost(float, tag = "2")]
-        F(f32),
-        /// bool.
-        #[prost(bool, tag = "3")]
-        B(bool),
-        /// string.
-        #[prost(bytes, tag = "4")]
-        S(::prost::bytes::Bytes),
-    }
-}
-/// Defines an Analyzer.
-///
-/// An analyzer processes data from its input streams using the logic defined in
-/// the Operator that it represents. Of course, it produces data for the output
-/// streams declared in the Operator.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnalyzerDefinition {
-    /// The name of this analyzer.
-    ///
-    /// Tentatively \[a-z][a-z0-9]*(_[a-z0-9\]+)*.
-    #[prost(string, tag = "1")]
-    pub analyzer: ::prost::alloc::string::String,
-    /// The name of the operator that this analyzer runs.
-    ///
-    /// Must match the name of a supported operator.
-    #[prost(string, tag = "2")]
-    pub operator: ::prost::alloc::string::String,
-    /// Input streams.
-    #[prost(message, repeated, tag = "3")]
-    pub inputs: ::prost::alloc::vec::Vec<analyzer_definition::StreamInput>,
-    /// The attribute values that this analyzer applies to the operator.
-    ///
-    /// Supply a mapping between the attribute names and the actual value you wish
-    /// to apply. If an attribute name is omitted, then it will take a
-    /// preconfigured default value.
-    #[prost(btree_map = "string, message", tag = "4")]
-    pub attrs: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        AttributeValue,
-    >,
-    /// Debug options.
-    #[prost(message, optional, tag = "5")]
-    pub debug_options: ::core::option::Option<analyzer_definition::DebugOptions>,
-}
-/// Nested message and enum types in `AnalyzerDefinition`.
-pub mod analyzer_definition {
-    /// The inputs to this analyzer.
-    ///
-    /// We accept input name references of the following form:
-    /// <analyzer-name>:<output-argument-name>
-    ///
-    /// Example:
-    ///
-    /// Suppose you had an operator named "SomeOp" that has 2 output
-    /// arguments, the first of which is named "foo" and the second of which is
-    /// named "bar", and an operator named "MyOp" that accepts 2 inputs.
-    ///
-    /// Also suppose that there is an analyzer named "some-analyzer" that is
-    /// running "SomeOp" and another analyzer named "my-analyzer" running "MyOp".
-    ///
-    /// To indicate that "my-analyzer" is to consume "some-analyzer"'s "foo"
-    /// output as its first input and "some-analyzer"'s "bar" output as its
-    /// second input, you can set this field to the following:
-    /// input = ["some-analyzer:foo", "some-analyzer:bar"]
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StreamInput {
-        /// The name of the stream input (as discussed above).
-        #[prost(string, tag = "1")]
-        pub input: ::prost::alloc::string::String,
-    }
-    /// Options available for debugging purposes only.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct DebugOptions {
-        /// Environment variables.
-        #[prost(btree_map = "string, string", tag = "1")]
-        pub environment_variables: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost::alloc::string::String,
-        >,
-    }
-}
-/// Defines a full analysis.
-///
-/// This is a description of the overall live analytics pipeline.
-/// You may think of this as an edge list representation of a multigraph.
-///
-/// This may be directly authored by a human in protobuf textformat, or it may be
-/// generated by a programming API (perhaps Python or JavaScript depending on
-/// context).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnalysisDefinition {
-    /// Analyzer definitions.
-    #[prost(message, repeated, tag = "1")]
-    pub analyzers: ::prost::alloc::vec::Vec<AnalyzerDefinition>,
-}
-/// Message describing the status of the Process.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunStatus {
-    /// The state of the Process.
-    #[prost(enumeration = "run_status::State", tag = "1")]
-    pub state: i32,
-    /// The reason of becoming the state.
-    #[prost(string, tag = "2")]
-    pub reason: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `RunStatus`.
-pub mod run_status {
-    /// State represents the running status of the Process.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// State is unspecified.
-        Unspecified = 0,
-        /// INITIALIZING means the Process is scheduled but yet ready to handle
-        /// real traffic.
-        Initializing = 1,
-        /// RUNNING means the Process is up running and handling traffic.
-        Running = 2,
-        /// COMPLETED means the Process has completed the processing, especially
-        /// for non-streaming use case.
-        Completed = 3,
-        /// FAILED means the Process failed to complete the processing.
-        Failed = 4,
-        /// PENDING means the Process is created but yet to be scheduled.
-        Pending = 5,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Initializing => "INITIALIZING",
-                State::Running => "RUNNING",
-                State::Completed => "COMPLETED",
-                State::Failed => "FAILED",
-                State::Pending => "PENDING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "INITIALIZING" => Some(Self::Initializing),
-                "RUNNING" => Some(Self::Running),
-                "COMPLETED" => Some(Self::Completed),
-                "FAILED" => Some(Self::Failed),
-                "PENDING" => Some(Self::Pending),
-                _ => None,
-            }
-        }
-    }
-}
-/// RunMode represents the mode to launch the Process on.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum RunMode {
-    /// Mode is unspecified.
-    Unspecified = 0,
-    /// Live mode. Meaning the Process is launched to handle live video
-    /// source, and possible packet drops are expected.
-    Live = 1,
-    /// Submission mode. Meaning the Process is launched to handle bounded video
-    /// files, with no packet drop. Completion status is tracked.
-    Submission = 2,
-}
-impl RunMode {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            RunMode::Unspecified => "RUN_MODE_UNSPECIFIED",
-            RunMode::Live => "LIVE",
-            RunMode::Submission => "SUBMISSION",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "RUN_MODE_UNSPECIFIED" => Some(Self::Unspecified),
-            "LIVE" => Some(Self::Live),
-            "SUBMISSION" => Some(Self::Submission),
-            _ => None,
-        }
-    }
-}
-/// Message describing the Analysis object.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Analysis {
-    /// The name of resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels as key value pairs.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// The definition of the analysis.
-    #[prost(message, optional, tag = "5")]
-    pub analysis_definition: ::core::option::Option<AnalysisDefinition>,
-    /// Map from the input parameter in the definition to the real stream.
-    /// E.g., suppose you had a stream source operator named "input-0" and you try
-    /// to receive from the real stream "stream-0". You can add the following
-    /// mapping: [input-0: stream-0].
-    #[prost(btree_map = "string, string", tag = "6")]
-    pub input_streams_mapping: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Map from the output parameter in the definition to the real stream.
-    /// E.g., suppose you had a stream sink operator named "output-0" and you try
-    /// to send to the real stream "stream-0". You can add the following
-    /// mapping: [output-0: stream-0].
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub output_streams_mapping: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Boolean flag to indicate whether you would like to disable the ability
-    /// to automatically start a Process when new event happening in the input
-    /// Stream. If you would like to start a Process manually, the field needs
-    /// to be set to true.
-    #[prost(bool, tag = "8")]
-    pub disable_event_watch: bool,
-}
-/// Message describing the Process object.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Process {
-    /// The name of resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The create timestamp.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The update timestamp.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. Reference to an existing Analysis resource.
-    #[prost(string, tag = "4")]
-    pub analysis: ::prost::alloc::string::String,
-    /// Optional. Attribute overrides of the Analyzers.
-    /// Format for each single override item:
-    /// "{analyzer_name}:{attribute_key}={value}"
-    #[prost(string, repeated, tag = "5")]
-    pub attribute_overrides: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Status of the Process.
-    #[prost(message, optional, tag = "6")]
-    pub run_status: ::core::option::Option<RunStatus>,
-    /// Optional. Run mode of the Process.
-    #[prost(enumeration = "RunMode", tag = "7")]
-    pub run_mode: i32,
-    /// Optional. Event ID of the input/output streams.
-    /// This is useful when you have a StreamSource/StreamSink operator in the
-    /// Analysis, and you want to manually specify the Event to read from/write to.
-    #[prost(string, tag = "8")]
-    pub event_id: ::prost::alloc::string::String,
-    /// Optional. Optional: Batch ID of the Process.
-    #[prost(string, tag = "9")]
-    pub batch_id: ::prost::alloc::string::String,
-    /// Optional. Optional: The number of retries for a process in submission mode
-    /// the system should try before declaring failure. By default, no retry will
-    /// be performed.
-    #[prost(int32, tag = "10")]
-    pub retry_count: i32,
-}
-/// The descriptor for a gstreamer buffer payload.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GstreamerBufferDescriptor {
-    /// The caps string of the payload.
-    #[prost(string, tag = "1")]
-    pub caps_string: ::prost::alloc::string::String,
-    /// Whether the buffer is a key frame.
-    #[prost(bool, tag = "2")]
-    pub is_key_frame: bool,
-    /// PTS of the frame.
-    #[prost(message, optional, tag = "3")]
-    pub pts_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// DTS of the frame.
-    #[prost(message, optional, tag = "4")]
-    pub dts_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Duration of the frame.
-    #[prost(message, optional, tag = "5")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// The descriptor for a raw image.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RawImageDescriptor {
-    /// Raw image format. Its possible values are: "srgb".
-    #[prost(string, tag = "1")]
-    pub format: ::prost::alloc::string::String,
-    /// The height of the image.
-    #[prost(int32, tag = "2")]
-    pub height: i32,
-    /// The width of the image.
-    #[prost(int32, tag = "3")]
-    pub width: i32,
-}
-/// The message that represents the data type of a packet.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PacketType {
-    /// The type class of the packet. Its possible values are:
-    /// "gst", "protobuf", and "string".
-    #[prost(string, tag = "1")]
-    pub type_class: ::prost::alloc::string::String,
-    /// The type descriptor.
-    #[prost(message, optional, tag = "2")]
-    pub type_descriptor: ::core::option::Option<packet_type::TypeDescriptor>,
-}
-/// Nested message and enum types in `PacketType`.
-pub mod packet_type {
-    /// The message that fully specifies the type of the packet.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TypeDescriptor {
-        /// The type of the packet. Its possible values is codec dependent.
-        ///
-        /// The fully qualified type name is always the concatenation of the
-        /// value in `type_class` together with the value in `type`, separated by a
-        /// '/'.
-        ///
-        /// Note that specific codecs can define their own type hierarchy, and so the
-        /// type string here can in fact be separated by multiple '/'s of its own.
-        ///
-        /// Please see the open source SDK for specific codec documentation.
-        #[prost(string, tag = "1")]
-        pub r#type: ::prost::alloc::string::String,
-        /// Detailed information about the type.
-        ///
-        /// It is non-empty only for specific type class codecs. Needed only when the
-        /// type string alone is not enough to disambiguate the specific type.
-        #[prost(oneof = "type_descriptor::TypeDetails", tags = "2, 3")]
-        pub type_details: ::core::option::Option<type_descriptor::TypeDetails>,
-    }
-    /// Nested message and enum types in `TypeDescriptor`.
-    pub mod type_descriptor {
-        /// Detailed information about the type.
-        ///
-        /// It is non-empty only for specific type class codecs. Needed only when the
-        /// type string alone is not enough to disambiguate the specific type.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum TypeDetails {
-            /// GstreamerBufferDescriptor is the descriptor for gstreamer buffer type.
-            #[prost(message, tag = "2")]
-            GstreamerBufferDescriptor(super::super::GstreamerBufferDescriptor),
-            /// RawImageDescriptor is the descriptor for the raw image type.
-            #[prost(message, tag = "3")]
-            RawImageDescriptor(super::super::RawImageDescriptor),
-        }
-    }
-}
-/// The message that represents server metadata.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ServerMetadata {
-    /// The offset position for the packet in its stream.
-    #[prost(int64, tag = "1")]
-    pub offset: i64,
-    /// The timestamp at which the stream server receives this packet. This is
-    /// based on the local clock of on the server side. It is guaranteed to be
-    /// monotonically increasing for the packets within each session; however
-    /// this timestamp is not comparable across packets sent to the same stream
-    /// different sessions. Session here refers to one individual gRPC streaming
-    /// request to the stream server.
-    #[prost(message, optional, tag = "2")]
-    pub ingest_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The message that represents series metadata.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SeriesMetadata {
-    /// Series name. It's in the format of
-    /// "projects/{project}/locations/{location}/clusters/{cluster}/series/{stream}".
-    #[prost(string, tag = "1")]
-    pub series: ::prost::alloc::string::String,
-}
-/// The message that represents packet header.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PacketHeader {
-    /// Input only. The capture time of the packet.
-    #[prost(message, optional, tag = "1")]
-    pub capture_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Input only. Immutable. The type of the payload.
-    #[prost(message, optional, tag = "2")]
-    pub r#type: ::core::option::Option<PacketType>,
-    /// Input only. This field is for users to attach user managed metadata.
-    #[prost(message, optional, tag = "3")]
-    pub metadata: ::core::option::Option<::prost_types::Struct>,
-    /// Output only. Metadata that the server appends to each packet before sending
-    /// it to receivers. You don't need to set a value for this field when sending
-    /// packets.
-    #[prost(message, optional, tag = "4")]
-    pub server_metadata: ::core::option::Option<ServerMetadata>,
-    /// Input only. Immutable. Metadata that the server needs to know where to
-    /// write the packets to. It's only required for the first packet.
-    #[prost(message, optional, tag = "5")]
-    pub series_metadata: ::core::option::Option<SeriesMetadata>,
-    /// Immutable. Packet flag set. SDK will set the flag automatically.
-    #[prost(int32, tag = "6")]
-    pub flags: i32,
-    /// Immutable. Header string for tracing across services. It should be set when
-    /// the packet is first arrived in the stream server.
-    ///
-    /// The input format is a lowercase hex string:
-    ///    - version_id: 1 byte, currently must be zero - hex encoded (2 characters)
-    ///    - trace_id: 16 bytes (opaque blob) - hex encoded (32 characters)
-    ///    - span_id: 8 bytes (opaque blob) - hex encoded (16 characters)
-    ///    - trace_options: 1 byte (LSB means tracing enabled) - hex encoded (2
-    ///    characters)
-    /// Example: "00-404142434445464748494a4b4c4d4e4f-6162636465666768-01"
-    ///            v  trace_id                         span_id          options
-    #[prost(string, tag = "7")]
-    pub trace_context: ::prost::alloc::string::String,
-}
-/// The quanta of datum that the series accepts.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Packet {
-    /// The packet header.
-    #[prost(message, optional, tag = "1")]
-    pub header: ::core::option::Option<PacketHeader>,
-    /// The payload of the packet.
-    #[prost(bytes = "bytes", tag = "2")]
-    pub payload: ::prost::bytes::Bytes,
-}
-/// Request message for ReceiveEvents.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceiveEventsRequest {
-    #[prost(oneof = "receive_events_request::Request", tags = "1, 2")]
-    pub request: ::core::option::Option<receive_events_request::Request>,
-}
-/// Nested message and enum types in `ReceiveEventsRequest`.
-pub mod receive_events_request {
-    /// SetupRequest is the first message sent to the service to setup the RPC
-    /// connection.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SetupRequest {
-        /// The cluster name.
-        #[prost(string, tag = "1")]
-        pub cluster: ::prost::alloc::string::String,
-        /// The stream name. The service will return the events for the given stream.
-        #[prost(string, tag = "2")]
-        pub stream: ::prost::alloc::string::String,
-        /// A name for the receiver to self-identify.
-        ///
-        /// This is used to keep track of a receiver's read progress.
-        #[prost(string, tag = "3")]
-        pub receiver: ::prost::alloc::string::String,
-        /// Controller mode configuration for receiving events from the server.
-        #[prost(message, optional, tag = "4")]
-        pub controlled_mode: ::core::option::Option<super::ControlledMode>,
-        /// The maximum duration of server silence before the client determines the
-        /// server unreachable.
-        ///
-        /// The client must either receive an `Event` update or a heart beat message
-        /// before this duration expires; otherwise, the client will automatically
-        /// cancel the current connection and retry.
-        #[prost(message, optional, tag = "5")]
-        pub heartbeat_interval: ::core::option::Option<::prost_types::Duration>,
-        /// The grace period after which a `writes_done_request` is issued, that a
-        /// `WritesDone` is expected from the client.
-        ///
-        /// The server is free to cancel the RPC should this expire.
-        ///
-        /// A system default will be chosen if unset.
-        #[prost(message, optional, tag = "6")]
-        pub writes_done_grace_period: ::core::option::Option<::prost_types::Duration>,
-    }
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Request {
-        /// The setup request to setup the RPC connection.
-        #[prost(message, tag = "1")]
-        SetupRequest(SetupRequest),
-        /// This request checkpoints the consumer's read progress.
-        #[prost(message, tag = "2")]
-        CommitRequest(super::CommitRequest),
-    }
-}
-/// The event update message.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EventUpdate {
-    /// The name of the stream that the event is attached to.
-    #[prost(string, tag = "1")]
-    pub stream: ::prost::alloc::string::String,
-    /// The name of the event.
-    #[prost(string, tag = "2")]
-    pub event: ::prost::alloc::string::String,
-    /// The name of the series.
-    #[prost(string, tag = "3")]
-    pub series: ::prost::alloc::string::String,
-    /// The timestamp when the Event update happens.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The offset of the message that will be used to acknowledge of the message
-    /// receiving.
-    #[prost(int64, tag = "5")]
-    pub offset: i64,
-}
-/// Control message for a ReceiveEventsResponse.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceiveEventsControlResponse {
-    /// Possible control messages.
-    #[prost(oneof = "receive_events_control_response::Control", tags = "1, 2")]
-    pub control: ::core::option::Option<receive_events_control_response::Control>,
-}
-/// Nested message and enum types in `ReceiveEventsControlResponse`.
-pub mod receive_events_control_response {
-    /// Possible control messages.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Control {
-        /// A server heartbeat.
-        #[prost(bool, tag = "1")]
-        Heartbeat(bool),
-        /// A request to the receiver to complete any final writes followed by a
-        /// `WritesDone`; e.g. issue any final `CommitRequest`s.
-        ///
-        /// May be ignored if `WritesDone` has already been issued at any point
-        /// prior to receiving this message.
-        ///
-        /// If `WritesDone` does not get issued, then the server will forcefully
-        /// cancel the connection, and the receiver will likely receive an
-        /// uninformative after `Read` returns `false` and `Finish` is called.
-        #[prost(bool, tag = "2")]
-        WritesDoneRequest(bool),
-    }
-}
-/// Response message for the ReceiveEvents.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceiveEventsResponse {
-    /// Possible response types.
-    #[prost(oneof = "receive_events_response::Response", tags = "1, 2")]
-    pub response: ::core::option::Option<receive_events_response::Response>,
-}
-/// Nested message and enum types in `ReceiveEventsResponse`.
-pub mod receive_events_response {
-    /// Possible response types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Response {
-        /// The event update message.
-        #[prost(message, tag = "1")]
-        EventUpdate(super::EventUpdate),
-        /// A control message from the server.
-        #[prost(message, tag = "2")]
-        Control(super::ReceiveEventsControlResponse),
-    }
-}
-/// The lease message.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Lease {
-    /// The lease id.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The series name.
-    #[prost(string, tag = "2")]
-    pub series: ::prost::alloc::string::String,
-    /// The owner name.
-    #[prost(string, tag = "3")]
-    pub owner: ::prost::alloc::string::String,
-    /// The lease expire time.
-    #[prost(message, optional, tag = "4")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The lease type.
-    #[prost(enumeration = "LeaseType", tag = "5")]
-    pub lease_type: i32,
-}
-/// Request message for acquiring a lease.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AcquireLeaseRequest {
-    /// The series name.
-    #[prost(string, tag = "1")]
-    pub series: ::prost::alloc::string::String,
-    /// The owner name.
-    #[prost(string, tag = "2")]
-    pub owner: ::prost::alloc::string::String,
-    /// The lease term.
-    #[prost(message, optional, tag = "3")]
-    pub term: ::core::option::Option<::prost_types::Duration>,
-    /// The lease type.
-    #[prost(enumeration = "LeaseType", tag = "4")]
-    pub lease_type: i32,
-}
-/// Request message for renewing a lease.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RenewLeaseRequest {
-    /// Lease id.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// Series name.
-    #[prost(string, tag = "2")]
-    pub series: ::prost::alloc::string::String,
-    /// Lease owner.
-    #[prost(string, tag = "3")]
-    pub owner: ::prost::alloc::string::String,
-    /// Lease term.
-    #[prost(message, optional, tag = "4")]
-    pub term: ::core::option::Option<::prost_types::Duration>,
-}
-/// Request message for releasing lease.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseLeaseRequest {
-    /// Lease id.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// Series name.
-    #[prost(string, tag = "2")]
-    pub series: ::prost::alloc::string::String,
-    /// Lease owner.
-    #[prost(string, tag = "3")]
-    pub owner: ::prost::alloc::string::String,
-}
-/// Response message for release lease.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseLeaseResponse {}
-/// RequestMetadata is the metadata message for the request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RequestMetadata {
-    /// Stream name.
-    #[prost(string, tag = "1")]
-    pub stream: ::prost::alloc::string::String,
-    /// Evevt name.
-    #[prost(string, tag = "2")]
-    pub event: ::prost::alloc::string::String,
-    /// Series name.
-    #[prost(string, tag = "3")]
-    pub series: ::prost::alloc::string::String,
-    /// Lease id.
-    #[prost(string, tag = "4")]
-    pub lease_id: ::prost::alloc::string::String,
-    /// Owner name.
-    #[prost(string, tag = "5")]
-    pub owner: ::prost::alloc::string::String,
-    /// Lease term specifies how long the client wants the session to be maintained
-    /// by the server after the client leaves. If the lease term is not set, the
-    /// server will release the session immediately and the client cannot reconnect
-    /// to the same session later.
-    #[prost(message, optional, tag = "6")]
-    pub lease_term: ::core::option::Option<::prost_types::Duration>,
-}
-/// Request message for sending packets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendPacketsRequest {
-    #[prost(oneof = "send_packets_request::Request", tags = "1, 2")]
-    pub request: ::core::option::Option<send_packets_request::Request>,
-}
-/// Nested message and enum types in `SendPacketsRequest`.
-pub mod send_packets_request {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Request {
-        /// Packets sent over the streaming rpc.
-        #[prost(message, tag = "1")]
-        Packet(super::Packet),
-        /// The first message of the streaming rpc including the request metadata.
-        #[prost(message, tag = "2")]
-        Metadata(super::RequestMetadata),
-    }
-}
-/// Response message for sending packets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendPacketsResponse {}
-/// Request message for receiving packets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceivePacketsRequest {
-    /// Possible request types from the client.
-    #[prost(oneof = "receive_packets_request::Request", tags = "6, 7")]
-    pub request: ::core::option::Option<receive_packets_request::Request>,
-}
-/// Nested message and enum types in `ReceivePacketsRequest`.
-pub mod receive_packets_request {
-    /// The message specifying the initial settings for the ReceivePackets session.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SetupRequest {
-        /// The configurations that specify where packets are retrieved.
-        #[prost(message, optional, tag = "1")]
-        pub metadata: ::core::option::Option<super::RequestMetadata>,
-        /// A name for the receiver to self-identify.
-        ///
-        /// This is used to keep track of a receiver's read progress.
-        #[prost(string, tag = "2")]
-        pub receiver: ::prost::alloc::string::String,
-        /// The maximum duration of server silence before the client determines the
-        /// server unreachable.
-        ///
-        /// The client must either receive a `Packet` or a heart beat message before
-        /// this duration expires; otherwise, the client will automatically cancel
-        /// the current connection and retry.
-        #[prost(message, optional, tag = "5")]
-        pub heartbeat_interval: ::core::option::Option<::prost_types::Duration>,
-        /// The grace period after which a `writes_done_request` is issued, that a
-        /// `WritesDone` is expected from the client.
-        ///
-        /// The server is free to cancel the RPC should this expire.
-        ///
-        /// A system default will be chosen if unset.
-        #[prost(message, optional, tag = "6")]
-        pub writes_done_grace_period: ::core::option::Option<::prost_types::Duration>,
-        /// The mode in which the consumer reads messages.
-        #[prost(oneof = "setup_request::ConsumerMode", tags = "3, 4")]
-        pub consumer_mode: ::core::option::Option<setup_request::ConsumerMode>,
-    }
-    /// Nested message and enum types in `SetupRequest`.
-    pub mod setup_request {
-        /// The mode in which the consumer reads messages.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ConsumerMode {
-            /// Options for configuring eager mode.
-            #[prost(message, tag = "3")]
-            EagerReceiveMode(super::super::EagerMode),
-            /// Options for configuring controlled mode.
-            #[prost(message, tag = "4")]
-            ControlledReceiveMode(super::super::ControlledMode),
-        }
-    }
-    /// Possible request types from the client.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Request {
-        /// The request to setup the initial state of session.
-        ///
-        /// The client must send and only send this as the first message.
-        #[prost(message, tag = "6")]
-        SetupRequest(SetupRequest),
-        /// This request checkpoints the consumer's read progress.
-        #[prost(message, tag = "7")]
-        CommitRequest(super::CommitRequest),
-    }
-}
-/// Control message for a ReceivePacketsResponse.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceivePacketsControlResponse {
-    /// Possible control messages.
-    #[prost(oneof = "receive_packets_control_response::Control", tags = "1, 2")]
-    pub control: ::core::option::Option<receive_packets_control_response::Control>,
-}
-/// Nested message and enum types in `ReceivePacketsControlResponse`.
-pub mod receive_packets_control_response {
-    /// Possible control messages.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Control {
-        /// A server heartbeat.
-        #[prost(bool, tag = "1")]
-        Heartbeat(bool),
-        /// A request to the receiver to complete any final writes followed by a
-        /// `WritesDone`; e.g. issue any final `CommitRequest`s.
-        ///
-        /// May be ignored if `WritesDone` has already been issued at any point
-        /// prior to receiving this message.
-        ///
-        /// If `WritesDone` does not get issued, then the server will forcefully
-        /// cancel the connection, and the receiver will likely receive an
-        /// uninformative after `Read` returns `false` and `Finish` is called.
-        #[prost(bool, tag = "2")]
-        WritesDoneRequest(bool),
-    }
-}
-/// Response message from ReceivePackets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReceivePacketsResponse {
-    /// Possible response types.
-    #[prost(oneof = "receive_packets_response::Response", tags = "1, 3")]
-    pub response: ::core::option::Option<receive_packets_response::Response>,
-}
-/// Nested message and enum types in `ReceivePacketsResponse`.
-pub mod receive_packets_response {
-    /// Possible response types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Response {
-        /// A genuine data payload originating from the sender.
-        #[prost(message, tag = "1")]
-        Packet(super::Packet),
-        /// A control message from the server.
-        #[prost(message, tag = "3")]
-        Control(super::ReceivePacketsControlResponse),
-    }
-}
-/// The options for receiver under the eager mode.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EagerMode {}
-/// The options for receiver under the controlled mode.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ControlledMode {
-    /// This is the logical starting point to fallback upon should the
-    /// specified starting offset be unavailable.
-    ///
-    /// This can be one of the following values:
-    ///
-    /// "begin": This will read from the earliest available message.
-    ///
-    /// "end": This will read only future messages.
-    #[prost(string, tag = "2")]
-    pub fallback_starting_offset: ::prost::alloc::string::String,
-    /// This is the offset from which to start receiveing.
-    #[prost(oneof = "controlled_mode::StartingOffset", tags = "1")]
-    pub starting_offset: ::core::option::Option<controlled_mode::StartingOffset>,
-}
-/// Nested message and enum types in `ControlledMode`.
-pub mod controlled_mode {
-    /// This is the offset from which to start receiveing.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum StartingOffset {
-        /// This can be set to the following logical starting points:
-        ///
-        /// "begin": This will read from the earliest available message.
-        ///
-        /// "most-recent": This will read from the latest available message.
-        ///
-        /// "end": This will read only future messages.
-        ///
-        /// "stored": This will resume reads one past the last committed offset.
-        ///            It is the only option that resumes progress; all others
-        ///            jump unilaterally.
-        #[prost(string, tag = "1")]
-        StartingLogicalOffset(::prost::alloc::string::String),
-    }
-}
-/// The message for explicitly committing the read progress.
-///
-/// This may only be used when `ReceivePacketsControlledMode` is set in the
-/// initial setup request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommitRequest {
-    /// The offset to commit.
-    #[prost(int64, tag = "1")]
-    pub offset: i64,
-}
-/// The lease type.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum LeaseType {
-    /// Lease type unspecified.
-    Unspecified = 0,
-    /// Lease for stream reader.
-    Reader = 1,
-    /// Lease for stream writer.
-    Writer = 2,
-}
-impl LeaseType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            LeaseType::Unspecified => "LEASE_TYPE_UNSPECIFIED",
-            LeaseType::Reader => "LEASE_TYPE_READER",
-            LeaseType::Writer => "LEASE_TYPE_WRITER",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "LEASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "LEASE_TYPE_READER" => Some(Self::Reader),
-            "LEASE_TYPE_WRITER" => Some(Self::Writer),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod streaming_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Streaming service for receiving and sending packets.
-    #[derive(Debug, Clone)]
-    pub struct StreamingServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> StreamingServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> StreamingServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            StreamingServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Send packets to the series.
-        pub async fn send_packets(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::SendPacketsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::SendPacketsResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/SendPackets",
-            );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
-        }
-        /// Receive packets from the series.
-        pub async fn receive_packets(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::ReceivePacketsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::ReceivePacketsResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/ReceivePackets",
-            );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
-        }
-        /// Receive events given the stream name.
-        pub async fn receive_events(
-            &mut self,
-            request: impl tonic::IntoStreamingRequest<
-                Message = super::ReceiveEventsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<tonic::codec::Streaming<super::ReceiveEventsResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/ReceiveEvents",
-            );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
-        }
-        /// AcquireLease acquires a lease.
-        pub async fn acquire_lease(
-            &mut self,
-            request: impl tonic::IntoRequest<super::AcquireLeaseRequest>,
-        ) -> Result<tonic::Response<super::Lease>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/AcquireLease",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// RenewLease renews a lease.
-        pub async fn renew_lease(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RenewLeaseRequest>,
-        ) -> Result<tonic::Response<super::Lease>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/RenewLease",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// RleaseLease releases a lease.
-        pub async fn release_lease(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReleaseLeaseRequest>,
-        ) -> Result<tonic::Response<super::ReleaseLeaseResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.StreamingService/ReleaseLease",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Message for requesting list of Analyses
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAnalysesRequest {
-    /// Required. Parent value for ListAnalysesRequest
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Analyses
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAnalysesResponse {
-    /// The list of Analysis
-    #[prost(message, repeated, tag = "1")]
-    pub analyses: ::prost::alloc::vec::Vec<Analysis>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting an Analysis.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAnalysisRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating an Analysis.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAnalysisRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub analysis_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub analysis: ::core::option::Option<Analysis>,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating an Analysis.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateAnalysisRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the
-    /// Analysis resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated.
-    #[prost(message, optional, tag = "2")]
-    pub analysis: ::core::option::Option<Analysis>,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting an Analysis.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteAnalysisRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for requesting list of Processes.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProcessesRequest {
-    /// Required. Parent value for ListProcessesRequest.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Requested page size. Server may return fewer items than requested.
-    /// If unspecified, server will pick an appropriate default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Filtering results
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Hint for how to order the results
-    #[prost(string, tag = "5")]
-    pub order_by: ::prost::alloc::string::String,
-}
-/// Message for response to listing Processes.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListProcessesResponse {
-    /// The list of Processes.
-    #[prost(message, repeated, tag = "1")]
-    pub processes: ::prost::alloc::vec::Vec<Process>,
-    /// A token identifying a page of results the server should return.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Message for getting a Process.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetProcessRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Message for creating a Process.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateProcessRequest {
-    /// Required. Value for parent.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Id of the requesting object.
-    #[prost(string, tag = "2")]
-    pub process_id: ::prost::alloc::string::String,
-    /// Required. The resource being created.
-    #[prost(message, optional, tag = "3")]
-    pub process: ::core::option::Option<Process>,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "4")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for updating a Process.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateProcessRequest {
-    /// Required. Field mask is used to specify the fields to be overwritten in the
-    /// Process resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The resource being updated.
-    #[prost(message, optional, tag = "2")]
-    pub process: ::core::option::Option<Process>,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes since the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "3")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Message for deleting a Process.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteProcessRequest {
-    /// Required. Name of the resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. An optional request ID to identify requests. Specify a unique
-    /// request ID so that if you must retry your request, the server will know to
-    /// ignore the request if it has already been completed. The server will
-    /// guarantee that for at least 60 minutes after the first request.
-    ///
-    /// For example, consider a situation where you make an initial request and the
-    /// request times out. If you make the request again with the same request ID,
-    /// the server can check if original operation with the same request ID was
-    /// received, and if so, will ignore the second request. This prevents clients
-    /// from accidentally creating duplicate commitments.
-    ///
-    /// The request ID must be a valid UUID with the exception that zero UUID is
-    /// not supported (00000000-0000-0000-0000-000000000000).
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-/// Request message for running the processes in a batch.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchRunProcessRequest {
-    /// Required. The parent resource shared by all processes being created.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The create process requests.
-    #[prost(message, repeated, tag = "2")]
-    pub requests: ::prost::alloc::vec::Vec<CreateProcessRequest>,
-    /// Optional. Options for batch processes.
-    #[prost(message, optional, tag = "3")]
-    pub options: ::core::option::Option<
-        batch_run_process_request::BatchRunProcessOptions,
-    >,
-    /// Output only. The batch ID.
-    #[prost(string, tag = "4")]
-    pub batch_id: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `BatchRunProcessRequest`.
-pub mod batch_run_process_request {
-    /// Options for batch processes.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct BatchRunProcessOptions {
-        /// The retry counts per process. Default: 3.
-        #[prost(int32, tag = "1")]
-        pub retry_count: i32,
-        /// The batch size. Default: 5, maximum: 100.
-        #[prost(int32, tag = "2")]
-        pub batch_size: i32,
-    }
-}
-/// Response message for running the processes in a batch.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchRunProcessResponse {
-    /// The batch ID.
-    #[prost(string, tag = "1")]
-    pub batch_id: ::prost::alloc::string::String,
-    /// Processes created.
-    #[prost(message, repeated, tag = "2")]
-    pub processes: ::prost::alloc::vec::Vec<Process>,
-}
-/// Generated client implementations.
-pub mod live_video_analytics_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service describing handlers for resources. The service enables clients to run
-    /// Live Video Analytics (LVA) on the streaming inputs.
-    #[derive(Debug, Clone)]
-    pub struct LiveVideoAnalyticsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> LiveVideoAnalyticsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> LiveVideoAnalyticsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            LiveVideoAnalyticsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists Analyses in a given project and location.
-        pub async fn list_analyses(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListAnalysesRequest>,
-        ) -> Result<tonic::Response<super::ListAnalysesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListAnalyses",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Analysis.
-        pub async fn get_analysis(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAnalysisRequest>,
-        ) -> Result<tonic::Response<super::Analysis>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetAnalysis",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Analysis in a given project and location.
-        pub async fn create_analysis(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateAnalysisRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateAnalysis",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Analysis.
-        pub async fn update_analysis(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateAnalysisRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateAnalysis",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Analysis.
-        pub async fn delete_analysis(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteAnalysisRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteAnalysis",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Processes in a given project and location.
-        pub async fn list_processes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListProcessesRequest>,
-        ) -> Result<tonic::Response<super::ListProcessesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/ListProcesses",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets details of a single Process.
-        pub async fn get_process(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetProcessRequest>,
-        ) -> Result<tonic::Response<super::Process>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/GetProcess",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new Process in a given project and location.
-        pub async fn create_process(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateProcessRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/CreateProcess",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the parameters of a single Process.
-        pub async fn update_process(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateProcessRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/UpdateProcess",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a single Process.
-        pub async fn delete_process(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteProcessRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/DeleteProcess",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Run all of the processes to "completion". Max time for each process is
-        /// the LRO time limit.
-        pub async fn batch_run_process(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BatchRunProcessRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.visionai.v1.LiveVideoAnalytics/BatchRunProcess",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

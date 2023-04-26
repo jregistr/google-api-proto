@@ -882,6 +882,206 @@ pub mod prediction_service_client {
         }
     }
 }
+/// Registered Api Key.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PredictionApiKeyRegistration {
+    /// The API key.
+    #[prost(string, tag = "1")]
+    pub api_key: ::prost::alloc::string::String,
+}
+/// Request message for the `CreatePredictionApiKeyRegistration` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreatePredictionApiKeyRegistrationRequest {
+    /// Required. The parent resource path.
+    /// `projects/*/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The prediction API key registration.
+    #[prost(message, optional, tag = "2")]
+    pub prediction_api_key_registration: ::core::option::Option<
+        PredictionApiKeyRegistration,
+    >,
+}
+/// Request message for the `ListPredictionApiKeyRegistrations`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPredictionApiKeyRegistrationsRequest {
+    /// Required. The parent placement resource name such as
+    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. Maximum number of results to return per page. If unset, the
+    /// service will choose a reasonable default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. The previous `ListPredictionApiKeyRegistration.nextPageToken`.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for the `ListPredictionApiKeyRegistrations`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListPredictionApiKeyRegistrationsResponse {
+    /// The list of registered API keys.
+    #[prost(message, repeated, tag = "1")]
+    pub prediction_api_key_registrations: ::prost::alloc::vec::Vec<
+        PredictionApiKeyRegistration,
+    >,
+    /// If empty, the list is complete. If nonempty, pass the token to the next
+    /// request's `ListPredictionApiKeysRegistrationsRequest.pageToken`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request message for `DeletePredictionApiKeyRegistration` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeletePredictionApiKeyRegistrationRequest {
+    /// Required. The API key to unregister including full resource path.
+    /// `projects/*/locations/global/catalogs/default_catalog/eventStores/default_event_store/predictionApiKeyRegistrations/<YOUR_API_KEY>`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod prediction_api_key_registry_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for registering API keys for use with the `predict` method. If you
+    /// use an API key to request predictions, you must first register the API key.
+    /// Otherwise, your prediction request is rejected. If you use OAuth to
+    /// authenticate your `predict` method call, you do not need to register an API
+    /// key. You can register up to 20 API keys per project.
+    #[derive(Debug, Clone)]
+    pub struct PredictionApiKeyRegistryClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> PredictionApiKeyRegistryClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PredictionApiKeyRegistryClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            PredictionApiKeyRegistryClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Register an API key for use with predict method.
+        pub async fn create_prediction_api_key_registration(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::CreatePredictionApiKeyRegistrationRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::PredictionApiKeyRegistration>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/CreatePredictionApiKeyRegistration",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// List the registered apiKeys for use with predict method.
+        pub async fn list_prediction_api_key_registrations(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListPredictionApiKeyRegistrationsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::ListPredictionApiKeyRegistrationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/ListPredictionApiKeyRegistrations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Unregister an apiKey from using for predict method.
+        pub async fn delete_prediction_api_key_registration(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::DeletePredictionApiKeyRegistrationRequest,
+            >,
+        ) -> Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/DeletePredictionApiKeyRegistration",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Google Cloud Storage location for input content.
 /// format.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1677,206 +1877,6 @@ pub mod user_event_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommendationengine.v1beta1.UserEventService/ImportUserEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Registered Api Key.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PredictionApiKeyRegistration {
-    /// The API key.
-    #[prost(string, tag = "1")]
-    pub api_key: ::prost::alloc::string::String,
-}
-/// Request message for the `CreatePredictionApiKeyRegistration` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreatePredictionApiKeyRegistrationRequest {
-    /// Required. The parent resource path.
-    /// `projects/*/locations/global/catalogs/default_catalog/eventStores/default_event_store`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The prediction API key registration.
-    #[prost(message, optional, tag = "2")]
-    pub prediction_api_key_registration: ::core::option::Option<
-        PredictionApiKeyRegistration,
-    >,
-}
-/// Request message for the `ListPredictionApiKeyRegistrations`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPredictionApiKeyRegistrationsRequest {
-    /// Required. The parent placement resource name such as
-    /// `projects/1234/locations/global/catalogs/default_catalog/eventStores/default_event_store`
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. Maximum number of results to return per page. If unset, the
-    /// service will choose a reasonable default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. The previous `ListPredictionApiKeyRegistration.nextPageToken`.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for the `ListPredictionApiKeyRegistrations`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListPredictionApiKeyRegistrationsResponse {
-    /// The list of registered API keys.
-    #[prost(message, repeated, tag = "1")]
-    pub prediction_api_key_registrations: ::prost::alloc::vec::Vec<
-        PredictionApiKeyRegistration,
-    >,
-    /// If empty, the list is complete. If nonempty, pass the token to the next
-    /// request's `ListPredictionApiKeysRegistrationsRequest.pageToken`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request message for `DeletePredictionApiKeyRegistration` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeletePredictionApiKeyRegistrationRequest {
-    /// Required. The API key to unregister including full resource path.
-    /// `projects/*/locations/global/catalogs/default_catalog/eventStores/default_event_store/predictionApiKeyRegistrations/<YOUR_API_KEY>`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod prediction_api_key_registry_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for registering API keys for use with the `predict` method. If you
-    /// use an API key to request predictions, you must first register the API key.
-    /// Otherwise, your prediction request is rejected. If you use OAuth to
-    /// authenticate your `predict` method call, you do not need to register an API
-    /// key. You can register up to 20 API keys per project.
-    #[derive(Debug, Clone)]
-    pub struct PredictionApiKeyRegistryClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> PredictionApiKeyRegistryClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PredictionApiKeyRegistryClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            PredictionApiKeyRegistryClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Register an API key for use with predict method.
-        pub async fn create_prediction_api_key_registration(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::CreatePredictionApiKeyRegistrationRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::PredictionApiKeyRegistration>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/CreatePredictionApiKeyRegistration",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List the registered apiKeys for use with predict method.
-        pub async fn list_prediction_api_key_registrations(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListPredictionApiKeyRegistrationsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListPredictionApiKeyRegistrationsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/ListPredictionApiKeyRegistrations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Unregister an apiKey from using for predict method.
-        pub async fn delete_prediction_api_key_registration(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::DeletePredictionApiKeyRegistrationRequest,
-            >,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.recommendationengine.v1beta1.PredictionApiKeyRegistry/DeletePredictionApiKeyRegistration",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

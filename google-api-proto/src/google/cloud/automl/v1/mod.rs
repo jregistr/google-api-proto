@@ -1,423 +1,20 @@
-/// Contains annotation details specific to classification.
+/// A definition of an annotation spec.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassificationAnnotation {
-    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
-    /// means greater confidence that the annotation is positive. If a user
-    /// approves an annotation as negative or positive, the score value remains
-    /// unchanged. If a user creates an annotation, the score is 0 for negative or
-    /// 1 for positive.
-    #[prost(float, tag = "1")]
-    pub score: f32,
-}
-/// Model evaluation metrics for classification problems.
-/// Note: For Video Classification this metrics only describe quality of the
-/// Video Classification predictions of "segment_classification" type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassificationEvaluationMetrics {
-    /// Output only. The Area Under Precision-Recall Curve metric. Micro-averaged
-    /// for the overall evaluation.
-    #[prost(float, tag = "1")]
-    pub au_prc: f32,
-    /// Output only. The Area Under Receiver Operating Characteristic curve metric.
-    /// Micro-averaged for the overall evaluation.
-    #[prost(float, tag = "6")]
-    pub au_roc: f32,
-    /// Output only. The Log Loss metric.
-    #[prost(float, tag = "7")]
-    pub log_loss: f32,
-    /// Output only. Metrics for each confidence_threshold in
-    /// 0.00,0.05,0.10,...,0.95,0.96,0.97,0.98,0.99 and
-    /// position_threshold = INT32_MAX_VALUE.
-    /// ROC and precision-recall curves, and other aggregated metrics are derived
-    /// from them. The confidence metrics entries may also be supplied for
-    /// additional values of position_threshold, but from these no aggregated
-    /// metrics are computed.
-    #[prost(message, repeated, tag = "3")]
-    pub confidence_metrics_entry: ::prost::alloc::vec::Vec<
-        classification_evaluation_metrics::ConfidenceMetricsEntry,
-    >,
-    /// Output only. Confusion matrix of the evaluation.
-    /// Only set for MULTICLASS classification problems where number
-    /// of labels is no more than 10.
-    /// Only set for model level evaluation, not for evaluation per label.
-    #[prost(message, optional, tag = "4")]
-    pub confusion_matrix: ::core::option::Option<
-        classification_evaluation_metrics::ConfusionMatrix,
-    >,
-    /// Output only. The annotation spec ids used for this evaluation.
-    #[prost(string, repeated, tag = "5")]
-    pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `ClassificationEvaluationMetrics`.
-pub mod classification_evaluation_metrics {
-    /// Metrics for a single confidence threshold.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceMetricsEntry {
-        /// Output only. Metrics are computed with an assumption that the model
-        /// never returns predictions with score lower than this value.
-        #[prost(float, tag = "1")]
-        pub confidence_threshold: f32,
-        /// Output only. Metrics are computed with an assumption that the model
-        /// always returns at most this many predictions (ordered by their score,
-        /// descendingly), but they all still need to meet the confidence_threshold.
-        #[prost(int32, tag = "14")]
-        pub position_threshold: i32,
-        /// Output only. Recall (True Positive Rate) for the given confidence
-        /// threshold.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// Output only. Precision for the given confidence threshold.
-        #[prost(float, tag = "3")]
-        pub precision: f32,
-        /// Output only. False Positive Rate for the given confidence threshold.
-        #[prost(float, tag = "8")]
-        pub false_positive_rate: f32,
-        /// Output only. The harmonic mean of recall and precision.
-        #[prost(float, tag = "4")]
-        pub f1_score: f32,
-        /// Output only. The Recall (True Positive Rate) when only considering the
-        /// label that has the highest prediction score and not below the confidence
-        /// threshold for each example.
-        #[prost(float, tag = "5")]
-        pub recall_at1: f32,
-        /// Output only. The precision when only considering the label that has the
-        /// highest prediction score and not below the confidence threshold for each
-        /// example.
-        #[prost(float, tag = "6")]
-        pub precision_at1: f32,
-        /// Output only. The False Positive Rate when only considering the label that
-        /// has the highest prediction score and not below the confidence threshold
-        /// for each example.
-        #[prost(float, tag = "9")]
-        pub false_positive_rate_at1: f32,
-        /// Output only. The harmonic mean of \[recall_at1][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.recall_at1\] and \[precision_at1][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.precision_at1\].
-        #[prost(float, tag = "7")]
-        pub f1_score_at1: f32,
-        /// Output only. The number of model created labels that match a ground truth
-        /// label.
-        #[prost(int64, tag = "10")]
-        pub true_positive_count: i64,
-        /// Output only. The number of model created labels that do not match a
-        /// ground truth label.
-        #[prost(int64, tag = "11")]
-        pub false_positive_count: i64,
-        /// Output only. The number of ground truth labels that are not matched
-        /// by a model created label.
-        #[prost(int64, tag = "12")]
-        pub false_negative_count: i64,
-        /// Output only. The number of labels that were not created by the model,
-        /// but if they would, they would not match a ground truth label.
-        #[prost(int64, tag = "13")]
-        pub true_negative_count: i64,
-    }
-    /// Confusion matrix of the model running the classification.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfusionMatrix {
-        /// Output only. IDs of the annotation specs used in the confusion matrix.
-        /// For Tables CLASSIFICATION
-        /// \[prediction_type][google.cloud.automl.v1p1beta.TablesModelMetadata.prediction_type\]
-        /// only list of \[annotation_spec_display_name-s][\] is populated.
-        #[prost(string, repeated, tag = "1")]
-        pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Output only. Display name of the annotation specs used in the confusion
-        /// matrix, as they were at the moment of the evaluation. For Tables
-        /// CLASSIFICATION
-        /// \[prediction_type-s][google.cloud.automl.v1p1beta.TablesModelMetadata.prediction_type\],
-        /// distinct values of the target column at the moment of the model
-        /// evaluation are populated here.
-        #[prost(string, repeated, tag = "3")]
-        pub display_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Output only. Rows in the confusion matrix. The number of rows is equal to
-        /// the size of `annotation_spec_id`.
-        /// `row\[i].example_count[j\]` is the number of examples that have ground
-        /// truth of the `annotation_spec_id\[i\]` and are predicted as
-        /// `annotation_spec_id\[j\]` by the model being evaluated.
-        #[prost(message, repeated, tag = "2")]
-        pub row: ::prost::alloc::vec::Vec<confusion_matrix::Row>,
-    }
-    /// Nested message and enum types in `ConfusionMatrix`.
-    pub mod confusion_matrix {
-        /// Output only. A row in the confusion matrix.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Row {
-            /// Output only. Value of the specific cell in the confusion matrix.
-            /// The number of values each row has (i.e. the length of the row) is equal
-            /// to the length of the `annotation_spec_id` field or, if that one is not
-            /// populated, length of the \[display_name][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfusionMatrix.display_name\] field.
-            #[prost(int32, repeated, tag = "1")]
-            pub example_count: ::prost::alloc::vec::Vec<i32>,
-        }
-    }
-}
-/// Type of the classification problem.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ClassificationType {
-    /// An un-set value of this enum.
-    Unspecified = 0,
-    /// At most one label is allowed per example.
-    Multiclass = 1,
-    /// Multiple labels are allowed for one example.
-    Multilabel = 2,
-}
-impl ClassificationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ClassificationType::Unspecified => "CLASSIFICATION_TYPE_UNSPECIFIED",
-            ClassificationType::Multiclass => "MULTICLASS",
-            ClassificationType::Multilabel => "MULTILABEL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "CLASSIFICATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "MULTICLASS" => Some(Self::Multiclass),
-            "MULTILABEL" => Some(Self::Multilabel),
-            _ => None,
-        }
-    }
-}
-/// A vertex represents a 2D point in the image.
-/// The normalized vertex coordinates are between 0 to 1 fractions relative to
-/// the original plane (image, video). E.g. if the plane (e.g. whole image) would
-/// have size 10 x 20 then a point with normalized coordinates (0.1, 0.3) would
-/// be at the position (1, 6) on that plane.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NormalizedVertex {
-    /// Required. Horizontal coordinate.
-    #[prost(float, tag = "1")]
-    pub x: f32,
-    /// Required. Vertical coordinate.
-    #[prost(float, tag = "2")]
-    pub y: f32,
-}
-/// A bounding polygon of a detected object on a plane.
-/// On output both vertices and normalized_vertices are provided.
-/// The polygon is formed by connecting vertices in the order they are listed.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingPoly {
-    /// Output only . The bounding polygon normalized vertices.
-    #[prost(message, repeated, tag = "2")]
-    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
-}
-/// Annotation details for image object detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionAnnotation {
-    /// Output only. The rectangle representing the object location.
-    #[prost(message, optional, tag = "1")]
-    pub bounding_box: ::core::option::Option<BoundingPoly>,
-    /// Output only. The confidence that this annotation is positive for the parent example,
-    /// value in [0, 1], higher means higher positivity confidence.
-    #[prost(float, tag = "2")]
-    pub score: f32,
-}
-/// Bounding box matching model metrics for a single intersection-over-union
-/// threshold and multiple label match confidence thresholds.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BoundingBoxMetricsEntry {
-    /// Output only. The intersection-over-union threshold value used to compute
-    /// this metrics entry.
-    #[prost(float, tag = "1")]
-    pub iou_threshold: f32,
-    /// Output only. The mean average precision, most often close to au_prc.
-    #[prost(float, tag = "2")]
-    pub mean_average_precision: f32,
-    /// Output only. Metrics for each label-match confidence_threshold from
-    /// 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99. Precision-recall curve is
-    /// derived from them.
-    #[prost(message, repeated, tag = "3")]
-    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
-        bounding_box_metrics_entry::ConfidenceMetricsEntry,
-    >,
-}
-/// Nested message and enum types in `BoundingBoxMetricsEntry`.
-pub mod bounding_box_metrics_entry {
-    /// Metrics for a single confidence threshold.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceMetricsEntry {
-        /// Output only. The confidence threshold value used to compute the metrics.
-        #[prost(float, tag = "1")]
-        pub confidence_threshold: f32,
-        /// Output only. Recall under the given confidence threshold.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// Output only. Precision under the given confidence threshold.
-        #[prost(float, tag = "3")]
-        pub precision: f32,
-        /// Output only. The harmonic mean of recall and precision.
-        #[prost(float, tag = "4")]
-        pub f1_score: f32,
-    }
-}
-/// Model evaluation metrics for image object detection problems.
-/// Evaluates prediction quality of labeled bounding boxes.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionEvaluationMetrics {
-    /// Output only. The total number of bounding boxes (i.e. summed over all
-    /// images) the ground truth used to create this evaluation had.
-    #[prost(int32, tag = "1")]
-    pub evaluated_bounding_box_count: i32,
-    /// Output only. The bounding boxes match metrics for each
-    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
-    /// pair.
-    #[prost(message, repeated, tag = "2")]
-    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
-    /// Output only. The single metric for bounding boxes evaluation:
-    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
-    #[prost(float, tag = "3")]
-    pub bounding_box_mean_average_precision: f32,
-}
-/// A contiguous part of a text (string), assuming it has an UTF-8 NFC encoding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextSegment {
-    /// Output only. The content of the TextSegment.
-    #[prost(string, tag = "3")]
-    pub content: ::prost::alloc::string::String,
-    /// Required. Zero-based character index of the first character of the text
-    /// segment (counting characters from the beginning of the text).
-    #[prost(int64, tag = "1")]
-    pub start_offset: i64,
-    /// Required. Zero-based character index of the first character past the end of
-    /// the text segment (counting character from the beginning of the text).
-    /// The character at the end_offset is NOT included in the text segment.
-    #[prost(int64, tag = "2")]
-    pub end_offset: i64,
-}
-/// Annotation for identifying spans of text.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextExtractionAnnotation {
-    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
-    /// means greater confidence in correctness of the annotation.
-    #[prost(float, tag = "1")]
-    pub score: f32,
-    /// Required. Text extraction annotations can either be a text segment or a
-    /// text relation.
-    #[prost(oneof = "text_extraction_annotation::Annotation", tags = "3")]
-    pub annotation: ::core::option::Option<text_extraction_annotation::Annotation>,
-}
-/// Nested message and enum types in `TextExtractionAnnotation`.
-pub mod text_extraction_annotation {
-    /// Required. Text extraction annotations can either be a text segment or a
-    /// text relation.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Annotation {
-        /// An entity annotation will set this, which is the part of the original
-        /// text to which the annotation pertains.
-        #[prost(message, tag = "3")]
-        TextSegment(super::TextSegment),
-    }
-}
-/// Model evaluation metrics for text extraction problems.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextExtractionEvaluationMetrics {
-    /// Output only. The Area under precision recall curve metric.
-    #[prost(float, tag = "1")]
-    pub au_prc: f32,
-    /// Output only. Metrics that have confidence thresholds.
-    /// Precision-recall curve can be derived from it.
-    #[prost(message, repeated, tag = "2")]
-    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
-        text_extraction_evaluation_metrics::ConfidenceMetricsEntry,
-    >,
-}
-/// Nested message and enum types in `TextExtractionEvaluationMetrics`.
-pub mod text_extraction_evaluation_metrics {
-    /// Metrics for a single confidence threshold.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceMetricsEntry {
-        /// Output only. The confidence threshold value used to compute the metrics.
-        /// Only annotations with score of at least this threshold are considered to
-        /// be ones the model would return.
-        #[prost(float, tag = "1")]
-        pub confidence_threshold: f32,
-        /// Output only. Recall under the given confidence threshold.
-        #[prost(float, tag = "3")]
-        pub recall: f32,
-        /// Output only. Precision under the given confidence threshold.
-        #[prost(float, tag = "4")]
-        pub precision: f32,
-        /// Output only. The harmonic mean of recall and precision.
-        #[prost(float, tag = "5")]
-        pub f1_score: f32,
-    }
-}
-/// Contains annotation details specific to text sentiment.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextSentimentAnnotation {
-    /// Output only. The sentiment with the semantic, as given to the
-    /// \[AutoMl.ImportData][google.cloud.automl.v1.AutoMl.ImportData\] when populating the dataset from which the model used
-    /// for the prediction had been trained.
-    /// The sentiment values are between 0 and
-    /// Dataset.text_sentiment_dataset_metadata.sentiment_max (inclusive),
-    /// with higher value meaning more positive sentiment. They are completely
-    /// relative, i.e. 0 means least positive sentiment and sentiment_max means
-    /// the most positive from the sentiments present in the train data. Therefore
-    ///   e.g. if train data had only negative sentiment, then sentiment_max, would
-    /// be still negative (although least negative).
-    /// The sentiment shouldn't be confused with "score" or "magnitude"
-    /// from the previous Natural Language Sentiment Analysis API.
-    #[prost(int32, tag = "1")]
-    pub sentiment: i32,
-}
-/// Model evaluation metrics for text sentiment problems.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextSentimentEvaluationMetrics {
-    /// Output only. Precision.
-    #[prost(float, tag = "1")]
-    pub precision: f32,
-    /// Output only. Recall.
-    #[prost(float, tag = "2")]
-    pub recall: f32,
-    /// Output only. The harmonic mean of recall and precision.
-    #[prost(float, tag = "3")]
-    pub f1_score: f32,
-    /// Output only. Mean absolute error. Only set for the overall model
-    /// evaluation, not for evaluation of a single annotation spec.
-    #[prost(float, tag = "4")]
-    pub mean_absolute_error: f32,
-    /// Output only. Mean squared error. Only set for the overall model
-    /// evaluation, not for evaluation of a single annotation spec.
-    #[prost(float, tag = "5")]
-    pub mean_squared_error: f32,
-    /// Output only. Linear weighted kappa. Only set for the overall model
-    /// evaluation, not for evaluation of a single annotation spec.
-    #[prost(float, tag = "6")]
-    pub linear_kappa: f32,
-    /// Output only. Quadratic weighted kappa. Only set for the overall model
-    /// evaluation, not for evaluation of a single annotation spec.
-    #[prost(float, tag = "7")]
-    pub quadratic_kappa: f32,
-    /// Output only. Confusion matrix of the evaluation.
-    /// Only set for the overall model evaluation, not for evaluation of a single
-    /// annotation spec.
-    #[prost(message, optional, tag = "8")]
-    pub confusion_matrix: ::core::option::Option<
-        classification_evaluation_metrics::ConfusionMatrix,
-    >,
+pub struct AnnotationSpec {
+    /// Output only. Resource name of the annotation spec.
+    /// Form:
+    /// 'projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/annotationSpecs/{annotation_spec_id}'
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the annotation spec to show in the interface. The name can be
+    /// up to 32 characters long and must match the regexp `\[a-zA-Z0-9_\]+`.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The number of examples in the parent dataset
+    /// labeled by the annotation spec.
+    #[prost(int32, tag = "9")]
+    pub example_count: i32,
 }
 /// Input configuration for \[AutoMl.ImportData][google.cloud.automl.v1.AutoMl.ImportData\] action.
 ///
@@ -1786,6 +1383,618 @@ pub struct GcsDestination {
     #[prost(string, tag = "1")]
     pub output_uri_prefix: ::prost::alloc::string::String,
 }
+/// Metadata used across all long running operations returned by AutoML API.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// Output only. Progress of operation. Range: [0, 100].
+    /// Not used currently.
+    #[prost(int32, tag = "13")]
+    pub progress_percent: i32,
+    /// Output only. Partial failures encountered.
+    /// E.g. single files that couldn't be read.
+    /// This field should never exceed 20 entries.
+    /// Status details field will contain standard GCP error details.
+    #[prost(message, repeated, tag = "2")]
+    pub partial_failures: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
+    /// Output only. Time when the operation was created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Time when the operation was updated for the last time.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Ouptut only. Details of specific operation. Even if this field is empty,
+    /// the presence allows to distinguish different types of operations.
+    #[prost(
+        oneof = "operation_metadata::Details",
+        tags = "8, 24, 25, 10, 30, 15, 16, 21, 22"
+    )]
+    pub details: ::core::option::Option<operation_metadata::Details>,
+}
+/// Nested message and enum types in `OperationMetadata`.
+pub mod operation_metadata {
+    /// Ouptut only. Details of specific operation. Even if this field is empty,
+    /// the presence allows to distinguish different types of operations.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Details {
+        /// Details of a Delete operation.
+        #[prost(message, tag = "8")]
+        DeleteDetails(super::DeleteOperationMetadata),
+        /// Details of a DeployModel operation.
+        #[prost(message, tag = "24")]
+        DeployModelDetails(super::DeployModelOperationMetadata),
+        /// Details of an UndeployModel operation.
+        #[prost(message, tag = "25")]
+        UndeployModelDetails(super::UndeployModelOperationMetadata),
+        /// Details of CreateModel operation.
+        #[prost(message, tag = "10")]
+        CreateModelDetails(super::CreateModelOperationMetadata),
+        /// Details of CreateDataset operation.
+        #[prost(message, tag = "30")]
+        CreateDatasetDetails(super::CreateDatasetOperationMetadata),
+        /// Details of ImportData operation.
+        #[prost(message, tag = "15")]
+        ImportDataDetails(super::ImportDataOperationMetadata),
+        /// Details of BatchPredict operation.
+        #[prost(message, tag = "16")]
+        BatchPredictDetails(super::BatchPredictOperationMetadata),
+        /// Details of ExportData operation.
+        #[prost(message, tag = "21")]
+        ExportDataDetails(super::ExportDataOperationMetadata),
+        /// Details of ExportModel operation.
+        #[prost(message, tag = "22")]
+        ExportModelDetails(super::ExportModelOperationMetadata),
+    }
+}
+/// Details of operations that perform deletes of any entities.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteOperationMetadata {}
+/// Details of DeployModel operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeployModelOperationMetadata {}
+/// Details of UndeployModel operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UndeployModelOperationMetadata {}
+/// Details of CreateDataset operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateDatasetOperationMetadata {}
+/// Details of CreateModel operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateModelOperationMetadata {}
+/// Details of ImportData operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportDataOperationMetadata {}
+/// Details of ExportData operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportDataOperationMetadata {
+    /// Output only. Information further describing this export data's output.
+    #[prost(message, optional, tag = "1")]
+    pub output_info: ::core::option::Option<
+        export_data_operation_metadata::ExportDataOutputInfo,
+    >,
+}
+/// Nested message and enum types in `ExportDataOperationMetadata`.
+pub mod export_data_operation_metadata {
+    /// Further describes this export data's output.
+    /// Supplements
+    /// \[OutputConfig][google.cloud.automl.v1.OutputConfig\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExportDataOutputInfo {
+        /// The output location to which the exported data is written.
+        #[prost(oneof = "export_data_output_info::OutputLocation", tags = "1")]
+        pub output_location: ::core::option::Option<
+            export_data_output_info::OutputLocation,
+        >,
+    }
+    /// Nested message and enum types in `ExportDataOutputInfo`.
+    pub mod export_data_output_info {
+        /// The output location to which the exported data is written.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum OutputLocation {
+            /// The full path of the Google Cloud Storage directory created, into which
+            /// the exported data is written.
+            #[prost(string, tag = "1")]
+            GcsOutputDirectory(::prost::alloc::string::String),
+        }
+    }
+}
+/// Details of BatchPredict operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchPredictOperationMetadata {
+    /// Output only. The input config that was given upon starting this
+    /// batch predict operation.
+    #[prost(message, optional, tag = "1")]
+    pub input_config: ::core::option::Option<BatchPredictInputConfig>,
+    /// Output only. Information further describing this batch predict's output.
+    #[prost(message, optional, tag = "2")]
+    pub output_info: ::core::option::Option<
+        batch_predict_operation_metadata::BatchPredictOutputInfo,
+    >,
+}
+/// Nested message and enum types in `BatchPredictOperationMetadata`.
+pub mod batch_predict_operation_metadata {
+    /// Further describes this batch predict's output.
+    /// Supplements
+    /// \[BatchPredictOutputConfig][google.cloud.automl.v1.BatchPredictOutputConfig\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct BatchPredictOutputInfo {
+        /// The output location into which prediction output is written.
+        #[prost(oneof = "batch_predict_output_info::OutputLocation", tags = "1")]
+        pub output_location: ::core::option::Option<
+            batch_predict_output_info::OutputLocation,
+        >,
+    }
+    /// Nested message and enum types in `BatchPredictOutputInfo`.
+    pub mod batch_predict_output_info {
+        /// The output location into which prediction output is written.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum OutputLocation {
+            /// The full path of the Google Cloud Storage directory created, into which
+            /// the prediction output is written.
+            #[prost(string, tag = "1")]
+            GcsOutputDirectory(::prost::alloc::string::String),
+        }
+    }
+}
+/// Details of ExportModel operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportModelOperationMetadata {
+    /// Output only. Information further describing the output of this model
+    /// export.
+    #[prost(message, optional, tag = "2")]
+    pub output_info: ::core::option::Option<
+        export_model_operation_metadata::ExportModelOutputInfo,
+    >,
+}
+/// Nested message and enum types in `ExportModelOperationMetadata`.
+pub mod export_model_operation_metadata {
+    /// Further describes the output of model export.
+    /// Supplements
+    /// \[ModelExportOutputConfig][google.cloud.automl.v1.ModelExportOutputConfig\].
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExportModelOutputInfo {
+        /// The full path of the Google Cloud Storage directory created, into which
+        /// the model will be exported.
+        #[prost(string, tag = "1")]
+        pub gcs_output_directory: ::prost::alloc::string::String,
+    }
+}
+/// Contains annotation details specific to classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassificationAnnotation {
+    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
+    /// means greater confidence that the annotation is positive. If a user
+    /// approves an annotation as negative or positive, the score value remains
+    /// unchanged. If a user creates an annotation, the score is 0 for negative or
+    /// 1 for positive.
+    #[prost(float, tag = "1")]
+    pub score: f32,
+}
+/// Model evaluation metrics for classification problems.
+/// Note: For Video Classification this metrics only describe quality of the
+/// Video Classification predictions of "segment_classification" type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassificationEvaluationMetrics {
+    /// Output only. The Area Under Precision-Recall Curve metric. Micro-averaged
+    /// for the overall evaluation.
+    #[prost(float, tag = "1")]
+    pub au_prc: f32,
+    /// Output only. The Area Under Receiver Operating Characteristic curve metric.
+    /// Micro-averaged for the overall evaluation.
+    #[prost(float, tag = "6")]
+    pub au_roc: f32,
+    /// Output only. The Log Loss metric.
+    #[prost(float, tag = "7")]
+    pub log_loss: f32,
+    /// Output only. Metrics for each confidence_threshold in
+    /// 0.00,0.05,0.10,...,0.95,0.96,0.97,0.98,0.99 and
+    /// position_threshold = INT32_MAX_VALUE.
+    /// ROC and precision-recall curves, and other aggregated metrics are derived
+    /// from them. The confidence metrics entries may also be supplied for
+    /// additional values of position_threshold, but from these no aggregated
+    /// metrics are computed.
+    #[prost(message, repeated, tag = "3")]
+    pub confidence_metrics_entry: ::prost::alloc::vec::Vec<
+        classification_evaluation_metrics::ConfidenceMetricsEntry,
+    >,
+    /// Output only. Confusion matrix of the evaluation.
+    /// Only set for MULTICLASS classification problems where number
+    /// of labels is no more than 10.
+    /// Only set for model level evaluation, not for evaluation per label.
+    #[prost(message, optional, tag = "4")]
+    pub confusion_matrix: ::core::option::Option<
+        classification_evaluation_metrics::ConfusionMatrix,
+    >,
+    /// Output only. The annotation spec ids used for this evaluation.
+    #[prost(string, repeated, tag = "5")]
+    pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `ClassificationEvaluationMetrics`.
+pub mod classification_evaluation_metrics {
+    /// Metrics for a single confidence threshold.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceMetricsEntry {
+        /// Output only. Metrics are computed with an assumption that the model
+        /// never returns predictions with score lower than this value.
+        #[prost(float, tag = "1")]
+        pub confidence_threshold: f32,
+        /// Output only. Metrics are computed with an assumption that the model
+        /// always returns at most this many predictions (ordered by their score,
+        /// descendingly), but they all still need to meet the confidence_threshold.
+        #[prost(int32, tag = "14")]
+        pub position_threshold: i32,
+        /// Output only. Recall (True Positive Rate) for the given confidence
+        /// threshold.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// Output only. Precision for the given confidence threshold.
+        #[prost(float, tag = "3")]
+        pub precision: f32,
+        /// Output only. False Positive Rate for the given confidence threshold.
+        #[prost(float, tag = "8")]
+        pub false_positive_rate: f32,
+        /// Output only. The harmonic mean of recall and precision.
+        #[prost(float, tag = "4")]
+        pub f1_score: f32,
+        /// Output only. The Recall (True Positive Rate) when only considering the
+        /// label that has the highest prediction score and not below the confidence
+        /// threshold for each example.
+        #[prost(float, tag = "5")]
+        pub recall_at1: f32,
+        /// Output only. The precision when only considering the label that has the
+        /// highest prediction score and not below the confidence threshold for each
+        /// example.
+        #[prost(float, tag = "6")]
+        pub precision_at1: f32,
+        /// Output only. The False Positive Rate when only considering the label that
+        /// has the highest prediction score and not below the confidence threshold
+        /// for each example.
+        #[prost(float, tag = "9")]
+        pub false_positive_rate_at1: f32,
+        /// Output only. The harmonic mean of \[recall_at1][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.recall_at1\] and \[precision_at1][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.precision_at1\].
+        #[prost(float, tag = "7")]
+        pub f1_score_at1: f32,
+        /// Output only. The number of model created labels that match a ground truth
+        /// label.
+        #[prost(int64, tag = "10")]
+        pub true_positive_count: i64,
+        /// Output only. The number of model created labels that do not match a
+        /// ground truth label.
+        #[prost(int64, tag = "11")]
+        pub false_positive_count: i64,
+        /// Output only. The number of ground truth labels that are not matched
+        /// by a model created label.
+        #[prost(int64, tag = "12")]
+        pub false_negative_count: i64,
+        /// Output only. The number of labels that were not created by the model,
+        /// but if they would, they would not match a ground truth label.
+        #[prost(int64, tag = "13")]
+        pub true_negative_count: i64,
+    }
+    /// Confusion matrix of the model running the classification.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfusionMatrix {
+        /// Output only. IDs of the annotation specs used in the confusion matrix.
+        /// For Tables CLASSIFICATION
+        /// \[prediction_type][google.cloud.automl.v1p1beta.TablesModelMetadata.prediction_type\]
+        /// only list of \[annotation_spec_display_name-s][\] is populated.
+        #[prost(string, repeated, tag = "1")]
+        pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Output only. Display name of the annotation specs used in the confusion
+        /// matrix, as they were at the moment of the evaluation. For Tables
+        /// CLASSIFICATION
+        /// \[prediction_type-s][google.cloud.automl.v1p1beta.TablesModelMetadata.prediction_type\],
+        /// distinct values of the target column at the moment of the model
+        /// evaluation are populated here.
+        #[prost(string, repeated, tag = "3")]
+        pub display_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Output only. Rows in the confusion matrix. The number of rows is equal to
+        /// the size of `annotation_spec_id`.
+        /// `row\[i].example_count[j\]` is the number of examples that have ground
+        /// truth of the `annotation_spec_id\[i\]` and are predicted as
+        /// `annotation_spec_id\[j\]` by the model being evaluated.
+        #[prost(message, repeated, tag = "2")]
+        pub row: ::prost::alloc::vec::Vec<confusion_matrix::Row>,
+    }
+    /// Nested message and enum types in `ConfusionMatrix`.
+    pub mod confusion_matrix {
+        /// Output only. A row in the confusion matrix.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Row {
+            /// Output only. Value of the specific cell in the confusion matrix.
+            /// The number of values each row has (i.e. the length of the row) is equal
+            /// to the length of the `annotation_spec_id` field or, if that one is not
+            /// populated, length of the \[display_name][google.cloud.automl.v1.ClassificationEvaluationMetrics.ConfusionMatrix.display_name\] field.
+            #[prost(int32, repeated, tag = "1")]
+            pub example_count: ::prost::alloc::vec::Vec<i32>,
+        }
+    }
+}
+/// Type of the classification problem.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ClassificationType {
+    /// An un-set value of this enum.
+    Unspecified = 0,
+    /// At most one label is allowed per example.
+    Multiclass = 1,
+    /// Multiple labels are allowed for one example.
+    Multilabel = 2,
+}
+impl ClassificationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ClassificationType::Unspecified => "CLASSIFICATION_TYPE_UNSPECIFIED",
+            ClassificationType::Multiclass => "MULTICLASS",
+            ClassificationType::Multilabel => "MULTILABEL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CLASSIFICATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "MULTICLASS" => Some(Self::Multiclass),
+            "MULTILABEL" => Some(Self::Multilabel),
+            _ => None,
+        }
+    }
+}
+/// A vertex represents a 2D point in the image.
+/// The normalized vertex coordinates are between 0 to 1 fractions relative to
+/// the original plane (image, video). E.g. if the plane (e.g. whole image) would
+/// have size 10 x 20 then a point with normalized coordinates (0.1, 0.3) would
+/// be at the position (1, 6) on that plane.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NormalizedVertex {
+    /// Required. Horizontal coordinate.
+    #[prost(float, tag = "1")]
+    pub x: f32,
+    /// Required. Vertical coordinate.
+    #[prost(float, tag = "2")]
+    pub y: f32,
+}
+/// A bounding polygon of a detected object on a plane.
+/// On output both vertices and normalized_vertices are provided.
+/// The polygon is formed by connecting vertices in the order they are listed.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingPoly {
+    /// Output only . The bounding polygon normalized vertices.
+    #[prost(message, repeated, tag = "2")]
+    pub normalized_vertices: ::prost::alloc::vec::Vec<NormalizedVertex>,
+}
+/// Annotation details for image object detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionAnnotation {
+    /// Output only. The rectangle representing the object location.
+    #[prost(message, optional, tag = "1")]
+    pub bounding_box: ::core::option::Option<BoundingPoly>,
+    /// Output only. The confidence that this annotation is positive for the parent example,
+    /// value in [0, 1], higher means higher positivity confidence.
+    #[prost(float, tag = "2")]
+    pub score: f32,
+}
+/// Bounding box matching model metrics for a single intersection-over-union
+/// threshold and multiple label match confidence thresholds.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BoundingBoxMetricsEntry {
+    /// Output only. The intersection-over-union threshold value used to compute
+    /// this metrics entry.
+    #[prost(float, tag = "1")]
+    pub iou_threshold: f32,
+    /// Output only. The mean average precision, most often close to au_prc.
+    #[prost(float, tag = "2")]
+    pub mean_average_precision: f32,
+    /// Output only. Metrics for each label-match confidence_threshold from
+    /// 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99. Precision-recall curve is
+    /// derived from them.
+    #[prost(message, repeated, tag = "3")]
+    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
+        bounding_box_metrics_entry::ConfidenceMetricsEntry,
+    >,
+}
+/// Nested message and enum types in `BoundingBoxMetricsEntry`.
+pub mod bounding_box_metrics_entry {
+    /// Metrics for a single confidence threshold.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceMetricsEntry {
+        /// Output only. The confidence threshold value used to compute the metrics.
+        #[prost(float, tag = "1")]
+        pub confidence_threshold: f32,
+        /// Output only. Recall under the given confidence threshold.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// Output only. Precision under the given confidence threshold.
+        #[prost(float, tag = "3")]
+        pub precision: f32,
+        /// Output only. The harmonic mean of recall and precision.
+        #[prost(float, tag = "4")]
+        pub f1_score: f32,
+    }
+}
+/// Model evaluation metrics for image object detection problems.
+/// Evaluates prediction quality of labeled bounding boxes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionEvaluationMetrics {
+    /// Output only. The total number of bounding boxes (i.e. summed over all
+    /// images) the ground truth used to create this evaluation had.
+    #[prost(int32, tag = "1")]
+    pub evaluated_bounding_box_count: i32,
+    /// Output only. The bounding boxes match metrics for each
+    /// Intersection-over-union threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// and each label confidence threshold 0.05,0.10,...,0.95,0.96,0.97,0.98,0.99
+    /// pair.
+    #[prost(message, repeated, tag = "2")]
+    pub bounding_box_metrics_entries: ::prost::alloc::vec::Vec<BoundingBoxMetricsEntry>,
+    /// Output only. The single metric for bounding boxes evaluation:
+    /// the mean_average_precision averaged over all bounding_box_metrics_entries.
+    #[prost(float, tag = "3")]
+    pub bounding_box_mean_average_precision: f32,
+}
+/// A contiguous part of a text (string), assuming it has an UTF-8 NFC encoding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextSegment {
+    /// Output only. The content of the TextSegment.
+    #[prost(string, tag = "3")]
+    pub content: ::prost::alloc::string::String,
+    /// Required. Zero-based character index of the first character of the text
+    /// segment (counting characters from the beginning of the text).
+    #[prost(int64, tag = "1")]
+    pub start_offset: i64,
+    /// Required. Zero-based character index of the first character past the end of
+    /// the text segment (counting character from the beginning of the text).
+    /// The character at the end_offset is NOT included in the text segment.
+    #[prost(int64, tag = "2")]
+    pub end_offset: i64,
+}
+/// Annotation for identifying spans of text.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextExtractionAnnotation {
+    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
+    /// means greater confidence in correctness of the annotation.
+    #[prost(float, tag = "1")]
+    pub score: f32,
+    /// Required. Text extraction annotations can either be a text segment or a
+    /// text relation.
+    #[prost(oneof = "text_extraction_annotation::Annotation", tags = "3")]
+    pub annotation: ::core::option::Option<text_extraction_annotation::Annotation>,
+}
+/// Nested message and enum types in `TextExtractionAnnotation`.
+pub mod text_extraction_annotation {
+    /// Required. Text extraction annotations can either be a text segment or a
+    /// text relation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Annotation {
+        /// An entity annotation will set this, which is the part of the original
+        /// text to which the annotation pertains.
+        #[prost(message, tag = "3")]
+        TextSegment(super::TextSegment),
+    }
+}
+/// Model evaluation metrics for text extraction problems.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextExtractionEvaluationMetrics {
+    /// Output only. The Area under precision recall curve metric.
+    #[prost(float, tag = "1")]
+    pub au_prc: f32,
+    /// Output only. Metrics that have confidence thresholds.
+    /// Precision-recall curve can be derived from it.
+    #[prost(message, repeated, tag = "2")]
+    pub confidence_metrics_entries: ::prost::alloc::vec::Vec<
+        text_extraction_evaluation_metrics::ConfidenceMetricsEntry,
+    >,
+}
+/// Nested message and enum types in `TextExtractionEvaluationMetrics`.
+pub mod text_extraction_evaluation_metrics {
+    /// Metrics for a single confidence threshold.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceMetricsEntry {
+        /// Output only. The confidence threshold value used to compute the metrics.
+        /// Only annotations with score of at least this threshold are considered to
+        /// be ones the model would return.
+        #[prost(float, tag = "1")]
+        pub confidence_threshold: f32,
+        /// Output only. Recall under the given confidence threshold.
+        #[prost(float, tag = "3")]
+        pub recall: f32,
+        /// Output only. Precision under the given confidence threshold.
+        #[prost(float, tag = "4")]
+        pub precision: f32,
+        /// Output only. The harmonic mean of recall and precision.
+        #[prost(float, tag = "5")]
+        pub f1_score: f32,
+    }
+}
+/// Contains annotation details specific to text sentiment.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextSentimentAnnotation {
+    /// Output only. The sentiment with the semantic, as given to the
+    /// \[AutoMl.ImportData][google.cloud.automl.v1.AutoMl.ImportData\] when populating the dataset from which the model used
+    /// for the prediction had been trained.
+    /// The sentiment values are between 0 and
+    /// Dataset.text_sentiment_dataset_metadata.sentiment_max (inclusive),
+    /// with higher value meaning more positive sentiment. They are completely
+    /// relative, i.e. 0 means least positive sentiment and sentiment_max means
+    /// the most positive from the sentiments present in the train data. Therefore
+    ///   e.g. if train data had only negative sentiment, then sentiment_max, would
+    /// be still negative (although least negative).
+    /// The sentiment shouldn't be confused with "score" or "magnitude"
+    /// from the previous Natural Language Sentiment Analysis API.
+    #[prost(int32, tag = "1")]
+    pub sentiment: i32,
+}
+/// Model evaluation metrics for text sentiment problems.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextSentimentEvaluationMetrics {
+    /// Output only. Precision.
+    #[prost(float, tag = "1")]
+    pub precision: f32,
+    /// Output only. Recall.
+    #[prost(float, tag = "2")]
+    pub recall: f32,
+    /// Output only. The harmonic mean of recall and precision.
+    #[prost(float, tag = "3")]
+    pub f1_score: f32,
+    /// Output only. Mean absolute error. Only set for the overall model
+    /// evaluation, not for evaluation of a single annotation spec.
+    #[prost(float, tag = "4")]
+    pub mean_absolute_error: f32,
+    /// Output only. Mean squared error. Only set for the overall model
+    /// evaluation, not for evaluation of a single annotation spec.
+    #[prost(float, tag = "5")]
+    pub mean_squared_error: f32,
+    /// Output only. Linear weighted kappa. Only set for the overall model
+    /// evaluation, not for evaluation of a single annotation spec.
+    #[prost(float, tag = "6")]
+    pub linear_kappa: f32,
+    /// Output only. Quadratic weighted kappa. Only set for the overall model
+    /// evaluation, not for evaluation of a single annotation spec.
+    #[prost(float, tag = "7")]
+    pub quadratic_kappa: f32,
+    /// Output only. Confusion matrix of the evaluation.
+    /// Only set for the overall model evaluation, not for evaluation of a single
+    /// annotation spec.
+    #[prost(message, optional, tag = "8")]
+    pub confusion_matrix: ::core::option::Option<
+        classification_evaluation_metrics::ConfusionMatrix,
+    >,
+}
 /// A representation of an image.
 /// Only images up to 30MB in size are supported.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2150,23 +2359,454 @@ pub mod annotation_payload {
         TextSentiment(super::TextSentimentAnnotation),
     }
 }
-/// A definition of an annotation spec.
+/// Request message for \[PredictionService.Predict][google.cloud.automl.v1.PredictionService.Predict\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnnotationSpec {
-    /// Output only. Resource name of the annotation spec.
-    /// Form:
-    /// 'projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/annotationSpecs/{annotation_spec_id}'
+pub struct PredictRequest {
+    /// Required. Name of the model requested to serve the prediction.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. The name of the annotation spec to show in the interface. The name can be
-    /// up to 32 characters long and must match the regexp `\[a-zA-Z0-9_\]+`.
+    /// Required. Payload to perform a prediction on. The payload must match the
+    /// problem type that the model was trained to solve.
+    #[prost(message, optional, tag = "2")]
+    pub payload: ::core::option::Option<ExamplePayload>,
+    /// Additional domain-specific parameters, any string must be up to 25000
+    /// characters long.
+    ///
+    /// AutoML Vision Classification
+    ///
+    /// `score_threshold`
+    /// : (float) A value from 0.0 to 1.0. When the model
+    ///    makes predictions for an image, it will only produce results that have
+    ///    at least this confidence score. The default is 0.5.
+    ///
+    /// AutoML Vision Object Detection
+    ///
+    /// `score_threshold`
+    /// : (float) When Model detects objects on the image,
+    ///    it will only produce bounding boxes which have at least this
+    ///    confidence score. Value in 0 to 1 range, default is 0.5.
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding
+    ///    boxes returned. The default is 100. The
+    ///    number of returned bounding boxes might be limited by the server.
+    ///
+    /// AutoML Tables
+    ///
+    /// `feature_importance`
+    /// : (boolean) Whether
+    /// \[feature_importance][google.cloud.automl.v1.TablesModelColumnInfo.feature_importance\]
+    ///    is populated in the returned list of
+    ///    \[TablesAnnotation][google.cloud.automl.v1.TablesAnnotation\]
+    ///    objects. The default is false.
+    #[prost(btree_map = "string, string", tag = "3")]
+    pub params: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Response message for \[PredictionService.Predict][google.cloud.automl.v1.PredictionService.Predict\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PredictResponse {
+    /// Prediction result.
+    /// AutoML Translation and AutoML Natural Language Sentiment Analysis
+    /// return precisely one payload.
+    #[prost(message, repeated, tag = "1")]
+    pub payload: ::prost::alloc::vec::Vec<AnnotationPayload>,
+    /// The preprocessed example that AutoML actually makes prediction on.
+    /// Empty if AutoML does not preprocess the input example.
+    ///
+    /// For AutoML Natural Language (Classification, Entity Extraction, and
+    /// Sentiment Analysis), if the input is a document, the recognized text is
+    /// returned in the
+    /// \[document_text][google.cloud.automl.v1.Document.document_text\]
+    /// property.
+    #[prost(message, optional, tag = "3")]
+    pub preprocessed_input: ::core::option::Option<ExamplePayload>,
+    /// Additional domain-specific prediction response metadata.
+    ///
+    /// AutoML Vision Object Detection
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding boxes to return per image.
+    ///
+    /// AutoML Natural Language Sentiment Analysis
+    ///
+    /// `sentiment_score`
+    /// : (float, deprecated) A value between -1 and 1,
+    ///    -1 maps to least positive sentiment, while 1 maps to the most positive
+    ///    one and the higher the score, the more positive the sentiment in the
+    ///    document is. Yet these values are relative to the training data, so
+    ///    e.g. if all data was positive then -1 is also positive (though
+    ///    the least).
+    ///    `sentiment_score` is not the same as "score" and "magnitude"
+    ///    from Sentiment Analysis in the Natural Language API.
+    #[prost(btree_map = "string, string", tag = "2")]
+    pub metadata: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Request message for \[PredictionService.BatchPredict][google.cloud.automl.v1.PredictionService.BatchPredict\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchPredictRequest {
+    /// Required. Name of the model requested to serve the batch prediction.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The input configuration for batch prediction.
+    #[prost(message, optional, tag = "3")]
+    pub input_config: ::core::option::Option<BatchPredictInputConfig>,
+    /// Required. The Configuration specifying where output predictions should
+    /// be written.
+    #[prost(message, optional, tag = "4")]
+    pub output_config: ::core::option::Option<BatchPredictOutputConfig>,
+    /// Additional domain-specific parameters for the predictions, any string must
+    /// be up to 25000 characters long.
+    ///
+    /// AutoML Natural Language Classification
+    ///
+    /// `score_threshold`
+    /// : (float) A value from 0.0 to 1.0. When the model
+    ///    makes predictions for a text snippet, it will only produce results
+    ///    that have at least this confidence score. The default is 0.5.
+    ///
+    ///
+    /// AutoML Vision Classification
+    ///
+    /// `score_threshold`
+    /// : (float) A value from 0.0 to 1.0. When the model
+    ///    makes predictions for an image, it will only produce results that
+    ///    have at least this confidence score. The default is 0.5.
+    ///
+    /// AutoML Vision Object Detection
+    ///
+    /// `score_threshold`
+    /// : (float) When Model detects objects on the image,
+    ///    it will only produce bounding boxes which have at least this
+    ///    confidence score. Value in 0 to 1 range, default is 0.5.
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding
+    ///    boxes returned per image. The default is 100, the
+    ///    number of bounding boxes returned might be limited by the server.
+    /// AutoML Video Intelligence Classification
+    ///
+    /// `score_threshold`
+    /// : (float) A value from 0.0 to 1.0. When the model
+    ///    makes predictions for a video, it will only produce results that
+    ///    have at least this confidence score. The default is 0.5.
+    ///
+    /// `segment_classification`
+    /// : (boolean) Set to true to request
+    ///    segment-level classification. AutoML Video Intelligence returns
+    ///    labels and their confidence scores for the entire segment of the
+    ///    video that user specified in the request configuration.
+    ///    The default is true.
+    ///
+    /// `shot_classification`
+    /// : (boolean) Set to true to request shot-level
+    ///    classification. AutoML Video Intelligence determines the boundaries
+    ///    for each camera shot in the entire segment of the video that user
+    ///    specified in the request configuration. AutoML Video Intelligence
+    ///    then returns labels and their confidence scores for each detected
+    ///    shot, along with the start and end time of the shot.
+    ///    The default is false.
+    ///
+    ///    WARNING: Model evaluation is not done for this classification type,
+    ///    the quality of it depends on training data, but there are no metrics
+    ///    provided to describe that quality.
+    ///
+    /// `1s_interval_classification`
+    /// : (boolean) Set to true to request
+    ///    classification for a video at one-second intervals. AutoML Video
+    ///    Intelligence returns labels and their confidence scores for each
+    ///    second of the entire segment of the video that user specified in the
+    ///    request configuration. The default is false.
+    ///
+    ///    WARNING: Model evaluation is not done for this classification
+    ///    type, the quality of it depends on training data, but there are no
+    ///    metrics provided to describe that quality.
+    ///
+    /// AutoML Video Intelligence Object Tracking
+    ///
+    /// `score_threshold`
+    /// : (float) When Model detects objects on video frames,
+    ///    it will only produce bounding boxes which have at least this
+    ///    confidence score. Value in 0 to 1 range, default is 0.5.
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding
+    ///    boxes returned per image. The default is 100, the
+    ///    number of bounding boxes returned might be limited by the server.
+    ///
+    /// `min_bounding_box_size`
+    /// : (float) Only bounding boxes with shortest edge
+    ///    at least that long as a relative value of video frame size are
+    ///    returned. Value in 0 to 1 range. Default is 0.
+    ///
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub params: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Result of the Batch Predict. This message is returned in
+/// \[response][google.longrunning.Operation.response\] of the operation returned
+/// by the \[PredictionService.BatchPredict][google.cloud.automl.v1.PredictionService.BatchPredict\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchPredictResult {
+    /// Additional domain-specific prediction response metadata.
+    ///
+    /// AutoML Vision Object Detection
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding boxes returned per image.
+    ///
+    /// AutoML Video Intelligence Object Tracking
+    ///
+    /// `max_bounding_box_count`
+    /// : (int64) The maximum number of bounding boxes returned per frame.
+    #[prost(btree_map = "string, string", tag = "1")]
+    pub metadata: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Generated client implementations.
+pub mod prediction_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// AutoML Prediction API.
+    ///
+    /// On any input that is documented to expect a string parameter in
+    /// snake_case or dash-case, either of those cases is accepted.
+    #[derive(Debug, Clone)]
+    pub struct PredictionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> PredictionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> PredictionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            PredictionServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Perform an online prediction. The prediction result is directly
+        /// returned in the response.
+        /// Available for following ML scenarios, and their expected request payloads:
+        ///
+        /// AutoML Vision Classification
+        ///
+        /// * An image in .JPEG, .GIF or .PNG format, image_bytes up to 30MB.
+        ///
+        /// AutoML Vision Object Detection
+        ///
+        /// * An image in .JPEG, .GIF or .PNG format, image_bytes up to 30MB.
+        ///
+        /// AutoML Natural Language Classification
+        ///
+        /// * A TextSnippet up to 60,000 characters, UTF-8 encoded or a document in
+        /// .PDF, .TIF or .TIFF format with size upto 2MB.
+        ///
+        /// AutoML Natural Language Entity Extraction
+        ///
+        /// * A TextSnippet up to 10,000 characters, UTF-8 NFC encoded or a document
+        ///  in .PDF, .TIF or .TIFF format with size upto 20MB.
+        ///
+        /// AutoML Natural Language Sentiment Analysis
+        ///
+        /// * A TextSnippet up to 60,000 characters, UTF-8 encoded or a document in
+        /// .PDF, .TIF or .TIFF format with size upto 2MB.
+        ///
+        /// AutoML Translation
+        ///
+        /// * A TextSnippet up to 25,000 characters, UTF-8 encoded.
+        ///
+        /// AutoML Tables
+        ///
+        /// * A row with column values matching
+        ///   the columns of the model, up to 5MB. Not available for FORECASTING
+        ///   `prediction_type`.
+        pub async fn predict(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PredictRequest>,
+        ) -> Result<tonic::Response<super::PredictResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.automl.v1.PredictionService/Predict",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Perform a batch prediction. Unlike the online [Predict][google.cloud.automl.v1.PredictionService.Predict], batch
+        /// prediction result won't be immediately available in the response. Instead,
+        /// a long running operation object is returned. User can poll the operation
+        /// result via [GetOperation][google.longrunning.Operations.GetOperation]
+        /// method. Once the operation is done, [BatchPredictResult][google.cloud.automl.v1.BatchPredictResult] is returned in
+        /// the [response][google.longrunning.Operation.response] field.
+        /// Available for following ML scenarios:
+        ///
+        /// * AutoML Vision Classification
+        /// * AutoML Vision Object Detection
+        /// * AutoML Video Intelligence Classification
+        /// * AutoML Video Intelligence Object Tracking * AutoML Natural Language Classification
+        /// * AutoML Natural Language Entity Extraction
+        /// * AutoML Natural Language Sentiment Analysis
+        /// * AutoML Tables
+        pub async fn batch_predict(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchPredictRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.automl.v1.PredictionService/BatchPredict",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Evaluation results of a model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ModelEvaluation {
+    /// Output only. Resource name of the model evaluation.
+    /// Format:
+    /// `projects/{project_id}/locations/{location_id}/models/{model_id}/modelEvaluations/{model_evaluation_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The ID of the annotation spec that the model evaluation applies to. The
+    /// The ID is empty for the overall model evaluation.
+    /// For Tables annotation specs in the dataset do not exist and this ID is
+    /// always not set, but for CLASSIFICATION
+    /// \[prediction_type-s][google.cloud.automl.v1.TablesModelMetadata.prediction_type\]
+    /// the
+    /// \[display_name][google.cloud.automl.v1.ModelEvaluation.display_name\]
+    /// field is used.
     #[prost(string, tag = "2")]
+    pub annotation_spec_id: ::prost::alloc::string::String,
+    /// Output only. The value of
+    /// \[display_name][google.cloud.automl.v1.AnnotationSpec.display_name\]
+    /// at the moment when the model was trained. Because this field returns a
+    /// value at model training time, for different models trained from the same
+    /// dataset, the values may differ, since display names could had been changed
+    /// between the two model's trainings. For Tables CLASSIFICATION
+    /// \[prediction_type-s][google.cloud.automl.v1.TablesModelMetadata.prediction_type\]
+    /// distinct values of the target column at the moment of the model evaluation
+    /// are populated here.
+    /// The display_name is empty for the overall model evaluation.
+    #[prost(string, tag = "15")]
     pub display_name: ::prost::alloc::string::String,
-    /// Output only. The number of examples in the parent dataset
-    /// labeled by the annotation spec.
-    #[prost(int32, tag = "9")]
-    pub example_count: i32,
+    /// Output only. Timestamp when this model evaluation was created.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The number of examples used for model evaluation, i.e. for
+    /// which ground truth from time of model creation is compared against the
+    /// predicted annotations created by the model.
+    /// For overall ModelEvaluation (i.e. with annotation_spec_id not set) this is
+    /// the total number of all examples used for evaluation.
+    /// Otherwise, this is the count of examples that according to the ground
+    /// truth were annotated by the
+    /// \[annotation_spec_id][google.cloud.automl.v1.ModelEvaluation.annotation_spec_id\].
+    #[prost(int32, tag = "6")]
+    pub evaluated_example_count: i32,
+    /// Output only. Problem type specific evaluation metrics.
+    #[prost(oneof = "model_evaluation::Metrics", tags = "8, 9, 12, 11, 13")]
+    pub metrics: ::core::option::Option<model_evaluation::Metrics>,
+}
+/// Nested message and enum types in `ModelEvaluation`.
+pub mod model_evaluation {
+    /// Output only. Problem type specific evaluation metrics.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Metrics {
+        /// Model evaluation metrics for image, text, video and tables
+        /// classification.
+        /// Tables problem is considered a classification when the target column
+        /// is CATEGORY DataType.
+        #[prost(message, tag = "8")]
+        ClassificationEvaluationMetrics(super::ClassificationEvaluationMetrics),
+        /// Model evaluation metrics for translation.
+        #[prost(message, tag = "9")]
+        TranslationEvaluationMetrics(super::TranslationEvaluationMetrics),
+        /// Model evaluation metrics for image object detection.
+        #[prost(message, tag = "12")]
+        ImageObjectDetectionEvaluationMetrics(
+            super::ImageObjectDetectionEvaluationMetrics,
+        ),
+        /// Evaluation metrics for text sentiment models.
+        #[prost(message, tag = "11")]
+        TextSentimentEvaluationMetrics(super::TextSentimentEvaluationMetrics),
+        /// Evaluation metrics for text extraction models.
+        #[prost(message, tag = "13")]
+        TextExtractionEvaluationMetrics(super::TextExtractionEvaluationMetrics),
+    }
 }
 /// Dataset metadata that is specific to image classification.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2391,80 +3031,6 @@ pub struct TextSentimentDatasetMetadata {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TextSentimentModelMetadata {}
-/// A workspace for solving a single, particular machine learning (ML) problem.
-/// A workspace contains examples that may be annotated.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Dataset {
-    /// Output only. The resource name of the dataset.
-    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the dataset to show in the interface. The name can be
-    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
-    /// and a-z, underscores
-    /// (_), and ASCII digits 0-9.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// User-provided description of the dataset. The description can be up to
-    /// 25000 characters long.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The number of examples in the dataset.
-    #[prost(int32, tag = "21")]
-    pub example_count: i32,
-    /// Output only. Timestamp when this dataset was created.
-    #[prost(message, optional, tag = "14")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Used to perform consistent read-modify-write updates. If not set, a blind
-    /// "overwrite" update happens.
-    #[prost(string, tag = "17")]
-    pub etag: ::prost::alloc::string::String,
-    /// Optional. The labels with user-defined metadata to organize your dataset.
-    ///
-    /// Label keys and values can be no longer than 64 characters
-    /// (Unicode codepoints), can only contain lowercase letters, numeric
-    /// characters, underscores and dashes. International characters are allowed.
-    /// Label values are optional. Label keys must start with a letter.
-    ///
-    /// See <https://goo.gl/xmQnxf> for more information on and examples of labels.
-    #[prost(btree_map = "string, string", tag = "39")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[prost(oneof = "dataset::DatasetMetadata", tags = "23, 24, 25, 26, 28, 30")]
-    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
-}
-/// Nested message and enum types in `Dataset`.
-pub mod dataset {
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DatasetMetadata {
-        /// Metadata for a dataset used for translation.
-        #[prost(message, tag = "23")]
-        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
-        /// Metadata for a dataset used for image classification.
-        #[prost(message, tag = "24")]
-        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
-        /// Metadata for a dataset used for text classification.
-        #[prost(message, tag = "25")]
-        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
-        /// Metadata for a dataset used for image object detection.
-        #[prost(message, tag = "26")]
-        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
-        /// Metadata for a dataset used for text extraction.
-        #[prost(message, tag = "28")]
-        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
-        /// Metadata for a dataset used for text sentiment.
-        #[prost(message, tag = "30")]
-        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
-    }
-}
 /// API proto representing a trained machine learning model.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2587,80 +3153,78 @@ pub mod model {
         TextSentimentModelMetadata(super::TextSentimentModelMetadata),
     }
 }
-/// Evaluation results of a model.
+/// A workspace for solving a single, particular machine learning (ML) problem.
+/// A workspace contains examples that may be annotated.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ModelEvaluation {
-    /// Output only. Resource name of the model evaluation.
-    /// Format:
-    /// `projects/{project_id}/locations/{location_id}/models/{model_id}/modelEvaluations/{model_evaluation_id}`
+pub struct Dataset {
+    /// Output only. The resource name of the dataset.
+    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Output only. The ID of the annotation spec that the model evaluation applies to. The
-    /// The ID is empty for the overall model evaluation.
-    /// For Tables annotation specs in the dataset do not exist and this ID is
-    /// always not set, but for CLASSIFICATION
-    /// \[prediction_type-s][google.cloud.automl.v1.TablesModelMetadata.prediction_type\]
-    /// the
-    /// \[display_name][google.cloud.automl.v1.ModelEvaluation.display_name\]
-    /// field is used.
+    /// Required. The name of the dataset to show in the interface. The name can be
+    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
+    /// and a-z, underscores
+    /// (_), and ASCII digits 0-9.
     #[prost(string, tag = "2")]
-    pub annotation_spec_id: ::prost::alloc::string::String,
-    /// Output only. The value of
-    /// \[display_name][google.cloud.automl.v1.AnnotationSpec.display_name\]
-    /// at the moment when the model was trained. Because this field returns a
-    /// value at model training time, for different models trained from the same
-    /// dataset, the values may differ, since display names could had been changed
-    /// between the two model's trainings. For Tables CLASSIFICATION
-    /// \[prediction_type-s][google.cloud.automl.v1.TablesModelMetadata.prediction_type\]
-    /// distinct values of the target column at the moment of the model evaluation
-    /// are populated here.
-    /// The display_name is empty for the overall model evaluation.
-    #[prost(string, tag = "15")]
     pub display_name: ::prost::alloc::string::String,
-    /// Output only. Timestamp when this model evaluation was created.
-    #[prost(message, optional, tag = "5")]
+    /// User-provided description of the dataset. The description can be up to
+    /// 25000 characters long.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The number of examples in the dataset.
+    #[prost(int32, tag = "21")]
+    pub example_count: i32,
+    /// Output only. Timestamp when this dataset was created.
+    #[prost(message, optional, tag = "14")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The number of examples used for model evaluation, i.e. for
-    /// which ground truth from time of model creation is compared against the
-    /// predicted annotations created by the model.
-    /// For overall ModelEvaluation (i.e. with annotation_spec_id not set) this is
-    /// the total number of all examples used for evaluation.
-    /// Otherwise, this is the count of examples that according to the ground
-    /// truth were annotated by the
-    /// \[annotation_spec_id][google.cloud.automl.v1.ModelEvaluation.annotation_spec_id\].
-    #[prost(int32, tag = "6")]
-    pub evaluated_example_count: i32,
-    /// Output only. Problem type specific evaluation metrics.
-    #[prost(oneof = "model_evaluation::Metrics", tags = "8, 9, 12, 11, 13")]
-    pub metrics: ::core::option::Option<model_evaluation::Metrics>,
+    /// Used to perform consistent read-modify-write updates. If not set, a blind
+    /// "overwrite" update happens.
+    #[prost(string, tag = "17")]
+    pub etag: ::prost::alloc::string::String,
+    /// Optional. The labels with user-defined metadata to organize your dataset.
+    ///
+    /// Label keys and values can be no longer than 64 characters
+    /// (Unicode codepoints), can only contain lowercase letters, numeric
+    /// characters, underscores and dashes. International characters are allowed.
+    /// Label values are optional. Label keys must start with a letter.
+    ///
+    /// See <https://goo.gl/xmQnxf> for more information on and examples of labels.
+    #[prost(btree_map = "string, string", tag = "39")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
+    #[prost(oneof = "dataset::DatasetMetadata", tags = "23, 24, 25, 26, 28, 30")]
+    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
 }
-/// Nested message and enum types in `ModelEvaluation`.
-pub mod model_evaluation {
-    /// Output only. Problem type specific evaluation metrics.
+/// Nested message and enum types in `Dataset`.
+pub mod dataset {
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Metrics {
-        /// Model evaluation metrics for image, text, video and tables
-        /// classification.
-        /// Tables problem is considered a classification when the target column
-        /// is CATEGORY DataType.
-        #[prost(message, tag = "8")]
-        ClassificationEvaluationMetrics(super::ClassificationEvaluationMetrics),
-        /// Model evaluation metrics for translation.
-        #[prost(message, tag = "9")]
-        TranslationEvaluationMetrics(super::TranslationEvaluationMetrics),
-        /// Model evaluation metrics for image object detection.
-        #[prost(message, tag = "12")]
-        ImageObjectDetectionEvaluationMetrics(
-            super::ImageObjectDetectionEvaluationMetrics,
-        ),
-        /// Evaluation metrics for text sentiment models.
-        #[prost(message, tag = "11")]
-        TextSentimentEvaluationMetrics(super::TextSentimentEvaluationMetrics),
-        /// Evaluation metrics for text extraction models.
-        #[prost(message, tag = "13")]
-        TextExtractionEvaluationMetrics(super::TextExtractionEvaluationMetrics),
+    pub enum DatasetMetadata {
+        /// Metadata for a dataset used for translation.
+        #[prost(message, tag = "23")]
+        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
+        /// Metadata for a dataset used for image classification.
+        #[prost(message, tag = "24")]
+        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
+        /// Metadata for a dataset used for text classification.
+        #[prost(message, tag = "25")]
+        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
+        /// Metadata for a dataset used for image object detection.
+        #[prost(message, tag = "26")]
+        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
+        /// Metadata for a dataset used for text extraction.
+        #[prost(message, tag = "28")]
+        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
+        /// Metadata for a dataset used for text sentiment.
+        #[prost(message, tag = "30")]
+        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
     }
 }
 /// Request message for \[AutoMl.CreateDataset][google.cloud.automl.v1.AutoMl.CreateDataset\].
@@ -3461,569 +4025,5 @@ pub mod auto_ml_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
-    }
-}
-/// Request message for \[PredictionService.Predict][google.cloud.automl.v1.PredictionService.Predict\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PredictRequest {
-    /// Required. Name of the model requested to serve the prediction.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. Payload to perform a prediction on. The payload must match the
-    /// problem type that the model was trained to solve.
-    #[prost(message, optional, tag = "2")]
-    pub payload: ::core::option::Option<ExamplePayload>,
-    /// Additional domain-specific parameters, any string must be up to 25000
-    /// characters long.
-    ///
-    /// AutoML Vision Classification
-    ///
-    /// `score_threshold`
-    /// : (float) A value from 0.0 to 1.0. When the model
-    ///    makes predictions for an image, it will only produce results that have
-    ///    at least this confidence score. The default is 0.5.
-    ///
-    /// AutoML Vision Object Detection
-    ///
-    /// `score_threshold`
-    /// : (float) When Model detects objects on the image,
-    ///    it will only produce bounding boxes which have at least this
-    ///    confidence score. Value in 0 to 1 range, default is 0.5.
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding
-    ///    boxes returned. The default is 100. The
-    ///    number of returned bounding boxes might be limited by the server.
-    ///
-    /// AutoML Tables
-    ///
-    /// `feature_importance`
-    /// : (boolean) Whether
-    /// \[feature_importance][google.cloud.automl.v1.TablesModelColumnInfo.feature_importance\]
-    ///    is populated in the returned list of
-    ///    \[TablesAnnotation][google.cloud.automl.v1.TablesAnnotation\]
-    ///    objects. The default is false.
-    #[prost(btree_map = "string, string", tag = "3")]
-    pub params: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Response message for \[PredictionService.Predict][google.cloud.automl.v1.PredictionService.Predict\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct PredictResponse {
-    /// Prediction result.
-    /// AutoML Translation and AutoML Natural Language Sentiment Analysis
-    /// return precisely one payload.
-    #[prost(message, repeated, tag = "1")]
-    pub payload: ::prost::alloc::vec::Vec<AnnotationPayload>,
-    /// The preprocessed example that AutoML actually makes prediction on.
-    /// Empty if AutoML does not preprocess the input example.
-    ///
-    /// For AutoML Natural Language (Classification, Entity Extraction, and
-    /// Sentiment Analysis), if the input is a document, the recognized text is
-    /// returned in the
-    /// \[document_text][google.cloud.automl.v1.Document.document_text\]
-    /// property.
-    #[prost(message, optional, tag = "3")]
-    pub preprocessed_input: ::core::option::Option<ExamplePayload>,
-    /// Additional domain-specific prediction response metadata.
-    ///
-    /// AutoML Vision Object Detection
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding boxes to return per image.
-    ///
-    /// AutoML Natural Language Sentiment Analysis
-    ///
-    /// `sentiment_score`
-    /// : (float, deprecated) A value between -1 and 1,
-    ///    -1 maps to least positive sentiment, while 1 maps to the most positive
-    ///    one and the higher the score, the more positive the sentiment in the
-    ///    document is. Yet these values are relative to the training data, so
-    ///    e.g. if all data was positive then -1 is also positive (though
-    ///    the least).
-    ///    `sentiment_score` is not the same as "score" and "magnitude"
-    ///    from Sentiment Analysis in the Natural Language API.
-    #[prost(btree_map = "string, string", tag = "2")]
-    pub metadata: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Request message for \[PredictionService.BatchPredict][google.cloud.automl.v1.PredictionService.BatchPredict\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchPredictRequest {
-    /// Required. Name of the model requested to serve the batch prediction.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The input configuration for batch prediction.
-    #[prost(message, optional, tag = "3")]
-    pub input_config: ::core::option::Option<BatchPredictInputConfig>,
-    /// Required. The Configuration specifying where output predictions should
-    /// be written.
-    #[prost(message, optional, tag = "4")]
-    pub output_config: ::core::option::Option<BatchPredictOutputConfig>,
-    /// Additional domain-specific parameters for the predictions, any string must
-    /// be up to 25000 characters long.
-    ///
-    /// AutoML Natural Language Classification
-    ///
-    /// `score_threshold`
-    /// : (float) A value from 0.0 to 1.0. When the model
-    ///    makes predictions for a text snippet, it will only produce results
-    ///    that have at least this confidence score. The default is 0.5.
-    ///
-    ///
-    /// AutoML Vision Classification
-    ///
-    /// `score_threshold`
-    /// : (float) A value from 0.0 to 1.0. When the model
-    ///    makes predictions for an image, it will only produce results that
-    ///    have at least this confidence score. The default is 0.5.
-    ///
-    /// AutoML Vision Object Detection
-    ///
-    /// `score_threshold`
-    /// : (float) When Model detects objects on the image,
-    ///    it will only produce bounding boxes which have at least this
-    ///    confidence score. Value in 0 to 1 range, default is 0.5.
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding
-    ///    boxes returned per image. The default is 100, the
-    ///    number of bounding boxes returned might be limited by the server.
-    /// AutoML Video Intelligence Classification
-    ///
-    /// `score_threshold`
-    /// : (float) A value from 0.0 to 1.0. When the model
-    ///    makes predictions for a video, it will only produce results that
-    ///    have at least this confidence score. The default is 0.5.
-    ///
-    /// `segment_classification`
-    /// : (boolean) Set to true to request
-    ///    segment-level classification. AutoML Video Intelligence returns
-    ///    labels and their confidence scores for the entire segment of the
-    ///    video that user specified in the request configuration.
-    ///    The default is true.
-    ///
-    /// `shot_classification`
-    /// : (boolean) Set to true to request shot-level
-    ///    classification. AutoML Video Intelligence determines the boundaries
-    ///    for each camera shot in the entire segment of the video that user
-    ///    specified in the request configuration. AutoML Video Intelligence
-    ///    then returns labels and their confidence scores for each detected
-    ///    shot, along with the start and end time of the shot.
-    ///    The default is false.
-    ///
-    ///    WARNING: Model evaluation is not done for this classification type,
-    ///    the quality of it depends on training data, but there are no metrics
-    ///    provided to describe that quality.
-    ///
-    /// `1s_interval_classification`
-    /// : (boolean) Set to true to request
-    ///    classification for a video at one-second intervals. AutoML Video
-    ///    Intelligence returns labels and their confidence scores for each
-    ///    second of the entire segment of the video that user specified in the
-    ///    request configuration. The default is false.
-    ///
-    ///    WARNING: Model evaluation is not done for this classification
-    ///    type, the quality of it depends on training data, but there are no
-    ///    metrics provided to describe that quality.
-    ///
-    /// AutoML Video Intelligence Object Tracking
-    ///
-    /// `score_threshold`
-    /// : (float) When Model detects objects on video frames,
-    ///    it will only produce bounding boxes which have at least this
-    ///    confidence score. Value in 0 to 1 range, default is 0.5.
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding
-    ///    boxes returned per image. The default is 100, the
-    ///    number of bounding boxes returned might be limited by the server.
-    ///
-    /// `min_bounding_box_size`
-    /// : (float) Only bounding boxes with shortest edge
-    ///    at least that long as a relative value of video frame size are
-    ///    returned. Value in 0 to 1 range. Default is 0.
-    ///
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub params: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Result of the Batch Predict. This message is returned in
-/// \[response][google.longrunning.Operation.response\] of the operation returned
-/// by the \[PredictionService.BatchPredict][google.cloud.automl.v1.PredictionService.BatchPredict\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchPredictResult {
-    /// Additional domain-specific prediction response metadata.
-    ///
-    /// AutoML Vision Object Detection
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding boxes returned per image.
-    ///
-    /// AutoML Video Intelligence Object Tracking
-    ///
-    /// `max_bounding_box_count`
-    /// : (int64) The maximum number of bounding boxes returned per frame.
-    #[prost(btree_map = "string, string", tag = "1")]
-    pub metadata: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Generated client implementations.
-pub mod prediction_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// AutoML Prediction API.
-    ///
-    /// On any input that is documented to expect a string parameter in
-    /// snake_case or dash-case, either of those cases is accepted.
-    #[derive(Debug, Clone)]
-    pub struct PredictionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> PredictionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PredictionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            PredictionServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Perform an online prediction. The prediction result is directly
-        /// returned in the response.
-        /// Available for following ML scenarios, and their expected request payloads:
-        ///
-        /// AutoML Vision Classification
-        ///
-        /// * An image in .JPEG, .GIF or .PNG format, image_bytes up to 30MB.
-        ///
-        /// AutoML Vision Object Detection
-        ///
-        /// * An image in .JPEG, .GIF or .PNG format, image_bytes up to 30MB.
-        ///
-        /// AutoML Natural Language Classification
-        ///
-        /// * A TextSnippet up to 60,000 characters, UTF-8 encoded or a document in
-        /// .PDF, .TIF or .TIFF format with size upto 2MB.
-        ///
-        /// AutoML Natural Language Entity Extraction
-        ///
-        /// * A TextSnippet up to 10,000 characters, UTF-8 NFC encoded or a document
-        ///  in .PDF, .TIF or .TIFF format with size upto 20MB.
-        ///
-        /// AutoML Natural Language Sentiment Analysis
-        ///
-        /// * A TextSnippet up to 60,000 characters, UTF-8 encoded or a document in
-        /// .PDF, .TIF or .TIFF format with size upto 2MB.
-        ///
-        /// AutoML Translation
-        ///
-        /// * A TextSnippet up to 25,000 characters, UTF-8 encoded.
-        ///
-        /// AutoML Tables
-        ///
-        /// * A row with column values matching
-        ///   the columns of the model, up to 5MB. Not available for FORECASTING
-        ///   `prediction_type`.
-        pub async fn predict(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PredictRequest>,
-        ) -> Result<tonic::Response<super::PredictResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.automl.v1.PredictionService/Predict",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Perform a batch prediction. Unlike the online [Predict][google.cloud.automl.v1.PredictionService.Predict], batch
-        /// prediction result won't be immediately available in the response. Instead,
-        /// a long running operation object is returned. User can poll the operation
-        /// result via [GetOperation][google.longrunning.Operations.GetOperation]
-        /// method. Once the operation is done, [BatchPredictResult][google.cloud.automl.v1.BatchPredictResult] is returned in
-        /// the [response][google.longrunning.Operation.response] field.
-        /// Available for following ML scenarios:
-        ///
-        /// * AutoML Vision Classification
-        /// * AutoML Vision Object Detection
-        /// * AutoML Video Intelligence Classification
-        /// * AutoML Video Intelligence Object Tracking * AutoML Natural Language Classification
-        /// * AutoML Natural Language Entity Extraction
-        /// * AutoML Natural Language Sentiment Analysis
-        /// * AutoML Tables
-        pub async fn batch_predict(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BatchPredictRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.automl.v1.PredictionService/BatchPredict",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Metadata used across all long running operations returned by AutoML API.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// Output only. Progress of operation. Range: [0, 100].
-    /// Not used currently.
-    #[prost(int32, tag = "13")]
-    pub progress_percent: i32,
-    /// Output only. Partial failures encountered.
-    /// E.g. single files that couldn't be read.
-    /// This field should never exceed 20 entries.
-    /// Status details field will contain standard GCP error details.
-    #[prost(message, repeated, tag = "2")]
-    pub partial_failures: ::prost::alloc::vec::Vec<super::super::super::rpc::Status>,
-    /// Output only. Time when the operation was created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Time when the operation was updated for the last time.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Ouptut only. Details of specific operation. Even if this field is empty,
-    /// the presence allows to distinguish different types of operations.
-    #[prost(
-        oneof = "operation_metadata::Details",
-        tags = "8, 24, 25, 10, 30, 15, 16, 21, 22"
-    )]
-    pub details: ::core::option::Option<operation_metadata::Details>,
-}
-/// Nested message and enum types in `OperationMetadata`.
-pub mod operation_metadata {
-    /// Ouptut only. Details of specific operation. Even if this field is empty,
-    /// the presence allows to distinguish different types of operations.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Details {
-        /// Details of a Delete operation.
-        #[prost(message, tag = "8")]
-        DeleteDetails(super::DeleteOperationMetadata),
-        /// Details of a DeployModel operation.
-        #[prost(message, tag = "24")]
-        DeployModelDetails(super::DeployModelOperationMetadata),
-        /// Details of an UndeployModel operation.
-        #[prost(message, tag = "25")]
-        UndeployModelDetails(super::UndeployModelOperationMetadata),
-        /// Details of CreateModel operation.
-        #[prost(message, tag = "10")]
-        CreateModelDetails(super::CreateModelOperationMetadata),
-        /// Details of CreateDataset operation.
-        #[prost(message, tag = "30")]
-        CreateDatasetDetails(super::CreateDatasetOperationMetadata),
-        /// Details of ImportData operation.
-        #[prost(message, tag = "15")]
-        ImportDataDetails(super::ImportDataOperationMetadata),
-        /// Details of BatchPredict operation.
-        #[prost(message, tag = "16")]
-        BatchPredictDetails(super::BatchPredictOperationMetadata),
-        /// Details of ExportData operation.
-        #[prost(message, tag = "21")]
-        ExportDataDetails(super::ExportDataOperationMetadata),
-        /// Details of ExportModel operation.
-        #[prost(message, tag = "22")]
-        ExportModelDetails(super::ExportModelOperationMetadata),
-    }
-}
-/// Details of operations that perform deletes of any entities.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteOperationMetadata {}
-/// Details of DeployModel operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeployModelOperationMetadata {}
-/// Details of UndeployModel operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UndeployModelOperationMetadata {}
-/// Details of CreateDataset operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateDatasetOperationMetadata {}
-/// Details of CreateModel operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateModelOperationMetadata {}
-/// Details of ImportData operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportDataOperationMetadata {}
-/// Details of ExportData operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportDataOperationMetadata {
-    /// Output only. Information further describing this export data's output.
-    #[prost(message, optional, tag = "1")]
-    pub output_info: ::core::option::Option<
-        export_data_operation_metadata::ExportDataOutputInfo,
-    >,
-}
-/// Nested message and enum types in `ExportDataOperationMetadata`.
-pub mod export_data_operation_metadata {
-    /// Further describes this export data's output.
-    /// Supplements
-    /// \[OutputConfig][google.cloud.automl.v1.OutputConfig\].
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExportDataOutputInfo {
-        /// The output location to which the exported data is written.
-        #[prost(oneof = "export_data_output_info::OutputLocation", tags = "1")]
-        pub output_location: ::core::option::Option<
-            export_data_output_info::OutputLocation,
-        >,
-    }
-    /// Nested message and enum types in `ExportDataOutputInfo`.
-    pub mod export_data_output_info {
-        /// The output location to which the exported data is written.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum OutputLocation {
-            /// The full path of the Google Cloud Storage directory created, into which
-            /// the exported data is written.
-            #[prost(string, tag = "1")]
-            GcsOutputDirectory(::prost::alloc::string::String),
-        }
-    }
-}
-/// Details of BatchPredict operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchPredictOperationMetadata {
-    /// Output only. The input config that was given upon starting this
-    /// batch predict operation.
-    #[prost(message, optional, tag = "1")]
-    pub input_config: ::core::option::Option<BatchPredictInputConfig>,
-    /// Output only. Information further describing this batch predict's output.
-    #[prost(message, optional, tag = "2")]
-    pub output_info: ::core::option::Option<
-        batch_predict_operation_metadata::BatchPredictOutputInfo,
-    >,
-}
-/// Nested message and enum types in `BatchPredictOperationMetadata`.
-pub mod batch_predict_operation_metadata {
-    /// Further describes this batch predict's output.
-    /// Supplements
-    /// \[BatchPredictOutputConfig][google.cloud.automl.v1.BatchPredictOutputConfig\].
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct BatchPredictOutputInfo {
-        /// The output location into which prediction output is written.
-        #[prost(oneof = "batch_predict_output_info::OutputLocation", tags = "1")]
-        pub output_location: ::core::option::Option<
-            batch_predict_output_info::OutputLocation,
-        >,
-    }
-    /// Nested message and enum types in `BatchPredictOutputInfo`.
-    pub mod batch_predict_output_info {
-        /// The output location into which prediction output is written.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum OutputLocation {
-            /// The full path of the Google Cloud Storage directory created, into which
-            /// the prediction output is written.
-            #[prost(string, tag = "1")]
-            GcsOutputDirectory(::prost::alloc::string::String),
-        }
-    }
-}
-/// Details of ExportModel operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportModelOperationMetadata {
-    /// Output only. Information further describing the output of this model
-    /// export.
-    #[prost(message, optional, tag = "2")]
-    pub output_info: ::core::option::Option<
-        export_model_operation_metadata::ExportModelOutputInfo,
-    >,
-}
-/// Nested message and enum types in `ExportModelOperationMetadata`.
-pub mod export_model_operation_metadata {
-    /// Further describes the output of model export.
-    /// Supplements
-    /// \[ModelExportOutputConfig][google.cloud.automl.v1.ModelExportOutputConfig\].
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ExportModelOutputInfo {
-        /// The full path of the Google Cloud Storage directory created, into which
-        /// the model will be exported.
-        #[prost(string, tag = "1")]
-        pub gcs_output_directory: ::prost::alloc::string::String,
     }
 }

@@ -1,44 +1,3 @@
-/// Table reference that includes just the 3 strings needed to identify a table.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableReference {
-    /// The assigned project ID of the project.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The ID of the dataset in the above project.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The ID of the table in the above dataset.
-    #[prost(string, tag = "3")]
-    pub table_id: ::prost::alloc::string::String,
-}
-/// All fields in this message optional.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableModifiers {
-    /// The snapshot time of the table. If not set, interpreted as now.
-    #[prost(message, optional, tag = "1")]
-    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Arrow schema.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowSchema {
-    /// IPC serialized Arrow schema.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_schema: ::prost::bytes::Bytes,
-}
-/// Arrow RecordBatch.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ArrowRecordBatch {
-    /// IPC serialized Arrow RecordBatch.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub serialized_record_batch: ::prost::bytes::Bytes,
-    /// The count of rows in the returning block.
-    #[prost(int64, tag = "2")]
-    pub row_count: i64,
-}
 /// Avro schema.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -79,6 +38,47 @@ pub struct TableReadOptions {
     ///            "numeric_field BETWEEN 1.0 AND 5.0"
     #[prost(string, tag = "2")]
     pub row_restriction: ::prost::alloc::string::String,
+}
+/// Arrow schema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowSchema {
+    /// IPC serialized Arrow schema.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_schema: ::prost::bytes::Bytes,
+}
+/// Arrow RecordBatch.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ArrowRecordBatch {
+    /// IPC serialized Arrow RecordBatch.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub serialized_record_batch: ::prost::bytes::Bytes,
+    /// The count of rows in the returning block.
+    #[prost(int64, tag = "2")]
+    pub row_count: i64,
+}
+/// Table reference that includes just the 3 strings needed to identify a table.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableReference {
+    /// The assigned project ID of the project.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The ID of the dataset in the above project.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The ID of the table in the above dataset.
+    #[prost(string, tag = "3")]
+    pub table_id: ::prost::alloc::string::String,
+}
+/// All fields in this message optional.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableModifiers {
+    /// The snapshot time of the table. If not set, interpreted as now.
+    #[prost(message, optional, tag = "1")]
+    pub snapshot_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Information about a single data stream within a read session.
 #[allow(clippy::derive_partial_eq_without_eq)]

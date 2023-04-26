@@ -1,27 +1,3 @@
-/// Message encapsulating a value that can be either absolute ("fixed") or
-/// relative ("percent") to a value.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FixedOrPercent {
-    /// Type of the value.
-    #[prost(oneof = "fixed_or_percent::Mode", tags = "1, 2")]
-    pub mode: ::core::option::Option<fixed_or_percent::Mode>,
-}
-/// Nested message and enum types in `FixedOrPercent`.
-pub mod fixed_or_percent {
-    /// Type of the value.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Mode {
-        /// Specifies a fixed value.
-        #[prost(int32, tag = "1")]
-        Fixed(i32),
-        /// Specifies the relative value defined as a percentage, which will be
-        /// multiplied by a reference value.
-        #[prost(int32, tag = "2")]
-        Percent(i32),
-    }
-}
 /// An OS Config resource representing a guest configuration policy. These
 /// policies represent the desired state for VM instance guest environments
 /// including packages to install or remove, package repository configurations,
@@ -1020,6 +996,30 @@ impl DesiredState {
             "REMOVED" => Some(Self::Removed),
             _ => None,
         }
+    }
+}
+/// Message encapsulating a value that can be either absolute ("fixed") or
+/// relative ("percent") to a value.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FixedOrPercent {
+    /// Type of the value.
+    #[prost(oneof = "fixed_or_percent::Mode", tags = "1, 2")]
+    pub mode: ::core::option::Option<fixed_or_percent::Mode>,
+}
+/// Nested message and enum types in `FixedOrPercent`.
+pub mod fixed_or_percent {
+    /// Type of the value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Mode {
+        /// Specifies a fixed value.
+        #[prost(int32, tag = "1")]
+        Fixed(i32),
+        /// Specifies the relative value defined as a percentage, which will be
+        /// multiplied by a reference value.
+        #[prost(int32, tag = "2")]
+        Percent(i32),
     }
 }
 /// A request message to initiate patching across Compute Engine instances.
