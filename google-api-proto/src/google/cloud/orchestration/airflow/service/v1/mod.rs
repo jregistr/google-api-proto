@@ -611,6 +611,13 @@ pub struct EnvironmentConfig {
     /// interface](/composer/docs/how-to/accessing/airflow-web-interface)).
     #[prost(string, tag = "6")]
     pub airflow_uri: ::prost::alloc::string::String,
+    /// Output only. The 'bring your own identity' variant of the URI of the Apache
+    /// Airflow Web UI hosted within this environment, to be accessed with external
+    /// identities using workforce identity federation (see [Access environments
+    /// with workforce identity
+    /// federation](/composer/docs/composer-2/access-environments-with-workforce-identity-federation)).
+    #[prost(string, tag = "20")]
+    pub airflow_byoid_uri: ::prost::alloc::string::String,
     /// Optional. The configuration options for GKE cluster master authorized
     /// networks. By default master authorized networks feature is:
     /// - in case of private environment: enabled with no external networks

@@ -556,7 +556,11 @@ pub struct ExistenceFilter {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StructuredQuery {
-    /// The projection to return.
+    /// Optional sub-set of the fields to return.
+    ///
+    /// This acts as a \[DocumentMask][google.firestore.v1.DocumentMask\] over the
+    /// documents returned from a query. When not set, assumes that the caller
+    /// wants all fields returned.
     #[prost(message, optional, tag = "1")]
     pub select: ::core::option::Option<structured_query::Projection>,
     /// The collections to query.
@@ -824,23 +828,26 @@ pub mod structured_query {
             ///
             /// Requires:
             ///
-            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
+            /// * That `value` is a non-empty `ArrayValue`, subject to disjunction
+            ///    limits.
+            /// * No `NOT_IN` filters in the same query.
             In = 8,
             /// The given `field` is an array that contains any of the values in the
             /// given array.
             ///
             /// Requires:
             ///
-            /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN` or `ARRAY_CONTAINS_ANY` or `NOT_IN`.
+            /// * That `value` is a non-empty `ArrayValue`, subject to disjunction
+            ///    limits.
+            /// * No other `ARRAY_CONTAINS_ANY` filters within the same disjunction.
+            /// * No `NOT_IN` filters in the same query.
             ArrayContainsAny = 9,
             /// The value of the `field` is not in the given array.
             ///
             /// Requires:
             ///
             /// * That `value` is a non-empty `ArrayValue` with at most 10 values.
-            /// * No other `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
+            /// * No other `OR`, `IN`, `ARRAY_CONTAINS_ANY`, `NOT_IN`, `NOT_EQUAL`,
             ///    `IS_NOT_NULL`, or `IS_NOT_NAN`.
             /// * That `field` comes first in the `order_by`.
             NotIn = 10,
@@ -1067,7 +1074,7 @@ pub struct StructuredAggregationQuery {
 }
 /// Nested message and enum types in `StructuredAggregationQuery`.
 pub mod structured_aggregation_query {
-    /// Defines a aggregation that produces a single result.
+    /// Defines an aggregation that produces a single result.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Aggregation {
@@ -1082,7 +1089,7 @@ pub mod structured_aggregation_query {
         ///    COUNT_UP_TO(1) AS count_up_to_1,
         ///    COUNT_UP_TO(2),
         ///    COUNT_UP_TO(3) AS count_up_to_3,
-        ///    COUNT_UP_TO(4)
+        ///    COUNT(*)
         /// OVER (
         ///    ...
         /// );
@@ -1095,7 +1102,7 @@ pub mod structured_aggregation_query {
         ///    COUNT_UP_TO(1) AS count_up_to_1,
         ///    COUNT_UP_TO(2) AS field_1,
         ///    COUNT_UP_TO(3) AS count_up_to_3,
-        ///    COUNT_UP_TO(4) AS field_2
+        ///    COUNT(*) AS field_2
         /// OVER (
         ///    ...
         /// );
@@ -1125,7 +1132,7 @@ pub mod structured_aggregation_query {
             /// count.
             ///
             /// This provides a way to set an upper bound on the number of documents
-            /// to scan, limiting latency and cost.
+            /// to scan, limiting latency, and cost.
             ///
             /// Unspecified is interpreted as no bound.
             ///
@@ -1719,7 +1726,14 @@ pub struct RunAggregationQueryResponse {
     /// a new transaction.
     #[prost(bytes = "bytes", tag = "2")]
     pub transaction: ::prost::bytes::Bytes,
-    /// The time at which the aggregate value is valid for.
+    /// The time at which the aggregate result was computed. This is always
+    /// monotonically increasing; in this case, the previous AggregationResult in
+    /// the result stream are guaranteed not to have changed between their
+    /// `read_time` and this one.
+    ///
+    /// If the query returns no results, a response with `read_time` and no
+    /// `result` will be sent, and this represents the time at which the query
+    /// was run.
     #[prost(message, optional, tag = "3")]
     pub read_time: ::core::option::Option<::prost_types::Timestamp>,
 }
@@ -2576,7 +2590,7 @@ pub mod firestore_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
         /// Streams batches of document updates and deletes, in order. This method is
-        /// only available via the gRPC API (not REST).
+        /// only available via gRPC or WebChannel (not REST).
         pub async fn write(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::WriteRequest>,
@@ -2599,8 +2613,8 @@ pub mod firestore_client {
             );
             self.inner.streaming(request.into_streaming_request(), path, codec).await
         }
-        /// Listens to changes. This method is only available via the gRPC API (not
-        /// REST).
+        /// Listens to changes. This method is only available via gRPC or WebChannel
+        /// (not REST).
         pub async fn listen(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::ListenRequest>,
