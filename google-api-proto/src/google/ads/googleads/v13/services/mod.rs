@@ -20093,11 +20093,11 @@ pub mod apply_recommendation_operation {
             super::super::common::CallFeedItem,
         >,
     }
-    /// Parameters to use when applying sitelink extension recommendation.
+    /// Parameters to use when applying sitelink recommendation.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SitelinkExtensionParameters {
-        /// Sitelink extensions to be added. This is a required field.
+        /// Sitelinks to be added. This is a required field.
         #[prost(message, repeated, tag = "1")]
         pub sitelink_extensions: ::prost::alloc::vec::Vec<
             super::super::common::SitelinkFeedItem,
@@ -20280,7 +20280,7 @@ pub mod apply_recommendation_operation {
         /// Parameters to use when applying call extension recommendation.
         #[prost(message, tag = "7")]
         CallExtension(CallExtensionParameters),
-        /// Parameters to use when applying sitelink extension recommendation.
+        /// Parameters to use when applying sitelink recommendation.
         #[prost(message, tag = "8")]
         SitelinkExtension(SitelinkExtensionParameters),
         /// Parameters to use when applying move unused budget recommendation.
@@ -21477,6 +21477,154 @@ pub mod travel_asset_suggestion_service_client {
         }
     }
 }
+/// A single update operation for a CustomerSkAdNetworkConversionValueSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomerSkAdNetworkConversionValueSchemaOperation {
+    /// Update operation: The schema is expected to have a valid resource name.
+    #[prost(message, optional, tag = "1")]
+    pub update: ::core::option::Option<
+        super::resources::CustomerSkAdNetworkConversionValueSchema,
+    >,
+}
+/// Request message for
+/// \[CustomerSkAdNetworkConversionValueSchemaService.MutateCustomerSkAdNetworkConversionValueSchema][google.ads.googleads.v13.services.CustomerSkAdNetworkConversionValueSchemaService.MutateCustomerSkAdNetworkConversionValueSchema\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerSkAdNetworkConversionValueSchemaRequest {
+    /// The ID of the customer whose shared sets are being modified.
+    #[prost(string, tag = "1")]
+    pub customer_id: ::prost::alloc::string::String,
+    /// The operation to perform.
+    #[prost(message, optional, tag = "2")]
+    pub operation: ::core::option::Option<
+        CustomerSkAdNetworkConversionValueSchemaOperation,
+    >,
+    /// If true, the request is validated but not executed. Only errors are
+    /// returned, not results.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
+}
+/// The result for the CustomerSkAdNetworkConversionValueSchema mutate.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerSkAdNetworkConversionValueSchemaResult {
+    /// Resource name of the customer that was modified.
+    #[prost(string, tag = "1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// App ID of the SkanConversionValue modified.
+    #[prost(string, tag = "2")]
+    pub app_id: ::prost::alloc::string::String,
+}
+/// Response message for MutateCustomerSkAdNetworkConversionValueSchema.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateCustomerSkAdNetworkConversionValueSchemaResponse {
+    /// All results for the mutate.
+    #[prost(message, optional, tag = "1")]
+    pub result: ::core::option::Option<
+        MutateCustomerSkAdNetworkConversionValueSchemaResult,
+    >,
+}
+/// Generated client implementations.
+pub mod customer_sk_ad_network_conversion_value_schema_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage CustomerSkAdNetworkConversionValueSchema.
+    #[derive(Debug, Clone)]
+    pub struct CustomerSkAdNetworkConversionValueSchemaServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomerSkAdNetworkConversionValueSchemaServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomerSkAdNetworkConversionValueSchemaServiceClient<
+            InterceptedService<T, F>,
+        >
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomerSkAdNetworkConversionValueSchemaServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates or updates the CustomerSkAdNetworkConversionValueSchema.
+        ///
+        /// List of thrown errors:
+        ///   [AuthenticationError]()
+        ///   [AuthorizationError]()
+        ///   [FieldError]()
+        ///   [InternalError]()
+        ///   [MutateError]()
+        pub async fn mutate_customer_sk_ad_network_conversion_value_schema(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::MutateCustomerSkAdNetworkConversionValueSchemaRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::MutateCustomerSkAdNetworkConversionValueSchemaResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.googleads.v13.services.CustomerSkAdNetworkConversionValueSchemaService/MutateCustomerSkAdNetworkConversionValueSchema",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// Request message for
 /// \[OfflineUserDataJobService.CreateOfflineUserDataJob][google.ads.googleads.v13.services.OfflineUserDataJobService.CreateOfflineUserDataJob\].
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -22285,7 +22433,6 @@ pub struct GenerateReachForecastRequest {
     #[prost(message, optional, tag = "13")]
     pub forecast_metric_options: ::core::option::Option<ForecastMetricOptions>,
     /// The name of the customer being planned for. This is a user-defined value.
-    /// Required if targeting.audience_targeting is set.
     #[prost(string, optional, tag = "14")]
     pub customer_reach_group: ::core::option::Option<::prost::alloc::string::String>,
 }
@@ -22889,6 +23036,10 @@ pub struct GenerateAudienceCompositionInsightsRequest {
     /// Required. The audience of interest for which insights are being requested.
     #[prost(message, optional, tag = "2")]
     pub audience: ::core::option::Option<InsightsAudience>,
+    /// The baseline audience to which the audience of interest is being
+    /// compared.
+    #[prost(message, optional, tag = "6")]
+    pub baseline_audience: ::core::option::Option<InsightsAudience>,
     /// The one-month range of historical data to use for insights, in the format
     /// "yyyy-mm". If unset, insights will be returned for the last thirty days of
     /// data.
@@ -22970,6 +23121,12 @@ pub struct ListInsightsEligibleDatesResponse {
     /// available, each represented as a string in the form "YYYY-MM".
     #[prost(string, repeated, tag = "1")]
     pub data_months: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The actual dates covered by the "last 30 days" date range that will be used
+    /// implicitly for
+    /// \[AudienceInsightsService.GenerateAudienceCompositionInsights][google.ads.googleads.v13.services.AudienceInsightsService.GenerateAudienceCompositionInsights\]
+    /// requests that have no data_month set.
+    #[prost(message, optional, tag = "2")]
+    pub last_thirty_days: ::core::option::Option<super::common::DateRange>,
 }
 /// An audience attribute that can be used to request insights about the
 /// audience.
