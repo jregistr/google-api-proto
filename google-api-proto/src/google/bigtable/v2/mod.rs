@@ -1,3 +1,19 @@
+/// Feature flags supported by a client.
+/// This is intended to be sent as part of request metadata to assure the server
+/// that certain behaviors are safe to enable. This proto is meant to be
+/// serialized and websafe-base64 encoded under the `bigtable-features` metadata
+/// key. The value will remain constant for the lifetime of a client and due to
+/// HTTP2's HPACK compression, the request overhead will be tiny.
+/// This is an internal implementation detail and should not be used by endusers
+/// directly.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeatureFlags {
+    /// Notify the server that the client enables batch write flow control by
+    /// requesting RateLimitInfo from MutateRowsResponse.
+    #[prost(bool, tag = "3")]
+    pub mutate_rows_rate_limit: bool,
+}
 /// ReadIterationStats captures information about the iteration of rows or cells
 /// over the course of a read, e.g. how many results were scanned in a read
 /// operation versus the results returned.
@@ -756,8 +772,8 @@ pub struct ReadRowsRequest {
     /// `projects/<project>/instances/<instance>/tables/<table>`.
     #[prost(string, tag = "1")]
     pub table_name: ::prost::alloc::string::String,
-    /// This value specifies routing for replication. This API only accepts the
-    /// empty value of app_profile_id.
+    /// This value specifies routing for replication. If not specified, the
+    /// "default" application profile will be used.
     #[prost(string, tag = "5")]
     pub app_profile_id: ::prost::alloc::string::String,
     /// The row keys and/or ranges to read sequentially. If not specified, reads
@@ -778,7 +794,6 @@ pub struct ReadRowsRequest {
 }
 /// Nested message and enum types in `ReadRowsRequest`.
 pub mod read_rows_request {
-    ///
     /// The desired view into RequestStats that should be returned in the response.
     ///
     /// See also: RequestStats message.
@@ -1046,6 +1061,11 @@ pub struct MutateRowsResponse {
     /// One or more results for Entries from the batch request.
     #[prost(message, repeated, tag = "1")]
     pub entries: ::prost::alloc::vec::Vec<mutate_rows_response::Entry>,
+    /// Information about how client should limit the rate (QPS). Primirily used by
+    /// supported official Cloud Bigtable clients. If unset, the rate limit info is
+    /// not provided by the server.
+    #[prost(message, optional, tag = "3")]
+    pub rate_limit_info: ::core::option::Option<RateLimitInfo>,
 }
 /// Nested message and enum types in `MutateRowsResponse`.
 pub mod mutate_rows_response {
@@ -1064,6 +1084,30 @@ pub mod mutate_rows_response {
         #[prost(message, optional, tag = "2")]
         pub status: ::core::option::Option<super::super::super::rpc::Status>,
     }
+}
+/// Information about how client should adjust the load to Bigtable.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RateLimitInfo {
+    /// Time that clients should wait before adjusting the target rate again.
+    /// If clients adjust rate too frequently, the impact of the previous
+    /// adjustment may not have been taken into account and may
+    /// over-throttle or under-throttle. If clients adjust rate too slowly, they
+    /// will not be responsive to load changes on server side, and may
+    /// over-throttle or under-throttle.
+    #[prost(message, optional, tag = "1")]
+    pub period: ::core::option::Option<::prost_types::Duration>,
+    /// If it has been at least one `period` since the last load adjustment, the
+    /// client should multiply the current load by this value to get the new target
+    /// load. For example, if the current load is 100 and `factor` is 0.8, the new
+    /// target load should be 80. After adjusting, the client should ignore
+    /// `factor` until another `period` has passed.
+    ///
+    /// The client can measure its load using any unit that's comparable over time
+    /// For example, QPS can be used as long as each request involves a similar
+    /// amount of work.
+    #[prost(double, tag = "2")]
+    pub factor: f64,
 }
 /// Request message for Bigtable.CheckAndMutateRow.
 #[allow(clippy::derive_partial_eq_without_eq)]
