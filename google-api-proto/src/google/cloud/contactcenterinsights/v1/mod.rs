@@ -49,6 +49,9 @@ pub struct Conversation {
     /// Output only. The conversation's latest analysis, if one exists.
     #[prost(message, optional, tag = "12")]
     pub latest_analysis: ::core::option::Option<Analysis>,
+    /// Output only. Latest summary of the conversation.
+    #[prost(message, optional, tag = "20")]
+    pub latest_summary: ::core::option::Option<ConversationSummarizationSuggestionData>,
     /// Output only. The annotations that were generated during the customer and
     /// agent interaction.
     #[prost(message, repeated, tag = "13")]
@@ -1051,7 +1054,7 @@ pub struct PhraseMatchRuleGroup {
         tag = "1"
     )]
     pub r#type: i32,
-    /// A list of phase match rules that are included in this group.
+    /// A list of phrase match rules that are included in this group.
     #[prost(message, repeated, tag = "2")]
     pub phrase_match_rules: ::prost::alloc::vec::Vec<PhraseMatchRule>,
 }
@@ -1258,7 +1261,7 @@ pub struct RuntimeAnnotation {
     #[prost(message, optional, tag = "5")]
     pub answer_feedback: ::core::option::Option<AnswerFeedback>,
     /// The data in the annotation.
-    #[prost(oneof = "runtime_annotation::Data", tags = "6, 7, 8, 9, 10")]
+    #[prost(oneof = "runtime_annotation::Data", tags = "6, 7, 8, 9, 10, 12")]
     pub data: ::core::option::Option<runtime_annotation::Data>,
 }
 /// Nested message and enum types in `RuntimeAnnotation`.
@@ -1282,6 +1285,11 @@ pub mod runtime_annotation {
         /// Dialogflow interaction data.
         #[prost(message, tag = "10")]
         DialogflowInteraction(super::DialogflowInteractionData),
+        /// Conversation summarization suggestion data.
+        #[prost(message, tag = "12")]
+        ConversationSummarizationSuggestion(
+            super::ConversationSummarizationSuggestionData,
+        ),
     }
 }
 /// The feedback that the customer has about a certain answer in the
@@ -1479,6 +1487,42 @@ pub struct DialogflowInteractionData {
     #[prost(float, tag = "2")]
     pub confidence: f32,
 }
+/// Conversation summarization suggestion data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversationSummarizationSuggestionData {
+    /// The summarization content that is concatenated into one string.
+    #[prost(string, tag = "1")]
+    pub text: ::prost::alloc::string::String,
+    /// The summarization content that is divided into sections. The key is the
+    /// section's name and the value is the section's content. There is no
+    /// specific format for the key or value.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub text_sections: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// The confidence score of the summarization.
+    #[prost(float, tag = "2")]
+    pub confidence: f32,
+    /// A map that contains metadata about the summarization and the document
+    /// from which it originates.
+    #[prost(btree_map = "string, string", tag = "3")]
+    pub metadata: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// The name of the answer record.
+    /// Format:
+    /// projects/{project}/locations/{location}/answerRecords/{answer_record}
+    #[prost(string, tag = "4")]
+    pub answer_record: ::prost::alloc::string::String,
+    /// The name of the model that generates this summary.
+    /// Format:
+    /// projects/{project}/locations/{location}/conversationModels/{conversation_model}
+    #[prost(string, tag = "6")]
+    pub conversation_model: ::prost::alloc::string::String,
+}
 /// The call participant speaking for a given utterance.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1625,6 +1669,82 @@ pub struct AnnotatorSelector {
     /// provided issue model will be used for inference.
     #[prost(string, repeated, tag = "10")]
     pub issue_models: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Whether to run the summarization annotator.
+    #[prost(bool, tag = "9")]
+    pub run_summarization_annotator: bool,
+    /// Configuration for the summarization annotator.
+    #[prost(message, optional, tag = "11")]
+    pub summarization_config: ::core::option::Option<
+        annotator_selector::SummarizationConfig,
+    >,
+}
+/// Nested message and enum types in `AnnotatorSelector`.
+pub mod annotator_selector {
+    /// Configuration for summarization.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SummarizationConfig {
+        /// Summarization must use either a preexisting conversation profile or one
+        /// of the supported default models.
+        #[prost(oneof = "summarization_config::ModelSource", tags = "1, 2")]
+        pub model_source: ::core::option::Option<summarization_config::ModelSource>,
+    }
+    /// Nested message and enum types in `SummarizationConfig`.
+    pub mod summarization_config {
+        /// Summarization model to use, if `conversation_profile` is not used.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum SummarizationModel {
+            /// Unspecified summarization model.
+            Unspecified = 0,
+            /// The Insights baseline model.
+            BaselineModel = 1,
+        }
+        impl SummarizationModel {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    SummarizationModel::Unspecified => "SUMMARIZATION_MODEL_UNSPECIFIED",
+                    SummarizationModel::BaselineModel => "BASELINE_MODEL",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "SUMMARIZATION_MODEL_UNSPECIFIED" => Some(Self::Unspecified),
+                    "BASELINE_MODEL" => Some(Self::BaselineModel),
+                    _ => None,
+                }
+            }
+        }
+        /// Summarization must use either a preexisting conversation profile or one
+        /// of the supported default models.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ModelSource {
+            /// Resource name of the Dialogflow conversation profile.
+            /// Format:
+            /// projects/{project}/locations/{location}/conversationProfiles/{conversation_profile}
+            #[prost(string, tag = "1")]
+            ConversationProfile(::prost::alloc::string::String),
+            /// Default summarization model to be used.
+            #[prost(enumeration = "SummarizationModel", tag = "2")]
+            SummarizationModel(i32),
+        }
+    }
 }
 /// The request for calculating conversation statistics.
 #[allow(clippy::derive_partial_eq_without_eq)]

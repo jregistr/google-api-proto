@@ -25,6 +25,8 @@ pub enum AcceleratorType {
     NvidiaTeslaT4 = 5,
     /// Nvidia Tesla A100 GPU.
     NvidiaTeslaA100 = 8,
+    /// Nvidia L4 GPU.
+    NvidiaL4 = 11,
     /// TPU v2.
     TpuV2 = 6,
     /// TPU v3.
@@ -46,6 +48,7 @@ impl AcceleratorType {
             AcceleratorType::NvidiaTeslaP4 => "NVIDIA_TESLA_P4",
             AcceleratorType::NvidiaTeslaT4 => "NVIDIA_TESLA_T4",
             AcceleratorType::NvidiaTeslaA100 => "NVIDIA_TESLA_A100",
+            AcceleratorType::NvidiaL4 => "NVIDIA_L4",
             AcceleratorType::TpuV2 => "TPU_V2",
             AcceleratorType::TpuV3 => "TPU_V3",
             AcceleratorType::TpuV4Pod => "TPU_V4_POD",
@@ -61,6 +64,7 @@ impl AcceleratorType {
             "NVIDIA_TESLA_P4" => Some(Self::NvidiaTeslaP4),
             "NVIDIA_TESLA_T4" => Some(Self::NvidiaTeslaT4),
             "NVIDIA_TESLA_A100" => Some(Self::NvidiaTeslaA100),
+            "NVIDIA_L4" => Some(Self::NvidiaL4),
             "TPU_V2" => Some(Self::TpuV2),
             "TPU_V3" => Some(Self::TpuV3),
             "TPU_V4_POD" => Some(Self::TpuV4Pod),
@@ -1751,8 +1755,8 @@ pub struct BlurBaselineConfig {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExplanationSpecOverride {
     /// The parameters to be overridden. Note that the
-    /// \[method][google.cloud.aiplatform.v1.ExplanationParameters.method\] cannot be
-    /// changed. If not specified, no parameter is overridden.
+    /// attribution method cannot be changed. If not specified,
+    /// no parameter is overridden.
     #[prost(message, optional, tag = "1")]
     pub parameters: ::core::option::Option<ExplanationParameters>,
     /// The metadata to be overridden. If not specified, no metadata is overridden.
@@ -2632,6 +2636,8 @@ pub mod model_source_info {
         Bqml = 3,
         /// The Model is saved or tuned from Model Garden.
         ModelGarden = 4,
+        /// The Model is saved or tuned from Genie.
+        Genie = 5,
     }
     impl ModelSourceType {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -2645,6 +2651,7 @@ pub mod model_source_info {
                 ModelSourceType::Custom => "CUSTOM",
                 ModelSourceType::Bqml => "BQML",
                 ModelSourceType::ModelGarden => "MODEL_GARDEN",
+                ModelSourceType::Genie => "GENIE",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -2655,6 +2662,7 @@ pub mod model_source_info {
                 "CUSTOM" => Some(Self::Custom),
                 "BQML" => Some(Self::Bqml),
                 "MODEL_GARDEN" => Some(Self::ModelGarden),
+                "GENIE" => Some(Self::Genie),
                 _ => None,
             }
         }
@@ -4838,10 +4846,6 @@ pub struct EvaluatedAnnotation {
     /// ModelEvaluation. The EvaluatedDataItemView consists of all ground truths
     /// and predictions on
     /// \[data_item_payload][google.cloud.aiplatform.v1.EvaluatedAnnotation.data_item_payload\].
-    ///
-    /// Can be passed in
-    /// \[GetEvaluatedDataItemView's][ModelService.GetEvaluatedDataItemView][\]
-    /// \[id][GetEvaluatedDataItemViewRequest.id\].
     #[prost(string, tag = "6")]
     pub evaluated_data_item_view_id: ::prost::alloc::string::String,
     /// Explanations of
@@ -5558,8 +5562,10 @@ pub struct ListModelVersionsRequest {
     pub page_size: i32,
     /// The standard list page token.
     /// Typically obtained via
-    /// \[ListModelVersionsResponse.next_page_token][google.cloud.aiplatform.v1.ListModelVersionsResponse.next_page_token\]
-    /// of the previous \[ModelService.ListModelversions][\] call.
+    /// \[next_page_token][google.cloud.aiplatform.v1.ListModelVersionsResponse.next_page_token\]
+    /// of the previous
+    /// \[ListModelVersions][google.cloud.aiplatform.v1.ModelService.ListModelVersions\]
+    /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
     /// An expression for filtering the results of the request. For field names
@@ -6924,7 +6930,7 @@ pub struct PipelineTaskDetail {
     #[prost(int64, tag = "12")]
     pub parent_task_id: i64,
     /// Output only. The user specified name of the task that is defined in
-    /// \[PipelineJob.spec][\].
+    /// \[pipeline_spec][google.cloud.aiplatform.v1.PipelineJob.pipeline_spec\].
     #[prost(string, tag = "2")]
     pub task_name: ::prost::alloc::string::String,
     /// Output only. Task create time.
@@ -7183,18 +7189,20 @@ pub struct TensorboardExperiment {
     pub update_time: ::core::option::Option<::prost_types::Timestamp>,
     /// The labels with user-defined metadata to organize your Datasets.
     ///
-    /// Label keys and values can be no longer than 64 characters
+    /// Label keys and values cannot be longer than 64 characters
     /// (Unicode codepoints), can only contain lowercase letters, numeric
     /// characters, underscores and dashes. International characters are allowed.
     /// No more than 64 user labels can be associated with one Dataset (System
     /// labels are excluded).
     ///
     /// See <https://goo.gl/xmQnxf> for more information and examples of labels.
-    /// System reserved label keys are prefixed with "aiplatform.googleapis.com/"
-    /// and are immutable. Following system labels exist for each Dataset:
-    /// * "aiplatform.googleapis.com/dataset_metadata_schema":
-    ///    - output only, its value is the
-    ///    \[metadata_schema's][metadata_schema_uri\] title.
+    /// System reserved label keys are prefixed with `aiplatform.googleapis.com/`
+    /// and are immutable. The following system labels exist for each Dataset:
+    ///
+    /// * `aiplatform.googleapis.com/dataset_metadata_schema`: output only. Its
+    ///     value is the
+    ///     \[metadata_schema's][google.cloud.aiplatform.v1.Dataset.metadata_schema_uri\]
+    ///     title.
     #[prost(btree_map = "string, string", tag = "6")]
     pub labels: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
@@ -7448,6 +7456,16 @@ pub struct CustomJobSpec {
     /// \[HyperparameterTuningJob.trials][google.cloud.aiplatform.v1.HyperparameterTuningJob.trials\]).
     #[prost(bool, tag = "16")]
     pub enable_dashboard_access: bool,
+    /// Optional. The Experiment associated with this job.
+    /// Format:
+    /// `projects/{project}/locations/{location}/metadataStores/{metadataStores}/contexts/{experiment-name}`
+    #[prost(string, tag = "17")]
+    pub experiment: ::prost::alloc::string::String,
+    /// Optional. The Experiment Run associated with this job.
+    /// Format:
+    /// `projects/{project}/locations/{location}/metadataStores/{metadataStores}/contexts/{experiment-name}-{experiment-run-name}`
+    #[prost(string, tag = "18")]
+    pub experiment_run: ::prost::alloc::string::String,
 }
 /// Represents the spec of a worker pool in a job.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -7824,6 +7842,13 @@ pub struct EntityType {
     /// disabled.
     #[prost(message, optional, tag = "8")]
     pub monitoring_config: ::core::option::Option<FeaturestoreMonitoringConfig>,
+    /// Optional. Config for data retention policy in offline storage.
+    /// TTL in days for feature values that will be stored in offline storage.
+    /// The Feature Store offline storage periodically removes obsolete feature
+    /// values older than `offline_storage_ttl_days` since the feature generation
+    /// time. If unset (or explicitly set to 0), default to 4000 days TTL.
+    #[prost(int32, tag = "10")]
+    pub offline_storage_ttl_days: i32,
 }
 /// Stats and Anomaly generated at specific timestamp for specific Feature.
 /// The start_time and end_time are used to define the time range of the dataset
@@ -7953,10 +7978,11 @@ pub struct Feature {
 }
 /// Nested message and enum types in `Feature`.
 pub mod feature {
-    /// A list of historical [Snapshot
-    /// Analysis]\[FeaturestoreMonitoringConfig.SnapshotAnalysis\] or [Import Feature
-    /// Analysis] \[FeaturestoreMonitoringConfig.ImportFeatureAnalysis\] stats
-    /// requested by user, sorted by
+    /// A list of historical
+    /// \[SnapshotAnalysis][google.cloud.aiplatform.v1.FeaturestoreMonitoringConfig.SnapshotAnalysis\]
+    /// or
+    /// \[ImportFeaturesAnalysis][google.cloud.aiplatform.v1.FeaturestoreMonitoringConfig.ImportFeaturesAnalysis\]
+    /// stats requested by user, sorted by
     /// \[FeatureStatsAnomaly.start_time][google.cloud.aiplatform.v1.FeatureStatsAnomaly.start_time\]
     /// descending.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -8136,6 +8162,14 @@ pub struct Featurestore {
     /// Output only. State of the featurestore.
     #[prost(enumeration = "featurestore::State", tag = "8")]
     pub state: i32,
+    /// Optional. TTL in days for feature values that will be stored in online
+    /// serving storage. The Feature Store online storage periodically removes
+    /// obsolete feature values older than `online_storage_ttl_days` since the
+    /// feature generation time. Note that `online_storage_ttl_days` should be less
+    /// than or equal to `offline_storage_ttl_days` for each EntityType under a
+    /// featurestore. If not set, default to 4000 days
+    #[prost(int32, tag = "13")]
+    pub online_storage_ttl_days: i32,
     /// Optional. Customer-managed encryption key spec for data storage. If set,
     /// both of the online and offline data storage will be secured by this key.
     #[prost(message, optional, tag = "10")]
@@ -8371,7 +8405,7 @@ pub struct UpdateFeaturestoreRequest {
     ///    * `labels`
     ///    * `online_serving_config.fixed_node_count`
     ///    * `online_serving_config.scaling`
-    ///    * `online_storage_ttl_days` (available in Preview)
+    ///    * `online_storage_ttl_days`
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -8876,7 +8910,7 @@ pub struct UpdateEntityTypeRequest {
     ///    * `monitoring_config.import_features_analysis.anomaly_detection_baseline`
     ///    * `monitoring_config.numerical_threshold_config.value`
     ///    * `monitoring_config.categorical_threshold_config.value`
-    ///    * `offline_storage_ttl_days` (available in Preview)
+    ///    * `offline_storage_ttl_days`
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -12735,13 +12769,13 @@ pub struct DeployedIndex {
     /// e2-standard-16 and e2-highmem-16 for cost efficiency.
     #[prost(message, optional, tag = "16")]
     pub dedicated_resources: ::core::option::Option<DedicatedResources>,
-    /// Optional. If true, private endpoint's access logs are sent to StackDriver
+    /// Optional. If true, private endpoint's access logs are sent to Cloud
     /// Logging.
     ///
     /// These logs are like standard server access logs, containing
     /// information like timestamp and latency for each MatchRequest.
     ///
-    /// Note that Stackdriver logs may incur a cost, especially if the deployed
+    /// Note that logs may incur a cost, especially if the deployed
     /// index receives a high queries per second rate (QPS).
     /// Estimate your costs before enabling this option.
     #[prost(bool, tag = "8")]
@@ -13492,9 +13526,9 @@ pub struct BatchPredictionJob {
     pub encryption_spec: ::core::option::Option<EncryptionSpec>,
     /// For custom-trained Models and AutoML Tabular Models, the container of the
     /// DeployedModel instances will send `stderr` and `stdout` streams to
-    /// Stackdriver Logging by default. Please note that the logs incur cost,
+    /// Cloud Logging by default. Please note that the logs incur cost,
     /// which are subject to [Cloud Logging
-    /// pricing](<https://cloud.google.com/stackdriver/pricing>).
+    /// pricing](<https://cloud.google.com/logging/pricing>).
     ///
     /// User can disable container logging by setting this flag to true.
     #[prost(bool, tag = "34")]
@@ -17560,12 +17594,12 @@ pub struct ExportTensorboardTimeSeriesDataRequest {
     #[prost(int32, tag = "3")]
     pub page_size: i32,
     /// A page token, received from a previous
-    /// \[TensorboardService.ExportTensorboardTimeSeries][\] call.
-    /// Provide this to retrieve the subsequent page.
+    /// \[ExportTensorboardTimeSeriesData][google.cloud.aiplatform.v1.TensorboardService.ExportTensorboardTimeSeriesData\]
+    /// call. Provide this to retrieve the subsequent page.
     ///
     /// When paginating, all other parameters provided to
-    /// \[TensorboardService.ExportTensorboardTimeSeries][\] must
-    /// match the call that provided the page token.
+    /// \[ExportTensorboardTimeSeriesData][google.cloud.aiplatform.v1.TensorboardService.ExportTensorboardTimeSeriesData\]
+    /// must match the call that provided the page token.
     #[prost(string, tag = "4")]
     pub page_token: ::prost::alloc::string::String,
     /// Field to use to sort the TensorboardTimeSeries' data.
@@ -17583,8 +17617,9 @@ pub struct ExportTensorboardTimeSeriesDataResponse {
     #[prost(message, repeated, tag = "1")]
     pub time_series_data_points: ::prost::alloc::vec::Vec<TimeSeriesDataPoint>,
     /// A token, which can be sent as
-    /// \[ExportTensorboardTimeSeriesRequest.page_token][\] to retrieve the next
-    /// page. If this field is omitted, there are no subsequent pages.
+    /// \[page_token][google.cloud.aiplatform.v1.ExportTensorboardTimeSeriesDataRequest.page_token\]
+    /// to retrieve the next page. If this field is omitted, there are no
+    /// subsequent pages.
     #[prost(string, tag = "2")]
     pub next_page_token: ::prost::alloc::string::String,
 }
@@ -19030,7 +19065,8 @@ pub struct Endpoint {
     pub enable_private_service_connect: bool,
     /// Output only. Resource name of the Model Monitoring job associated with this
     /// Endpoint if monitoring is enabled by
-    /// \[CreateModelDeploymentMonitoringJob][\]. Format:
+    /// \[JobService.CreateModelDeploymentMonitoringJob][google.cloud.aiplatform.v1.JobService.CreateModelDeploymentMonitoringJob\].
+    /// Format:
     /// `projects/{project}/locations/{location}/modelDeploymentMonitoringJobs/{model_deployment_monitoring_job}`
     #[prost(string, tag = "14")]
     pub model_deployment_monitoring_job: ::prost::alloc::string::String,
@@ -19102,19 +19138,19 @@ pub struct DeployedModel {
     pub service_account: ::prost::alloc::string::String,
     /// For custom-trained Models and AutoML Tabular Models, the container of the
     /// DeployedModel instances will send `stderr` and `stdout` streams to
-    /// Stackdriver Logging by default. Please note that the logs incur cost,
+    /// Cloud Logging by default. Please note that the logs incur cost,
     /// which are subject to [Cloud Logging
-    /// pricing](<https://cloud.google.com/stackdriver/pricing>).
+    /// pricing](<https://cloud.google.com/logging/pricing>).
     ///
     /// User can disable container logging by setting this flag to true.
     #[prost(bool, tag = "15")]
     pub disable_container_logging: bool,
-    /// If true, online prediction access logs are sent to StackDriver
+    /// If true, online prediction access logs are sent to Cloud
     /// Logging.
     /// These logs are like standard server access logs, containing
     /// information like timestamp and latency for each prediction request.
     ///
-    /// Note that Stackdriver logs may incur a cost, especially if your project
+    /// Note that logs may incur a cost, especially if your project
     /// receives prediction requests at a high queries per second rate (QPS).
     /// Estimate your costs before enabling this option.
     #[prost(bool, tag = "13")]
@@ -19433,6 +19469,53 @@ pub struct UndeployModelOperationMetadata {
     #[prost(message, optional, tag = "1")]
     pub generic_metadata: ::core::option::Option<GenericOperationMetadata>,
 }
+/// Request message for
+/// \[EndpointService.MutateDeployedModel][google.cloud.aiplatform.v1.EndpointService.MutateDeployedModel\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateDeployedModelRequest {
+    /// Required. The name of the Endpoint resource into which to mutate a
+    /// DeployedModel. Format:
+    /// `projects/{project}/locations/{location}/endpoints/{endpoint}`
+    #[prost(string, tag = "1")]
+    pub endpoint: ::prost::alloc::string::String,
+    /// Required. The DeployedModel to be mutated within the Endpoint. Only the
+    /// following fields can be mutated:
+    ///
+    /// * `min_replica_count` in either
+    /// \[DedicatedResources][google.cloud.aiplatform.v1.DedicatedResources\] or
+    /// \[AutomaticResources][google.cloud.aiplatform.v1.AutomaticResources\]
+    /// * `max_replica_count` in either
+    /// \[DedicatedResources][google.cloud.aiplatform.v1.DedicatedResources\] or
+    /// \[AutomaticResources][google.cloud.aiplatform.v1.AutomaticResources\]
+    /// * \[autoscaling_metric_specs][google.cloud.aiplatform.v1.DedicatedResources.autoscaling_metric_specs\]
+    /// * `disable_container_logging` (v1 only)
+    /// * `enable_container_logging` (v1beta1 only)
+    #[prost(message, optional, tag = "2")]
+    pub deployed_model: ::core::option::Option<DeployedModel>,
+    /// Required. The update mask applies to the resource. See
+    /// \[google.protobuf.FieldMask][google.protobuf.FieldMask\].
+    #[prost(message, optional, tag = "4")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Response message for
+/// \[EndpointService.MutateDeployedModel][google.cloud.aiplatform.v1.EndpointService.MutateDeployedModel\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateDeployedModelResponse {
+    /// The DeployedModel that's being mutated.
+    #[prost(message, optional, tag = "1")]
+    pub deployed_model: ::core::option::Option<DeployedModel>,
+}
+/// Runtime operation information for
+/// \[EndpointService.MutateDeployedModel][google.cloud.aiplatform.v1.EndpointService.MutateDeployedModel\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MutateDeployedModelOperationMetadata {
+    /// The operation generic information.
+    #[prost(message, optional, tag = "1")]
+    pub generic_metadata: ::core::option::Option<GenericOperationMetadata>,
+}
 /// Generated client implementations.
 pub mod endpoint_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -19642,6 +19725,32 @@ pub mod endpoint_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.aiplatform.v1.EndpointService/UndeployModel",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates an existing deployed model. Updatable fields include
+        /// `min_replica_count`, `max_replica_count`, `autoscaling_metric_specs`,
+        /// `disable_container_logging` (v1 only), and `enable_container_logging`
+        /// (v1beta1 only).
+        pub async fn mutate_deployed_model(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MutateDeployedModelRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.aiplatform.v1.EndpointService/MutateDeployedModel",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -20242,7 +20351,7 @@ pub mod read_feature_values_response {
         #[prost(string, tag = "1")]
         pub entity_type: ::prost::alloc::string::String,
         /// List of Feature metadata corresponding to each piece of
-        /// \[ReadFeatureValuesResponse.data][\].
+        /// \[ReadFeatureValuesResponse.EntityView.data][google.cloud.aiplatform.v1.ReadFeatureValuesResponse.EntityView.data\].
         #[prost(message, repeated, tag = "2")]
         pub feature_descriptors: ::prost::alloc::vec::Vec<FeatureDescriptor>,
     }
@@ -21404,7 +21513,7 @@ pub struct Dataset {
         ::prost::alloc::string::String,
     >,
     /// All SavedQueries belong to the Dataset will be returned in List/Get
-    /// Dataset response. The \[annotation_specs][SavedQuery.annotation_specs\] field
+    /// Dataset response. The annotation_specs field
     /// will not be populated except for UI cases which will only use
     /// \[annotation_spec_count][google.cloud.aiplatform.v1.SavedQuery.annotation_spec_count\].
     /// In CreateDataset request, a SavedQuery is created together if
@@ -21487,9 +21596,9 @@ pub mod import_data_config {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExportDataConfig {
-    /// A filter on Annotations of the Dataset. Only Annotations on to-be-exported
-    /// DataItems(specified by \[data_items_filter][\]) that match this filter will
-    /// be exported. The filter syntax is the same as in
+    /// An expression for filtering what part of the Dataset is to be exported.
+    /// Only Annotations that match this filter will be exported. The filter syntax
+    /// is the same as in
     /// \[ListAnnotations][google.cloud.aiplatform.v1.DatasetService.ListAnnotations\].
     #[prost(string, tag = "2")]
     pub annotations_filter: ::prost::alloc::string::String,
