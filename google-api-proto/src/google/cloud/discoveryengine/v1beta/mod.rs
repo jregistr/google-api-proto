@@ -105,7 +105,9 @@ pub struct UserInfo {
     /// This should not be set when using the client side event reporting with
     /// GTM or JavaScript tag in
     /// \[UserEventService.CollectUserEvent][google.cloud.discoveryengine.v1beta.UserEventService.CollectUserEvent\]
-    /// or if \[direct_user_request][\] is set.
+    /// or if
+    /// \[UserEvent.direct_user_request][google.cloud.discoveryengine.v1beta.UserEvent.direct_user_request\]
+    /// is set.
     #[prost(string, tag = "2")]
     pub user_agent: ::prost::alloc::string::String,
 }
@@ -1167,17 +1169,19 @@ pub struct UserEvent {
     /// Token to attribute an API response to user action(s) to trigger the event.
     ///
     /// Highly recommended for user events that are the result of
-    /// \[PredictionService.Predict][\]. This field enables accurate attribution of
-    /// recommendation model performance.
+    /// \[RecommendationService.Recommend][google.cloud.discoveryengine.v1beta.RecommendationService.Recommend\].
+    /// This field enables accurate attribution of recommendation model
+    /// performance.
     ///
     /// The value must be one of:
     ///
     /// * \[PredictResponse.attribution_token][\] for events that are the result of
-    /// \[PredictionService.Predict][\].
+    /// \[RecommendationService.Recommend][google.cloud.discoveryengine.v1beta.RecommendationService.Recommend\].
     /// * \[SearchResponse.attribution_token][google.cloud.discoveryengine.v1beta.SearchResponse.attribution_token\] for events that are the result of
     /// \[SearchService.Search][google.cloud.discoveryengine.v1beta.SearchService.Search\].
     /// * \[CompleteQueryResponse.attribution_token][\] for events that are the
-    /// result of \[SearchService.CompleteQuery][\].
+    /// result of
+    /// \[CompletionService.CompleteQuery][google.cloud.discoveryengine.v1beta.CompletionService.CompleteQuery\].
     ///
     /// This token enables us to accurately attribute page view or conversion
     /// completion back to the event and the particular predict response containing
@@ -1191,14 +1195,15 @@ pub struct UserEvent {
     /// predicate from one or more fields of the documents being filtered.
     ///
     /// One example is for `search` events, the associated
-    /// \[SearchService.SearchRequest][\] may contain a filter expression in
-    /// \[SearchService.SearchRequest.filter][\] conforming to
-    /// <https://google.aip.dev/160#filtering.>
+    /// \[SearchRequest][google.cloud.discoveryengine.v1beta.SearchRequest\] may
+    /// contain a filter expression in
+    /// \[SearchRequest.filter][google.cloud.discoveryengine.v1beta.SearchRequest.filter\]
+    /// conforming to <https://google.aip.dev/160#filtering.>
     ///
     /// Similarly, for `view-item-list` events that are generated from a
-    /// \[PredictionService.PredictRequest][\], this field may be populated directly
-    /// from \[PredictionService.PredictRequest.filter][\] conforming to
-    /// <https://google.aip.dev/160#filtering.>
+    /// \[RecommendationService.RecommendRequest][\], this field may be populated
+    /// directly from \[RecommendationService.RecommendRequest.filter][\] conforming
+    /// to <https://google.aip.dev/160#filtering.>
     ///
     /// The value must be a UTF-8 encoded string with a length limit of 1,000
     /// characters. Otherwise, an INVALID_ARGUMENT error is returned.
@@ -1344,9 +1349,10 @@ pub struct SearchInfo {
     ///
     /// At least one of
     /// \[search_query][google.cloud.discoveryengine.v1beta.SearchInfo.search_query\]
-    /// or \[page_categories][\] is required for `search` events. Other event types
-    /// should not set this field. Otherwise, an INVALID_ARGUMENT error is
-    /// returned.
+    /// or
+    /// \[PageInfo.page_category][google.cloud.discoveryengine.v1beta.PageInfo.page_category\]
+    /// is required for `search` events. Other event types should not set this
+    /// field. Otherwise, an INVALID_ARGUMENT error is returned.
     #[prost(string, tag = "1")]
     pub search_query: ::prost::alloc::string::String,
     /// The order in which products are returned, if applicable.
@@ -2468,6 +2474,61 @@ pub mod recommendation_service_client {
     }
 }
 /// Request message for
+/// \[DocumentService.PurgeDocuments][google.cloud.discoveryengine.v1beta.DocumentService.PurgeDocuments\]
+/// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeDocumentsRequest {
+    /// Required. The parent resource name, such as
+    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Filter matching documents to purge. Only currently supported
+    /// value is
+    /// `*` (all items).
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Actually performs the purge. If `force` is set to false, return the
+    /// expected purge count without deleting any documents.
+    #[prost(bool, tag = "3")]
+    pub force: bool,
+}
+/// Response message for
+/// \[DocumentService.PurgeDocuments][google.cloud.discoveryengine.v1beta.DocumentService.PurgeDocuments\]
+/// method. If the long running operation is successfully done, then this message
+/// is returned by the google.longrunning.Operations.response field.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeDocumentsResponse {
+    /// The total count of documents purged as a result of the operation.
+    #[prost(int64, tag = "1")]
+    pub purge_count: i64,
+    /// A sample of document names that will be deleted. Only populated if `force`
+    /// is set to false. A max of 100 names will be returned and the names are
+    /// chosen at random.
+    #[prost(string, repeated, tag = "2")]
+    pub purge_sample: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Metadata related to the progress of the PurgeDocuments operation.
+/// This will be returned by the google.longrunning.Operation.metadata field.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PurgeDocumentsMetadata {
+    /// Operation create time.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Operation last update time. If the operation is done, this is also the
+    /// finish time.
+    #[prost(message, optional, tag = "2")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Count of entries that were deleted successfully.
+    #[prost(int64, tag = "3")]
+    pub success_count: i64,
+    /// Count of entries that encountered errors while processing.
+    #[prost(int64, tag = "4")]
+    pub failure_count: i64,
+}
+/// Request message for
 /// \[DocumentService.GetDocument][google.cloud.discoveryengine.v1beta.DocumentService.GetDocument\]
 /// method.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2803,6 +2864,45 @@ pub mod document_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/ImportDocuments",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Permanently deletes all selected
+        /// [Document][google.cloud.discoveryengine.v1beta.Document]s in a branch.
+        ///
+        /// This process is asynchronous. Depending on the number of
+        /// [Document][google.cloud.discoveryengine.v1beta.Document]s to be deleted,
+        /// this operation can take hours to complete. Before the delete operation
+        /// completes, some [Document][google.cloud.discoveryengine.v1beta.Document]s
+        /// might still be returned by
+        /// [DocumentService.GetDocument][google.cloud.discoveryengine.v1beta.DocumentService.GetDocument]
+        /// or
+        /// [DocumentService.ListDocuments][google.cloud.discoveryengine.v1beta.DocumentService.ListDocuments].
+        ///
+        /// To get a list of the
+        /// [Document][google.cloud.discoveryengine.v1beta.Document]s to be deleted,
+        /// set
+        /// [PurgeDocumentsRequest.force][google.cloud.discoveryengine.v1beta.PurgeDocumentsRequest.force]
+        /// to false.
+        pub async fn purge_documents(
+            &mut self,
+            request: impl tonic::IntoRequest<super::PurgeDocumentsRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.DocumentService/PurgeDocuments",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
