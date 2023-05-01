@@ -1353,6 +1353,10 @@ pub mod target_artifact {
         /// Output only. File path of the rendered manifest relative to the URI.
         #[prost(string, tag = "3")]
         pub manifest_path: ::prost::alloc::string::String,
+        /// Output only. File path of the directory of rendered job manifests
+        /// relative to the URI. This is only set if it is applicable.
+        #[prost(string, tag = "4")]
+        pub job_manifests_path: ::prost::alloc::string::String,
     }
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
@@ -1363,6 +1367,19 @@ pub mod target_artifact {
         #[prost(string, tag = "4")]
         ArtifactUri(::prost::alloc::string::String),
     }
+}
+/// The artifacts produced by a deploy operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeployArtifact {
+    /// Output only. URI of a directory containing the artifacts. All paths are
+    /// relative to this location.
+    #[prost(string, tag = "1")]
+    pub artifact_uri: ::prost::alloc::string::String,
+    /// Output only. File paths of the manifests applied during the deploy
+    /// operation relative to the URI.
+    #[prost(string, repeated, tag = "2")]
+    pub manifest_paths: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// CloudRunRenderMetadata contains Cloud Run information associated with a
 /// `Release` render.
@@ -1900,7 +1917,7 @@ pub mod phase {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeploymentJobs {
-    /// Output only. The deploy Job. This is the first job run in the phase.
+    /// Output only. The deploy Job. This is the deploy job in the phase.
     #[prost(message, optional, tag = "1")]
     pub deploy_job: ::core::option::Option<Job>,
     /// Output only. The verify Job. Runs after a deploy if the deploy succeeds.
@@ -2403,6 +2420,9 @@ pub struct DeployJobRun {
     /// Output only. Metadata containing information about the deploy job run.
     #[prost(message, optional, tag = "4")]
     pub metadata: ::core::option::Option<DeployJobRunMetadata>,
+    /// Output only. The artifact of a deploy job run, if available.
+    #[prost(message, optional, tag = "5")]
+    pub artifact: ::core::option::Option<DeployArtifact>,
 }
 /// Nested message and enum types in `DeployJobRun`.
 pub mod deploy_job_run {
