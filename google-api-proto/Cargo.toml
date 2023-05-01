@@ -52,6 +52,7 @@ google-ads-searchads360-v0-common = ["google-ads-searchads360-v0-enums", "google
 google-ads-searchads360-v0-enums = []
 google-ads-searchads360-v0-resources = ["google-ads-searchads360-v0-common", "google-ads-searchads360-v0-enums", "google-api"]
 google-ads-searchads360-v0-services = ["google-ads-searchads360-v0-common", "google-ads-searchads360-v0-enums", "google-ads-searchads360-v0-resources", "google-api"]
+google-ai-generativelanguage-v1beta2 = ["google-api"]
 google-analytics-admin-v1alpha = ["google-api"]
 google-analytics-admin-v1beta = ["google-api"]
 google-analytics-data-v1alpha = ["google-api"]

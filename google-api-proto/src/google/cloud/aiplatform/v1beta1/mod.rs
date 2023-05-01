@@ -2572,6 +2572,16 @@ pub mod model {
         }
     }
 }
+/// Contains information about the Large Model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LargeModelReference {
+    /// Required. The unique name of the large Foundation or pre-built model. Like
+    /// "chat-panda", "text-panda". Or model name with version ID, like
+    /// "chat-panda-001", "text-panda-005", etc.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
 /// Contains the schemata used in Model's predictions and explanations via
 /// \[PredictionService.Predict][google.cloud.aiplatform.v1beta1.PredictionService.Predict\],
 /// \[PredictionService.Explain][google.cloud.aiplatform.v1beta1.PredictionService.Explain\]
@@ -3379,6 +3389,405 @@ pub mod prediction_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.aiplatform.v1beta1.PredictionService/Explain",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A Model Garden Publisher Model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct PublisherModel {
+    /// Output only. The resource name of the PublisherModel.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Immutable. The version ID of the PublisherModel.
+    /// A new version is committed when a new model version is uploaded under an
+    /// existing model id. It is an auto-incrementing decimal number in string
+    /// representation.
+    #[prost(string, tag = "2")]
+    pub version_id: ::prost::alloc::string::String,
+    /// Required. Indicates the open source category of the publisher model.
+    #[prost(enumeration = "publisher_model::OpenSourceCategory", tag = "7")]
+    pub open_source_category: i32,
+    /// Optional. Supported call-to-action options.
+    #[prost(message, optional, tag = "19")]
+    pub supported_actions: ::core::option::Option<publisher_model::CallToAction>,
+    /// Optional. Additional information about the model's Frameworks.
+    #[prost(string, repeated, tag = "23")]
+    pub frameworks: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Output only. Immutable. Used to indicate this model has a
+    /// publisher model and provide the template of the publisher model resource
+    /// name.
+    #[prost(string, tag = "30")]
+    pub publisher_model_template: ::prost::alloc::string::String,
+    /// Optional. The schemata that describes formats of the PublisherModel's
+    /// predictions and explanations as given and returned via
+    /// \[PredictionService.Predict][google.cloud.aiplatform.v1beta1.PredictionService.Predict\].
+    #[prost(message, optional, tag = "31")]
+    pub predict_schemata: ::core::option::Option<PredictSchemata>,
+}
+/// Nested message and enum types in `PublisherModel`.
+pub mod publisher_model {
+    /// Reference to a resource.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ResourceReference {
+        #[prost(oneof = "resource_reference::Reference", tags = "1, 2")]
+        pub reference: ::core::option::Option<resource_reference::Reference>,
+    }
+    /// Nested message and enum types in `ResourceReference`.
+    pub mod resource_reference {
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Reference {
+            /// The URI of the resource.
+            #[prost(string, tag = "1")]
+            Uri(::prost::alloc::string::String),
+            /// The resource name of the GCP resource.
+            #[prost(string, tag = "2")]
+            ResourceName(::prost::alloc::string::String),
+        }
+    }
+    /// A named piece of documentation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Documentation {
+        /// Required. E.g., OVERVIEW, USE CASES, DOCUMENTATION, SDK & SAMPLES, JAVA,
+        /// NODE.JS, etc..
+        #[prost(string, tag = "1")]
+        pub title: ::prost::alloc::string::String,
+        /// Required. Content of this piece of document (in Markdown format).
+        #[prost(string, tag = "2")]
+        pub content: ::prost::alloc::string::String,
+    }
+    /// Actions could take on this Publisher Model.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CallToAction {
+        /// Optional. To view Rest API docs.
+        #[prost(message, optional, tag = "1")]
+        pub view_rest_api: ::core::option::Option<call_to_action::ViewRestApi>,
+        /// Optional. Open notebook of the PublisherModel.
+        #[prost(message, optional, tag = "2")]
+        pub open_notebook: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+        /// Optional. Create application using the PublisherModel.
+        #[prost(message, optional, tag = "3")]
+        pub create_application: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+        /// Optional. Open fine-tuning pipeline of the PublisherModel.
+        #[prost(message, optional, tag = "4")]
+        pub open_fine_tuning_pipeline: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+        /// Optional. Open prompt-tuning pipeline of the PublisherModel.
+        #[prost(message, optional, tag = "5")]
+        pub open_prompt_tuning_pipeline: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+        /// Optional. Open Genie / Playground.
+        #[prost(message, optional, tag = "6")]
+        pub open_genie: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+        /// Optional. Deploy the PublisherModel to Vertex Endpoint.
+        #[prost(message, optional, tag = "7")]
+        pub deploy: ::core::option::Option<call_to_action::Deploy>,
+        /// Optional. Open in Generation AI Studio.
+        #[prost(message, optional, tag = "8")]
+        pub open_generation_ai_studio: ::core::option::Option<
+            call_to_action::RegionalResourceReferences,
+        >,
+    }
+    /// Nested message and enum types in `CallToAction`.
+    pub mod call_to_action {
+        /// The regional resource name or the URI. Key is region, e.g.,
+        /// us-central1, europe-west2, global, etc..
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct RegionalResourceReferences {
+            /// Required.
+            #[prost(btree_map = "string, message", tag = "1")]
+            pub references: ::prost::alloc::collections::BTreeMap<
+                ::prost::alloc::string::String,
+                super::ResourceReference,
+            >,
+            /// Required. The title of the regional resource reference.
+            #[prost(string, tag = "2")]
+            pub title: ::prost::alloc::string::String,
+        }
+        /// Rest API docs.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ViewRestApi {
+            /// Required.
+            #[prost(message, repeated, tag = "1")]
+            pub documentations: ::prost::alloc::vec::Vec<super::Documentation>,
+            /// Required. The title of the view rest API.
+            #[prost(string, tag = "2")]
+            pub title: ::prost::alloc::string::String,
+        }
+        /// Model metadata that is needed for UploadModel or
+        /// DeployModel/CreateEndpoint requests.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Deploy {
+            /// Optional. Default model display name.
+            #[prost(string, tag = "1")]
+            pub model_display_name: ::prost::alloc::string::String,
+            /// Optional. Large model reference. When this is set, model_artifact_spec
+            /// is not needed.
+            #[prost(message, optional, tag = "2")]
+            pub large_model_reference: ::core::option::Option<
+                super::super::LargeModelReference,
+            >,
+            /// Optional. The specification of the container that is to be used when
+            /// deploying this Model in Vertex AI. Not present for Large Models.
+            #[prost(message, optional, tag = "3")]
+            pub container_spec: ::core::option::Option<super::super::ModelContainerSpec>,
+            /// Optional. The path to the directory containing the Model artifact and
+            /// any of its supporting files.
+            #[prost(string, tag = "4")]
+            pub artifact_uri: ::prost::alloc::string::String,
+            /// Required. The title of the regional resource reference.
+            #[prost(string, tag = "8")]
+            pub title: ::prost::alloc::string::String,
+            /// The prediction (for example, the machine) resources that the
+            /// DeployedModel uses.
+            #[prost(oneof = "deploy::PredictionResources", tags = "5, 6, 7")]
+            pub prediction_resources: ::core::option::Option<
+                deploy::PredictionResources,
+            >,
+        }
+        /// Nested message and enum types in `Deploy`.
+        pub mod deploy {
+            /// The prediction (for example, the machine) resources that the
+            /// DeployedModel uses.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum PredictionResources {
+                /// A description of resources that are dedicated to the DeployedModel,
+                /// and that need a higher degree of manual configuration.
+                #[prost(message, tag = "5")]
+                DedicatedResources(super::super::super::DedicatedResources),
+                /// A description of resources that to large degree are decided by Vertex
+                /// AI, and require only a modest additional configuration.
+                #[prost(message, tag = "6")]
+                AutomaticResources(super::super::super::AutomaticResources),
+                /// The resource name of the shared DeploymentResourcePool to deploy on.
+                /// Format:
+                /// `projects/{project}/locations/{location}/deploymentResourcePools/{deployment_resource_pool}`
+                #[prost(string, tag = "7")]
+                SharedResources(::prost::alloc::string::String),
+            }
+        }
+    }
+    /// An enum representing the open source category of a PublisherModel.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum OpenSourceCategory {
+        /// The open source category is unspecified, which should not be used.
+        Unspecified = 0,
+        /// Used to indicate the PublisherModel is not open sourced.
+        Proprietary = 1,
+        /// Used to indicate the PublisherModel is a Google-owned open source model
+        /// w/ Google checkpoint.
+        GoogleOwnedOssWithGoogleCheckpoint = 2,
+        /// Used to indicate the PublisherModel is a 3p-owned open source model w/
+        /// Google checkpoint.
+        ThirdPartyOwnedOssWithGoogleCheckpoint = 3,
+        /// Used to indicate the PublisherModel is a Google-owned pure open source
+        /// model.
+        GoogleOwnedOss = 4,
+        /// Used to indicate the PublisherModel is a 3p-owned pure open source model.
+        ThirdPartyOwnedOss = 5,
+    }
+    impl OpenSourceCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OpenSourceCategory::Unspecified => "OPEN_SOURCE_CATEGORY_UNSPECIFIED",
+                OpenSourceCategory::Proprietary => "PROPRIETARY",
+                OpenSourceCategory::GoogleOwnedOssWithGoogleCheckpoint => {
+                    "GOOGLE_OWNED_OSS_WITH_GOOGLE_CHECKPOINT"
+                }
+                OpenSourceCategory::ThirdPartyOwnedOssWithGoogleCheckpoint => {
+                    "THIRD_PARTY_OWNED_OSS_WITH_GOOGLE_CHECKPOINT"
+                }
+                OpenSourceCategory::GoogleOwnedOss => "GOOGLE_OWNED_OSS",
+                OpenSourceCategory::ThirdPartyOwnedOss => "THIRD_PARTY_OWNED_OSS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OPEN_SOURCE_CATEGORY_UNSPECIFIED" => Some(Self::Unspecified),
+                "PROPRIETARY" => Some(Self::Proprietary),
+                "GOOGLE_OWNED_OSS_WITH_GOOGLE_CHECKPOINT" => {
+                    Some(Self::GoogleOwnedOssWithGoogleCheckpoint)
+                }
+                "THIRD_PARTY_OWNED_OSS_WITH_GOOGLE_CHECKPOINT" => {
+                    Some(Self::ThirdPartyOwnedOssWithGoogleCheckpoint)
+                }
+                "GOOGLE_OWNED_OSS" => Some(Self::GoogleOwnedOss),
+                "THIRD_PARTY_OWNED_OSS" => Some(Self::ThirdPartyOwnedOss),
+                _ => None,
+            }
+        }
+    }
+}
+/// Request message for
+/// \[ModelGardenService.GetPublisherModel][google.cloud.aiplatform.v1beta1.ModelGardenService.GetPublisherModel\]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetPublisherModelRequest {
+    /// Required. The name of the PublisherModel resource.
+    /// Format:
+    /// `publishers/{publisher}/models/{publisher_model}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. The IETF BCP-47 language code representing the language in which
+    /// the publisher model's text information should be written in (see go/bcp47).
+    #[prost(string, tag = "2")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Optional. PublisherModel view specifying which fields to read.
+    #[prost(enumeration = "PublisherModelView", tag = "3")]
+    pub view: i32,
+}
+/// View enumeration of PublisherModel.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum PublisherModelView {
+    /// The default / unset value. The API will default to the BASIC view.
+    Unspecified = 0,
+    /// Include basic metadata about the publisher model, but not the full
+    /// contents.
+    Basic = 1,
+    /// Include everything.
+    Full = 2,
+    /// Include: VersionId, ModelVersionExternalName, and SupportedActions.
+    PublisherModelVersionViewBasic = 3,
+}
+impl PublisherModelView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            PublisherModelView::Unspecified => "PUBLISHER_MODEL_VIEW_UNSPECIFIED",
+            PublisherModelView::Basic => "PUBLISHER_MODEL_VIEW_BASIC",
+            PublisherModelView::Full => "PUBLISHER_MODEL_VIEW_FULL",
+            PublisherModelView::PublisherModelVersionViewBasic => {
+                "PUBLISHER_MODEL_VERSION_VIEW_BASIC"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "PUBLISHER_MODEL_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+            "PUBLISHER_MODEL_VIEW_BASIC" => Some(Self::Basic),
+            "PUBLISHER_MODEL_VIEW_FULL" => Some(Self::Full),
+            "PUBLISHER_MODEL_VERSION_VIEW_BASIC" => {
+                Some(Self::PublisherModelVersionViewBasic)
+            }
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod model_garden_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The interface of Model Garden Service.
+    #[derive(Debug, Clone)]
+    pub struct ModelGardenServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ModelGardenServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ModelGardenServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ModelGardenServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets a Model Garden publisher model.
+        pub async fn get_publisher_model(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetPublisherModelRequest>,
+        ) -> Result<tonic::Response<super::PublisherModel>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.aiplatform.v1beta1.ModelGardenService/GetPublisherModel",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

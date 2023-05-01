@@ -29,6 +29,8 @@ pub mod actions;
     )
 )]
 pub mod ads;
+#[cfg(any(feature = "google-ai-generativelanguage-v1beta2"))]
+pub mod ai;
 #[cfg(
     any(
         feature = "google-analytics-admin-v1alpha",
