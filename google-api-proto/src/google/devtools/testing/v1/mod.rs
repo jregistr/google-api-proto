@@ -915,6 +915,7 @@ pub mod test_specification {
 pub struct SystraceSetup {
     /// Systrace duration in seconds.
     /// Should be between 1 and 30 seconds. 0 disables systrace.
+    #[deprecated]
     #[prost(int32, tag = "1")]
     pub duration_seconds: i32,
 }
@@ -952,14 +953,10 @@ pub struct TestSetup {
     /// instrumentation tests).
     #[prost(message, repeated, tag = "6")]
     pub environment_variables: ::prost::alloc::vec::Vec<EnvironmentVariable>,
-    /// Deprecated: Systrace uses Python 2 which has been sunset 2020-01-01.
-    /// Support of Systrace may stop at any time, at which point no Systrace file
-    /// will be provided in the results.
-    ///
     /// Systrace configuration for the run.
-    /// If set a systrace will be taken, starting on test start and lasting for the
-    /// configured duration. The systrace file thus obtained is put in the results
-    /// bucket together with the other artifacts from the run.
+    /// Deprecated: Systrace used Python 2 which was sunsetted on 2020-01-01.
+    /// Systrace is no longer supported in the Cloud Testing API, and no Systrace
+    /// file will be provided in the results.
     #[deprecated]
     #[prost(message, optional, tag = "9")]
     pub systrace: ::core::option::Option<SystraceSetup>,

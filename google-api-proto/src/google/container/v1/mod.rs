@@ -2057,6 +2057,9 @@ pub struct ClusterUpdate {
     /// The desired node pool logging configuration defaults for the cluster.
     #[prost(message, optional, tag = "116")]
     pub desired_node_pool_logging_config: ::core::option::Option<NodePoolLoggingConfig>,
+    /// The desired fleet configuration for the cluster.
+    #[prost(message, optional, tag = "117")]
+    pub desired_fleet: ::core::option::Option<Fleet>,
     /// The desired stack type of the cluster.
     /// If a stack type is provided and does not match the current stack type of
     /// the cluster, update will attempt to change the stack type to the new type.
@@ -2122,12 +2125,12 @@ pub struct Operation {
     ///
     /// Examples:
     ///
-    /// -
-    /// `<https://container.googleapis.com/v1/projects/123/locations/us-central1/clusters/my-cluster`>
-    /// -
-    /// `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np`>
-    /// -
-    /// `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np/node/my-node`>
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/locations/us-central1/clusters/my-cluster`>
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np`>
+    ///    -
+    ///    `<https://container.googleapis.com/v1/projects/123/zones/us-central1-c/clusters/my-cluster/nodePools/my-np/node/my-node`>
     #[prost(string, tag = "7")]
     pub target_link: ::prost::alloc::string::String,
     /// [Output only] The name of the Google Compute Engine

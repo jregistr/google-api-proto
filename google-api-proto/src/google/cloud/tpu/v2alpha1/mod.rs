@@ -910,15 +910,6 @@ pub struct DeleteQueuedResourceRequest {
     #[prost(string, tag = "2")]
     pub request_id: ::prost::alloc::string::String,
 }
-/// Request for
-/// \[ResetQueuedResource][google.cloud.tpu.v2alpha1.Tpu.ResetQueuedResource\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ResetQueuedResourceRequest {
-    /// Required. The name of the queued resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
 /// The per-product per-project service identity for Cloud TPU service.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1576,29 +1567,6 @@ pub mod tpu_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.tpu.v2alpha1.Tpu/DeleteQueuedResource",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Resets a QueuedResource TPU instance
-        pub async fn reset_queued_resource(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ResetQueuedResourceRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.tpu.v2alpha1.Tpu/ResetQueuedResource",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
