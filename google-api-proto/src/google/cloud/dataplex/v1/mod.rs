@@ -337,9 +337,8 @@ pub mod zone {
             /// discovery every 60 minutes. To explicitly set a timezone to the cron
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid string
-            /// from IANA time zone database. For example,
-            /// `CRON_TZ=America/New_York 1 * * * *`,
-            /// or `TZ=America/New_York 1 * * * *`.
+            /// from IANA time zone database. For example, `CRON_TZ=America/New_York 1
+            /// * * * *`, or `TZ=America/New_York 1 * * * *`.
             #[prost(string, tag = "10")]
             Schedule(::prost::alloc::string::String),
         }
@@ -888,9 +887,8 @@ pub mod asset {
             /// discovery every 60 minutes. To explicitly set a timezone to the cron
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid string
-            /// from IANA time zone database. For example,
-            /// `CRON_TZ=America/New_York 1 * * * *`,
-            /// or `TZ=America/New_York 1 * * * *`.
+            /// from IANA time zone database. For example, `CRON_TZ=America/New_York 1
+            /// * * * *`, or `TZ=America/New_York 1 * * * *`.
             #[prost(string, tag = "10")]
             Schedule(::prost::alloc::string::String),
         }
@@ -908,6 +906,10 @@ pub mod asset {
         /// Required. Immutable. Type of resource.
         #[prost(enumeration = "resource_spec::Type", tag = "2")]
         pub r#type: i32,
+        /// Optional. Determines how read permissions are handled for each asset and
+        /// their associated tables. Only available to storage buckets assets.
+        #[prost(enumeration = "resource_spec::AccessMode", tag = "5")]
+        pub read_access_mode: i32,
     }
     /// Nested message and enum types in `ResourceSpec`.
     pub mod resource_spec {
@@ -954,6 +956,50 @@ pub mod asset {
                 }
             }
         }
+        /// Access Mode determines how data stored within the resource is read. This
+        /// is only applicable to storage bucket assets.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum AccessMode {
+            /// Access mode unspecified.
+            Unspecified = 0,
+            /// Default. Data is accessed directly using storage APIs.
+            Direct = 1,
+            /// Data is accessed through a managed interface using BigQuery APIs.
+            Managed = 2,
+        }
+        impl AccessMode {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    AccessMode::Unspecified => "ACCESS_MODE_UNSPECIFIED",
+                    AccessMode::Direct => "DIRECT",
+                    AccessMode::Managed => "MANAGED",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "ACCESS_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "DIRECT" => Some(Self::Direct),
+                    "MANAGED" => Some(Self::Managed),
+                    _ => None,
+                }
+            }
+        }
     }
     /// Status of the resource referenced by an asset.
     #[allow(clippy::derive_partial_eq_without_eq)]
@@ -968,6 +1014,9 @@ pub mod asset {
         /// Last update time of the status.
         #[prost(message, optional, tag = "3")]
         pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Output only. Service account associated with the BigQuery Connection.
+        #[prost(string, tag = "4")]
+        pub managed_access_identity: ::prost::alloc::string::String,
     }
     /// Nested message and enum types in `ResourceStatus`.
     pub mod resource_status {
@@ -1279,6 +1328,7 @@ pub mod environment {
             OsImage(OsImageRuntime),
         }
     }
+    /// Configuration for sessions created for this environment.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SessionSpec {
@@ -1294,6 +1344,7 @@ pub mod environment {
         #[prost(bool, tag = "2")]
         pub enable_fast_startup: bool,
     }
+    /// Status of sessions created for this environment.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SessionStatus {
@@ -1302,6 +1353,7 @@ pub mod environment {
         #[prost(bool, tag = "1")]
         pub active: bool,
     }
+    /// URI Endpoints to access sessions associated with the Environment.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Endpoints {
@@ -1349,6 +1401,7 @@ pub struct Content {
     /// Only returned in `GetContent` requests and not in `ListContent` request.
     #[prost(oneof = "content::Data", tags = "9")]
     pub data: ::core::option::Option<content::Data>,
+    /// Types of content
     #[prost(oneof = "content::Content", tags = "100, 101")]
     pub content: ::core::option::Option<content::Content>,
 }
@@ -1462,6 +1515,7 @@ pub mod content {
         #[prost(string, tag = "9")]
         DataText(::prost::alloc::string::String),
     }
+    /// Types of content
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Content {
@@ -1487,6 +1541,7 @@ pub struct Session {
     /// Output only. Session start time.
     #[prost(message, optional, tag = "3")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. State of Session
     #[prost(enumeration = "State", tag = "4")]
     pub state: i32,
 }
@@ -1495,14 +1550,14 @@ pub struct Session {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Trigger {
     /// DataScan scheduling and trigger settings.
-    /// If not specified, the default is OnDemand, which means the scan will not
-    /// run until the user calls RunDataScan API.
+    ///
+    /// If not specified, the default is `onDemand`.
     #[prost(oneof = "trigger::Mode", tags = "100, 101")]
     pub mode: ::core::option::Option<trigger::Mode>,
 }
 /// Nested message and enum types in `Trigger`.
 pub mod trigger {
-    /// The scan runs one-time via RunDataScan API.
+    /// The scan runs once via `RunDataScan` API.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct OnDemand {}
@@ -1510,24 +1565,28 @@ pub mod trigger {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Schedule {
-        /// Required. Cron schedule (<https://en.wikipedia.org/wiki/Cron>) for running
+        /// Required. \[Cron\](<https://en.wikipedia.org/wiki/Cron>) schedule for running
         /// scans periodically.
-        /// To explicitly set a timezone to the cron tab, apply a prefix in the
-        /// cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or "TZ=${IANA_TIME_ZONE}".
-        /// The ${IANA_TIME_ZONE} may only be a valid string from IANA time zone
-        /// database. For example, "CRON_TZ=America/New_York 1 * * * *", or
-        /// "TZ=America/New_York 1 * * * *".
+        ///
+        /// To explicitly set a timezone in the cron tab, apply a prefix in the
+        /// cron tab: **"CRON_TZ=${IANA_TIME_ZONE}"** or **"TZ=${IANA_TIME_ZONE}"**.
+        /// The **${IANA_TIME_ZONE}** may only be a valid string from IANA time zone
+        /// database
+        /// (\[wikipedia\](<https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>)).
+        /// For example, `CRON_TZ=America/New_York 1 * * * *`, or
+        /// `TZ=America/New_York 1 * * * *`.
+        ///
         /// This field is required for Schedule scans.
         #[prost(string, tag = "1")]
         pub cron: ::prost::alloc::string::String,
     }
     /// DataScan scheduling and trigger settings.
-    /// If not specified, the default is OnDemand, which means the scan will not
-    /// run until the user calls RunDataScan API.
+    ///
+    /// If not specified, the default is `onDemand`.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Mode {
-        /// The scan runs one-time shortly after DataScan Creation.
+        /// The scan runs once via `RunDataScan` API.
         #[prost(message, tag = "100")]
         OnDemand(OnDemand),
         /// The scan is scheduled to run periodically.
@@ -1539,23 +1598,29 @@ pub mod trigger {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataSource {
-    /// The source is required and immutable which means once entity is set, it
-    /// cannot be change to others, and vice versa.
-    #[prost(oneof = "data_source::Source", tags = "100")]
+    /// The source is required and immutable. Once it is set, it cannot be change
+    /// to others.
+    #[prost(oneof = "data_source::Source", tags = "100, 101")]
     pub source: ::core::option::Option<data_source::Source>,
 }
 /// Nested message and enum types in `DataSource`.
 pub mod data_source {
-    /// The source is required and immutable which means once entity is set, it
-    /// cannot be change to others, and vice versa.
+    /// The source is required and immutable. Once it is set, it cannot be change
+    /// to others.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Source {
-        /// Immutable. The dataplex entity that contains the data for DataScan, of
-        /// the form:
+        /// Immutable. The Dataplex entity that represents the data source (e.g.
+        /// BigQuery table) for DataScan, of the form:
         /// `projects/{project_number}/locations/{location_id}/lakes/{lake_id}/zones/{zone_id}/entities/{entity_id}`.
         #[prost(string, tag = "100")]
         Entity(::prost::alloc::string::String),
+        /// Immutable. The service-qualified full resource name of the cloud resource
+        /// for a DataScan job to scan against. The field could be: BigQuery table of
+        /// type "TABLE" for DataProfileScan/DataQualityScan Format:
+        /// //bigquery.googleapis.com/projects/PROJECT_ID/datasets/DATASET_ID/tables/TABLE_ID
+        #[prost(string, tag = "101")]
+        Resource(::prost::alloc::string::String),
     }
 }
 /// The data scanned during processing (e.g. in incremental DataScan)
@@ -1573,13 +1638,13 @@ pub mod scanned_data {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct IncrementalField {
         /// The field that contains values which monotonically increases over time
-        /// (e.g. timestamp).
+        /// (e.g. a timestamp column).
         #[prost(string, tag = "1")]
         pub field: ::prost::alloc::string::String,
-        /// Value that marks the start of the range
+        /// Value that marks the start of the range.
         #[prost(string, tag = "2")]
         pub start: ::prost::alloc::string::String,
-        /// Value that marks the end of the range
+        /// Value that marks the end of the range.
         #[prost(string, tag = "3")]
         pub end: ::prost::alloc::string::String,
     }
@@ -2634,9 +2699,8 @@ pub mod task {
             /// tab, apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
             /// "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
             /// string from IANA time zone database. For example,
-            /// `CRON_TZ=America/New_York 1 * * * *`,
-            /// or `TZ=America/New_York 1 * * * *`.
-            /// This field is required for RECURRING tasks.
+            /// `CRON_TZ=America/New_York 1 * * * *`, or `TZ=America/New_York 1 * * *
+            /// *`. This field is required for RECURRING tasks.
             #[prost(string, tag = "100")]
             Schedule(::prost::alloc::string::String),
         }
@@ -3643,8 +3707,7 @@ pub struct Entity {
     /// published table name. Specifying a new ID in an update entity
     /// request will override the existing value.
     /// The ID must contain only letters (a-z, A-Z), numbers (0-9), and
-    /// underscores. Must begin with a letter and consist of 256 or fewer
-    /// characters.
+    /// underscores, and consist of 256 or fewer characters.
     #[prost(string, tag = "7")]
     pub id: ::prost::alloc::string::String,
     /// Optional. The etag associated with the entity, which can be retrieved with
@@ -3684,6 +3747,14 @@ pub struct Entity {
     /// Output only. Metadata stores that the entity is compatible with.
     #[prost(message, optional, tag = "19")]
     pub compatibility: ::core::option::Option<entity::CompatibilityStatus>,
+    /// Output only. Identifies the access mechanism to the entity. Not user
+    /// settable.
+    #[prost(message, optional, tag = "21")]
+    pub access: ::core::option::Option<StorageAccess>,
+    /// Output only. System generated unique ID for the Entity. This ID will be
+    /// different if the Entity is deleted and re-created with the same name.
+    #[prost(string, tag = "22")]
+    pub uid: ::prost::alloc::string::String,
     /// Required. The description of the data structure and layout.
     /// The schema is not included in list responses. It is only included in
     /// `SCHEMA` and `FULL` entity views of a `GetEntity` response.
@@ -4263,6 +4334,61 @@ pub mod storage_format {
         Iceberg(IcebergOptions),
     }
 }
+/// Describes the access mechanism of the data within its storage location.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StorageAccess {
+    /// Output only. Describes the read access mechanism of the data. Not user
+    /// settable.
+    #[prost(enumeration = "storage_access::AccessMode", tag = "21")]
+    pub read: i32,
+}
+/// Nested message and enum types in `StorageAccess`.
+pub mod storage_access {
+    /// Access Mode determines how data stored within the Entity is read.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AccessMode {
+        /// Access mode unspecified.
+        Unspecified = 0,
+        /// Default. Data is accessed directly using storage APIs.
+        Direct = 1,
+        /// Data is accessed through a managed interface using BigQuery APIs.
+        Managed = 2,
+    }
+    impl AccessMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AccessMode::Unspecified => "ACCESS_MODE_UNSPECIFIED",
+                AccessMode::Direct => "DIRECT",
+                AccessMode::Managed => "MANAGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACCESS_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DIRECT" => Some(Self::Direct),
+                "MANAGED" => Some(Self::Managed),
+                _ => None,
+            }
+        }
+    }
+}
 /// Identifies the cloud system that manages the data storage.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
@@ -4542,134 +4668,116 @@ pub mod metadata_service_client {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataProfileSpec {}
-/// DataProfileResult defines the output of DataProfileScan.
-/// Each field of the table will have field type specific profile result.
+/// DataProfileResult defines the output of DataProfileScan. Each field of the
+/// table will have field type specific profile result.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataProfileResult {
-    /// The count of all rows in the sampled data.
-    /// Return 0, if zero rows.
+    /// The count of rows scanned.
     #[prost(int64, tag = "3")]
     pub row_count: i64,
-    /// This represents the profile information per field.
+    /// The profile information per field.
     #[prost(message, optional, tag = "4")]
     pub profile: ::core::option::Option<data_profile_result::Profile>,
-    /// The data scanned for this profile.
+    /// The data scanned for this result.
     #[prost(message, optional, tag = "5")]
     pub scanned_data: ::core::option::Option<ScannedData>,
 }
 /// Nested message and enum types in `DataProfileResult`.
 pub mod data_profile_result {
-    /// Profile information describing the structure and layout of the data
-    /// and contains the profile info.
+    /// Contains name, type, mode and field type specific profile information.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct Profile {
-        /// The sequence of fields describing data in table entities.
+        /// List of fields with structural and profile information for each field.
         #[prost(message, repeated, tag = "2")]
         pub fields: ::prost::alloc::vec::Vec<profile::Field>,
     }
     /// Nested message and enum types in `Profile`.
     pub mod profile {
-        /// Represents a column field within a table schema.
+        /// A field within a table.
         #[allow(clippy::derive_partial_eq_without_eq)]
         #[derive(Clone, PartialEq, ::prost::Message)]
         pub struct Field {
             /// The name of the field.
             #[prost(string, tag = "1")]
             pub name: ::prost::alloc::string::String,
-            /// The field data type. Possible values include:
-            ///
-            /// * STRING
-            /// * BYTE
-            /// * INT64
-            /// * INT32
-            /// * INT16
-            /// * DOUBLE
-            /// * FLOAT
-            /// * DECIMAL
-            /// * BOOLEAN
-            /// * BINARY
-            /// * TIMESTAMP
-            /// * DATE
-            /// * TIME
-            /// * NULL
-            /// * RECORD
+            /// The data type retrieved from the schema of the data source. For
+            /// instance, for a BigQuery native table, it is the [BigQuery Table
+            /// Schema](<https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#tablefieldschema>).
+            /// For a Dataplex Entity, it is the [Entity
+            /// Schema](<https://cloud.google.com/dataplex/docs/reference/rpc/google.cloud.dataplex.v1#type_3>).
             #[prost(string, tag = "2")]
             pub r#type: ::prost::alloc::string::String,
-            /// The mode of the field. Its value will be:
-            /// REQUIRED, if it is a required field.
-            /// NULLABLE, if it is an optional field.
-            /// REPEATED, if it is a repeated field.
+            /// The mode of the field. Possible values include:
+            ///
+            /// * REQUIRED, if it is a required field.
+            /// * NULLABLE, if it is an optional field.
+            /// * REPEATED, if it is a repeated field.
             #[prost(string, tag = "3")]
             pub mode: ::prost::alloc::string::String,
-            /// The profile information for the corresponding field.
+            /// Profile information for the corresponding field.
             #[prost(message, optional, tag = "4")]
             pub profile: ::core::option::Option<field::ProfileInfo>,
         }
         /// Nested message and enum types in `Field`.
         pub mod field {
-            /// ProfileInfo defines the profile information for each schema field type.
+            /// The profile information for each field type.
             #[allow(clippy::derive_partial_eq_without_eq)]
             #[derive(Clone, PartialEq, ::prost::Message)]
             pub struct ProfileInfo {
-                /// The ratio of null rows against the rows in the sampled data.
+                /// Ratio of rows with null value against total scanned rows.
                 #[prost(double, tag = "2")]
                 pub null_ratio: f64,
-                /// The ratio of rows that are distinct against the rows in the sampled
-                /// data.
+                /// Ratio of rows with distinct values against total scanned rows.
+                /// Not available for complex non-groupable field type RECORD and fields
+                /// with REPEATABLE mode.
                 #[prost(double, tag = "3")]
                 pub distinct_ratio: f64,
-                /// The array of top N values of the field in the sampled data.
-                /// Currently N is set as 10 or equal to distinct values in the field,
-                /// whichever is smaller. This will be optional for complex non-groupable
-                /// data-types such as JSON, ARRAY, JSON, STRUCT.
+                /// The list of top N non-null values and number of times they occur in
+                /// the scanned data. N is 10 or equal to the number of distinct values
+                /// in the field, whichever is smaller. Not available for complex
+                /// non-groupable field type RECORD and fields with REPEATABLE mode.
                 #[prost(message, repeated, tag = "4")]
                 pub top_n_values: ::prost::alloc::vec::Vec<profile_info::TopNValue>,
-                /// The corresponding profile for specific field type.
-                /// Each field will have only one field type specific profile output.
+                /// Structural and profile information for specific field type. Not
+                /// available, if mode is REPEATABLE.
                 #[prost(oneof = "profile_info::FieldInfo", tags = "101, 102, 103")]
                 pub field_info: ::core::option::Option<profile_info::FieldInfo>,
             }
             /// Nested message and enum types in `ProfileInfo`.
             pub mod profile_info {
-                /// StringFieldInfo defines output info for any string type field.
+                /// The profile information for a string type field.
                 #[allow(clippy::derive_partial_eq_without_eq)]
                 #[derive(Clone, PartialEq, ::prost::Message)]
                 pub struct StringFieldInfo {
-                    /// The minimum length of the string field in the sampled data.
-                    /// Optional if zero non-null rows.
+                    /// Minimum length of non-null values in the scanned data.
                     #[prost(int64, tag = "1")]
                     pub min_length: i64,
-                    /// The maximum length of a string field in the sampled data.
-                    /// Optional if zero non-null rows.
+                    /// Maximum length of non-null values in the scanned data.
                     #[prost(int64, tag = "2")]
                     pub max_length: i64,
-                    /// The average length of a string field in the sampled data.
-                    /// Optional if zero non-null rows.
+                    /// Average length of non-null values in the scanned data.
                     #[prost(double, tag = "3")]
                     pub average_length: f64,
                 }
-                /// IntegerFieldInfo defines output for any integer type field.
+                /// The profile information for an integer type field.
                 #[allow(clippy::derive_partial_eq_without_eq)]
                 #[derive(Clone, PartialEq, ::prost::Message)]
                 pub struct IntegerFieldInfo {
-                    /// The average of non-null values of integer field in the sampled
-                    /// data. Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Average of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(double, tag = "1")]
                     pub average: f64,
-                    /// The standard deviation of non-null of integer field in the sampled
-                    /// data. Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Standard deviation of non-null values in the scanned data. NaN, if
+                    /// the field has a NaN.
                     #[prost(double, tag = "3")]
                     pub standard_deviation: f64,
-                    /// The minimum value of an integer field in the sampled data.
-                    /// Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Minimum of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(int64, tag = "4")]
                     pub min: i64,
-                    /// A quartile divide the number of data points into four parts, or
+                    /// A quartile divides the number of data points into four parts, or
                     /// quarters, of more-or-less equal size. Three main quartiles used
                     /// are: The first quartile (Q1) splits off the lowest 25% of data from
                     /// the highest 75%. It is also known as the lower or 25th empirical
@@ -4677,36 +4785,33 @@ pub mod data_profile_result {
                     /// quartile (Q2) is the median of a data set. So, 50% of the data lies
                     /// below this point. The third quartile (Q3) splits off the highest
                     /// 25% of data from the lowest 75%. It is known as the upper or 75th
-                    /// empirical quartile, as 75% of the data lies below this point. So,
-                    /// here the quartiles is provided as an ordered list of quartile
-                    /// values, occurring in order Q1, median, Q3.
+                    /// empirical quartile, as 75% of the data lies below this point.
+                    /// Here, the quartiles is provided as an ordered list of quartile
+                    /// values for the scanned data, occurring in order Q1, median, Q3.
                     #[prost(int64, repeated, tag = "6")]
                     pub quartiles: ::prost::alloc::vec::Vec<i64>,
-                    /// The maximum value of an integer field in the sampled data.
-                    /// Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Maximum of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(int64, tag = "5")]
                     pub max: i64,
                 }
-                /// DoubleFieldInfo defines output for any double type field.
+                /// The profile information for a double type field.
                 #[allow(clippy::derive_partial_eq_without_eq)]
                 #[derive(Clone, PartialEq, ::prost::Message)]
                 pub struct DoubleFieldInfo {
-                    /// The average of non-null values of double field in the sampled data.
-                    /// Return NaN, if the field has a NaN. Optional if zero non-null rows.
+                    /// Average of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(double, tag = "1")]
                     pub average: f64,
-                    /// The standard deviation of non-null of double field in the sampled
-                    /// data. Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Standard deviation of non-null values in the scanned data. NaN, if
+                    /// the field has a NaN.
                     #[prost(double, tag = "3")]
                     pub standard_deviation: f64,
-                    /// The minimum value of a double field in the sampled data.
-                    /// Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Minimum of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(double, tag = "4")]
                     pub min: f64,
-                    /// A quartile divide the numebr of data points into four parts, or
+                    /// A quartile divides the number of data points into four parts, or
                     /// quarters, of more-or-less equal size. Three main quartiles used
                     /// are: The first quartile (Q1) splits off the lowest 25% of data from
                     /// the highest 75%. It is also known as the lower or 25th empirical
@@ -4714,41 +4819,39 @@ pub mod data_profile_result {
                     /// quartile (Q2) is the median of a data set. So, 50% of the data lies
                     /// below this point. The third quartile (Q3) splits off the highest
                     /// 25% of data from the lowest 75%. It is known as the upper or 75th
-                    /// empirical quartile, as 75% of the data lies below this point. So,
-                    /// here the quartiles is provided as an ordered list of quartile
-                    /// values, occurring in order Q1, median, Q3.
+                    /// empirical quartile, as 75% of the data lies below this point.
+                    /// Here, the quartiles is provided as an ordered list of quartile
+                    /// values for the scanned data, occurring in order Q1, median, Q3.
                     #[prost(double, repeated, tag = "6")]
                     pub quartiles: ::prost::alloc::vec::Vec<f64>,
-                    /// The maximum value of a double field in the sampled data.
-                    /// Return NaN, if the field has a NaN. Optional if zero non-null
-                    /// rows.
+                    /// Maximum of non-null values in the scanned data. NaN, if the field
+                    /// has a NaN.
                     #[prost(double, tag = "5")]
                     pub max: f64,
                 }
-                /// The TopNValue defines the structure of output of top N values of a
-                /// field.
+                /// Top N non-null values in the scanned data.
                 #[allow(clippy::derive_partial_eq_without_eq)]
                 #[derive(Clone, PartialEq, ::prost::Message)]
                 pub struct TopNValue {
-                    /// The value is the string value of the actual value from the field.
+                    /// String value of a top N non-null value.
                     #[prost(string, tag = "1")]
                     pub value: ::prost::alloc::string::String,
-                    /// The frequency count of the corresponding value in the field.
+                    /// Count of the corresponding value in the scanned data.
                     #[prost(int64, tag = "2")]
                     pub count: i64,
                 }
-                /// The corresponding profile for specific field type.
-                /// Each field will have only one field type specific profile output.
+                /// Structural and profile information for specific field type. Not
+                /// available, if mode is REPEATABLE.
                 #[allow(clippy::derive_partial_eq_without_eq)]
                 #[derive(Clone, PartialEq, ::prost::Oneof)]
                 pub enum FieldInfo {
-                    /// The corresponding string field profile.
+                    /// String type field information.
                     #[prost(message, tag = "101")]
                     StringProfile(StringFieldInfo),
-                    /// The corresponding integer field profile.
+                    /// Integer type field information.
                     #[prost(message, tag = "102")]
                     IntegerProfile(IntegerFieldInfo),
-                    /// The corresponding double field profile.
+                    /// Double type field information.
                     #[prost(message, tag = "103")]
                     DoubleProfile(DoubleFieldInfo),
                 }
@@ -4772,7 +4875,7 @@ pub struct DataQualityResult {
     /// Overall data quality result -- `true` if all rules passed.
     #[prost(bool, tag = "5")]
     pub passed: bool,
-    /// A list of results at the dimension-level.
+    /// A list of results at the dimension level.
     #[prost(message, repeated, tag = "2")]
     pub dimensions: ::prost::alloc::vec::Vec<DataQualityDimensionResult>,
     /// A list of all the rules in a job, and their results.
@@ -4785,8 +4888,7 @@ pub struct DataQualityResult {
     #[prost(message, optional, tag = "7")]
     pub scanned_data: ::core::option::Option<ScannedData>,
 }
-/// DataQualityRuleResult provides a more detailed, per-rule level view of the
-/// results.
+/// DataQualityRuleResult provides a more detailed, per-rule view of the results.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataQualityRuleResult {
@@ -4796,12 +4898,15 @@ pub struct DataQualityRuleResult {
     /// Whether the rule passed or failed.
     #[prost(bool, tag = "7")]
     pub passed: bool,
-    /// The number of rows a rule was evaluated against.
-    /// This field is only valid for ColumnMap type rules.
+    /// The number of rows a rule was evaluated against. This field is only valid
+    /// for ColumnMap type rules.
+    ///
     /// Evaluated count can be configured to either
-    /// (1) include all rows (default) - with null rows automatically failing rule
-    /// evaluation  OR (2) exclude null rows from the evaluated_count, by setting
-    /// ignore_nulls = true
+    ///
+    /// * include all rows (default) - with `null` rows automatically failing rule
+    /// evaluation, or
+    /// * exclude `null` rows from the `evaluated_count`, by setting
+    /// `ignore_nulls = true`.
     #[prost(int64, tag = "9")]
     pub evaluated_count: i64,
     /// The number of rows which passed a rule evaluation.
@@ -4811,7 +4916,7 @@ pub struct DataQualityRuleResult {
     /// The number of rows with null values in the specified column.
     #[prost(int64, tag = "5")]
     pub null_count: i64,
-    /// The ratio of passed_count / evaluated_count.
+    /// The ratio of **passed_count / evaluated_count**.
     /// This field is only valid for ColumnMap type rules.
     #[prost(double, tag = "6")]
     pub pass_ratio: f64,
@@ -4820,8 +4925,8 @@ pub struct DataQualityRuleResult {
     #[prost(string, tag = "10")]
     pub failing_rows_query: ::prost::alloc::string::String,
 }
-/// DataQualityDimensionResult provides a more detailed, per-dimension level view
-/// of the results.
+/// DataQualityDimensionResult provides a more detailed, per-dimension view of
+/// the results.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DataQualityDimensionResult {
@@ -4836,22 +4941,25 @@ pub struct DataQualityRule {
     /// Optional. The unnested column which this rule is evaluated against.
     #[prost(string, tag = "500")]
     pub column: ::prost::alloc::string::String,
-    /// Optional. Rows with null values will automatically fail a rule, unless
-    /// ignore_null is true. In that case, such null rows are trivially considered
-    /// passing. Only applicable to ColumnMap rules.
+    /// Optional. Rows with `null` values will automatically fail a rule, unless
+    /// `ignore_null` is `true`. In that case, such `null` rows are trivially
+    /// considered passing.
+    ///
+    /// Only applicable to ColumnMap rules.
     #[prost(bool, tag = "501")]
     pub ignore_null: bool,
     /// Required. The dimension a rule belongs to. Results are also aggregated at
-    /// the dimension-level. Supported dimensions are ["COMPLETENESS", "ACCURACY",
-    /// "CONSISTENCY", "VALIDITY", "UNIQUENESS", "INTEGRITY"]
+    /// the dimension level. Supported dimensions are **["COMPLETENESS",
+    /// "ACCURACY", "CONSISTENCY", "VALIDITY", "UNIQUENESS", "INTEGRITY"]**
     #[prost(string, tag = "502")]
     pub dimension: ::prost::alloc::string::String,
-    /// Optional. The minimum ratio of passing_rows / total_rows required to pass
-    /// this rule, with a range of [0.0, 1.0]
+    /// Optional. The minimum ratio of **passing_rows / total_rows** required to
+    /// pass this rule, with a range of [0.0, 1.0].
     ///
-    /// 0 indicates default value (i.e. 1.0)
+    /// 0 indicates default value (i.e. 1.0).
     #[prost(double, tag = "503")]
     pub threshold: f64,
+    /// The rule-specific configuration.
     #[prost(
         oneof = "data_quality_rule::RuleType",
         tags = "1, 2, 3, 4, 100, 101, 200, 201"
@@ -4865,21 +4973,25 @@ pub mod data_quality_rule {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RangeExpectation {
         /// Optional. The minimum column value allowed for a row to pass this
-        /// validation. At least one of min_value and max_value need to be provided.
+        /// validation. At least one of `min_value` and `max_value` need to be
+        /// provided.
         #[prost(string, tag = "1")]
         pub min_value: ::prost::alloc::string::String,
         /// Optional. The maximum column value allowed for a row to pass this
-        /// validation. At least one of min_value and max_value need to be provided.
+        /// validation. At least one of `min_value` and `max_value` need to be
+        /// provided.
         #[prost(string, tag = "2")]
         pub max_value: ::prost::alloc::string::String,
         /// Optional. Whether each value needs to be strictly greater than ('>') the
-        /// minimum, or if equality is allowed. Only relevant if a min_value has been
-        /// defined. Default = false.
+        /// minimum, or if equality is allowed.
+        ///
+        /// Only relevant if a `min_value` has been defined. Default = false.
         #[prost(bool, tag = "3")]
         pub strict_min_enabled: bool,
         /// Optional. Whether each value needs to be strictly lesser than ('<') the
-        /// maximum, or if equality is allowed. Only relevant if a max_value has been
-        /// defined. Default = false.
+        /// maximum, or if equality is allowed.
+        ///
+        /// Only relevant if a `max_value` has been defined. Default = false.
         #[prost(bool, tag = "4")]
         pub strict_max_enabled: bool,
     }
@@ -4891,6 +5003,7 @@ pub mod data_quality_rule {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct SetExpectation {
+        /// Expected values for the column value.
         #[prost(string, repeated, tag = "1")]
         pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
@@ -4898,6 +5011,7 @@ pub mod data_quality_rule {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RegexExpectation {
+        /// A regular expression the column value is expected to match.
         #[prost(string, tag = "1")]
         pub regex: ::prost::alloc::string::String,
     }
@@ -4910,31 +5024,37 @@ pub mod data_quality_rule {
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct StatisticRangeExpectation {
+        /// The aggregate metric to evaluate.
         #[prost(enumeration = "statistic_range_expectation::ColumnStatistic", tag = "1")]
         pub statistic: i32,
         /// The minimum column statistic value allowed for a row to pass this
         /// validation.
-        /// At least one of min_value and max_value need to be provided.
+        ///
+        /// At least one of `min_value` and `max_value` need to be provided.
         #[prost(string, tag = "2")]
         pub min_value: ::prost::alloc::string::String,
         /// The maximum column statistic value allowed for a row to pass this
         /// validation.
-        /// At least one of min_value and max_value need to be provided.
+        ///
+        /// At least one of `min_value` and `max_value` need to be provided.
         #[prost(string, tag = "3")]
         pub max_value: ::prost::alloc::string::String,
         /// Whether column statistic needs to be strictly greater than ('>')
-        /// the minimum, or if equality is allowed. Only relevant if a min_value has
-        /// been defined. Default = false.
+        /// the minimum, or if equality is allowed.
+        ///
+        /// Only relevant if a `min_value` has been defined. Default = false.
         #[prost(bool, tag = "4")]
         pub strict_min_enabled: bool,
         /// Whether column statistic needs to be strictly lesser than ('<') the
-        /// maximum, or if equality is allowed. Only relevant if a max_value has been
-        /// defined. Default = false.
+        /// maximum, or if equality is allowed.
+        ///
+        /// Only relevant if a `max_value` has been defined. Default = false.
         #[prost(bool, tag = "5")]
         pub strict_max_enabled: bool,
     }
     /// Nested message and enum types in `StatisticRangeExpectation`.
     pub mod statistic_range_expectation {
+        /// The list of aggregate metrics a rule can be evaluated against.
         #[derive(
             Clone,
             Copy,
@@ -4983,25 +5103,32 @@ pub mod data_quality_rule {
         }
     }
     /// Evaluates whether each row passes the specified condition.
+    ///
     /// The SQL expression needs to use BigQuery standard SQL syntax and should
-    /// produce a boolean per row as the result.
+    /// produce a boolean value per row as the result.
+    ///
     /// Example: col1 >= 0 AND col2 < 10
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct RowConditionExpectation {
+        /// The SQL expression.
         #[prost(string, tag = "1")]
         pub sql_expression: ::prost::alloc::string::String,
     }
     /// Evaluates whether the provided expression is true.
+    ///
     /// The SQL expression needs to use BigQuery standard SQL syntax and should
     /// produce a scalar boolean result.
+    ///
     /// Example: MIN(col1) >= 0
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct TableConditionExpectation {
+        /// The SQL expression.
         #[prost(string, tag = "1")]
         pub sql_expression: ::prost::alloc::string::String,
     }
+    /// The rule-specific configuration.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum RuleType {
@@ -5537,6 +5664,21 @@ pub struct GetJobRequest {
     /// `projects/{project_number}/locations/{location_id}/lakes/{lake_id}/tasks/{task_id}/jobs/{job_id}`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunTaskRequest {
+    /// Required. The resource name of the task:
+    /// `projects/{project_number}/locations/{location_id}/lakes/{lake_id}/tasks/{task_id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunTaskResponse {
+    /// Jobs created by RunTask API.
+    #[prost(message, optional, tag = "1")]
+    pub job: ::core::option::Option<Job>,
 }
 /// List jobs request.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6301,6 +6443,26 @@ pub mod dataplex_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// Run an on demand execution of a Task.
+        pub async fn run_task(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RunTaskRequest>,
+        ) -> Result<tonic::Response<super::RunTaskResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.dataplex.v1.DataplexService/RunTask",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
         /// Get job resource.
         pub async fn get_job(
             &mut self,
@@ -6495,6 +6657,10 @@ pub struct CreateDataScanRequest {
     /// * Must be unique within the customer project / location.
     #[prost(string, tag = "3")]
     pub data_scan_id: ::prost::alloc::string::String,
+    /// Optional. Only validate the request, but do not perform mutations.
+    /// The default is `false`.
+    #[prost(bool, tag = "4")]
+    pub validate_only: bool,
 }
 /// Update dataScan request.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6508,6 +6674,10 @@ pub struct UpdateDataScanRequest {
     /// Required. Mask of fields to update.
     #[prost(message, optional, tag = "2")]
     pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Optional. Only validate the request, but do not perform mutations.
+    /// The default is `false`.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
 }
 /// Delete dataScan request.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6591,7 +6761,7 @@ pub struct ListDataScansRequest {
     #[prost(string, tag = "1")]
     pub parent: ::prost::alloc::string::String,
     /// Optional. Maximum number of dataScans to return. The service may return
-    /// fewer than this value. If unspecified, at most 10 scans will be returned.
+    /// fewer than this value. If unspecified, at most 500 scans will be returned.
     /// The maximum value is 1000; values above 1000 will be coerced to 1000.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
@@ -6650,7 +6820,7 @@ pub struct RunDataScanResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetDataScanJobRequest {
     /// Required. The resource name of the DataScanJob:
-    /// `projects/{project}/locations/{location_id}/dataScans/{data_scan_id}/dataScanJobs/{data_scan_job_id}`
+    /// `projects/{project}/locations/{location_id}/dataScans/{data_scan_id}/jobs/{data_scan_job_id}`
     /// where `project` refers to a *project_id* or *project_number* and
     /// `location_id` refers to a GCP region.
     #[prost(string, tag = "1")]
