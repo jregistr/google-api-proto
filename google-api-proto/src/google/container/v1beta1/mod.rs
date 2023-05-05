@@ -964,6 +964,9 @@ pub struct AddonsConfig {
     /// Configuration for the Backup for GKE agent addon.
     #[prost(message, optional, tag = "16")]
     pub gke_backup_agent_config: ::core::option::Option<GkeBackupAgentConfig>,
+    /// Configuration for the Cloud Storage Fuse CSI driver.
+    #[prost(message, optional, tag = "17")]
+    pub gcs_fuse_csi_driver_config: ::core::option::Option<GcsFuseCsiDriverConfig>,
 }
 /// Configuration options for the HTTP (L7) load balancing controller addon,
 /// which makes it easy to set up HTTP load balancers for services in a cluster.
@@ -1052,6 +1055,14 @@ pub struct GcePersistentDiskCsiDriverConfig {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GcpFilestoreCsiDriverConfig {
     /// Whether the GCP Filestore CSI driver is enabled for this cluster.
+    #[prost(bool, tag = "1")]
+    pub enabled: bool,
+}
+/// Configuration for the Cloud Storage Fuse CSI driver.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsFuseCsiDriverConfig {
+    /// Whether the Cloud Storage Fuse CSI driver is enabled for this cluster.
     #[prost(bool, tag = "1")]
     pub enabled: bool,
 }
@@ -2556,6 +2567,9 @@ pub struct ClusterUpdate {
     /// The desired node pool logging configuration defaults for the cluster.
     #[prost(message, optional, tag = "116")]
     pub desired_node_pool_logging_config: ::core::option::Option<NodePoolLoggingConfig>,
+    /// The desired fleet configuration for the cluster.
+    #[prost(message, optional, tag = "117")]
+    pub desired_fleet: ::core::option::Option<Fleet>,
     /// The desired stack type of the cluster.
     /// If a stack type is provided and does not match the current stack type of
     /// the cluster, update will attempt to change the stack type to the new type.
