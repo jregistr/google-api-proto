@@ -1872,11 +1872,74 @@ pub struct Examples {
     /// The number of neighbors to return when querying for examples.
     #[prost(int32, tag = "3")]
     pub neighbor_count: i32,
+    #[prost(oneof = "examples::Source", tags = "5")]
+    pub source: ::core::option::Option<examples::Source>,
     #[prost(oneof = "examples::Config", tags = "2, 4")]
     pub config: ::core::option::Option<examples::Config>,
 }
 /// Nested message and enum types in `Examples`.
 pub mod examples {
+    /// The Cloud Storage input instances.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExampleGcsSource {
+        /// The format in which instances are given, if not specified, assume it's
+        /// JSONL format. Currently only JSONL format is supported.
+        #[prost(enumeration = "example_gcs_source::DataFormat", tag = "1")]
+        pub data_format: i32,
+        /// The Cloud Storage location for the input instances.
+        #[prost(message, optional, tag = "2")]
+        pub gcs_source: ::core::option::Option<super::GcsSource>,
+    }
+    /// Nested message and enum types in `ExampleGcsSource`.
+    pub mod example_gcs_source {
+        /// The format of the input example instances.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum DataFormat {
+            /// Format unspecified, used when unset.
+            Unspecified = 0,
+            /// Examples are stored in JSONL files.
+            Jsonl = 1,
+        }
+        impl DataFormat {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
+                    DataFormat::Jsonl => "JSONL",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "DATA_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                    "JSONL" => Some(Self::Jsonl),
+                    _ => None,
+                }
+            }
+        }
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// The Cloud Storage input instances.
+        #[prost(message, tag = "5")]
+        ExampleGcsSource(ExampleGcsSource),
+    }
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Config {

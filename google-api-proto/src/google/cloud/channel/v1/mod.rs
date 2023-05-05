@@ -1151,6 +1151,10 @@ pub struct Entitlement {
     /// - display_name: The display name of the billing subaccount.
     #[prost(message, repeated, tag = "26")]
     pub parameters: ::prost::alloc::vec::Vec<Parameter>,
+    /// Optional. The billing account resource name that is used to pay for this
+    /// entitlement.
+    #[prost(string, tag = "28")]
+    pub billing_account: ::prost::alloc::string::String,
 }
 /// Nested message and enum types in `Entitlement`.
 pub mod entitlement {
@@ -5411,7 +5415,8 @@ pub mod cloud_channel_service_client {
         /// [CustomerRepricingConfig][google.cloud.channel.v1.CustomerRepricingConfig]
         /// resources. The data for each resource is displayed in the ascending order
         /// of:
-        /// * customer ID
+        ///
+        /// * Customer ID
         /// * [RepricingConfig.EntitlementGranularity.entitlement][google.cloud.channel.v1.RepricingConfig.EntitlementGranularity.entitlement]
         /// * [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
         /// * [CustomerRepricingConfig.update_time][google.cloud.channel.v1.CustomerRepricingConfig.update_time]
@@ -5646,7 +5651,8 @@ pub mod cloud_channel_service_client {
         /// [ChannelPartnerRepricingConfig][google.cloud.channel.v1.ChannelPartnerRepricingConfig]
         /// resources. The data for each resource is displayed in the ascending order
         /// of:
-        /// * channel partner ID
+        ///
+        /// * Channel Partner ID
         /// * [RepricingConfig.effective_invoice_month][google.cloud.channel.v1.RepricingConfig.effective_invoice_month]
         /// * [ChannelPartnerRepricingConfig.update_time][google.cloud.channel.v1.ChannelPartnerRepricingConfig.update_time]
         ///
