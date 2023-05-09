@@ -2,6 +2,8 @@
 pub mod addressvalidation;
 #[cfg(any(feature = "google-maps-mapsplatformdatasets-v1alpha"))]
 pub mod mapsplatformdatasets;
+#[cfg(any(feature = "google-maps-places-v1"))]
+pub mod places;
 #[cfg(
     any(
         feature = "google-maps-playablelocations-v3",
