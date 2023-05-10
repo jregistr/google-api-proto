@@ -9062,6 +9062,16 @@ pub mod human_agent_assistant_config {
         /// ID>/conversationModels/<Model ID>`.
         #[prost(string, tag = "1")]
         pub model: ::prost::alloc::string::String,
+        /// Version of current baseline model. It will be ignored if
+        /// \[model][google.cloud.dialogflow.v2.HumanAgentAssistantConfig.ConversationModelConfig.model\]
+        /// is set. Valid versions are:
+        ///    Article Suggestion baseline model:
+        ///      - 0.9
+        ///      - 1.0 (default)
+        ///    Summarization baseline model:
+        ///      - 1.0
+        #[prost(string, tag = "8")]
+        pub baseline_model_version: ::prost::alloc::string::String,
     }
     /// Config to process conversation.
     #[allow(clippy::derive_partial_eq_without_eq)]
