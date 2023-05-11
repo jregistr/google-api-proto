@@ -1568,6 +1568,10 @@ pub struct ListJobsRequest {
     /// List filter.
     #[prost(string, tag = "4")]
     pub filter: ::prost::alloc::string::String,
+    /// Sort results. Supported are "name", "name desc", "create_time",
+    /// "create_time desc", and "".
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
     /// Page size.
     #[prost(int32, tag = "2")]
     pub page_size: i32,
@@ -1603,6 +1607,10 @@ pub struct ListTasksRequest {
     /// State=RUNNING
     #[prost(string, tag = "2")]
     pub filter: ::prost::alloc::string::String,
+    /// Sort results. Supported are "name", "name desc", "create_time",
+    /// "create_time desc", and "".
+    #[prost(string, tag = "5")]
+    pub order_by: ::prost::alloc::string::String,
     /// Page size.
     #[prost(int32, tag = "3")]
     pub page_size: i32,

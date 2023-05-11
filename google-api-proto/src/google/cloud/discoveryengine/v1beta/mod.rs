@@ -280,6 +280,11 @@ pub struct SearchRequest {
     /// If this field is unrecognizable, an  `INVALID_ARGUMENT`  is returned.
     #[prost(string, tag = "8")]
     pub order_by: ::prost::alloc::string::String,
+    /// Information about the end user.
+    /// Highly recommended for analytics. The user_agent string in UserInfo will
+    /// be used to deduce device_type for analytics.
+    #[prost(message, optional, tag = "21")]
+    pub user_info: ::core::option::Option<UserInfo>,
     /// Facet specifications for faceted search. If empty, no facets are returned.
     ///
     /// A maximum of 100 values are allowed. Otherwise, an  `INVALID_ARGUMENT`
@@ -300,7 +305,6 @@ pub struct SearchRequest {
     /// * `search_type`: double. Default empty. Enables non-webpage searching
     ///    depending on the value. The only valid non-default value is 1,
     ///    which enables image searching.
-    /// This field is ignored for other verticals.
     #[prost(btree_map = "string, message", tag = "11")]
     pub params: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
@@ -336,6 +340,32 @@ pub struct SearchRequest {
     /// search.
     #[prost(message, optional, tag = "24")]
     pub content_search_spec: ::core::option::Option<search_request::ContentSearchSpec>,
+    /// Whether to turn on safe search. This is only supported for
+    /// \[ContentConfig.PUBLIC_WEBSITE][\].
+    #[prost(bool, tag = "20")]
+    pub safe_search: bool,
+    /// The user labels applied to a resource must meet the following requirements:
+    ///
+    /// * Each resource can have multiple labels, up to a maximum of 64.
+    /// * Each label must be a key-value pair.
+    /// * Keys have a minimum length of 1 character and a maximum length of 63
+    ///    characters and cannot be empty. Values can be empty and have a maximum
+    ///    length of 63 characters.
+    /// * Keys and values can contain only lowercase letters, numeric characters,
+    ///    underscores, and dashes. All characters must use UTF-8 encoding, and
+    ///    international characters are allowed.
+    /// * The key portion of a label must be unique. However, you can use the same
+    ///    key with multiple resources.
+    /// * Keys must start with a lowercase letter or international character.
+    ///
+    /// See [Google Cloud
+    /// Document](<https://cloud.google.com/resource-manager/docs/creating-managing-labels#requirements>)
+    /// for more details.
+    #[prost(btree_map = "string, string", tag = "22")]
+    pub user_label: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
 }
 /// Nested message and enum types in `SearchRequest`.
 pub mod search_request {
