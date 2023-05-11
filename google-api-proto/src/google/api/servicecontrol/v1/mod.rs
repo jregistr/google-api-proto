@@ -1,186 +1,3 @@
-/// A common proto for logging HTTP requests. Only contains semantics
-/// defined by the HTTP specification. Product-specific logging
-/// information MUST be defined in a separate message.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct HttpRequest {
-    /// The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
-    #[prost(string, tag = "1")]
-    pub request_method: ::prost::alloc::string::String,
-    /// The scheme (http, https), the host name, the path, and the query
-    /// portion of the URL that was requested.
-    /// Example: `"<http://example.com/some/info?color=red"`.>
-    #[prost(string, tag = "2")]
-    pub request_url: ::prost::alloc::string::String,
-    /// The size of the HTTP request message in bytes, including the request
-    /// headers and the request body.
-    #[prost(int64, tag = "3")]
-    pub request_size: i64,
-    /// The response code indicating the status of the response.
-    /// Examples: 200, 404.
-    #[prost(int32, tag = "4")]
-    pub status: i32,
-    /// The size of the HTTP response message sent back to the client, in bytes,
-    /// including the response headers and the response body.
-    #[prost(int64, tag = "5")]
-    pub response_size: i64,
-    /// The user agent sent by the client. Example:
-    /// `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET
-    /// CLR 1.0.3705)"`.
-    #[prost(string, tag = "6")]
-    pub user_agent: ::prost::alloc::string::String,
-    /// The IP address (IPv4 or IPv6) of the client that issued the HTTP
-    /// request. Examples: `"192.168.1.1"`, `"FE80::0202:B3FF:FE1E:8329"`.
-    #[prost(string, tag = "7")]
-    pub remote_ip: ::prost::alloc::string::String,
-    /// The IP address (IPv4 or IPv6) of the origin server that the request was
-    /// sent to.
-    #[prost(string, tag = "13")]
-    pub server_ip: ::prost::alloc::string::String,
-    /// The referer URL of the request, as defined in
-    /// [HTTP/1.1 Header Field
-    /// Definitions](<http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html>).
-    #[prost(string, tag = "8")]
-    pub referer: ::prost::alloc::string::String,
-    /// The request processing latency on the server, from the time the request was
-    /// received until the response was sent.
-    #[prost(message, optional, tag = "14")]
-    pub latency: ::core::option::Option<::prost_types::Duration>,
-    /// Whether or not a cache lookup was attempted.
-    #[prost(bool, tag = "11")]
-    pub cache_lookup: bool,
-    /// Whether or not an entity was served from cache
-    /// (with or without validation).
-    #[prost(bool, tag = "9")]
-    pub cache_hit: bool,
-    /// Whether or not the response was validated with the origin server before
-    /// being served from cache. This field is only meaningful if `cache_hit` is
-    /// True.
-    #[prost(bool, tag = "10")]
-    pub cache_validated_with_origin_server: bool,
-    /// The number of HTTP response bytes inserted into cache. Set only when a
-    /// cache fill was attempted.
-    #[prost(int64, tag = "12")]
-    pub cache_fill_bytes: i64,
-    /// Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
-    #[prost(string, tag = "15")]
-    pub protocol: ::prost::alloc::string::String,
-}
-/// An individual log entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntry {
-    /// Required. The log to which this log entry belongs. Examples: `"syslog"`,
-    /// `"book_log"`.
-    #[prost(string, tag = "10")]
-    pub name: ::prost::alloc::string::String,
-    /// The time the event described by the log entry occurred. If
-    /// omitted, defaults to operation start time.
-    #[prost(message, optional, tag = "11")]
-    pub timestamp: ::core::option::Option<::prost_types::Timestamp>,
-    /// The severity of the log entry. The default value is
-    /// `LogSeverity.DEFAULT`.
-    #[prost(
-        enumeration = "super::super::super::logging::r#type::LogSeverity",
-        tag = "12"
-    )]
-    pub severity: i32,
-    /// Optional. Information about the HTTP request associated with this
-    /// log entry, if applicable.
-    #[prost(message, optional, tag = "14")]
-    pub http_request: ::core::option::Option<HttpRequest>,
-    /// Optional. Resource name of the trace associated with the log entry, if any.
-    /// If this field contains a relative resource name, you can assume the name is
-    /// relative to `//tracing.googleapis.com`. Example:
-    /// `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
-    #[prost(string, tag = "15")]
-    pub trace: ::prost::alloc::string::String,
-    /// A unique ID for the log entry used for deduplication. If omitted,
-    /// the implementation will generate one based on operation_id.
-    #[prost(string, tag = "4")]
-    pub insert_id: ::prost::alloc::string::String,
-    /// A set of user-defined (key, value) data that provides additional
-    /// information about the log entry.
-    #[prost(btree_map = "string, string", tag = "13")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. Information about an operation associated with the log entry, if
-    /// applicable.
-    #[prost(message, optional, tag = "16")]
-    pub operation: ::core::option::Option<LogEntryOperation>,
-    /// Optional. Source code location information associated with the log entry,
-    /// if any.
-    #[prost(message, optional, tag = "17")]
-    pub source_location: ::core::option::Option<LogEntrySourceLocation>,
-    /// The log entry payload, which can be one of multiple types.
-    #[prost(oneof = "log_entry::Payload", tags = "2, 3, 6")]
-    pub payload: ::core::option::Option<log_entry::Payload>,
-}
-/// Nested message and enum types in `LogEntry`.
-pub mod log_entry {
-    /// The log entry payload, which can be one of multiple types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Payload {
-        /// The log entry payload, represented as a protocol buffer that is
-        /// expressed as a JSON object. The only accepted type currently is
-        /// \[AuditLog][google.cloud.audit.AuditLog\].
-        #[prost(message, tag = "2")]
-        ProtoPayload(::prost_types::Any),
-        /// The log entry payload, represented as a Unicode string (UTF-8).
-        #[prost(string, tag = "3")]
-        TextPayload(::prost::alloc::string::String),
-        /// The log entry payload, represented as a structure that
-        /// is expressed as a JSON object.
-        #[prost(message, tag = "6")]
-        StructPayload(::prost_types::Struct),
-    }
-}
-/// Additional information about a potentially long-running operation with which
-/// a log entry is associated.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntryOperation {
-    /// Optional. An arbitrary operation identifier. Log entries with the
-    /// same identifier are assumed to be part of the same operation.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// Optional. An arbitrary producer identifier. The combination of
-    /// `id` and `producer` must be globally unique.  Examples for `producer`:
-    /// `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
-    #[prost(string, tag = "2")]
-    pub producer: ::prost::alloc::string::String,
-    /// Optional. Set this to True if this is the first log entry in the operation.
-    #[prost(bool, tag = "3")]
-    pub first: bool,
-    /// Optional. Set this to True if this is the last log entry in the operation.
-    #[prost(bool, tag = "4")]
-    pub last: bool,
-}
-/// Additional information about the source code location that produced the log
-/// entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogEntrySourceLocation {
-    /// Optional. Source file name. Depending on the runtime environment, this
-    /// might be a simple name or a fully-qualified name.
-    #[prost(string, tag = "1")]
-    pub file: ::prost::alloc::string::String,
-    /// Optional. Line within the source file. 1-based; 0 indicates no line number
-    /// available.
-    #[prost(int64, tag = "2")]
-    pub line: i64,
-    /// Optional. Human-readable name of the function or method being invoked, with
-    /// optional context such as the class or package name. This information may be
-    /// used in contexts such as the logs viewer, where a file and line number are
-    /// less meaningful. The format can vary by language. For example:
-    /// `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
-    /// (Python).
-    #[prost(string, tag = "3")]
-    pub function: ::prost::alloc::string::String,
-}
 /// Distribution represents a frequency distribution of double-valued sample
 /// points. It contains the size of the population of sample points plus
 /// additional optional information:
@@ -425,645 +242,6 @@ pub struct MetricValueSet {
     /// The values in this metric.
     #[prost(message, repeated, tag = "2")]
     pub metric_values: ::prost::alloc::vec::Vec<MetricValue>,
-}
-/// Represents information regarding an operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Operation {
-    /// Identity of the operation. This must be unique within the scope of the
-    /// service that generated the operation. If the service calls
-    /// Check() and Report() on the same operation, the two calls should carry
-    /// the same id.
-    ///
-    /// UUID version 4 is recommended, though not required.
-    /// In scenarios where an operation is computed from existing information
-    /// and an idempotent id is desirable for deduplication purpose, UUID version 5
-    /// is recommended. See RFC 4122 for details.
-    #[prost(string, tag = "1")]
-    pub operation_id: ::prost::alloc::string::String,
-    /// Fully qualified name of the operation. Reserved for future use.
-    #[prost(string, tag = "2")]
-    pub operation_name: ::prost::alloc::string::String,
-    /// Identity of the consumer who is using the service.
-    /// This field should be filled in for the operations initiated by a
-    /// consumer, but not for service-initiated operations that are
-    /// not related to a specific consumer.
-    ///
-    /// - This can be in one of the following formats:
-    ///      - project:PROJECT_ID,
-    ///      - project`_`number:PROJECT_NUMBER,
-    ///      - projects/PROJECT_ID or PROJECT_NUMBER,
-    ///      - folders/FOLDER_NUMBER,
-    ///      - organizations/ORGANIZATION_NUMBER,
-    ///      - api`_`key:API_KEY.
-    #[prost(string, tag = "3")]
-    pub consumer_id: ::prost::alloc::string::String,
-    /// Required. Start time of the operation.
-    #[prost(message, optional, tag = "4")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// End time of the operation.
-    /// Required when the operation is used in
-    /// \[ServiceController.Report][google.api.servicecontrol.v1.ServiceController.Report\],
-    /// but optional when the operation is used in
-    /// \[ServiceController.Check][google.api.servicecontrol.v1.ServiceController.Check\].
-    #[prost(message, optional, tag = "5")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Labels describing the operation. Only the following labels are allowed:
-    ///
-    /// - Labels describing monitored resources as defined in
-    ///    the service configuration.
-    /// - Default labels of metric values. When specified, labels defined in the
-    ///    metric value override these default.
-    /// - The following labels defined by Google Cloud Platform:
-    ///      - `cloud.googleapis.com/location` describing the location where the
-    ///         operation happened,
-    ///      - `servicecontrol.googleapis.com/user_agent` describing the user agent
-    ///         of the API request,
-    ///      - `servicecontrol.googleapis.com/service_agent` describing the service
-    ///         used to handle the API request (e.g. ESP),
-    ///      - `servicecontrol.googleapis.com/platform` describing the platform
-    ///         where the API is served, such as App Engine, Compute Engine, or
-    ///         Kubernetes Engine.
-    #[prost(btree_map = "string, string", tag = "6")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Represents information about this operation. Each MetricValueSet
-    /// corresponds to a metric defined in the service configuration.
-    /// The data type used in the MetricValueSet must agree with
-    /// the data type specified in the metric definition.
-    ///
-    /// Within a single operation, it is not allowed to have more than one
-    /// MetricValue instances that have the same metric names and identical
-    /// label value combinations. If a request has such duplicated MetricValue
-    /// instances, the entire request is rejected with
-    /// an invalid argument error.
-    #[prost(message, repeated, tag = "7")]
-    pub metric_value_sets: ::prost::alloc::vec::Vec<MetricValueSet>,
-    /// Represents information to be logged.
-    #[prost(message, repeated, tag = "8")]
-    pub log_entries: ::prost::alloc::vec::Vec<LogEntry>,
-    /// DO NOT USE. This is an experimental field.
-    #[prost(enumeration = "operation::Importance", tag = "11")]
-    pub importance: i32,
-    /// Unimplemented.
-    #[prost(message, repeated, tag = "16")]
-    pub extensions: ::prost::alloc::vec::Vec<::prost_types::Any>,
-}
-/// Nested message and enum types in `Operation`.
-pub mod operation {
-    /// Defines the importance of the data contained in the operation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Importance {
-        /// Allows data caching, batching, and aggregation. It provides
-        /// higher performance with higher data loss risk.
-        Low = 0,
-        /// Disables data aggregation to minimize data loss. It is for operations
-        /// that contains significant monetary value or audit trail. This feature
-        /// only applies to the client libraries.
-        High = 1,
-    }
-    impl Importance {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Importance::Low => "LOW",
-                Importance::High => "HIGH",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "LOW" => Some(Self::Low),
-                "HIGH" => Some(Self::High),
-                _ => None,
-            }
-        }
-    }
-}
-/// Defines the errors to be returned in
-/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckError {
-    /// The error code.
-    #[prost(enumeration = "check_error::Code", tag = "1")]
-    pub code: i32,
-    /// Subject to whom this error applies. See the specific code enum for more
-    /// details on this field. For example:
-    ///
-    /// - "project:<project-id or project-number>"
-    /// - "folder:<folder-id>"
-    /// - "organization:<organization-id>"
-    #[prost(string, tag = "4")]
-    pub subject: ::prost::alloc::string::String,
-    /// Free-form text providing details on the error cause of the error.
-    #[prost(string, tag = "2")]
-    pub detail: ::prost::alloc::string::String,
-    /// Contains public information about the check error. If available,
-    /// `status.code` will be non zero and client can propagate it out as public
-    /// error.
-    #[prost(message, optional, tag = "3")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-}
-/// Nested message and enum types in `CheckError`.
-pub mod check_error {
-    /// Error codes for Check responses.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Code {
-        /// This is never used in `CheckResponse`.
-        ErrorCodeUnspecified = 0,
-        /// The consumer's project id, network container, or resource container was
-        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
-        NotFound = 5,
-        /// The consumer doesn't have access to the specified resource.
-        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
-        PermissionDenied = 7,
-        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
-        ResourceExhausted = 8,
-        /// The consumer hasn't activated the service.
-        ServiceNotActivated = 104,
-        /// The consumer cannot access the service because billing is disabled.
-        BillingDisabled = 107,
-        /// The consumer's project has been marked as deleted (soft deletion).
-        ProjectDeleted = 108,
-        /// The consumer's project number or id does not represent a valid project.
-        ProjectInvalid = 114,
-        /// The input consumer info does not represent a valid consumer folder or
-        /// organization.
-        ConsumerInvalid = 125,
-        /// The IP address of the consumer is invalid for the specific consumer
-        /// project.
-        IpAddressBlocked = 109,
-        /// The referer address of the consumer request is invalid for the specific
-        /// consumer project.
-        RefererBlocked = 110,
-        /// The client application of the consumer request is invalid for the
-        /// specific consumer project.
-        ClientAppBlocked = 111,
-        /// The API targeted by this request is invalid for the specified consumer
-        /// project.
-        ApiTargetBlocked = 122,
-        /// The consumer's API key is invalid.
-        ApiKeyInvalid = 105,
-        /// The consumer's API Key has expired.
-        ApiKeyExpired = 112,
-        /// The consumer's API Key was not found in config record.
-        ApiKeyNotFound = 113,
-        /// The credential in the request can not be verified.
-        InvalidCredential = 123,
-        /// The backend server for looking up project id/number is unavailable.
-        NamespaceLookupUnavailable = 300,
-        /// The backend server for checking service status is unavailable.
-        ServiceStatusUnavailable = 301,
-        /// The backend server for checking billing status is unavailable.
-        BillingStatusUnavailable = 302,
-        /// Cloud Resource Manager backend server is unavailable.
-        CloudResourceManagerBackendUnavailable = 305,
-    }
-    impl Code {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Code::ErrorCodeUnspecified => "ERROR_CODE_UNSPECIFIED",
-                Code::NotFound => "NOT_FOUND",
-                Code::PermissionDenied => "PERMISSION_DENIED",
-                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
-                Code::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
-                Code::BillingDisabled => "BILLING_DISABLED",
-                Code::ProjectDeleted => "PROJECT_DELETED",
-                Code::ProjectInvalid => "PROJECT_INVALID",
-                Code::ConsumerInvalid => "CONSUMER_INVALID",
-                Code::IpAddressBlocked => "IP_ADDRESS_BLOCKED",
-                Code::RefererBlocked => "REFERER_BLOCKED",
-                Code::ClientAppBlocked => "CLIENT_APP_BLOCKED",
-                Code::ApiTargetBlocked => "API_TARGET_BLOCKED",
-                Code::ApiKeyInvalid => "API_KEY_INVALID",
-                Code::ApiKeyExpired => "API_KEY_EXPIRED",
-                Code::ApiKeyNotFound => "API_KEY_NOT_FOUND",
-                Code::InvalidCredential => "INVALID_CREDENTIAL",
-                Code::NamespaceLookupUnavailable => "NAMESPACE_LOOKUP_UNAVAILABLE",
-                Code::ServiceStatusUnavailable => "SERVICE_STATUS_UNAVAILABLE",
-                Code::BillingStatusUnavailable => "BILLING_STATUS_UNAVAILABLE",
-                Code::CloudResourceManagerBackendUnavailable => {
-                    "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE"
-                }
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ERROR_CODE_UNSPECIFIED" => Some(Self::ErrorCodeUnspecified),
-                "NOT_FOUND" => Some(Self::NotFound),
-                "PERMISSION_DENIED" => Some(Self::PermissionDenied),
-                "RESOURCE_EXHAUSTED" => Some(Self::ResourceExhausted),
-                "SERVICE_NOT_ACTIVATED" => Some(Self::ServiceNotActivated),
-                "BILLING_DISABLED" => Some(Self::BillingDisabled),
-                "PROJECT_DELETED" => Some(Self::ProjectDeleted),
-                "PROJECT_INVALID" => Some(Self::ProjectInvalid),
-                "CONSUMER_INVALID" => Some(Self::ConsumerInvalid),
-                "IP_ADDRESS_BLOCKED" => Some(Self::IpAddressBlocked),
-                "REFERER_BLOCKED" => Some(Self::RefererBlocked),
-                "CLIENT_APP_BLOCKED" => Some(Self::ClientAppBlocked),
-                "API_TARGET_BLOCKED" => Some(Self::ApiTargetBlocked),
-                "API_KEY_INVALID" => Some(Self::ApiKeyInvalid),
-                "API_KEY_EXPIRED" => Some(Self::ApiKeyExpired),
-                "API_KEY_NOT_FOUND" => Some(Self::ApiKeyNotFound),
-                "INVALID_CREDENTIAL" => Some(Self::InvalidCredential),
-                "NAMESPACE_LOOKUP_UNAVAILABLE" => Some(Self::NamespaceLookupUnavailable),
-                "SERVICE_STATUS_UNAVAILABLE" => Some(Self::ServiceStatusUnavailable),
-                "BILLING_STATUS_UNAVAILABLE" => Some(Self::BillingStatusUnavailable),
-                "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE" => {
-                    Some(Self::CloudResourceManagerBackendUnavailable)
-                }
-                _ => None,
-            }
-        }
-    }
-}
-/// Request message for the Check method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckRequest {
-    /// The service name as specified in its service configuration. For example,
-    /// `"pubsub.googleapis.com"`.
-    ///
-    /// See
-    /// \[google.api.Service\](<https://cloud.google.com/service-management/reference/rpc/google.api#google.api.Service>)
-    /// for the definition of a service name.
-    #[prost(string, tag = "1")]
-    pub service_name: ::prost::alloc::string::String,
-    /// The operation to be checked.
-    #[prost(message, optional, tag = "2")]
-    pub operation: ::core::option::Option<Operation>,
-    /// Specifies which version of service configuration should be used to process
-    /// the request.
-    ///
-    /// If unspecified or no matching version can be found, the
-    /// latest one will be used.
-    #[prost(string, tag = "4")]
-    pub service_config_id: ::prost::alloc::string::String,
-}
-/// Response message for the Check method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CheckResponse {
-    /// The same operation_id value used in the
-    /// \[CheckRequest][google.api.servicecontrol.v1.CheckRequest\]. Used for logging
-    /// and diagnostics purposes.
-    #[prost(string, tag = "1")]
-    pub operation_id: ::prost::alloc::string::String,
-    /// Indicate the decision of the check.
-    ///
-    /// If no check errors are present, the service should process the operation.
-    /// Otherwise the service should use the list of errors to determine the
-    /// appropriate action.
-    #[prost(message, repeated, tag = "2")]
-    pub check_errors: ::prost::alloc::vec::Vec<CheckError>,
-    /// The actual config id used to process the request.
-    #[prost(string, tag = "5")]
-    pub service_config_id: ::prost::alloc::string::String,
-    /// The current service rollout id used to process the request.
-    #[prost(string, tag = "11")]
-    pub service_rollout_id: ::prost::alloc::string::String,
-    /// Feedback data returned from the server during processing a Check request.
-    #[prost(message, optional, tag = "6")]
-    pub check_info: ::core::option::Option<check_response::CheckInfo>,
-}
-/// Nested message and enum types in `CheckResponse`.
-pub mod check_response {
-    /// Contains additional information about the check operation.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CheckInfo {
-        /// A list of fields and label keys that are ignored by the server.
-        /// The client doesn't need to send them for following requests to improve
-        /// performance and allow better aggregation.
-        #[prost(string, repeated, tag = "1")]
-        pub unused_arguments: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Consumer info of this check.
-        #[prost(message, optional, tag = "2")]
-        pub consumer_info: ::core::option::Option<ConsumerInfo>,
-    }
-    /// `ConsumerInfo` provides information about the consumer.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConsumerInfo {
-        /// The Google cloud project number, e.g. 1234567890. A value of 0 indicates
-        /// no project number is found.
-        ///
-        /// NOTE: This field is deprecated after we support flexible consumer
-        /// id. New code should not depend on this field anymore.
-        #[prost(int64, tag = "1")]
-        pub project_number: i64,
-        /// The type of the consumer which should have been defined in
-        /// [Google Resource Manager](<https://cloud.google.com/resource-manager/>).
-        #[prost(enumeration = "consumer_info::ConsumerType", tag = "2")]
-        pub r#type: i32,
-        /// The consumer identity number, can be Google cloud project number, folder
-        /// number or organization number e.g. 1234567890. A value of 0 indicates no
-        /// consumer number is found.
-        #[prost(int64, tag = "3")]
-        pub consumer_number: i64,
-    }
-    /// Nested message and enum types in `ConsumerInfo`.
-    pub mod consumer_info {
-        /// The type of the consumer as defined in
-        /// [Google Resource Manager](<https://cloud.google.com/resource-manager/>).
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ConsumerType {
-            /// This is never used.
-            Unspecified = 0,
-            /// The consumer is a Google Cloud Project.
-            Project = 1,
-            /// The consumer is a Google Cloud Folder.
-            Folder = 2,
-            /// The consumer is a Google Cloud Organization.
-            Organization = 3,
-            /// Service-specific resource container which is defined by the service
-            /// producer to offer their users the ability to manage service control
-            /// functionalities at a finer level of granularity than the PROJECT.
-            ServiceSpecific = 4,
-        }
-        impl ConsumerType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ConsumerType::Unspecified => "CONSUMER_TYPE_UNSPECIFIED",
-                    ConsumerType::Project => "PROJECT",
-                    ConsumerType::Folder => "FOLDER",
-                    ConsumerType::Organization => "ORGANIZATION",
-                    ConsumerType::ServiceSpecific => "SERVICE_SPECIFIC",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "CONSUMER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "PROJECT" => Some(Self::Project),
-                    "FOLDER" => Some(Self::Folder),
-                    "ORGANIZATION" => Some(Self::Organization),
-                    "SERVICE_SPECIFIC" => Some(Self::ServiceSpecific),
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Request message for the Report method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReportRequest {
-    /// The service name as specified in its service configuration. For example,
-    /// `"pubsub.googleapis.com"`.
-    ///
-    /// See
-    /// \[google.api.Service\](<https://cloud.google.com/service-management/reference/rpc/google.api#google.api.Service>)
-    /// for the definition of a service name.
-    #[prost(string, tag = "1")]
-    pub service_name: ::prost::alloc::string::String,
-    /// Operations to be reported.
-    ///
-    /// Typically the service should report one operation per request.
-    /// Putting multiple operations into a single request is allowed, but should
-    /// be used only when multiple operations are natually available at the time
-    /// of the report.
-    ///
-    /// There is no limit on the number of operations in the same ReportRequest,
-    /// however the ReportRequest size should be no larger than 1MB. See
-    /// \[ReportResponse.report_errors][google.api.servicecontrol.v1.ReportResponse.report_errors\]
-    /// for partial failure behavior.
-    #[prost(message, repeated, tag = "2")]
-    pub operations: ::prost::alloc::vec::Vec<Operation>,
-    /// Specifies which version of service config should be used to process the
-    /// request.
-    ///
-    /// If unspecified or no matching version can be found, the
-    /// latest one will be used.
-    #[prost(string, tag = "3")]
-    pub service_config_id: ::prost::alloc::string::String,
-}
-/// Response message for the Report method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReportResponse {
-    /// Partial failures, one for each `Operation` in the request that failed
-    /// processing. There are three possible combinations of the RPC status:
-    ///
-    /// 1. The combination of a successful RPC status and an empty `report_errors`
-    ///     list indicates a complete success where all `Operations` in the
-    ///     request are processed successfully.
-    /// 2. The combination of a successful RPC status and a non-empty
-    ///     `report_errors` list indicates a partial success where some
-    ///     `Operations` in the request succeeded. Each
-    ///     `Operation` that failed processing has a corresponding item
-    ///     in this list.
-    /// 3. A failed RPC status indicates a general non-deterministic failure.
-    ///     When this happens, it's impossible to know which of the
-    ///     'Operations' in the request succeeded or failed.
-    #[prost(message, repeated, tag = "1")]
-    pub report_errors: ::prost::alloc::vec::Vec<report_response::ReportError>,
-    /// The actual config id used to process the request.
-    #[prost(string, tag = "2")]
-    pub service_config_id: ::prost::alloc::string::String,
-    /// The current service rollout id used to process the request.
-    #[prost(string, tag = "4")]
-    pub service_rollout_id: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ReportResponse`.
-pub mod report_response {
-    /// Represents the processing error of one
-    /// \[Operation][google.api.servicecontrol.v1.Operation\] in the request.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ReportError {
-        /// The
-        /// \[Operation.operation_id][google.api.servicecontrol.v1.Operation.operation_id\]
-        /// value from the request.
-        #[prost(string, tag = "1")]
-        pub operation_id: ::prost::alloc::string::String,
-        /// Details of the error when processing the
-        /// \[Operation][google.api.servicecontrol.v1.Operation\].
-        #[prost(message, optional, tag = "2")]
-        pub status: ::core::option::Option<super::super::super::super::rpc::Status>,
-    }
-}
-/// Generated client implementations.
-pub mod service_controller_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// [Google Service Control API](/service-control/overview)
-    ///
-    /// Lets clients check and report operations against a [managed
-    /// service](https://cloud.google.com/service-management/reference/rpc/google.api/servicemanagement.v1#google.api.servicemanagement.v1.ManagedService).
-    #[derive(Debug, Clone)]
-    pub struct ServiceControllerClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ServiceControllerClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ServiceControllerClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ServiceControllerClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Checks whether an operation on a service should be allowed to proceed
-        /// based on the configuration of the service and related policies. It must be
-        /// called before the operation is executed.
-        ///
-        /// If feasible, the client should cache the check results and reuse them for
-        /// 60 seconds. In case of any server errors, the client should rely on the
-        /// cached results for much longer time to avoid outage.
-        /// WARNING: There is general 60s delay for the configuration and policy
-        /// propagation, therefore callers MUST NOT depend on the `Check` method having
-        /// the latest policy information.
-        ///
-        /// NOTE: the [CheckRequest][google.api.servicecontrol.v1.CheckRequest] has
-        /// the size limit (wire-format byte size) of 1MB.
-        ///
-        /// This method requires the `servicemanagement.services.check` permission
-        /// on the specified service. For more information, see
-        /// [Cloud IAM](https://cloud.google.com/iam).
-        pub async fn check(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CheckRequest>,
-        ) -> Result<tonic::Response<super::CheckResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.api.servicecontrol.v1.ServiceController/Check",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Reports operation results to Google Service Control, such as logs and
-        /// metrics. It should be called after an operation is completed.
-        ///
-        /// If feasible, the client should aggregate reporting data for up to 5
-        /// seconds to reduce API traffic. Limiting aggregation to 5 seconds is to
-        /// reduce data loss during client crashes. Clients should carefully choose
-        /// the aggregation time window to avoid data loss risk more than 0.01%
-        /// for business and compliance reasons.
-        ///
-        /// NOTE: the [ReportRequest][google.api.servicecontrol.v1.ReportRequest] has
-        /// the size limit (wire-format byte size) of 1MB.
-        ///
-        /// This method requires the `servicemanagement.services.report` permission
-        /// on the specified service. For more information, see
-        /// [Google Cloud IAM](https://cloud.google.com/iam).
-        pub async fn report(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReportRequest>,
-        ) -> Result<tonic::Response<super::ReportResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.api.servicecontrol.v1.ServiceController/Report",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
 }
 /// Request message for the AllocateQuota method.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1424,6 +602,828 @@ pub mod quota_controller_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.servicecontrol.v1.QuotaController/AllocateQuota",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A common proto for logging HTTP requests. Only contains semantics
+/// defined by the HTTP specification. Product-specific logging
+/// information MUST be defined in a separate message.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct HttpRequest {
+    /// The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
+    #[prost(string, tag = "1")]
+    pub request_method: ::prost::alloc::string::String,
+    /// The scheme (http, https), the host name, the path, and the query
+    /// portion of the URL that was requested.
+    /// Example: `"<http://example.com/some/info?color=red"`.>
+    #[prost(string, tag = "2")]
+    pub request_url: ::prost::alloc::string::String,
+    /// The size of the HTTP request message in bytes, including the request
+    /// headers and the request body.
+    #[prost(int64, tag = "3")]
+    pub request_size: i64,
+    /// The response code indicating the status of the response.
+    /// Examples: 200, 404.
+    #[prost(int32, tag = "4")]
+    pub status: i32,
+    /// The size of the HTTP response message sent back to the client, in bytes,
+    /// including the response headers and the response body.
+    #[prost(int64, tag = "5")]
+    pub response_size: i64,
+    /// The user agent sent by the client. Example:
+    /// `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET
+    /// CLR 1.0.3705)"`.
+    #[prost(string, tag = "6")]
+    pub user_agent: ::prost::alloc::string::String,
+    /// The IP address (IPv4 or IPv6) of the client that issued the HTTP
+    /// request. Examples: `"192.168.1.1"`, `"FE80::0202:B3FF:FE1E:8329"`.
+    #[prost(string, tag = "7")]
+    pub remote_ip: ::prost::alloc::string::String,
+    /// The IP address (IPv4 or IPv6) of the origin server that the request was
+    /// sent to.
+    #[prost(string, tag = "13")]
+    pub server_ip: ::prost::alloc::string::String,
+    /// The referer URL of the request, as defined in
+    /// [HTTP/1.1 Header Field
+    /// Definitions](<http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html>).
+    #[prost(string, tag = "8")]
+    pub referer: ::prost::alloc::string::String,
+    /// The request processing latency on the server, from the time the request was
+    /// received until the response was sent.
+    #[prost(message, optional, tag = "14")]
+    pub latency: ::core::option::Option<::prost_types::Duration>,
+    /// Whether or not a cache lookup was attempted.
+    #[prost(bool, tag = "11")]
+    pub cache_lookup: bool,
+    /// Whether or not an entity was served from cache
+    /// (with or without validation).
+    #[prost(bool, tag = "9")]
+    pub cache_hit: bool,
+    /// Whether or not the response was validated with the origin server before
+    /// being served from cache. This field is only meaningful if `cache_hit` is
+    /// True.
+    #[prost(bool, tag = "10")]
+    pub cache_validated_with_origin_server: bool,
+    /// The number of HTTP response bytes inserted into cache. Set only when a
+    /// cache fill was attempted.
+    #[prost(int64, tag = "12")]
+    pub cache_fill_bytes: i64,
+    /// Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
+    #[prost(string, tag = "15")]
+    pub protocol: ::prost::alloc::string::String,
+}
+/// An individual log entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogEntry {
+    /// Required. The log to which this log entry belongs. Examples: `"syslog"`,
+    /// `"book_log"`.
+    #[prost(string, tag = "10")]
+    pub name: ::prost::alloc::string::String,
+    /// The time the event described by the log entry occurred. If
+    /// omitted, defaults to operation start time.
+    #[prost(message, optional, tag = "11")]
+    pub timestamp: ::core::option::Option<::prost_types::Timestamp>,
+    /// The severity of the log entry. The default value is
+    /// `LogSeverity.DEFAULT`.
+    #[prost(
+        enumeration = "super::super::super::logging::r#type::LogSeverity",
+        tag = "12"
+    )]
+    pub severity: i32,
+    /// Optional. Information about the HTTP request associated with this
+    /// log entry, if applicable.
+    #[prost(message, optional, tag = "14")]
+    pub http_request: ::core::option::Option<HttpRequest>,
+    /// Optional. Resource name of the trace associated with the log entry, if any.
+    /// If this field contains a relative resource name, you can assume the name is
+    /// relative to `//tracing.googleapis.com`. Example:
+    /// `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
+    #[prost(string, tag = "15")]
+    pub trace: ::prost::alloc::string::String,
+    /// A unique ID for the log entry used for deduplication. If omitted,
+    /// the implementation will generate one based on operation_id.
+    #[prost(string, tag = "4")]
+    pub insert_id: ::prost::alloc::string::String,
+    /// A set of user-defined (key, value) data that provides additional
+    /// information about the log entry.
+    #[prost(btree_map = "string, string", tag = "13")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. Information about an operation associated with the log entry, if
+    /// applicable.
+    #[prost(message, optional, tag = "16")]
+    pub operation: ::core::option::Option<LogEntryOperation>,
+    /// Optional. Source code location information associated with the log entry,
+    /// if any.
+    #[prost(message, optional, tag = "17")]
+    pub source_location: ::core::option::Option<LogEntrySourceLocation>,
+    /// The log entry payload, which can be one of multiple types.
+    #[prost(oneof = "log_entry::Payload", tags = "2, 3, 6")]
+    pub payload: ::core::option::Option<log_entry::Payload>,
+}
+/// Nested message and enum types in `LogEntry`.
+pub mod log_entry {
+    /// The log entry payload, which can be one of multiple types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Payload {
+        /// The log entry payload, represented as a protocol buffer that is
+        /// expressed as a JSON object. The only accepted type currently is
+        /// \[AuditLog][google.cloud.audit.AuditLog\].
+        #[prost(message, tag = "2")]
+        ProtoPayload(::prost_types::Any),
+        /// The log entry payload, represented as a Unicode string (UTF-8).
+        #[prost(string, tag = "3")]
+        TextPayload(::prost::alloc::string::String),
+        /// The log entry payload, represented as a structure that
+        /// is expressed as a JSON object.
+        #[prost(message, tag = "6")]
+        StructPayload(::prost_types::Struct),
+    }
+}
+/// Additional information about a potentially long-running operation with which
+/// a log entry is associated.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogEntryOperation {
+    /// Optional. An arbitrary operation identifier. Log entries with the
+    /// same identifier are assumed to be part of the same operation.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// Optional. An arbitrary producer identifier. The combination of
+    /// `id` and `producer` must be globally unique.  Examples for `producer`:
+    /// `"MyDivision.MyBigCompany.com"`, `"github.com/MyProject/MyApplication"`.
+    #[prost(string, tag = "2")]
+    pub producer: ::prost::alloc::string::String,
+    /// Optional. Set this to True if this is the first log entry in the operation.
+    #[prost(bool, tag = "3")]
+    pub first: bool,
+    /// Optional. Set this to True if this is the last log entry in the operation.
+    #[prost(bool, tag = "4")]
+    pub last: bool,
+}
+/// Additional information about the source code location that produced the log
+/// entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogEntrySourceLocation {
+    /// Optional. Source file name. Depending on the runtime environment, this
+    /// might be a simple name or a fully-qualified name.
+    #[prost(string, tag = "1")]
+    pub file: ::prost::alloc::string::String,
+    /// Optional. Line within the source file. 1-based; 0 indicates no line number
+    /// available.
+    #[prost(int64, tag = "2")]
+    pub line: i64,
+    /// Optional. Human-readable name of the function or method being invoked, with
+    /// optional context such as the class or package name. This information may be
+    /// used in contexts such as the logs viewer, where a file and line number are
+    /// less meaningful. The format can vary by language. For example:
+    /// `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
+    /// (Python).
+    #[prost(string, tag = "3")]
+    pub function: ::prost::alloc::string::String,
+}
+/// Defines the errors to be returned in
+/// \[google.api.servicecontrol.v1.CheckResponse.check_errors][google.api.servicecontrol.v1.CheckResponse.check_errors\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckError {
+    /// The error code.
+    #[prost(enumeration = "check_error::Code", tag = "1")]
+    pub code: i32,
+    /// Subject to whom this error applies. See the specific code enum for more
+    /// details on this field. For example:
+    ///
+    /// - "project:<project-id or project-number>"
+    /// - "folder:<folder-id>"
+    /// - "organization:<organization-id>"
+    #[prost(string, tag = "4")]
+    pub subject: ::prost::alloc::string::String,
+    /// Free-form text providing details on the error cause of the error.
+    #[prost(string, tag = "2")]
+    pub detail: ::prost::alloc::string::String,
+    /// Contains public information about the check error. If available,
+    /// `status.code` will be non zero and client can propagate it out as public
+    /// error.
+    #[prost(message, optional, tag = "3")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+}
+/// Nested message and enum types in `CheckError`.
+pub mod check_error {
+    /// Error codes for Check responses.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Code {
+        /// This is never used in `CheckResponse`.
+        ErrorCodeUnspecified = 0,
+        /// The consumer's project id, network container, or resource container was
+        /// not found. Same as \[google.rpc.Code.NOT_FOUND][google.rpc.Code.NOT_FOUND\].
+        NotFound = 5,
+        /// The consumer doesn't have access to the specified resource.
+        /// Same as \[google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED\].
+        PermissionDenied = 7,
+        /// Quota check failed. Same as \[google.rpc.Code.RESOURCE_EXHAUSTED][google.rpc.Code.RESOURCE_EXHAUSTED\].
+        ResourceExhausted = 8,
+        /// The consumer hasn't activated the service.
+        ServiceNotActivated = 104,
+        /// The consumer cannot access the service because billing is disabled.
+        BillingDisabled = 107,
+        /// The consumer's project has been marked as deleted (soft deletion).
+        ProjectDeleted = 108,
+        /// The consumer's project number or id does not represent a valid project.
+        ProjectInvalid = 114,
+        /// The input consumer info does not represent a valid consumer folder or
+        /// organization.
+        ConsumerInvalid = 125,
+        /// The IP address of the consumer is invalid for the specific consumer
+        /// project.
+        IpAddressBlocked = 109,
+        /// The referer address of the consumer request is invalid for the specific
+        /// consumer project.
+        RefererBlocked = 110,
+        /// The client application of the consumer request is invalid for the
+        /// specific consumer project.
+        ClientAppBlocked = 111,
+        /// The API targeted by this request is invalid for the specified consumer
+        /// project.
+        ApiTargetBlocked = 122,
+        /// The consumer's API key is invalid.
+        ApiKeyInvalid = 105,
+        /// The consumer's API Key has expired.
+        ApiKeyExpired = 112,
+        /// The consumer's API Key was not found in config record.
+        ApiKeyNotFound = 113,
+        /// The credential in the request can not be verified.
+        InvalidCredential = 123,
+        /// The backend server for looking up project id/number is unavailable.
+        NamespaceLookupUnavailable = 300,
+        /// The backend server for checking service status is unavailable.
+        ServiceStatusUnavailable = 301,
+        /// The backend server for checking billing status is unavailable.
+        BillingStatusUnavailable = 302,
+        /// Cloud Resource Manager backend server is unavailable.
+        CloudResourceManagerBackendUnavailable = 305,
+    }
+    impl Code {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Code::ErrorCodeUnspecified => "ERROR_CODE_UNSPECIFIED",
+                Code::NotFound => "NOT_FOUND",
+                Code::PermissionDenied => "PERMISSION_DENIED",
+                Code::ResourceExhausted => "RESOURCE_EXHAUSTED",
+                Code::ServiceNotActivated => "SERVICE_NOT_ACTIVATED",
+                Code::BillingDisabled => "BILLING_DISABLED",
+                Code::ProjectDeleted => "PROJECT_DELETED",
+                Code::ProjectInvalid => "PROJECT_INVALID",
+                Code::ConsumerInvalid => "CONSUMER_INVALID",
+                Code::IpAddressBlocked => "IP_ADDRESS_BLOCKED",
+                Code::RefererBlocked => "REFERER_BLOCKED",
+                Code::ClientAppBlocked => "CLIENT_APP_BLOCKED",
+                Code::ApiTargetBlocked => "API_TARGET_BLOCKED",
+                Code::ApiKeyInvalid => "API_KEY_INVALID",
+                Code::ApiKeyExpired => "API_KEY_EXPIRED",
+                Code::ApiKeyNotFound => "API_KEY_NOT_FOUND",
+                Code::InvalidCredential => "INVALID_CREDENTIAL",
+                Code::NamespaceLookupUnavailable => "NAMESPACE_LOOKUP_UNAVAILABLE",
+                Code::ServiceStatusUnavailable => "SERVICE_STATUS_UNAVAILABLE",
+                Code::BillingStatusUnavailable => "BILLING_STATUS_UNAVAILABLE",
+                Code::CloudResourceManagerBackendUnavailable => {
+                    "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ERROR_CODE_UNSPECIFIED" => Some(Self::ErrorCodeUnspecified),
+                "NOT_FOUND" => Some(Self::NotFound),
+                "PERMISSION_DENIED" => Some(Self::PermissionDenied),
+                "RESOURCE_EXHAUSTED" => Some(Self::ResourceExhausted),
+                "SERVICE_NOT_ACTIVATED" => Some(Self::ServiceNotActivated),
+                "BILLING_DISABLED" => Some(Self::BillingDisabled),
+                "PROJECT_DELETED" => Some(Self::ProjectDeleted),
+                "PROJECT_INVALID" => Some(Self::ProjectInvalid),
+                "CONSUMER_INVALID" => Some(Self::ConsumerInvalid),
+                "IP_ADDRESS_BLOCKED" => Some(Self::IpAddressBlocked),
+                "REFERER_BLOCKED" => Some(Self::RefererBlocked),
+                "CLIENT_APP_BLOCKED" => Some(Self::ClientAppBlocked),
+                "API_TARGET_BLOCKED" => Some(Self::ApiTargetBlocked),
+                "API_KEY_INVALID" => Some(Self::ApiKeyInvalid),
+                "API_KEY_EXPIRED" => Some(Self::ApiKeyExpired),
+                "API_KEY_NOT_FOUND" => Some(Self::ApiKeyNotFound),
+                "INVALID_CREDENTIAL" => Some(Self::InvalidCredential),
+                "NAMESPACE_LOOKUP_UNAVAILABLE" => Some(Self::NamespaceLookupUnavailable),
+                "SERVICE_STATUS_UNAVAILABLE" => Some(Self::ServiceStatusUnavailable),
+                "BILLING_STATUS_UNAVAILABLE" => Some(Self::BillingStatusUnavailable),
+                "CLOUD_RESOURCE_MANAGER_BACKEND_UNAVAILABLE" => {
+                    Some(Self::CloudResourceManagerBackendUnavailable)
+                }
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents information regarding an operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Operation {
+    /// Identity of the operation. This must be unique within the scope of the
+    /// service that generated the operation. If the service calls
+    /// Check() and Report() on the same operation, the two calls should carry
+    /// the same id.
+    ///
+    /// UUID version 4 is recommended, though not required.
+    /// In scenarios where an operation is computed from existing information
+    /// and an idempotent id is desirable for deduplication purpose, UUID version 5
+    /// is recommended. See RFC 4122 for details.
+    #[prost(string, tag = "1")]
+    pub operation_id: ::prost::alloc::string::String,
+    /// Fully qualified name of the operation. Reserved for future use.
+    #[prost(string, tag = "2")]
+    pub operation_name: ::prost::alloc::string::String,
+    /// Identity of the consumer who is using the service.
+    /// This field should be filled in for the operations initiated by a
+    /// consumer, but not for service-initiated operations that are
+    /// not related to a specific consumer.
+    ///
+    /// - This can be in one of the following formats:
+    ///      - project:PROJECT_ID,
+    ///      - project`_`number:PROJECT_NUMBER,
+    ///      - projects/PROJECT_ID or PROJECT_NUMBER,
+    ///      - folders/FOLDER_NUMBER,
+    ///      - organizations/ORGANIZATION_NUMBER,
+    ///      - api`_`key:API_KEY.
+    #[prost(string, tag = "3")]
+    pub consumer_id: ::prost::alloc::string::String,
+    /// Required. Start time of the operation.
+    #[prost(message, optional, tag = "4")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// End time of the operation.
+    /// Required when the operation is used in
+    /// \[ServiceController.Report][google.api.servicecontrol.v1.ServiceController.Report\],
+    /// but optional when the operation is used in
+    /// \[ServiceController.Check][google.api.servicecontrol.v1.ServiceController.Check\].
+    #[prost(message, optional, tag = "5")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Labels describing the operation. Only the following labels are allowed:
+    ///
+    /// - Labels describing monitored resources as defined in
+    ///    the service configuration.
+    /// - Default labels of metric values. When specified, labels defined in the
+    ///    metric value override these default.
+    /// - The following labels defined by Google Cloud Platform:
+    ///      - `cloud.googleapis.com/location` describing the location where the
+    ///         operation happened,
+    ///      - `servicecontrol.googleapis.com/user_agent` describing the user agent
+    ///         of the API request,
+    ///      - `servicecontrol.googleapis.com/service_agent` describing the service
+    ///         used to handle the API request (e.g. ESP),
+    ///      - `servicecontrol.googleapis.com/platform` describing the platform
+    ///         where the API is served, such as App Engine, Compute Engine, or
+    ///         Kubernetes Engine.
+    #[prost(btree_map = "string, string", tag = "6")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Represents information about this operation. Each MetricValueSet
+    /// corresponds to a metric defined in the service configuration.
+    /// The data type used in the MetricValueSet must agree with
+    /// the data type specified in the metric definition.
+    ///
+    /// Within a single operation, it is not allowed to have more than one
+    /// MetricValue instances that have the same metric names and identical
+    /// label value combinations. If a request has such duplicated MetricValue
+    /// instances, the entire request is rejected with
+    /// an invalid argument error.
+    #[prost(message, repeated, tag = "7")]
+    pub metric_value_sets: ::prost::alloc::vec::Vec<MetricValueSet>,
+    /// Represents information to be logged.
+    #[prost(message, repeated, tag = "8")]
+    pub log_entries: ::prost::alloc::vec::Vec<LogEntry>,
+    /// DO NOT USE. This is an experimental field.
+    #[prost(enumeration = "operation::Importance", tag = "11")]
+    pub importance: i32,
+    /// Unimplemented.
+    #[prost(message, repeated, tag = "16")]
+    pub extensions: ::prost::alloc::vec::Vec<::prost_types::Any>,
+}
+/// Nested message and enum types in `Operation`.
+pub mod operation {
+    /// Defines the importance of the data contained in the operation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Importance {
+        /// Allows data caching, batching, and aggregation. It provides
+        /// higher performance with higher data loss risk.
+        Low = 0,
+        /// Disables data aggregation to minimize data loss. It is for operations
+        /// that contains significant monetary value or audit trail. This feature
+        /// only applies to the client libraries.
+        High = 1,
+    }
+    impl Importance {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Importance::Low => "LOW",
+                Importance::High => "HIGH",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "LOW" => Some(Self::Low),
+                "HIGH" => Some(Self::High),
+                _ => None,
+            }
+        }
+    }
+}
+/// Request message for the Check method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckRequest {
+    /// The service name as specified in its service configuration. For example,
+    /// `"pubsub.googleapis.com"`.
+    ///
+    /// See
+    /// \[google.api.Service\](<https://cloud.google.com/service-management/reference/rpc/google.api#google.api.Service>)
+    /// for the definition of a service name.
+    #[prost(string, tag = "1")]
+    pub service_name: ::prost::alloc::string::String,
+    /// The operation to be checked.
+    #[prost(message, optional, tag = "2")]
+    pub operation: ::core::option::Option<Operation>,
+    /// Specifies which version of service configuration should be used to process
+    /// the request.
+    ///
+    /// If unspecified or no matching version can be found, the
+    /// latest one will be used.
+    #[prost(string, tag = "4")]
+    pub service_config_id: ::prost::alloc::string::String,
+}
+/// Response message for the Check method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CheckResponse {
+    /// The same operation_id value used in the
+    /// \[CheckRequest][google.api.servicecontrol.v1.CheckRequest\]. Used for logging
+    /// and diagnostics purposes.
+    #[prost(string, tag = "1")]
+    pub operation_id: ::prost::alloc::string::String,
+    /// Indicate the decision of the check.
+    ///
+    /// If no check errors are present, the service should process the operation.
+    /// Otherwise the service should use the list of errors to determine the
+    /// appropriate action.
+    #[prost(message, repeated, tag = "2")]
+    pub check_errors: ::prost::alloc::vec::Vec<CheckError>,
+    /// The actual config id used to process the request.
+    #[prost(string, tag = "5")]
+    pub service_config_id: ::prost::alloc::string::String,
+    /// The current service rollout id used to process the request.
+    #[prost(string, tag = "11")]
+    pub service_rollout_id: ::prost::alloc::string::String,
+    /// Feedback data returned from the server during processing a Check request.
+    #[prost(message, optional, tag = "6")]
+    pub check_info: ::core::option::Option<check_response::CheckInfo>,
+}
+/// Nested message and enum types in `CheckResponse`.
+pub mod check_response {
+    /// Contains additional information about the check operation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CheckInfo {
+        /// A list of fields and label keys that are ignored by the server.
+        /// The client doesn't need to send them for following requests to improve
+        /// performance and allow better aggregation.
+        #[prost(string, repeated, tag = "1")]
+        pub unused_arguments: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Consumer info of this check.
+        #[prost(message, optional, tag = "2")]
+        pub consumer_info: ::core::option::Option<ConsumerInfo>,
+    }
+    /// `ConsumerInfo` provides information about the consumer.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConsumerInfo {
+        /// The Google cloud project number, e.g. 1234567890. A value of 0 indicates
+        /// no project number is found.
+        ///
+        /// NOTE: This field is deprecated after we support flexible consumer
+        /// id. New code should not depend on this field anymore.
+        #[prost(int64, tag = "1")]
+        pub project_number: i64,
+        /// The type of the consumer which should have been defined in
+        /// [Google Resource Manager](<https://cloud.google.com/resource-manager/>).
+        #[prost(enumeration = "consumer_info::ConsumerType", tag = "2")]
+        pub r#type: i32,
+        /// The consumer identity number, can be Google cloud project number, folder
+        /// number or organization number e.g. 1234567890. A value of 0 indicates no
+        /// consumer number is found.
+        #[prost(int64, tag = "3")]
+        pub consumer_number: i64,
+    }
+    /// Nested message and enum types in `ConsumerInfo`.
+    pub mod consumer_info {
+        /// The type of the consumer as defined in
+        /// [Google Resource Manager](<https://cloud.google.com/resource-manager/>).
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ConsumerType {
+            /// This is never used.
+            Unspecified = 0,
+            /// The consumer is a Google Cloud Project.
+            Project = 1,
+            /// The consumer is a Google Cloud Folder.
+            Folder = 2,
+            /// The consumer is a Google Cloud Organization.
+            Organization = 3,
+            /// Service-specific resource container which is defined by the service
+            /// producer to offer their users the ability to manage service control
+            /// functionalities at a finer level of granularity than the PROJECT.
+            ServiceSpecific = 4,
+        }
+        impl ConsumerType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ConsumerType::Unspecified => "CONSUMER_TYPE_UNSPECIFIED",
+                    ConsumerType::Project => "PROJECT",
+                    ConsumerType::Folder => "FOLDER",
+                    ConsumerType::Organization => "ORGANIZATION",
+                    ConsumerType::ServiceSpecific => "SERVICE_SPECIFIC",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CONSUMER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "PROJECT" => Some(Self::Project),
+                    "FOLDER" => Some(Self::Folder),
+                    "ORGANIZATION" => Some(Self::Organization),
+                    "SERVICE_SPECIFIC" => Some(Self::ServiceSpecific),
+                    _ => None,
+                }
+            }
+        }
+    }
+}
+/// Request message for the Report method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReportRequest {
+    /// The service name as specified in its service configuration. For example,
+    /// `"pubsub.googleapis.com"`.
+    ///
+    /// See
+    /// \[google.api.Service\](<https://cloud.google.com/service-management/reference/rpc/google.api#google.api.Service>)
+    /// for the definition of a service name.
+    #[prost(string, tag = "1")]
+    pub service_name: ::prost::alloc::string::String,
+    /// Operations to be reported.
+    ///
+    /// Typically the service should report one operation per request.
+    /// Putting multiple operations into a single request is allowed, but should
+    /// be used only when multiple operations are natually available at the time
+    /// of the report.
+    ///
+    /// There is no limit on the number of operations in the same ReportRequest,
+    /// however the ReportRequest size should be no larger than 1MB. See
+    /// \[ReportResponse.report_errors][google.api.servicecontrol.v1.ReportResponse.report_errors\]
+    /// for partial failure behavior.
+    #[prost(message, repeated, tag = "2")]
+    pub operations: ::prost::alloc::vec::Vec<Operation>,
+    /// Specifies which version of service config should be used to process the
+    /// request.
+    ///
+    /// If unspecified or no matching version can be found, the
+    /// latest one will be used.
+    #[prost(string, tag = "3")]
+    pub service_config_id: ::prost::alloc::string::String,
+}
+/// Response message for the Report method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReportResponse {
+    /// Partial failures, one for each `Operation` in the request that failed
+    /// processing. There are three possible combinations of the RPC status:
+    ///
+    /// 1. The combination of a successful RPC status and an empty `report_errors`
+    ///     list indicates a complete success where all `Operations` in the
+    ///     request are processed successfully.
+    /// 2. The combination of a successful RPC status and a non-empty
+    ///     `report_errors` list indicates a partial success where some
+    ///     `Operations` in the request succeeded. Each
+    ///     `Operation` that failed processing has a corresponding item
+    ///     in this list.
+    /// 3. A failed RPC status indicates a general non-deterministic failure.
+    ///     When this happens, it's impossible to know which of the
+    ///     'Operations' in the request succeeded or failed.
+    #[prost(message, repeated, tag = "1")]
+    pub report_errors: ::prost::alloc::vec::Vec<report_response::ReportError>,
+    /// The actual config id used to process the request.
+    #[prost(string, tag = "2")]
+    pub service_config_id: ::prost::alloc::string::String,
+    /// The current service rollout id used to process the request.
+    #[prost(string, tag = "4")]
+    pub service_rollout_id: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ReportResponse`.
+pub mod report_response {
+    /// Represents the processing error of one
+    /// \[Operation][google.api.servicecontrol.v1.Operation\] in the request.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ReportError {
+        /// The
+        /// \[Operation.operation_id][google.api.servicecontrol.v1.Operation.operation_id\]
+        /// value from the request.
+        #[prost(string, tag = "1")]
+        pub operation_id: ::prost::alloc::string::String,
+        /// Details of the error when processing the
+        /// \[Operation][google.api.servicecontrol.v1.Operation\].
+        #[prost(message, optional, tag = "2")]
+        pub status: ::core::option::Option<super::super::super::super::rpc::Status>,
+    }
+}
+/// Generated client implementations.
+pub mod service_controller_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// [Google Service Control API](/service-control/overview)
+    ///
+    /// Lets clients check and report operations against a [managed
+    /// service](https://cloud.google.com/service-management/reference/rpc/google.api/servicemanagement.v1#google.api.servicemanagement.v1.ManagedService).
+    #[derive(Debug, Clone)]
+    pub struct ServiceControllerClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ServiceControllerClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ServiceControllerClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ServiceControllerClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Checks whether an operation on a service should be allowed to proceed
+        /// based on the configuration of the service and related policies. It must be
+        /// called before the operation is executed.
+        ///
+        /// If feasible, the client should cache the check results and reuse them for
+        /// 60 seconds. In case of any server errors, the client should rely on the
+        /// cached results for much longer time to avoid outage.
+        /// WARNING: There is general 60s delay for the configuration and policy
+        /// propagation, therefore callers MUST NOT depend on the `Check` method having
+        /// the latest policy information.
+        ///
+        /// NOTE: the [CheckRequest][google.api.servicecontrol.v1.CheckRequest] has
+        /// the size limit (wire-format byte size) of 1MB.
+        ///
+        /// This method requires the `servicemanagement.services.check` permission
+        /// on the specified service. For more information, see
+        /// [Cloud IAM](https://cloud.google.com/iam).
+        pub async fn check(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CheckRequest>,
+        ) -> Result<tonic::Response<super::CheckResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.api.servicecontrol.v1.ServiceController/Check",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Reports operation results to Google Service Control, such as logs and
+        /// metrics. It should be called after an operation is completed.
+        ///
+        /// If feasible, the client should aggregate reporting data for up to 5
+        /// seconds to reduce API traffic. Limiting aggregation to 5 seconds is to
+        /// reduce data loss during client crashes. Clients should carefully choose
+        /// the aggregation time window to avoid data loss risk more than 0.01%
+        /// for business and compliance reasons.
+        ///
+        /// NOTE: the [ReportRequest][google.api.servicecontrol.v1.ReportRequest] has
+        /// the size limit (wire-format byte size) of 1MB.
+        ///
+        /// This method requires the `servicemanagement.services.report` permission
+        /// on the specified service. For more information, see
+        /// [Google Cloud IAM](https://cloud.google.com/iam).
+        pub async fn report(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ReportRequest>,
+        ) -> Result<tonic::Response<super::ReportResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.api.servicecontrol.v1.ServiceController/Report",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

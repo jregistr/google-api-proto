@@ -1,3 +1,50 @@
+/// A custom column.
+/// See Search Ads 360 custom column at
+/// <https://support.google.com/sa360/answer/9633916>
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CustomColumn {
+    /// Immutable. The resource name of the custom column.
+    /// Custom column resource names have the form:
+    ///
+    /// `customers/{customer_id}/customColumns/{custom_column_id}`
+    #[prost(string, tag = "1")]
+    pub resource_name: ::prost::alloc::string::String,
+    /// Output only. ID of the custom column.
+    #[prost(int64, tag = "2")]
+    pub id: i64,
+    /// Output only. User-defined name of the custom column.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. User-defined description of the custom column.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The type of the result value of the custom column.
+    #[prost(
+        enumeration = "super::enums::custom_column_value_type_enum::CustomColumnValueType",
+        tag = "5"
+    )]
+    pub value_type: i32,
+    /// Output only. True when the custom column is referring to one or more
+    /// attributes.
+    #[prost(bool, tag = "6")]
+    pub references_attributes: bool,
+    /// Output only. True when the custom column is referring to one or more
+    /// metrics.
+    #[prost(bool, tag = "7")]
+    pub references_metrics: bool,
+    /// Output only. True when the custom column is available to be used in the
+    /// query of SearchAds360Service.Search and SearchAds360Service.SearchStream.
+    #[prost(bool, tag = "8")]
+    pub queryable: bool,
+    /// Output only. The list of the referenced system columns of this custom
+    /// column. For example, A custom column "sum of impressions and clicks" has
+    /// referenced system columns of {"metrics.clicks", "metrics.impressions"}.
+    #[prost(string, repeated, tag = "9")]
+    pub referenced_system_columns: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
+}
 /// An ad group.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1630,51 +1677,4 @@ pub struct SearchAds360Field {
     /// Output only. Whether the field artifact is repeated.
     #[prost(bool, optional, tag = "31")]
     pub is_repeated: ::core::option::Option<bool>,
-}
-/// A custom column.
-/// See Search Ads 360 custom column at
-/// <https://support.google.com/sa360/answer/9633916>
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomColumn {
-    /// Immutable. The resource name of the custom column.
-    /// Custom column resource names have the form:
-    ///
-    /// `customers/{customer_id}/customColumns/{custom_column_id}`
-    #[prost(string, tag = "1")]
-    pub resource_name: ::prost::alloc::string::String,
-    /// Output only. ID of the custom column.
-    #[prost(int64, tag = "2")]
-    pub id: i64,
-    /// Output only. User-defined name of the custom column.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. User-defined description of the custom column.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The type of the result value of the custom column.
-    #[prost(
-        enumeration = "super::enums::custom_column_value_type_enum::CustomColumnValueType",
-        tag = "5"
-    )]
-    pub value_type: i32,
-    /// Output only. True when the custom column is referring to one or more
-    /// attributes.
-    #[prost(bool, tag = "6")]
-    pub references_attributes: bool,
-    /// Output only. True when the custom column is referring to one or more
-    /// metrics.
-    #[prost(bool, tag = "7")]
-    pub references_metrics: bool,
-    /// Output only. True when the custom column is available to be used in the
-    /// query of SearchAds360Service.Search and SearchAds360Service.SearchStream.
-    #[prost(bool, tag = "8")]
-    pub queryable: bool,
-    /// Output only. The list of the referenced system columns of this custom
-    /// column. For example, A custom column "sum of impressions and clicks" has
-    /// referenced system columns of {"metrics.clicks", "metrics.impressions"}.
-    #[prost(string, repeated, tag = "9")]
-    pub referenced_system_columns: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
 }

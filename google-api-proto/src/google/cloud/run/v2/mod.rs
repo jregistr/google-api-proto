@@ -1,406 +1,3 @@
-/// Defines a status condition for a resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Condition {
-    /// type is used to communicate the status of the reconciliation process.
-    /// See also:
-    /// <https://github.com/knative/serving/blob/main/docs/spec/errors.md#error-conditions-and-reporting>
-    /// Types common to all resources include:
-    /// * "Ready": True when the Resource is ready.
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// State of the condition.
-    #[prost(enumeration = "condition::State", tag = "2")]
-    pub state: i32,
-    /// Human readable message indicating details about the current status.
-    #[prost(string, tag = "3")]
-    pub message: ::prost::alloc::string::String,
-    /// Last time the condition transitioned from one status to another.
-    #[prost(message, optional, tag = "4")]
-    pub last_transition_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// How to interpret failures of this condition, one of Error, Warning, Info
-    #[prost(enumeration = "condition::Severity", tag = "5")]
-    pub severity: i32,
-    /// The reason for this condition. Depending on the condition type,
-    /// it will populate one of these fields.
-    /// Successful conditions cannot have a reason.
-    #[prost(oneof = "condition::Reasons", tags = "6, 9, 11")]
-    pub reasons: ::core::option::Option<condition::Reasons>,
-}
-/// Nested message and enum types in `Condition`.
-pub mod condition {
-    /// Represents the possible Condition states.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// The default value. This value is used if the state is omitted.
-        Unspecified = 0,
-        /// Transient state: Reconciliation has not started yet.
-        ConditionPending = 1,
-        /// Transient state: reconciliation is still in progress.
-        ConditionReconciling = 2,
-        /// Terminal state: Reconciliation did not succeed.
-        ConditionFailed = 3,
-        /// Terminal state: Reconciliation completed successfully.
-        ConditionSucceeded = 4,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::ConditionPending => "CONDITION_PENDING",
-                State::ConditionReconciling => "CONDITION_RECONCILING",
-                State::ConditionFailed => "CONDITION_FAILED",
-                State::ConditionSucceeded => "CONDITION_SUCCEEDED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CONDITION_PENDING" => Some(Self::ConditionPending),
-                "CONDITION_RECONCILING" => Some(Self::ConditionReconciling),
-                "CONDITION_FAILED" => Some(Self::ConditionFailed),
-                "CONDITION_SUCCEEDED" => Some(Self::ConditionSucceeded),
-                _ => None,
-            }
-        }
-    }
-    /// Represents the severity of the condition failures.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Severity {
-        /// Unspecified severity
-        Unspecified = 0,
-        /// Error severity.
-        Error = 1,
-        /// Warning severity.
-        Warning = 2,
-        /// Info severity.
-        Info = 3,
-    }
-    impl Severity {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
-                Severity::Error => "ERROR",
-                Severity::Warning => "WARNING",
-                Severity::Info => "INFO",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
-                "ERROR" => Some(Self::Error),
-                "WARNING" => Some(Self::Warning),
-                "INFO" => Some(Self::Info),
-                _ => None,
-            }
-        }
-    }
-    /// Reasons common to all types of conditions.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum CommonReason {
-        /// Default value.
-        Undefined = 0,
-        /// Reason unknown. Further details will be in message.
-        Unknown = 1,
-        /// Revision creation process failed.
-        RevisionFailed = 3,
-        /// Timed out waiting for completion.
-        ProgressDeadlineExceeded = 4,
-        /// The container image path is incorrect.
-        ContainerMissing = 6,
-        /// Insufficient permissions on the container image.
-        ContainerPermissionDenied = 7,
-        /// Container image is not authorized by policy.
-        ContainerImageUnauthorized = 8,
-        /// Container image policy authorization check failed.
-        ContainerImageAuthorizationCheckFailed = 9,
-        /// Insufficient permissions on encryption key.
-        EncryptionKeyPermissionDenied = 10,
-        /// Permission check on encryption key failed.
-        EncryptionKeyCheckFailed = 11,
-        /// At least one Access check on secrets failed.
-        SecretsAccessCheckFailed = 12,
-        /// Waiting for operation to complete.
-        WaitingForOperation = 13,
-        /// System will retry immediately.
-        ImmediateRetry = 14,
-        /// System will retry later; current attempt failed.
-        PostponedRetry = 15,
-        /// An internal error occurred. Further information may be in the message.
-        Internal = 16,
-    }
-    impl CommonReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CommonReason::Undefined => "COMMON_REASON_UNDEFINED",
-                CommonReason::Unknown => "UNKNOWN",
-                CommonReason::RevisionFailed => "REVISION_FAILED",
-                CommonReason::ProgressDeadlineExceeded => "PROGRESS_DEADLINE_EXCEEDED",
-                CommonReason::ContainerMissing => "CONTAINER_MISSING",
-                CommonReason::ContainerPermissionDenied => "CONTAINER_PERMISSION_DENIED",
-                CommonReason::ContainerImageUnauthorized => {
-                    "CONTAINER_IMAGE_UNAUTHORIZED"
-                }
-                CommonReason::ContainerImageAuthorizationCheckFailed => {
-                    "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED"
-                }
-                CommonReason::EncryptionKeyPermissionDenied => {
-                    "ENCRYPTION_KEY_PERMISSION_DENIED"
-                }
-                CommonReason::EncryptionKeyCheckFailed => "ENCRYPTION_KEY_CHECK_FAILED",
-                CommonReason::SecretsAccessCheckFailed => "SECRETS_ACCESS_CHECK_FAILED",
-                CommonReason::WaitingForOperation => "WAITING_FOR_OPERATION",
-                CommonReason::ImmediateRetry => "IMMEDIATE_RETRY",
-                CommonReason::PostponedRetry => "POSTPONED_RETRY",
-                CommonReason::Internal => "INTERNAL",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "COMMON_REASON_UNDEFINED" => Some(Self::Undefined),
-                "UNKNOWN" => Some(Self::Unknown),
-                "REVISION_FAILED" => Some(Self::RevisionFailed),
-                "PROGRESS_DEADLINE_EXCEEDED" => Some(Self::ProgressDeadlineExceeded),
-                "CONTAINER_MISSING" => Some(Self::ContainerMissing),
-                "CONTAINER_PERMISSION_DENIED" => Some(Self::ContainerPermissionDenied),
-                "CONTAINER_IMAGE_UNAUTHORIZED" => Some(Self::ContainerImageUnauthorized),
-                "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED" => {
-                    Some(Self::ContainerImageAuthorizationCheckFailed)
-                }
-                "ENCRYPTION_KEY_PERMISSION_DENIED" => {
-                    Some(Self::EncryptionKeyPermissionDenied)
-                }
-                "ENCRYPTION_KEY_CHECK_FAILED" => Some(Self::EncryptionKeyCheckFailed),
-                "SECRETS_ACCESS_CHECK_FAILED" => Some(Self::SecretsAccessCheckFailed),
-                "WAITING_FOR_OPERATION" => Some(Self::WaitingForOperation),
-                "IMMEDIATE_RETRY" => Some(Self::ImmediateRetry),
-                "POSTPONED_RETRY" => Some(Self::PostponedRetry),
-                "INTERNAL" => Some(Self::Internal),
-                _ => None,
-            }
-        }
-    }
-    /// Reasons specific to Revision resource.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum RevisionReason {
-        /// Default value.
-        Undefined = 0,
-        /// Revision in Pending state.
-        Pending = 1,
-        /// Revision is in Reserve state.
-        Reserve = 2,
-        /// Revision is Retired.
-        Retired = 3,
-        /// Revision is being retired.
-        Retiring = 4,
-        /// Revision is being recreated.
-        Recreating = 5,
-        /// There was a health check error.
-        HealthCheckContainerError = 6,
-        /// Health check failed due to user error from customized path of the
-        /// container. System will retry.
-        CustomizedPathResponsePending = 7,
-        /// A revision with min_instance_count > 0 was created and is reserved, but
-        /// it was not configured to serve traffic, so it's not live. This can also
-        /// happen momentarily during traffic migration.
-        MinInstancesNotProvisioned = 8,
-        /// The maximum allowed number of active revisions has been reached.
-        ActiveRevisionLimitReached = 9,
-        /// There was no deployment defined.
-        /// This value is no longer used, but Services created in older versions of
-        /// the API might contain this value.
-        NoDeployment = 10,
-        /// A revision's container has no port specified since the revision is of a
-        /// manually scaled service with 0 instance count
-        HealthCheckSkipped = 11,
-        /// A revision with min_instance_count > 0 was created and is waiting for
-        /// enough instances to begin a traffic migration.
-        MinInstancesWarming = 12,
-    }
-    impl RevisionReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                RevisionReason::Undefined => "REVISION_REASON_UNDEFINED",
-                RevisionReason::Pending => "PENDING",
-                RevisionReason::Reserve => "RESERVE",
-                RevisionReason::Retired => "RETIRED",
-                RevisionReason::Retiring => "RETIRING",
-                RevisionReason::Recreating => "RECREATING",
-                RevisionReason::HealthCheckContainerError => {
-                    "HEALTH_CHECK_CONTAINER_ERROR"
-                }
-                RevisionReason::CustomizedPathResponsePending => {
-                    "CUSTOMIZED_PATH_RESPONSE_PENDING"
-                }
-                RevisionReason::MinInstancesNotProvisioned => {
-                    "MIN_INSTANCES_NOT_PROVISIONED"
-                }
-                RevisionReason::ActiveRevisionLimitReached => {
-                    "ACTIVE_REVISION_LIMIT_REACHED"
-                }
-                RevisionReason::NoDeployment => "NO_DEPLOYMENT",
-                RevisionReason::HealthCheckSkipped => "HEALTH_CHECK_SKIPPED",
-                RevisionReason::MinInstancesWarming => "MIN_INSTANCES_WARMING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "REVISION_REASON_UNDEFINED" => Some(Self::Undefined),
-                "PENDING" => Some(Self::Pending),
-                "RESERVE" => Some(Self::Reserve),
-                "RETIRED" => Some(Self::Retired),
-                "RETIRING" => Some(Self::Retiring),
-                "RECREATING" => Some(Self::Recreating),
-                "HEALTH_CHECK_CONTAINER_ERROR" => Some(Self::HealthCheckContainerError),
-                "CUSTOMIZED_PATH_RESPONSE_PENDING" => {
-                    Some(Self::CustomizedPathResponsePending)
-                }
-                "MIN_INSTANCES_NOT_PROVISIONED" => Some(Self::MinInstancesNotProvisioned),
-                "ACTIVE_REVISION_LIMIT_REACHED" => Some(Self::ActiveRevisionLimitReached),
-                "NO_DEPLOYMENT" => Some(Self::NoDeployment),
-                "HEALTH_CHECK_SKIPPED" => Some(Self::HealthCheckSkipped),
-                "MIN_INSTANCES_WARMING" => Some(Self::MinInstancesWarming),
-                _ => None,
-            }
-        }
-    }
-    /// Reasons specific to Execution resource.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ExecutionReason {
-        /// Default value.
-        Undefined = 0,
-        /// Internal system error getting execution status. System will retry.
-        JobStatusServicePollingError = 1,
-        /// A task reached its retry limit and the last attempt failed due to the
-        /// user container exiting with a non-zero exit code.
-        NonZeroExitCode = 2,
-        /// The execution was cancelled by users.
-        Cancelled = 3,
-        /// The execution is in the process of being cancelled.
-        Cancelling = 4,
-    }
-    impl ExecutionReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ExecutionReason::Undefined => "EXECUTION_REASON_UNDEFINED",
-                ExecutionReason::JobStatusServicePollingError => {
-                    "JOB_STATUS_SERVICE_POLLING_ERROR"
-                }
-                ExecutionReason::NonZeroExitCode => "NON_ZERO_EXIT_CODE",
-                ExecutionReason::Cancelled => "CANCELLED",
-                ExecutionReason::Cancelling => "CANCELLING",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "EXECUTION_REASON_UNDEFINED" => Some(Self::Undefined),
-                "JOB_STATUS_SERVICE_POLLING_ERROR" => {
-                    Some(Self::JobStatusServicePollingError)
-                }
-                "NON_ZERO_EXIT_CODE" => Some(Self::NonZeroExitCode),
-                "CANCELLED" => Some(Self::Cancelled),
-                "CANCELLING" => Some(Self::Cancelling),
-                _ => None,
-            }
-        }
-    }
-    /// The reason for this condition. Depending on the condition type,
-    /// it will populate one of these fields.
-    /// Successful conditions cannot have a reason.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Reasons {
-        /// A common (service-level) reason for this condition.
-        #[prost(enumeration = "CommonReason", tag = "6")]
-        Reason(i32),
-        /// A reason for the revision condition.
-        #[prost(enumeration = "RevisionReason", tag = "9")]
-        RevisionReason(i32),
-        /// A reason for the execution condition.
-        #[prost(enumeration = "ExecutionReason", tag = "11")]
-        ExecutionReason(i32),
-    }
-}
 /// A single application container.
 /// This specifies both the container to run, the command to run in the container
 /// and the arguments to supply to it.
@@ -1032,6 +629,626 @@ pub mod task_template {
         MaxRetries(i32),
     }
 }
+/// ExecutionTemplate describes the data an execution should have when created
+/// from a template.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExecutionTemplate {
+    /// Unstructured key value map that can be used to organize and categorize
+    /// objects.
+    /// User-provided labels are shared with Google's billing system, so they can
+    /// be used to filter, or break down billing charges by team, component,
+    /// environment, state, etc. For more information, visit
+    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
+    /// <https://cloud.google.com/run/docs/configuring/labels.>
+    ///
+    /// <p>Cloud Run API v2 does not support labels with `run.googleapis.com`,
+    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
+    /// namespaces, and they will be rejected. All system labels in v1 now have a
+    /// corresponding field in v2 ExecutionTemplate.
+    #[prost(btree_map = "string, string", tag = "1")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Unstructured key value map that may be set by external tools to store and
+    /// arbitrary metadata. They are not queryable and should be preserved
+    /// when modifying objects.
+    ///
+    /// <p>Cloud Run API v2 does not support annotations with `run.googleapis.com`,
+    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
+    /// namespaces, and they will be rejected. All system annotations in v1 now
+    /// have a corresponding field in v2 ExecutionTemplate.
+    ///
+    /// <p>This field follows Kubernetes annotations' namespacing, limits, and
+    /// rules.
+    #[prost(btree_map = "string, string", tag = "2")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Specifies the maximum desired number of tasks the execution should run at
+    /// given time. Must be <= task_count.
+    /// When the job is run, if this field is 0 or unset, the maximum possible
+    /// value will be used for that execution.
+    /// The actual number of tasks running in steady state will be less than this
+    /// number when there are fewer tasks waiting to be completed remaining,
+    /// i.e. when the work left to do is less than max parallelism.
+    #[prost(int32, tag = "3")]
+    pub parallelism: i32,
+    /// Specifies the desired number of tasks the execution should run.
+    /// Setting to 1 means that parallelism is limited to 1 and the success of
+    /// that task signals the success of the execution. Defaults to 1.
+    #[prost(int32, tag = "4")]
+    pub task_count: i32,
+    /// Required. Describes the task(s) that will be created when executing an
+    /// execution.
+    #[prost(message, optional, tag = "5")]
+    pub template: ::core::option::Option<TaskTemplate>,
+}
+/// Holds a single traffic routing entry for the Service. Allocations can be done
+/// to a specific Revision name, or pointing to the latest Ready Revision.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTarget {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
+    pub r#type: i32,
+    /// Revision to which to send this portion of traffic, if traffic allocation is
+    /// by revision.
+    #[prost(string, tag = "2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    /// This defaults to zero if unspecified.
+    #[prost(int32, tag = "3")]
+    pub percent: i32,
+    /// Indicates a string to be part of the URI to exclusively reference this
+    /// target.
+    #[prost(string, tag = "4")]
+    pub tag: ::prost::alloc::string::String,
+}
+/// Represents the observed state of a single `TrafficTarget` entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficTargetStatus {
+    /// The allocation type for this traffic target.
+    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
+    pub r#type: i32,
+    /// Revision to which this traffic is sent.
+    #[prost(string, tag = "2")]
+    pub revision: ::prost::alloc::string::String,
+    /// Specifies percent of the traffic to this Revision.
+    #[prost(int32, tag = "3")]
+    pub percent: i32,
+    /// Indicates the string used in the URI to exclusively reference this target.
+    #[prost(string, tag = "4")]
+    pub tag: ::prost::alloc::string::String,
+    /// Displays the target URI.
+    #[prost(string, tag = "5")]
+    pub uri: ::prost::alloc::string::String,
+}
+/// The type of instance allocation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TrafficTargetAllocationType {
+    /// Unspecified instance allocation type.
+    Unspecified = 0,
+    /// Allocates instances to the Service's latest ready Revision.
+    Latest = 1,
+    /// Allocates instances to a Revision by name.
+    Revision = 2,
+}
+impl TrafficTargetAllocationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TrafficTargetAllocationType::Unspecified => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED"
+            }
+            TrafficTargetAllocationType::Latest => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+            }
+            TrafficTargetAllocationType::Revision => {
+                "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION"
+            }
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST" => Some(Self::Latest),
+            "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION" => Some(Self::Revision),
+            _ => None,
+        }
+    }
+}
+/// RevisionTemplate describes the data a revision should have when created from
+/// a template.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RevisionTemplate {
+    /// The unique name for the revision. If this field is omitted, it will be
+    /// automatically generated based on the Service name.
+    #[prost(string, tag = "1")]
+    pub revision: ::prost::alloc::string::String,
+    /// Unstructured key value map that can be used to organize and categorize
+    /// objects.
+    /// User-provided labels are shared with Google's billing system, so they can
+    /// be used to filter, or break down billing charges by team, component,
+    /// environment, state, etc. For more information, visit
+    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
+    /// <https://cloud.google.com/run/docs/configuring/labels.>
+    ///
+    /// <p>Cloud Run API v2 does not support labels with `run.googleapis.com`,
+    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
+    /// namespaces, and they will be rejected. All system labels in v1 now have a
+    /// corresponding field in v2 RevisionTemplate.
+    #[prost(btree_map = "string, string", tag = "2")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Unstructured key value map that may be set by external tools to store and
+    /// arbitrary metadata. They are not queryable and should be preserved
+    /// when modifying objects.
+    ///
+    /// <p>Cloud Run API v2 does not support annotations with `run.googleapis.com`,
+    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
+    /// namespaces, and they will be rejected. All system annotations in v1 now
+    /// have a corresponding field in v2 RevisionTemplate.
+    ///
+    /// <p>This field follows Kubernetes annotations' namespacing, limits, and
+    /// rules.
+    #[prost(btree_map = "string, string", tag = "3")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Scaling settings for this Revision.
+    #[prost(message, optional, tag = "4")]
+    pub scaling: ::core::option::Option<RevisionScaling>,
+    /// VPC Access configuration to use for this Revision. For more information,
+    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
+    #[prost(message, optional, tag = "6")]
+    pub vpc_access: ::core::option::Option<VpcAccess>,
+    /// Max allowed time for an instance to respond to a request.
+    #[prost(message, optional, tag = "8")]
+    pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Email address of the IAM service account associated with the revision of
+    /// the service. The service account represents the identity of the running
+    /// revision, and determines what permissions the revision has. If not
+    /// provided, the revision will use the project's default service account.
+    #[prost(string, tag = "9")]
+    pub service_account: ::prost::alloc::string::String,
+    /// Holds the single container that defines the unit of execution for this
+    /// Revision.
+    #[prost(message, repeated, tag = "10")]
+    pub containers: ::prost::alloc::vec::Vec<Container>,
+    /// A list of Volumes to make available to containers.
+    #[prost(message, repeated, tag = "11")]
+    pub volumes: ::prost::alloc::vec::Vec<Volume>,
+    /// The sandbox environment to host this Revision.
+    #[prost(enumeration = "ExecutionEnvironment", tag = "13")]
+    pub execution_environment: i32,
+    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
+    /// this container image. For more information, go to
+    /// <https://cloud.google.com/run/docs/securing/using-cmek>
+    #[prost(string, tag = "14")]
+    pub encryption_key: ::prost::alloc::string::String,
+    /// Sets the maximum number of requests that each serving instance can receive.
+    #[prost(int32, tag = "15")]
+    pub max_instance_request_concurrency: i32,
+    /// Enable session affinity.
+    #[prost(bool, tag = "19")]
+    pub session_affinity: bool,
+}
+/// Defines a status condition for a resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Condition {
+    /// type is used to communicate the status of the reconciliation process.
+    /// See also:
+    /// <https://github.com/knative/serving/blob/main/docs/spec/errors.md#error-conditions-and-reporting>
+    /// Types common to all resources include:
+    /// * "Ready": True when the Resource is ready.
+    #[prost(string, tag = "1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// State of the condition.
+    #[prost(enumeration = "condition::State", tag = "2")]
+    pub state: i32,
+    /// Human readable message indicating details about the current status.
+    #[prost(string, tag = "3")]
+    pub message: ::prost::alloc::string::String,
+    /// Last time the condition transitioned from one status to another.
+    #[prost(message, optional, tag = "4")]
+    pub last_transition_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// How to interpret failures of this condition, one of Error, Warning, Info
+    #[prost(enumeration = "condition::Severity", tag = "5")]
+    pub severity: i32,
+    /// The reason for this condition. Depending on the condition type,
+    /// it will populate one of these fields.
+    /// Successful conditions cannot have a reason.
+    #[prost(oneof = "condition::Reasons", tags = "6, 9, 11")]
+    pub reasons: ::core::option::Option<condition::Reasons>,
+}
+/// Nested message and enum types in `Condition`.
+pub mod condition {
+    /// Represents the possible Condition states.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// The default value. This value is used if the state is omitted.
+        Unspecified = 0,
+        /// Transient state: Reconciliation has not started yet.
+        ConditionPending = 1,
+        /// Transient state: reconciliation is still in progress.
+        ConditionReconciling = 2,
+        /// Terminal state: Reconciliation did not succeed.
+        ConditionFailed = 3,
+        /// Terminal state: Reconciliation completed successfully.
+        ConditionSucceeded = 4,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::ConditionPending => "CONDITION_PENDING",
+                State::ConditionReconciling => "CONDITION_RECONCILING",
+                State::ConditionFailed => "CONDITION_FAILED",
+                State::ConditionSucceeded => "CONDITION_SUCCEEDED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONDITION_PENDING" => Some(Self::ConditionPending),
+                "CONDITION_RECONCILING" => Some(Self::ConditionReconciling),
+                "CONDITION_FAILED" => Some(Self::ConditionFailed),
+                "CONDITION_SUCCEEDED" => Some(Self::ConditionSucceeded),
+                _ => None,
+            }
+        }
+    }
+    /// Represents the severity of the condition failures.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Severity {
+        /// Unspecified severity
+        Unspecified = 0,
+        /// Error severity.
+        Error = 1,
+        /// Warning severity.
+        Warning = 2,
+        /// Info severity.
+        Info = 3,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Error => "ERROR",
+                Severity::Warning => "WARNING",
+                Severity::Info => "INFO",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "ERROR" => Some(Self::Error),
+                "WARNING" => Some(Self::Warning),
+                "INFO" => Some(Self::Info),
+                _ => None,
+            }
+        }
+    }
+    /// Reasons common to all types of conditions.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum CommonReason {
+        /// Default value.
+        Undefined = 0,
+        /// Reason unknown. Further details will be in message.
+        Unknown = 1,
+        /// Revision creation process failed.
+        RevisionFailed = 3,
+        /// Timed out waiting for completion.
+        ProgressDeadlineExceeded = 4,
+        /// The container image path is incorrect.
+        ContainerMissing = 6,
+        /// Insufficient permissions on the container image.
+        ContainerPermissionDenied = 7,
+        /// Container image is not authorized by policy.
+        ContainerImageUnauthorized = 8,
+        /// Container image policy authorization check failed.
+        ContainerImageAuthorizationCheckFailed = 9,
+        /// Insufficient permissions on encryption key.
+        EncryptionKeyPermissionDenied = 10,
+        /// Permission check on encryption key failed.
+        EncryptionKeyCheckFailed = 11,
+        /// At least one Access check on secrets failed.
+        SecretsAccessCheckFailed = 12,
+        /// Waiting for operation to complete.
+        WaitingForOperation = 13,
+        /// System will retry immediately.
+        ImmediateRetry = 14,
+        /// System will retry later; current attempt failed.
+        PostponedRetry = 15,
+        /// An internal error occurred. Further information may be in the message.
+        Internal = 16,
+    }
+    impl CommonReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CommonReason::Undefined => "COMMON_REASON_UNDEFINED",
+                CommonReason::Unknown => "UNKNOWN",
+                CommonReason::RevisionFailed => "REVISION_FAILED",
+                CommonReason::ProgressDeadlineExceeded => "PROGRESS_DEADLINE_EXCEEDED",
+                CommonReason::ContainerMissing => "CONTAINER_MISSING",
+                CommonReason::ContainerPermissionDenied => "CONTAINER_PERMISSION_DENIED",
+                CommonReason::ContainerImageUnauthorized => {
+                    "CONTAINER_IMAGE_UNAUTHORIZED"
+                }
+                CommonReason::ContainerImageAuthorizationCheckFailed => {
+                    "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED"
+                }
+                CommonReason::EncryptionKeyPermissionDenied => {
+                    "ENCRYPTION_KEY_PERMISSION_DENIED"
+                }
+                CommonReason::EncryptionKeyCheckFailed => "ENCRYPTION_KEY_CHECK_FAILED",
+                CommonReason::SecretsAccessCheckFailed => "SECRETS_ACCESS_CHECK_FAILED",
+                CommonReason::WaitingForOperation => "WAITING_FOR_OPERATION",
+                CommonReason::ImmediateRetry => "IMMEDIATE_RETRY",
+                CommonReason::PostponedRetry => "POSTPONED_RETRY",
+                CommonReason::Internal => "INTERNAL",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMMON_REASON_UNDEFINED" => Some(Self::Undefined),
+                "UNKNOWN" => Some(Self::Unknown),
+                "REVISION_FAILED" => Some(Self::RevisionFailed),
+                "PROGRESS_DEADLINE_EXCEEDED" => Some(Self::ProgressDeadlineExceeded),
+                "CONTAINER_MISSING" => Some(Self::ContainerMissing),
+                "CONTAINER_PERMISSION_DENIED" => Some(Self::ContainerPermissionDenied),
+                "CONTAINER_IMAGE_UNAUTHORIZED" => Some(Self::ContainerImageUnauthorized),
+                "CONTAINER_IMAGE_AUTHORIZATION_CHECK_FAILED" => {
+                    Some(Self::ContainerImageAuthorizationCheckFailed)
+                }
+                "ENCRYPTION_KEY_PERMISSION_DENIED" => {
+                    Some(Self::EncryptionKeyPermissionDenied)
+                }
+                "ENCRYPTION_KEY_CHECK_FAILED" => Some(Self::EncryptionKeyCheckFailed),
+                "SECRETS_ACCESS_CHECK_FAILED" => Some(Self::SecretsAccessCheckFailed),
+                "WAITING_FOR_OPERATION" => Some(Self::WaitingForOperation),
+                "IMMEDIATE_RETRY" => Some(Self::ImmediateRetry),
+                "POSTPONED_RETRY" => Some(Self::PostponedRetry),
+                "INTERNAL" => Some(Self::Internal),
+                _ => None,
+            }
+        }
+    }
+    /// Reasons specific to Revision resource.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum RevisionReason {
+        /// Default value.
+        Undefined = 0,
+        /// Revision in Pending state.
+        Pending = 1,
+        /// Revision is in Reserve state.
+        Reserve = 2,
+        /// Revision is Retired.
+        Retired = 3,
+        /// Revision is being retired.
+        Retiring = 4,
+        /// Revision is being recreated.
+        Recreating = 5,
+        /// There was a health check error.
+        HealthCheckContainerError = 6,
+        /// Health check failed due to user error from customized path of the
+        /// container. System will retry.
+        CustomizedPathResponsePending = 7,
+        /// A revision with min_instance_count > 0 was created and is reserved, but
+        /// it was not configured to serve traffic, so it's not live. This can also
+        /// happen momentarily during traffic migration.
+        MinInstancesNotProvisioned = 8,
+        /// The maximum allowed number of active revisions has been reached.
+        ActiveRevisionLimitReached = 9,
+        /// There was no deployment defined.
+        /// This value is no longer used, but Services created in older versions of
+        /// the API might contain this value.
+        NoDeployment = 10,
+        /// A revision's container has no port specified since the revision is of a
+        /// manually scaled service with 0 instance count
+        HealthCheckSkipped = 11,
+        /// A revision with min_instance_count > 0 was created and is waiting for
+        /// enough instances to begin a traffic migration.
+        MinInstancesWarming = 12,
+    }
+    impl RevisionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                RevisionReason::Undefined => "REVISION_REASON_UNDEFINED",
+                RevisionReason::Pending => "PENDING",
+                RevisionReason::Reserve => "RESERVE",
+                RevisionReason::Retired => "RETIRED",
+                RevisionReason::Retiring => "RETIRING",
+                RevisionReason::Recreating => "RECREATING",
+                RevisionReason::HealthCheckContainerError => {
+                    "HEALTH_CHECK_CONTAINER_ERROR"
+                }
+                RevisionReason::CustomizedPathResponsePending => {
+                    "CUSTOMIZED_PATH_RESPONSE_PENDING"
+                }
+                RevisionReason::MinInstancesNotProvisioned => {
+                    "MIN_INSTANCES_NOT_PROVISIONED"
+                }
+                RevisionReason::ActiveRevisionLimitReached => {
+                    "ACTIVE_REVISION_LIMIT_REACHED"
+                }
+                RevisionReason::NoDeployment => "NO_DEPLOYMENT",
+                RevisionReason::HealthCheckSkipped => "HEALTH_CHECK_SKIPPED",
+                RevisionReason::MinInstancesWarming => "MIN_INSTANCES_WARMING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "REVISION_REASON_UNDEFINED" => Some(Self::Undefined),
+                "PENDING" => Some(Self::Pending),
+                "RESERVE" => Some(Self::Reserve),
+                "RETIRED" => Some(Self::Retired),
+                "RETIRING" => Some(Self::Retiring),
+                "RECREATING" => Some(Self::Recreating),
+                "HEALTH_CHECK_CONTAINER_ERROR" => Some(Self::HealthCheckContainerError),
+                "CUSTOMIZED_PATH_RESPONSE_PENDING" => {
+                    Some(Self::CustomizedPathResponsePending)
+                }
+                "MIN_INSTANCES_NOT_PROVISIONED" => Some(Self::MinInstancesNotProvisioned),
+                "ACTIVE_REVISION_LIMIT_REACHED" => Some(Self::ActiveRevisionLimitReached),
+                "NO_DEPLOYMENT" => Some(Self::NoDeployment),
+                "HEALTH_CHECK_SKIPPED" => Some(Self::HealthCheckSkipped),
+                "MIN_INSTANCES_WARMING" => Some(Self::MinInstancesWarming),
+                _ => None,
+            }
+        }
+    }
+    /// Reasons specific to Execution resource.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ExecutionReason {
+        /// Default value.
+        Undefined = 0,
+        /// Internal system error getting execution status. System will retry.
+        JobStatusServicePollingError = 1,
+        /// A task reached its retry limit and the last attempt failed due to the
+        /// user container exiting with a non-zero exit code.
+        NonZeroExitCode = 2,
+        /// The execution was cancelled by users.
+        Cancelled = 3,
+        /// The execution is in the process of being cancelled.
+        Cancelling = 4,
+    }
+    impl ExecutionReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ExecutionReason::Undefined => "EXECUTION_REASON_UNDEFINED",
+                ExecutionReason::JobStatusServicePollingError => {
+                    "JOB_STATUS_SERVICE_POLLING_ERROR"
+                }
+                ExecutionReason::NonZeroExitCode => "NON_ZERO_EXIT_CODE",
+                ExecutionReason::Cancelled => "CANCELLED",
+                ExecutionReason::Cancelling => "CANCELLING",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EXECUTION_REASON_UNDEFINED" => Some(Self::Undefined),
+                "JOB_STATUS_SERVICE_POLLING_ERROR" => {
+                    Some(Self::JobStatusServicePollingError)
+                }
+                "NON_ZERO_EXIT_CODE" => Some(Self::NonZeroExitCode),
+                "CANCELLED" => Some(Self::Cancelled),
+                "CANCELLING" => Some(Self::Cancelling),
+                _ => None,
+            }
+        }
+    }
+    /// The reason for this condition. Depending on the condition type,
+    /// it will populate one of these fields.
+    /// Successful conditions cannot have a reason.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Reasons {
+        /// A common (service-level) reason for this condition.
+        #[prost(enumeration = "CommonReason", tag = "6")]
+        Reason(i32),
+        /// A reason for the revision condition.
+        #[prost(enumeration = "RevisionReason", tag = "9")]
+        RevisionReason(i32),
+        /// A reason for the execution condition.
+        #[prost(enumeration = "ExecutionReason", tag = "11")]
+        ExecutionReason(i32),
+    }
+}
 /// Request message for obtaining a Execution by its full name.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1352,63 +1569,6 @@ pub mod executions_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
-}
-/// ExecutionTemplate describes the data an execution should have when created
-/// from a template.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExecutionTemplate {
-    /// Unstructured key value map that can be used to organize and categorize
-    /// objects.
-    /// User-provided labels are shared with Google's billing system, so they can
-    /// be used to filter, or break down billing charges by team, component,
-    /// environment, state, etc. For more information, visit
-    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
-    /// <https://cloud.google.com/run/docs/configuring/labels.>
-    ///
-    /// <p>Cloud Run API v2 does not support labels with `run.googleapis.com`,
-    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
-    /// namespaces, and they will be rejected. All system labels in v1 now have a
-    /// corresponding field in v2 ExecutionTemplate.
-    #[prost(btree_map = "string, string", tag = "1")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Unstructured key value map that may be set by external tools to store and
-    /// arbitrary metadata. They are not queryable and should be preserved
-    /// when modifying objects.
-    ///
-    /// <p>Cloud Run API v2 does not support annotations with `run.googleapis.com`,
-    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
-    /// namespaces, and they will be rejected. All system annotations in v1 now
-    /// have a corresponding field in v2 ExecutionTemplate.
-    ///
-    /// <p>This field follows Kubernetes annotations' namespacing, limits, and
-    /// rules.
-    #[prost(btree_map = "string, string", tag = "2")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Specifies the maximum desired number of tasks the execution should run at
-    /// given time. Must be <= task_count.
-    /// When the job is run, if this field is 0 or unset, the maximum possible
-    /// value will be used for that execution.
-    /// The actual number of tasks running in steady state will be less than this
-    /// number when there are fewer tasks waiting to be completed remaining,
-    /// i.e. when the work left to do is less than max parallelism.
-    #[prost(int32, tag = "3")]
-    pub parallelism: i32,
-    /// Specifies the desired number of tasks the execution should run.
-    /// Setting to 1 means that parallelism is limited to 1 and the success of
-    /// that task signals the success of the execution. Defaults to 1.
-    #[prost(int32, tag = "4")]
-    pub task_count: i32,
-    /// Required. Describes the task(s) that will be created when executing an
-    /// execution.
-    #[prost(message, optional, tag = "5")]
-    pub template: ::core::option::Option<TaskTemplate>,
 }
 /// Request message for creating a Job.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1963,166 +2123,6 @@ pub mod jobs_client {
         }
     }
 }
-/// Holds a single traffic routing entry for the Service. Allocations can be done
-/// to a specific Revision name, or pointing to the latest Ready Revision.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTarget {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
-    pub r#type: i32,
-    /// Revision to which to send this portion of traffic, if traffic allocation is
-    /// by revision.
-    #[prost(string, tag = "2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    /// This defaults to zero if unspecified.
-    #[prost(int32, tag = "3")]
-    pub percent: i32,
-    /// Indicates a string to be part of the URI to exclusively reference this
-    /// target.
-    #[prost(string, tag = "4")]
-    pub tag: ::prost::alloc::string::String,
-}
-/// Represents the observed state of a single `TrafficTarget` entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficTargetStatus {
-    /// The allocation type for this traffic target.
-    #[prost(enumeration = "TrafficTargetAllocationType", tag = "1")]
-    pub r#type: i32,
-    /// Revision to which this traffic is sent.
-    #[prost(string, tag = "2")]
-    pub revision: ::prost::alloc::string::String,
-    /// Specifies percent of the traffic to this Revision.
-    #[prost(int32, tag = "3")]
-    pub percent: i32,
-    /// Indicates the string used in the URI to exclusively reference this target.
-    #[prost(string, tag = "4")]
-    pub tag: ::prost::alloc::string::String,
-    /// Displays the target URI.
-    #[prost(string, tag = "5")]
-    pub uri: ::prost::alloc::string::String,
-}
-/// The type of instance allocation.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TrafficTargetAllocationType {
-    /// Unspecified instance allocation type.
-    Unspecified = 0,
-    /// Allocates instances to the Service's latest ready Revision.
-    Latest = 1,
-    /// Allocates instances to a Revision by name.
-    Revision = 2,
-}
-impl TrafficTargetAllocationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            TrafficTargetAllocationType::Unspecified => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED"
-            }
-            TrafficTargetAllocationType::Latest => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
-            }
-            TrafficTargetAllocationType::Revision => {
-                "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION"
-            }
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST" => Some(Self::Latest),
-            "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION" => Some(Self::Revision),
-            _ => None,
-        }
-    }
-}
-/// RevisionTemplate describes the data a revision should have when created from
-/// a template.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RevisionTemplate {
-    /// The unique name for the revision. If this field is omitted, it will be
-    /// automatically generated based on the Service name.
-    #[prost(string, tag = "1")]
-    pub revision: ::prost::alloc::string::String,
-    /// Unstructured key value map that can be used to organize and categorize
-    /// objects.
-    /// User-provided labels are shared with Google's billing system, so they can
-    /// be used to filter, or break down billing charges by team, component,
-    /// environment, state, etc. For more information, visit
-    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
-    /// <https://cloud.google.com/run/docs/configuring/labels.>
-    ///
-    /// <p>Cloud Run API v2 does not support labels with `run.googleapis.com`,
-    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
-    /// namespaces, and they will be rejected. All system labels in v1 now have a
-    /// corresponding field in v2 RevisionTemplate.
-    #[prost(btree_map = "string, string", tag = "2")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Unstructured key value map that may be set by external tools to store and
-    /// arbitrary metadata. They are not queryable and should be preserved
-    /// when modifying objects.
-    ///
-    /// <p>Cloud Run API v2 does not support annotations with `run.googleapis.com`,
-    /// `cloud.googleapis.com`, `serving.knative.dev`, or `autoscaling.knative.dev`
-    /// namespaces, and they will be rejected. All system annotations in v1 now
-    /// have a corresponding field in v2 RevisionTemplate.
-    ///
-    /// <p>This field follows Kubernetes annotations' namespacing, limits, and
-    /// rules.
-    #[prost(btree_map = "string, string", tag = "3")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Scaling settings for this Revision.
-    #[prost(message, optional, tag = "4")]
-    pub scaling: ::core::option::Option<RevisionScaling>,
-    /// VPC Access configuration to use for this Revision. For more information,
-    /// visit <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
-    #[prost(message, optional, tag = "6")]
-    pub vpc_access: ::core::option::Option<VpcAccess>,
-    /// Max allowed time for an instance to respond to a request.
-    #[prost(message, optional, tag = "8")]
-    pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Email address of the IAM service account associated with the revision of
-    /// the service. The service account represents the identity of the running
-    /// revision, and determines what permissions the revision has. If not
-    /// provided, the revision will use the project's default service account.
-    #[prost(string, tag = "9")]
-    pub service_account: ::prost::alloc::string::String,
-    /// Holds the single container that defines the unit of execution for this
-    /// Revision.
-    #[prost(message, repeated, tag = "10")]
-    pub containers: ::prost::alloc::vec::Vec<Container>,
-    /// A list of Volumes to make available to containers.
-    #[prost(message, repeated, tag = "11")]
-    pub volumes: ::prost::alloc::vec::Vec<Volume>,
-    /// The sandbox environment to host this Revision.
-    #[prost(enumeration = "ExecutionEnvironment", tag = "13")]
-    pub execution_environment: i32,
-    /// A reference to a customer managed encryption key (CMEK) to use to encrypt
-    /// this container image. For more information, go to
-    /// <https://cloud.google.com/run/docs/securing/using-cmek>
-    #[prost(string, tag = "14")]
-    pub encryption_key: ::prost::alloc::string::String,
-    /// Sets the maximum number of requests that each serving instance can receive.
-    #[prost(int32, tag = "15")]
-    pub max_instance_request_concurrency: i32,
-    /// Enable session affinity.
-    #[prost(bool, tag = "19")]
-    pub session_affinity: bool,
-}
 /// Request message for obtaining a Revision by its full name.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2442,302 +2442,6 @@ pub mod revisions_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.run.v2.Revisions/DeleteRevision",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for obtaining a Task by its full name.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTaskRequest {
-    /// Required. The full name of the Task.
-    /// Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}/tasks/{task}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for retrieving a list of Tasks.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTasksRequest {
-    /// Required. The Execution from which the Tasks should be listed.
-    /// To list all Tasks across Executions of a Job, use "-" instead of Execution
-    /// name. To list all Tasks across Jobs, use "-" instead of Job name. Format:
-    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Tasks to return in this call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token received from a previous call to ListTasks.
-    /// All other parameters must match.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// If true, returns deleted (but unexpired) resources along with active ones.
-    #[prost(bool, tag = "4")]
-    pub show_deleted: bool,
-}
-/// Response message containing a list of Tasks.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTasksResponse {
-    /// The resulting list of Tasks.
-    #[prost(message, repeated, tag = "1")]
-    pub tasks: ::prost::alloc::vec::Vec<Task>,
-    /// A token indicating there are more items than page_size. Use it in the next
-    /// ListTasks request to continue.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Task represents a single run of a container to completion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Task {
-    /// Output only. The unique name of this Task.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server assigned unique identifier for the Task. The value is a
-    /// UUID4 string and guaranteed to remain unchanged until the resource is
-    /// deleted.
-    #[prost(string, tag = "2")]
-    pub uid: ::prost::alloc::string::String,
-    /// Output only. A number that monotonically increases every time the user
-    /// modifies the desired state.
-    #[prost(int64, tag = "3")]
-    pub generation: i64,
-    /// Output only. Unstructured key value map that can be used to organize and
-    /// categorize objects. User-provided labels are shared with Google's billing
-    /// system, so they can be used to filter, or break down billing charges by
-    /// team, component, environment, state, etc. For more information, visit
-    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
-    /// <https://cloud.google.com/run/docs/configuring/labels>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Unstructured key value map that may
-    /// be set by external tools to store and arbitrary metadata.
-    /// They are not queryable and should be preserved
-    /// when modifying objects.
-    #[prost(btree_map = "string, string", tag = "5")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Represents time when the task was created by the job
-    /// controller. It is not guaranteed to be set in happens-before order across
-    /// separate operations.
-    #[prost(message, optional, tag = "6")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the task started to run.
-    /// It is not guaranteed to be set in happens-before order across separate
-    /// operations.
-    #[prost(message, optional, tag = "27")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Represents time when the Task was completed. It is not
-    /// guaranteed to be set in happens-before order across separate operations.
-    #[prost(message, optional, tag = "7")]
-    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The last-modified time.
-    #[prost(message, optional, tag = "8")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the deletion time. It is only
-    /// populated as a response to a Delete request.
-    #[prost(message, optional, tag = "9")]
-    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. For a deleted resource, the time after which it will be
-    /// permamently deleted. It is only populated as a response to a Delete
-    /// request.
-    #[prost(message, optional, tag = "10")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The name of the parent Job.
-    #[prost(string, tag = "12")]
-    pub job: ::prost::alloc::string::String,
-    /// Output only. The name of the parent Execution.
-    #[prost(string, tag = "13")]
-    pub execution: ::prost::alloc::string::String,
-    /// Holds the single container that defines the unit of execution for this
-    /// task.
-    #[prost(message, repeated, tag = "14")]
-    pub containers: ::prost::alloc::vec::Vec<Container>,
-    /// A list of Volumes to make available to containers.
-    #[prost(message, repeated, tag = "15")]
-    pub volumes: ::prost::alloc::vec::Vec<Volume>,
-    /// Number of retries allowed per Task, before marking this Task failed.
-    #[prost(int32, tag = "16")]
-    pub max_retries: i32,
-    /// Max allowed time duration the Task may be active before the system will
-    /// actively try to mark it failed and kill associated containers. This applies
-    /// per attempt of a task, meaning each retry can run for the full timeout.
-    #[prost(message, optional, tag = "17")]
-    pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Email address of the IAM service account associated with the Task of a
-    /// Job. The service account represents the identity of the
-    /// running task, and determines what permissions the task has. If
-    /// not provided, the task will use the project's default service account.
-    #[prost(string, tag = "18")]
-    pub service_account: ::prost::alloc::string::String,
-    /// The execution environment being used to host this Task.
-    #[prost(enumeration = "ExecutionEnvironment", tag = "20")]
-    pub execution_environment: i32,
-    /// Output only. Indicates whether the resource's reconciliation is still in
-    /// progress. See comments in `Job.reconciling` for additional information on
-    /// reconciliation process in Cloud Run.
-    #[prost(bool, tag = "21")]
-    pub reconciling: bool,
-    /// Output only. The Condition of this Task, containing its readiness status,
-    /// and detailed error information in case it did not reach the desired state.
-    #[prost(message, repeated, tag = "22")]
-    pub conditions: ::prost::alloc::vec::Vec<Condition>,
-    /// Output only. The generation of this Task. See comments in `Job.reconciling`
-    /// for additional information on reconciliation process in Cloud Run.
-    #[prost(int64, tag = "23")]
-    pub observed_generation: i64,
-    /// Output only. Index of the Task, unique per execution, and beginning at 0.
-    #[prost(int32, tag = "24")]
-    pub index: i32,
-    /// Output only. The number of times this Task was retried.
-    /// Tasks are retried when they fail up to the maxRetries limit.
-    #[prost(int32, tag = "25")]
-    pub retried: i32,
-    /// Output only. Result of the last attempt of this Task.
-    #[prost(message, optional, tag = "26")]
-    pub last_attempt_result: ::core::option::Option<TaskAttemptResult>,
-    /// Output only. A reference to a customer managed encryption key (CMEK) to use
-    /// to encrypt this container image. For more information, go to
-    /// <https://cloud.google.com/run/docs/securing/using-cmek>
-    #[prost(string, tag = "28")]
-    pub encryption_key: ::prost::alloc::string::String,
-    /// Output only. VPC Access configuration to use for this Task. For more
-    /// information, visit
-    /// <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
-    #[prost(message, optional, tag = "29")]
-    pub vpc_access: ::core::option::Option<VpcAccess>,
-    /// Output only. URI where logs for this execution can be found in Cloud
-    /// Console.
-    #[prost(string, tag = "32")]
-    pub log_uri: ::prost::alloc::string::String,
-    /// Output only. Reserved for future use.
-    #[prost(bool, tag = "33")]
-    pub satisfies_pzs: bool,
-    /// Output only. A system-generated fingerprint for this version of the
-    /// resource. May be used to detect modification conflict during updates.
-    #[prost(string, tag = "99")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// Result of a task attempt.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TaskAttemptResult {
-    /// Output only. The status of this attempt.
-    /// If the status code is OK, then the attempt succeeded.
-    #[prost(message, optional, tag = "1")]
-    pub status: ::core::option::Option<super::super::super::rpc::Status>,
-    /// Output only. The exit code of this attempt.
-    /// This may be unset if the container was unable to exit cleanly with a code
-    /// due to some other failure.
-    /// See status field for possible failure details.
-    #[prost(int32, tag = "2")]
-    pub exit_code: i32,
-}
-/// Generated client implementations.
-pub mod tasks_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Cloud Run Task Control Plane API.
-    #[derive(Debug, Clone)]
-    pub struct TasksClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TasksClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TasksClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TasksClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Gets information about a Task.
-        pub async fn get_task(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Tasks/GetTask",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists Tasks from an Execution of a Job.
-        pub async fn list_tasks(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTasksRequest>,
-        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.run.v2.Tasks/ListTasks",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -3277,6 +2981,302 @@ pub mod services_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.run.v2.Services/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for obtaining a Task by its full name.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTaskRequest {
+    /// Required. The full name of the Task.
+    /// Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}/tasks/{task}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for retrieving a list of Tasks.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTasksRequest {
+    /// Required. The Execution from which the Tasks should be listed.
+    /// To list all Tasks across Executions of a Job, use "-" instead of Execution
+    /// name. To list all Tasks across Jobs, use "-" instead of Job name. Format:
+    /// projects/{project}/locations/{location}/jobs/{job}/executions/{execution}
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Tasks to return in this call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token received from a previous call to ListTasks.
+    /// All other parameters must match.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// If true, returns deleted (but unexpired) resources along with active ones.
+    #[prost(bool, tag = "4")]
+    pub show_deleted: bool,
+}
+/// Response message containing a list of Tasks.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTasksResponse {
+    /// The resulting list of Tasks.
+    #[prost(message, repeated, tag = "1")]
+    pub tasks: ::prost::alloc::vec::Vec<Task>,
+    /// A token indicating there are more items than page_size. Use it in the next
+    /// ListTasks request to continue.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Task represents a single run of a container to completion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Task {
+    /// Output only. The unique name of this Task.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server assigned unique identifier for the Task. The value is a
+    /// UUID4 string and guaranteed to remain unchanged until the resource is
+    /// deleted.
+    #[prost(string, tag = "2")]
+    pub uid: ::prost::alloc::string::String,
+    /// Output only. A number that monotonically increases every time the user
+    /// modifies the desired state.
+    #[prost(int64, tag = "3")]
+    pub generation: i64,
+    /// Output only. Unstructured key value map that can be used to organize and
+    /// categorize objects. User-provided labels are shared with Google's billing
+    /// system, so they can be used to filter, or break down billing charges by
+    /// team, component, environment, state, etc. For more information, visit
+    /// <https://cloud.google.com/resource-manager/docs/creating-managing-labels> or
+    /// <https://cloud.google.com/run/docs/configuring/labels>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Unstructured key value map that may
+    /// be set by external tools to store and arbitrary metadata.
+    /// They are not queryable and should be preserved
+    /// when modifying objects.
+    #[prost(btree_map = "string, string", tag = "5")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Represents time when the task was created by the job
+    /// controller. It is not guaranteed to be set in happens-before order across
+    /// separate operations.
+    #[prost(message, optional, tag = "6")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the task started to run.
+    /// It is not guaranteed to be set in happens-before order across separate
+    /// operations.
+    #[prost(message, optional, tag = "27")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Represents time when the Task was completed. It is not
+    /// guaranteed to be set in happens-before order across separate operations.
+    #[prost(message, optional, tag = "7")]
+    pub completion_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The last-modified time.
+    #[prost(message, optional, tag = "8")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the deletion time. It is only
+    /// populated as a response to a Delete request.
+    #[prost(message, optional, tag = "9")]
+    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. For a deleted resource, the time after which it will be
+    /// permamently deleted. It is only populated as a response to a Delete
+    /// request.
+    #[prost(message, optional, tag = "10")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The name of the parent Job.
+    #[prost(string, tag = "12")]
+    pub job: ::prost::alloc::string::String,
+    /// Output only. The name of the parent Execution.
+    #[prost(string, tag = "13")]
+    pub execution: ::prost::alloc::string::String,
+    /// Holds the single container that defines the unit of execution for this
+    /// task.
+    #[prost(message, repeated, tag = "14")]
+    pub containers: ::prost::alloc::vec::Vec<Container>,
+    /// A list of Volumes to make available to containers.
+    #[prost(message, repeated, tag = "15")]
+    pub volumes: ::prost::alloc::vec::Vec<Volume>,
+    /// Number of retries allowed per Task, before marking this Task failed.
+    #[prost(int32, tag = "16")]
+    pub max_retries: i32,
+    /// Max allowed time duration the Task may be active before the system will
+    /// actively try to mark it failed and kill associated containers. This applies
+    /// per attempt of a task, meaning each retry can run for the full timeout.
+    #[prost(message, optional, tag = "17")]
+    pub timeout: ::core::option::Option<::prost_types::Duration>,
+    /// Email address of the IAM service account associated with the Task of a
+    /// Job. The service account represents the identity of the
+    /// running task, and determines what permissions the task has. If
+    /// not provided, the task will use the project's default service account.
+    #[prost(string, tag = "18")]
+    pub service_account: ::prost::alloc::string::String,
+    /// The execution environment being used to host this Task.
+    #[prost(enumeration = "ExecutionEnvironment", tag = "20")]
+    pub execution_environment: i32,
+    /// Output only. Indicates whether the resource's reconciliation is still in
+    /// progress. See comments in `Job.reconciling` for additional information on
+    /// reconciliation process in Cloud Run.
+    #[prost(bool, tag = "21")]
+    pub reconciling: bool,
+    /// Output only. The Condition of this Task, containing its readiness status,
+    /// and detailed error information in case it did not reach the desired state.
+    #[prost(message, repeated, tag = "22")]
+    pub conditions: ::prost::alloc::vec::Vec<Condition>,
+    /// Output only. The generation of this Task. See comments in `Job.reconciling`
+    /// for additional information on reconciliation process in Cloud Run.
+    #[prost(int64, tag = "23")]
+    pub observed_generation: i64,
+    /// Output only. Index of the Task, unique per execution, and beginning at 0.
+    #[prost(int32, tag = "24")]
+    pub index: i32,
+    /// Output only. The number of times this Task was retried.
+    /// Tasks are retried when they fail up to the maxRetries limit.
+    #[prost(int32, tag = "25")]
+    pub retried: i32,
+    /// Output only. Result of the last attempt of this Task.
+    #[prost(message, optional, tag = "26")]
+    pub last_attempt_result: ::core::option::Option<TaskAttemptResult>,
+    /// Output only. A reference to a customer managed encryption key (CMEK) to use
+    /// to encrypt this container image. For more information, go to
+    /// <https://cloud.google.com/run/docs/securing/using-cmek>
+    #[prost(string, tag = "28")]
+    pub encryption_key: ::prost::alloc::string::String,
+    /// Output only. VPC Access configuration to use for this Task. For more
+    /// information, visit
+    /// <https://cloud.google.com/run/docs/configuring/connecting-vpc.>
+    #[prost(message, optional, tag = "29")]
+    pub vpc_access: ::core::option::Option<VpcAccess>,
+    /// Output only. URI where logs for this execution can be found in Cloud
+    /// Console.
+    #[prost(string, tag = "32")]
+    pub log_uri: ::prost::alloc::string::String,
+    /// Output only. Reserved for future use.
+    #[prost(bool, tag = "33")]
+    pub satisfies_pzs: bool,
+    /// Output only. A system-generated fingerprint for this version of the
+    /// resource. May be used to detect modification conflict during updates.
+    #[prost(string, tag = "99")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Result of a task attempt.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TaskAttemptResult {
+    /// Output only. The status of this attempt.
+    /// If the status code is OK, then the attempt succeeded.
+    #[prost(message, optional, tag = "1")]
+    pub status: ::core::option::Option<super::super::super::rpc::Status>,
+    /// Output only. The exit code of this attempt.
+    /// This may be unset if the container was unable to exit cleanly with a code
+    /// due to some other failure.
+    /// See status field for possible failure details.
+    #[prost(int32, tag = "2")]
+    pub exit_code: i32,
+}
+/// Generated client implementations.
+pub mod tasks_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Cloud Run Task Control Plane API.
+    #[derive(Debug, Clone)]
+    pub struct TasksClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TasksClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TasksClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TasksClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Gets information about a Task.
+        pub async fn get_task(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTaskRequest>,
+        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Tasks/GetTask",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists Tasks from an Execution of a Job.
+        pub async fn list_tasks(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTasksRequest>,
+        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.run.v2.Tasks/ListTasks",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

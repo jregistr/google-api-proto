@@ -1,3 +1,1081 @@
+/// The root node in the resource hierarchy to which a particular entity's
+/// (a company, for example) resources belong.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Organization {
+    /// Output only. The resource name of the organization. This is the
+    /// organization's relative path in the API. Its format is
+    /// "organizations/\[organization_id\]". For example, "organizations/1234".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. A human-readable string that refers to the organization in the
+    /// Google Cloud Console. This string is set by the server and cannot be
+    /// changed. The string will be set to the primary domain (for example,
+    /// "google.com") of the Google Workspace customer that owns the organization.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The organization's current lifecycle state.
+    #[prost(enumeration = "organization::State", tag = "4")]
+    pub state: i32,
+    /// Output only. Timestamp when the Organization was created.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when the Organization was last modified.
+    #[prost(message, optional, tag = "6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when the Organization was requested for deletion.
+    #[prost(message, optional, tag = "7")]
+    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. A checksum computed by the server based on the current value
+    /// of the Organization resource. This may be sent on update and delete
+    /// requests to ensure the client has an up-to-date value before proceeding.
+    #[prost(string, tag = "8")]
+    pub etag: ::prost::alloc::string::String,
+    /// The owner of this organization. The owner should be specified on
+    /// creation. Once set, it cannot be changed.
+    ///
+    /// The lifetime of the organization and all of its descendants are bound to
+    /// the owner. If the owner is deleted, the organization and all its
+    /// descendants will be deleted.
+    #[prost(oneof = "organization::Owner", tags = "3")]
+    pub owner: ::core::option::Option<organization::Owner>,
+}
+/// Nested message and enum types in `Organization`.
+pub mod organization {
+    /// Organization lifecycle states.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.  This is only useful for distinguishing unset values.
+        Unspecified = 0,
+        /// The normal and active state.
+        Active = 1,
+        /// The organization has been marked for deletion by the user.
+        DeleteRequested = 2,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::DeleteRequested => "DELETE_REQUESTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
+                _ => None,
+            }
+        }
+    }
+    /// The owner of this organization. The owner should be specified on
+    /// creation. Once set, it cannot be changed.
+    ///
+    /// The lifetime of the organization and all of its descendants are bound to
+    /// the owner. If the owner is deleted, the organization and all its
+    /// descendants will be deleted.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Owner {
+        /// Immutable. The G Suite / Workspace customer id used in the Directory API.
+        #[prost(string, tag = "3")]
+        DirectoryCustomerId(::prost::alloc::string::String),
+    }
+}
+/// The request sent to the `GetOrganization` method. The `name` field is
+/// required. `organization_id` is no longer accepted.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetOrganizationRequest {
+    /// Required. The resource name of the Organization to fetch. This is the
+    /// organization's relative path in the API, formatted as
+    /// "organizations/\[organizationId\]". For example, "organizations/1234".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The request sent to the `SearchOrganizations` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchOrganizationsRequest {
+    /// Optional. The maximum number of organizations to return in the response.
+    /// The server can return fewer organizations than requested. If unspecified,
+    /// server picks an appropriate default.
+    #[prost(int32, tag = "1")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// `SearchOrganizations` that indicates from where listing should continue.
+    #[prost(string, tag = "2")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. An optional query string used to filter the Organizations to
+    /// return in the response. Query rules are case-insensitive.
+    ///
+    ///
+    /// ```
+    /// | Field            | Description                                |
+    /// |------------------|--------------------------------------------|
+    /// | directoryCustomerId, owner.directoryCustomerId | Filters by directory
+    /// customer id. |
+    /// | domain           | Filters by domain.                         |
+    /// ```
+    ///
+    /// Organizations may be queried by `directoryCustomerId` or by
+    /// `domain`, where the domain is a G Suite domain, for example:
+    ///
+    /// * Query `directorycustomerid:123456789` returns Organization
+    /// resources with `owner.directory_customer_id` equal to `123456789`.
+    /// * Query `domain:google.com` returns Organization resources corresponding
+    /// to the domain `google.com`.
+    #[prost(string, tag = "3")]
+    pub query: ::prost::alloc::string::String,
+}
+/// The response returned from the `SearchOrganizations` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchOrganizationsResponse {
+    /// The list of Organizations that matched the search query, possibly
+    /// paginated.
+    #[prost(message, repeated, tag = "1")]
+    pub organizations: ::prost::alloc::vec::Vec<Organization>,
+    /// A pagination token to be used to retrieve the next page of results. If the
+    /// result is too large to fit within the page size specified in the request,
+    /// this field will be set with a token that can be used to fetch the next page
+    /// of results. If this field is empty, it indicates that this response
+    /// contains the last page of results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// A status object which is used as the `metadata` field for the operation
+/// returned by DeleteOrganization.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteOrganizationMetadata {}
+/// A status object which is used as the `metadata` field for the Operation
+/// returned by UndeleteOrganization.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UndeleteOrganizationMetadata {}
+/// Generated client implementations.
+pub mod organizations_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Allows users to manage their organization resources.
+    #[derive(Debug, Clone)]
+    pub struct OrganizationsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> OrganizationsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> OrganizationsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            OrganizationsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Fetches an organization resource identified by the specified resource name.
+        pub async fn get_organization(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetOrganizationRequest>,
+        ) -> Result<tonic::Response<super::Organization>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/GetOrganization",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Searches organization resources that are visible to the user and satisfy
+        /// the specified filter. This method returns organizations in an unspecified
+        /// order. New organizations do not necessarily appear at the end of the
+        /// results, and may take a small amount of time to appear.
+        ///
+        /// Search will only return organizations on which the user has the permission
+        /// `resourcemanager.organizations.get`
+        pub async fn search_organizations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchOrganizationsRequest>,
+        ) -> Result<tonic::Response<super::SearchOrganizationsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/SearchOrganizations",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the access control policy for an organization resource. The policy may
+        /// be empty if no such policy or resource exists. The `resource` field should
+        /// be the organization's resource name, for example: "organizations/123".
+        ///
+        /// Authorization requires the IAM permission
+        /// `resourcemanager.organizations.getIamPolicy` on the specified organization.
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the access control policy on an organization resource. Replaces any
+        /// existing policy. The `resource` field should be the organization's resource
+        /// name, for example: "organizations/123".
+        ///
+        /// Authorization requires the IAM permission
+        /// `resourcemanager.organizations.setIamPolicy` on the specified organization.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns the permissions that a caller has on the specified organization.
+        /// The `resource` field should be the organization's resource name,
+        /// for example: "organizations/123".
+        ///
+        /// There are no permissions required for making this API call.
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::super::super::super::iam::v1::TestIamPermissionsResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.Organizations/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A TagValue is a child of a particular TagKey. This is used to group
+/// cloud resources for the purpose of controlling them using policies.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagValue {
+    /// Immutable. Resource name for TagValue in the format `tagValues/456`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Immutable. The resource name of the new TagValue's parent TagKey.
+    /// Must be of the form `tagKeys/{tag_key_id}`.
+    #[prost(string, tag = "2")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Immutable. User-assigned short name for TagValue. The short name
+    /// should be unique for TagValues within the same parent TagKey.
+    ///
+    /// The short name must be 63 characters or less, beginning and ending with
+    /// an alphanumeric character (\[a-z0-9A-Z\]) with dashes (-), underscores (_),
+    /// dots (.), and alphanumerics between.
+    #[prost(string, tag = "3")]
+    pub short_name: ::prost::alloc::string::String,
+    /// Output only. The namespaced name of the TagValue. Can be in the form
+    /// `{organization_id}/{tag_key_short_name}/{tag_value_short_name}` or
+    /// `{project_id}/{tag_key_short_name}/{tag_value_short_name}` or
+    /// `{project_number}/{tag_key_short_name}/{tag_value_short_name}`.
+    #[prost(string, tag = "4")]
+    pub namespaced_name: ::prost::alloc::string::String,
+    /// Optional. User-assigned description of the TagValue.
+    /// Must not exceed 256 characters.
+    ///
+    /// Read-write.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Creation time.
+    #[prost(message, optional, tag = "6")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Update time.
+    #[prost(message, optional, tag = "7")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Entity tag which users can pass to prevent race conditions. This
+    /// field is always set in server responses. See UpdateTagValueRequest for
+    /// details.
+    #[prost(string, tag = "8")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// The request message for listing TagValues for the specified TagKey.
+/// Resource name for TagKey, parent of the TagValues to be listed,
+/// in the format `tagKeys/123`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagValuesRequest {
+    /// Required.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of TagValues to return in the response. The
+    /// server allows a maximum of 300 TagValues to return. If unspecified, the
+    /// server will use 100 as the default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// `ListTagValues` that indicates where this listing should continue from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The ListTagValues response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagValuesResponse {
+    /// A possibly paginated list of TagValues that are direct descendants of
+    /// the specified parent TagKey.
+    #[prost(message, repeated, tag = "1")]
+    pub tag_values: ::prost::alloc::vec::Vec<TagValue>,
+    /// A pagination token returned from a previous call to `ListTagValues`
+    /// that indicates from where listing should continue. This is currently not
+    /// used, but the server may at any point start supplying a valid token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The request message for getting a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTagValueRequest {
+    /// Required. Resource name for TagValue to be fetched in the format
+    /// `tagValues/456`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The request message for getting a TagValue by its namespaced name.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNamespacedTagValueRequest {
+    /// Required. A namespaced tag value name in the following format:
+    ///
+    ///    `{parentId}/{tagKeyShort}/{tagValueShort}`
+    ///
+    /// Examples:
+    /// - `42/foo/abc` for a value with short name "abc" under the key with short
+    ///    name "foo" under the organization with ID 42
+    /// - `r2-d2/bar/xyz` for a value with short name "xyz" under the key with
+    ///     short name "bar" under the project with ID "r2-d2"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The request message for creating a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTagValueRequest {
+    /// Required. The TagValue to be created. Only fields `short_name`,
+    /// `description`, and `parent` are considered during the creation request.
+    #[prost(message, optional, tag = "1")]
+    pub tag_value: ::core::option::Option<TagValue>,
+    /// Optional. Set as true to perform the validations necessary for creating the
+    /// resource, but not actually perform the action.
+    #[prost(bool, tag = "2")]
+    pub validate_only: bool,
+}
+/// Runtime operation information for creating a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTagValueMetadata {}
+/// The request message for updating a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateTagValueRequest {
+    /// Required. The new definition of the TagValue. Only fields `description` and
+    /// `etag` fields can be updated by this request. If the `etag` field is
+    /// nonempty, it must match the `etag` field of the existing ControlGroup.
+    /// Otherwise, `ABORTED` will be returned.
+    #[prost(message, optional, tag = "1")]
+    pub tag_value: ::core::option::Option<TagValue>,
+    /// Optional. Fields to be updated.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Optional. True to perform validations necessary for updating the resource,
+    /// but not actually perform the action.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
+}
+/// Runtime operation information for updating a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateTagValueMetadata {}
+/// The request message for deleting a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTagValueRequest {
+    /// Required. Resource name for TagValue to be deleted in the format
+    /// tagValues/456.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Set as true to perform the validations necessary for deletion,
+    /// but not actually perform the action.
+    #[prost(bool, tag = "2")]
+    pub validate_only: bool,
+    /// Optional. The etag known to the client for the expected state of the
+    /// TagValue. This is to be used for optimistic concurrency.
+    #[prost(string, tag = "3")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Runtime operation information for deleting a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTagValueMetadata {}
+/// Generated client implementations.
+pub mod tag_values_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Allow users to create and manage tag values.
+    #[derive(Debug, Clone)]
+    pub struct TagValuesClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TagValuesClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TagValuesClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TagValuesClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Lists all TagValues for a specific TagKey.
+        pub async fn list_tag_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTagValuesRequest>,
+        ) -> Result<tonic::Response<super::ListTagValuesResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/ListTagValues",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Retrieves a TagValue. This method will return `PERMISSION_DENIED` if the
+        /// value does not exist or the user does not have permission to view it.
+        pub async fn get_tag_value(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetTagValueRequest>,
+        ) -> Result<tonic::Response<super::TagValue>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/GetTagValue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Retrieves a TagValue by its namespaced name.
+        /// This method will return `PERMISSION_DENIED` if the value does not exist
+        /// or the user does not have permission to view it.
+        pub async fn get_namespaced_tag_value(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetNamespacedTagValueRequest>,
+        ) -> Result<tonic::Response<super::TagValue>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/GetNamespacedTagValue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a TagValue as a child of the specified TagKey. If a another
+        /// request with the same parameters is sent while the original request is in
+        /// process the second request will receive an error. A maximum of 1000
+        /// TagValues can exist under a TagKey at any given time.
+        pub async fn create_tag_value(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTagValueRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/CreateTagValue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates the attributes of the TagValue resource.
+        pub async fn update_tag_value(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateTagValueRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/UpdateTagValue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a TagValue. The TagValue cannot have any bindings when it is
+        /// deleted.
+        pub async fn delete_tag_value(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTagValueRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/DeleteTagValue",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Gets the access control policy for a TagValue. The returned policy may be
+        /// empty if no such policy or resource exists. The `resource` field should
+        /// be the TagValue's resource name. For example: `tagValues/1234`.
+        /// The caller must have the
+        /// `cloudresourcemanager.googleapis.com/tagValues.getIamPolicy` permission on
+        /// the identified TagValue to get the access control policy.
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/GetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Sets the access control policy on a TagValue, replacing any existing
+        /// policy. The `resource` field should be the TagValue's resource name.
+        /// For example: `tagValues/1234`.
+        /// The caller must have `resourcemanager.tagValues.setIamPolicy` permission
+        /// on the identified tagValue.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> Result<
+            tonic::Response<super::super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/SetIamPolicy",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns permissions that a caller has on the specified TagValue.
+        /// The `resource` field should be the TagValue's resource name. For example:
+        /// `tagValues/1234`.
+        ///
+        /// There are no permissions required for making this API call.
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> Result<
+            tonic::Response<
+                super::super::super::super::iam::v1::TestIamPermissionsResponse,
+            >,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagValues/TestIamPermissions",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// A TagHold represents the use of a TagValue that is not captured by
+/// TagBindings. If a TagValue has any TagHolds, deletion will be blocked.
+/// This resource is intended to be created in the same cloud location as the
+/// `holder`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagHold {
+    /// Output only. The resource name of a TagHold. This is a String of the form:
+    /// `tagValues/{tag-value-id}/tagHolds/{tag-hold-id}`
+    /// (e.g. `tagValues/123/tagHolds/456`). This resource name is generated by
+    /// the server.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the resource where the TagValue is being used. Must
+    /// be less than 200 characters. E.g.
+    /// `//compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group`
+    #[prost(string, tag = "2")]
+    pub holder: ::prost::alloc::string::String,
+    /// Optional. An optional string representing the origin of this request. This
+    /// field should include human-understandable information to distinguish
+    /// origins from each other. Must be less than 200 characters. E.g.
+    /// `migs-35678234`
+    #[prost(string, tag = "3")]
+    pub origin: ::prost::alloc::string::String,
+    /// Optional. A URL where an end user can learn more about removing this hold.
+    /// E.g.
+    /// `<https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing`>
+    #[prost(string, tag = "4")]
+    pub help_link: ::prost::alloc::string::String,
+    /// Output only. The time this TagHold was created.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The request message to create a TagHold.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTagHoldRequest {
+    /// Required. The resource name of the TagHold's parent TagValue. Must be of
+    /// the form: `tagValues/{tag-value-id}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The TagHold to be created.
+    #[prost(message, optional, tag = "2")]
+    pub tag_hold: ::core::option::Option<TagHold>,
+    /// Optional. Set to true to perform the validations necessary for creating the
+    /// resource, but not actually perform the action.
+    #[prost(bool, tag = "3")]
+    pub validate_only: bool,
+}
+/// Runtime operation information for creating a TagHold.
+/// (-- The metadata is currently empty, but may include information in the
+/// future. --)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTagHoldMetadata {}
+/// The request message to delete a TagHold.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTagHoldRequest {
+    /// Required. The resource name of the TagHold to delete. Must be of the form:
+    /// `tagValues/{tag-value-id}/tagHolds/{tag-hold-id}`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Set to true to perform the validations necessary for deleting the
+    /// resource, but not actually perform the action.
+    #[prost(bool, tag = "2")]
+    pub validate_only: bool,
+}
+/// Runtime operation information for deleting a TagHold.
+/// (-- The metadata is currently empty, but may include information in the
+/// future. --)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTagHoldMetadata {}
+/// The request message for listing the TagHolds under a TagValue.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagHoldsRequest {
+    /// Required. The resource name of the parent TagValue. Must be of the form:
+    /// `tagValues/{tag-value-id}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of TagHolds to return in the response. The
+    /// server allows a maximum of 300 TagHolds to return. If unspecified, the
+    /// server will use 100 as the default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// `ListTagHolds` that indicates where this listing should continue from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Optional. Criteria used to select a subset of TagHolds parented by the
+    /// TagValue to return. This field follows the syntax defined by aip.dev/160;
+    /// the `holder` and `origin` fields are supported for filtering. Currently
+    /// only `AND` syntax is supported. Some example queries are:
+    ///
+    ///    * `holder =
+    ///      //compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group`
+    ///    * `origin = 35678234`
+    ///    * `holder =
+    ///      //compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group
+    ///      AND origin = 35678234`
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+}
+/// The ListTagHolds response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagHoldsResponse {
+    /// A possibly paginated list of TagHolds.
+    #[prost(message, repeated, tag = "1")]
+    pub tag_holds: ::prost::alloc::vec::Vec<TagHold>,
+    /// Pagination token.
+    ///
+    /// If the result set is too large to fit in a single response, this token
+    /// is returned. It encodes the position of the current result cursor.
+    /// Feeding this value into a new list request with the `page_token` parameter
+    /// gives the next page of the results.
+    ///
+    /// When `next_page_token` is not filled in, there is no next page and
+    /// the list returned is the last page in the result set.
+    ///
+    /// Pagination tokens have a limited lifetime.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod tag_holds_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Allow users to create and manage TagHolds for TagValues. TagHolds represent
+    /// the use of a Tag Value that is not captured by TagBindings but
+    /// should still block TagValue deletion (such as a reference in a policy
+    /// condition). This service provides isolated failure domains by cloud location
+    /// so that TagHolds can be managed in the same location as their usage.
+    #[derive(Debug, Clone)]
+    pub struct TagHoldsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> TagHoldsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> TagHoldsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            TagHoldsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Creates a TagHold. Returns ALREADY_EXISTS if a TagHold with the same
+        /// resource and origin exists under the same TagValue.
+        pub async fn create_tag_hold(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTagHoldRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagHolds/CreateTagHold",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a TagHold.
+        pub async fn delete_tag_hold(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTagHoldRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagHolds/DeleteTagHold",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Lists TagHolds under a TagValue.
+        pub async fn list_tag_holds(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTagHoldsRequest>,
+        ) -> Result<tonic::Response<super::ListTagHoldsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagHolds/ListTagHolds",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
 /// A folder in an organization's resource hierarchy, used to
 /// organize that organization's resources.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -722,179 +1800,196 @@ pub mod folders_client {
         }
     }
 }
-/// A TagValue is a child of a particular TagKey. This is used to group
-/// cloud resources for the purpose of controlling them using policies.
+/// A TagBinding represents a connection between a TagValue and a cloud
+/// resource Once a TagBinding is created, the TagValue is applied to all the
+/// descendants of the Google Cloud resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagValue {
-    /// Immutable. Resource name for TagValue in the format `tagValues/456`.
+pub struct TagBinding {
+    /// Output only. The name of the TagBinding. This is a String of the form:
+    /// `tagBindings/{full-resource-name}/{tag-value-name}` (e.g.
+    /// `tagBindings/%2F%2Fcloudresourcemanager.googleapis.com%2Fprojects%2F123/tagValues/456`).
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Immutable. The resource name of the new TagValue's parent TagKey.
-    /// Must be of the form `tagKeys/{tag_key_id}`.
+    /// The full resource name of the resource the TagValue is bound to.
+    /// E.g. `//cloudresourcemanager.googleapis.com/projects/123`
     #[prost(string, tag = "2")]
     pub parent: ::prost::alloc::string::String,
-    /// Required. Immutable. User-assigned short name for TagValue. The short name
-    /// should be unique for TagValues within the same parent TagKey.
-    ///
-    /// The short name must be 63 characters or less, beginning and ending with
-    /// an alphanumeric character (\[a-z0-9A-Z\]) with dashes (-), underscores (_),
-    /// dots (.), and alphanumerics between.
+    /// The TagValue of the TagBinding.
+    /// Must be of the form `tagValues/456`.
     #[prost(string, tag = "3")]
-    pub short_name: ::prost::alloc::string::String,
-    /// Output only. The namespaced name of the TagValue. Can be in the form
-    /// `{organization_id}/{tag_key_short_name}/{tag_value_short_name}` or
-    /// `{project_id}/{tag_key_short_name}/{tag_value_short_name}` or
-    /// `{project_number}/{tag_key_short_name}/{tag_value_short_name}`.
+    pub tag_value: ::prost::alloc::string::String,
+    /// The namespaced name for the TagValue of the TagBinding.
+    /// Must be in the format
+    /// `{parent_id}/{tag_key_short_name}/{short_name}`.
+    ///
+    /// For methods that support TagValue namespaced name, only one of
+    /// tag_value_namespaced_name or tag_value may be filled. Requests with both
+    /// fields will be rejected.
     #[prost(string, tag = "4")]
-    pub namespaced_name: ::prost::alloc::string::String,
-    /// Optional. User-assigned description of the TagValue.
-    /// Must not exceed 256 characters.
-    ///
-    /// Read-write.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Creation time.
-    #[prost(message, optional, tag = "6")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Update time.
-    #[prost(message, optional, tag = "7")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Entity tag which users can pass to prevent race conditions. This
-    /// field is always set in server responses. See UpdateTagValueRequest for
-    /// details.
-    #[prost(string, tag = "8")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// The request message for listing TagValues for the specified TagKey.
-/// Resource name for TagKey, parent of the TagValues to be listed,
-/// in the format `tagKeys/123`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagValuesRequest {
-    /// Required.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of TagValues to return in the response. The
-    /// server allows a maximum of 300 TagValues to return. If unspecified, the
-    /// server will use 100 as the default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// `ListTagValues` that indicates where this listing should continue from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The ListTagValues response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagValuesResponse {
-    /// A possibly paginated list of TagValues that are direct descendants of
-    /// the specified parent TagKey.
-    #[prost(message, repeated, tag = "1")]
-    pub tag_values: ::prost::alloc::vec::Vec<TagValue>,
-    /// A pagination token returned from a previous call to `ListTagValues`
-    /// that indicates from where listing should continue. This is currently not
-    /// used, but the server may at any point start supplying a valid token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The request message for getting a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTagValueRequest {
-    /// Required. Resource name for TagValue to be fetched in the format
-    /// `tagValues/456`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The request message for getting a TagValue by its namespaced name.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNamespacedTagValueRequest {
-    /// Required. A namespaced tag value name in the following format:
-    ///
-    ///    `{parentId}/{tagKeyShort}/{tagValueShort}`
-    ///
-    /// Examples:
-    /// - `42/foo/abc` for a value with short name "abc" under the key with short
-    ///    name "foo" under the organization with ID 42
-    /// - `r2-d2/bar/xyz` for a value with short name "xyz" under the key with
-    ///     short name "bar" under the project with ID "r2-d2"
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The request message for creating a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagValueRequest {
-    /// Required. The TagValue to be created. Only fields `short_name`,
-    /// `description`, and `parent` are considered during the creation request.
-    #[prost(message, optional, tag = "1")]
-    pub tag_value: ::core::option::Option<TagValue>,
-    /// Optional. Set as true to perform the validations necessary for creating the
-    /// resource, but not actually perform the action.
-    #[prost(bool, tag = "2")]
-    pub validate_only: bool,
+    pub tag_value_namespaced_name: ::prost::alloc::string::String,
 }
 /// Runtime operation information for creating a TagValue.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagValueMetadata {}
-/// The request message for updating a TagValue.
+pub struct CreateTagBindingMetadata {}
+/// The request message to create a TagBinding.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTagValueRequest {
-    /// Required. The new definition of the TagValue. Only fields `description` and
-    /// `etag` fields can be updated by this request. If the `etag` field is
-    /// nonempty, it must match the `etag` field of the existing ControlGroup.
-    /// Otherwise, `ABORTED` will be returned.
+pub struct CreateTagBindingRequest {
+    /// Required. The TagBinding to be created.
     #[prost(message, optional, tag = "1")]
-    pub tag_value: ::core::option::Option<TagValue>,
-    /// Optional. Fields to be updated.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Optional. True to perform validations necessary for updating the resource,
-    /// but not actually perform the action.
-    #[prost(bool, tag = "3")]
-    pub validate_only: bool,
-}
-/// Runtime operation information for updating a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTagValueMetadata {}
-/// The request message for deleting a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagValueRequest {
-    /// Required. Resource name for TagValue to be deleted in the format
-    /// tagValues/456.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Set as true to perform the validations necessary for deletion,
-    /// but not actually perform the action.
+    pub tag_binding: ::core::option::Option<TagBinding>,
+    /// Optional. Set to true to perform the validations necessary for creating the
+    /// resource, but not actually perform the action.
     #[prost(bool, tag = "2")]
     pub validate_only: bool,
-    /// Optional. The etag known to the client for the expected state of the
-    /// TagValue. This is to be used for optimistic concurrency.
-    #[prost(string, tag = "3")]
-    pub etag: ::prost::alloc::string::String,
 }
-/// Runtime operation information for deleting a TagValue.
+/// Runtime operation information for deleting a TagBinding.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagValueMetadata {}
+pub struct DeleteTagBindingMetadata {}
+/// The request message to delete a TagBinding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTagBindingRequest {
+    /// Required. The name of the TagBinding. This is a String of the form:
+    /// `tagBindings/{id}` (e.g.
+    /// `tagBindings/%2F%2Fcloudresourcemanager.googleapis.com%2Fprojects%2F123/tagValues/456`).
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The request message to list all TagBindings for a parent.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagBindingsRequest {
+    /// Required. The full resource name of a resource for which you want to list
+    /// existing TagBindings. E.g.
+    /// "//cloudresourcemanager.googleapis.com/projects/123"
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of TagBindings to return in the response. The
+    /// server allows a maximum of 300 TagBindings to return. If unspecified, the
+    /// server will use 100 as the default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// `ListTagBindings` that indicates where this listing should continue from.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The ListTagBindings response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTagBindingsResponse {
+    /// A possibly paginated list of TagBindings for the specified resource.
+    #[prost(message, repeated, tag = "1")]
+    pub tag_bindings: ::prost::alloc::vec::Vec<TagBinding>,
+    /// Pagination token.
+    ///
+    /// If the result set is too large to fit in a single response, this token
+    /// is returned. It encodes the position of the current result cursor.
+    /// Feeding this value into a new list request with the `page_token` parameter
+    /// gives the next page of the results.
+    ///
+    /// When `next_page_token` is not filled in, there is no next page and
+    /// the list returned is the last page in the result set.
+    ///
+    /// Pagination tokens have a limited lifetime.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The request message to ListEffectiveTags
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEffectiveTagsRequest {
+    /// Required. The full resource name of a resource for which you want to list
+    /// the effective tags. E.g.
+    /// "//cloudresourcemanager.googleapis.com/projects/123"
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of effective tags to return in the response.
+    /// The server allows a maximum of 300 effective tags to return in a single
+    /// page. If unspecified, the server will use 100 as the default.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. A pagination token returned from a previous call to
+    /// `ListEffectiveTags` that indicates from where this listing should continue.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The response of ListEffectiveTags.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListEffectiveTagsResponse {
+    /// A possibly paginated list of effective tags for the specified resource.
+    #[prost(message, repeated, tag = "1")]
+    pub effective_tags: ::prost::alloc::vec::Vec<EffectiveTag>,
+    /// Pagination token.
+    ///
+    /// If the result set is too large to fit in a single response, this token
+    /// is returned. It encodes the position of the current result cursor.
+    /// Feeding this value into a new list request with the `page_token` parameter
+    /// gives the next page of the results.
+    ///
+    /// When `next_page_token` is not filled in, there is no next page and
+    /// the list returned is the last page in the result set.
+    ///
+    /// Pagination tokens have a limited lifetime.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// An EffectiveTag represents a tag that applies to a resource during policy
+/// evaluation. Tags can be either directly bound to a resource or inherited from
+/// its ancestor. EffectiveTag contains the name and
+/// namespaced_name of the tag value and tag key, with additional fields of
+/// `inherited` to indicate the inheritance status of the effective tag.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EffectiveTag {
+    /// Resource name for TagValue in the format `tagValues/456`.
+    #[prost(string, tag = "1")]
+    pub tag_value: ::prost::alloc::string::String,
+    /// The namespaced name of the TagValue. Can be in the form
+    /// `{organization_id}/{tag_key_short_name}/{tag_value_short_name}` or
+    /// `{project_id}/{tag_key_short_name}/{tag_value_short_name}` or
+    /// `{project_number}/{tag_key_short_name}/{tag_value_short_name}`.
+    #[prost(string, tag = "2")]
+    pub namespaced_tag_value: ::prost::alloc::string::String,
+    /// The name of the TagKey, in the format `tagKeys/{id}`, such as
+    /// `tagKeys/123`.
+    #[prost(string, tag = "3")]
+    pub tag_key: ::prost::alloc::string::String,
+    /// The namespaced name of the TagKey. Can be in the form
+    /// `{organization_id}/{tag_key_short_name}` or
+    /// `{project_id}/{tag_key_short_name}` or
+    /// `{project_number}/{tag_key_short_name}`.
+    #[prost(string, tag = "4")]
+    pub namespaced_tag_key: ::prost::alloc::string::String,
+    /// The parent name of the tag key.
+    /// Must be in the format `organizations/{organization_id}` or
+    /// `projects/{project_number}`
+    #[prost(string, tag = "6")]
+    pub tag_key_parent_name: ::prost::alloc::string::String,
+    /// Indicates the inheritance status of a tag value
+    /// attached to the given resource. If the tag value is inherited from one of
+    /// the resource's ancestors, inherited will be true. If false, then the tag
+    /// value is directly attached to the resource, inherited will be false.
+    #[prost(bool, tag = "5")]
+    pub inherited: bool,
+}
 /// Generated client implementations.
-pub mod tag_values_client {
+pub mod tag_bindings_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
     use tonic::codegen::http::Uri;
-    /// Allow users to create and manage tag values.
+    /// Allow users to create and manage TagBindings between TagValues and
+    /// different Google Cloud resources throughout the GCP resource hierarchy.
     #[derive(Debug, Clone)]
-    pub struct TagValuesClient<T> {
+    pub struct TagBindingsClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> TagValuesClient<T>
+    impl<T> TagBindingsClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
         T::Error: Into<StdError>,
@@ -912,7 +2007,7 @@ pub mod tag_values_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> TagValuesClient<InterceptedService<T, F>>
+        ) -> TagBindingsClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -926,7 +2021,7 @@ pub mod tag_values_client {
                 http::Request<tonic::body::BoxBody>,
             >>::Error: Into<StdError> + Send + Sync,
         {
-            TagValuesClient::new(InterceptedService::new(inner, interceptor))
+            TagBindingsClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -943,215 +2038,36 @@ pub mod tag_values_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
-        /// Lists all TagValues for a specific TagKey.
-        pub async fn list_tag_values(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTagValuesRequest>,
-        ) -> Result<tonic::Response<super::ListTagValuesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/ListTagValues",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Retrieves a TagValue. This method will return `PERMISSION_DENIED` if the
-        /// value does not exist or the user does not have permission to view it.
-        pub async fn get_tag_value(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetTagValueRequest>,
-        ) -> Result<tonic::Response<super::TagValue>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/GetTagValue",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Retrieves a TagValue by its namespaced name.
-        /// This method will return `PERMISSION_DENIED` if the value does not exist
-        /// or the user does not have permission to view it.
-        pub async fn get_namespaced_tag_value(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetNamespacedTagValueRequest>,
-        ) -> Result<tonic::Response<super::TagValue>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/GetNamespacedTagValue",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a TagValue as a child of the specified TagKey. If a another
-        /// request with the same parameters is sent while the original request is in
-        /// process the second request will receive an error. A maximum of 1000
-        /// TagValues can exist under a TagKey at any given time.
-        pub async fn create_tag_value(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTagValueRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/CreateTagValue",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates the attributes of the TagValue resource.
-        pub async fn update_tag_value(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateTagValueRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/UpdateTagValue",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a TagValue. The TagValue cannot have any bindings when it is
-        /// deleted.
-        pub async fn delete_tag_value(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteTagValueRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/DeleteTagValue",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for a TagValue. The returned policy may be
-        /// empty if no such policy or resource exists. The `resource` field should
-        /// be the TagValue's resource name. For example: `tagValues/1234`.
-        /// The caller must have the
-        /// `cloudresourcemanager.googleapis.com/tagValues.getIamPolicy` permission on
-        /// the identified TagValue to get the access control policy.
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on a TagValue, replacing any existing
-        /// policy. The `resource` field should be the TagValue's resource name.
-        /// For example: `tagValues/1234`.
-        /// The caller must have `resourcemanager.tagValues.setIamPolicy` permission
-        /// on the identified tagValue.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns permissions that a caller has on the specified TagValue.
-        /// The `resource` field should be the TagValue's resource name. For example:
-        /// `tagValues/1234`.
+        /// Lists the TagBindings for the given Google Cloud resource, as specified
+        /// with `parent`.
         ///
-        /// There are no permissions required for making this API call.
-        pub async fn test_iam_permissions(
+        /// NOTE: The `parent` field is expected to be a full resource name:
+        /// https://cloud.google.com/apis/design/resource_names#full_resource_name
+        pub async fn list_tag_bindings(
             &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
+            request: impl tonic::IntoRequest<super::ListTagBindingsRequest>,
+        ) -> Result<tonic::Response<super::ListTagBindingsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagBindings/ListTagBindings",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Creates a TagBinding between a TagValue and a Google Cloud resource.
+        pub async fn create_tag_binding(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTagBindingRequest>,
         ) -> Result<
-            tonic::Response<
-                super::super::super::super::iam::v1::TestIamPermissionsResponse,
-            >,
+            tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
             self.inner
@@ -1165,7 +2081,51 @@ pub mod tag_values_client {
                 })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagValues/TestIamPermissions",
+                "/google.cloud.resourcemanager.v3.TagBindings/CreateTagBinding",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Deletes a TagBinding.
+        pub async fn delete_tag_binding(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteTagBindingRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagBindings/DeleteTagBinding",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Return a list of effective tags for the given Google Cloud resource, as
+        /// specified in `parent`.
+        pub async fn list_effective_tags(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListEffectiveTagsRequest>,
+        ) -> Result<tonic::Response<super::ListEffectiveTagsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.resourcemanager.v3.TagBindings/ListEffectiveTags",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
@@ -1674,966 +2634,6 @@ pub mod tag_keys_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.resourcemanager.v3.TagKeys/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// The root node in the resource hierarchy to which a particular entity's
-/// (a company, for example) resources belong.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Organization {
-    /// Output only. The resource name of the organization. This is the
-    /// organization's relative path in the API. Its format is
-    /// "organizations/\[organization_id\]". For example, "organizations/1234".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. A human-readable string that refers to the organization in the
-    /// Google Cloud Console. This string is set by the server and cannot be
-    /// changed. The string will be set to the primary domain (for example,
-    /// "google.com") of the Google Workspace customer that owns the organization.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The organization's current lifecycle state.
-    #[prost(enumeration = "organization::State", tag = "4")]
-    pub state: i32,
-    /// Output only. Timestamp when the Organization was created.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when the Organization was last modified.
-    #[prost(message, optional, tag = "6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when the Organization was requested for deletion.
-    #[prost(message, optional, tag = "7")]
-    pub delete_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. A checksum computed by the server based on the current value
-    /// of the Organization resource. This may be sent on update and delete
-    /// requests to ensure the client has an up-to-date value before proceeding.
-    #[prost(string, tag = "8")]
-    pub etag: ::prost::alloc::string::String,
-    /// The owner of this organization. The owner should be specified on
-    /// creation. Once set, it cannot be changed.
-    ///
-    /// The lifetime of the organization and all of its descendants are bound to
-    /// the owner. If the owner is deleted, the organization and all its
-    /// descendants will be deleted.
-    #[prost(oneof = "organization::Owner", tags = "3")]
-    pub owner: ::core::option::Option<organization::Owner>,
-}
-/// Nested message and enum types in `Organization`.
-pub mod organization {
-    /// Organization lifecycle states.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.  This is only useful for distinguishing unset values.
-        Unspecified = 0,
-        /// The normal and active state.
-        Active = 1,
-        /// The organization has been marked for deletion by the user.
-        DeleteRequested = 2,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Active => "ACTIVE",
-                State::DeleteRequested => "DELETE_REQUESTED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ACTIVE" => Some(Self::Active),
-                "DELETE_REQUESTED" => Some(Self::DeleteRequested),
-                _ => None,
-            }
-        }
-    }
-    /// The owner of this organization. The owner should be specified on
-    /// creation. Once set, it cannot be changed.
-    ///
-    /// The lifetime of the organization and all of its descendants are bound to
-    /// the owner. If the owner is deleted, the organization and all its
-    /// descendants will be deleted.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Owner {
-        /// Immutable. The G Suite / Workspace customer id used in the Directory API.
-        #[prost(string, tag = "3")]
-        DirectoryCustomerId(::prost::alloc::string::String),
-    }
-}
-/// The request sent to the `GetOrganization` method. The `name` field is
-/// required. `organization_id` is no longer accepted.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetOrganizationRequest {
-    /// Required. The resource name of the Organization to fetch. This is the
-    /// organization's relative path in the API, formatted as
-    /// "organizations/\[organizationId\]". For example, "organizations/1234".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The request sent to the `SearchOrganizations` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchOrganizationsRequest {
-    /// Optional. The maximum number of organizations to return in the response.
-    /// The server can return fewer organizations than requested. If unspecified,
-    /// server picks an appropriate default.
-    #[prost(int32, tag = "1")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// `SearchOrganizations` that indicates from where listing should continue.
-    #[prost(string, tag = "2")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. An optional query string used to filter the Organizations to
-    /// return in the response. Query rules are case-insensitive.
-    ///
-    ///
-    /// ```
-    /// | Field            | Description                                |
-    /// |------------------|--------------------------------------------|
-    /// | directoryCustomerId, owner.directoryCustomerId | Filters by directory
-    /// customer id. |
-    /// | domain           | Filters by domain.                         |
-    /// ```
-    ///
-    /// Organizations may be queried by `directoryCustomerId` or by
-    /// `domain`, where the domain is a G Suite domain, for example:
-    ///
-    /// * Query `directorycustomerid:123456789` returns Organization
-    /// resources with `owner.directory_customer_id` equal to `123456789`.
-    /// * Query `domain:google.com` returns Organization resources corresponding
-    /// to the domain `google.com`.
-    #[prost(string, tag = "3")]
-    pub query: ::prost::alloc::string::String,
-}
-/// The response returned from the `SearchOrganizations` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchOrganizationsResponse {
-    /// The list of Organizations that matched the search query, possibly
-    /// paginated.
-    #[prost(message, repeated, tag = "1")]
-    pub organizations: ::prost::alloc::vec::Vec<Organization>,
-    /// A pagination token to be used to retrieve the next page of results. If the
-    /// result is too large to fit within the page size specified in the request,
-    /// this field will be set with a token that can be used to fetch the next page
-    /// of results. If this field is empty, it indicates that this response
-    /// contains the last page of results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// A status object which is used as the `metadata` field for the operation
-/// returned by DeleteOrganization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteOrganizationMetadata {}
-/// A status object which is used as the `metadata` field for the Operation
-/// returned by UndeleteOrganization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UndeleteOrganizationMetadata {}
-/// Generated client implementations.
-pub mod organizations_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Allows users to manage their organization resources.
-    #[derive(Debug, Clone)]
-    pub struct OrganizationsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> OrganizationsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> OrganizationsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            OrganizationsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Fetches an organization resource identified by the specified resource name.
-        pub async fn get_organization(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetOrganizationRequest>,
-        ) -> Result<tonic::Response<super::Organization>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/GetOrganization",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches organization resources that are visible to the user and satisfy
-        /// the specified filter. This method returns organizations in an unspecified
-        /// order. New organizations do not necessarily appear at the end of the
-        /// results, and may take a small amount of time to appear.
-        ///
-        /// Search will only return organizations on which the user has the permission
-        /// `resourcemanager.organizations.get`
-        pub async fn search_organizations(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchOrganizationsRequest>,
-        ) -> Result<tonic::Response<super::SearchOrganizationsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/SearchOrganizations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for an organization resource. The policy may
-        /// be empty if no such policy or resource exists. The `resource` field should
-        /// be the organization's resource name, for example: "organizations/123".
-        ///
-        /// Authorization requires the IAM permission
-        /// `resourcemanager.organizations.getIamPolicy` on the specified organization.
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on an organization resource. Replaces any
-        /// existing policy. The `resource` field should be the organization's resource
-        /// name, for example: "organizations/123".
-        ///
-        /// Authorization requires the IAM permission
-        /// `resourcemanager.organizations.setIamPolicy` on the specified organization.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns the permissions that a caller has on the specified organization.
-        /// The `resource` field should be the organization's resource name,
-        /// for example: "organizations/123".
-        ///
-        /// There are no permissions required for making this API call.
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<
-                super::super::super::super::iam::v1::TestIamPermissionsResponse,
-            >,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.Organizations/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A TagHold represents the use of a TagValue that is not captured by
-/// TagBindings. If a TagValue has any TagHolds, deletion will be blocked.
-/// This resource is intended to be created in the same cloud location as the
-/// `holder`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagHold {
-    /// Output only. The resource name of a TagHold. This is a String of the form:
-    /// `tagValues/{tag-value-id}/tagHolds/{tag-hold-id}`
-    /// (e.g. `tagValues/123/tagHolds/456`). This resource name is generated by
-    /// the server.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the resource where the TagValue is being used. Must
-    /// be less than 200 characters. E.g.
-    /// `//compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group`
-    #[prost(string, tag = "2")]
-    pub holder: ::prost::alloc::string::String,
-    /// Optional. An optional string representing the origin of this request. This
-    /// field should include human-understandable information to distinguish
-    /// origins from each other. Must be less than 200 characters. E.g.
-    /// `migs-35678234`
-    #[prost(string, tag = "3")]
-    pub origin: ::prost::alloc::string::String,
-    /// Optional. A URL where an end user can learn more about removing this hold.
-    /// E.g.
-    /// `<https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing`>
-    #[prost(string, tag = "4")]
-    pub help_link: ::prost::alloc::string::String,
-    /// Output only. The time this TagHold was created.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The request message to create a TagHold.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagHoldRequest {
-    /// Required. The resource name of the TagHold's parent TagValue. Must be of
-    /// the form: `tagValues/{tag-value-id}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The TagHold to be created.
-    #[prost(message, optional, tag = "2")]
-    pub tag_hold: ::core::option::Option<TagHold>,
-    /// Optional. Set to true to perform the validations necessary for creating the
-    /// resource, but not actually perform the action.
-    #[prost(bool, tag = "3")]
-    pub validate_only: bool,
-}
-/// Runtime operation information for creating a TagHold.
-/// (-- The metadata is currently empty, but may include information in the
-/// future. --)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagHoldMetadata {}
-/// The request message to delete a TagHold.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagHoldRequest {
-    /// Required. The resource name of the TagHold to delete. Must be of the form:
-    /// `tagValues/{tag-value-id}/tagHolds/{tag-hold-id}`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Set to true to perform the validations necessary for deleting the
-    /// resource, but not actually perform the action.
-    #[prost(bool, tag = "2")]
-    pub validate_only: bool,
-}
-/// Runtime operation information for deleting a TagHold.
-/// (-- The metadata is currently empty, but may include information in the
-/// future. --)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagHoldMetadata {}
-/// The request message for listing the TagHolds under a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagHoldsRequest {
-    /// Required. The resource name of the parent TagValue. Must be of the form:
-    /// `tagValues/{tag-value-id}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of TagHolds to return in the response. The
-    /// server allows a maximum of 300 TagHolds to return. If unspecified, the
-    /// server will use 100 as the default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// `ListTagHolds` that indicates where this listing should continue from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Optional. Criteria used to select a subset of TagHolds parented by the
-    /// TagValue to return. This field follows the syntax defined by aip.dev/160;
-    /// the `holder` and `origin` fields are supported for filtering. Currently
-    /// only `AND` syntax is supported. Some example queries are:
-    ///
-    ///    * `holder =
-    ///      //compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group`
-    ///    * `origin = 35678234`
-    ///    * `holder =
-    ///      //compute.googleapis.com/compute/projects/myproject/regions/us-east-1/instanceGroupManagers/instance-group
-    ///      AND origin = 35678234`
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-}
-/// The ListTagHolds response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagHoldsResponse {
-    /// A possibly paginated list of TagHolds.
-    #[prost(message, repeated, tag = "1")]
-    pub tag_holds: ::prost::alloc::vec::Vec<TagHold>,
-    /// Pagination token.
-    ///
-    /// If the result set is too large to fit in a single response, this token
-    /// is returned. It encodes the position of the current result cursor.
-    /// Feeding this value into a new list request with the `page_token` parameter
-    /// gives the next page of the results.
-    ///
-    /// When `next_page_token` is not filled in, there is no next page and
-    /// the list returned is the last page in the result set.
-    ///
-    /// Pagination tokens have a limited lifetime.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod tag_holds_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Allow users to create and manage TagHolds for TagValues. TagHolds represent
-    /// the use of a Tag Value that is not captured by TagBindings but
-    /// should still block TagValue deletion (such as a reference in a policy
-    /// condition). This service provides isolated failure domains by cloud location
-    /// so that TagHolds can be managed in the same location as their usage.
-    #[derive(Debug, Clone)]
-    pub struct TagHoldsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TagHoldsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TagHoldsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TagHoldsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a TagHold. Returns ALREADY_EXISTS if a TagHold with the same
-        /// resource and origin exists under the same TagValue.
-        pub async fn create_tag_hold(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTagHoldRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagHolds/CreateTagHold",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a TagHold.
-        pub async fn delete_tag_hold(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteTagHoldRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagHolds/DeleteTagHold",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists TagHolds under a TagValue.
-        pub async fn list_tag_holds(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTagHoldsRequest>,
-        ) -> Result<tonic::Response<super::ListTagHoldsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagHolds/ListTagHolds",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A TagBinding represents a connection between a TagValue and a cloud
-/// resource Once a TagBinding is created, the TagValue is applied to all the
-/// descendants of the Google Cloud resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagBinding {
-    /// Output only. The name of the TagBinding. This is a String of the form:
-    /// `tagBindings/{full-resource-name}/{tag-value-name}` (e.g.
-    /// `tagBindings/%2F%2Fcloudresourcemanager.googleapis.com%2Fprojects%2F123/tagValues/456`).
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The full resource name of the resource the TagValue is bound to.
-    /// E.g. `//cloudresourcemanager.googleapis.com/projects/123`
-    #[prost(string, tag = "2")]
-    pub parent: ::prost::alloc::string::String,
-    /// The TagValue of the TagBinding.
-    /// Must be of the form `tagValues/456`.
-    #[prost(string, tag = "3")]
-    pub tag_value: ::prost::alloc::string::String,
-    /// The namespaced name for the TagValue of the TagBinding.
-    /// Must be in the format
-    /// `{parent_id}/{tag_key_short_name}/{short_name}`.
-    ///
-    /// For methods that support TagValue namespaced name, only one of
-    /// tag_value_namespaced_name or tag_value may be filled. Requests with both
-    /// fields will be rejected.
-    #[prost(string, tag = "4")]
-    pub tag_value_namespaced_name: ::prost::alloc::string::String,
-}
-/// Runtime operation information for creating a TagValue.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagBindingMetadata {}
-/// The request message to create a TagBinding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTagBindingRequest {
-    /// Required. The TagBinding to be created.
-    #[prost(message, optional, tag = "1")]
-    pub tag_binding: ::core::option::Option<TagBinding>,
-    /// Optional. Set to true to perform the validations necessary for creating the
-    /// resource, but not actually perform the action.
-    #[prost(bool, tag = "2")]
-    pub validate_only: bool,
-}
-/// Runtime operation information for deleting a TagBinding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagBindingMetadata {}
-/// The request message to delete a TagBinding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTagBindingRequest {
-    /// Required. The name of the TagBinding. This is a String of the form:
-    /// `tagBindings/{id}` (e.g.
-    /// `tagBindings/%2F%2Fcloudresourcemanager.googleapis.com%2Fprojects%2F123/tagValues/456`).
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The request message to list all TagBindings for a parent.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagBindingsRequest {
-    /// Required. The full resource name of a resource for which you want to list
-    /// existing TagBindings. E.g.
-    /// "//cloudresourcemanager.googleapis.com/projects/123"
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of TagBindings to return in the response. The
-    /// server allows a maximum of 300 TagBindings to return. If unspecified, the
-    /// server will use 100 as the default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// `ListTagBindings` that indicates where this listing should continue from.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The ListTagBindings response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTagBindingsResponse {
-    /// A possibly paginated list of TagBindings for the specified resource.
-    #[prost(message, repeated, tag = "1")]
-    pub tag_bindings: ::prost::alloc::vec::Vec<TagBinding>,
-    /// Pagination token.
-    ///
-    /// If the result set is too large to fit in a single response, this token
-    /// is returned. It encodes the position of the current result cursor.
-    /// Feeding this value into a new list request with the `page_token` parameter
-    /// gives the next page of the results.
-    ///
-    /// When `next_page_token` is not filled in, there is no next page and
-    /// the list returned is the last page in the result set.
-    ///
-    /// Pagination tokens have a limited lifetime.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The request message to ListEffectiveTags
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEffectiveTagsRequest {
-    /// Required. The full resource name of a resource for which you want to list
-    /// the effective tags. E.g.
-    /// "//cloudresourcemanager.googleapis.com/projects/123"
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of effective tags to return in the response.
-    /// The server allows a maximum of 300 effective tags to return in a single
-    /// page. If unspecified, the server will use 100 as the default.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. A pagination token returned from a previous call to
-    /// `ListEffectiveTags` that indicates from where this listing should continue.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The response of ListEffectiveTags.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListEffectiveTagsResponse {
-    /// A possibly paginated list of effective tags for the specified resource.
-    #[prost(message, repeated, tag = "1")]
-    pub effective_tags: ::prost::alloc::vec::Vec<EffectiveTag>,
-    /// Pagination token.
-    ///
-    /// If the result set is too large to fit in a single response, this token
-    /// is returned. It encodes the position of the current result cursor.
-    /// Feeding this value into a new list request with the `page_token` parameter
-    /// gives the next page of the results.
-    ///
-    /// When `next_page_token` is not filled in, there is no next page and
-    /// the list returned is the last page in the result set.
-    ///
-    /// Pagination tokens have a limited lifetime.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// An EffectiveTag represents a tag that applies to a resource during policy
-/// evaluation. Tags can be either directly bound to a resource or inherited from
-/// its ancestor. EffectiveTag contains the name and
-/// namespaced_name of the tag value and tag key, with additional fields of
-/// `inherited` to indicate the inheritance status of the effective tag.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EffectiveTag {
-    /// Resource name for TagValue in the format `tagValues/456`.
-    #[prost(string, tag = "1")]
-    pub tag_value: ::prost::alloc::string::String,
-    /// The namespaced name of the TagValue. Can be in the form
-    /// `{organization_id}/{tag_key_short_name}/{tag_value_short_name}` or
-    /// `{project_id}/{tag_key_short_name}/{tag_value_short_name}` or
-    /// `{project_number}/{tag_key_short_name}/{tag_value_short_name}`.
-    #[prost(string, tag = "2")]
-    pub namespaced_tag_value: ::prost::alloc::string::String,
-    /// The name of the TagKey, in the format `tagKeys/{id}`, such as
-    /// `tagKeys/123`.
-    #[prost(string, tag = "3")]
-    pub tag_key: ::prost::alloc::string::String,
-    /// The namespaced name of the TagKey. Can be in the form
-    /// `{organization_id}/{tag_key_short_name}` or
-    /// `{project_id}/{tag_key_short_name}` or
-    /// `{project_number}/{tag_key_short_name}`.
-    #[prost(string, tag = "4")]
-    pub namespaced_tag_key: ::prost::alloc::string::String,
-    /// The parent name of the tag key.
-    /// Must be in the format `organizations/{organization_id}` or
-    /// `projects/{project_number}`
-    #[prost(string, tag = "6")]
-    pub tag_key_parent_name: ::prost::alloc::string::String,
-    /// Indicates the inheritance status of a tag value
-    /// attached to the given resource. If the tag value is inherited from one of
-    /// the resource's ancestors, inherited will be true. If false, then the tag
-    /// value is directly attached to the resource, inherited will be false.
-    #[prost(bool, tag = "5")]
-    pub inherited: bool,
-}
-/// Generated client implementations.
-pub mod tag_bindings_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Allow users to create and manage TagBindings between TagValues and
-    /// different Google Cloud resources throughout the GCP resource hierarchy.
-    #[derive(Debug, Clone)]
-    pub struct TagBindingsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> TagBindingsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> TagBindingsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            TagBindingsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists the TagBindings for the given Google Cloud resource, as specified
-        /// with `parent`.
-        ///
-        /// NOTE: The `parent` field is expected to be a full resource name:
-        /// https://cloud.google.com/apis/design/resource_names#full_resource_name
-        pub async fn list_tag_bindings(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTagBindingsRequest>,
-        ) -> Result<tonic::Response<super::ListTagBindingsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagBindings/ListTagBindings",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a TagBinding between a TagValue and a Google Cloud resource.
-        pub async fn create_tag_binding(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTagBindingRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagBindings/CreateTagBinding",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a TagBinding.
-        pub async fn delete_tag_binding(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteTagBindingRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagBindings/DeleteTagBinding",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Return a list of effective tags for the given Google Cloud resource, as
-        /// specified in `parent`.
-        pub async fn list_effective_tags(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListEffectiveTagsRequest>,
-        ) -> Result<tonic::Response<super::ListEffectiveTagsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.resourcemanager.v3.TagBindings/ListEffectiveTags",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

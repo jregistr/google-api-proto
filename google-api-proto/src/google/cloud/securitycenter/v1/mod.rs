@@ -1,3 +1,254 @@
+/// Represents a particular IAM binding, which captures a member's role addition,
+/// removal, or state.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IamBinding {
+    /// The action that was performed on a Binding.
+    #[prost(enumeration = "iam_binding::Action", tag = "1")]
+    pub action: i32,
+    /// Role that is assigned to "members".
+    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
+    #[prost(string, tag = "2")]
+    pub role: ::prost::alloc::string::String,
+    /// A single identity requesting access for a Cloud Platform resource,
+    /// e.g. "foo@google.com".
+    #[prost(string, tag = "3")]
+    pub member: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `IamBinding`.
+pub mod iam_binding {
+    /// The type of action performed on a Binding in a policy.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Action {
+        /// Unspecified.
+        Unspecified = 0,
+        /// Addition of a Binding.
+        Add = 1,
+        /// Removal of a Binding.
+        Remove = 2,
+    }
+    impl Action {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Action::Unspecified => "ACTION_UNSPECIFIED",
+                Action::Add => "ADD",
+                Action::Remove => "REMOVE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
+                "ADD" => Some(Self::Add),
+                "REMOVE" => Some(Self::Remove),
+                _ => None,
+            }
+        }
+    }
+}
+/// Response of asset discovery run
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration = "run_asset_discovery_response::State", tag = "1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
+    #[prost(message, optional, tag = "2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "COMPLETED" => Some(Self::Completed),
+                "SUPERSEDED" => Some(Self::Superseded),
+                "TERMINATED" => Some(Self::Terminated),
+                _ => None,
+            }
+        }
+    }
+}
+/// Configures how to deliver Findings to BigQuery Instance.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BigQueryExport {
+    /// The relative resource name of this export. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name.>
+    /// Example format:
+    /// "organizations/{organization_id}/bigQueryExports/{export_id}" Example
+    /// format: "folders/{folder_id}/bigQueryExports/{export_id}" Example format:
+    /// "projects/{project_id}/bigQueryExports/{export_id}"
+    /// This field is provided in responses, and is ignored when provided in create
+    /// requests.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the export (max of 1024 characters).
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Expression that defines the filter to apply across create/update events
+    /// of findings. The expression is a list of zero or more restrictions combined
+    /// via logical operators `AND` and `OR`. Parentheses are supported, and `OR`
+    /// has higher precedence than `AND`.
+    ///
+    /// Restrictions have the form `<field> <operator> <value>` and may have a
+    /// `-` character in front of them to indicate negation. The fields map to
+    /// those defined in the corresponding resource.
+    ///
+    /// The supported operators are:
+    ///
+    /// * `=` for all value types.
+    /// * `>`, `<`, `>=`, `<=` for integer values.
+    /// * `:`, meaning substring matching, for strings.
+    ///
+    /// The supported value types are:
+    ///
+    /// * string literals in quotes.
+    /// * integer literals without quotes.
+    /// * boolean literals `true` and `false` without quotes.
+    #[prost(string, tag = "3")]
+    pub filter: ::prost::alloc::string::String,
+    /// The dataset to write findings' updates to. Its format is
+    /// "projects/\[project_id]/datasets/[bigquery_dataset_id\]".
+    /// BigQuery Dataset unique ID  must contain only letters (a-z, A-Z), numbers
+    /// (0-9), or underscores (_).
+    #[prost(string, tag = "4")]
+    pub dataset: ::prost::alloc::string::String,
+    /// Output only. The time at which the BigQuery export was created.
+    /// This field is set by the server and will be ignored if provided on export
+    /// on creation.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The most recent time at which the BigQuery export was updated.
+    /// This field is set by the server and will be ignored if provided on export
+    /// creation or update.
+    #[prost(message, optional, tag = "6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Email address of the user who last edited the BigQuery export.
+    /// This field is set by the server and will be ignored if provided on export
+    /// creation or update.
+    #[prost(string, tag = "7")]
+    pub most_recent_editor: ::prost::alloc::string::String,
+    /// Output only. The service account that needs permission to create table and
+    /// upload data to the BigQuery dataset.
+    #[prost(string, tag = "8")]
+    pub principal: ::prost::alloc::string::String,
+}
+/// Label represents a generic name=value label. Label has separate name and
+/// value fields to support filtering with contains().
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Label {
+    /// Label name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Label value.
+    #[prost(string, tag = "2")]
+    pub value: ::prost::alloc::string::String,
+}
+/// Container associated with the finding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Container {
+    /// Container name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Container image URI provided when configuring a pod/container.
+    /// May identify a container image version using mutable tags.
+    #[prost(string, tag = "2")]
+    pub uri: ::prost::alloc::string::String,
+    /// Optional container image id, when provided by the container runtime.
+    /// Uniquely identifies the container image launched using a container image
+    /// digest.
+    #[prost(string, tag = "3")]
+    pub image_id: ::prost::alloc::string::String,
+    /// Container labels, as provided by the container runtime.
+    #[prost(message, repeated, tag = "4")]
+    pub labels: ::prost::alloc::vec::Vec<Label>,
+}
+/// Represents database access information, such as queries.
+/// A database may be a sub-resource of an instance (as in the case of CloudSQL
+/// instances or Cloud Spanner instances), or the database instance itself.
+/// Some database resources may not have the full resource name populated
+/// because these resource types are not yet supported by Cloud Asset Inventory
+/// (e.g. CloudSQL databases). In these cases only the display name will be
+/// provided.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Database {
+    /// The full resource name of the database the user connected to, if it is
+    /// supported by CAI. (<https://google.aip.dev/122#full-resource-names>)
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name of the database the user connected to.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The username used to connect to the DB. This may not necessarily be an IAM
+    /// principal, and has no required format.
+    #[prost(string, tag = "3")]
+    pub user_name: ::prost::alloc::string::String,
+    /// The SQL statement associated with the relevant access.
+    #[prost(string, tag = "4")]
+    pub query: ::prost::alloc::string::String,
+    /// The target usernames/roles/groups of a SQL privilege grant (not an IAM
+    /// policy change).
+    #[prost(string, repeated, tag = "5")]
+    pub grantees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 /// Represents an access event.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -89,262 +340,154 @@ pub struct Geolocation {
     #[prost(string, tag = "1")]
     pub region_code: ::prost::alloc::string::String,
 }
-/// The [data profile](<https://cloud.google.com/dlp/docs/data-profiles>)
-/// associated with the finding.
+/// File information about the related binary/library used by an executable, or
+/// the script used by a script interpreter
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CloudDlpDataProfile {
-    /// Name of the data profile, for example,
-    /// `projects/123/locations/europe/tableProfiles/8383929`.
+pub struct File {
+    /// Absolute path of the file as a JSON encoded string.
     #[prost(string, tag = "1")]
-    pub data_profile: ::prost::alloc::string::String,
-}
-/// A mute config is a Cloud SCC resource that contains the configuration
-/// to mute create/update events of findings.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MuteConfig {
-    /// This field will be ignored if provided on config creation. Format
-    /// "organizations/{organization}/muteConfigs/{mute_config}"
-    /// "folders/{folder}/muteConfigs/{mute_config}"
-    /// "projects/{project}/muteConfigs/{mute_config}"
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name to be displayed for the mute config.
-    #[deprecated]
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// A description of the mute config.
+    pub path: ::prost::alloc::string::String,
+    /// Size of the file in bytes.
+    #[prost(int64, tag = "2")]
+    pub size: i64,
+    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
+    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
+    /// of the entire file.
     #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. An expression that defines the filter to apply across
-    /// create/update events of findings. While creating a filter string, be
-    /// mindful of the scope in which the mute configuration is being created.
-    /// E.g., If a filter contains project = X but is created under the project = Y
-    /// scope, it might not match any findings.
-    ///
-    /// The following field and operator combinations are supported:
-    ///
-    /// * severity: `=`, `:`
-    /// * category: `=`, `:`
-    /// * resource.name: `=`, `:`
-    /// * resource.project_name: `=`, `:`
-    /// * resource.project_display_name: `=`, `:`
-    /// * resource.folders.resource_folder: `=`, `:`
-    /// * resource.parent_name: `=`, `:`
-    /// * resource.parent_display_name: `=`, `:`
-    /// * resource.type: `=`, `:`
-    /// * finding_class: `=`, `:`
-    /// * indicator.ip_addresses: `=`, `:`
-    /// * indicator.domains: `=`, `:`
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Output only. The time at which the mute config was created.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The most recent time at which the mute config was updated.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(message, optional, tag = "6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Email address of the user who last edited the mute config.
-    /// This field is set by the server and will be ignored if provided on config
-    /// creation or update.
-    #[prost(string, tag = "7")]
-    pub most_recent_editor: ::prost::alloc::string::String,
+    pub sha256: ::prost::alloc::string::String,
+    /// The length in bytes of the file prefix that was hashed.  If
+    /// hashed_size == size, any hashes reported represent the entire
+    /// file.
+    #[prost(int64, tag = "4")]
+    pub hashed_size: i64,
+    /// True when the hash covers only a prefix of the file.
+    #[prost(bool, tag = "5")]
+    pub partially_hashed: bool,
+    /// Prefix of the file contents as a JSON encoded string.
+    /// (Currently only populated for Malicious Script Executed findings.)
+    #[prost(string, tag = "6")]
+    pub contents: ::prost::alloc::string::String,
 }
-/// Label represents a generic name=value label. Label has separate name and
-/// value fields to support filtering with contains().
+/// Defines the properties in a custom module configuration for Security
+/// Health Analytics. Use the custom module configuration to create custom
+/// detectors that generate custom findings for resources that you specify.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Label {
-    /// Label name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Label value.
-    #[prost(string, tag = "2")]
-    pub value: ::prost::alloc::string::String,
-}
-/// Container associated with the finding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Container {
-    /// Container name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Container image URI provided when configuring a pod/container.
-    /// May identify a container image version using mutable tags.
-    #[prost(string, tag = "2")]
-    pub uri: ::prost::alloc::string::String,
-    /// Optional container image id, when provided by the container runtime.
-    /// Uniquely identifies the container image launched using a container image
-    /// digest.
-    #[prost(string, tag = "3")]
-    pub image_id: ::prost::alloc::string::String,
-    /// Container labels, as provided by the container runtime.
-    #[prost(message, repeated, tag = "4")]
-    pub labels: ::prost::alloc::vec::Vec<Label>,
-}
-/// Configures how to deliver Findings to BigQuery Instance.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BigQueryExport {
-    /// The relative resource name of this export. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name.>
-    /// Example format:
-    /// "organizations/{organization_id}/bigQueryExports/{export_id}" Example
-    /// format: "folders/{folder_id}/bigQueryExports/{export_id}" Example format:
-    /// "projects/{project_id}/bigQueryExports/{export_id}"
-    /// This field is provided in responses, and is ignored when provided in create
-    /// requests.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the export (max of 1024 characters).
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Expression that defines the filter to apply across create/update events
-    /// of findings. The expression is a list of zero or more restrictions combined
-    /// via logical operators `AND` and `OR`. Parentheses are supported, and `OR`
-    /// has higher precedence than `AND`.
-    ///
-    /// Restrictions have the form `<field> <operator> <value>` and may have a
-    /// `-` character in front of them to indicate negation. The fields map to
-    /// those defined in the corresponding resource.
-    ///
-    /// The supported operators are:
-    ///
-    /// * `=` for all value types.
-    /// * `>`, `<`, `>=`, `<=` for integer values.
-    /// * `:`, meaning substring matching, for strings.
-    ///
-    /// The supported value types are:
-    ///
-    /// * string literals in quotes.
-    /// * integer literals without quotes.
-    /// * boolean literals `true` and `false` without quotes.
-    #[prost(string, tag = "3")]
-    pub filter: ::prost::alloc::string::String,
-    /// The dataset to write findings' updates to. Its format is
-    /// "projects/\[project_id]/datasets/[bigquery_dataset_id\]".
-    /// BigQuery Dataset unique ID  must contain only letters (a-z, A-Z), numbers
-    /// (0-9), or underscores (_).
-    #[prost(string, tag = "4")]
-    pub dataset: ::prost::alloc::string::String,
-    /// Output only. The time at which the BigQuery export was created.
-    /// This field is set by the server and will be ignored if provided on export
-    /// on creation.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The most recent time at which the BigQuery export was updated.
-    /// This field is set by the server and will be ignored if provided on export
-    /// creation or update.
-    #[prost(message, optional, tag = "6")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Email address of the user who last edited the BigQuery export.
-    /// This field is set by the server and will be ignored if provided on export
-    /// creation or update.
-    #[prost(string, tag = "7")]
-    pub most_recent_editor: ::prost::alloc::string::String,
-    /// Output only. The service account that needs permission to create table and
-    /// upload data to the BigQuery dataset.
-    #[prost(string, tag = "8")]
-    pub principal: ::prost::alloc::string::String,
-}
-/// User specified settings that are attached to the Security Command
-/// Center organization.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OrganizationSettings {
-    /// The relative resource name of the settings. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/organizationSettings".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
-    /// set to `true`, then discovery of assets will occur. If it is set to `false,
-    /// all historical assets will remain, but discovery of future assets will not
-    /// occur.
-    #[prost(bool, tag = "2")]
-    pub enable_asset_discovery: bool,
-    /// The configuration used for Asset Discovery runs.
+pub struct CustomConfig {
+    /// The CEL expression to evaluate to produce findings. When the expression
+    /// evaluates to true against a resource, a finding is generated.
+    #[prost(message, optional, tag = "1")]
+    pub predicate: ::core::option::Option<super::super::super::r#type::Expr>,
+    /// Custom output properties.
+    #[prost(message, optional, tag = "2")]
+    pub custom_output: ::core::option::Option<custom_config::CustomOutputSpec>,
+    /// The resource types that the custom module operates on. Each custom module
+    /// can specify up to 5 resource types.
     #[prost(message, optional, tag = "3")]
-    pub asset_discovery_config: ::core::option::Option<
-        organization_settings::AssetDiscoveryConfig,
-    >,
+    pub resource_selector: ::core::option::Option<custom_config::ResourceSelector>,
+    /// The severity to assign to findings generated by the module.
+    #[prost(enumeration = "custom_config::Severity", tag = "4")]
+    pub severity: i32,
+    /// Text that describes the vulnerability or misconfiguration that the custom
+    /// module detects. This explanation is returned with each finding instance to
+    /// help investigators understand the detected issue. The text must be enclosed
+    /// in quotation marks.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// An explanation of the recommended steps that security teams can take to
+    /// resolve the detected issue. This explanation is returned with each finding
+    /// generated by this module in the `nextSteps` property of the finding JSON.
+    #[prost(string, tag = "6")]
+    pub recommendation: ::prost::alloc::string::String,
 }
-/// Nested message and enum types in `OrganizationSettings`.
-pub mod organization_settings {
-    /// The configuration used for Asset Discovery runs.
+/// Nested message and enum types in `CustomConfig`.
+pub mod custom_config {
+    /// A set of optional name-value pairs that define custom source properties to
+    /// return with each finding that is generated by the custom module. The custom
+    /// source properties that are defined here are included in the finding JSON
+    /// under `sourceProperties`.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AssetDiscoveryConfig {
-        /// The project ids to use for filtering asset discovery.
-        #[prost(string, repeated, tag = "1")]
-        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The mode to use for filtering asset discovery.
-        #[prost(enumeration = "asset_discovery_config::InclusionMode", tag = "2")]
-        pub inclusion_mode: i32,
-        /// The folder ids to use for filtering asset discovery.
-        /// It consists of only digits, e.g., 756619654966.
-        #[prost(string, repeated, tag = "3")]
-        pub folder_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    pub struct CustomOutputSpec {
+        /// A list of custom output properties to add to the finding.
+        #[prost(message, repeated, tag = "1")]
+        pub properties: ::prost::alloc::vec::Vec<custom_output_spec::Property>,
     }
-    /// Nested message and enum types in `AssetDiscoveryConfig`.
-    pub mod asset_discovery_config {
-        /// The mode of inclusion when running Asset Discovery.
-        /// Asset discovery can be limited by explicitly identifying projects to be
-        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
-        /// within the organization and their children are discovered during asset
-        /// discovery. If EXCLUDE is set, then projects that don't match those
-        /// projects are discovered during asset discovery. If neither are set, then
-        /// all projects within the organization are discovered during asset
-        /// discovery.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum InclusionMode {
-            /// Unspecified. Setting the mode with this value will disable
-            /// inclusion/exclusion filtering for Asset Discovery.
-            Unspecified = 0,
-            /// Asset Discovery will capture only the resources within the projects
-            /// specified. All other resources will be ignored.
-            IncludeOnly = 1,
-            /// Asset Discovery will ignore all resources under the projects specified.
-            /// All other resources will be retrieved.
-            Exclude = 2,
+    /// Nested message and enum types in `CustomOutputSpec`.
+    pub mod custom_output_spec {
+        /// An individual name-value pair that defines a custom source property.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Property {
+            /// Name of the property for the custom output.
+            #[prost(string, tag = "1")]
+            pub name: ::prost::alloc::string::String,
+            /// The CEL expression for the custom output. A resource property can be
+            /// specified to return the value of the property or a text string enclosed
+            /// in quotation marks.
+            #[prost(message, optional, tag = "2")]
+            pub value_expression: ::core::option::Option<
+                super::super::super::super::super::r#type::Expr,
+            >,
         }
-        impl InclusionMode {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
-                    InclusionMode::IncludeOnly => "INCLUDE_ONLY",
-                    InclusionMode::Exclude => "EXCLUDE",
-                }
+    }
+    /// Resource for selecting resource type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ResourceSelector {
+        /// The resource types to run the detector on.
+        #[prost(string, repeated, tag = "1")]
+        pub resource_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// Defines the valid value options for the severity of a finding.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Severity {
+        /// Unspecified severity.
+        Unspecified = 0,
+        /// Critical severity.
+        Critical = 1,
+        /// High severity.
+        High = 2,
+        /// Medium severity.
+        Medium = 3,
+        /// Low severity.
+        Low = 4,
+    }
+    impl Severity {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
+                Severity::Critical => "CRITICAL",
+                Severity::High => "HIGH",
+                Severity::Medium => "MEDIUM",
+                Severity::Low => "LOW",
             }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "INCLUSION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "INCLUDE_ONLY" => Some(Self::IncludeOnly),
-                    "EXCLUDE" => Some(Self::Exclude),
-                    _ => None,
-                }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "CRITICAL" => Some(Self::Critical),
+                "HIGH" => Some(Self::High),
+                "MEDIUM" => Some(Self::Medium),
+                "LOW" => Some(Self::Low),
+                _ => None,
             }
         }
     }
@@ -394,85 +537,60 @@ pub struct Resource {
     #[prost(message, repeated, tag = "7")]
     pub folders: ::prost::alloc::vec::Vec<Folder>,
 }
-/// Contains information about the IP connection associated with the finding.
+/// The details pertaining to specific contacts
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connection {
-    /// Destination IP address. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(string, tag = "1")]
-    pub destination_ip: ::prost::alloc::string::String,
-    /// Destination port. Not present for sockets that are listening and not
-    /// connected.
-    #[prost(int32, tag = "2")]
-    pub destination_port: i32,
-    /// Source IP address.
-    #[prost(string, tag = "3")]
-    pub source_ip: ::prost::alloc::string::String,
-    /// Source port.
-    #[prost(int32, tag = "4")]
-    pub source_port: i32,
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[prost(enumeration = "connection::Protocol", tag = "5")]
-    pub protocol: i32,
+pub struct ContactDetails {
+    /// A list of contacts
+    #[prost(message, repeated, tag = "1")]
+    pub contacts: ::prost::alloc::vec::Vec<Contact>,
 }
-/// Nested message and enum types in `Connection`.
-pub mod connection {
-    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Protocol {
-        /// Unspecified protocol (not HOPOPT).
-        Unspecified = 0,
-        /// Internet Control Message Protocol.
-        Icmp = 1,
-        /// Transmission Control Protocol.
-        Tcp = 6,
-        /// User Datagram Protocol.
-        Udp = 17,
-        /// Generic Routing Encapsulation.
-        Gre = 47,
-        /// Encap Security Payload.
-        Esp = 50,
-    }
-    impl Protocol {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Protocol::Unspecified => "PROTOCOL_UNSPECIFIED",
-                Protocol::Icmp => "ICMP",
-                Protocol::Tcp => "TCP",
-                Protocol::Udp => "UDP",
-                Protocol::Gre => "GRE",
-                Protocol::Esp => "ESP",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PROTOCOL_UNSPECIFIED" => Some(Self::Unspecified),
-                "ICMP" => Some(Self::Icmp),
-                "TCP" => Some(Self::Tcp),
-                "UDP" => Some(Self::Udp),
-                "GRE" => Some(Self::Gre),
-                "ESP" => Some(Self::Esp),
-                _ => None,
-            }
-        }
-    }
+/// The email address of a contact.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Contact {
+    /// An email address. For example, "`person123@company.com`".
+    #[prost(string, tag = "1")]
+    pub email: ::prost::alloc::string::String,
+}
+/// Kernel mode rootkit signatures.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct KernelRootkit {
+    /// Rootkit name when available.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// True when unexpected modifications of kernel code memory are present.
+    #[prost(bool, tag = "2")]
+    pub unexpected_code_modification: bool,
+    /// True when unexpected modifications of kernel read-only data memory are
+    /// present.
+    #[prost(bool, tag = "3")]
+    pub unexpected_read_only_data_modification: bool,
+    /// True when `ftrace` points are present with callbacks pointing to regions
+    /// that are not in the expected kernel or module code range.
+    #[prost(bool, tag = "4")]
+    pub unexpected_ftrace_handler: bool,
+    /// True when `kprobe` points are present with callbacks pointing to regions
+    /// that are not in the expected kernel or module code range.
+    #[prost(bool, tag = "5")]
+    pub unexpected_kprobe_handler: bool,
+    /// True when kernel code pages that are not in the expected kernel or module
+    /// code regions are present.
+    #[prost(bool, tag = "6")]
+    pub unexpected_kernel_code_pages: bool,
+    /// True when system call handlers that are are not in the expected kernel or
+    /// module code regions are present.
+    #[prost(bool, tag = "7")]
+    pub unexpected_system_call_handler: bool,
+    /// True when interrupt handlers that are are not in the expected kernel or
+    /// module code regions are present.
+    #[prost(bool, tag = "8")]
+    pub unexpected_interrupt_handler: bool,
+    /// True when unexpected processes in the scheduler run queue are present. Such
+    /// processes are in the run queue, but not in the process task list.
+    #[prost(bool, tag = "9")]
+    pub unexpected_processes_in_runqueue: bool,
 }
 /// User specified security marks that are attached to the parent Security
 /// Command Center resource. Security marks are scoped within a Security Command
@@ -512,274 +630,115 @@ pub struct SecurityMarks {
     #[prost(string, tag = "3")]
     pub canonical_name: ::prost::alloc::string::String,
 }
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, and
-/// other tools.
+/// Security Command Center representation of a Google Cloud
+/// resource.
+///
+/// The Asset is a Security Command Center resource that captures information
+/// about a single Google Cloud resource. All modifications to an Asset are only
+/// within the context of Security Command Center and don't affect the referenced
+/// Google Cloud resource.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
+pub struct Asset {
+    /// The relative resource name of this asset. See:
     /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
     /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
+    /// "organizations/{organization_id}/assets/{asset_id}".
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated or insecure libraries."
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// The canonical name of the finding. It's either
-    /// "organizations/{organization_id}/sources/{source_id}",
-    /// "folders/{folder_id}/sources/{source_id}" or
-    /// "projects/{project_number}/sources/{source_id}",
-    /// depending on the closest CRM ancestor of the resource associated with the
-    /// finding.
-    #[prost(string, tag = "14")]
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[prost(message, optional, tag = "2")]
+    pub security_center_properties: ::core::option::Option<
+        asset::SecurityCenterProperties,
+    >,
+    /// Resource managed properties. These properties are managed and defined by
+    /// the Google Cloud resource and cannot be modified by the user.
+    #[prost(btree_map = "string, message", tag = "7")]
+    pub resource_properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::Value,
+    >,
+    /// User specified security marks. These marks are entirely managed by the user
+    /// and come from the SecurityMarks resource that belongs to the asset.
+    #[prost(message, optional, tag = "8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the asset was created in Security Command Center.
+    #[prost(message, optional, tag = "9")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the asset was last updated or added in Cloud SCC.
+    #[prost(message, optional, tag = "10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[prost(message, optional, tag = "11")]
+    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
+    /// The canonical name of the resource. It's either
+    /// "organizations/{organization_id}/assets/{asset_id}",
+    /// "folders/{folder_id}/assets/{asset_id}" or
+    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
+    /// ancestor of the resource.
+    #[prost(string, tag = "13")]
     pub canonical_name: ::prost::alloc::string::String,
 }
-/// Details about the Cloud Data Loss Prevention (Cloud DLP) [inspection
-/// job](<https://cloud.google.com/dlp/docs/concepts-job-triggers>) that produced
-/// the finding.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CloudDlpInspection {
-    /// Name of the inspection job, for example,
-    /// `projects/123/locations/europe/dlpJobs/i-8383929`.
-    #[prost(string, tag = "1")]
-    pub inspect_job: ::prost::alloc::string::String,
-    /// The [type of
-    /// information](<https://cloud.google.com/dlp/docs/infotypes-reference>) found,
-    /// for example, `EMAIL_ADDRESS` or `STREET_ADDRESS`.
-    #[prost(string, tag = "2")]
-    pub info_type: ::prost::alloc::string::String,
-    /// The number of times Cloud DLP found this infoType within this job
-    /// and resource.
-    #[prost(int64, tag = "3")]
-    pub info_type_count: i64,
-    /// Whether Cloud DLP scanned the complete resource or a sampled subset.
-    #[prost(bool, tag = "4")]
-    pub full_scan: bool,
-}
-/// Contains compliance information about a security standard indicating unmet
-/// recommendations.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Compliance {
-    /// Refers to industry wide standards or benchmarks e.g. "cis", "pci", "owasp",
-    /// etc.
-    #[prost(string, tag = "1")]
-    pub standard: ::prost::alloc::string::String,
-    /// Version of the standard/benchmark e.g. 1.1
-    #[prost(string, tag = "2")]
-    pub version: ::prost::alloc::string::String,
-    /// Policies within the standard/benchmark e.g. A.12.4.1
-    #[prost(string, repeated, tag = "3")]
-    pub ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// The details pertaining to specific contacts
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContactDetails {
-    /// A list of contacts
-    #[prost(message, repeated, tag = "1")]
-    pub contacts: ::prost::alloc::vec::Vec<Contact>,
-}
-/// The email address of a contact.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Contact {
-    /// An email address. For example, "`person123@company.com`".
-    #[prost(string, tag = "1")]
-    pub email: ::prost::alloc::string::String,
-}
-/// Represents database access information, such as queries.
-/// A database may be a sub-resource of an instance (as in the case of CloudSQL
-/// instances or Cloud Spanner instances), or the database instance itself.
-/// Some database resources may not have the full resource name populated
-/// because these resource types are not yet supported by Cloud Asset Inventory
-/// (e.g. CloudSQL databases). In these cases only the display name will be
-/// provided.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Database {
-    /// The full resource name of the database the user connected to, if it is
-    /// supported by CAI. (<https://google.aip.dev/122#full-resource-names>)
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The human readable name of the database the user connected to.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The username used to connect to the DB. This may not necessarily be an IAM
-    /// principal, and has no required format.
-    #[prost(string, tag = "3")]
-    pub user_name: ::prost::alloc::string::String,
-    /// The SQL statement associated with the relevant access.
-    #[prost(string, tag = "4")]
-    pub query: ::prost::alloc::string::String,
-    /// The target usernames/roles/groups of a SQL privilege grant (not an IAM
-    /// policy change).
-    #[prost(string, repeated, tag = "5")]
-    pub grantees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Exfiltration represents a data exfiltration attempt of one or more
-/// sources to one or more targets. Sources represent the source
-/// of data that is exfiltrated, and Targets represents the destination the
-/// data was copied to.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Exfiltration {
-    /// If there are multiple sources, then the data is considered "joined" between
-    /// them. For instance, BigQuery can join multiple tables, and each
-    /// table would be considered a source.
-    #[prost(message, repeated, tag = "1")]
-    pub sources: ::prost::alloc::vec::Vec<ExfilResource>,
-    /// If there are multiple targets, each target would get a complete copy of the
-    /// "joined" source data.
-    #[prost(message, repeated, tag = "2")]
-    pub targets: ::prost::alloc::vec::Vec<ExfilResource>,
-}
-/// Resource that has been exfiltrated or exfiltrated_to.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExfilResource {
-    /// Resource's URI (<https://google.aip.dev/122#full-resource-names>)
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Subcomponents of the asset that is exfiltrated - these could be
-    /// URIs used during exfiltration, table names, databases, filenames, etc.
-    /// For example, multiple tables may be exfiltrated from the same CloudSQL
-    /// instance, or multiple files from the same Cloud Storage bucket.
-    #[prost(string, repeated, tag = "2")]
-    pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Representation of third party SIEM/SOAR fields within SCC.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExternalSystem {
-    /// Full resource name of the external system, for example:
-    /// "organizations/1234/sources/5678/findings/123456/externalSystems/jira",
-    /// "folders/1234/sources/5678/findings/123456/externalSystems/jira",
-    /// "projects/1234/sources/5678/findings/123456/externalSystems/jira"
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// References primary/secondary etc assignees in the external system.
-    #[prost(string, repeated, tag = "2")]
-    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Identifier that's used to track the given finding in the external system.
-    #[prost(string, tag = "3")]
-    pub external_uid: ::prost::alloc::string::String,
-    /// Most recent status of the corresponding finding's ticket/tracker in the
-    /// external system.
-    #[prost(string, tag = "4")]
-    pub status: ::prost::alloc::string::String,
-    /// The most recent time when the corresponding finding's ticket/tracker was
-    /// updated in the external system.
-    #[prost(message, optional, tag = "5")]
-    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// File information about the related binary/library used by an executable, or
-/// the script used by a script interpreter
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct File {
-    /// Absolute path of the file as a JSON encoded string.
-    #[prost(string, tag = "1")]
-    pub path: ::prost::alloc::string::String,
-    /// Size of the file in bytes.
-    #[prost(int64, tag = "2")]
-    pub size: i64,
-    /// SHA256 hash of the first hashed_size bytes of the file encoded as a
-    /// hex string.  If hashed_size == size, sha256 represents the SHA256 hash
-    /// of the entire file.
-    #[prost(string, tag = "3")]
-    pub sha256: ::prost::alloc::string::String,
-    /// The length in bytes of the file prefix that was hashed.  If
-    /// hashed_size == size, any hashes reported represent the entire
-    /// file.
-    #[prost(int64, tag = "4")]
-    pub hashed_size: i64,
-    /// True when the hash covers only a prefix of the file.
-    #[prost(bool, tag = "5")]
-    pub partially_hashed: bool,
-    /// Prefix of the file contents as a JSON encoded string.
-    /// (Currently only populated for Malicious Script Executed findings.)
-    #[prost(string, tag = "6")]
-    pub contents: ::prost::alloc::string::String,
-}
-/// Represents a particular IAM binding, which captures a member's role addition,
-/// removal, or state.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IamBinding {
-    /// The action that was performed on a Binding.
-    #[prost(enumeration = "iam_binding::Action", tag = "1")]
-    pub action: i32,
-    /// Role that is assigned to "members".
-    /// For example, "roles/viewer", "roles/editor", or "roles/owner".
-    #[prost(string, tag = "2")]
-    pub role: ::prost::alloc::string::String,
-    /// A single identity requesting access for a Cloud Platform resource,
-    /// e.g. "foo@google.com".
-    #[prost(string, tag = "3")]
-    pub member: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `IamBinding`.
-pub mod iam_binding {
-    /// The type of action performed on a Binding in a policy.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Action {
-        /// Unspecified.
-        Unspecified = 0,
-        /// Addition of a Binding.
-        Add = 1,
-        /// Removal of a Binding.
-        Remove = 2,
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SecurityCenterProperties {
+        /// The full resource name of the Google Cloud resource this asset
+        /// represents. This field is immutable after create time. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "1")]
+        pub resource_name: ::prost::alloc::string::String,
+        /// The type of the Google Cloud resource. Examples include: APPLICATION,
+        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
+        /// Security Command Center and/or the producer of the resource and is
+        /// immutable after create time.
+        #[prost(string, tag = "2")]
+        pub resource_type: ::prost::alloc::string::String,
+        /// The full resource name of the immediate parent of the resource. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "3")]
+        pub resource_parent: ::prost::alloc::string::String,
+        /// The full resource name of the project the resource belongs to. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "4")]
+        pub resource_project: ::prost::alloc::string::String,
+        /// Owners of the Google Cloud resource.
+        #[prost(string, repeated, tag = "5")]
+        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The user defined display name for this resource.
+        #[prost(string, tag = "6")]
+        pub resource_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the parent of this resource.
+        #[prost(string, tag = "7")]
+        pub resource_parent_display_name: ::prost::alloc::string::String,
+        /// The user defined display name for the project of this resource.
+        #[prost(string, tag = "8")]
+        pub resource_project_display_name: ::prost::alloc::string::String,
+        /// Contains a Folder message for each folder in the assets ancestry.
+        /// The first folder is the deepest nested folder, and the last folder is the
+        /// folder directly under the Organization.
+        #[prost(message, repeated, tag = "10")]
+        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
     }
-    impl Action {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Action::Unspecified => "ACTION_UNSPECIFIED",
-                Action::Add => "ADD",
-                Action::Remove => "REMOVE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ACTION_UNSPECIFIED" => Some(Self::Unspecified),
-                "ADD" => Some(Self::Add),
-                "REMOVE" => Some(Self::Remove),
-                _ => None,
-            }
-        }
+    /// Cloud IAM Policy information associated with the Google Cloud resource
+    /// described by the Security Command Center asset. This information is managed
+    /// and defined by the Google Cloud resource and cannot be modified by the
+    /// user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IamPolicy {
+        /// The JSON representation of the Policy associated with the asset.
+        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
+        /// details.
+        #[prost(string, tag = "1")]
+        pub policy_blob: ::prost::alloc::string::String,
     }
 }
 /// Represents what's commonly known as an _indicator of compromise_ (IoC) in
@@ -863,44 +822,329 @@ pub mod indicator {
         }
     }
 }
-/// Kernel mode rootkit signatures.
+/// Contains compliance information about a security standard indicating unmet
+/// recommendations.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KernelRootkit {
-    /// Rootkit name when available.
+pub struct Compliance {
+    /// Refers to industry wide standards or benchmarks e.g. "cis", "pci", "owasp",
+    /// etc.
+    #[prost(string, tag = "1")]
+    pub standard: ::prost::alloc::string::String,
+    /// Version of the standard/benchmark e.g. 1.1
+    #[prost(string, tag = "2")]
+    pub version: ::prost::alloc::string::String,
+    /// Policies within the standard/benchmark e.g. A.12.4.1
+    #[prost(string, repeated, tag = "3")]
+    pub ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Exfiltration represents a data exfiltration attempt of one or more
+/// sources to one or more targets. Sources represent the source
+/// of data that is exfiltrated, and Targets represents the destination the
+/// data was copied to.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Exfiltration {
+    /// If there are multiple sources, then the data is considered "joined" between
+    /// them. For instance, BigQuery can join multiple tables, and each
+    /// table would be considered a source.
+    #[prost(message, repeated, tag = "1")]
+    pub sources: ::prost::alloc::vec::Vec<ExfilResource>,
+    /// If there are multiple targets, each target would get a complete copy of the
+    /// "joined" source data.
+    #[prost(message, repeated, tag = "2")]
+    pub targets: ::prost::alloc::vec::Vec<ExfilResource>,
+}
+/// Resource that has been exfiltrated or exfiltrated_to.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExfilResource {
+    /// Resource's URI (<https://google.aip.dev/122#full-resource-names>)
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// True when unexpected modifications of kernel code memory are present.
-    #[prost(bool, tag = "2")]
-    pub unexpected_code_modification: bool,
-    /// True when unexpected modifications of kernel read-only data memory are
-    /// present.
-    #[prost(bool, tag = "3")]
-    pub unexpected_read_only_data_modification: bool,
-    /// True when `ftrace` points are present with callbacks pointing to regions
-    /// that are not in the expected kernel or module code range.
+    /// Subcomponents of the asset that is exfiltrated - these could be
+    /// URIs used during exfiltration, table names, databases, filenames, etc.
+    /// For example, multiple tables may be exfiltrated from the same CloudSQL
+    /// instance, or multiple files from the same Cloud Storage bucket.
+    #[prost(string, repeated, tag = "2")]
+    pub components: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A mute config is a Cloud SCC resource that contains the configuration
+/// to mute create/update events of findings.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MuteConfig {
+    /// This field will be ignored if provided on config creation. Format
+    /// "organizations/{organization}/muteConfigs/{mute_config}"
+    /// "folders/{folder}/muteConfigs/{mute_config}"
+    /// "projects/{project}/muteConfigs/{mute_config}"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The human readable name to be displayed for the mute config.
+    #[deprecated]
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// A description of the mute config.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. An expression that defines the filter to apply across
+    /// create/update events of findings. While creating a filter string, be
+    /// mindful of the scope in which the mute configuration is being created.
+    /// E.g., If a filter contains project = X but is created under the project = Y
+    /// scope, it might not match any findings.
+    ///
+    /// The following field and operator combinations are supported:
+    ///
+    /// * severity: `=`, `:`
+    /// * category: `=`, `:`
+    /// * resource.name: `=`, `:`
+    /// * resource.project_name: `=`, `:`
+    /// * resource.project_display_name: `=`, `:`
+    /// * resource.folders.resource_folder: `=`, `:`
+    /// * resource.parent_name: `=`, `:`
+    /// * resource.parent_display_name: `=`, `:`
+    /// * resource.type: `=`, `:`
+    /// * finding_class: `=`, `:`
+    /// * indicator.ip_addresses: `=`, `:`
+    /// * indicator.domains: `=`, `:`
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Output only. The time at which the mute config was created.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The most recent time at which the mute config was updated.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(message, optional, tag = "6")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Email address of the user who last edited the mute config.
+    /// This field is set by the server and will be ignored if provided on config
+    /// creation or update.
+    #[prost(string, tag = "7")]
+    pub most_recent_editor: ::prost::alloc::string::String,
+}
+/// The [data profile](<https://cloud.google.com/dlp/docs/data-profiles>)
+/// associated with the finding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CloudDlpDataProfile {
+    /// Name of the data profile, for example,
+    /// `projects/123/locations/europe/tableProfiles/8383929`.
+    #[prost(string, tag = "1")]
+    pub data_profile: ::prost::alloc::string::String,
+}
+/// An EffectiveSecurityHealthAnalyticsCustomModule is the representation of
+/// a Security Health Analytics custom module at a specified level of the
+/// resource hierarchy: organization, folder, or project. If a custom module is
+/// inherited from a parent organization or folder, the value of the
+/// `enablementState` property in EffectiveSecurityHealthAnalyticsCustomModule is
+/// set to the value that is effective in the parent, instead of  `INHERITED`.
+/// For example, if the module is enabled in a parent organization or folder, the
+/// effective enablement_state for the module in all child folders or projects is
+/// also `enabled`. EffectiveSecurityHealthAnalyticsCustomModule is read-only.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EffectiveSecurityHealthAnalyticsCustomModule {
+    /// Output only. The resource name of the custom module.
+    /// Its format is
+    /// "organizations/{organization}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}",
+    /// or
+    /// "folders/{folder}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}",
+    /// or
+    /// "projects/{project}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. The user-specified configuration for the module.
+    #[prost(message, optional, tag = "2")]
+    pub custom_config: ::core::option::Option<CustomConfig>,
+    /// Output only. The effective state of enablement for the module at the given
+    /// level of the hierarchy.
+    #[prost(
+        enumeration = "effective_security_health_analytics_custom_module::EnablementState",
+        tag = "3"
+    )]
+    pub enablement_state: i32,
+    /// Output only. The display name for the custom module. The name must be
+    /// between 1 and 128 characters, start with a lowercase letter, and contain
+    /// alphanumeric characters or underscores only.
+    #[prost(string, tag = "4")]
+    pub display_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `EffectiveSecurityHealthAnalyticsCustomModule`.
+pub mod effective_security_health_analytics_custom_module {
+    /// The enablement state of the module.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum EnablementState {
+        /// Unspecified enablement state.
+        Unspecified = 0,
+        /// The module is enabled at the given level.
+        Enabled = 1,
+        /// The module is disabled at the given level.
+        Disabled = 2,
+    }
+    impl EnablementState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                EnablementState::Unspecified => "ENABLEMENT_STATE_UNSPECIFIED",
+                EnablementState::Enabled => "ENABLED",
+                EnablementState::Disabled => "DISABLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ENABLEMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ENABLED" => Some(Self::Enabled),
+                "DISABLED" => Some(Self::Disabled),
+                _ => None,
+            }
+        }
+    }
+}
+/// Representation of third party SIEM/SOAR fields within SCC.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExternalSystem {
+    /// Full resource name of the external system, for example:
+    /// "organizations/1234/sources/5678/findings/123456/externalSystems/jira",
+    /// "folders/1234/sources/5678/findings/123456/externalSystems/jira",
+    /// "projects/1234/sources/5678/findings/123456/externalSystems/jira"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// References primary/secondary etc assignees in the external system.
+    #[prost(string, repeated, tag = "2")]
+    pub assignees: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Identifier that's used to track the given finding in the external system.
+    #[prost(string, tag = "3")]
+    pub external_uid: ::prost::alloc::string::String,
+    /// Most recent status of the corresponding finding's ticket/tracker in the
+    /// external system.
+    #[prost(string, tag = "4")]
+    pub status: ::prost::alloc::string::String,
+    /// The most recent time when the corresponding finding's ticket/tracker was
+    /// updated in the external system.
+    #[prost(message, optional, tag = "5")]
+    pub external_system_update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Details about the Cloud Data Loss Prevention (Cloud DLP) [inspection
+/// job](<https://cloud.google.com/dlp/docs/concepts-job-triggers>) that produced
+/// the finding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CloudDlpInspection {
+    /// Name of the inspection job, for example,
+    /// `projects/123/locations/europe/dlpJobs/i-8383929`.
+    #[prost(string, tag = "1")]
+    pub inspect_job: ::prost::alloc::string::String,
+    /// The [type of
+    /// information](<https://cloud.google.com/dlp/docs/infotypes-reference>) found,
+    /// for example, `EMAIL_ADDRESS` or `STREET_ADDRESS`.
+    #[prost(string, tag = "2")]
+    pub info_type: ::prost::alloc::string::String,
+    /// The number of times Cloud DLP found this infoType within this job
+    /// and resource.
+    #[prost(int64, tag = "3")]
+    pub info_type_count: i64,
+    /// Whether Cloud DLP scanned the complete resource or a sampled subset.
     #[prost(bool, tag = "4")]
-    pub unexpected_ftrace_handler: bool,
-    /// True when `kprobe` points are present with callbacks pointing to regions
-    /// that are not in the expected kernel or module code range.
-    #[prost(bool, tag = "5")]
-    pub unexpected_kprobe_handler: bool,
-    /// True when kernel code pages that are not in the expected kernel or module
-    /// code regions are present.
-    #[prost(bool, tag = "6")]
-    pub unexpected_kernel_code_pages: bool,
-    /// True when system call handlers that are are not in the expected kernel or
-    /// module code regions are present.
-    #[prost(bool, tag = "7")]
-    pub unexpected_system_call_handler: bool,
-    /// True when interrupt handlers that are are not in the expected kernel or
-    /// module code regions are present.
-    #[prost(bool, tag = "8")]
-    pub unexpected_interrupt_handler: bool,
-    /// True when unexpected processes in the scheduler run queue are present. Such
-    /// processes are in the run queue, but not in the process task list.
-    #[prost(bool, tag = "9")]
-    pub unexpected_processes_in_runqueue: bool,
+    pub full_scan: bool,
+}
+/// Contains information about the IP connection associated with the finding.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connection {
+    /// Destination IP address. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(string, tag = "1")]
+    pub destination_ip: ::prost::alloc::string::String,
+    /// Destination port. Not present for sockets that are listening and not
+    /// connected.
+    #[prost(int32, tag = "2")]
+    pub destination_port: i32,
+    /// Source IP address.
+    #[prost(string, tag = "3")]
+    pub source_ip: ::prost::alloc::string::String,
+    /// Source port.
+    #[prost(int32, tag = "4")]
+    pub source_port: i32,
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[prost(enumeration = "connection::Protocol", tag = "5")]
+    pub protocol: i32,
+}
+/// Nested message and enum types in `Connection`.
+pub mod connection {
+    /// IANA Internet Protocol Number such as TCP(6) and UDP(17).
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Protocol {
+        /// Unspecified protocol (not HOPOPT).
+        Unspecified = 0,
+        /// Internet Control Message Protocol.
+        Icmp = 1,
+        /// Transmission Control Protocol.
+        Tcp = 6,
+        /// User Datagram Protocol.
+        Udp = 17,
+        /// Generic Routing Encapsulation.
+        Gre = 47,
+        /// Encap Security Payload.
+        Esp = 50,
+    }
+    impl Protocol {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Protocol::Unspecified => "PROTOCOL_UNSPECIFIED",
+                Protocol::Icmp => "ICMP",
+                Protocol::Tcp => "TCP",
+                Protocol::Udp => "UDP",
+                Protocol::Gre => "GRE",
+                Protocol::Esp => "ESP",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PROTOCOL_UNSPECIFIED" => Some(Self::Unspecified),
+                "ICMP" => Some(Self::Icmp),
+                "TCP" => Some(Self::Tcp),
+                "UDP" => Some(Self::Udp),
+                "GRE" => Some(Self::Gre),
+                "ESP" => Some(Self::Esp),
+                _ => None,
+            }
+        }
+    }
 }
 /// Kubernetes-related attributes.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -2354,349 +2598,6 @@ pub mod finding {
         }
     }
 }
-/// Cloud SCC's Notification
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct NotificationMessage {
-    /// Name of the notification config that generated current notification.
-    #[prost(string, tag = "1")]
-    pub notification_config_name: ::prost::alloc::string::String,
-    /// The Cloud resource tied to this notification's Finding.
-    #[prost(message, optional, tag = "3")]
-    pub resource: ::core::option::Option<Resource>,
-    /// Notification Event.
-    #[prost(oneof = "notification_message::Event", tags = "2")]
-    pub event: ::core::option::Option<notification_message::Event>,
-}
-/// Nested message and enum types in `NotificationMessage`.
-pub mod notification_message {
-    /// Notification Event.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// If it's a Finding based notification config, this field will be
-        /// populated.
-        #[prost(message, tag = "2")]
-        Finding(super::Finding),
-    }
-}
-/// Defines the properties in a custom module configuration for Security
-/// Health Analytics. Use the custom module configuration to create custom
-/// detectors that generate custom findings for resources that you specify.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomConfig {
-    /// The CEL expression to evaluate to produce findings. When the expression
-    /// evaluates to true against a resource, a finding is generated.
-    #[prost(message, optional, tag = "1")]
-    pub predicate: ::core::option::Option<super::super::super::r#type::Expr>,
-    /// Custom output properties.
-    #[prost(message, optional, tag = "2")]
-    pub custom_output: ::core::option::Option<custom_config::CustomOutputSpec>,
-    /// The resource types that the custom module operates on. Each custom module
-    /// can specify up to 5 resource types.
-    #[prost(message, optional, tag = "3")]
-    pub resource_selector: ::core::option::Option<custom_config::ResourceSelector>,
-    /// The severity to assign to findings generated by the module.
-    #[prost(enumeration = "custom_config::Severity", tag = "4")]
-    pub severity: i32,
-    /// Text that describes the vulnerability or misconfiguration that the custom
-    /// module detects. This explanation is returned with each finding instance to
-    /// help investigators understand the detected issue. The text must be enclosed
-    /// in quotation marks.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// An explanation of the recommended steps that security teams can take to
-    /// resolve the detected issue. This explanation is returned with each finding
-    /// generated by this module in the `nextSteps` property of the finding JSON.
-    #[prost(string, tag = "6")]
-    pub recommendation: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `CustomConfig`.
-pub mod custom_config {
-    /// A set of optional name-value pairs that define custom source properties to
-    /// return with each finding that is generated by the custom module. The custom
-    /// source properties that are defined here are included in the finding JSON
-    /// under `sourceProperties`.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CustomOutputSpec {
-        /// A list of custom output properties to add to the finding.
-        #[prost(message, repeated, tag = "1")]
-        pub properties: ::prost::alloc::vec::Vec<custom_output_spec::Property>,
-    }
-    /// Nested message and enum types in `CustomOutputSpec`.
-    pub mod custom_output_spec {
-        /// An individual name-value pair that defines a custom source property.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Property {
-            /// Name of the property for the custom output.
-            #[prost(string, tag = "1")]
-            pub name: ::prost::alloc::string::String,
-            /// The CEL expression for the custom output. A resource property can be
-            /// specified to return the value of the property or a text string enclosed
-            /// in quotation marks.
-            #[prost(message, optional, tag = "2")]
-            pub value_expression: ::core::option::Option<
-                super::super::super::super::super::r#type::Expr,
-            >,
-        }
-    }
-    /// Resource for selecting resource type.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ResourceSelector {
-        /// The resource types to run the detector on.
-        #[prost(string, repeated, tag = "1")]
-        pub resource_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// Defines the valid value options for the severity of a finding.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Severity {
-        /// Unspecified severity.
-        Unspecified = 0,
-        /// Critical severity.
-        Critical = 1,
-        /// High severity.
-        High = 2,
-        /// Medium severity.
-        Medium = 3,
-        /// Low severity.
-        Low = 4,
-    }
-    impl Severity {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Severity::Unspecified => "SEVERITY_UNSPECIFIED",
-                Severity::Critical => "CRITICAL",
-                Severity::High => "HIGH",
-                Severity::Medium => "MEDIUM",
-                Severity::Low => "LOW",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SEVERITY_UNSPECIFIED" => Some(Self::Unspecified),
-                "CRITICAL" => Some(Self::Critical),
-                "HIGH" => Some(Self::High),
-                "MEDIUM" => Some(Self::Medium),
-                "LOW" => Some(Self::Low),
-                _ => None,
-            }
-        }
-    }
-}
-/// An EffectiveSecurityHealthAnalyticsCustomModule is the representation of
-/// a Security Health Analytics custom module at a specified level of the
-/// resource hierarchy: organization, folder, or project. If a custom module is
-/// inherited from a parent organization or folder, the value of the
-/// `enablementState` property in EffectiveSecurityHealthAnalyticsCustomModule is
-/// set to the value that is effective in the parent, instead of  `INHERITED`.
-/// For example, if the module is enabled in a parent organization or folder, the
-/// effective enablement_state for the module in all child folders or projects is
-/// also `enabled`. EffectiveSecurityHealthAnalyticsCustomModule is read-only.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EffectiveSecurityHealthAnalyticsCustomModule {
-    /// Output only. The resource name of the custom module.
-    /// Its format is
-    /// "organizations/{organization}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}",
-    /// or
-    /// "folders/{folder}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}",
-    /// or
-    /// "projects/{project}/securityHealthAnalyticsSettings/effectiveCustomModules/{customModule}"
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. The user-specified configuration for the module.
-    #[prost(message, optional, tag = "2")]
-    pub custom_config: ::core::option::Option<CustomConfig>,
-    /// Output only. The effective state of enablement for the module at the given
-    /// level of the hierarchy.
-    #[prost(
-        enumeration = "effective_security_health_analytics_custom_module::EnablementState",
-        tag = "3"
-    )]
-    pub enablement_state: i32,
-    /// Output only. The display name for the custom module. The name must be
-    /// between 1 and 128 characters, start with a lowercase letter, and contain
-    /// alphanumeric characters or underscores only.
-    #[prost(string, tag = "4")]
-    pub display_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `EffectiveSecurityHealthAnalyticsCustomModule`.
-pub mod effective_security_health_analytics_custom_module {
-    /// The enablement state of the module.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum EnablementState {
-        /// Unspecified enablement state.
-        Unspecified = 0,
-        /// The module is enabled at the given level.
-        Enabled = 1,
-        /// The module is disabled at the given level.
-        Disabled = 2,
-    }
-    impl EnablementState {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                EnablementState::Unspecified => "ENABLEMENT_STATE_UNSPECIFIED",
-                EnablementState::Enabled => "ENABLED",
-                EnablementState::Disabled => "DISABLED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ENABLEMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ENABLED" => Some(Self::Enabled),
-                "DISABLED" => Some(Self::Disabled),
-                _ => None,
-            }
-        }
-    }
-}
-/// Security Command Center representation of a Google Cloud
-/// resource.
-///
-/// The Asset is a Security Command Center resource that captures information
-/// about a single Google Cloud resource. All modifications to an Asset are only
-/// within the context of Security Command Center and don't affect the referenced
-/// Google Cloud resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// The relative resource name of this asset. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/assets/{asset_id}".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[prost(message, optional, tag = "2")]
-    pub security_center_properties: ::core::option::Option<
-        asset::SecurityCenterProperties,
-    >,
-    /// Resource managed properties. These properties are managed and defined by
-    /// the Google Cloud resource and cannot be modified by the user.
-    #[prost(btree_map = "string, message", tag = "7")]
-    pub resource_properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::Value,
-    >,
-    /// User specified security marks. These marks are entirely managed by the user
-    /// and come from the SecurityMarks resource that belongs to the asset.
-    #[prost(message, optional, tag = "8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the asset was created in Security Command Center.
-    #[prost(message, optional, tag = "9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the asset was last updated or added in Cloud SCC.
-    #[prost(message, optional, tag = "10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[prost(message, optional, tag = "11")]
-    pub iam_policy: ::core::option::Option<asset::IamPolicy>,
-    /// The canonical name of the resource. It's either
-    /// "organizations/{organization_id}/assets/{asset_id}",
-    /// "folders/{folder_id}/assets/{asset_id}" or
-    /// "projects/{project_number}/assets/{asset_id}", depending on the closest CRM
-    /// ancestor of the resource.
-    #[prost(string, tag = "13")]
-    pub canonical_name: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SecurityCenterProperties {
-        /// The full resource name of the Google Cloud resource this asset
-        /// represents. This field is immutable after create time. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "1")]
-        pub resource_name: ::prost::alloc::string::String,
-        /// The type of the Google Cloud resource. Examples include: APPLICATION,
-        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
-        /// Security Command Center and/or the producer of the resource and is
-        /// immutable after create time.
-        #[prost(string, tag = "2")]
-        pub resource_type: ::prost::alloc::string::String,
-        /// The full resource name of the immediate parent of the resource. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "3")]
-        pub resource_parent: ::prost::alloc::string::String,
-        /// The full resource name of the project the resource belongs to. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "4")]
-        pub resource_project: ::prost::alloc::string::String,
-        /// Owners of the Google Cloud resource.
-        #[prost(string, repeated, tag = "5")]
-        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The user defined display name for this resource.
-        #[prost(string, tag = "6")]
-        pub resource_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the parent of this resource.
-        #[prost(string, tag = "7")]
-        pub resource_parent_display_name: ::prost::alloc::string::String,
-        /// The user defined display name for the project of this resource.
-        #[prost(string, tag = "8")]
-        pub resource_project_display_name: ::prost::alloc::string::String,
-        /// Contains a Folder message for each folder in the assets ancestry.
-        /// The first folder is the deepest nested folder, and the last folder is the
-        /// folder directly under the Organization.
-        #[prost(message, repeated, tag = "10")]
-        pub folders: ::prost::alloc::vec::Vec<super::Folder>,
-    }
-    /// Cloud IAM Policy information associated with the Google Cloud resource
-    /// described by the Security Command Center asset. This information is managed
-    /// and defined by the Google Cloud resource and cannot be modified by the
-    /// user.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IamPolicy {
-        /// The JSON representation of the Policy associated with the asset.
-        /// See <https://cloud.google.com/iam/reference/rest/v1/Policy> for format
-        /// details.
-        #[prost(string, tag = "1")]
-        pub policy_blob: ::prost::alloc::string::String,
-    }
-}
 /// Cloud Security Command Center (Cloud SCC) notification configs.
 ///
 /// A notification config is a Cloud SCC resource that contains the configuration
@@ -2767,64 +2668,99 @@ pub mod notification_config {
         StreamingConfig(StreamingConfig),
     }
 }
-/// Response of asset discovery run
+/// User specified settings that are attached to the Security Command
+/// Center organization.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration = "run_asset_discovery_response::State", tag = "1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag = "2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
+pub struct OrganizationSettings {
+    /// The relative resource name of the settings. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/organizationSettings".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A flag that indicates if Asset Discovery should be enabled. If the flag is
+    /// set to `true`, then discovery of assets will occur. If it is set to `false,
+    /// all historical assets will remain, but discovery of future assets will not
+    /// occur.
+    #[prost(bool, tag = "2")]
+    pub enable_asset_discovery: bool,
+    /// The configuration used for Asset Discovery runs.
+    #[prost(message, optional, tag = "3")]
+    pub asset_discovery_config: ::core::option::Option<
+        organization_settings::AssetDiscoveryConfig,
+    >,
 }
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
+/// Nested message and enum types in `OrganizationSettings`.
+pub mod organization_settings {
+    /// The configuration used for Asset Discovery runs.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AssetDiscoveryConfig {
+        /// The project ids to use for filtering asset discovery.
+        #[prost(string, repeated, tag = "1")]
+        pub project_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The mode to use for filtering asset discovery.
+        #[prost(enumeration = "asset_discovery_config::InclusionMode", tag = "2")]
+        pub inclusion_mode: i32,
+        /// The folder ids to use for filtering asset discovery.
+        /// It consists of only digits, e.g., 756619654966.
+        #[prost(string, repeated, tag = "3")]
+        pub folder_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Completed => "COMPLETED",
-                State::Superseded => "SUPERSEDED",
-                State::Terminated => "TERMINATED",
-            }
+    /// Nested message and enum types in `AssetDiscoveryConfig`.
+    pub mod asset_discovery_config {
+        /// The mode of inclusion when running Asset Discovery.
+        /// Asset discovery can be limited by explicitly identifying projects to be
+        /// included or excluded. If INCLUDE_ONLY is set, then only those projects
+        /// within the organization and their children are discovered during asset
+        /// discovery. If EXCLUDE is set, then projects that don't match those
+        /// projects are discovered during asset discovery. If neither are set, then
+        /// all projects within the organization are discovered during asset
+        /// discovery.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum InclusionMode {
+            /// Unspecified. Setting the mode with this value will disable
+            /// inclusion/exclusion filtering for Asset Discovery.
+            Unspecified = 0,
+            /// Asset Discovery will capture only the resources within the projects
+            /// specified. All other resources will be ignored.
+            IncludeOnly = 1,
+            /// Asset Discovery will ignore all resources under the projects specified.
+            /// All other resources will be retrieved.
+            Exclude = 2,
         }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "COMPLETED" => Some(Self::Completed),
-                "SUPERSEDED" => Some(Self::Superseded),
-                "TERMINATED" => Some(Self::Terminated),
-                _ => None,
+        impl InclusionMode {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    InclusionMode::Unspecified => "INCLUSION_MODE_UNSPECIFIED",
+                    InclusionMode::IncludeOnly => "INCLUDE_ONLY",
+                    InclusionMode::Exclude => "EXCLUDE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "INCLUSION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "INCLUDE_ONLY" => Some(Self::IncludeOnly),
+                    "EXCLUDE" => Some(Self::Exclude),
+                    _ => None,
+                }
             }
         }
     }
@@ -2929,6 +2865,44 @@ pub mod security_health_analytics_custom_module {
             }
         }
     }
+}
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, and
+/// other tools.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated or insecure libraries."
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// The canonical name of the finding. It's either
+    /// "organizations/{organization_id}/sources/{source_id}",
+    /// "folders/{folder_id}/sources/{source_id}" or
+    /// "projects/{project_number}/sources/{source_id}",
+    /// depending on the closest CRM ancestor of the resource associated with the
+    /// finding.
+    #[prost(string, tag = "14")]
+    pub canonical_name: ::prost::alloc::string::String,
 }
 /// Request message for bulk findings update.
 ///
@@ -5508,5 +5482,31 @@ pub mod security_center_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+    }
+}
+/// Cloud SCC's Notification
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct NotificationMessage {
+    /// Name of the notification config that generated current notification.
+    #[prost(string, tag = "1")]
+    pub notification_config_name: ::prost::alloc::string::String,
+    /// The Cloud resource tied to this notification's Finding.
+    #[prost(message, optional, tag = "3")]
+    pub resource: ::core::option::Option<Resource>,
+    /// Notification Event.
+    #[prost(oneof = "notification_message::Event", tags = "2")]
+    pub event: ::core::option::Option<notification_message::Event>,
+}
+/// Nested message and enum types in `NotificationMessage`.
+pub mod notification_message {
+    /// Notification Event.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Event {
+        /// If it's a Finding based notification config, this field will be
+        /// populated.
+        #[prost(message, tag = "2")]
+        Finding(super::Finding),
     }
 }

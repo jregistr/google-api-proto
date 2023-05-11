@@ -1,4 +1,135 @@
 /// Request message for
+/// \[CustomColumnService.GetCustomColumn][google.ads.searchads360.v0.services.CustomColumnService.GetCustomColumn\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetCustomColumnRequest {
+    /// Required. The resource name of the custom column to fetch.
+    #[prost(string, tag = "1")]
+    pub resource_name: ::prost::alloc::string::String,
+}
+/// Request message for
+/// \[CustomColumnService.ListCustomColumns][google.ads.searchads360.v0.services.CustomColumnService.ListCustomColumns\]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCustomColumnsRequest {
+    /// Required. The ID of the customer to apply the CustomColumn list operation
+    /// to.
+    #[prost(string, tag = "1")]
+    pub customer_id: ::prost::alloc::string::String,
+}
+/// Response message for fetching all custom columns associated with a customer.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCustomColumnsResponse {
+    /// The CustomColumns owned by the provided customer.
+    #[prost(message, repeated, tag = "1")]
+    pub custom_columns: ::prost::alloc::vec::Vec<super::resources::CustomColumn>,
+}
+/// Generated client implementations.
+pub mod custom_column_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service to manage custom columns.
+    #[derive(Debug, Clone)]
+    pub struct CustomColumnServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CustomColumnServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CustomColumnServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CustomColumnServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Returns the requested custom column in full detail.
+        pub async fn get_custom_column(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetCustomColumnRequest>,
+        ) -> Result<
+            tonic::Response<super::super::resources::CustomColumn>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.searchads360.v0.services.CustomColumnService/GetCustomColumn",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Returns all the custom columns associated with the customer in full detail.
+        pub async fn list_custom_columns(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListCustomColumnsRequest>,
+        ) -> Result<tonic::Response<super::ListCustomColumnsResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.ads.searchads360.v0.services.CustomColumnService/ListCustomColumns",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+    }
+}
+/// Request message for
 /// \[SearchAds360Service.Search][google.ads.searchads360.v0.services.SearchAds360Service.Search\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -526,137 +657,6 @@ pub mod search_ads360_field_service_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.SearchAds360FieldService/SearchSearchAds360Fields",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[CustomColumnService.GetCustomColumn][google.ads.searchads360.v0.services.CustomColumnService.GetCustomColumn\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetCustomColumnRequest {
-    /// Required. The resource name of the custom column to fetch.
-    #[prost(string, tag = "1")]
-    pub resource_name: ::prost::alloc::string::String,
-}
-/// Request message for
-/// \[CustomColumnService.ListCustomColumns][google.ads.searchads360.v0.services.CustomColumnService.ListCustomColumns\]
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCustomColumnsRequest {
-    /// Required. The ID of the customer to apply the CustomColumn list operation
-    /// to.
-    #[prost(string, tag = "1")]
-    pub customer_id: ::prost::alloc::string::String,
-}
-/// Response message for fetching all custom columns associated with a customer.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCustomColumnsResponse {
-    /// The CustomColumns owned by the provided customer.
-    #[prost(message, repeated, tag = "1")]
-    pub custom_columns: ::prost::alloc::vec::Vec<super::resources::CustomColumn>,
-}
-/// Generated client implementations.
-pub mod custom_column_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service to manage custom columns.
-    #[derive(Debug, Clone)]
-    pub struct CustomColumnServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CustomColumnServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CustomColumnServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CustomColumnServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns the requested custom column in full detail.
-        pub async fn get_custom_column(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetCustomColumnRequest>,
-        ) -> Result<
-            tonic::Response<super::super::resources::CustomColumn>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.searchads360.v0.services.CustomColumnService/GetCustomColumn",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns all the custom columns associated with the customer in full detail.
-        pub async fn list_custom_columns(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListCustomColumnsRequest>,
-        ) -> Result<tonic::Response<super::ListCustomColumnsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.ads.searchads360.v0.services.CustomColumnService/ListCustomColumns",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }

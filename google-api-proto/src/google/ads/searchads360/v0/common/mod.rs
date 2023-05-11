@@ -1,3 +1,46 @@
+/// Segment only fields.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Segments {
+    /// Resource name of the conversion action.
+    #[prost(string, optional, tag = "146")]
+    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
+    /// Conversion action category.
+    #[prost(
+        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
+        tag = "53"
+    )]
+    pub conversion_action_category: i32,
+    /// Conversion action name.
+    #[prost(string, optional, tag = "114")]
+    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Date to which metrics apply.
+    /// yyyy-MM-dd format, for example, 2018-04-17.
+    #[prost(string, optional, tag = "79")]
+    pub date: ::core::option::Option<::prost::alloc::string::String>,
+    /// Day of the week, for example, MONDAY.
+    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
+    pub day_of_week: i32,
+    /// Device to which metrics apply.
+    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
+    pub device: i32,
+    /// Month as represented by the date of the first day of a month. Formatted as
+    /// yyyy-MM-dd.
+    #[prost(string, optional, tag = "90")]
+    pub month: ::core::option::Option<::prost::alloc::string::String>,
+    /// Quarter as represented by the date of the first day of a quarter.
+    /// Uses the calendar year for quarters, for example, the second quarter of
+    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "128")]
+    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
+    /// Week as defined as Monday through Sunday, and represented by the date of
+    /// Monday. Formatted as yyyy-MM-dd.
+    #[prost(string, optional, tag = "130")]
+    pub week: ::core::option::Option<::prost::alloc::string::String>,
+    /// Year, formatted as yyyy.
+    #[prost(int32, optional, tag = "131")]
+    pub year: ::core::option::Option<i32>,
+}
 /// Metrics data.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -349,260 +392,36 @@ pub struct Metrics {
     #[prost(int64, optional, tag = "155")]
     pub client_account_view_through_conversions: ::core::option::Option<i64>,
 }
-/// Segment only fields.
+/// A rule specifying the maximum number of times an ad (or some set of ads) can
+/// be shown to a user over a particular time period.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Segments {
-    /// Resource name of the conversion action.
-    #[prost(string, optional, tag = "146")]
-    pub conversion_action: ::core::option::Option<::prost::alloc::string::String>,
-    /// Conversion action category.
-    #[prost(
-        enumeration = "super::enums::conversion_action_category_enum::ConversionActionCategory",
-        tag = "53"
-    )]
-    pub conversion_action_category: i32,
-    /// Conversion action name.
-    #[prost(string, optional, tag = "114")]
-    pub conversion_action_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Date to which metrics apply.
-    /// yyyy-MM-dd format, for example, 2018-04-17.
-    #[prost(string, optional, tag = "79")]
-    pub date: ::core::option::Option<::prost::alloc::string::String>,
-    /// Day of the week, for example, MONDAY.
-    #[prost(enumeration = "super::enums::day_of_week_enum::DayOfWeek", tag = "5")]
-    pub day_of_week: i32,
-    /// Device to which metrics apply.
-    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
-    pub device: i32,
-    /// Month as represented by the date of the first day of a month. Formatted as
-    /// yyyy-MM-dd.
-    #[prost(string, optional, tag = "90")]
-    pub month: ::core::option::Option<::prost::alloc::string::String>,
-    /// Quarter as represented by the date of the first day of a quarter.
-    /// Uses the calendar year for quarters, for example, the second quarter of
-    /// 2018 starts on 2018-04-01. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "128")]
-    pub quarter: ::core::option::Option<::prost::alloc::string::String>,
-    /// Week as defined as Monday through Sunday, and represented by the date of
-    /// Monday. Formatted as yyyy-MM-dd.
-    #[prost(string, optional, tag = "130")]
-    pub week: ::core::option::Option<::prost::alloc::string::String>,
-    /// Year, formatted as yyyy.
-    #[prost(int32, optional, tag = "131")]
-    pub year: ::core::option::Option<i32>,
-}
-/// A generic data container.
+pub struct FrequencyCapEntry {}
+/// A mapping that can be used by custom parameter tags in a
+/// `tracking_url_template`, `final_urls`, or `mobile_final_urls`.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Value {
-    /// A value.
-    #[prost(oneof = "value::Value", tags = "1, 2, 3, 4, 5")]
-    pub value: ::core::option::Option<value::Value>,
-}
-/// Nested message and enum types in `Value`.
-pub mod value {
-    /// A value.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// A boolean.
-        #[prost(bool, tag = "1")]
-        BooleanValue(bool),
-        /// An int64.
-        #[prost(int64, tag = "2")]
-        Int64Value(i64),
-        /// A float.
-        #[prost(float, tag = "3")]
-        FloatValue(f32),
-        /// A double.
-        #[prost(double, tag = "4")]
-        DoubleValue(f64),
-        /// A string.
-        #[prost(string, tag = "5")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// Settings for the targeting-related features, at the campaign and ad group
-/// levels. For more details about the targeting setting, visit
-/// <https://support.google.com/google-ads/answer/7365594>
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TargetingSetting {
-    /// The per-targeting-dimension setting to restrict the reach of your campaign
-    /// or ad group.
-    #[prost(message, repeated, tag = "1")]
-    pub target_restrictions: ::prost::alloc::vec::Vec<TargetRestriction>,
-}
-/// The list of per-targeting-dimension targeting settings.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TargetRestriction {
-    /// The targeting dimension that these settings apply to.
-    #[prost(
-        enumeration = "super::enums::targeting_dimension_enum::TargetingDimension",
-        tag = "1"
-    )]
-    pub targeting_dimension: i32,
-    /// Indicates whether to restrict your ads to show only for the criteria you
-    /// have selected for this targeting_dimension, or to target all values for
-    /// this targeting_dimension and show ads based on your targeting in other
-    /// TargetingDimensions. A value of `true` means that these criteria will only
-    /// apply bid modifiers, and not affect targeting. A value of `false` means
-    /// that these criteria will restrict targeting as well as applying bid
-    /// modifiers.
-    #[prost(bool, optional, tag = "3")]
-    pub bid_only: ::core::option::Option<bool>,
-}
-/// A keyword criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct KeywordInfo {
-    /// The text of the keyword (at most 80 characters and 10 words).
+pub struct CustomParameter {
+    /// The key matching the parameter tag name.
     #[prost(string, optional, tag = "3")]
-    pub text: ::core::option::Option<::prost::alloc::string::String>,
-    /// The match type of the keyword.
-    #[prost(
-        enumeration = "super::enums::keyword_match_type_enum::KeywordMatchType",
-        tag = "2"
-    )]
-    pub match_type: i32,
-}
-/// A location criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationInfo {
-    /// The geo target constant resource name.
-    #[prost(string, optional, tag = "2")]
-    pub geo_target_constant: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// A device criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeviceInfo {
-    /// Type of the device.
-    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
-    pub r#type: i32,
-}
-/// A listing group criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListingGroupInfo {
-    /// Type of the listing group.
-    #[prost(
-        enumeration = "super::enums::listing_group_type_enum::ListingGroupType",
-        tag = "1"
-    )]
-    pub r#type: i32,
-}
-/// An age range criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AgeRangeInfo {
-    /// Type of the age range.
-    #[prost(enumeration = "super::enums::age_range_type_enum::AgeRangeType", tag = "1")]
-    pub r#type: i32,
-}
-/// A gender criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GenderInfo {
-    /// Type of the gender.
-    #[prost(enumeration = "super::enums::gender_type_enum::GenderType", tag = "1")]
-    pub r#type: i32,
-}
-/// A User List criterion. Represents a user list that is defined by the
-/// advertiser to be targeted.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserListInfo {
-    /// The User List resource name.
-    #[prost(string, optional, tag = "2")]
-    pub user_list: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// A language criterion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LanguageInfo {
-    /// The language constant resource name.
-    #[prost(string, optional, tag = "2")]
-    pub language_constant: ::core::option::Option<::prost::alloc::string::String>,
-}
-/// Represents a criterion for targeting webpages of an advertiser's website.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WebpageInfo {
-    /// The name of the criterion that is defined by this parameter. The name value
-    /// will be used for identifying, sorting and filtering criteria with this type
-    /// of parameters.
-    ///
-    /// This field is required for CREATE operations and is prohibited on UPDATE
-    /// operations.
-    #[prost(string, optional, tag = "3")]
-    pub criterion_name: ::core::option::Option<::prost::alloc::string::String>,
-    /// Conditions, or logical expressions, for webpage targeting. The list of
-    /// webpage targeting conditions are and-ed together when evaluated
-    /// for targeting. An empty list of conditions indicates all pages of the
-    /// campaign's website are targeted.
-    ///
-    /// This field is required for CREATE operations and is prohibited on UPDATE
-    /// operations.
-    #[prost(message, repeated, tag = "2")]
-    pub conditions: ::prost::alloc::vec::Vec<WebpageConditionInfo>,
-    /// Website criteria coverage percentage. This is the computed percentage
-    /// of website coverage based on the website target, negative website target
-    /// and negative keywords in the ad group and campaign. For instance, when
-    /// coverage returns as 1, it indicates it has 100% coverage. This field is
-    /// read-only.
-    #[prost(double, tag = "4")]
-    pub coverage_percentage: f64,
-}
-/// Logical expression for targeting webpages of an advertiser's website.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WebpageConditionInfo {
-    /// Operand of webpage targeting condition.
-    #[prost(
-        enumeration = "super::enums::webpage_condition_operand_enum::WebpageConditionOperand",
-        tag = "1"
-    )]
-    pub operand: i32,
-    /// Operator of webpage targeting condition.
-    #[prost(
-        enumeration = "super::enums::webpage_condition_operator_enum::WebpageConditionOperator",
-        tag = "2"
-    )]
-    pub operator: i32,
-    /// Argument of webpage targeting condition.
+    pub key: ::core::option::Option<::prost::alloc::string::String>,
+    /// The value to be substituted.
     #[prost(string, optional, tag = "4")]
-    pub argument: ::core::option::Option<::prost::alloc::string::String>,
+    pub value: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// A radius around a list of locations specified through a feed.
+/// A type of label displaying text on a colored background.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LocationGroupInfo {
-    /// Geo target constant(s) restricting the scope of the geographic area within
-    /// the feed. Currently only one geo target constant is allowed.
-    #[prost(string, repeated, tag = "6")]
-    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Distance in units specifying the radius around targeted locations.
-    /// This is required and must be set in CREATE operations.
-    #[prost(int64, optional, tag = "7")]
-    pub radius: ::core::option::Option<i64>,
-    /// Unit of the radius. Miles and meters are supported for geo target
-    /// constants. Milli miles and meters are supported for feed item sets.
-    /// This is required and must be set in CREATE operations.
-    #[prost(
-        enumeration = "super::enums::location_group_radius_units_enum::LocationGroupRadiusUnits",
-        tag = "4"
-    )]
-    pub radius_units: i32,
-    /// FeedItemSets whose FeedItems are targeted. If multiple IDs are specified,
-    /// then all items that appear in at least one set are targeted. This field
-    /// cannot be used with geo_target_constants. This is optional and can only be
-    /// set in CREATE operations.
-    #[prost(string, repeated, tag = "8")]
-    pub feed_item_sets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+pub struct TextLabel {
+    /// Background color of the label in RGB format. This string must match the
+    /// regular expression '^\#(\[a-fA-F0-9]{6}|[a-fA-F0-9\]{3})$'.
+    /// Note: The background color may not be visible for manager accounts.
+    #[prost(string, optional, tag = "3")]
+    pub background_color: ::core::option::Option<::prost::alloc::string::String>,
+    /// A short description of the label. The length must be no more than 200
+    /// characters.
+    #[prost(string, optional, tag = "4")]
+    pub description: ::core::option::Option<::prost::alloc::string::String>,
 }
 /// An automated bidding strategy that raises bids for clicks
 /// that seem more likely to lead to a conversion and lowers
@@ -794,23 +613,37 @@ pub struct PercentCpc {
     #[prost(bool, optional, tag = "4")]
     pub enhanced_cpc_enabled: ::core::option::Option<bool>,
 }
-/// A mapping that can be used by custom parameter tags in a
-/// `tracking_url_template`, `final_urls`, or `mobile_final_urls`.
+/// A generic data container.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomParameter {
-    /// The key matching the parameter tag name.
-    #[prost(string, optional, tag = "3")]
-    pub key: ::core::option::Option<::prost::alloc::string::String>,
-    /// The value to be substituted.
-    #[prost(string, optional, tag = "4")]
-    pub value: ::core::option::Option<::prost::alloc::string::String>,
+pub struct Value {
+    /// A value.
+    #[prost(oneof = "value::Value", tags = "1, 2, 3, 4, 5")]
+    pub value: ::core::option::Option<value::Value>,
 }
-/// A rule specifying the maximum number of times an ad (or some set of ads) can
-/// be shown to a user over a particular time period.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FrequencyCapEntry {}
+/// Nested message and enum types in `Value`.
+pub mod value {
+    /// A value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// A boolean.
+        #[prost(bool, tag = "1")]
+        BooleanValue(bool),
+        /// An int64.
+        #[prost(int64, tag = "2")]
+        Int64Value(i64),
+        /// A float.
+        #[prost(float, tag = "3")]
+        FloatValue(f32),
+        /// A double.
+        #[prost(double, tag = "4")]
+        DoubleValue(f64),
+        /// A string.
+        #[prost(string, tag = "5")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
 /// Settings for Real-Time Bidding, a feature only available for campaigns
 /// targeting the Ad Exchange network.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -820,17 +653,184 @@ pub struct RealTimeBiddingSetting {
     #[prost(bool, optional, tag = "2")]
     pub opt_in: ::core::option::Option<bool>,
 }
-/// A type of label displaying text on a colored background.
+/// A keyword criterion.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextLabel {
-    /// Background color of the label in RGB format. This string must match the
-    /// regular expression '^\#(\[a-fA-F0-9]{6}|[a-fA-F0-9\]{3})$'.
-    /// Note: The background color may not be visible for manager accounts.
+pub struct KeywordInfo {
+    /// The text of the keyword (at most 80 characters and 10 words).
     #[prost(string, optional, tag = "3")]
-    pub background_color: ::core::option::Option<::prost::alloc::string::String>,
-    /// A short description of the label. The length must be no more than 200
-    /// characters.
+    pub text: ::core::option::Option<::prost::alloc::string::String>,
+    /// The match type of the keyword.
+    #[prost(
+        enumeration = "super::enums::keyword_match_type_enum::KeywordMatchType",
+        tag = "2"
+    )]
+    pub match_type: i32,
+}
+/// A location criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationInfo {
+    /// The geo target constant resource name.
+    #[prost(string, optional, tag = "2")]
+    pub geo_target_constant: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// A device criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeviceInfo {
+    /// Type of the device.
+    #[prost(enumeration = "super::enums::device_enum::Device", tag = "1")]
+    pub r#type: i32,
+}
+/// A listing group criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListingGroupInfo {
+    /// Type of the listing group.
+    #[prost(
+        enumeration = "super::enums::listing_group_type_enum::ListingGroupType",
+        tag = "1"
+    )]
+    pub r#type: i32,
+}
+/// An age range criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AgeRangeInfo {
+    /// Type of the age range.
+    #[prost(enumeration = "super::enums::age_range_type_enum::AgeRangeType", tag = "1")]
+    pub r#type: i32,
+}
+/// A gender criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GenderInfo {
+    /// Type of the gender.
+    #[prost(enumeration = "super::enums::gender_type_enum::GenderType", tag = "1")]
+    pub r#type: i32,
+}
+/// A User List criterion. Represents a user list that is defined by the
+/// advertiser to be targeted.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserListInfo {
+    /// The User List resource name.
+    #[prost(string, optional, tag = "2")]
+    pub user_list: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// A language criterion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LanguageInfo {
+    /// The language constant resource name.
+    #[prost(string, optional, tag = "2")]
+    pub language_constant: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// Represents a criterion for targeting webpages of an advertiser's website.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WebpageInfo {
+    /// The name of the criterion that is defined by this parameter. The name value
+    /// will be used for identifying, sorting and filtering criteria with this type
+    /// of parameters.
+    ///
+    /// This field is required for CREATE operations and is prohibited on UPDATE
+    /// operations.
+    #[prost(string, optional, tag = "3")]
+    pub criterion_name: ::core::option::Option<::prost::alloc::string::String>,
+    /// Conditions, or logical expressions, for webpage targeting. The list of
+    /// webpage targeting conditions are and-ed together when evaluated
+    /// for targeting. An empty list of conditions indicates all pages of the
+    /// campaign's website are targeted.
+    ///
+    /// This field is required for CREATE operations and is prohibited on UPDATE
+    /// operations.
+    #[prost(message, repeated, tag = "2")]
+    pub conditions: ::prost::alloc::vec::Vec<WebpageConditionInfo>,
+    /// Website criteria coverage percentage. This is the computed percentage
+    /// of website coverage based on the website target, negative website target
+    /// and negative keywords in the ad group and campaign. For instance, when
+    /// coverage returns as 1, it indicates it has 100% coverage. This field is
+    /// read-only.
+    #[prost(double, tag = "4")]
+    pub coverage_percentage: f64,
+}
+/// Logical expression for targeting webpages of an advertiser's website.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WebpageConditionInfo {
+    /// Operand of webpage targeting condition.
+    #[prost(
+        enumeration = "super::enums::webpage_condition_operand_enum::WebpageConditionOperand",
+        tag = "1"
+    )]
+    pub operand: i32,
+    /// Operator of webpage targeting condition.
+    #[prost(
+        enumeration = "super::enums::webpage_condition_operator_enum::WebpageConditionOperator",
+        tag = "2"
+    )]
+    pub operator: i32,
+    /// Argument of webpage targeting condition.
     #[prost(string, optional, tag = "4")]
-    pub description: ::core::option::Option<::prost::alloc::string::String>,
+    pub argument: ::core::option::Option<::prost::alloc::string::String>,
+}
+/// A radius around a list of locations specified through a feed.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LocationGroupInfo {
+    /// Geo target constant(s) restricting the scope of the geographic area within
+    /// the feed. Currently only one geo target constant is allowed.
+    #[prost(string, repeated, tag = "6")]
+    pub geo_target_constants: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Distance in units specifying the radius around targeted locations.
+    /// This is required and must be set in CREATE operations.
+    #[prost(int64, optional, tag = "7")]
+    pub radius: ::core::option::Option<i64>,
+    /// Unit of the radius. Miles and meters are supported for geo target
+    /// constants. Milli miles and meters are supported for feed item sets.
+    /// This is required and must be set in CREATE operations.
+    #[prost(
+        enumeration = "super::enums::location_group_radius_units_enum::LocationGroupRadiusUnits",
+        tag = "4"
+    )]
+    pub radius_units: i32,
+    /// FeedItemSets whose FeedItems are targeted. If multiple IDs are specified,
+    /// then all items that appear in at least one set are targeted. This field
+    /// cannot be used with geo_target_constants. This is optional and can only be
+    /// set in CREATE operations.
+    #[prost(string, repeated, tag = "8")]
+    pub feed_item_sets: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Settings for the targeting-related features, at the campaign and ad group
+/// levels. For more details about the targeting setting, visit
+/// <https://support.google.com/google-ads/answer/7365594>
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TargetingSetting {
+    /// The per-targeting-dimension setting to restrict the reach of your campaign
+    /// or ad group.
+    #[prost(message, repeated, tag = "1")]
+    pub target_restrictions: ::prost::alloc::vec::Vec<TargetRestriction>,
+}
+/// The list of per-targeting-dimension targeting settings.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TargetRestriction {
+    /// The targeting dimension that these settings apply to.
+    #[prost(
+        enumeration = "super::enums::targeting_dimension_enum::TargetingDimension",
+        tag = "1"
+    )]
+    pub targeting_dimension: i32,
+    /// Indicates whether to restrict your ads to show only for the criteria you
+    /// have selected for this targeting_dimension, or to target all values for
+    /// this targeting_dimension and show ads based on your targeting in other
+    /// TargetingDimensions. A value of `true` means that these criteria will only
+    /// apply bid modifiers, and not affect targeting. A value of `false` means
+    /// that these criteria will restrict targeting as well as applying bid
+    /// modifiers.
+    #[prost(bool, optional, tag = "3")]
+    pub bid_only: ::core::option::Option<bool>,
 }

@@ -245,101 +245,6 @@ pub struct AdminUser {
     #[prost(string, tag = "3")]
     pub family_name: ::prost::alloc::string::String,
 }
-/// Provides contextual information about a
-/// \[google.longrunning.Operation][google.longrunning.Operation\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// The RPC that initiated this Long Running Operation.
-    #[prost(enumeration = "operation_metadata::OperationType", tag = "1")]
-    pub operation_type: i32,
-}
-/// Nested message and enum types in `OperationMetadata`.
-pub mod operation_metadata {
-    /// RPCs that return a Long Running Operation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum OperationType {
-        /// Not used.
-        Unspecified = 0,
-        /// Long Running Operation was triggered by CreateEntitlement.
-        CreateEntitlement = 1,
-        /// Long Running Operation was triggered by ChangeRenewalSettings.
-        ChangeRenewalSettings = 3,
-        /// Long Running Operation was triggered by StartPaidService.
-        StartPaidService = 5,
-        /// Long Running Operation was triggered by ActivateEntitlement.
-        ActivateEntitlement = 7,
-        /// Long Running Operation was triggered by SuspendEntitlement.
-        SuspendEntitlement = 8,
-        /// Long Running Operation was triggered by CancelEntitlement.
-        CancelEntitlement = 9,
-        /// Long Running Operation was triggered by TransferEntitlements.
-        TransferEntitlements = 10,
-        /// Long Running Operation was triggered by TransferEntitlementsToGoogle.
-        TransferEntitlementsToGoogle = 11,
-        /// Long Running Operation was triggered by ChangeOffer.
-        ChangeOffer = 14,
-        /// Long Running Operation was triggered by ChangeParameters.
-        ChangeParameters = 15,
-        /// Long Running Operation was triggered by ProvisionCloudIdentity.
-        ProvisionCloudIdentity = 16,
-    }
-    impl OperationType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
-                OperationType::CreateEntitlement => "CREATE_ENTITLEMENT",
-                OperationType::ChangeRenewalSettings => "CHANGE_RENEWAL_SETTINGS",
-                OperationType::StartPaidService => "START_PAID_SERVICE",
-                OperationType::ActivateEntitlement => "ACTIVATE_ENTITLEMENT",
-                OperationType::SuspendEntitlement => "SUSPEND_ENTITLEMENT",
-                OperationType::CancelEntitlement => "CANCEL_ENTITLEMENT",
-                OperationType::TransferEntitlements => "TRANSFER_ENTITLEMENTS",
-                OperationType::TransferEntitlementsToGoogle => {
-                    "TRANSFER_ENTITLEMENTS_TO_GOOGLE"
-                }
-                OperationType::ChangeOffer => "CHANGE_OFFER",
-                OperationType::ChangeParameters => "CHANGE_PARAMETERS",
-                OperationType::ProvisionCloudIdentity => "PROVISION_CLOUD_IDENTITY",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CREATE_ENTITLEMENT" => Some(Self::CreateEntitlement),
-                "CHANGE_RENEWAL_SETTINGS" => Some(Self::ChangeRenewalSettings),
-                "START_PAID_SERVICE" => Some(Self::StartPaidService),
-                "ACTIVATE_ENTITLEMENT" => Some(Self::ActivateEntitlement),
-                "SUSPEND_ENTITLEMENT" => Some(Self::SuspendEntitlement),
-                "CANCEL_ENTITLEMENT" => Some(Self::CancelEntitlement),
-                "TRANSFER_ENTITLEMENTS" => Some(Self::TransferEntitlements),
-                "TRANSFER_ENTITLEMENTS_TO_GOOGLE" => {
-                    Some(Self::TransferEntitlementsToGoogle)
-                }
-                "CHANGE_OFFER" => Some(Self::ChangeOffer),
-                "CHANGE_PARAMETERS" => Some(Self::ChangeParameters),
-                "PROVISION_CLOUD_IDENTITY" => Some(Self::ProvisionCloudIdentity),
-                _ => None,
-            }
-        }
-    }
-}
 /// A Product is the entity a customer uses when placing an order. For example,
 /// Google Workspace, Google Voice, etc.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -895,190 +800,6 @@ impl PeriodType {
         }
     }
 }
-/// Represents Pub/Sub message content describing customer update.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CustomerEvent {
-    /// Resource name of the customer.
-    /// Format: accounts/{account_id}/customers/{customer_id}
-    #[prost(string, tag = "1")]
-    pub customer: ::prost::alloc::string::String,
-    /// Type of event which happened on the customer.
-    #[prost(enumeration = "customer_event::Type", tag = "2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `CustomerEvent`.
-pub mod customer_event {
-    /// Type of customer event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// Primary domain for customer was changed.
-        PrimaryDomainChanged = 1,
-        /// Primary domain of the customer has been verified.
-        PrimaryDomainVerified = 2,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
-                Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "PRIMARY_DOMAIN_CHANGED" => Some(Self::PrimaryDomainChanged),
-                "PRIMARY_DOMAIN_VERIFIED" => Some(Self::PrimaryDomainVerified),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represents Pub/Sub message content describing entitlement update.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EntitlementEvent {
-    /// Resource name of an entitlement of the form:
-    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
-    #[prost(string, tag = "1")]
-    pub entitlement: ::prost::alloc::string::String,
-    /// Type of event which happened on the entitlement.
-    #[prost(enumeration = "entitlement_event::Type", tag = "2")]
-    pub event_type: i32,
-}
-/// Nested message and enum types in `EntitlementEvent`.
-pub mod entitlement_event {
-    /// Type of entitlement event.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Not used.
-        Unspecified = 0,
-        /// A new entitlement was created.
-        Created = 1,
-        /// The offer type associated with an entitlement was changed.
-        /// This is not triggered if an entitlement converts from a commit offer to a
-        /// flexible offer as part of a renewal.
-        PricePlanSwitched = 3,
-        /// Annual commitment for a commit plan was changed.
-        CommitmentChanged = 4,
-        /// An annual entitlement was renewed.
-        Renewed = 5,
-        /// Entitlement was suspended.
-        Suspended = 6,
-        /// Entitlement was unsuspended.
-        Activated = 7,
-        /// Entitlement was cancelled.
-        Cancelled = 8,
-        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
-        /// Business Standard to Google Workspace Business Plus).
-        SkuChanged = 9,
-        /// The renewal settings of an entitlement has changed.
-        RenewalSettingChanged = 10,
-        /// Paid service has started on trial entitlement.
-        PaidServiceStarted = 11,
-        /// License was assigned to or revoked from a user.
-        LicenseAssignmentChanged = 12,
-        /// License cap was changed for the entitlement.
-        LicenseCapChanged = 13,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::Created => "CREATED",
-                Type::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
-                Type::CommitmentChanged => "COMMITMENT_CHANGED",
-                Type::Renewed => "RENEWED",
-                Type::Suspended => "SUSPENDED",
-                Type::Activated => "ACTIVATED",
-                Type::Cancelled => "CANCELLED",
-                Type::SkuChanged => "SKU_CHANGED",
-                Type::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
-                Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
-                Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
-                Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CREATED" => Some(Self::Created),
-                "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
-                "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
-                "RENEWED" => Some(Self::Renewed),
-                "SUSPENDED" => Some(Self::Suspended),
-                "ACTIVATED" => Some(Self::Activated),
-                "CANCELLED" => Some(Self::Cancelled),
-                "SKU_CHANGED" => Some(Self::SkuChanged),
-                "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
-                "PAID_SERVICE_STARTED" => Some(Self::PaidServiceStarted),
-                "LICENSE_ASSIGNMENT_CHANGED" => Some(Self::LicenseAssignmentChanged),
-                "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represents information which resellers will get as part of notification from
-/// Pub/Sub.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SubscriberEvent {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[prost(oneof = "subscriber_event::Event", tags = "1, 2")]
-    pub event: ::core::option::Option<subscriber_event::Event>,
-}
-/// Nested message and enum types in `SubscriberEvent`.
-pub mod subscriber_event {
-    /// Specifies the Pub/Sub event provided to the partners.
-    /// This is a required field.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Event {
-        /// Customer event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag = "1")]
-        CustomerEvent(super::CustomerEvent),
-        /// Entitlement event sent as part of Pub/Sub event to partners.
-        #[prost(message, tag = "2")]
-        EntitlementEvent(super::EntitlementEvent),
-    }
-}
 /// An entitlement is a representation of a customer's ability to use a service.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1432,48 +1153,21 @@ pub mod transfer_eligibility {
         }
     }
 }
-/// Change event entry for Entitlement order history
+/// Represents Pub/Sub message content describing customer update.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EntitlementChange {
-    /// Required. Resource name of an entitlement in the form:
-    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+pub struct CustomerEvent {
+    /// Resource name of the customer.
+    /// Format: accounts/{account_id}/customers/{customer_id}
     #[prost(string, tag = "1")]
-    pub entitlement: ::prost::alloc::string::String,
-    /// Required. Resource name of the Offer at the time of change.
-    /// Takes the form: accounts/{account_id}/offers/{offer_id}.
-    #[prost(string, tag = "2")]
-    pub offer: ::prost::alloc::string::String,
-    /// Service provisioned for an Entitlement.
-    #[prost(message, optional, tag = "3")]
-    pub provisioned_service: ::core::option::Option<ProvisionedService>,
-    /// The change action type.
-    #[prost(enumeration = "entitlement_change::ChangeType", tag = "4")]
-    pub change_type: i32,
-    /// The submitted time of the change.
-    #[prost(message, optional, tag = "5")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Operator type responsible for the change.
-    #[prost(enumeration = "entitlement_change::OperatorType", tag = "6")]
-    pub operator_type: i32,
-    /// Extended parameters, such as:
-    /// purchase_order_number, gcp_details;
-    /// internal_correlation_id, long_running_operation_id, order_id;
-    /// etc.
-    #[prost(message, repeated, tag = "8")]
-    pub parameters: ::prost::alloc::vec::Vec<Parameter>,
-    /// Human-readable identifier that shows what operator made a change.
-    /// When the operator_type is RESELLER, this is the user's email address.
-    /// For all other operator types, this is empty.
-    #[prost(string, tag = "12")]
-    pub operator: ::prost::alloc::string::String,
-    /// The reason the change was made
-    #[prost(oneof = "entitlement_change::ChangeReason", tags = "9, 10, 11, 100")]
-    pub change_reason: ::core::option::Option<entitlement_change::ChangeReason>,
+    pub customer: ::prost::alloc::string::String,
+    /// Type of event which happened on the customer.
+    #[prost(enumeration = "customer_event::Type", tag = "2")]
+    pub event_type: i32,
 }
-/// Nested message and enum types in `EntitlementChange`.
-pub mod entitlement_change {
-    /// Specifies the type of change action
+/// Nested message and enum types in `CustomerEvent`.
+pub mod customer_event {
+    /// Type of customer event.
     #[derive(
         Clone,
         Copy,
@@ -1486,69 +1180,121 @@ pub mod entitlement_change {
         ::prost::Enumeration
     )]
     #[repr(i32)]
-    pub enum ChangeType {
+    pub enum Type {
         /// Not used.
         Unspecified = 0,
-        /// New Entitlement was created.
-        Created = 1,
-        /// Price plan associated with an Entitlement was changed.
-        PricePlanSwitched = 3,
-        /// Number of seats committed for a commitment Entitlement was changed.
-        CommitmentChanged = 4,
-        /// An annual Entitlement was renewed.
-        Renewed = 5,
-        /// Entitlement was suspended.
-        Suspended = 6,
-        /// Entitlement was activated.
-        Activated = 7,
-        /// Entitlement was cancelled.
-        Cancelled = 8,
-        /// Entitlement was upgraded or downgraded for ex. from Google Workspace
-        /// Business Standard to Google Workspace Business Plus.
-        SkuChanged = 9,
-        /// The settings for renewal of an Entitlement have changed.
-        RenewalSettingChanged = 10,
-        /// Use for Google Workspace subscription.
-        /// Either a trial was converted to a paid subscription or a new subscription
-        /// with no trial is created.
-        PaidSubscriptionStarted = 11,
-        /// License cap was changed for the entitlement.
-        LicenseCapChanged = 12,
-        /// The suspension details have changed (but it is still suspended).
-        SuspensionDetailsChanged = 13,
-        /// The trial end date was extended.
-        TrialEndDateExtended = 14,
-        /// Entitlement started trial.
-        TrialStarted = 15,
+        /// Primary domain for customer was changed.
+        PrimaryDomainChanged = 1,
+        /// Primary domain of the customer has been verified.
+        PrimaryDomainVerified = 2,
     }
-    impl ChangeType {
+    impl Type {
         /// String value of the enum field names used in the ProtoBuf definition.
         ///
         /// The values are not transformed in any way and thus are considered stable
         /// (if the ProtoBuf definition does not change) and safe for programmatic use.
         pub fn as_str_name(&self) -> &'static str {
             match self {
-                ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
-                ChangeType::Created => "CREATED",
-                ChangeType::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
-                ChangeType::CommitmentChanged => "COMMITMENT_CHANGED",
-                ChangeType::Renewed => "RENEWED",
-                ChangeType::Suspended => "SUSPENDED",
-                ChangeType::Activated => "ACTIVATED",
-                ChangeType::Cancelled => "CANCELLED",
-                ChangeType::SkuChanged => "SKU_CHANGED",
-                ChangeType::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
-                ChangeType::PaidSubscriptionStarted => "PAID_SUBSCRIPTION_STARTED",
-                ChangeType::LicenseCapChanged => "LICENSE_CAP_CHANGED",
-                ChangeType::SuspensionDetailsChanged => "SUSPENSION_DETAILS_CHANGED",
-                ChangeType::TrialEndDateExtended => "TRIAL_END_DATE_EXTENDED",
-                ChangeType::TrialStarted => "TRIAL_STARTED",
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::PrimaryDomainChanged => "PRIMARY_DOMAIN_CHANGED",
+                Type::PrimaryDomainVerified => "PRIMARY_DOMAIN_VERIFIED",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
         pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
             match value {
-                "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "PRIMARY_DOMAIN_CHANGED" => Some(Self::PrimaryDomainChanged),
+                "PRIMARY_DOMAIN_VERIFIED" => Some(Self::PrimaryDomainVerified),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represents Pub/Sub message content describing entitlement update.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EntitlementEvent {
+    /// Resource name of an entitlement of the form:
+    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+    #[prost(string, tag = "1")]
+    pub entitlement: ::prost::alloc::string::String,
+    /// Type of event which happened on the entitlement.
+    #[prost(enumeration = "entitlement_event::Type", tag = "2")]
+    pub event_type: i32,
+}
+/// Nested message and enum types in `EntitlementEvent`.
+pub mod entitlement_event {
+    /// Type of entitlement event.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Not used.
+        Unspecified = 0,
+        /// A new entitlement was created.
+        Created = 1,
+        /// The offer type associated with an entitlement was changed.
+        /// This is not triggered if an entitlement converts from a commit offer to a
+        /// flexible offer as part of a renewal.
+        PricePlanSwitched = 3,
+        /// Annual commitment for a commit plan was changed.
+        CommitmentChanged = 4,
+        /// An annual entitlement was renewed.
+        Renewed = 5,
+        /// Entitlement was suspended.
+        Suspended = 6,
+        /// Entitlement was unsuspended.
+        Activated = 7,
+        /// Entitlement was cancelled.
+        Cancelled = 8,
+        /// Entitlement was upgraded or downgraded (e.g. from Google Workspace
+        /// Business Standard to Google Workspace Business Plus).
+        SkuChanged = 9,
+        /// The renewal settings of an entitlement has changed.
+        RenewalSettingChanged = 10,
+        /// Paid service has started on trial entitlement.
+        PaidServiceStarted = 11,
+        /// License was assigned to or revoked from a user.
+        LicenseAssignmentChanged = 12,
+        /// License cap was changed for the entitlement.
+        LicenseCapChanged = 13,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Created => "CREATED",
+                Type::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
+                Type::CommitmentChanged => "COMMITMENT_CHANGED",
+                Type::Renewed => "RENEWED",
+                Type::Suspended => "SUSPENDED",
+                Type::Activated => "ACTIVATED",
+                Type::Cancelled => "CANCELLED",
+                Type::SkuChanged => "SKU_CHANGED",
+                Type::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
+                Type::PaidServiceStarted => "PAID_SERVICE_STARTED",
+                Type::LicenseAssignmentChanged => "LICENSE_ASSIGNMENT_CHANGED",
+                Type::LicenseCapChanged => "LICENSE_CAP_CHANGED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
                 "CREATED" => Some(Self::Created),
                 "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
                 "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
@@ -1558,193 +1304,132 @@ pub mod entitlement_change {
                 "CANCELLED" => Some(Self::Cancelled),
                 "SKU_CHANGED" => Some(Self::SkuChanged),
                 "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
-                "PAID_SUBSCRIPTION_STARTED" => Some(Self::PaidSubscriptionStarted),
+                "PAID_SERVICE_STARTED" => Some(Self::PaidServiceStarted),
+                "LICENSE_ASSIGNMENT_CHANGED" => Some(Self::LicenseAssignmentChanged),
                 "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
-                "SUSPENSION_DETAILS_CHANGED" => Some(Self::SuspensionDetailsChanged),
-                "TRIAL_END_DATE_EXTENDED" => Some(Self::TrialEndDateExtended),
-                "TRIAL_STARTED" => Some(Self::TrialStarted),
                 _ => None,
             }
         }
     }
-    /// Specifies the type of operator responsible for the change
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum OperatorType {
-        /// Not used.
-        Unspecified = 0,
-        /// Customer service representative.
-        CustomerServiceRepresentative = 1,
-        /// System auto job.
-        System = 2,
-        /// Customer user.
-        Customer = 3,
-        /// Reseller user.
-        Reseller = 4,
-    }
-    impl OperatorType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                OperatorType::Unspecified => "OPERATOR_TYPE_UNSPECIFIED",
-                OperatorType::CustomerServiceRepresentative => {
-                    "CUSTOMER_SERVICE_REPRESENTATIVE"
-                }
-                OperatorType::System => "SYSTEM",
-                OperatorType::Customer => "CUSTOMER",
-                OperatorType::Reseller => "RESELLER",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "OPERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CUSTOMER_SERVICE_REPRESENTATIVE" => {
-                    Some(Self::CustomerServiceRepresentative)
-                }
-                "SYSTEM" => Some(Self::System),
-                "CUSTOMER" => Some(Self::Customer),
-                "RESELLER" => Some(Self::Reseller),
-                _ => None,
-            }
-        }
-    }
-    /// Cancellation reason for the entitlement
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum CancellationReason {
-        /// Not used.
-        Unspecified = 0,
-        /// Reseller triggered a cancellation of the service.
-        ServiceTerminated = 1,
-        /// Relationship between the reseller and customer has ended due to a
-        /// transfer.
-        RelationshipEnded = 2,
-        /// Entitlement transferred away from reseller while still keeping other
-        /// entitlement(s) with the reseller.
-        PartialTransfer = 3,
-    }
-    impl CancellationReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                CancellationReason::Unspecified => "CANCELLATION_REASON_UNSPECIFIED",
-                CancellationReason::ServiceTerminated => "SERVICE_TERMINATED",
-                CancellationReason::RelationshipEnded => "RELATIONSHIP_ENDED",
-                CancellationReason::PartialTransfer => "PARTIAL_TRANSFER",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "CANCELLATION_REASON_UNSPECIFIED" => Some(Self::Unspecified),
-                "SERVICE_TERMINATED" => Some(Self::ServiceTerminated),
-                "RELATIONSHIP_ENDED" => Some(Self::RelationshipEnded),
-                "PARTIAL_TRANSFER" => Some(Self::PartialTransfer),
-                _ => None,
-            }
-        }
-    }
-    /// The Entitlement's activation reason
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ActivationReason {
-        /// Not used.
-        Unspecified = 0,
-        /// Reseller reactivated a suspended Entitlement.
-        ResellerRevokedSuspension = 1,
-        /// Customer accepted pending terms of service.
-        CustomerAcceptedPendingTos = 2,
-        /// Reseller updated the renewal settings on an entitlement that was
-        /// suspended due to cancellation, and this update reactivated the
-        /// entitlement.
-        RenewalSettingsChanged = 3,
-        /// Other reasons (Activated temporarily for cancellation, added a payment
-        /// plan to a trial entitlement, etc.)
-        OtherActivationReason = 100,
-    }
-    impl ActivationReason {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ActivationReason::Unspecified => "ACTIVATION_REASON_UNSPECIFIED",
-                ActivationReason::ResellerRevokedSuspension => {
-                    "RESELLER_REVOKED_SUSPENSION"
-                }
-                ActivationReason::CustomerAcceptedPendingTos => {
-                    "CUSTOMER_ACCEPTED_PENDING_TOS"
-                }
-                ActivationReason::RenewalSettingsChanged => "RENEWAL_SETTINGS_CHANGED",
-                ActivationReason::OtherActivationReason => "OTHER_ACTIVATION_REASON",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "ACTIVATION_REASON_UNSPECIFIED" => Some(Self::Unspecified),
-                "RESELLER_REVOKED_SUSPENSION" => Some(Self::ResellerRevokedSuspension),
-                "CUSTOMER_ACCEPTED_PENDING_TOS" => Some(Self::CustomerAcceptedPendingTos),
-                "RENEWAL_SETTINGS_CHANGED" => Some(Self::RenewalSettingsChanged),
-                "OTHER_ACTIVATION_REASON" => Some(Self::OtherActivationReason),
-                _ => None,
-            }
-        }
-    }
-    /// The reason the change was made
+}
+/// Represents information which resellers will get as part of notification from
+/// Pub/Sub.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SubscriberEvent {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
+    #[prost(oneof = "subscriber_event::Event", tags = "1, 2")]
+    pub event: ::core::option::Option<subscriber_event::Event>,
+}
+/// Nested message and enum types in `SubscriberEvent`.
+pub mod subscriber_event {
+    /// Specifies the Pub/Sub event provided to the partners.
+    /// This is a required field.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ChangeReason {
-        /// Suspension reason for the Entitlement.
-        #[prost(enumeration = "super::entitlement::SuspensionReason", tag = "9")]
-        SuspensionReason(i32),
-        /// Cancellation reason for the Entitlement.
-        #[prost(enumeration = "CancellationReason", tag = "10")]
-        CancellationReason(i32),
-        /// The Entitlement's activation reason
-        #[prost(enumeration = "ActivationReason", tag = "11")]
-        ActivationReason(i32),
-        /// e.g. purchase_number change reason, entered by CRS.
-        #[prost(string, tag = "100")]
-        OtherChangeReason(::prost::alloc::string::String),
+    pub enum Event {
+        /// Customer event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag = "1")]
+        CustomerEvent(super::CustomerEvent),
+        /// Entitlement event sent as part of Pub/Sub event to partners.
+        #[prost(message, tag = "2")]
+        EntitlementEvent(super::EntitlementEvent),
+    }
+}
+/// Provides contextual information about a
+/// \[google.longrunning.Operation][google.longrunning.Operation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// The RPC that initiated this Long Running Operation.
+    #[prost(enumeration = "operation_metadata::OperationType", tag = "1")]
+    pub operation_type: i32,
+}
+/// Nested message and enum types in `OperationMetadata`.
+pub mod operation_metadata {
+    /// RPCs that return a Long Running Operation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum OperationType {
+        /// Not used.
+        Unspecified = 0,
+        /// Long Running Operation was triggered by CreateEntitlement.
+        CreateEntitlement = 1,
+        /// Long Running Operation was triggered by ChangeRenewalSettings.
+        ChangeRenewalSettings = 3,
+        /// Long Running Operation was triggered by StartPaidService.
+        StartPaidService = 5,
+        /// Long Running Operation was triggered by ActivateEntitlement.
+        ActivateEntitlement = 7,
+        /// Long Running Operation was triggered by SuspendEntitlement.
+        SuspendEntitlement = 8,
+        /// Long Running Operation was triggered by CancelEntitlement.
+        CancelEntitlement = 9,
+        /// Long Running Operation was triggered by TransferEntitlements.
+        TransferEntitlements = 10,
+        /// Long Running Operation was triggered by TransferEntitlementsToGoogle.
+        TransferEntitlementsToGoogle = 11,
+        /// Long Running Operation was triggered by ChangeOffer.
+        ChangeOffer = 14,
+        /// Long Running Operation was triggered by ChangeParameters.
+        ChangeParameters = 15,
+        /// Long Running Operation was triggered by ProvisionCloudIdentity.
+        ProvisionCloudIdentity = 16,
+    }
+    impl OperationType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OperationType::Unspecified => "OPERATION_TYPE_UNSPECIFIED",
+                OperationType::CreateEntitlement => "CREATE_ENTITLEMENT",
+                OperationType::ChangeRenewalSettings => "CHANGE_RENEWAL_SETTINGS",
+                OperationType::StartPaidService => "START_PAID_SERVICE",
+                OperationType::ActivateEntitlement => "ACTIVATE_ENTITLEMENT",
+                OperationType::SuspendEntitlement => "SUSPEND_ENTITLEMENT",
+                OperationType::CancelEntitlement => "CANCEL_ENTITLEMENT",
+                OperationType::TransferEntitlements => "TRANSFER_ENTITLEMENTS",
+                OperationType::TransferEntitlementsToGoogle => {
+                    "TRANSFER_ENTITLEMENTS_TO_GOOGLE"
+                }
+                OperationType::ChangeOffer => "CHANGE_OFFER",
+                OperationType::ChangeParameters => "CHANGE_PARAMETERS",
+                OperationType::ProvisionCloudIdentity => "PROVISION_CLOUD_IDENTITY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OPERATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATE_ENTITLEMENT" => Some(Self::CreateEntitlement),
+                "CHANGE_RENEWAL_SETTINGS" => Some(Self::ChangeRenewalSettings),
+                "START_PAID_SERVICE" => Some(Self::StartPaidService),
+                "ACTIVATE_ENTITLEMENT" => Some(Self::ActivateEntitlement),
+                "SUSPEND_ENTITLEMENT" => Some(Self::SuspendEntitlement),
+                "CANCEL_ENTITLEMENT" => Some(Self::CancelEntitlement),
+                "TRANSFER_ENTITLEMENTS" => Some(Self::TransferEntitlements),
+                "TRANSFER_ENTITLEMENTS_TO_GOOGLE" => {
+                    Some(Self::TransferEntitlementsToGoogle)
+                }
+                "CHANGE_OFFER" => Some(Self::ChangeOffer),
+                "CHANGE_PARAMETERS" => Some(Self::ChangeParameters),
+                "PROVISION_CLOUD_IDENTITY" => Some(Self::ProvisionCloudIdentity),
+                _ => None,
+            }
+        }
     }
 }
 /// Request message for
@@ -2339,6 +2024,321 @@ pub mod cloud_channel_reports_service_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+    }
+}
+/// Change event entry for Entitlement order history
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EntitlementChange {
+    /// Required. Resource name of an entitlement in the form:
+    /// accounts/{account_id}/customers/{customer_id}/entitlements/{entitlement_id}
+    #[prost(string, tag = "1")]
+    pub entitlement: ::prost::alloc::string::String,
+    /// Required. Resource name of the Offer at the time of change.
+    /// Takes the form: accounts/{account_id}/offers/{offer_id}.
+    #[prost(string, tag = "2")]
+    pub offer: ::prost::alloc::string::String,
+    /// Service provisioned for an Entitlement.
+    #[prost(message, optional, tag = "3")]
+    pub provisioned_service: ::core::option::Option<ProvisionedService>,
+    /// The change action type.
+    #[prost(enumeration = "entitlement_change::ChangeType", tag = "4")]
+    pub change_type: i32,
+    /// The submitted time of the change.
+    #[prost(message, optional, tag = "5")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Operator type responsible for the change.
+    #[prost(enumeration = "entitlement_change::OperatorType", tag = "6")]
+    pub operator_type: i32,
+    /// Extended parameters, such as:
+    /// purchase_order_number, gcp_details;
+    /// internal_correlation_id, long_running_operation_id, order_id;
+    /// etc.
+    #[prost(message, repeated, tag = "8")]
+    pub parameters: ::prost::alloc::vec::Vec<Parameter>,
+    /// Human-readable identifier that shows what operator made a change.
+    /// When the operator_type is RESELLER, this is the user's email address.
+    /// For all other operator types, this is empty.
+    #[prost(string, tag = "12")]
+    pub operator: ::prost::alloc::string::String,
+    /// The reason the change was made
+    #[prost(oneof = "entitlement_change::ChangeReason", tags = "9, 10, 11, 100")]
+    pub change_reason: ::core::option::Option<entitlement_change::ChangeReason>,
+}
+/// Nested message and enum types in `EntitlementChange`.
+pub mod entitlement_change {
+    /// Specifies the type of change action
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ChangeType {
+        /// Not used.
+        Unspecified = 0,
+        /// New Entitlement was created.
+        Created = 1,
+        /// Price plan associated with an Entitlement was changed.
+        PricePlanSwitched = 3,
+        /// Number of seats committed for a commitment Entitlement was changed.
+        CommitmentChanged = 4,
+        /// An annual Entitlement was renewed.
+        Renewed = 5,
+        /// Entitlement was suspended.
+        Suspended = 6,
+        /// Entitlement was activated.
+        Activated = 7,
+        /// Entitlement was cancelled.
+        Cancelled = 8,
+        /// Entitlement was upgraded or downgraded for ex. from Google Workspace
+        /// Business Standard to Google Workspace Business Plus.
+        SkuChanged = 9,
+        /// The settings for renewal of an Entitlement have changed.
+        RenewalSettingChanged = 10,
+        /// Use for Google Workspace subscription.
+        /// Either a trial was converted to a paid subscription or a new subscription
+        /// with no trial is created.
+        PaidSubscriptionStarted = 11,
+        /// License cap was changed for the entitlement.
+        LicenseCapChanged = 12,
+        /// The suspension details have changed (but it is still suspended).
+        SuspensionDetailsChanged = 13,
+        /// The trial end date was extended.
+        TrialEndDateExtended = 14,
+        /// Entitlement started trial.
+        TrialStarted = 15,
+    }
+    impl ChangeType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                ChangeType::Created => "CREATED",
+                ChangeType::PricePlanSwitched => "PRICE_PLAN_SWITCHED",
+                ChangeType::CommitmentChanged => "COMMITMENT_CHANGED",
+                ChangeType::Renewed => "RENEWED",
+                ChangeType::Suspended => "SUSPENDED",
+                ChangeType::Activated => "ACTIVATED",
+                ChangeType::Cancelled => "CANCELLED",
+                ChangeType::SkuChanged => "SKU_CHANGED",
+                ChangeType::RenewalSettingChanged => "RENEWAL_SETTING_CHANGED",
+                ChangeType::PaidSubscriptionStarted => "PAID_SUBSCRIPTION_STARTED",
+                ChangeType::LicenseCapChanged => "LICENSE_CAP_CHANGED",
+                ChangeType::SuspensionDetailsChanged => "SUSPENSION_DETAILS_CHANGED",
+                ChangeType::TrialEndDateExtended => "TRIAL_END_DATE_EXTENDED",
+                ChangeType::TrialStarted => "TRIAL_STARTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CREATED" => Some(Self::Created),
+                "PRICE_PLAN_SWITCHED" => Some(Self::PricePlanSwitched),
+                "COMMITMENT_CHANGED" => Some(Self::CommitmentChanged),
+                "RENEWED" => Some(Self::Renewed),
+                "SUSPENDED" => Some(Self::Suspended),
+                "ACTIVATED" => Some(Self::Activated),
+                "CANCELLED" => Some(Self::Cancelled),
+                "SKU_CHANGED" => Some(Self::SkuChanged),
+                "RENEWAL_SETTING_CHANGED" => Some(Self::RenewalSettingChanged),
+                "PAID_SUBSCRIPTION_STARTED" => Some(Self::PaidSubscriptionStarted),
+                "LICENSE_CAP_CHANGED" => Some(Self::LicenseCapChanged),
+                "SUSPENSION_DETAILS_CHANGED" => Some(Self::SuspensionDetailsChanged),
+                "TRIAL_END_DATE_EXTENDED" => Some(Self::TrialEndDateExtended),
+                "TRIAL_STARTED" => Some(Self::TrialStarted),
+                _ => None,
+            }
+        }
+    }
+    /// Specifies the type of operator responsible for the change
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum OperatorType {
+        /// Not used.
+        Unspecified = 0,
+        /// Customer service representative.
+        CustomerServiceRepresentative = 1,
+        /// System auto job.
+        System = 2,
+        /// Customer user.
+        Customer = 3,
+        /// Reseller user.
+        Reseller = 4,
+    }
+    impl OperatorType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                OperatorType::Unspecified => "OPERATOR_TYPE_UNSPECIFIED",
+                OperatorType::CustomerServiceRepresentative => {
+                    "CUSTOMER_SERVICE_REPRESENTATIVE"
+                }
+                OperatorType::System => "SYSTEM",
+                OperatorType::Customer => "CUSTOMER",
+                OperatorType::Reseller => "RESELLER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "OPERATOR_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CUSTOMER_SERVICE_REPRESENTATIVE" => {
+                    Some(Self::CustomerServiceRepresentative)
+                }
+                "SYSTEM" => Some(Self::System),
+                "CUSTOMER" => Some(Self::Customer),
+                "RESELLER" => Some(Self::Reseller),
+                _ => None,
+            }
+        }
+    }
+    /// Cancellation reason for the entitlement
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum CancellationReason {
+        /// Not used.
+        Unspecified = 0,
+        /// Reseller triggered a cancellation of the service.
+        ServiceTerminated = 1,
+        /// Relationship between the reseller and customer has ended due to a
+        /// transfer.
+        RelationshipEnded = 2,
+        /// Entitlement transferred away from reseller while still keeping other
+        /// entitlement(s) with the reseller.
+        PartialTransfer = 3,
+    }
+    impl CancellationReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                CancellationReason::Unspecified => "CANCELLATION_REASON_UNSPECIFIED",
+                CancellationReason::ServiceTerminated => "SERVICE_TERMINATED",
+                CancellationReason::RelationshipEnded => "RELATIONSHIP_ENDED",
+                CancellationReason::PartialTransfer => "PARTIAL_TRANSFER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CANCELLATION_REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                "SERVICE_TERMINATED" => Some(Self::ServiceTerminated),
+                "RELATIONSHIP_ENDED" => Some(Self::RelationshipEnded),
+                "PARTIAL_TRANSFER" => Some(Self::PartialTransfer),
+                _ => None,
+            }
+        }
+    }
+    /// The Entitlement's activation reason
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ActivationReason {
+        /// Not used.
+        Unspecified = 0,
+        /// Reseller reactivated a suspended Entitlement.
+        ResellerRevokedSuspension = 1,
+        /// Customer accepted pending terms of service.
+        CustomerAcceptedPendingTos = 2,
+        /// Reseller updated the renewal settings on an entitlement that was
+        /// suspended due to cancellation, and this update reactivated the
+        /// entitlement.
+        RenewalSettingsChanged = 3,
+        /// Other reasons (Activated temporarily for cancellation, added a payment
+        /// plan to a trial entitlement, etc.)
+        OtherActivationReason = 100,
+    }
+    impl ActivationReason {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ActivationReason::Unspecified => "ACTIVATION_REASON_UNSPECIFIED",
+                ActivationReason::ResellerRevokedSuspension => {
+                    "RESELLER_REVOKED_SUSPENSION"
+                }
+                ActivationReason::CustomerAcceptedPendingTos => {
+                    "CUSTOMER_ACCEPTED_PENDING_TOS"
+                }
+                ActivationReason::RenewalSettingsChanged => "RENEWAL_SETTINGS_CHANGED",
+                ActivationReason::OtherActivationReason => "OTHER_ACTIVATION_REASON",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "ACTIVATION_REASON_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESELLER_REVOKED_SUSPENSION" => Some(Self::ResellerRevokedSuspension),
+                "CUSTOMER_ACCEPTED_PENDING_TOS" => Some(Self::CustomerAcceptedPendingTos),
+                "RENEWAL_SETTINGS_CHANGED" => Some(Self::RenewalSettingsChanged),
+                "OTHER_ACTIVATION_REASON" => Some(Self::OtherActivationReason),
+                _ => None,
+            }
+        }
+    }
+    /// The reason the change was made
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ChangeReason {
+        /// Suspension reason for the Entitlement.
+        #[prost(enumeration = "super::entitlement::SuspensionReason", tag = "9")]
+        SuspensionReason(i32),
+        /// Cancellation reason for the Entitlement.
+        #[prost(enumeration = "CancellationReason", tag = "10")]
+        CancellationReason(i32),
+        /// The Entitlement's activation reason
+        #[prost(enumeration = "ActivationReason", tag = "11")]
+        ActivationReason(i32),
+        /// e.g. purchase_number change reason, entered by CRS.
+        #[prost(string, tag = "100")]
+        OtherChangeReason(::prost::alloc::string::String),
     }
 }
 /// Entity representing a link between distributors and their indirect

@@ -1,19 +1,3 @@
-/// Feature flags supported by a client.
-/// This is intended to be sent as part of request metadata to assure the server
-/// that certain behaviors are safe to enable. This proto is meant to be
-/// serialized and websafe-base64 encoded under the `bigtable-features` metadata
-/// key. The value will remain constant for the lifetime of a client and due to
-/// HTTP2's HPACK compression, the request overhead will be tiny.
-/// This is an internal implementation detail and should not be used by endusers
-/// directly.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FeatureFlags {
-    /// Notify the server that the client enables batch write flow control by
-    /// requesting RateLimitInfo from MutateRowsResponse.
-    #[prost(bool, tag = "3")]
-    pub mutate_rows_rate_limit: bool,
-}
 /// ReadIterationStats captures information about the iteration of rows or cells
 /// over the course of a read, e.g. how many results were scanned in a read
 /// operation versus the results returned.
@@ -1793,6 +1777,22 @@ pub mod bigtable_client {
             self.inner.server_streaming(request.into_request(), path, codec).await
         }
     }
+}
+/// Feature flags supported by a client.
+/// This is intended to be sent as part of request metadata to assure the server
+/// that certain behaviors are safe to enable. This proto is meant to be
+/// serialized and websafe-base64 encoded under the `bigtable-features` metadata
+/// key. The value will remain constant for the lifetime of a client and due to
+/// HTTP2's HPACK compression, the request overhead will be tiny.
+/// This is an internal implementation detail and should not be used by endusers
+/// directly.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FeatureFlags {
+    /// Notify the server that the client enables batch write flow control by
+    /// requesting RateLimitInfo from MutateRowsResponse.
+    #[prost(bool, tag = "3")]
+    pub mutate_rows_rate_limit: bool,
 }
 /// Response metadata proto
 /// This is an experimental feature that will be used to get zone_id and

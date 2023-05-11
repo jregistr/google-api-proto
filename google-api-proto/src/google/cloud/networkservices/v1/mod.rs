@@ -1,445 +1,3 @@
-/// Represents the metadata of the long-running operation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// Output only. The time the operation was created.
-    #[prost(message, optional, tag = "1")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The time the operation finished running.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Server-defined resource path for the target of the operation.
-    #[prost(string, tag = "3")]
-    pub target: ::prost::alloc::string::String,
-    /// Output only. Name of the verb executed by the operation.
-    #[prost(string, tag = "4")]
-    pub verb: ::prost::alloc::string::String,
-    /// Output only. Human-readable status of the operation, if any.
-    #[prost(string, tag = "5")]
-    pub status_message: ::prost::alloc::string::String,
-    /// Output only. Identifies whether the user has requested cancellation
-    /// of the operation. Operations that have successfully been cancelled
-    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
-    /// corresponding to `Code.CANCELLED`.
-    #[prost(bool, tag = "6")]
-    pub requested_cancellation: bool,
-    /// Output only. API version used to start the operation.
-    #[prost(string, tag = "7")]
-    pub api_version: ::prost::alloc::string::String,
-}
-/// Specification of a port-based selector.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TrafficPortSelector {
-    /// Optional. A list of ports. Can be port numbers or port range
-    /// (example, \[80-90\] specifies all ports from 80 to 90, including
-    /// 80 and 90) or named ports or * to specify all ports. If the
-    /// list is empty, all ports are selected.
-    #[prost(string, repeated, tag = "1")]
-    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A definition of a matcher that selects endpoints to which the policies
-/// should be applied.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EndpointMatcher {
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[prost(oneof = "endpoint_matcher::MatcherType", tags = "1")]
-    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
-}
-/// Nested message and enum types in `EndpointMatcher`.
-pub mod endpoint_matcher {
-    /// The matcher that is based on node metadata presented by xDS clients.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MetadataLabelMatcher {
-        /// Specifies how matching should be done.
-        ///
-        /// Supported values are:
-        /// MATCH_ANY: At least one of the Labels specified in the
-        ///    matcher should match the metadata presented by xDS client.
-        /// MATCH_ALL: The metadata presented by the xDS client should
-        ///    contain all of the labels specified here.
-        ///
-        /// The selection is determined based on the best match. For
-        /// example, suppose there are three EndpointPolicy
-        /// resources P1, P2 and P3 and if P1 has a the matcher as
-        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
-        /// MATCH_ALL <A:1,B:1,C:1>.
-        ///
-        /// If a client with label <A:1> connects, the config from P1
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1> connects, the config from P2
-        /// will be selected.
-        ///
-        /// If a client with label <A:1,B:1,C:1> connects, the config
-        /// from P3 will be selected.
-        ///
-        /// If there is more than one best match, (for example, if a
-        /// config P4 with selector <A:1,D:1> exists and if a client with
-        /// label <A:1,B:1,D:1> connects), an error will be thrown.
-        #[prost(
-            enumeration = "metadata_label_matcher::MetadataLabelMatchCriteria",
-            tag = "1"
-        )]
-        pub metadata_label_match_criteria: i32,
-        /// The list of label value pairs that must match labels in the
-        /// provided metadata based on filterMatchCriteria This list can
-        /// have at most 64 entries. The list can be empty if the match
-        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
-        /// matches any client).
-        #[prost(message, repeated, tag = "2")]
-        pub metadata_labels: ::prost::alloc::vec::Vec<
-            metadata_label_matcher::MetadataLabels,
-        >,
-    }
-    /// Nested message and enum types in `MetadataLabelMatcher`.
-    pub mod metadata_label_matcher {
-        /// Defines a name-pair value for a single label.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MetadataLabels {
-            /// Required. Label name presented as key in xDS Node Metadata.
-            #[prost(string, tag = "1")]
-            pub label_name: ::prost::alloc::string::String,
-            /// Required. Label value presented as value corresponding to the above
-            /// key, in xDS Node Metadata.
-            #[prost(string, tag = "2")]
-            pub label_value: ::prost::alloc::string::String,
-        }
-        /// Possible criteria values that define logic of how matching is made.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum MetadataLabelMatchCriteria {
-            /// Default value. Should not be used.
-            Unspecified = 0,
-            /// At least one of the Labels specified in the matcher should match the
-            /// metadata presented by xDS client.
-            MatchAny = 1,
-            /// The metadata presented by the xDS client should contain all of the
-            /// labels specified here.
-            MatchAll = 2,
-        }
-        impl MetadataLabelMatchCriteria {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MetadataLabelMatchCriteria::Unspecified => {
-                        "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED"
-                    }
-                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
-                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED" => {
-                        Some(Self::Unspecified)
-                    }
-                    "MATCH_ANY" => Some(Self::MatchAny),
-                    "MATCH_ALL" => Some(Self::MatchAll),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// Specifies type of the matcher used for this endpoint matcher.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MatcherType {
-        /// The matcher is based on node metadata presented by xDS clients.
-        #[prost(message, tag = "1")]
-        MetadataLabelMatcher(MetadataLabelMatcher),
-    }
-}
-/// Gateway represents the configuration for a proxy, typically a load balancer.
-/// It captures the ip:port over which the services are exposed by the proxy,
-/// along with any policy configurations. Routes have reference to to Gateways to
-/// dictate how requests should be routed by this Gateway.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Gateway {
-    /// Required. Name of the Gateway resource. It matches pattern
-    /// `projects/*/locations/*/gateways/<gateway_name>`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server-defined URL of this resource
-    #[prost(string, tag = "13")]
-    pub self_link: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. Set of label tags associated with the Gateway resource.
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Immutable. The type of the customer managed gateway.
-    /// This field is required. If unspecified, an error is returned.
-    #[prost(enumeration = "gateway::Type", tag = "6")]
-    pub r#type: i32,
-    /// Required. One or more ports that the Gateway must receive traffic on. The proxy binds
-    /// to the ports specified. Gateway listen on 0.0.0.0 on the ports specified
-    /// below.
-    #[prost(int32, repeated, packed = "false", tag = "11")]
-    pub ports: ::prost::alloc::vec::Vec<i32>,
-    /// Required. Immutable. Scope determines how configuration across multiple Gateway instances are
-    /// merged. The configuration for multiple Gateway instances with the same
-    /// scope will be merged as presented as a single coniguration to the
-    /// proxy/load balancer.
-    ///
-    /// Max length 64 characters.
-    /// Scope should start with a letter and can only have letters, numbers,
-    /// hyphens.
-    #[prost(string, tag = "8")]
-    pub scope: ::prost::alloc::string::String,
-    /// Optional. A fully-qualified ServerTLSPolicy URL reference. Specifies how TLS
-    /// traffic is terminated. If empty, TLS termination is disabled.
-    #[prost(string, tag = "9")]
-    pub server_tls_policy: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Gateway`.
-pub mod gateway {
-    /// The type of the customer-managed gateway.
-    /// Possible values are:
-    /// * OPEN_MESH
-    /// * SECURE_WEB_GATEWAY
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// The type of the customer managed gateway is unspecified.
-        Unspecified = 0,
-        /// The type of the customer managed gateway is TrafficDirector Open
-        /// Mesh.
-        OpenMesh = 1,
-        /// The type of the customer managed gateway is SecureWebGateway (SWG).
-        SecureWebGateway = 2,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::OpenMesh => "OPEN_MESH",
-                Type::SecureWebGateway => "SECURE_WEB_GATEWAY",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "OPEN_MESH" => Some(Self::OpenMesh),
-                "SECURE_WEB_GATEWAY" => Some(Self::SecureWebGateway),
-                _ => None,
-            }
-        }
-    }
-}
-/// Request used with the ListGateways method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGatewaysRequest {
-    /// Required. The project and location from which the Gateways should be
-    /// listed, specified in the format `projects/*/locations/*`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of Gateways to return per call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListGatewaysResponse`
-    /// Indicates that this is a continuation of a prior `ListGateways` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListGateways method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListGatewaysResponse {
-    /// List of Gateway resources.
-    #[prost(message, repeated, tag = "1")]
-    pub gateways: ::prost::alloc::vec::Vec<Gateway>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetGateway method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGatewayRequest {
-    /// Required. A name of the Gateway to get. Must be in the format
-    /// `projects/*/locations/*/gateways/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the CreateGateway method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateGatewayRequest {
-    /// Required. The parent resource of the Gateway. Must be in the
-    /// format `projects/*/locations/*`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the Gateway resource to be created.
-    #[prost(string, tag = "2")]
-    pub gateway_id: ::prost::alloc::string::String,
-    /// Required. Gateway resource to be created.
-    #[prost(message, optional, tag = "3")]
-    pub gateway: ::core::option::Option<Gateway>,
-}
-/// Request used by the UpdateGateway method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateGatewayRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// Gateway resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated Gateway resource.
-    #[prost(message, optional, tag = "2")]
-    pub gateway: ::core::option::Option<Gateway>,
-}
-/// Request used by the DeleteGateway method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteGatewayRequest {
-    /// Required. A name of the Gateway to delete. Must be in the format
-    /// `projects/*/locations/*/gateways/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// ServiceBinding is the resource that defines a Service Directory Service to
-/// be used in a BackendService resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ServiceBinding {
-    /// Required. Name of the ServiceBinding resource. It matches pattern
-    /// `projects/*/locations/global/serviceBindings/service_binding_name>`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required. The full service directory service name of the format
-    /// /projects/*/locations/*/namespaces/*/services/*
-    #[prost(string, tag = "5")]
-    pub service: ::prost::alloc::string::String,
-    /// Optional. Set of label tags associated with the ServiceBinding resource.
-    #[prost(btree_map = "string, string", tag = "7")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Request used with the ListServiceBindings method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListServiceBindingsRequest {
-    /// Required. The project and location from which the ServiceBindings should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of ServiceBindings to return per call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListServiceBindingsResponse`
-    /// Indicates that this is a continuation of a prior `ListRouters` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListServiceBindings method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListServiceBindingsResponse {
-    /// List of ServiceBinding resources.
-    #[prost(message, repeated, tag = "1")]
-    pub service_bindings: ::prost::alloc::vec::Vec<ServiceBinding>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetServiceBindingRequest {
-    /// Required. A name of the ServiceBinding to get. Must be in the format
-    /// `projects/*/locations/global/serviceBindings/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the ServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateServiceBindingRequest {
-    /// Required. The parent resource of the ServiceBinding. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the ServiceBinding resource to be created.
-    #[prost(string, tag = "2")]
-    pub service_binding_id: ::prost::alloc::string::String,
-    /// Required. ServiceBinding resource to be created.
-    #[prost(message, optional, tag = "3")]
-    pub service_binding: ::core::option::Option<ServiceBinding>,
-}
-/// Request used by the DeleteServiceBinding method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteServiceBindingRequest {
-    /// Required. A name of the ServiceBinding to delete. Must be in the format
-    /// `projects/*/locations/global/serviceBindings/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
 /// Mesh represents a logical configuration grouping for workload to workload
 /// communication within a service mesh. Routes that point to mesh dictate how
 /// requests are routed within this logical mesh boundary.
@@ -552,191 +110,6 @@ pub struct UpdateMeshRequest {
 pub struct DeleteMeshRequest {
     /// Required. A name of the Mesh to delete. Must be in the format
     /// `projects/*/locations/global/meshes/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// TlsRoute defines how traffic should be routed based on SNI and other matching
-/// L3 attributes.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TlsRoute {
-    /// Required. Name of the TlsRoute resource. It matches pattern
-    /// `projects/*/locations/global/tlsRoutes/tls_route_name>`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Server-defined URL of this resource
-    #[prost(string, tag = "8")]
-    pub self_link: ::prost::alloc::string::String,
-    /// Output only. The timestamp when the resource was created.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. The timestamp when the resource was updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional. A free-text description of the resource. Max length 1024 characters.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// Required. Rules that define how traffic is routed and handled. At least one RouteRule
-    /// must be supplied. If there are multiple rules then the action taken will be
-    /// the first rule to match.
-    #[prost(message, repeated, tag = "5")]
-    pub rules: ::prost::alloc::vec::Vec<tls_route::RouteRule>,
-    /// Optional. Meshes defines a list of meshes this TlsRoute is attached to, as one of the
-    /// routing rules to route the requests served by the mesh.
-    ///
-    /// Each mesh reference should match the pattern:
-    /// `projects/*/locations/global/meshes/<mesh_name>`
-    ///
-    /// The attached Mesh should be of a type SIDECAR
-    #[prost(string, repeated, tag = "6")]
-    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Optional. Gateways defines a list of gateways this TlsRoute is attached to, as one of
-    /// the routing rules to route the requests served by the gateway.
-    ///
-    /// Each gateway reference should match the pattern:
-    /// `projects/*/locations/global/gateways/<gateway_name>`
-    #[prost(string, repeated, tag = "7")]
-    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `TlsRoute`.
-pub mod tls_route {
-    /// Specifies how to match traffic and how to route traffic when traffic is
-    /// matched.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteRule {
-        /// Required. RouteMatch defines the predicate used to match requests to a given
-        /// action. Multiple match types are "OR"ed for evaluation.
-        #[prost(message, repeated, tag = "1")]
-        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
-        /// Required. The detailed rule defining how to route matched traffic.
-        #[prost(message, optional, tag = "2")]
-        pub action: ::core::option::Option<RouteAction>,
-    }
-    /// RouteMatch defines the predicate used to match requests to a given action.
-    /// Multiple match types are "AND"ed for evaluation.
-    /// If no routeMatch field is specified, this rule will unconditionally match
-    /// traffic.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteMatch {
-        /// Optional. SNI (server name indicator) to match against.
-        /// SNI will be matched against all wildcard domains, i.e. www.example.com
-        /// will be first matched against www.example.com, then *.example.com, then
-        /// *.com.
-        /// Partial wildcards are not supported, and values like *w.example.com are
-        /// invalid.
-        /// At least one of sni_host and alpn is required.
-        /// Up to 5 sni hosts across all matches can be set.
-        #[prost(string, repeated, tag = "1")]
-        pub sni_host: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. ALPN (Application-Layer Protocol Negotiation) to match against.
-        /// Examples: "http/1.1", "h2".
-        /// At least one of sni_host and alpn is required.
-        /// Up to 5 alpns across all matches can be set.
-        #[prost(string, repeated, tag = "2")]
-        pub alpn: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-    /// The specifications for routing traffic and applying associated policies.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteAction {
-        /// Required. The destination services to which traffic should be forwarded. At least
-        /// one destination service is required.
-        #[prost(message, repeated, tag = "1")]
-        pub destinations: ::prost::alloc::vec::Vec<RouteDestination>,
-    }
-    /// Describe the destination for traffic to be routed to.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RouteDestination {
-        /// Required. The URL of a BackendService to route traffic to.
-        #[prost(string, tag = "1")]
-        pub service_name: ::prost::alloc::string::String,
-        /// Optional. Specifies the proportion of requests forwareded to the backend referenced
-        /// by the service_name field. This is computed as:
-        ///          weight/Sum(weights in destinations)
-        /// Weights in all destinations does not need to sum up to 100.
-        #[prost(int32, tag = "2")]
-        pub weight: i32,
-    }
-}
-/// Request used with the ListTlsRoutes method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTlsRoutesRequest {
-    /// Required. The project and location from which the TlsRoutes should be
-    /// listed, specified in the format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Maximum number of TlsRoutes to return per call.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The value returned by the last `ListTlsRoutesResponse`
-    /// Indicates that this is a continuation of a prior `ListTlsRoutes` call,
-    /// and that the system should return the next page of data.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response returned by the ListTlsRoutes method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTlsRoutesResponse {
-    /// List of TlsRoute resources.
-    #[prost(message, repeated, tag = "1")]
-    pub tls_routes: ::prost::alloc::vec::Vec<TlsRoute>,
-    /// If there might be more results than those appearing in this response, then
-    /// `next_page_token` is included. To get the next set of results, call this
-    /// method again using the value of `next_page_token` as `page_token`.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request used by the GetTlsRoute method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetTlsRouteRequest {
-    /// Required. A name of the TlsRoute to get. Must be in the format
-    /// `projects/*/locations/global/tlsRoutes/*`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request used by the TlsRoute method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTlsRouteRequest {
-    /// Required. The parent resource of the TlsRoute. Must be in the
-    /// format `projects/*/locations/global`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. Short name of the TlsRoute resource to be created. E.g. TODO(Add an
-    /// example).
-    #[prost(string, tag = "2")]
-    pub tls_route_id: ::prost::alloc::string::String,
-    /// Required. TlsRoute resource to be created.
-    #[prost(message, optional, tag = "3")]
-    pub tls_route: ::core::option::Option<TlsRoute>,
-}
-/// Request used by the UpdateTlsRoute method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateTlsRouteRequest {
-    /// Optional. Field mask is used to specify the fields to be overwritten in the
-    /// TlsRoute resource by the update.
-    /// The fields specified in the update_mask are relative to the resource, not
-    /// the full request. A field will be overwritten if it is in the mask. If the
-    /// user does not provide a mask then all fields will be overwritten.
-    #[prost(message, optional, tag = "1")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. Updated TlsRoute resource.
-    #[prost(message, optional, tag = "2")]
-    pub tls_route: ::core::option::Option<TlsRoute>,
-}
-/// Request used by the DeleteTlsRoute method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteTlsRouteRequest {
-    /// Required. A name of the TlsRoute to delete. Must be in the format
-    /// `projects/*/locations/global/tlsRoutes/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
@@ -1409,6 +782,448 @@ pub struct DeleteHttpRouteRequest {
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
+/// Gateway represents the configuration for a proxy, typically a load balancer.
+/// It captures the ip:port over which the services are exposed by the proxy,
+/// along with any policy configurations. Routes have reference to to Gateways to
+/// dictate how requests should be routed by this Gateway.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Gateway {
+    /// Required. Name of the Gateway resource. It matches pattern
+    /// `projects/*/locations/*/gateways/<gateway_name>`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server-defined URL of this resource
+    #[prost(string, tag = "13")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. Set of label tags associated with the Gateway resource.
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Immutable. The type of the customer managed gateway.
+    /// This field is required. If unspecified, an error is returned.
+    #[prost(enumeration = "gateway::Type", tag = "6")]
+    pub r#type: i32,
+    /// Required. One or more ports that the Gateway must receive traffic on. The proxy binds
+    /// to the ports specified. Gateway listen on 0.0.0.0 on the ports specified
+    /// below.
+    #[prost(int32, repeated, packed = "false", tag = "11")]
+    pub ports: ::prost::alloc::vec::Vec<i32>,
+    /// Required. Immutable. Scope determines how configuration across multiple Gateway instances are
+    /// merged. The configuration for multiple Gateway instances with the same
+    /// scope will be merged as presented as a single coniguration to the
+    /// proxy/load balancer.
+    ///
+    /// Max length 64 characters.
+    /// Scope should start with a letter and can only have letters, numbers,
+    /// hyphens.
+    #[prost(string, tag = "8")]
+    pub scope: ::prost::alloc::string::String,
+    /// Optional. A fully-qualified ServerTLSPolicy URL reference. Specifies how TLS
+    /// traffic is terminated. If empty, TLS termination is disabled.
+    #[prost(string, tag = "9")]
+    pub server_tls_policy: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Gateway`.
+pub mod gateway {
+    /// The type of the customer-managed gateway.
+    /// Possible values are:
+    /// * OPEN_MESH
+    /// * SECURE_WEB_GATEWAY
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// The type of the customer managed gateway is unspecified.
+        Unspecified = 0,
+        /// The type of the customer managed gateway is TrafficDirector Open
+        /// Mesh.
+        OpenMesh = 1,
+        /// The type of the customer managed gateway is SecureWebGateway (SWG).
+        SecureWebGateway = 2,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::OpenMesh => "OPEN_MESH",
+                Type::SecureWebGateway => "SECURE_WEB_GATEWAY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "OPEN_MESH" => Some(Self::OpenMesh),
+                "SECURE_WEB_GATEWAY" => Some(Self::SecureWebGateway),
+                _ => None,
+            }
+        }
+    }
+}
+/// Request used with the ListGateways method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGatewaysRequest {
+    /// Required. The project and location from which the Gateways should be
+    /// listed, specified in the format `projects/*/locations/*`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of Gateways to return per call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListGatewaysResponse`
+    /// Indicates that this is a continuation of a prior `ListGateways` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListGateways method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListGatewaysResponse {
+    /// List of Gateway resources.
+    #[prost(message, repeated, tag = "1")]
+    pub gateways: ::prost::alloc::vec::Vec<Gateway>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetGateway method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGatewayRequest {
+    /// Required. A name of the Gateway to get. Must be in the format
+    /// `projects/*/locations/*/gateways/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the CreateGateway method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateGatewayRequest {
+    /// Required. The parent resource of the Gateway. Must be in the
+    /// format `projects/*/locations/*`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the Gateway resource to be created.
+    #[prost(string, tag = "2")]
+    pub gateway_id: ::prost::alloc::string::String,
+    /// Required. Gateway resource to be created.
+    #[prost(message, optional, tag = "3")]
+    pub gateway: ::core::option::Option<Gateway>,
+}
+/// Request used by the UpdateGateway method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateGatewayRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// Gateway resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated Gateway resource.
+    #[prost(message, optional, tag = "2")]
+    pub gateway: ::core::option::Option<Gateway>,
+}
+/// Request used by the DeleteGateway method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteGatewayRequest {
+    /// Required. A name of the Gateway to delete. Must be in the format
+    /// `projects/*/locations/*/gateways/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// ServiceBinding is the resource that defines a Service Directory Service to
+/// be used in a BackendService resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ServiceBinding {
+    /// Required. Name of the ServiceBinding resource. It matches pattern
+    /// `projects/*/locations/global/serviceBindings/service_binding_name>`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag = "3")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required. The full service directory service name of the format
+    /// /projects/*/locations/*/namespaces/*/services/*
+    #[prost(string, tag = "5")]
+    pub service: ::prost::alloc::string::String,
+    /// Optional. Set of label tags associated with the ServiceBinding resource.
+    #[prost(btree_map = "string, string", tag = "7")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Request used with the ListServiceBindings method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListServiceBindingsRequest {
+    /// Required. The project and location from which the ServiceBindings should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of ServiceBindings to return per call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListServiceBindingsResponse`
+    /// Indicates that this is a continuation of a prior `ListRouters` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListServiceBindings method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListServiceBindingsResponse {
+    /// List of ServiceBinding resources.
+    #[prost(message, repeated, tag = "1")]
+    pub service_bindings: ::prost::alloc::vec::Vec<ServiceBinding>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetServiceBindingRequest {
+    /// Required. A name of the ServiceBinding to get. Must be in the format
+    /// `projects/*/locations/global/serviceBindings/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the ServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateServiceBindingRequest {
+    /// Required. The parent resource of the ServiceBinding. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the ServiceBinding resource to be created.
+    #[prost(string, tag = "2")]
+    pub service_binding_id: ::prost::alloc::string::String,
+    /// Required. ServiceBinding resource to be created.
+    #[prost(message, optional, tag = "3")]
+    pub service_binding: ::core::option::Option<ServiceBinding>,
+}
+/// Request used by the DeleteServiceBinding method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteServiceBindingRequest {
+    /// Required. A name of the ServiceBinding to delete. Must be in the format
+    /// `projects/*/locations/global/serviceBindings/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Represents the metadata of the long-running operation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadata {
+    /// Output only. The time the operation was created.
+    #[prost(message, optional, tag = "1")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The time the operation finished running.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Server-defined resource path for the target of the operation.
+    #[prost(string, tag = "3")]
+    pub target: ::prost::alloc::string::String,
+    /// Output only. Name of the verb executed by the operation.
+    #[prost(string, tag = "4")]
+    pub verb: ::prost::alloc::string::String,
+    /// Output only. Human-readable status of the operation, if any.
+    #[prost(string, tag = "5")]
+    pub status_message: ::prost::alloc::string::String,
+    /// Output only. Identifies whether the user has requested cancellation
+    /// of the operation. Operations that have successfully been cancelled
+    /// have \[Operation.error][\] value with a \[google.rpc.Status.code][google.rpc.Status.code\] of 1,
+    /// corresponding to `Code.CANCELLED`.
+    #[prost(bool, tag = "6")]
+    pub requested_cancellation: bool,
+    /// Output only. API version used to start the operation.
+    #[prost(string, tag = "7")]
+    pub api_version: ::prost::alloc::string::String,
+}
+/// Specification of a port-based selector.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TrafficPortSelector {
+    /// Optional. A list of ports. Can be port numbers or port range
+    /// (example, \[80-90\] specifies all ports from 80 to 90, including
+    /// 80 and 90) or named ports or * to specify all ports. If the
+    /// list is empty, all ports are selected.
+    #[prost(string, repeated, tag = "1")]
+    pub ports: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A definition of a matcher that selects endpoints to which the policies
+/// should be applied.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EndpointMatcher {
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[prost(oneof = "endpoint_matcher::MatcherType", tags = "1")]
+    pub matcher_type: ::core::option::Option<endpoint_matcher::MatcherType>,
+}
+/// Nested message and enum types in `EndpointMatcher`.
+pub mod endpoint_matcher {
+    /// The matcher that is based on node metadata presented by xDS clients.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MetadataLabelMatcher {
+        /// Specifies how matching should be done.
+        ///
+        /// Supported values are:
+        /// MATCH_ANY: At least one of the Labels specified in the
+        ///    matcher should match the metadata presented by xDS client.
+        /// MATCH_ALL: The metadata presented by the xDS client should
+        ///    contain all of the labels specified here.
+        ///
+        /// The selection is determined based on the best match. For
+        /// example, suppose there are three EndpointPolicy
+        /// resources P1, P2 and P3 and if P1 has a the matcher as
+        /// MATCH_ANY <A:1, B:1>, P2 has MATCH_ALL <A:1,B:1>, and P3 has
+        /// MATCH_ALL <A:1,B:1,C:1>.
+        ///
+        /// If a client with label <A:1> connects, the config from P1
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1> connects, the config from P2
+        /// will be selected.
+        ///
+        /// If a client with label <A:1,B:1,C:1> connects, the config
+        /// from P3 will be selected.
+        ///
+        /// If there is more than one best match, (for example, if a
+        /// config P4 with selector <A:1,D:1> exists and if a client with
+        /// label <A:1,B:1,D:1> connects), an error will be thrown.
+        #[prost(
+            enumeration = "metadata_label_matcher::MetadataLabelMatchCriteria",
+            tag = "1"
+        )]
+        pub metadata_label_match_criteria: i32,
+        /// The list of label value pairs that must match labels in the
+        /// provided metadata based on filterMatchCriteria This list can
+        /// have at most 64 entries. The list can be empty if the match
+        /// criteria is MATCH_ANY, to specify a wildcard match (i.e this
+        /// matches any client).
+        #[prost(message, repeated, tag = "2")]
+        pub metadata_labels: ::prost::alloc::vec::Vec<
+            metadata_label_matcher::MetadataLabels,
+        >,
+    }
+    /// Nested message and enum types in `MetadataLabelMatcher`.
+    pub mod metadata_label_matcher {
+        /// Defines a name-pair value for a single label.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MetadataLabels {
+            /// Required. Label name presented as key in xDS Node Metadata.
+            #[prost(string, tag = "1")]
+            pub label_name: ::prost::alloc::string::String,
+            /// Required. Label value presented as value corresponding to the above
+            /// key, in xDS Node Metadata.
+            #[prost(string, tag = "2")]
+            pub label_value: ::prost::alloc::string::String,
+        }
+        /// Possible criteria values that define logic of how matching is made.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MetadataLabelMatchCriteria {
+            /// Default value. Should not be used.
+            Unspecified = 0,
+            /// At least one of the Labels specified in the matcher should match the
+            /// metadata presented by xDS client.
+            MatchAny = 1,
+            /// The metadata presented by the xDS client should contain all of the
+            /// labels specified here.
+            MatchAll = 2,
+        }
+        impl MetadataLabelMatchCriteria {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetadataLabelMatchCriteria::Unspecified => {
+                        "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED"
+                    }
+                    MetadataLabelMatchCriteria::MatchAny => "MATCH_ANY",
+                    MetadataLabelMatchCriteria::MatchAll => "MATCH_ALL",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "METADATA_LABEL_MATCH_CRITERIA_UNSPECIFIED" => {
+                        Some(Self::Unspecified)
+                    }
+                    "MATCH_ANY" => Some(Self::MatchAny),
+                    "MATCH_ALL" => Some(Self::MatchAll),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// Specifies type of the matcher used for this endpoint matcher.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MatcherType {
+        /// The matcher is based on node metadata presented by xDS clients.
+        #[prost(message, tag = "1")]
+        MetadataLabelMatcher(MetadataLabelMatcher),
+    }
+}
 /// EndpointPolicy is a resource that helps apply desired configuration
 /// on the endpoints that match specific criteria.
 /// For example, this resource can be used to apply "authentication config"
@@ -1593,6 +1408,191 @@ pub struct UpdateEndpointPolicyRequest {
 pub struct DeleteEndpointPolicyRequest {
     /// Required. A name of the EndpointPolicy to delete. Must be in the format
     /// `projects/*/locations/global/endpointPolicies/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// TlsRoute defines how traffic should be routed based on SNI and other matching
+/// L3 attributes.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TlsRoute {
+    /// Required. Name of the TlsRoute resource. It matches pattern
+    /// `projects/*/locations/global/tlsRoutes/tls_route_name>`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Server-defined URL of this resource
+    #[prost(string, tag = "8")]
+    pub self_link: ::prost::alloc::string::String,
+    /// Output only. The timestamp when the resource was created.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. The timestamp when the resource was updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional. A free-text description of the resource. Max length 1024 characters.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// Required. Rules that define how traffic is routed and handled. At least one RouteRule
+    /// must be supplied. If there are multiple rules then the action taken will be
+    /// the first rule to match.
+    #[prost(message, repeated, tag = "5")]
+    pub rules: ::prost::alloc::vec::Vec<tls_route::RouteRule>,
+    /// Optional. Meshes defines a list of meshes this TlsRoute is attached to, as one of the
+    /// routing rules to route the requests served by the mesh.
+    ///
+    /// Each mesh reference should match the pattern:
+    /// `projects/*/locations/global/meshes/<mesh_name>`
+    ///
+    /// The attached Mesh should be of a type SIDECAR
+    #[prost(string, repeated, tag = "6")]
+    pub meshes: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Optional. Gateways defines a list of gateways this TlsRoute is attached to, as one of
+    /// the routing rules to route the requests served by the gateway.
+    ///
+    /// Each gateway reference should match the pattern:
+    /// `projects/*/locations/global/gateways/<gateway_name>`
+    #[prost(string, repeated, tag = "7")]
+    pub gateways: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `TlsRoute`.
+pub mod tls_route {
+    /// Specifies how to match traffic and how to route traffic when traffic is
+    /// matched.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteRule {
+        /// Required. RouteMatch defines the predicate used to match requests to a given
+        /// action. Multiple match types are "OR"ed for evaluation.
+        #[prost(message, repeated, tag = "1")]
+        pub matches: ::prost::alloc::vec::Vec<RouteMatch>,
+        /// Required. The detailed rule defining how to route matched traffic.
+        #[prost(message, optional, tag = "2")]
+        pub action: ::core::option::Option<RouteAction>,
+    }
+    /// RouteMatch defines the predicate used to match requests to a given action.
+    /// Multiple match types are "AND"ed for evaluation.
+    /// If no routeMatch field is specified, this rule will unconditionally match
+    /// traffic.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteMatch {
+        /// Optional. SNI (server name indicator) to match against.
+        /// SNI will be matched against all wildcard domains, i.e. www.example.com
+        /// will be first matched against www.example.com, then *.example.com, then
+        /// *.com.
+        /// Partial wildcards are not supported, and values like *w.example.com are
+        /// invalid.
+        /// At least one of sni_host and alpn is required.
+        /// Up to 5 sni hosts across all matches can be set.
+        #[prost(string, repeated, tag = "1")]
+        pub sni_host: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. ALPN (Application-Layer Protocol Negotiation) to match against.
+        /// Examples: "http/1.1", "h2".
+        /// At least one of sni_host and alpn is required.
+        /// Up to 5 alpns across all matches can be set.
+        #[prost(string, repeated, tag = "2")]
+        pub alpn: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+    /// The specifications for routing traffic and applying associated policies.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteAction {
+        /// Required. The destination services to which traffic should be forwarded. At least
+        /// one destination service is required.
+        #[prost(message, repeated, tag = "1")]
+        pub destinations: ::prost::alloc::vec::Vec<RouteDestination>,
+    }
+    /// Describe the destination for traffic to be routed to.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RouteDestination {
+        /// Required. The URL of a BackendService to route traffic to.
+        #[prost(string, tag = "1")]
+        pub service_name: ::prost::alloc::string::String,
+        /// Optional. Specifies the proportion of requests forwareded to the backend referenced
+        /// by the service_name field. This is computed as:
+        ///          weight/Sum(weights in destinations)
+        /// Weights in all destinations does not need to sum up to 100.
+        #[prost(int32, tag = "2")]
+        pub weight: i32,
+    }
+}
+/// Request used with the ListTlsRoutes method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTlsRoutesRequest {
+    /// Required. The project and location from which the TlsRoutes should be
+    /// listed, specified in the format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Maximum number of TlsRoutes to return per call.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The value returned by the last `ListTlsRoutesResponse`
+    /// Indicates that this is a continuation of a prior `ListTlsRoutes` call,
+    /// and that the system should return the next page of data.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response returned by the ListTlsRoutes method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTlsRoutesResponse {
+    /// List of TlsRoute resources.
+    #[prost(message, repeated, tag = "1")]
+    pub tls_routes: ::prost::alloc::vec::Vec<TlsRoute>,
+    /// If there might be more results than those appearing in this response, then
+    /// `next_page_token` is included. To get the next set of results, call this
+    /// method again using the value of `next_page_token` as `page_token`.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request used by the GetTlsRoute method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetTlsRouteRequest {
+    /// Required. A name of the TlsRoute to get. Must be in the format
+    /// `projects/*/locations/global/tlsRoutes/*`.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request used by the TlsRoute method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTlsRouteRequest {
+    /// Required. The parent resource of the TlsRoute. Must be in the
+    /// format `projects/*/locations/global`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. Short name of the TlsRoute resource to be created. E.g. TODO(Add an
+    /// example).
+    #[prost(string, tag = "2")]
+    pub tls_route_id: ::prost::alloc::string::String,
+    /// Required. TlsRoute resource to be created.
+    #[prost(message, optional, tag = "3")]
+    pub tls_route: ::core::option::Option<TlsRoute>,
+}
+/// Request used by the UpdateTlsRoute method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateTlsRouteRequest {
+    /// Optional. Field mask is used to specify the fields to be overwritten in the
+    /// TlsRoute resource by the update.
+    /// The fields specified in the update_mask are relative to the resource, not
+    /// the full request. A field will be overwritten if it is in the mask. If the
+    /// user does not provide a mask then all fields will be overwritten.
+    #[prost(message, optional, tag = "1")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. Updated TlsRoute resource.
+    #[prost(message, optional, tag = "2")]
+    pub tls_route: ::core::option::Option<TlsRoute>,
+}
+/// Request used by the DeleteTlsRoute method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteTlsRouteRequest {
+    /// Required. A name of the TlsRoute to delete. Must be in the format
+    /// `projects/*/locations/global/tlsRoutes/*`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
 }
