@@ -133,7 +133,7 @@ pub mod task_status {
     )]
     #[repr(i32)]
     pub enum State {
-        /// Unknown state.
+        /// unknown state
         Unspecified = 0,
         /// The Task is created and waiting for resources.
         Pending = 1,
@@ -145,8 +145,6 @@ pub mod task_status {
         Failed = 4,
         /// The Task has succeeded.
         Succeeded = 5,
-        /// The Task has not been executed when the Job finishes.
-        Unexecuted = 6,
     }
     impl State {
         /// String value of the enum field names used in the ProtoBuf definition.
@@ -161,7 +159,6 @@ pub mod task_status {
                 State::Running => "RUNNING",
                 State::Failed => "FAILED",
                 State::Succeeded => "SUCCEEDED",
-                State::Unexecuted => "UNEXECUTED",
             }
         }
         /// Creates an enum from field names used in the ProtoBuf definition.
@@ -173,7 +170,6 @@ pub mod task_status {
                 "RUNNING" => Some(Self::Running),
                 "FAILED" => Some(Self::Failed),
                 "SUCCEEDED" => Some(Self::Succeeded),
-                "UNEXECUTED" => Some(Self::Unexecuted),
                 _ => None,
             }
         }
@@ -210,12 +206,6 @@ pub struct Runnable {
     /// Timeout for this Runnable.
     #[prost(message, optional, tag = "8")]
     pub timeout: ::core::option::Option<::prost_types::Duration>,
-    /// Labels for this Runnable.
-    #[prost(btree_map = "string, string", tag = "9")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
     /// The script or container to run.
     #[prost(oneof = "runnable::Executable", tags = "1, 2, 6")]
     pub executable: ::core::option::Option<runnable::Executable>,
@@ -247,9 +237,8 @@ pub mod runnable {
         #[prost(string, tag = "8")]
         pub options: ::prost::alloc::string::String,
         /// If set to true, external network access to and from container will be
-        /// blocked, containers that are with block_external_network as true can
-        /// still communicate with each other, network cannot be specified in the
-        /// `container.options` field.
+        /// blocked. The container will use the default internal network
+        /// 'goog-internal'.
         #[prost(bool, tag = "9")]
         pub block_external_network: bool,
         /// Optional username for logging in to a docker registry. If username
@@ -837,9 +826,6 @@ pub struct AllocationPolicy {
     /// The network policy.
     #[prost(message, optional, tag = "7")]
     pub network: ::core::option::Option<allocation_policy::NetworkPolicy>,
-    /// The placement policy.
-    #[prost(message, optional, tag = "10")]
-    pub placement: ::core::option::Option<allocation_policy::PlacementPolicy>,
 }
 /// Nested message and enum types in `AllocationPolicy`.
 pub mod allocation_policy {
@@ -847,14 +833,12 @@ pub mod allocation_policy {
     #[derive(Clone, PartialEq, ::prost::Message)]
     pub struct LocationPolicy {
         /// A list of allowed location names represented by internal URLs.
-        ///
         /// Each location can be a region or a zone.
         /// Only one region or multiple zones in one region is supported now.
         /// For example,
         /// \["regions/us-central1"\] allow VMs in any zones in region us-central1.
         /// ["zones/us-central1-a", "zones/us-central1-c"] only allow VMs
         /// in zones us-central1-a and us-central1-c.
-        ///
         /// All locations end up in different regions would cause errors.
         /// For example,
         /// ["regions/us-central1", "zones/us-central1-a", "zones/us-central1-b",
@@ -865,7 +849,7 @@ pub mod allocation_policy {
     }
     /// A new persistent disk or a local ssd.
     /// A VM can only have one local SSD setting but multiple local SSD partitions.
-    /// See <https://cloud.google.com/compute/docs/disks#pdspecs> and
+    /// <https://cloud.google.com/compute/docs/disks#pdspecs.>
     /// <https://cloud.google.com/compute/docs/disks#localssds.>
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
@@ -877,7 +861,6 @@ pub mod allocation_policy {
         #[prost(string, tag = "1")]
         pub r#type: ::prost::alloc::string::String,
         /// Disk size in GB.
-        ///
         /// For persistent disk, this field is ignored if `data_source` is `image` or
         /// `snapshot`.
         /// For local SSD, size_gb should be a multiple of 375GB,
@@ -905,22 +888,18 @@ pub mod allocation_policy {
         pub enum DataSource {
             /// Name of a public or custom image used as the data source.
             /// For example, the following are all valid URLs:
-            ///
-            /// * Specify the image by its family name:
+            /// (1) Specify the image by its family name:
             /// projects/{project}/global/images/family/{image_family}
-            /// * Specify the image version:
+            /// (2) Specify the image version:
             /// projects/{project}/global/images/{image_version}
-            ///
             /// You can also use Batch customized image in short names.
             /// The following image values are supported for a boot disk:
-            ///
-            /// * "batch-debian": use Batch Debian images.
-            /// * "batch-centos": use Batch CentOS images.
-            /// * "batch-cos": use Batch Container-Optimized images.
+            /// "batch-debian": use Batch Debian images.
+            /// "batch-centos": use Batch CentOS images.
+            /// "batch-cos": use Batch Container-Optimized images.
             #[prost(string, tag = "4")]
             Image(::prost::alloc::string::String),
             /// Name of a snapshot used as the data source.
-            /// Snapshot is not supported as boot disk now.
             #[prost(string, tag = "5")]
             Snapshot(::prost::alloc::string::String),
         }
@@ -977,7 +956,7 @@ pub mod allocation_policy {
         pub machine_type: ::prost::alloc::string::String,
         /// The minimum CPU platform.
         /// See
-        /// <https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform.>
+        /// `<https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform`.>
         /// Not yet implemented.
         #[prost(string, tag = "3")]
         pub min_cpu_platform: ::prost::alloc::string::String,
@@ -987,9 +966,8 @@ pub mod allocation_policy {
         /// The accelerators attached to each VM instance.
         #[prost(message, repeated, tag = "5")]
         pub accelerators: ::prost::alloc::vec::Vec<Accelerator>,
-        /// Boot disk to be created and attached to each VM by this InstancePolicy.
+        /// Book disk to be created and attached to each VM by this InstancePolicy.
         /// Boot disk will be deleted when the VM is deleted.
-        /// Batch API now only supports booting from image.
         #[prost(message, optional, tag = "8")]
         pub boot_disk: ::core::option::Option<Disk>,
         /// Non-boot disks to be attached for each VM created by this InstancePolicy.
@@ -1033,22 +1011,18 @@ pub mod allocation_policy {
     pub struct NetworkInterface {
         /// The URL of an existing network resource.
         /// You can specify the network as a full or partial URL.
-        ///
         /// For example, the following are all valid URLs:
-        ///
-        /// * <https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}>
-        /// * projects/{project}/global/networks/{network}
-        /// * global/networks/{network}
+        /// <https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}>
+        /// projects/{project}/global/networks/{network}
+        /// global/networks/{network}
         #[prost(string, tag = "1")]
         pub network: ::prost::alloc::string::String,
         /// The URL of an existing subnetwork resource in the network.
         /// You can specify the subnetwork as a full or partial URL.
-        ///
         /// For example, the following are all valid URLs:
-        ///
-        /// * <https://www.googleapis.com/compute/v1/projects/{project}/regions/{region}/subnetworks/{subnetwork}>
-        /// * projects/{project}/regions/{region}/subnetworks/{subnetwork}
-        /// * regions/{region}/subnetworks/{subnetwork}
+        /// <https://www.googleapis.com/compute/v1/projects/{project}/regions/{region}/subnetworks/{subnetwork}>
+        /// projects/{project}/regions/{region}/subnetworks/{subnetwork}
+        /// regions/{region}/subnetworks/{subnetwork}
         #[prost(string, tag = "2")]
         pub subnetwork: ::prost::alloc::string::String,
         /// Default is false (with an external IP address). Required if
@@ -1068,25 +1042,6 @@ pub mod allocation_policy {
         /// Network configurations.
         #[prost(message, repeated, tag = "1")]
         pub network_interfaces: ::prost::alloc::vec::Vec<NetworkInterface>,
-    }
-    /// PlacementPolicy describes a group placement policy for the VMs controlled
-    /// by this AllocationPolicy.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PlacementPolicy {
-        /// UNSPECIFIED vs. COLLOCATED (default UNSPECIFIED). Use COLLOCATED when you
-        /// want VMs to be located close to each other for low network latency
-        /// between the VMs. No placement policy will be generated when collocation
-        /// is UNSPECIFIED.
-        #[prost(string, tag = "1")]
-        pub collocation: ::prost::alloc::string::String,
-        /// When specified, causes the job to fail if more than max_distance logical
-        /// switches are required between VMs. Batch uses the most compact possible
-        /// placement of VMs even when max_distance is not specified. An explicit
-        /// max_distance makes that level of compactness a strict requirement.
-        /// Not yet implemented
-        #[prost(int64, tag = "2")]
-        pub max_distance: i64,
     }
     /// Compute Engine VM instance provisioning model.
     #[derive(
@@ -1156,12 +1111,11 @@ pub struct TaskGroup {
     #[prost(message, optional, tag = "3")]
     pub task_spec: ::core::option::Option<TaskSpec>,
     /// Number of Tasks in the TaskGroup.
-    /// Default is 1.
+    /// default is 1
     #[prost(int64, tag = "4")]
     pub task_count: i64,
     /// Max number of tasks that can run in parallel.
     /// Default to min(task_count, 1000).
-    /// Field parallelism must be 1 if the scheduling_policy is IN_ORDER.
     #[prost(int64, tag = "5")]
     pub parallelism: i64,
     /// An array of environment variable mappings, which are passed to Tasks with

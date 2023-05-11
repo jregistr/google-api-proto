@@ -893,9 +893,9 @@ pub struct DetachSubscriptionRequest {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DetachSubscriptionResponse {}
-/// A subscription resource. If none of `push_config` or `bigquery_config` is
-/// set, then the subscriber will pull and ack messages using API methods. At
-/// most one of these fields may be set.
+/// A subscription resource. If none of `push_config`, `bigquery_config`, or
+/// `cloud_storage_config` is set, then the subscriber will pull and ack messages
+/// using API methods. At most one of these fields may be set.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Subscription {
@@ -920,6 +920,10 @@ pub struct Subscription {
     /// used to configure it.
     #[prost(message, optional, tag = "18")]
     pub bigquery_config: ::core::option::Option<BigQueryConfig>,
+    /// If delivery to Google Cloud Storage is used with this subscription, this
+    /// field is used to configure it.
+    #[prost(message, optional, tag = "22")]
+    pub cloud_storage_config: ::core::option::Option<CloudStorageConfig>,
     /// The approximate amount of time (on a best-effort basis) Pub/Sub waits for
     /// the subscriber to acknowledge receipt before resending the message. In the
     /// interval after the message is delivered and before it is acknowledged, it
@@ -1213,9 +1217,9 @@ pub mod push_config {
     pub struct OidcToken {
         /// [Service account
         /// email](<https://cloud.google.com/iam/docs/service-accounts>)
-        /// to be used for generating the OIDC token. The caller (for
-        /// CreateSubscription, UpdateSubscription, and ModifyPushConfig RPCs) must
-        /// have the iam.serviceAccounts.actAs permission for the service account.
+        /// used for generating the OIDC token. For more information
+        /// on setting up authentication, see
+        /// [Push subscriptions](<https://cloud.google.com/pubsub/docs/push>).
         #[prost(string, tag = "1")]
         pub service_account_email: ::prost::alloc::string::String,
         /// Audience to be used when generating OIDC token. The audience claim
@@ -1329,6 +1333,120 @@ pub mod big_query_config {
                 _ => None,
             }
         }
+    }
+}
+/// Configuration for a Cloud Storage subscription.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CloudStorageConfig {
+    /// Required. User-provided name for the Cloud Storage bucket.
+    /// The bucket must be created by the user. The bucket name must be without
+    /// any prefix like "gs://". See the [bucket naming
+    /// requirements] (<https://cloud.google.com/storage/docs/buckets#naming>).
+    #[prost(string, tag = "1")]
+    pub bucket: ::prost::alloc::string::String,
+    /// User-provided prefix for Cloud Storage filename. See the [object naming
+    /// requirements](<https://cloud.google.com/storage/docs/objects#naming>).
+    #[prost(string, tag = "2")]
+    pub filename_prefix: ::prost::alloc::string::String,
+    /// User-provided suffix for Cloud Storage filename. See the [object naming
+    /// requirements](<https://cloud.google.com/storage/docs/objects#naming>).
+    #[prost(string, tag = "3")]
+    pub filename_suffix: ::prost::alloc::string::String,
+    /// The maximum duration that can elapse before a new Cloud Storage file is
+    /// created. Min 1 minute, max 10 minutes, default 5 minutes. May not exceed
+    /// the subscription's acknowledgement deadline.
+    #[prost(message, optional, tag = "6")]
+    pub max_duration: ::core::option::Option<::prost_types::Duration>,
+    /// The maximum bytes that can be written to a Cloud Storage file before a new
+    /// file is created. Min 1 KB, max 10 GiB. The max_bytes limit may be exceeded
+    /// in cases where messages are larger than the limit.
+    #[prost(int64, tag = "7")]
+    pub max_bytes: i64,
+    /// Output only. An output-only field that indicates whether or not the
+    /// subscription can receive messages.
+    #[prost(enumeration = "cloud_storage_config::State", tag = "9")]
+    pub state: i32,
+    /// Defaults to text format.
+    #[prost(oneof = "cloud_storage_config::OutputFormat", tags = "4, 5")]
+    pub output_format: ::core::option::Option<cloud_storage_config::OutputFormat>,
+}
+/// Nested message and enum types in `CloudStorageConfig`.
+pub mod cloud_storage_config {
+    /// Configuration for writing message data in text format.
+    /// Message payloads will be written to files as raw text, separated by a
+    /// newline.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TextConfig {}
+    /// Configuration for writing message data in Avro format.
+    /// Message payloads and metadata will be written to files as an Avro binary.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AvroConfig {
+        /// When true, write the subscription name, message_id, publish_time,
+        /// attributes, and ordering_key as additional fields in the output.
+        #[prost(bool, tag = "1")]
+        pub write_metadata: bool,
+    }
+    /// Possible states for a Cloud Storage subscription.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Default value. This value is unused.
+        Unspecified = 0,
+        /// The subscription can actively send messages to Cloud Storage.
+        Active = 1,
+        /// Cannot write to the Cloud Storage bucket because of permission denied
+        /// errors.
+        PermissionDenied = 2,
+        /// Cannot write to the Cloud Storage bucket because it does not exist.
+        NotFound = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Active => "ACTIVE",
+                State::PermissionDenied => "PERMISSION_DENIED",
+                State::NotFound => "NOT_FOUND",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ACTIVE" => Some(Self::Active),
+                "PERMISSION_DENIED" => Some(Self::PermissionDenied),
+                "NOT_FOUND" => Some(Self::NotFound),
+                _ => None,
+            }
+        }
+    }
+    /// Defaults to text format.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum OutputFormat {
+        /// If set, message data will be written to Cloud Storage in text format.
+        #[prost(message, tag = "4")]
+        TextConfig(TextConfig),
+        /// If set, message data will be written to Cloud Storage in Avro format.
+        #[prost(message, tag = "5")]
+        AvroConfig(AvroConfig),
     }
 }
 /// A message and its corresponding acknowledgment ID.
