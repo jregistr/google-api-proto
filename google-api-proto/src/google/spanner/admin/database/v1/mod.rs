@@ -861,6 +861,14 @@ pub struct Database {
     /// Output only. The dialect of the Cloud Spanner Database.
     #[prost(enumeration = "DatabaseDialect", tag = "10")]
     pub database_dialect: i32,
+    /// Whether drop protection is enabled for this database. Defaults to false,
+    /// if not set.
+    #[prost(bool, tag = "11")]
+    pub enable_drop_protection: bool,
+    /// Output only. If true, the database is being updated. If false, there are no
+    /// ongoing update operations for the database.
+    #[prost(bool, tag = "12")]
+    pub reconciling: bool,
 }
 /// Nested message and enum types in `Database`.
 pub mod database {
@@ -998,6 +1006,40 @@ pub struct GetDatabaseRequest {
     /// `projects/<project>/instances/<instance>/databases/<database>`.
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
+}
+/// The request for
+/// \[UpdateDatabase][google.spanner.admin.database.v1.DatabaseAdmin.UpdateDatabase\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDatabaseRequest {
+    /// Required. The database to update.
+    /// The `name` field of the database is of the form
+    /// `projects/<project>/instances/<instance>/databases/<database>`.
+    #[prost(message, optional, tag = "1")]
+    pub database: ::core::option::Option<Database>,
+    /// Required. The list of fields to update. Currently, only
+    /// `enable_drop_protection` field can be updated.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Metadata type for the operation returned by
+/// \[UpdateDatabase][google.spanner.admin.database.v1.DatabaseAdmin.UpdateDatabase\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDatabaseMetadata {
+    /// The request for
+    /// \[UpdateDatabase][google.spanner.admin.database.v1.DatabaseAdmin.UpdateDatabase\].
+    #[prost(message, optional, tag = "1")]
+    pub request: ::core::option::Option<UpdateDatabaseRequest>,
+    /// The progress of the
+    /// \[UpdateDatabase][google.spanner.admin.database.v1.DatabaseAdmin.UpdateDatabase\]
+    /// operation.
+    #[prost(message, optional, tag = "2")]
+    pub progress: ::core::option::Option<OperationProgress>,
+    /// The time at which this operation was cancelled. If set, this operation is
+    /// in the process of undoing itself (which is best-effort).
+    #[prost(message, optional, tag = "3")]
+    pub cancel_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// Enqueues the given DDL statements to be applied, in order but not
 /// necessarily all at once, to the database schema at some point (or
@@ -1586,6 +1628,64 @@ pub mod database_admin_client {
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/google.spanner.admin.database.v1.DatabaseAdmin/GetDatabase",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        /// Updates a Cloud Spanner database. The returned
+        /// [long-running operation][google.longrunning.Operation] can be used to track
+        /// the progress of updating the database. If the named database does not
+        /// exist, returns `NOT_FOUND`.
+        ///
+        /// While the operation is pending:
+        ///
+        ///   * The database's
+        ///     [reconciling][google.spanner.admin.database.v1.Database.reconciling]
+        ///     field is set to true.
+        ///   * Cancelling the operation is best-effort. If the cancellation succeeds,
+        ///     the operation metadata's
+        ///     [cancel_time][google.spanner.admin.database.v1.UpdateDatabaseMetadata.cancel_time]
+        ///     is set, the updates are reverted, and the operation terminates with a
+        ///     `CANCELLED` status.
+        ///   * New UpdateDatabase requests will return a `FAILED_PRECONDITION` error
+        ///     until the pending operation is done (returns successfully or with
+        ///     error).
+        ///   * Reading the database via the API continues to give the pre-request
+        ///     values.
+        ///
+        /// Upon completion of the returned operation:
+        ///
+        ///   * The new values are in effect and readable via the API.
+        ///   * The database's
+        ///     [reconciling][google.spanner.admin.database.v1.Database.reconciling]
+        ///     field becomes false.
+        ///
+        /// The returned [long-running operation][google.longrunning.Operation] will
+        /// have a name of the format
+        /// `projects/<project>/instances/<instance>/databases/<database>/operations/<operation_id>`
+        /// and can be used to track the database modification. The
+        /// [metadata][google.longrunning.Operation.metadata] field type is
+        /// [UpdateDatabaseMetadata][google.spanner.admin.database.v1.UpdateDatabaseMetadata].
+        /// The [response][google.longrunning.Operation.response] field type is
+        /// [Database][google.spanner.admin.database.v1.Database], if successful.
+        pub async fn update_database(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateDatabaseRequest>,
+        ) -> Result<
+            tonic::Response<super::super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.spanner.admin.database.v1.DatabaseAdmin/UpdateDatabase",
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
