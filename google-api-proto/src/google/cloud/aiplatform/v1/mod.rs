@@ -4269,7 +4269,7 @@ pub struct ExplanationParameters {
     /// Models that predict multiple classes).
     #[prost(message, optional, tag = "5")]
     pub output_indices: ::core::option::Option<::prost_types::ListValue>,
-    #[prost(oneof = "explanation_parameters::Method", tags = "1, 2, 3")]
+    #[prost(oneof = "explanation_parameters::Method", tags = "1, 2, 3, 7")]
     pub method: ::core::option::Option<explanation_parameters::Method>,
 }
 /// Nested message and enum types in `ExplanationParameters`.
@@ -4299,6 +4299,10 @@ pub mod explanation_parameters {
         /// x-rays or quality-control cameras, use Integrated Gradients instead.
         #[prost(message, tag = "3")]
         XraiAttribution(super::XraiAttribution),
+        /// Example-based explanations that returns the nearest neighbors from the
+        /// provided dataset.
+        #[prost(message, tag = "7")]
+        Examples(super::Examples),
     }
 }
 /// An attribution method that approximates Shapley values for features that
@@ -4480,6 +4484,201 @@ pub struct BlurBaselineConfig {
     /// images) baseline.
     #[prost(float, tag = "1")]
     pub max_blur_sigma: f32,
+}
+/// Example-based explainability that returns the nearest neighbors from the
+/// provided dataset.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Examples {
+    /// The number of neighbors to return when querying for examples.
+    #[prost(int32, tag = "3")]
+    pub neighbor_count: i32,
+    #[prost(oneof = "examples::Source", tags = "5")]
+    pub source: ::core::option::Option<examples::Source>,
+    #[prost(oneof = "examples::Config", tags = "2, 4")]
+    pub config: ::core::option::Option<examples::Config>,
+}
+/// Nested message and enum types in `Examples`.
+pub mod examples {
+    /// The Cloud Storage input instances.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ExampleGcsSource {
+        /// The format in which instances are given, if not specified, assume it's
+        /// JSONL format. Currently only JSONL format is supported.
+        #[prost(enumeration = "example_gcs_source::DataFormat", tag = "1")]
+        pub data_format: i32,
+        /// The Cloud Storage location for the input instances.
+        #[prost(message, optional, tag = "2")]
+        pub gcs_source: ::core::option::Option<super::GcsSource>,
+    }
+    /// Nested message and enum types in `ExampleGcsSource`.
+    pub mod example_gcs_source {
+        /// The format of the input example instances.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum DataFormat {
+            /// Format unspecified, used when unset.
+            Unspecified = 0,
+            /// Examples are stored in JSONL files.
+            Jsonl = 1,
+        }
+        impl DataFormat {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    DataFormat::Unspecified => "DATA_FORMAT_UNSPECIFIED",
+                    DataFormat::Jsonl => "JSONL",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "DATA_FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                    "JSONL" => Some(Self::Jsonl),
+                    _ => None,
+                }
+            }
+        }
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// The Cloud Storage input instances.
+        #[prost(message, tag = "5")]
+        ExampleGcsSource(ExampleGcsSource),
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Config {
+        /// The full configuration for the generated index, the semantics are the
+        /// same as \[metadata][google.cloud.aiplatform.v1.Index.metadata\] and should
+        /// match
+        /// \[NearestNeighborSearchConfig\](<https://cloud.google.com/vertex-ai/docs/explainable-ai/configuring-explanations-example-based#nearest-neighbor-search-config>).
+        #[prost(message, tag = "2")]
+        NearestNeighborSearchConfig(::prost_types::Value),
+        /// Simplified preset configuration, which automatically sets configuration
+        /// values based on the desired query speed-precision trade-off and modality.
+        #[prost(message, tag = "4")]
+        Presets(super::Presets),
+    }
+}
+/// Preset configuration for example-based explanations
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Presets {
+    /// Preset option controlling parameters for speed-precision trade-off when
+    /// querying for examples. If omitted, defaults to `PRECISE`.
+    #[prost(enumeration = "presets::Query", optional, tag = "1")]
+    pub query: ::core::option::Option<i32>,
+    /// The modality of the uploaded model, which automatically configures the
+    /// distance measurement and feature normalization for the underlying example
+    /// index and queries. If your model does not precisely fit one of these types,
+    /// it is okay to choose the closest type.
+    #[prost(enumeration = "presets::Modality", tag = "2")]
+    pub modality: i32,
+}
+/// Nested message and enum types in `Presets`.
+pub mod presets {
+    /// Preset option controlling parameters for query speed-precision trade-off
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Query {
+        /// More precise neighbors as a trade-off against slower response.
+        Precise = 0,
+        /// Faster response as a trade-off against less precise neighbors.
+        Fast = 1,
+    }
+    impl Query {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Query::Precise => "PRECISE",
+                Query::Fast => "FAST",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PRECISE" => Some(Self::Precise),
+                "FAST" => Some(Self::Fast),
+                _ => None,
+            }
+        }
+    }
+    /// Preset option controlling parameters for different modalities
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Modality {
+        /// Should not be set. Added as a recommended best practice for enums
+        Unspecified = 0,
+        /// IMAGE modality
+        Image = 1,
+        /// TEXT modality
+        Text = 2,
+        /// TABULAR modality
+        Tabular = 3,
+    }
+    impl Modality {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Modality::Unspecified => "MODALITY_UNSPECIFIED",
+                Modality::Image => "IMAGE",
+                Modality::Text => "TEXT",
+                Modality::Tabular => "TABULAR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "MODALITY_UNSPECIFIED" => Some(Self::Unspecified),
+                "IMAGE" => Some(Self::Image),
+                "TEXT" => Some(Self::Text),
+                "TABULAR" => Some(Self::Tabular),
+                _ => None,
+            }
+        }
+    }
 }
 /// The \[ExplanationSpec][google.cloud.aiplatform.v1.ExplanationSpec\] entries
 /// that can be overridden at [online

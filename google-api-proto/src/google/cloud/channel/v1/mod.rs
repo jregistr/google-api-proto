@@ -497,7 +497,7 @@ pub struct Plan {
     #[prost(message, optional, tag = "4")]
     pub trial_period: ::core::option::Option<Period>,
     /// Reseller Billing account to charge after an offer transaction.
-    /// Only present for Google Cloud Platform offers.
+    /// Only present for Google Cloud offers.
     #[prost(string, tag = "5")]
     pub billing_account: ::prost::alloc::string::String,
 }
@@ -722,13 +722,12 @@ pub enum ResourceType {
     LicensedUser = 4,
     /// Voice usage.
     Minutes = 5,
-    /// For IaaS SKUs like Google Cloud Platform, monetization is based on usage
-    /// accrued on your billing account irrespective of the type of monetizable
-    /// resource. This enum represents an aggregated resource/container for all
-    /// usage SKUs on a billing account. Currently, only applicable to Google Cloud
-    /// Platform.
+    /// For IaaS SKUs like Google Cloud, monetization is based on usage accrued on
+    /// your billing account irrespective of the type of monetizable resource. This
+    /// enum represents an aggregated resource/container for all usage SKUs on a
+    /// billing account. Currently, only applicable to Google Cloud.
     IaasUsage = 6,
-    /// For Google Cloud Platform subscriptions like Anthos or SAP.
+    /// For Google Cloud subscriptions like Anthos or SAP.
     Subscription = 7,
 }
 impl ResourceType {
@@ -866,8 +865,8 @@ pub struct Entitlement {
     ///
     /// - assigned_units: The number of licenses assigned to users.
     ///
-    /// For GCP billing subaccounts, the following Parameter may be accepted as
-    /// input:
+    /// For Google Cloud billing subaccounts, the following Parameter may be
+    /// accepted as input:
     ///
     /// - display_name: The display name of the billing subaccount.
     #[prost(message, repeated, tag = "26")]
@@ -1010,8 +1009,8 @@ pub struct AssociationInfo {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProvisionedService {
     /// Output only. Provisioning ID of the entitlement. For Google Workspace, this
-    /// is the underlying Subscription ID. For Google Cloud Platform, this is the
-    /// Billing Account ID of the billing subaccount."
+    /// is the underlying Subscription ID. For Google Cloud, this is the Billing
+    /// Account ID of the billing subaccount."
     #[prost(string, tag = "1")]
     pub provisioning_id: ::prost::alloc::string::String,
     /// Output only. The product pertaining to the provisioning resource as
@@ -1509,6 +1508,10 @@ pub struct FetchReportResultsRequest {
     /// call.
     #[prost(string, tag = "3")]
     pub page_token: ::prost::alloc::string::String,
+    /// Optional. List of keys specifying which report partitions to return.
+    /// If empty, returns all partitions.
+    #[prost(string, repeated, tag = "4")]
+    pub partition_keys: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
 /// Response message for
 /// \[CloudChannelReportsService.FetchReportResults][google.cloud.channel.v1.CloudChannelReportsService.FetchReportResults\].
@@ -1721,15 +1724,14 @@ pub struct DateRange {
     >,
     /// The earliest invoice date (inclusive).
     ///
-    /// If your product uses monthly invoices, and this value is not the beginning
-    /// of a month, this will adjust the date to the first day of the given month.
+    /// If this value is not the first day of a month, this will move it back to
+    /// the first day of the given month.
     #[prost(message, optional, tag = "3")]
     pub invoice_start_date: ::core::option::Option<super::super::super::r#type::Date>,
-    /// The latest invoice date (exclusive).
+    /// The latest invoice date (inclusive).
     ///
-    /// If your product uses monthly invoices, and this value is not the beginning
-    /// of a month, this will adjust the date to the first day of the following
-    /// month.
+    /// If this value is not the last day of a month, this will move it forward to
+    /// the last day of the given month.
     #[prost(message, optional, tag = "4")]
     pub invoice_end_date: ::core::option::Option<super::super::super::r#type::Date>,
 }
@@ -1740,6 +1742,10 @@ pub struct Row {
     /// The list of values in the row.
     #[prost(message, repeated, tag = "1")]
     pub values: ::prost::alloc::vec::Vec<ReportValue>,
+    /// The key for the partition this row belongs to. This field is empty
+    /// if the report is not partitioned.
+    #[prost(string, tag = "2")]
+    pub partition_key: ::prost::alloc::string::String,
 }
 /// A single report value.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1847,7 +1853,8 @@ pub mod report_status {
     }
 }
 /// The ID and description of a report that was used to generate report data.
-/// For example, "GCP Daily Spend", "Google Workspace License Activity", etc.
+/// For example, "Google Cloud Daily Spend", "Google Workspace License Activity",
+/// etc.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Report {
@@ -1878,8 +1885,7 @@ pub mod cloud_channel_reports_service_client {
     use tonic::codegen::http::Uri;
     /// CloudChannelReportsService lets Google Cloud resellers and
     /// distributors retrieve and combine a variety of data in Cloud Channel for
-    /// multiple products (Google Cloud Platform (GCP), Google Voice, and
-    /// Google Workspace.)
+    /// multiple products (Google Cloud, Google Voice, and Google Workspace.)
     #[derive(Debug, Clone)]
     pub struct CloudChannelReportsServiceClient<T> {
         inner: tonic::client::Grpc<T>,

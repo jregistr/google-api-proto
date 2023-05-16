@@ -1,476 +1,3 @@
-/// Container for enum describing the category of conversions that are associated
-/// with a ConversionAction.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConversionActionCategoryEnum {}
-/// Nested message and enum types in `ConversionActionCategoryEnum`.
-pub mod conversion_action_category_enum {
-    /// The category of conversions that are associated with a ConversionAction.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConversionActionCategory {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Default category.
-        Default = 2,
-        /// User visiting a page.
-        PageView = 3,
-        /// Purchase, sales, or "order placed" event.
-        Purchase = 4,
-        /// Signup user action.
-        Signup = 5,
-        /// Lead-generating action.
-        Lead = 6,
-        /// Software download action (as for an app).
-        Download = 7,
-        /// The addition of items to a shopping cart or bag on an advertiser site.
-        AddToCart = 8,
-        /// When someone enters the checkout flow on an advertiser site.
-        BeginCheckout = 9,
-        /// The start of a paid subscription for a product or service.
-        SubscribePaid = 10,
-        /// A call to indicate interest in an advertiser's offering.
-        PhoneCallLead = 11,
-        /// A lead conversion imported from an external source into Google Ads.
-        ImportedLead = 12,
-        /// A submission of a form on an advertiser site indicating business
-        /// interest.
-        SubmitLeadForm = 13,
-        /// A booking of an appointment with an advertiser's business.
-        BookAppointment = 14,
-        /// A quote or price estimate request.
-        RequestQuote = 15,
-        /// A search for an advertiser's business location with intention to visit.
-        GetDirections = 16,
-        /// A click to an advertiser's partner's site.
-        OutboundClick = 17,
-        /// A call, SMS, email, chat or other type of contact to an advertiser.
-        Contact = 18,
-        /// A website engagement event such as long site time or a Google Analytics
-        /// (GA) Smart Goal. Intended to be used for GA, Firebase, GA Gold goal
-        /// imports.
-        Engagement = 19,
-        /// A visit to a physical store location.
-        StoreVisit = 20,
-        /// A sale occurring in a physical store.
-        StoreSale = 21,
-        /// A lead conversion imported from an external source into Google Ads,
-        /// that has been further qualified by the advertiser (marketing/sales team).
-        /// In the lead-to-sale journey, advertisers get leads, then act on them
-        /// by reaching out to the consumer. If the consumer is interested and
-        /// may end up buying their product, the advertiser marks such leads as
-        /// "qualified leads".
-        QualifiedLead = 22,
-        /// A lead conversion imported from an external source into Google Ads, that
-        /// has further completed a chosen stage as defined by the lead gen
-        /// advertiser.
-        ConvertedLead = 23,
-    }
-    impl ConversionActionCategory {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConversionActionCategory::Unspecified => "UNSPECIFIED",
-                ConversionActionCategory::Unknown => "UNKNOWN",
-                ConversionActionCategory::Default => "DEFAULT",
-                ConversionActionCategory::PageView => "PAGE_VIEW",
-                ConversionActionCategory::Purchase => "PURCHASE",
-                ConversionActionCategory::Signup => "SIGNUP",
-                ConversionActionCategory::Lead => "LEAD",
-                ConversionActionCategory::Download => "DOWNLOAD",
-                ConversionActionCategory::AddToCart => "ADD_TO_CART",
-                ConversionActionCategory::BeginCheckout => "BEGIN_CHECKOUT",
-                ConversionActionCategory::SubscribePaid => "SUBSCRIBE_PAID",
-                ConversionActionCategory::PhoneCallLead => "PHONE_CALL_LEAD",
-                ConversionActionCategory::ImportedLead => "IMPORTED_LEAD",
-                ConversionActionCategory::SubmitLeadForm => "SUBMIT_LEAD_FORM",
-                ConversionActionCategory::BookAppointment => "BOOK_APPOINTMENT",
-                ConversionActionCategory::RequestQuote => "REQUEST_QUOTE",
-                ConversionActionCategory::GetDirections => "GET_DIRECTIONS",
-                ConversionActionCategory::OutboundClick => "OUTBOUND_CLICK",
-                ConversionActionCategory::Contact => "CONTACT",
-                ConversionActionCategory::Engagement => "ENGAGEMENT",
-                ConversionActionCategory::StoreVisit => "STORE_VISIT",
-                ConversionActionCategory::StoreSale => "STORE_SALE",
-                ConversionActionCategory::QualifiedLead => "QUALIFIED_LEAD",
-                ConversionActionCategory::ConvertedLead => "CONVERTED_LEAD",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "DEFAULT" => Some(Self::Default),
-                "PAGE_VIEW" => Some(Self::PageView),
-                "PURCHASE" => Some(Self::Purchase),
-                "SIGNUP" => Some(Self::Signup),
-                "LEAD" => Some(Self::Lead),
-                "DOWNLOAD" => Some(Self::Download),
-                "ADD_TO_CART" => Some(Self::AddToCart),
-                "BEGIN_CHECKOUT" => Some(Self::BeginCheckout),
-                "SUBSCRIBE_PAID" => Some(Self::SubscribePaid),
-                "PHONE_CALL_LEAD" => Some(Self::PhoneCallLead),
-                "IMPORTED_LEAD" => Some(Self::ImportedLead),
-                "SUBMIT_LEAD_FORM" => Some(Self::SubmitLeadForm),
-                "BOOK_APPOINTMENT" => Some(Self::BookAppointment),
-                "REQUEST_QUOTE" => Some(Self::RequestQuote),
-                "GET_DIRECTIONS" => Some(Self::GetDirections),
-                "OUTBOUND_CLICK" => Some(Self::OutboundClick),
-                "CONTACT" => Some(Self::Contact),
-                "ENGAGEMENT" => Some(Self::Engagement),
-                "STORE_VISIT" => Some(Self::StoreVisit),
-                "STORE_SALE" => Some(Self::StoreSale),
-                "QUALIFIED_LEAD" => Some(Self::QualifiedLead),
-                "CONVERTED_LEAD" => Some(Self::ConvertedLead),
-                _ => None,
-            }
-        }
-    }
-}
-/// Container for enumeration of days of the week, for example, "Monday".
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DayOfWeekEnum {}
-/// Nested message and enum types in `DayOfWeekEnum`.
-pub mod day_of_week_enum {
-    /// Enumerates days of the week, for example, "Monday".
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DayOfWeek {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Monday.
-        Monday = 2,
-        /// Tuesday.
-        Tuesday = 3,
-        /// Wednesday.
-        Wednesday = 4,
-        /// Thursday.
-        Thursday = 5,
-        /// Friday.
-        Friday = 6,
-        /// Saturday.
-        Saturday = 7,
-        /// Sunday.
-        Sunday = 8,
-    }
-    impl DayOfWeek {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DayOfWeek::Unspecified => "UNSPECIFIED",
-                DayOfWeek::Unknown => "UNKNOWN",
-                DayOfWeek::Monday => "MONDAY",
-                DayOfWeek::Tuesday => "TUESDAY",
-                DayOfWeek::Wednesday => "WEDNESDAY",
-                DayOfWeek::Thursday => "THURSDAY",
-                DayOfWeek::Friday => "FRIDAY",
-                DayOfWeek::Saturday => "SATURDAY",
-                DayOfWeek::Sunday => "SUNDAY",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "MONDAY" => Some(Self::Monday),
-                "TUESDAY" => Some(Self::Tuesday),
-                "WEDNESDAY" => Some(Self::Wednesday),
-                "THURSDAY" => Some(Self::Thursday),
-                "FRIDAY" => Some(Self::Friday),
-                "SATURDAY" => Some(Self::Saturday),
-                "SUNDAY" => Some(Self::Sunday),
-                _ => None,
-            }
-        }
-    }
-}
-/// Container for enumeration of Google Ads devices available for targeting.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeviceEnum {}
-/// Nested message and enum types in `DeviceEnum`.
-pub mod device_enum {
-    /// Enumerates Google Ads devices available for targeting.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Device {
-        /// Not specified.
-        Unspecified = 0,
-        /// The value is unknown in this version.
-        Unknown = 1,
-        /// Mobile devices with full browsers.
-        Mobile = 2,
-        /// Tablets with full browsers.
-        Tablet = 3,
-        /// Computers.
-        Desktop = 4,
-        /// Smart TVs and game consoles.
-        ConnectedTv = 6,
-        /// Other device types.
-        Other = 5,
-    }
-    impl Device {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Device::Unspecified => "UNSPECIFIED",
-                Device::Unknown => "UNKNOWN",
-                Device::Mobile => "MOBILE",
-                Device::Tablet => "TABLET",
-                Device::Desktop => "DESKTOP",
-                Device::ConnectedTv => "CONNECTED_TV",
-                Device::Other => "OTHER",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "MOBILE" => Some(Self::Mobile),
-                "TABLET" => Some(Self::Tablet),
-                "DESKTOP" => Some(Self::Desktop),
-                "CONNECTED_TV" => Some(Self::ConnectedTv),
-                "OTHER" => Some(Self::Other),
-                _ => None,
-            }
-        }
-    }
-}
-/// Container for enum describing types of payable and free interactions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InteractionEventTypeEnum {}
-/// Nested message and enum types in `InteractionEventTypeEnum`.
-pub mod interaction_event_type_enum {
-    /// Enum describing possible types of payable and free interactions.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum InteractionEventType {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Click to site. In most cases, this interaction navigates to an external
-        /// location, usually the advertiser's landing page. This is also the default
-        /// InteractionEventType for click events.
-        Click = 2,
-        /// The user's expressed intent to engage with the ad in-place.
-        Engagement = 3,
-        /// User viewed a video ad.
-        VideoView = 4,
-        /// The default InteractionEventType for ad conversion events.
-        /// This is used when an ad conversion row does NOT indicate
-        /// that the free interactions (for example, the ad conversions)
-        /// should be 'promoted' and reported as part of the core metrics.
-        /// These are simply other (ad) conversions.
-        None = 5,
-    }
-    impl InteractionEventType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                InteractionEventType::Unspecified => "UNSPECIFIED",
-                InteractionEventType::Unknown => "UNKNOWN",
-                InteractionEventType::Click => "CLICK",
-                InteractionEventType::Engagement => "ENGAGEMENT",
-                InteractionEventType::VideoView => "VIDEO_VIEW",
-                InteractionEventType::None => "NONE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "CLICK" => Some(Self::Click),
-                "ENGAGEMENT" => Some(Self::Engagement),
-                "VIDEO_VIEW" => Some(Self::VideoView),
-                "NONE" => Some(Self::None),
-                _ => None,
-            }
-        }
-    }
-}
-/// The relative performance compared to other advertisers.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QualityScoreBucketEnum {}
-/// Nested message and enum types in `QualityScoreBucketEnum`.
-pub mod quality_score_bucket_enum {
-    /// Enum listing the possible quality score buckets.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum QualityScoreBucket {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Quality of the creative is below average.
-        BelowAverage = 2,
-        /// Quality of the creative is average.
-        Average = 3,
-        /// Quality of the creative is above average.
-        AboveAverage = 4,
-    }
-    impl QualityScoreBucket {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                QualityScoreBucket::Unspecified => "UNSPECIFIED",
-                QualityScoreBucket::Unknown => "UNKNOWN",
-                QualityScoreBucket::BelowAverage => "BELOW_AVERAGE",
-                QualityScoreBucket::Average => "AVERAGE",
-                QualityScoreBucket::AboveAverage => "ABOVE_AVERAGE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "BELOW_AVERAGE" => Some(Self::BelowAverage),
-                "AVERAGE" => Some(Self::Average),
-                "ABOVE_AVERAGE" => Some(Self::AboveAverage),
-                _ => None,
-            }
-        }
-    }
-}
-/// Container for enum describing where on the first search results page the
-/// automated bidding system should target impressions for the
-/// TargetImpressionShare bidding strategy.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TargetImpressionShareLocationEnum {}
-/// Nested message and enum types in `TargetImpressionShareLocationEnum`.
-pub mod target_impression_share_location_enum {
-    /// Enum describing possible goals.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum TargetImpressionShareLocation {
-        /// Not specified.
-        Unspecified = 0,
-        /// Used for return value only. Represents value unknown in this version.
-        Unknown = 1,
-        /// Any location on the web page.
-        AnywhereOnPage = 2,
-        /// Top box of ads.
-        TopOfPage = 3,
-        /// Top slot in the top box of ads.
-        AbsoluteTopOfPage = 4,
-    }
-    impl TargetImpressionShareLocation {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                TargetImpressionShareLocation::Unspecified => "UNSPECIFIED",
-                TargetImpressionShareLocation::Unknown => "UNKNOWN",
-                TargetImpressionShareLocation::AnywhereOnPage => "ANYWHERE_ON_PAGE",
-                TargetImpressionShareLocation::TopOfPage => "TOP_OF_PAGE",
-                TargetImpressionShareLocation::AbsoluteTopOfPage => {
-                    "ABSOLUTE_TOP_OF_PAGE"
-                }
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "UNKNOWN" => Some(Self::Unknown),
-                "ANYWHERE_ON_PAGE" => Some(Self::AnywhereOnPage),
-                "TOP_OF_PAGE" => Some(Self::TopOfPage),
-                "ABSOLUTE_TOP_OF_PAGE" => Some(Self::AbsoluteTopOfPage),
-                _ => None,
-            }
-        }
-    }
-}
 /// Container for enum describing the type of demographic age ranges.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -541,6 +68,72 @@ pub mod age_range_type_enum {
                 "AGE_RANGE_55_64" => Some(Self::AgeRange5564),
                 "AGE_RANGE_65_UP" => Some(Self::AgeRange65Up),
                 "AGE_RANGE_UNDETERMINED" => Some(Self::AgeRangeUndetermined),
+                _ => None,
+            }
+        }
+    }
+}
+/// Container for enumeration of Google Ads devices available for targeting.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeviceEnum {}
+/// Nested message and enum types in `DeviceEnum`.
+pub mod device_enum {
+    /// Enumerates Google Ads devices available for targeting.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Device {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Mobile devices with full browsers.
+        Mobile = 2,
+        /// Tablets with full browsers.
+        Tablet = 3,
+        /// Computers.
+        Desktop = 4,
+        /// Smart TVs and game consoles.
+        ConnectedTv = 6,
+        /// Other device types.
+        Other = 5,
+    }
+    impl Device {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Device::Unspecified => "UNSPECIFIED",
+                Device::Unknown => "UNKNOWN",
+                Device::Mobile => "MOBILE",
+                Device::Tablet => "TABLET",
+                Device::Desktop => "DESKTOP",
+                Device::ConnectedTv => "CONNECTED_TV",
+                Device::Other => "OTHER",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "MOBILE" => Some(Self::Mobile),
+                "TABLET" => Some(Self::Tablet),
+                "DESKTOP" => Some(Self::Desktop),
+                "CONNECTED_TV" => Some(Self::ConnectedTv),
+                "OTHER" => Some(Self::Other),
                 _ => None,
             }
         }
@@ -892,6 +485,413 @@ pub mod webpage_condition_operator_enum {
                 "UNKNOWN" => Some(Self::Unknown),
                 "EQUALS" => Some(Self::Equals),
                 "CONTAINS" => Some(Self::Contains),
+                _ => None,
+            }
+        }
+    }
+}
+/// Container for enum describing the category of conversions that are associated
+/// with a ConversionAction.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConversionActionCategoryEnum {}
+/// Nested message and enum types in `ConversionActionCategoryEnum`.
+pub mod conversion_action_category_enum {
+    /// The category of conversions that are associated with a ConversionAction.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConversionActionCategory {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Default category.
+        Default = 2,
+        /// User visiting a page.
+        PageView = 3,
+        /// Purchase, sales, or "order placed" event.
+        Purchase = 4,
+        /// Signup user action.
+        Signup = 5,
+        /// Lead-generating action.
+        Lead = 6,
+        /// Software download action (as for an app).
+        Download = 7,
+        /// The addition of items to a shopping cart or bag on an advertiser site.
+        AddToCart = 8,
+        /// When someone enters the checkout flow on an advertiser site.
+        BeginCheckout = 9,
+        /// The start of a paid subscription for a product or service.
+        SubscribePaid = 10,
+        /// A call to indicate interest in an advertiser's offering.
+        PhoneCallLead = 11,
+        /// A lead conversion imported from an external source into Google Ads.
+        ImportedLead = 12,
+        /// A submission of a form on an advertiser site indicating business
+        /// interest.
+        SubmitLeadForm = 13,
+        /// A booking of an appointment with an advertiser's business.
+        BookAppointment = 14,
+        /// A quote or price estimate request.
+        RequestQuote = 15,
+        /// A search for an advertiser's business location with intention to visit.
+        GetDirections = 16,
+        /// A click to an advertiser's partner's site.
+        OutboundClick = 17,
+        /// A call, SMS, email, chat or other type of contact to an advertiser.
+        Contact = 18,
+        /// A website engagement event such as long site time or a Google Analytics
+        /// (GA) Smart Goal. Intended to be used for GA, Firebase, GA Gold goal
+        /// imports.
+        Engagement = 19,
+        /// A visit to a physical store location.
+        StoreVisit = 20,
+        /// A sale occurring in a physical store.
+        StoreSale = 21,
+        /// A lead conversion imported from an external source into Google Ads,
+        /// that has been further qualified by the advertiser (marketing/sales team).
+        /// In the lead-to-sale journey, advertisers get leads, then act on them
+        /// by reaching out to the consumer. If the consumer is interested and
+        /// may end up buying their product, the advertiser marks such leads as
+        /// "qualified leads".
+        QualifiedLead = 22,
+        /// A lead conversion imported from an external source into Google Ads, that
+        /// has further completed a chosen stage as defined by the lead gen
+        /// advertiser.
+        ConvertedLead = 23,
+    }
+    impl ConversionActionCategory {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConversionActionCategory::Unspecified => "UNSPECIFIED",
+                ConversionActionCategory::Unknown => "UNKNOWN",
+                ConversionActionCategory::Default => "DEFAULT",
+                ConversionActionCategory::PageView => "PAGE_VIEW",
+                ConversionActionCategory::Purchase => "PURCHASE",
+                ConversionActionCategory::Signup => "SIGNUP",
+                ConversionActionCategory::Lead => "LEAD",
+                ConversionActionCategory::Download => "DOWNLOAD",
+                ConversionActionCategory::AddToCart => "ADD_TO_CART",
+                ConversionActionCategory::BeginCheckout => "BEGIN_CHECKOUT",
+                ConversionActionCategory::SubscribePaid => "SUBSCRIBE_PAID",
+                ConversionActionCategory::PhoneCallLead => "PHONE_CALL_LEAD",
+                ConversionActionCategory::ImportedLead => "IMPORTED_LEAD",
+                ConversionActionCategory::SubmitLeadForm => "SUBMIT_LEAD_FORM",
+                ConversionActionCategory::BookAppointment => "BOOK_APPOINTMENT",
+                ConversionActionCategory::RequestQuote => "REQUEST_QUOTE",
+                ConversionActionCategory::GetDirections => "GET_DIRECTIONS",
+                ConversionActionCategory::OutboundClick => "OUTBOUND_CLICK",
+                ConversionActionCategory::Contact => "CONTACT",
+                ConversionActionCategory::Engagement => "ENGAGEMENT",
+                ConversionActionCategory::StoreVisit => "STORE_VISIT",
+                ConversionActionCategory::StoreSale => "STORE_SALE",
+                ConversionActionCategory::QualifiedLead => "QUALIFIED_LEAD",
+                ConversionActionCategory::ConvertedLead => "CONVERTED_LEAD",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "DEFAULT" => Some(Self::Default),
+                "PAGE_VIEW" => Some(Self::PageView),
+                "PURCHASE" => Some(Self::Purchase),
+                "SIGNUP" => Some(Self::Signup),
+                "LEAD" => Some(Self::Lead),
+                "DOWNLOAD" => Some(Self::Download),
+                "ADD_TO_CART" => Some(Self::AddToCart),
+                "BEGIN_CHECKOUT" => Some(Self::BeginCheckout),
+                "SUBSCRIBE_PAID" => Some(Self::SubscribePaid),
+                "PHONE_CALL_LEAD" => Some(Self::PhoneCallLead),
+                "IMPORTED_LEAD" => Some(Self::ImportedLead),
+                "SUBMIT_LEAD_FORM" => Some(Self::SubmitLeadForm),
+                "BOOK_APPOINTMENT" => Some(Self::BookAppointment),
+                "REQUEST_QUOTE" => Some(Self::RequestQuote),
+                "GET_DIRECTIONS" => Some(Self::GetDirections),
+                "OUTBOUND_CLICK" => Some(Self::OutboundClick),
+                "CONTACT" => Some(Self::Contact),
+                "ENGAGEMENT" => Some(Self::Engagement),
+                "STORE_VISIT" => Some(Self::StoreVisit),
+                "STORE_SALE" => Some(Self::StoreSale),
+                "QUALIFIED_LEAD" => Some(Self::QualifiedLead),
+                "CONVERTED_LEAD" => Some(Self::ConvertedLead),
+                _ => None,
+            }
+        }
+    }
+}
+/// Container for enumeration of days of the week, for example, "Monday".
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DayOfWeekEnum {}
+/// Nested message and enum types in `DayOfWeekEnum`.
+pub mod day_of_week_enum {
+    /// Enumerates days of the week, for example, "Monday".
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DayOfWeek {
+        /// Not specified.
+        Unspecified = 0,
+        /// The value is unknown in this version.
+        Unknown = 1,
+        /// Monday.
+        Monday = 2,
+        /// Tuesday.
+        Tuesday = 3,
+        /// Wednesday.
+        Wednesday = 4,
+        /// Thursday.
+        Thursday = 5,
+        /// Friday.
+        Friday = 6,
+        /// Saturday.
+        Saturday = 7,
+        /// Sunday.
+        Sunday = 8,
+    }
+    impl DayOfWeek {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DayOfWeek::Unspecified => "UNSPECIFIED",
+                DayOfWeek::Unknown => "UNKNOWN",
+                DayOfWeek::Monday => "MONDAY",
+                DayOfWeek::Tuesday => "TUESDAY",
+                DayOfWeek::Wednesday => "WEDNESDAY",
+                DayOfWeek::Thursday => "THURSDAY",
+                DayOfWeek::Friday => "FRIDAY",
+                DayOfWeek::Saturday => "SATURDAY",
+                DayOfWeek::Sunday => "SUNDAY",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "MONDAY" => Some(Self::Monday),
+                "TUESDAY" => Some(Self::Tuesday),
+                "WEDNESDAY" => Some(Self::Wednesday),
+                "THURSDAY" => Some(Self::Thursday),
+                "FRIDAY" => Some(Self::Friday),
+                "SATURDAY" => Some(Self::Saturday),
+                "SUNDAY" => Some(Self::Sunday),
+                _ => None,
+            }
+        }
+    }
+}
+/// Container for enum describing types of payable and free interactions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InteractionEventTypeEnum {}
+/// Nested message and enum types in `InteractionEventTypeEnum`.
+pub mod interaction_event_type_enum {
+    /// Enum describing possible types of payable and free interactions.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum InteractionEventType {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Click to site. In most cases, this interaction navigates to an external
+        /// location, usually the advertiser's landing page. This is also the default
+        /// InteractionEventType for click events.
+        Click = 2,
+        /// The user's expressed intent to engage with the ad in-place.
+        Engagement = 3,
+        /// User viewed a video ad.
+        VideoView = 4,
+        /// The default InteractionEventType for ad conversion events.
+        /// This is used when an ad conversion row does NOT indicate
+        /// that the free interactions (for example, the ad conversions)
+        /// should be 'promoted' and reported as part of the core metrics.
+        /// These are simply other (ad) conversions.
+        None = 5,
+    }
+    impl InteractionEventType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                InteractionEventType::Unspecified => "UNSPECIFIED",
+                InteractionEventType::Unknown => "UNKNOWN",
+                InteractionEventType::Click => "CLICK",
+                InteractionEventType::Engagement => "ENGAGEMENT",
+                InteractionEventType::VideoView => "VIDEO_VIEW",
+                InteractionEventType::None => "NONE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "CLICK" => Some(Self::Click),
+                "ENGAGEMENT" => Some(Self::Engagement),
+                "VIDEO_VIEW" => Some(Self::VideoView),
+                "NONE" => Some(Self::None),
+                _ => None,
+            }
+        }
+    }
+}
+/// The relative performance compared to other advertisers.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QualityScoreBucketEnum {}
+/// Nested message and enum types in `QualityScoreBucketEnum`.
+pub mod quality_score_bucket_enum {
+    /// Enum listing the possible quality score buckets.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum QualityScoreBucket {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Quality of the creative is below average.
+        BelowAverage = 2,
+        /// Quality of the creative is average.
+        Average = 3,
+        /// Quality of the creative is above average.
+        AboveAverage = 4,
+    }
+    impl QualityScoreBucket {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                QualityScoreBucket::Unspecified => "UNSPECIFIED",
+                QualityScoreBucket::Unknown => "UNKNOWN",
+                QualityScoreBucket::BelowAverage => "BELOW_AVERAGE",
+                QualityScoreBucket::Average => "AVERAGE",
+                QualityScoreBucket::AboveAverage => "ABOVE_AVERAGE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "BELOW_AVERAGE" => Some(Self::BelowAverage),
+                "AVERAGE" => Some(Self::Average),
+                "ABOVE_AVERAGE" => Some(Self::AboveAverage),
+                _ => None,
+            }
+        }
+    }
+}
+/// Container for enum describing where on the first search results page the
+/// automated bidding system should target impressions for the
+/// TargetImpressionShare bidding strategy.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TargetImpressionShareLocationEnum {}
+/// Nested message and enum types in `TargetImpressionShareLocationEnum`.
+pub mod target_impression_share_location_enum {
+    /// Enum describing possible goals.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum TargetImpressionShareLocation {
+        /// Not specified.
+        Unspecified = 0,
+        /// Used for return value only. Represents value unknown in this version.
+        Unknown = 1,
+        /// Any location on the web page.
+        AnywhereOnPage = 2,
+        /// Top box of ads.
+        TopOfPage = 3,
+        /// Top slot in the top box of ads.
+        AbsoluteTopOfPage = 4,
+    }
+    impl TargetImpressionShareLocation {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TargetImpressionShareLocation::Unspecified => "UNSPECIFIED",
+                TargetImpressionShareLocation::Unknown => "UNKNOWN",
+                TargetImpressionShareLocation::AnywhereOnPage => "ANYWHERE_ON_PAGE",
+                TargetImpressionShareLocation::TopOfPage => "TOP_OF_PAGE",
+                TargetImpressionShareLocation::AbsoluteTopOfPage => {
+                    "ABSOLUTE_TOP_OF_PAGE"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "UNKNOWN" => Some(Self::Unknown),
+                "ANYWHERE_ON_PAGE" => Some(Self::AnywhereOnPage),
+                "TOP_OF_PAGE" => Some(Self::TopOfPage),
+                "ABSOLUTE_TOP_OF_PAGE" => Some(Self::AbsoluteTopOfPage),
                 _ => None,
             }
         }
@@ -2869,7 +2869,7 @@ pub mod asset_field_type_enum {
         Callout = 11,
         /// The asset is linked for use as a Structured Snippet extension.
         StructuredSnippet = 12,
-        /// The asset is linked for use as a Sitelink extension.
+        /// The asset is linked for use as a Sitelink.
         Sitelink = 13,
         /// The asset is linked for use as a Mobile App extension.
         MobileApp = 14,
